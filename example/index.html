@@ -1,0 +1,39 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<meta charset="utf-8"> 
+		<title>iFrame message passing test</title> 
+		<meta name="description" content="iFrame message passing test"> 
+		<meta name="viewport" content="width=device-width">
+	</head> 
+	<body> 
+
+		<h2>Automagically resizing iFrame</h2>
+		<p>Resize window to watch iFrame resize</p>
+		<div style="margin:20px;">
+			<iframe src="frame.content.html" width="100%" scrolling="no" height="0"></iframe>
+		</div>
+		<p id="callback">
+		</p>
+
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script type="application/javascript" src="../js/jquery.iframeResizer.js"></script> 
+		<script type="application/javascript">
+
+			$('iframe').iFrameSizer({
+				log: true,
+				removeMargin:true,
+				doHeight:true,
+				doWidth:false,
+				callback:function(messageData){
+					$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
+										' <b>Height:</b> ' + messageData.height + 
+										' <b>Width:</b> ' + messageData.width);
+				}
+			});
+
+		</script>
+
+	</body> 
+</html>
