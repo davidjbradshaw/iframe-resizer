@@ -8,7 +8,7 @@
 "cross-domain",
 "postMessage"
 ],
-"version": "0.1",
+"version": "0.1.0",
 "author": {
 "name": "David J. Bradshaw",
 "email": "davidjbradshaw+github@gmail.com"
