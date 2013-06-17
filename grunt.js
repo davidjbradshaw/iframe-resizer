@@ -5,7 +5,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     meta: {
-      version: '0.1',
+      version: '0.1.0',
       bannerHost: '/*! iFrame Resizer (jquery.iframeSizer.min.js ) - v<%= meta.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Force cross domain iframes to size to content.\n' +
