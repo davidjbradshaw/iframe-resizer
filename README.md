@@ -1,5 +1,5 @@
 iframe-resizer
---------------
+==============
 
 This is a simple plugin to enable the resizing of cross domain iframes to fit the contained content. This package contains two minified JavaScript files the <a href="js">js</a> folder. The first (<a href="jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a jQuery plugin for the page hosting the iframe and the second one (<a href="iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a plain self contained JavaScript file that needs placing in the page contained in your iframe.
 
@@ -9,7 +9,7 @@ This plugin is built using the <a href="https://developer.mozilla.org/en-US/docs
 
 `<iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>`
 
-Note that scrolling is set to no, as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
+Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
 Next we initialise the plugin on the host page. This example shows all the default options and the values returned to the callback function.
 
