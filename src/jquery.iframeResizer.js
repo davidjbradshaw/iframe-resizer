@@ -12,17 +12,17 @@
 	var 
 		msgId    = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen = msgId.length,
-		count	 = 0;
+		count    = 0;
 
 	var 
 		settings,
 		defaults = {
-			log: true,
-			removeMargin:true,
+			log: false,
+			contentWindowBodyMargin:8,
 			doHeight:true,
 			doWidth:false,
 			callback:function(){}
-		}
+		};
 
 	function log(msg){
 		if (settings.log && window.console){
@@ -35,9 +35,9 @@
 			function resize(){
 				function setDimension(dimension){
 					messageData.iframe.style[dimension] = messageData[dimension] + 'px';
-					log( messageData.iframe.id + ' ' + dimension + ' set to: ' + messageData[dimension] + 'px');
+					log( messageData.iframe.id + ' ' + dimension + ' set to ' + messageData[dimension] + 'px');
 				}
-				
+
 				if(settings.doHeight){
 					setDimension('height');
 				}
@@ -102,7 +102,7 @@
 				}
 
 				function postMessageToIframe(){
-					var msg = iframe.id + ':' + settings.removeMargin + ':' + settings.doWidth + ':' + settings.log;
+					var msg = iframe.id + ':' + settings.contentWindowBodyMargin + ':' + settings.doWidth + ':' + settings.log;
 					log('Sending init msg to iframe ('+msg+')');
 					iframe.contentWindow.postMessage( msgId + msg, '*' );
 				}
@@ -117,6 +117,6 @@
 				init();
 			}
 		});
-	}
+	};
 
 })( window.jQuery );
