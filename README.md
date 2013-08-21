@@ -32,4 +32,4 @@ If the `interval` option is set to a value other than zero, the iframe will use 
 
 Setting the `log` option to true will make the scripts in both the host page and the iframe output everything they do to the JavaScript console so you can see the communication between the two scripts.
 
-NOTE: Not all browsers (Firefox) allow the postmessage API to work with locally hosted file
+NOTE: Not all browsers allow the postmessage API to work with locally hosted files.
