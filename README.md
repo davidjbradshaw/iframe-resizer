@@ -18,6 +18,7 @@ Next we initialise the plugin on the host page. This example shows all the defau
 				contentWindowBodyMargin:8,
 				doHeight:true,
 				doWidth:false,
+				interval:0,
 				callback:function(messageData){
 					$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
 										' <b>Height:</b> ' + messageData.height + 
@@ -27,4 +28,8 @@ Next we initialise the plugin on the host page. This example shows all the defau
 
 The `contentWindowBodyMagin` setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in firefox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.
 
+If the `interval` option is set to a value other than zero, the iframe will use setInterval to check for the document content changing in size. This option is only useful if you have dynamic content in your frame that can cause the frame page to resize. If this is the case then the suggested value is 250, otherwise this should be left at zero. 
+
 Setting the `log` option to true will make the scripts in both the host page and the iframe output everything they do to the JavaScript console so you can see the communication between the two scripts.
+
+NOTE: Not all browsers (Firefox) allow the postmessage API to work with locally hosted file

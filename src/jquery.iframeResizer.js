@@ -9,18 +9,19 @@
 
 (function($) {
 
-	var 
+	var
 		msgId    = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen = msgId.length,
 		count    = 0;
 
-	var 
+	var
 		settings,
 		defaults = {
 			log: false,
 			contentWindowBodyMargin:8,
 			doHeight:true,
 			doWidth:false,
+			interval:0,
 			callback:function(){}
 		};
 
@@ -102,7 +103,7 @@
 				}
 
 				function postMessageToIframe(){
-					var msg = iframe.id + ':' + settings.contentWindowBodyMargin + ':' + settings.doWidth + ':' + settings.log;
+					var msg = iframe.id + ':' + settings.contentWindowBodyMargin + ':' + settings.doWidth + ':' + settings.log + ':' + settings.interval;
 					log('Sending init msg to iframe ('+msg+')');
 					iframe.contentWindow.postMessage( msgId + msg, '*' );
 				}

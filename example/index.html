@@ -9,7 +9,7 @@
 	<body> 
 
 		<h2>Automagically resizing iFrame</h2>
-		<p>Resize window to watch iFrame resize</p>
+		<p>Resize window or click 'Toggleto watch iFrame resize</p>
 		<div style="margin:20px;">
 			<iframe src="frame.content.html" width="100%" scrolling="no"></iframe>
 		</div>
@@ -26,6 +26,7 @@
 				contentWindowBodyMargin:8,
 				doHeight:true,
 				doWidth:false,
+				interval:250,
 				callback:function(messageData){
 					$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
 										' <b>Height:</b> ' + messageData.height + 

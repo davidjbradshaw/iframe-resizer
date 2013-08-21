@@ -1,14 +1,14 @@
 {
 "name": "iframeResizer",
 "title": "Iframe Resizer (Cross Domain)",
-"description": "jQuery plugin for to size an iframe to it's content, that work cross domain",
+"description": "This jQuery plugin keeps an iframe sized to it's content and works with cross domain content.",
 "keywords": [
 "iframe",
 "resizer",
 "cross-domain",
 "postMessage"
 ],
-"version": "0.1.0",
+"version": "0.2.0",
 "author": {
 "name": "David J. Bradshaw",
 "email": "davidjbradshaw+github@gmail.com"

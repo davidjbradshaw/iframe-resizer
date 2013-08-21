@@ -10,7 +10,7 @@
 
 (function() {
 
-	var 
+	var
 		myID	= '',
 		target	= null,
 		height	= 0,
@@ -18,6 +18,7 @@
 		base	= 10,
 		logging = false,
 		msgID	= '[iFrameSizer]',  //Must match host page msg ID
+		firstRun = true;
 		msgIdLen= msgID.length;
 
 	try{
@@ -48,48 +49,71 @@
 					return 'true' === str ? true : false;
 				}
 
+				function setMargin(){
+					document.body.style.margin = bodyMargin+'px';
+					log('Body margin set to '+bodyMargin+'px');
+				}
+
+				function intiWindowListener(){
+					addEventListener('resize', function(){
+						sendSize('Window resized');
+					});
+				}
+
+				function initInterval(){
+					if ( 0 !== interval ){
+						log('setInterval: '+interval);
+						setInterval(function(){
+							sendSize('setInterval');
+						},interval);
+					}
+				}
+
 				var data = event.data.substr(msgIdLen).split(':');
 
 				myID       = data[0];
 				bodyMargin = parseInt(data[1],base);
 				doWidth    = strBool(data[2]);
 				logging    = strBool(data[3]);
+				interval   = parseInt(data[4],base);
 				target     = event.source;
 				
 				log('Initialising iframe');
 
-				document.body.style.margin = bodyMargin+'px';
-				log('Body margin set to '+bodyMargin+'px');
-			
-				addEventListener('resize', sendSize);
+				setMargin();
+				intiWindowListener();
+				initInterval();
 			}
 
 			function getOffset(dimension){
 				return parseInt(document.body['offset'+dimension],base);
 			}
 
-			function sendSize(){
+			function sendSize(calleeMsg){
 
-				var 
+				var
 					currentHeight = getOffset('Height') + 2*bodyMargin,
 					currentWidth  = getOffset('Width')  + 2*bodyMargin,
 					msg;
 
-				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){ 
+				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
 					height = currentHeight;
 					width = currentWidth;
 
 					msg = myID + ':' + height + ':' + width;
+					log('Trigger event: '+calleeMsg);
 					log('Sending msg to host page ('+msg+')');
-					target.postMessage( msgID + msg, '*');  
+					target.postMessage( msgID + msg, '*');
 				}
 			}
 
+
 			var bodyMargin,doWidth;
 
-			if (msgID === event.data.substr(0,msgIdLen)){ //Check msg ID
+			if (msgID === event.data.substr(0,msgIdLen) && firstRun){ //Check msg ID
+				firstRun = false;
 				init();
-				sendSize();
+				sendSize('Document Loaded');
 			}
 		}
 
