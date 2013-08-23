@@ -18,6 +18,7 @@ Next we initialise the plugin on the host page. This example shows all the defau
 				contentWindowBodyMargin:8,
 				doHeight:true,
 				doWidth:false,
+				enablePublicMethods:false,
 				interval:0,
 				callback:function(messageData){
 					$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
@@ -28,8 +29,18 @@ Next we initialise the plugin on the host page. This example shows all the defau
 
 The `contentWindowBodyMagin` setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in firefox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.
 
-If the `interval` option is set to a value other than zero, the iframe will use setInterval to check for the document content changing in size. This option is only useful if you have dynamic content in your frame that can cause the frame page to resize. If this is the case then the suggested value is 250, otherwise this should be left at zero. 
-
 Setting the `log` option to true will make the scripts in both the host page and the iframe output everything they do to the JavaScript console so you can see the communication between the two scripts.
+
+###Dynamic content in iframe
+
+In most browsers the resize event only fires when the browser window resizes. This means that dynamic changes to the document that change the size of the content don't trigger any events. To overcome this limitation this plugin offers two options that can be set to enable functions in the iFrame. 
+
+The preferred option is to set `enablePublicMethods` to true. This creates a `window.iFrameResizer` object in the browser. Then when ever the content is changed in the iFrame you can call the following method to have the iFrame resize to the new content.
+
+	if (window.iFrameSizer && window.iFrameSizer.trigger) {
+		window.iFrameSizer.trigger();
+	}
+
+As a secondary option in cases where it is not possible to modify the existing JavaScript you can set an interval timer in the iframe to check changes to the content. This is done by setting the  `interval` option to a numeric value other than zero, the suggested value is 32, which causes the check to run every other screen refresh. Higher values lead to the screen redraw becoming noticeable to the user.
 
 NOTE: Not all browsers allow the postmessage API to work with locally hosted files.

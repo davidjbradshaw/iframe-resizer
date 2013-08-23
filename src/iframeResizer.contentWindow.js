@@ -31,15 +31,19 @@
 			}
 		}
 
+		function formatLogMsg(msg){
+			return msgID + '[' + myID + ']' + ' ' + msg;
+		}
+
 		function log(msg){
 			if (logging && window.console){
-				console.log(msgID + ' ' + msg+ ' (' + myID + ')' );
+				console.log(formatLogMsg(msg));
 			}
 		}
 
 		function warn(msg){
 			if (window.console){
-				console.warn(msgID + ' ' + msg+ ' (' + myID + ')' );
+				console.warn(formatLogMsg(msg));
 			}
 		}
 
@@ -71,18 +75,23 @@
 
 				var data = event.data.substr(msgIdLen).split(':');
 
-				myID       = data[0];
-				bodyMargin = parseInt(data[1],base);
-				doWidth    = strBool(data[2]);
-				logging    = strBool(data[3]);
-				interval   = parseInt(data[4],base);
-				target     = event.source;
+				myID           = data[0];
+				bodyMargin     = parseInt(data[1],base);
+				doWidth        = strBool(data[2]);
+				logging        = strBool(data[3]);
+				interval       = parseInt(data[4],base);
+				publicMethods  = strBool(data[5]);
+				target         = event.source;
 				
 				log('Initialising iframe');
 
 				setMargin();
 				intiWindowListener();
 				initInterval();
+
+				if (publicMethods){
+					setupPublicMethods();
+				}
 			}
 
 			function getOffset(dimension){
@@ -99,12 +108,21 @@
 				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
 					height = currentHeight;
 					width = currentWidth;
+					log( 'Trigger event: ' + calleeMsg );
 
 					msg = myID + ':' + height + ':' + width;
-					log('Trigger event: '+calleeMsg);
-					log('Sending msg to host page ('+msg+')');
-					target.postMessage( msgID + msg, '*');
+					target.postMessage( msgID + msg, '*' );
+					log( 'Sending msg to host page (' + msg + ')' );
 				}
+			}
+
+			function setupPublicMethods(){
+				log( 'Enabling public methods' );
+				window.iFrameSizer={
+					trigger: function(){
+						sendSize('window.iFrameSizer.trigger()');
+					}
+				};
 			}
 
 
@@ -113,7 +131,7 @@
 			if (msgID === event.data.substr(0,msgIdLen) && firstRun){ //Check msg ID
 				firstRun = false;
 				init();
-				sendSize('Document Loaded');
+				sendSize('Init message from host page');
 			}
 		}
 
