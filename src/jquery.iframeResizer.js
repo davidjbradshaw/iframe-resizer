@@ -59,7 +59,11 @@
 				function setDimension(dimension){
 					window.requestAnimationFrame(function(){
 						messageData.iframe.style[dimension] = messageData[dimension] + 'px';
-						log( ' ' + messageData.iframe.id + ' ' + dimension + ' set to ' + messageData[dimension] + 'px');
+						log(
+							' ' + messageData.iframe.id +
+							' ' + dimension +
+							' set to ' + messageData[dimension] + 'px'
+						);
 					});
 				}
 
@@ -127,7 +131,13 @@
 				}
 
 				function postMessageToIframe(){
-					var msg = iframe.id + ':' + settings.contentWindowBodyMargin + ':' + settings.doWidth + ':' + settings.log + ':' + settings.interval + ':' + settings.enablePublicMethods;
+					var msg = iframe.id +
+							':' + settings.contentWindowBodyMargin +
+							':' + settings.doWidth +
+							':' + settings.log +
+							':' + settings.interval +
+							':' + settings.enablePublicMethods;
+
 					log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
 					iframe.contentWindow.postMessage( msgId + msg, '*' );
 				}

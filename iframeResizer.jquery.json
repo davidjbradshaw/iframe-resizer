@@ -1,6 +1,6 @@
 {
 "name": "iframeResizer",
-"title": "Iframe Resizer (Cross Domain)",
+"title": "Auto Iframe Resizer (Cross Domain)",
 "description": "This jQuery plugin keeps an iframe sized to it's content and works  across domains. Configurable to scale both height and width and has options to deal with dynamic content reszing.",
 "keywords": [
 "iframe",
