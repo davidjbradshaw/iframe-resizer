@@ -13,7 +13,7 @@
 		msgId    = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen = msgId.length,
 		count    = 0,
-		settings,
+		settings = {},
 		defaults = {
 			log: false,
 			contentWindowBodyMargin:8,
@@ -46,7 +46,7 @@
     }
 
 	function log(msg){
-		if (settings.log && window.console){
+		if (settings && settings.log && window.console){
 			console.log(msgId + '[Host page]' + msg);
 		}
 	}
