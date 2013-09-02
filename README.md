@@ -35,7 +35,7 @@ Setting the `log` option to true will make the scripts in both the host page and
 
 In most browsers the resize event only fires when the browser window resizes. This means that dynamic changes to the document that change the size of the content don't trigger any events. To overcome this limitation this plugin offers two options that can be set to enable functions in the iFrame. 
 
-The preferred option is to set `enablePublicMethods` to true. This creates a `window.iFrameResizer` object in the browser. Then when ever the content is changed in the iFrame you can call the following method to have the iFrame resize to the new content.
+The preferred option is to set `enablePublicMethods` to true. This creates a `window.iFrameResizer` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.iFrameSizer.trigger()` method to have the iFrame resize to the new content. This should be wrapped in a test for the method to avoid errors when the page is not run in an iFrame.
 
 	if (window.iFrameSizer && window.iFrameSizer.trigger) {
 		window.iFrameSizer.trigger();
