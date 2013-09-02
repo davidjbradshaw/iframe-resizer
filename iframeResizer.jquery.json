@@ -1,14 +1,15 @@
 {
 "name": "iframeResizer",
 "title": "Auto Iframe Resizer (Cross Domain)",
-"description": "This jQuery plugin keeps an iframe sized to it's content and works  across domains. Configurable to scale both height and width and has options to deal with dynamic content reszing.",
+"description": "This jQuery plugin keeps an iframe sized to it's content and works across domains. Configurable to scale both height and width and has options to deal with dynamic content reszing.",
 "keywords": [
 "iframe",
 "resizer",
 "cross-domain",
-"postMessage"
+"postMessage",
+"scaleß to content"
 ],
-"version": "1.0.0",
+"version": "1.0.1",
 "author": {
 "name": "David J. Bradshaw",
 "email": "davidjbradshaw+github@gmail.com"
@@ -26,7 +27,7 @@
 }
 ],
 "bugs": "https://github.com/davidjbradshaw/iframe-resizer/issues",
-"homepage": "https://github.com/davidjbradshaw/iframe-resizer",
+"homepage": "http://davidjbradshaw.github.io/iframe-resizer/",
 "docs": "https://github.com/davidjbradshaw/iframe-resizer",
 "dependencies": {
 "jquery": ">=1.8"
