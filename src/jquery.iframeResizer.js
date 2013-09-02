@@ -92,7 +92,7 @@
 			if (msgId === msg.substr(0,msgIdLen)){
 				processMsg();
 				resize();
-				settings.callback(messageData,settings);
+				settings.callback(messageData);
 			}
 		}
 
