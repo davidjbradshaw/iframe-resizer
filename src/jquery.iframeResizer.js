@@ -89,7 +89,7 @@
 			var messageData = {};
 
 			//check message is for us.
-			if (msgId === msg.substr(0,msgIdLen)){
+			if (msgId === '' + msg.substr(0,msgIdLen)){
 				processMsg();
 				resize();
 				settings.callback(messageData);
