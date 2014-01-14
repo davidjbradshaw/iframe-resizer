@@ -12,7 +12,6 @@
     "grunt-contrib-jshint": "~0.6.3",
     "grunt-contrib-watch": "~0.5.2",
     "grunt-contrib-qunit": "0.3.0",
-    "grunt-concurrent": "~0.3.0",
     "load-grunt-tasks": "~0.1.0",
     "time-grunt": "~0.1.1"
   },
