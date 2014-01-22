@@ -1,0 +1,35 @@
+{
+  "name": "iframe-resizer",
+  "version": "1.0.3",
+  "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
+  "authors": [
+    "David J. Bradshaw <dave@bradshaw.net>"
+  ],
+  "description": "jQuery pluggin for cross domain sizing iframes to content with support for window resizing.",
+  "main": "js/jquery.iframeResizer.min.js",
+  "keywords": [
+    "Cross",
+    "Domain",
+    "iFrame",
+    "Resizing",
+    "Resizer",
+    "postMessage"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "*.md",
+    "AUTHORS.txt",
+    "grunt.js",
+    "gruntfile.js",
+    "package.json",
+    "bower.json"
+  ],
+  "dependencies": {
+    "jQuery": "1.7"
+  }
+}
