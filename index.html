@@ -1,37 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Iframe-resizer by davidjbradshaw</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Iframe-resizer by davidjbradshaw</title>
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Iframe-resizer</h1>
+        <p class="header">jQuery pluggin for cross domain sizing iframes to content with support for window resizing.</p>
 
-        <header>
-          <h1>Iframe-resizer</h1>
-          <h2>jQuery pluggin for cross domain sizing iframes to content with support for window resizing.</h2>
-        </header>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/davidjbradshaw/iframe-resizer/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/davidjbradshaw/iframe-resizer/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/davidjbradshaw/iframe-resizer">View On GitHub</a></li>
+        </ul>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/davidjbradshaw/iframe-resizer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/davidjbradshaw/iframe-resizer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/davidjbradshaw/iframe-resizer" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/davidjbradshaw">davidjbradshaw</a></p>
 
-        <hr>
 
-        <section id="main_content">
-          <h2>
+      </header>
+      <section>
+        <h2>
 <a name="cross-domain-iframe-resizer" class="anchor" href="#cross-domain-iframe-resizer"><span class="octicon octicon-link"></span></a>Cross domain iframe resizer</h2>
 
 <p>This is a simple plugin to enable the resizing of cross domain iframes to fit the contained content. This package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a jQuery plugin for the page hosting the iframe and the second one (<a href="iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a plain self contained JavaScript file that needs placing in the page contained within your iframe.</p>
@@ -66,11 +65,11 @@
 <p>Setting the <code>log</code> option to true will make the scripts in both the host page and the iframe output everything they do to the JavaScript console so you can see the communication between the two scripts.</p>
 
 <h3>
-<a name="dynamic-content-in-iframe" class="anchor" href="#dynamic-content-in-iframe"><span class="octicon octicon-link"></span></a>Dynamic content in iframe</h3>
+<a name="dynamic-content-in-iframe-with-ie10-and-other-outdated-browsers" class="anchor" href="#dynamic-content-in-iframe-with-ie10-and-other-outdated-browsers"><span class="octicon octicon-link"></span></a>Dynamic content in iFrame with IE10 and other outdated browsers</h3>
 
-<p>In most browsers the resize event only fires when the browser window resizes. This means that dynamic changes to the document that change the size of the content don't trigger any events. To overcome this limitation this plugin offers two options that can be set to enable functions in the iFrame. </p>
+<p>The iFrame script uses <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect changes to the DOM that may require the iFrame to be resized. In outdated browsers, such as IE10, where this is not supported this plugin offers two options that can be set to enable workarounds in the iFrame to detect content changes. </p>
 
-<p>The preferred option is to set <code>enablePublicMethods</code> to true. This creates a <code>window.iFrameResizer</code> object in the browser. Then when ever the content is changed in the iFrame you can call the following method to have the iFrame resize to the new content.</p>
+<p>The preferred option is to set <code>enablePublicMethods</code> to true. This creates a <code>window.iFrameResizer</code> object in the browser. Then whenever the content is changed in the iFrame you can call the <code>window.iFrameSizer.trigger()</code> method to have the iFrame resize to the new content. This should be wrapped in a test for the method to avoid errors when the page is not run in an iFrame.</p>
 
 <pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
     window.iFrameSizer.trigger();
@@ -79,16 +78,25 @@
 
 <p>As a secondary option in cases where it is not possible to modify the existing JavaScript you can set an interval timer in the iframe to check changes to the content. This is done by setting the  <code>interval</code> option to a numeric value other than zero, the suggested value is 32, which causes the check to run every other screen refresh. Higher values lead to the screen redraw becoming noticeable to the user.</p>
 
-<p>NOTE: Not all browsers allow the postmessage API to work with locally hosted files.</p>
-        </section>
+<h2>
+<a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
-        <footer>
-          Iframe-resizer is maintained by <a href="https://github.com/davidjbradshaw">davidjbradshaw</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<ul>
+<li>v1.1.0 Added DOM MutationObserver trigger to better detect content changes in iFrame, <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/7">#7</a> Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.</li>
+<li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
+<li>v1.0.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/2">#2</a> mime-type changed for IE8-10.</li>
+<li>v1.0.0 Initial published release.</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-        
-      </div>
+<p>Copyright (c) 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>
+Licensed under the MIT license.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
     </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
   </body>
 </html>
