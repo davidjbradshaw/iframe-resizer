@@ -43,13 +43,11 @@ The preferred option is to set `enablePublicMethods` to true. This creates a `wi
 
 As a secondary option in cases where it is not possible to modify the existing JavaScript you can set an interval timer in the iframe to check changes to the content. This is done by setting the  `interval` option to a numeric value other than zero, the suggested value is 32, which causes the check to run every other screen refresh. Higher values lead to the screen redraw becoming noticeable to the user.
 
-
 ##Version History
-* v1.1.0 Added DOM MutationObserver trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
+* v1.1.0 Added DOM MutationObserver trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
 * v1.0.2 [#2](https://github.com/davidjbradshaw/iframe-resizer/issues/2) mime-type changed for IE8-10.
 * v1.0.0 Initial published release.
-
 
 ## License
 Copyright (c) 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
