@@ -58,6 +58,11 @@
 					log('Body margin set to '+bodyMargin+'px');
 				}
 
+				function setHeightAuto(){
+					document.body.style.height = 'auto';
+					log('Body height set to "auto"');
+				}
+
 				function intiWindowListener(){
 					addEventListener('resize', function(){
 						sendSize('Window resized');
@@ -86,6 +91,8 @@
 				log('Initialising iframe');
 
 				setMargin();
+				setHeightAuto();
+				setupMutationObserver();
 				intiWindowListener();
 				initInterval();
 
@@ -123,6 +130,32 @@
 						sendSize('window.iFrameSizer.trigger()');
 					}
 				};
+			}
+
+			function setupMutationObserver(){
+				var 
+					MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
+
+					target = document.querySelector('body'),
+
+					config = {
+						childList: true, 
+						attributes: true, 
+						characterData: true, 
+						subtree: true, 
+						attributeOldValue: false, 
+						characterDataOldValue: false
+					},
+
+					observer = new MutationObserver(function(mutations) {
+						mutations.forEach(function(mutation) {
+							sendSize( 'mutationObserver: ' + mutation.target + ' ' + mutation.type );
+						});
+					});
+
+				log('Setup MutationObserver');
+
+				observer.observe(target, config);
 			}
 
 

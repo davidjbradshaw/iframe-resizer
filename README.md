@@ -31,9 +31,9 @@ The `contentWindowBodyMagin` setting is used to override the default browser bod
 
 Setting the `log` option to true will make the scripts in both the host page and the iframe output everything they do to the JavaScript console so you can see the communication between the two scripts.
 
-###Dynamic content in iframe
+###Dynamic content in iFrame with IE10 and other outdated browsers
 
-In most browsers the resize event only fires when the browser window resizes. This means that dynamic changes to the document that change the size of the content don't trigger any events. To overcome this limitation this plugin offers two options that can be set to enable functions in the iFrame. 
+The iFrame script uses <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect changes to the DOM that may require the iFrame to be resized. In outdated browsers, such as IE10, where this is not supported this plugin offers two options that can be set to enable workarounds in the iFrame to detect content changes. 
 
 The preferred option is to set `enablePublicMethods` to true. This creates a `window.iFrameResizer` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.iFrameSizer.trigger()` method to have the iFrame resize to the new content. This should be wrapped in a test for the method to avoid errors when the page is not run in an iFrame.
 
