@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QUnit LoadHide</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+
+    <div style="width:600px;">
+      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+    </div>
+
+  </div>
+  <script src="resources/qunit.js"></script>
+  <script src="resources/jquery.js"></script>
+  <script src="../src/jquery.iframeResizer.js"></script>
+  <script>
+  
+    'use strict';
+    var msgId = '[iFrameSizerTest]:';
+
+	
+    asyncTest( "iFrame inteval timer ", function() {
+
+      var callbackCounter = 0;
+
+      $('iframe').iFrameSizer({
+        interval:1,
+        callback:function(messageData){
+          
+          switch  (''+(++callbackCounter)){
+            case '1':
+              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'changeContent', '*' );
+              break;
+            default:
+              ok( true, 'iFrame detected content change');
+              if ('interval' === messageData.type){
+                ok( 'interval' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected interval.' );
+                start();
+              }
+              else
+                document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'changeContent', '*' );
+          }
+        }
+      });
+    });
+		
+  </script>
+</body>
+</html>

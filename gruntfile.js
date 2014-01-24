@@ -31,7 +31,7 @@ module.exports = function(grunt) {
       files: ['src/*.js']
     },
     qunit: {
-      files: ['test/**/*.html']
+      files: ['test/*.html']
     },
     jshint: {
       options: {
@@ -67,6 +67,6 @@ module.exports = function(grunt) {
   });
 
 
-  grunt.registerTask('default', ['jshint','uglify']);
+  grunt.registerTask('default', ['jshint','uglify','qunit']);
 
 };

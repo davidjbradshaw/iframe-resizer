@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QUnit LoadHide</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+
+    <div style="width:600px;">
+      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+    </div>
+
+  </div>
+  <script src="resources/qunit.js"></script>
+  <script src="resources/jquery.js"></script>
+  <script src="../src/jquery.iframeResizer.js"></script>
+  <script>
+  
+    'use strict';
+    var msgId = '[iFrameSizerTest]:';
+
+		asyncTest( "postMessage Response", function() {
+
+      $('iframe').iFrameSizer({
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
+          ok( 'iFrameSizer0' === messageData.iframe.id, 'iFrame id = iFrameSizer0.' );
+          ok( '600' === messageData.width, 'iFrame width = 600.' );
+          start();
+        }
+      });
+    });
+    
+  </script>
+</body>
+</html>
