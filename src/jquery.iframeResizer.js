@@ -56,7 +56,7 @@ jQuery(document).ready( function($) {
 
 	setupRAF();
 
-	$(window).on('message',function(event){
+	$(window).bind('message',function(event){
 
 		function receiver(msg) {
 			function resize(){
@@ -122,7 +122,7 @@ jQuery(document).ready( function($) {
 				iframe.style.overflow = 'hidden';
 				iframe.scrolling = 'no';
 
-				$(iframe).on('load',function(){
+				$(iframe).bind('load',function(){
 					trigger('iFrame.onload');
 				});
 			}
