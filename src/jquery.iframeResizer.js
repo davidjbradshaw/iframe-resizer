@@ -82,7 +82,8 @@
 				messageData = {
 					iframe: document.getElementById(data[0]),
 					height: data[1],
-					width:  data[2]
+					width:  data[2],
+					type:   data[3]
 				};
 			}
 

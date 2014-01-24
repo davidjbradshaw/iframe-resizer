@@ -18,7 +18,7 @@
 		base	= 10,
 		logging = false,
 		msgID	= '[iFrameSizer]',  //Must match host page msg ID
-		firstRun = true;
+		firstRun = true,
 		msgIdLen= msgID.length;
 
 	try{
@@ -65,7 +65,7 @@
 
 				function intiWindowListener(){
 					addEventListener('resize', function(){
-						sendSize('Window resized');
+						sendSize('resize','Window resized');
 					});
 				}
 
@@ -73,7 +73,7 @@
 					if ( 0 !== interval ){
 						log('setInterval: '+interval);
 						setInterval(function(){
-							sendSize('setInterval');
+							sendSize('interval','setInterval: '+interval);
 						},interval);
 					}
 				}
@@ -105,7 +105,13 @@
 				return parseInt(document.body['offset'+dimension],base);
 			}
 
-			function sendSize(calleeMsg){
+			function sendSize(type,calleeMsg){
+
+				function sendMsg(){
+					var msg = myID + ':' + height + ':' + width  + ':' + type;
+					target.postMessage( msgID + msg, '*' );
+					log( 'Sending msg to host page (' + msg + ')' );
+				}
 
 				var
 					currentHeight = getOffset('Height') + 2*bodyMargin,
@@ -117,9 +123,7 @@
 					width = currentWidth;
 					log( 'Trigger event: ' + calleeMsg );
 
-					msg = myID + ':' + height + ':' + width;
-					target.postMessage( msgID + msg, '*' );
-					log( 'Sending msg to host page (' + msg + ')' );
+					sendMsg();
 				}
 			}
 
@@ -127,44 +131,52 @@
 				log( 'Enabling public methods' );
 				window.iFrameSizer={
 					trigger: function(){
-						sendSize('window.iFrameSizer.trigger()');
+						sendSize('jsTrigger','window.iFrameSizer.trigger()');
 					}
 				};
 			}
 
 			function setupMutationObserver(){
-				var 
-					MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
 
-					target = document.querySelector('body'),
+				function createMutationObserver(){
+					var
+						target = document.querySelector('body'),
 
-					config = {
-						childList: true, 
-						attributes: true, 
-						characterData: true, 
-						subtree: true, 
-						attributeOldValue: false, 
-						characterDataOldValue: false
-					},
+						config = {
+							childList: true, 
+							attributes: true, 
+							characterData: true, 
+							subtree: true, 
+							attributeOldValue: false, 
+							characterDataOldValue: false
+						},
 
-					observer = new MutationObserver(function(mutations) {
-						mutations.forEach(function(mutation) {
-							sendSize( 'mutationObserver: ' + mutation.target + ' ' + mutation.type );
+						observer = new MutationObserver(function(mutations) {
+							mutations.forEach(function(mutation) {
+								sendSize( 'mutationObserver','mutationObserver: ' + mutation.target + ' ' + mutation.type );
+							});
 						});
-					});
 
-				log('Setup MutationObserver');
+					log('Setup MutationObserver');
 
-				observer.observe(target, config);
+					observer.observe(target, config);
+				}
+
+				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+
+				if (MutationObserver)
+					createMutationObserver();
+				else
+					log('MutationObserver not supported in this browser!');
 			}
 
 
 			var bodyMargin,doWidth;
 
 			if (msgID === event.data.substr(0,msgIdLen) && firstRun){ //Check msg ID
-				firstRun = false;
 				init();
-				sendSize('Init message from host page');
+				sendSize('init','Init message from host page');
+				firstRun = false;
 			}
 		}
 

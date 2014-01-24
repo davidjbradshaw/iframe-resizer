@@ -31,7 +31,8 @@
 				callback:function(messageData){
 					$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
 										' <b>Height:</b> ' + messageData.height + 
-										' <b>Width:</b> ' + messageData.width);
+										' <b>Width:</b> ' + messageData.width + 
+										' <b>Event type:</b> ' + messageData.type);
 				}
 			});
 
