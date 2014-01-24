@@ -1,41 +1,47 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
-		<meta name="description" content="iFrame message passing test"> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
 		<meta name="viewport" content="width=device-width">
-	</head> 
-	<body> 
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../src/jquery.iframeResizer.js"></script>
+		<script type="text/javascript">
+
+			jQuery(document).ready(function($) {
+
+				$('iframe').iFrameSizer({
+					log                    : true,  // For dewelopment
+					contentWindowBodyMargin: 8,     // Set the default browser body margin style (in px)
+					doHeight               : true,  // Calculates dynamic height
+					doWidth                : false, // Calculates dynamic width
+					interval               : 32,    // interval in ms to recalculate body height, 0 to disable refreshing
+					enablePublicMethods    : true,  // Calling within iframe hosted page (iframeResizer.contentWindow.min.js)
+					autoWindowResize       : true,  // Trigering resize on window.change event
+					callback               : function(messageData){ // Callback fn when message is received
+						$('p#callback').html(
+							'<b>Frame ID:</b> ' + messageData.iframe.id +
+							' <b>Height:</b> ' + messageData.height +
+							' <b>Width:</b> ' + messageData.width
+						);
+					}
+				});
+
+			});
+
+		</script>
+
+	</head>
+	<body>
 
 		<h2>Automagically resizing iFrame</h2>
 		<p>Resize window or click 'Toggle content' to watch iFrame resize</p>
 		<div style="margin:20px;">
 			<iframe src="frame.content.html" width="100%" scrolling="no"></iframe>
 		</div>
-		<p id="callback">
-		</p>
+		<p id="callback"></p>
 
-
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/jquery.iframeResizer.min.js"></script> 
-		<script type="text/javascript">
-
-			$('iframe').iFrameSizer({
-				log: true,
-				contentWindowBodyMargin:8,
-				doHeight:true,
-				doWidth:false,
-				interval:32,
-				enablePublicMethods:true,
-				callback:function(messageData){
-					$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
-										' <b>Height:</b> ' + messageData.height + 
-										' <b>Width:</b> ' + messageData.width);
-				}
-			});
-
-		</script>
-
-	</body> 
+	</body>
 </html>

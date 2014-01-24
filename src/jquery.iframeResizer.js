@@ -3,29 +3,32 @@
  * Desc: Force cross domain iframes to size to content.
  * Requires: iframeSizer.contentWindow.js to be loaded into the target frame.
  * Author: David J. Bradshaw - dave@bradshaw.net
+ * Contributor: Jure Mav - jure.mav@gmail.com
  * Date: 2013-06-14
  */
-
-
-(function($) {
+jQuery(document).ready( function($) {
 
 	var
-		msgId    = '[iFrameSizer]', //Must match iframe msg ID
-		msgIdLen = msgId.length,
-		count    = 0,
-		settings = {},
-		defaults = {
-			log: false,
-			contentWindowBodyMargin:8,
-			doHeight:true,
-			doWidth:false,
-			interval:0,
-			enablePublicMethods:false,
-			callback:function(){}
+		msgId              = '[iFrameSizer]', //Must match iframe msg ID
+		msgIdLen           = msgId.length,
+		count              = 0,
+		settings           = {},
+		initRetry          = 1000,
+		retryTimer         ,
+		iframeNotResponded = true,
+		defaults           = {
+			log                     : false,
+			contentWindowBodyMargin : 8,
+			doHeight                : true,
+			doWidth                 : false,
+			interval                : 0,
+			enablePublicMethods     : false,
+			autoWindowResize        : true,
+			callback                : function(){}
 		};
-		
 
-    function setupRAF(){
+
+	function setupRAF(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
 			x;
@@ -43,7 +46,7 @@
 			};
 		}
 
-    }
+	}
 
 	function log(msg){
 		if (settings && settings.log && window.console){
@@ -51,9 +54,10 @@
 		}
 	}
 
-    setupRAF();
+	setupRAF();
 
 	$(window).on('message',function(event){
+
 		function receiver(msg) {
 			function resize(){
 				function setDimension(dimension){
@@ -77,6 +81,7 @@
 			}
 
 			function processMsg(){
+
 				var data	= msg.substr(msgIdLen).split(':');
 
 				messageData = {
@@ -90,6 +95,8 @@
 
 			//check message is for us.
 			if (msgId === '' + msg.substr(0,msgIdLen)){
+				clearTimeout(retryTimer);
+				iframeNotResponded = false;
 				processMsg();
 				resize();
 				settings.callback(messageData);
@@ -109,8 +116,8 @@
 				return iframe.contentWindow ? true : false;
 			}
 
-			//We have to call trigger twice, as we can not be sure if all 
-			//iframes have completed loading when this code runs.
+			// We have to call trigger multiple times, as we can not be sure
+			// if iframes have completed loading 'jquery.iframeResizer.js'
 			function init(){
 				iframe.style.overflow = 'hidden';
 				iframe.scrolling = 'no';
@@ -118,7 +125,6 @@
 				$(iframe).on('load',function(){
 					trigger('iFrame.onload');
 				});
-				trigger('init');
 			}
 
 			function trigger(calleeMsg){
@@ -136,14 +142,24 @@
 							':' + settings.doWidth +
 							':' + settings.log +
 							':' + settings.interval +
-							':' + settings.enablePublicMethods;
-
+							':' + settings.enablePublicMethods +
+							':' + settings.autoWindowResize;
 					log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
 					iframe.contentWindow.postMessage( msgId + msg, '*' );
 				}
-			
+
+				function retryPostInitMessageToIframe(){
+					if ( iframeNotResponded && initRetry > 0){
+
+						retryTimer = setTimeout(function() {
+							trigger('init retry on 10ms');
+						}, 10);
+					}
+				}
+
 				ensureHasId();
 				postMessageToIframe();
+				retryPostInitMessageToIframe();
 			}
 
 			var iframe = this;
@@ -154,4 +170,5 @@
 		});
 	};
 
-})( window.jQuery );
+});
+
