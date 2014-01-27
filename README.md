@@ -2,7 +2,7 @@
 
 This is a simple plugin to enable the resizing of cross domain iframes to fit the contained content.
 
-This package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a **jQuery** plugin for the page hosting the iframe. The second one (<a href="iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is **native** JavaScript file that needs placing in the page contained within your iframe.
+This package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="js/jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a **jQuery** plugin for the page hosting the iframe. The second one (<a href="js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is **native** JavaScript file that needs placing in the page contained within your iframe.
 
 This plugin is built using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">window.postMessage API</a> to pass messages between the host page and the iframe. To see this working take a look at the <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.
 
@@ -28,7 +28,7 @@ Next we initialize the plugin on the page hosting file for our iframe. This exam
 		callback:function(messageData){
 			$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
 								' <b>Height:</b> ' + messageData.height + 
-								' <b>Width:</b> ' + messageData.width 
+								' <b>Width:</b> ' + messageData.width +
 								' <b>Event type:</b> ' + messageData.type);
 		}
 	});
