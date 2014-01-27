@@ -58,10 +58,12 @@
 					log('Body margin set to '+bodyMargin+'px');
 				}
 
-				function setHeightAuto(){
-					document.body.style.height = 'auto';
-					log('Body height set to "auto"');
-				}
+                function setHeightAuto(){
+                    // Bug fix for infinity resizing of iframe
+                    document.documentElement.style.height = 'auto';
+                    document.body.style.height = 'auto';
+                    log('HTML & body height set to "auto"');
+                }
 
 				function intiWindowListener(){
 					addEventListener('resize', function(){
