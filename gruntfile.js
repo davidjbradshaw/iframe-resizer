@@ -55,17 +55,17 @@ module.exports = function(grunt) {
         report:'gzip',
       },
       local: {
-        src: ['<banner:meta.bannerHost>','js/jquery.iframeResizer.js'],
+        src: ['<banner:meta.bannerHost>','src/jquery.iframeResizer.js'],
         dest: 'js/jquery.iframeResizer.min.js',
         options: {
-          sourceMap: 'js/jquery.iframeResizer.map'
+          sourceMap: 'src/jquery.iframeResizer.map'
         },
       },
       remote: {
-        src: ['<banner:meta.bannerIframe>','js/iframeResizer.contentWindow.js'],
+        src: ['<banner:meta.bannerIframe>','src/iframeResizer.contentWindow.js'],
         dest: 'js/iframeResizer.contentWindow.min.js',
         options: {
-          sourceMap: 'js/iframeResizer.contentWindow.map'
+          sourceMap: 'src/iframeResizer.contentWindow.map'
         },
       }
     },
@@ -78,15 +78,15 @@ module.exports = function(grunt) {
         src: ['js/*.min.js'],
         overwrite: true,                 // overwrite matched source files
         replacements: [{ 
-          from: /sourceMappingURL=js\//g,
-          to: 'sourceMappingURL='
+          from: /sourceMappingURL=src\//g,
+          to: 'sourceMappingURL=..\/src\/'
         }]
       },
       map: {
-        src: ['js/*.map'],
+        src: ['src/*.map'],
         overwrite: true,                 // overwrite matched source files
         replacements: [{ 
-          from: /js\//g,
+          from: /src\//g,
           to: ''
         }]
       }
