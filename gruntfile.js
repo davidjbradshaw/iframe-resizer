@@ -50,23 +50,50 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
+        sourceMaps:true,
+        sourceMapIncludeSources:true,
+        report:'gzip',
       },
       local: {
-        src: ['<banner:meta.bannerHost>','src/jquery.iframeResizer.js'],
-        dest: 'js/jquery.iframeResizer.min.js'
+        src: ['<banner:meta.bannerHost>','js/jquery.iframeResizer.js'],
+        dest: 'js/jquery.iframeResizer.min.js',
+        options: {
+          sourceMap: 'js/jquery.iframeResizer.map'
+        },
       },
       remote: {
-        src: ['<banner:meta.bannerIframe>','src/iframeResizer.contentWindow.js'],
-        dest: 'js/iframeResizer.contentWindow.min.js'
+        src: ['<banner:meta.bannerIframe>','js/iframeResizer.contentWindow.js'],
+        dest: 'js/iframeResizer.contentWindow.min.js',
+        options: {
+          sourceMap: 'js/iframeResizer.contentWindow.map'
+        },
       }
     },
     watch: {
       files: ['src/**/*'],
       tasks: 'sefault'
+    },
+    replace: {
+      min: {
+        src: ['js/*.min.js'],
+        overwrite: true,                 // overwrite matched source files
+        replacements: [{ 
+          from: /sourceMappingURL=js\//g,
+          to: 'sourceMappingURL='
+        }]
+      },
+      map: {
+        src: ['js/*.map'],
+        overwrite: true,                 // overwrite matched source files
+        replacements: [{ 
+          from: /js\//g,
+          to: ''
+        }]
+      }
     }
   });
 
-
-  grunt.registerTask('default', ['jshint','uglify','qunit']);
+  grunt.registerTask('default', ['jshint','uglify','replace','qunit']);
+  grunt.registerTask('notest', ['jshint','uglify','replace']);
 
 };
