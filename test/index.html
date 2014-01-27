@@ -16,7 +16,7 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
-  <script src="../src/jquery.iframeResizer.js"></script>
+  <script src="../js/jquery.iframeResizer.min.js"></script>
   <script>
   
     'use strict';
@@ -25,6 +25,7 @@
 		asyncTest( "postMessage Response", function() {
 
       $('iframe').iFrameSizer({
+        log:false,
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
