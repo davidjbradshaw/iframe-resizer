@@ -1,12 +1,12 @@
 /*
  * File: iframeSizer.contentWindow.js
- * Desc: Include this file in any page being loaded into an iframe 
+ * Desc: Include this file in any page being loaded into an iframe
  *       to force the iframe to resize to the content size.
  * Requires: jquery.iframeSizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
+ * Contributor: Jure Mav - jure.mav@gmail.com
  * Date: 2013-06-14
  */
-
 
 (function() {
 
@@ -49,6 +49,7 @@
 
 		function receiver(event) {
 			function init(){
+
 				function strBool(str){
 					return 'true' === str ? true : false;
 				}
@@ -56,6 +57,7 @@
 				function setMargin(){
 					document.body.style.margin = bodyMargin+'px';
 					log('Body margin set to '+bodyMargin+'px');
+
 				}
 
                 function setHeightAuto(){
@@ -65,7 +67,7 @@
                     log('HTML & body height set to "auto"');
                 }
 
-				function intiWindowListener(){
+				function initWindowListener(){
 					addEventListener('resize', function(){
 						sendSize('resize','Window resized');
 					});
@@ -82,21 +84,24 @@
 
 				var data = event.data.substr(msgIdLen).split(':');
 
-				myID           = data[0];
-				bodyMargin     = parseInt(data[1],base);
-				doWidth        = strBool(data[2]);
-				logging        = strBool(data[3]);
-				interval       = parseInt(data[4],base);
-				publicMethods  = strBool(data[5]);
-				target         = event.source;
-				
+				myID             = data[0];
+				bodyMargin       = parseInt(data[1],base);
+				doWidth          = strBool(data[2]);
+				logging          = strBool(data[3]);
+				interval         = parseInt(data[4],base);
+				publicMethods    = strBool(data[5]);
+				autoWindowResize = strBool(data[6]);
+				target           = event.source;
+
 				log('Initialising iframe');
 
 				setMargin();
 				setHeightAuto();
-				setupMutationObserver();
-				intiWindowListener();
-				initInterval();
+				if ( autoWindowResize ) {
+					initWindowListener();
+					setupMutationObserver();
+					initInterval();
+				}
 
 				if (publicMethods){
 					setupPublicMethods();
@@ -107,7 +112,7 @@
 				return parseInt(document.body['offset'+dimension],base);
 			}
 
-			function sendSize(type,calleeMsg){
+			function sendSize(type,calleeMsg, customHeight, customWidth){
 
 				function sendMsg(){
 					var msg = myID + ':' + height + ':' + width  + ':' + type;
@@ -116,8 +121,8 @@
 				}
 
 				var
-					currentHeight = getOffset('Height') + 2*bodyMargin,
-					currentWidth  = getOffset('Width')  + 2*bodyMargin,
+					currentHeight = customHeight || getOffset('Height') + 2*bodyMargin,
+					currentWidth  = customWidth || getOffset('Width')  + 2*bodyMargin,
 					msg;
 
 				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
@@ -131,9 +136,10 @@
 
 			function setupPublicMethods(){
 				log( 'Enabling public methods' );
-				window.iFrameSizer={
-					trigger: function(){
-						sendSize('jsTrigger','window.iFrameSizer.trigger()');
+
+				window.iFrameSizer = {
+					trigger: function(customHeight, customWidth){
+						sendSize('jsTrigger','window.iFrameSizer.trigger()', customHeight, customWidth);
 					}
 				};
 			}
@@ -171,7 +177,7 @@
 				else
 					log('MutationObserver not supported in this browser!');
 			}
-
+				
 
 			var bodyMargin,doWidth;
 
@@ -181,11 +187,11 @@
 				firstRun = false;
 			}
 		}
-
 		addEventListener('message', receiver);
 	}
 	catch(e){
 		warn(e);
 	}
 
- })();
+})();
+

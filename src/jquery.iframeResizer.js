@@ -3,29 +3,29 @@
  * Desc: Force cross domain iframes to size to content.
  * Requires: iframeSizer.contentWindow.js to be loaded into the target frame.
  * Author: David J. Bradshaw - dave@bradshaw.net
+ * Contributor: Jure Mav - jure.mav@gmail.com
  * Date: 2013-06-14
  */
-
-
-(function($) {
+( function($) {
 
 	var
-		msgId    = '[iFrameSizer]', //Must match iframe msg ID
-		msgIdLen = msgId.length,
-		count    = 0,
-		settings = {},
-		defaults = {
-			log: false,
-			contentWindowBodyMargin:8,
-			doHeight:true,
-			doWidth:false,
-			interval:0,
-			enablePublicMethods:false,
-			callback:function(){}
+		msgId              = '[iFrameSizer]', //Must match iframe msg ID
+		msgIdLen           = msgId.length,
+		count              = 0,
+		settings           = {},
+		defaults           = {
+			log                     : false,
+			contentWindowBodyMargin : 8,
+			doHeight                : true,
+			doWidth                 : false,
+			interval                : 0,
+			enablePublicMethods     : false,
+			autoWindowResize        : true,
+			callback                : function(){}
 		};
-		
 
-    function setupRAF(){
+
+	function setupRAF(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
 			x;
@@ -43,7 +43,7 @@
 			};
 		}
 
-    }
+	}
 
 	function log(msg){
 		if (settings && settings.log && window.console){
@@ -51,9 +51,10 @@
 		}
 	}
 
-    setupRAF();
+	setupRAF();
 
-	$(window).on('message',function(event){
+	$(window).bind('message',function(event){
+
 		function receiver(msg) {
 			function resize(){
 				function setDimension(dimension){
@@ -77,6 +78,7 @@
 			}
 
 			function processMsg(){
+
 				var data	= msg.substr(msgIdLen).split(':');
 
 				messageData = {
@@ -116,7 +118,7 @@
 				iframe.style.overflow = 'hidden';
 				iframe.scrolling = 'no';
 
-				$(iframe).on('load',function(){
+				$(iframe).bind('load',function(){
 					trigger('iFrame.onload');
 				});
 				trigger('init');
@@ -137,12 +139,12 @@
 							':' + settings.doWidth +
 							':' + settings.log +
 							':' + settings.interval +
-							':' + settings.enablePublicMethods;
-
+							':' + settings.enablePublicMethods +
+							':' + settings.autoWindowResize;
 					log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
 					iframe.contentWindow.postMessage( msgId + msg, '*' );
 				}
-			
+
 				ensureHasId();
 				postMessageToIframe();
 			}
@@ -156,3 +158,4 @@
 	};
 
 })( window.jQuery );
+
