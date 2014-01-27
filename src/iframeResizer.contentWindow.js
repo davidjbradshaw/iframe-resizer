@@ -13,8 +13,8 @@
 	var
 		myID	= '',
 		target	= null,
-		height	= 0,
-		width	= 0,
+		height	= 1,
+		width	= 1,
 		base	= 10,
 		logging = false,
 		msgID	= '[iFrameSizer]',  //Must match host page msg ID
@@ -73,15 +73,6 @@
 					});
 				}
 
-				function initInterval(){
-					if ( 0 !== interval ){
-						log('setInterval: '+interval);
-						setInterval(function(){
-							sendSize('interval','setInterval: '+interval);
-						},interval);
-					}
-				}
-
 				var data = event.data.substr(msgIdLen).split(':');
 
 				myID             = data[0];
@@ -100,11 +91,19 @@
 				if ( autoWindowResize ) {
 					initWindowListener();
 					setupMutationObserver();
-					initInterval();
 				}
 
 				if (publicMethods){
 					setupPublicMethods();
+				}
+			}
+
+			function initInterval(){
+				if ( 0 !== interval ){
+					log('setInterval: '+interval);
+					setInterval(function(){
+						sendSize('interval','setInterval: '+interval);
+					},interval);
 				}
 			}
 
@@ -121,8 +120,8 @@
 				}
 
 				var
-					currentHeight = customHeight || getOffset('Height') + 2*bodyMargin,
-					currentWidth  = customWidth || getOffset('Width')  + 2*bodyMargin,
+					currentHeight = (customHeight !== undefined)  ? customHeight : getOffset('Height') + 2*bodyMargin,
+					currentWidth  = (customWidth  !== undefined)  ? customWidth  : getOffset('Width')  + 2*bodyMargin,
 					msg;
 
 				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
@@ -140,6 +139,9 @@
 				window.iFrameSizer = {
 					trigger: function(customHeight, customWidth){
 						sendSize('jsTrigger','window.iFrameSizer.trigger()', customHeight, customWidth);
+					},
+					close: function(){
+						sendSize('close','window.iFrameSizer.close()', 0, 0);
 					}
 				};
 			}
@@ -174,8 +176,10 @@
 
 				if (MutationObserver)
 					createMutationObserver();
-				else
+				else {
 					log('MutationObserver not supported in this browser!');
+					initInterval();
+				}
 			}
 				
 

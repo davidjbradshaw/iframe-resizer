@@ -87,6 +87,11 @@
 					width:  data[2],
 					type:   data[3]
 				};
+
+				if ('close' === messageData.type)
+					$(messageData.iframe).remove();
+				else
+					resize();
 			}
 
 			var messageData = {};
@@ -94,7 +99,6 @@
 			//check message is for us.
 			if (msgId === '' + msg.substr(0,msgIdLen)){
 				processMsg();
-				resize();
 				settings.callback(messageData);
 			}
 		}
