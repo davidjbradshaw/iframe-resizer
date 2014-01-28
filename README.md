@@ -1,6 +1,6 @@
 # Cross domain iframe resizer
 
-This is a simple plugin to enable the resizing of cross domain iframes to fit the contained content.
+This is a simple library to enable the resizing of cross domain iframes to fit the contained content.
 
 This package contains two minified JavaScript files in the <a href="js">js</a> folder. The first ([jquery.iframeResizer.min.js](https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/jquery.iframeResizer.js)) is a **jQuery** plugin for the page hosting the iframe. 
 
@@ -36,41 +36,7 @@ Next we initialize the plugin on the page hosting file for our iframe. This exam
 
 The `contentWindowBodyMagin` setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in firefox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.
 
-
-### Methods
-
-To enable these methods you must set `enablePublicMethods` to `true`. This creates a `window.iFrameSizer` object in the iFrame.
-
-##### window.iFrameSizer.close()
-
-Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.
-
-	if (window.iFrameSizer && window.iFrameSizer.close) {
-		window.iFrameSizer.close();
-	}
-
-##### window.iFrameSizer.trigger ([<span style="font-weight:normal">customHeight<b>,</b> customWidth</span>])
-
-Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.
-
-	if (window.iFrameSizer && window.iFrameSizer.trigger) {
-		window.iFrameSizer.trigger();
-	}
-
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoWindowResize option to prevent auto resizing.
-
-	$('iframe').iFrameSizer({
-		enablePublicMethods: true,
-		autoWindowResize: false
-	});
-
-Then just call trigger method with dimensions:
-
-	if (window.iFrameSizer && window.iFrameSizer.trigger) {
-		window.iFrameSizer.trigger(100); // Set height to 100px
-	}
-
-## Plugin options
+## Options
 
 ### contentWindowBodyMagin
 
@@ -130,6 +96,40 @@ If enabled plugin creates a `window.iFrameResizer` object in the browser. Then w
 Callback function when message is received.
 
 
+## Methods
+
+To enable these methods you must set `enablePublicMethods` to `true`. This creates a `window.iFrameSizer` object in the iFrame.
+
+##### window.iFrameSizer.close()
+
+Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.
+
+	if (window.iFrameSizer && window.iFrameSizer.close) {
+		window.iFrameSizer.close();
+	}
+
+##### window.iFrameSizer.trigger ([<span style="font-weight:normal">customHeight<b>,</b> customWidth</span>])
+
+Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.
+
+	if (window.iFrameSizer && window.iFrameSizer.trigger) {
+		window.iFrameSizer.trigger();
+	}
+
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoWindowResize option to prevent auto resizing.
+
+	$('iframe').iFrameSizer({
+		enablePublicMethods: true,
+		autoWindowResize: false
+	});
+
+Then just call trigger method with dimensions:
+
+	if (window.iFrameSizer && window.iFrameSizer.trigger) {
+		window.iFrameSizer.trigger(100); // Set height to 100px
+	}
+
+
 ## Browser compatibility
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging).
@@ -148,7 +148,7 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 
 ##Version History
-* v1.2.0b Added autoWindowResize option, added height/width values to iframe public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus IntervalTimeout now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), sourceMaps added and close method introduced to public methods in iframe. 
+* v1.2.0b Added autoWindowResize option, added height/width values to iframe public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus IntervalTimer now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to public methods object in iframe. 
 * v1.1.1 Added event type to messageData object.
 * v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
