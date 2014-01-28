@@ -14,7 +14,7 @@ To set the library up for this create a basic iframe tag with the following opti
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-Next we initialise the plugin on the page hosting file for our iframe. This example shows all the default options and the values returned to the callback function.
+Next we initialise the plugin on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.
 
 	$('iframe').iFrameSizer({
 		log: false,
@@ -32,7 +32,7 @@ Next we initialise the plugin on the page hosting file for our iframe. This exam
 		}
 	});
 
-To see this working take a look at the <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.
+To see this working take a look at the [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
 
 ## Options
 
