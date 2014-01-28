@@ -35,9 +35,9 @@
 
 <p>This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
 
-<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/jquery.iframeResizer.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> plugin for the page hosting the iframe. </p>
+<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> plugin for the page hosting the iframe. </p>
 
-<p>The second one (<a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/iframeResizer.contentWindow.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iframe. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
+<p>The second one (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iframe. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
 
 <p>The code supports resizing the iFrame when the browser window changes size or the content of the iFrame changes. For this to work you need to set one of the dimensions to a percentage and tell the plugin only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
 
@@ -48,7 +48,7 @@
 
 <p>Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.</p>
 
-<p>Next we initialise the plugin on the page hosting file for our iframe. This example shows all the default options and the values returned to the callback function.</p>
+<p>Next we initialise the plugin on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
 <pre><code>$('iframe').iFrameSizer({
     log: false,
