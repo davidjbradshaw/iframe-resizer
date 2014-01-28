@@ -1,12 +1,12 @@
 # Cross domain iframe resizer
 
-This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setTimer for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
+This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
 The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first ([jquery.iframeResizer.min.js](https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/jquery.iframeResizer.js)) is a **jQuery** plugin for the page hosting the iframe. 
 
 The second one ([iframeResizer.contentWindow.min.js](https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/iframeResizer.contentWindow.js)) is a **native** JavaScript file that needs placing in the page contained within your iframe. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
 
-The code supports resizing the iframe when the browser window changes size or the content of the iframe changes. For this to work you need to set one of the dimensions to a percentage and tell the plugin only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
+The code supports resizing the iFrame when the browser window changes size or the content of the iframe changes. For this to work you need to set one of the dimensions to a percentage and tell the plugin only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 To set the library up for this create a basic iframe tag with the following options.
 
@@ -146,7 +146,7 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 
 ##Version History
-* v1.2.0b Added autoWindowResize option, added height/width values to iframe public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus IntervalTimer now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to public methods object in iframe. 
+* v1.2.0b Added autoWindowResize option, added height/width values to iframe public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to public methods object in iframe. 
 * v1.1.1 Added event type to messageData object.
 * v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
