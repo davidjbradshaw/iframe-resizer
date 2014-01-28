@@ -33,24 +33,22 @@
         <h1>
 <a name="cross-domain-iframe-resizer" class="anchor" href="#cross-domain-iframe-resizer"><span class="octicon octicon-link"></span></a>Cross domain iframe resizer</h1>
 
-<p>This is a simple library to enable the resizing of cross domain iFrames to fit the contained content.</p>
+<p>This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
 
-<p>This package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/jquery.iframeResizer.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> plugin for the page hosting the iframe. </p>
+<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/jquery.iframeResizer.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> plugin for the page hosting the iframe. </p>
 
-<p>The second one (<a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/iframeResizer.contentWindow.js">iframeResizer.contentWindow.min.js</a>) is <strong>native</strong> JavaScript file that needs placing in the page contained within your iframe. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
+<p>The second one (<a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/js/iframeResizer.contentWindow.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iframe. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
 
-<p>This plugin is built using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">window.postMessage API</a> to pass messages between the host page and the iframe. To see this working take a look at the <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.</p>
+<p>The code supports resizing the iFrame when the browser window changes size or the content of the iFrame changes. For this to work you need to set one of the dimensions to a percentage and tell the plugin only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
 
-<p>The code supports resizing the iframe when the browser window changes size or the content of the iframe changes. For this to work you need to set one of the dimensions to a percentage and tell the plugin only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
-
-<p>To set the plugin up for this create a basic iframe tag with the following options.</p>
+<p>To set the library up for this create a basic iframe tag with the following options.</p>
 
 <pre><code>&lt;iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"&gt;&lt;/iframe&gt;
 </code></pre>
 
 <p>Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.</p>
 
-<p>Next we initialize the plugin on the page hosting file for our iframe. This example shows all the default options and the values returned to the callback function.</p>
+<p>Next we initialise the plugin on the page hosting file for our iframe. This example shows all the default options and the values returned to the callback function.</p>
 
 <pre><code>$('iframe').iFrameSizer({
     log: false,
@@ -58,7 +56,7 @@
     doHeight:true,
     doWidth:false,
     enablePublicMethods:false,
-    interval:0,
+    interval:33,
     autoWindowResize: true,
     callback:function(messageData){
         $('p#callback').html('&lt;b&gt;Frame ID:&lt;/b&gt; ' + messageData.iframe.id + 
@@ -69,50 +67,10 @@
 });
 </code></pre>
 
-<p>The <code>contentWindowBodyMagin</code> setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way we can work this out is to set it, 8px is the default option in firefox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.</p>
-
-<h3>
-<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h3>
-
-<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates a <code>window.iFrameSizer</code> object in the iFrame.</p>
-
-<h5>
-<a name="windowiframesizerclose" class="anchor" href="#windowiframesizerclose"><span class="octicon octicon-link"></span></a>window.iFrameSizer.close()</h5>
-
-<p>Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.</p>
-
-<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.close) {
-    window.iFrameSizer.close();
-}
-</code></pre>
-
-<h5>
-<a name="windowiframesizertrigger-customheight-customwidth" class="anchor" href="#windowiframesizertrigger-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.iFrameSizer.trigger ([customHeight<b>,</b> customWidth])</h5>
-
-<p>Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.</p>
-
-<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
-    window.iFrameSizer.trigger();
-}
-</code></pre>
-
-<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoWindowResize option to prevent auto resizing.</p>
-
-<pre><code>$('iframe').iFrameSizer({
-    enablePublicMethods: true,
-    autoWindowResize: false
-});
-</code></pre>
-
-<p>Then just call trigger method with dimensions:</p>
-
-<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
-    window.iFrameSizer.trigger(100); // Set height to 100px
-}
-</code></pre>
+<p>To see this working take a look at the <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.</p>
 
 <h2>
-<a name="plugin-options" class="anchor" href="#plugin-options"><span class="octicon octicon-link"></span></a>Plugin options</h2>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
 
 <h3>
 <a name="contentwindowbodymagin" class="anchor" href="#contentwindowbodymagin"><span class="octicon octicon-link"></span></a>contentWindowBodyMagin</h3>
@@ -121,7 +79,7 @@
 type: number
 </code></pre>
 
-<p>Setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.</p>
+<p>Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.</p>
 
 <h3>
 <a name="log" class="anchor" href="#log"><span class="octicon octicon-link"></span></a>log</h3>
@@ -188,6 +146,46 @@ type: boolean
 <p>Callback function when message is received.</p>
 
 <h2>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
+
+<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates a <code>window.iFrameSizer</code> object in the iFrame.</p>
+
+<h5>
+<a name="windowiframesizerclose" class="anchor" href="#windowiframesizerclose"><span class="octicon octicon-link"></span></a>window.iFrameSizer.close()</h5>
+
+<p>Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.</p>
+
+<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.close) {
+    window.iFrameSizer.close();
+}
+</code></pre>
+
+<h5>
+<a name="windowiframesizertrigger-customheight-customwidth" class="anchor" href="#windowiframesizertrigger-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.iFrameSizer.trigger ([customHeight<b>,</b> customWidth])</h5>
+
+<p>Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.</p>
+
+<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
+    window.iFrameSizer.trigger();
+}
+</code></pre>
+
+<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoWindowResize option to prevent auto resizing.</p>
+
+<pre><code>$('iframe').iFrameSizer({
+    enablePublicMethods: true,
+    autoWindowResize: false
+});
+</code></pre>
+
+<p>Then just call trigger method with dimensions:</p>
+
+<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
+    window.iFrameSizer.trigger(100); // Set height to 100px
+}
+</code></pre>
+
+<h2>
 <a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
 
 <p>Works with all browsers which support <a href="http://caniuse.com/#feat=x-doc-messaging">window.postMessage</a>.</p>
@@ -250,7 +248,7 @@ type: boolean
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v1.2.0b Added autoWindowResize option, added height/width values to iframe public trigger function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus IntervalTimeout now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a>, sourceMaps added and close method introduced to public methods in iframe. </li>
+<li>v1.2.0b Added autoWindowResize option, added height/width values to iframe public trigger function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to public methods object in iFrame. </li>
 <li>v1.1.1 Added event type to messageData object.</li>
 <li>v1.1.0 Added DOM <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> trigger to better detect content changes in iFrame, <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/7">#7</a> Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.</li>
 <li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
