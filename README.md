@@ -76,7 +76,7 @@ Calculates iframe hosted content width.
 	default: 33  (in ms)
 	type: number
 
-In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the plugin falls back to using setInterval, to check for changes to the page size. Default values is equal to two frame refreshes at 60Hz, setting this to a higher value we make screen redraws noticeable to the user.
+In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the plugin falls back to using setInterval, to check for changes to the page size. Default values is equal to two frame refreshes at 60Hz, setting this to a higher value will make screen redraws noticeable to the user.
 
 Set to zero to disable.
 
