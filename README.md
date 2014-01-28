@@ -8,13 +8,13 @@ The second one ([iframeResizer.contentWindow.min.js](https://github.com/davidjbr
 
 The code supports resizing the iframe when the browser window changes size or the content of the iframe changes. For this to work you need to set one of the dimensions to a percentage and tell the plugin only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
-To set the plugin up for this create a basic iframe tag with the following options.
+To set the library up for this create a basic iframe tag with the following options.
 
 	<iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-Next we initialize the plugin on the page hosting file for our iframe. This example shows all the default options and the values returned to the callback function.
+Next we initialise the plugin on the page hosting file for our iframe. This example shows all the default options and the values returned to the callback function.
 
 	$('iframe').iFrameSizer({
 		log: false,
@@ -32,8 +32,6 @@ Next we initialize the plugin on the page hosting file for our iframe. This exam
 		}
 	});
 
-The `contentWindowBodyMagin` setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in firefox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.
-
 To see this working take a look at the <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.
 
 ## Options
@@ -43,7 +41,7 @@ To see this working take a look at the <a href="http://davidjbradshaw.com/iframe
 	default: 8  (in px)
 	type: number
 
-Setting is used to override the default browser body tag style. As we can not reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.
+Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iframe is at the edge of the iframe.
 
 ### log
 
