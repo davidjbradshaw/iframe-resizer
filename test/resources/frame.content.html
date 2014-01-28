@@ -66,20 +66,27 @@
 								$('p').remove();
 							}
 
+							function callMethod(methodName){
+								if (window.iFrameSizer) 
+										window.iFrameSizer[methodName]();
+									else
+										warn('window.iFrameSizer methods not enabled.')
+							}
+
 							var 
 								data = event.data.substr(msgIdLen).split(':'),
 								test = data[1];
 
 							switch (test){
-								case 'jsTrigger':
-									changeContent();
-									if (window.iFrameSizer) 
-										window.iFrameSizer.trigger();
-									else
-										warn('window.iFrameSizer.trigger() not enabled.')
-									break;
 								case 'changeContent':
 									changeContent();
+									break;
+								case 'close':
+									callMethod('close');
+									break;
+								case 'jsTrigger':
+									changeContent();
+									callMethod('trigger');
 									break;
 							}
 

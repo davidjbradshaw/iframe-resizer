@@ -88,8 +88,10 @@
 					type:   data[3]
 				};
 
-				if ('close' === messageData.type)
+				if ('close' === messageData.type){
+					log('iFrame '+messageData.iframe.id+' removed.');
 					$(messageData.iframe).remove();
+				}
 				else
 					resize();
 			}
