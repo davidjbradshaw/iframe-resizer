@@ -7,9 +7,10 @@
 "resizer",
 "cross-domain",
 "postMessage",
-"scale to content"
+"scale",
+"content"
 ],
-"version": "1.2.4",
+"version": "1.2.5",
 "author": {
 "name": "David J. Bradshaw",
 "email": "davidjbradshaw+github@gmail.com"
