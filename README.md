@@ -55,7 +55,7 @@ Setting the `log` option to true will make the scripts in both the host page and
 	default: true
 	type: boolean
 
-When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable it if using trigger method with custom dimensions.
+When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable it if using size method with custom dimensions.
 
 ### doHeight
 
@@ -121,7 +121,7 @@ This method also accepts two arguments: **customHeight** & **customWidth**. To u
 		autoResize: false
 	});
 
-Then just call trigger method with dimensions:
+Then just call size method with dimensions:
 
 	if (window.parentIFrame && window.parentIFrame.size) {
 		window.parentIFrame.size(100); // Set height to 100px
@@ -141,7 +141,7 @@ This library can be install via the [Bower](http://bower.io) Front-End package m
 ##Version History
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
-* v1.2.0 Added autoResize option, added height/width values to iFrame public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
+* v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
 * v1.1.1 Added event type to messageData object.
 * v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
