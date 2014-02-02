@@ -50,14 +50,14 @@
 
 <p>Next we initialise the library on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
-<pre><code>$('iframe').iFrameSizer({
+<pre><code>$('iframe').iFrameResize({
     log: false,
     contentWindowBodyMargin:8,
     doHeight:true,
     doWidth:false,
     enablePublicMethods:false,
     interval:33,
-    autoWindowResize: true,
+    autoResize: true,
     callback:function(messageData){
         $('p#callback').html('&lt;b&gt;Frame ID:&lt;/b&gt; ' + messageData.iframe.id + 
                             ' &lt;b&gt;Height:&lt;/b&gt; ' + messageData.height + 
@@ -91,13 +91,13 @@ type: boolean
 <p>Setting the <code>log</code> option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.</p>
 
 <h3>
-<a name="autowindowresize" class="anchor" href="#autowindowresize"><span class="octicon octicon-link"></span></a>autoWindowResize</h3>
+<a name="autoresize" class="anchor" href="#autoresize"><span class="octicon octicon-link"></span></a>autoResize</h3>
 
 <pre><code>default: true
 type: boolean
 </code></pre>
 
-<p>When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable it if using trigger method with custom dimensions.</p>
+<p>When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable it if using size method with custom dimensions.</p>
 
 <h3>
 <a name="doheight" class="anchor" href="#doheight"><span class="octicon octicon-link"></span></a>doHeight</h3>
@@ -106,7 +106,7 @@ type: boolean
 type: boolean
 </code></pre>
 
-<p>Calculates iFrame hosted content height.</p>
+<p>Calculate iFrame hosted content height.</p>
 
 <h3>
 <a name="dowidth" class="anchor" href="#dowidth"><span class="octicon octicon-link"></span></a>doWidth</h3>
@@ -115,7 +115,7 @@ type: boolean
 type: boolean
 </code></pre>
 
-<p>Calculates iFrame hosted content width.</p>
+<p>Calculate iFrame hosted content width.</p>
 
 <h3>
 <a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
@@ -135,12 +135,12 @@ type: number
 type: boolean
 </code></pre>
 
-<p>If enabled library creates a <code>window.iFrameResizer</code> object in the browser. Then whenever the content is changed in the iFrame you can call the <code>window.iFrameSizer.trigger()</code> method to have the iFrame resize to the new content.</p>
+<p>If enabled library creates a <code>window.parentIFrame</code> object in the browser. Then whenever the content is changed in the iFrame you can call the <code>window.parentIFrame.size()</code> method to have the iFrame resize to the new content.</p>
 
 <h3>
 <a name="callback" class="anchor" href="#callback"><span class="octicon octicon-link"></span></a>callback</h3>
 
-<pre><code>type: boolean
+<pre><code>type: function
 </code></pre>
 
 <p>Callback function when message is received.</p>
@@ -148,40 +148,40 @@ type: boolean
 <h2>
 <a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
 
-<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates a <code>window.iFrameSizer</code> object in the iFrame.</p>
+<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates a <code>window.parentIFrame</code> object in the iFrame.</p>
 
 <h5>
-<a name="windowiframesizerclose" class="anchor" href="#windowiframesizerclose"><span class="octicon octicon-link"></span></a>window.iFrameSizer.close()</h5>
+<a name="windowparentiframeclose" class="anchor" href="#windowparentiframeclose"><span class="octicon octicon-link"></span></a>window.parentIFrame.close()</h5>
 
 <p>Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.</p>
 
-<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.close) {
-    window.iFrameSizer.close();
+<pre><code>if (window.parentIFrame &amp;&amp; window.parentIFrame.close) {
+    window.parentIFrame.close();
 }
 </code></pre>
 
 <h5>
-<a name="windowiframesizertrigger-customheight-customwidth" class="anchor" href="#windowiframesizertrigger-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.iFrameSizer.trigger ([customHeight<b>,</b> customWidth])</h5>
+<a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight<b>,</b> customWidth])</h5>
 
 <p>Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.</p>
 
-<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
-    window.iFrameSizer.trigger();
+<pre><code>if (window.parentIFrame &amp;&amp; window.parentIFrame.size) {
+    window.parentIFrame.size();
 }
 </code></pre>
 
-<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoWindowResize option to prevent auto resizing.</p>
+<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoResize option to prevent auto resizing.</p>
 
-<pre><code>$('iframe').iFrameSizer({
+<pre><code>$('iframe').iFrameResize({
     enablePublicMethods: true,
-    autoWindowResize: false
+    autoResize: false
 });
 </code></pre>
 
-<p>Then just call trigger method with dimensions:</p>
+<p>Then just call size method with dimensions:</p>
 
-<pre><code>if (window.iFrameSizer &amp;&amp; window.iFrameSizer.trigger) {
-    window.iFrameSizer.trigger(100); // Set height to 100px
+<pre><code>if (window.parentIFrame &amp;&amp; window.parentIFrame.size) {
+    window.parentIFrame.size(100); // Set height to 100px
 }
 </code></pre>
 
@@ -190,65 +190,21 @@ type: boolean
 
 <p>Works with all browsers which support <a href="http://caniuse.com/#feat=x-doc-messaging">window.postMessage</a>.</p>
 
-<h3>
-<a name="tested-browsers" class="anchor" href="#tested-browsers"><span class="octicon octicon-link"></span></a>Tested browsers</h3>
+<h2>
+<a name="bower" class="anchor" href="#bower"><span class="octicon octicon-link"></span></a>Bower</h2>
 
-<table>
-<thead><tr>
-<th>Browser</th>
-<th>Version</th>
-<th>OS platform</th>
-<th>Working</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>IE8</td>
-<td>8.0.7600</td>
-<td>Windows 7</td>
-<td>true</td>
-</tr>
-<tr>
-<td>IE8 (IE7 mode)</td>
-<td>8.0.7600</td>
-<td>Windows 7</td>
-<td>true</td>
-</tr>
-<tr>
-<td>Chrome</td>
-<td>32.0.1700.76</td>
-<td>Windows 7</td>
-<td>true</td>
-</tr>
-<tr>
-<td>Firefox</td>
-<td>7.0</td>
-<td>Windows 7</td>
-<td>true</td>
-</tr>
-<tr>
-<td>Chrome</td>
-<td>33.0.1750.29 beta</td>
-<td>OS X 10.9.1</td>
-<td>true</td>
-</tr>
-<tr>
-<td>Firefox</td>
-<td>26.0</td>
-<td>OS X 10.9.1</td>
-<td>true</td>
-</tr>
-<tr>
-<td>Safari</td>
-<td>7.0.1 (9537.73.11)</td>
-<td>OS X 10.9.1</td>
-<td>true</td>
-</tr>
-</tbody>
-</table><h2>
+<p>This library can be install via the <a href="http://bower.io">Bower</a> Front-End package management system.</p>
+
+<pre><code>bower instal iframe-resizer
+</code></pre>
+
+<h2>
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v1.2.0 Added autoWindowResize option, added height/width values to iFrame public trigger function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to public methods object in iFrame. </li>
+<li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.</li>
+<li>v1.2.5 Fix publish to <a href="https://plugins.jquery.com">plugins.jquery.com</a>.</li>
+<li>v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. </li>
 <li>v1.1.1 Added event type to messageData object.</li>
 <li>v1.1.0 Added DOM <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> trigger to better detect content changes in iFrame, <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/7">#7</a> Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.</li>
 <li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
