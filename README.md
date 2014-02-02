@@ -62,14 +62,14 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 	default: true
 	type: boolean
 
-Calculates iFrame hosted content height.
+Calculate iFrame hosted content height.
 
 ### doWidth
 
 	default: false
 	type: boolean
 
-Calculates iFrame hosted content width.
+Calculate iFrame hosted content width.
 
 ### interval
 
@@ -85,7 +85,7 @@ Set to zero to disable.
 	default: false
 	type: boolean
 
-If enabled library creates a `window.iFrameResizer` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.parentIFrame.size()` method to have the iFrame resize to the new content.
+If enabled library creates a `window.parentIFrame` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.parentIFrame.size()` method to have the iFrame resize to the new content.
 
 ### callback
 
