@@ -20,7 +20,7 @@
 			doWidth                 : false,
 			interval                : 0,
 			enablePublicMethods     : false,
-			autoWindowResize        : true,
+			autoResize        : true,
 			callback                : function(){}
 		};
 
@@ -109,7 +109,7 @@
 	});
 
 
-	$.fn.iFrameSizer = function(options){
+	$.fn.iFrameResize = $.fn.iFrameSizer = function(options){
 
 		settings = $.extend( {}, defaults, options );
 
@@ -146,7 +146,7 @@
 							':' + settings.log +
 							':' + settings.interval +
 							':' + settings.enablePublicMethods +
-							':' + settings.autoWindowResize;
+							':' + settings.autoResize;
 					log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
 					iframe.contentWindow.postMessage( msgId + msg, '*' );
 				}

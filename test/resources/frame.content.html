@@ -66,9 +66,9 @@
 								$('p').remove();
 							}
 
-							function callMethod(methodName){
+							function callMethod(methodName,val1,val2){
 								if (window.iFrameSizer) 
-										window.iFrameSizer[methodName]();
+										window.iFrameSizer[methodName](val1,val2);
 									else
 										warn('window.iFrameSizer methods not enabled.')
 							}
@@ -83,6 +83,16 @@
 									break;
 								case 'close':
 									callMethod('close');
+									break;
+								case 'size':
+									changeContent();
+									callMethod('size');
+									break;
+								case 'size100':
+									callMethod('size',100);
+									break;
+								case 'size200300':
+									callMethod('size',200,300);
 									break;
 								case 'jsTrigger':
 									changeContent();

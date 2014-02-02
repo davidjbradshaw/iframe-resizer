@@ -77,20 +77,25 @@
 
 				myID             = data[0];
 				bodyMargin       = parseInt(data[1],base);
-				doWidth          = strBool(data[2]);
-				logging          = strBool(data[3]);
-				interval         = parseInt(data[4],base);
-				publicMethods    = strBool(data[5]);
-				autoWindowResize = strBool(data[6]);
+				doWidth          = (undefined !== data[2]) ? strBool(data[2])		: false;
+				logging          = (undefined !== data[3]) ? strBool(data[3])		: false;
+				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
+				publicMethods    = (undefined !== data[5]) ? strBool(data[5])		: false;
+				autoResize       = (undefined !== data[6]) ? strBool(data[6])		: true;
 				target           = event.source;
 
 				log('Initialising iframe');
 
 				setMargin();
 				setHeightAuto();
-				if ( autoWindowResize ) {
+log(autoResize);
+				if ( true === autoResize ) {
+					log('Auto Resize enabled');
 					initWindowListener();
 					setupMutationObserver();
+				}
+				else {
+					log('Auto Resize disabled');
 				}
 
 				if (publicMethods){
@@ -100,18 +105,18 @@
 
 			function initInterval(){
 				if ( 0 !== interval ){
-					log('setInterval: '+interval);
+					log('setInterval: '+interval+'ms');
 					setInterval(function(){
 						sendSize('interval','setInterval: '+interval);
 					},interval);
 				}
 			}
 
-			function getOffset(dimension){
-				return parseInt(document.body['offset'+dimension],base);
-			}
-
 			function sendSize(type,calleeMsg, customHeight, customWidth){
+
+				function getOffset(dimension){
+					return parseInt(document.body['offset'+dimension],base);
+				}
 
 				function sendMsg(){
 					var msg = myID + ':' + height + ':' + width  + ':' + type;
@@ -120,9 +125,8 @@
 				}
 
 				var
-					currentHeight = (customHeight !== undefined)  ? customHeight : getOffset('Height') + 2*bodyMargin,
-					currentWidth  = (customWidth  !== undefined)  ? customWidth  : getOffset('Width')  + 2*bodyMargin,
-					msg;
+					currentHeight = (undefined !== customHeight)  ? customHeight : getOffset('Height') + 2*bodyMargin,
+					currentWidth  = (undefined !== customWidth )  ? customWidth  : getOffset('Width')  + 2*bodyMargin;
 
 				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
 					height = currentHeight;
@@ -136,12 +140,15 @@
 			function setupPublicMethods(){
 				log( 'Enabling public methods' );
 
-				window.iFrameSizer = {
-					trigger: function(customHeight, customWidth){
-						sendSize('jsTrigger','window.iFrameSizer.trigger()', customHeight, customWidth);
+				window.parentIFrame = window.iFrameSizer = { //iFrameSizer deprecated name
+					trigger: function(customHeight, customWidth){ //deprecated method name
+						window.parentIFrame.size(customHeight, customWidth);
+					},
+					size: function(customHeight, customWidth){
+						sendSize('size','window.parentIFrame.size()', customHeight, customWidth);
 					},
 					close: function(){
-						sendSize('close','window.iFrameSizer.close()', 0, 0);
+						sendSize('close','window.parentIFrame.close()', 0, 0);
 					}
 				};
 			}

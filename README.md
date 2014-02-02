@@ -16,14 +16,14 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 
 Next we initialise the library on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.
 
-	$('iframe').iFrameSizer({
+	$('iframe').iFrameResize({
 		log: false,
 		contentWindowBodyMargin:8,
 		doHeight:true,
 		doWidth:false,
 		enablePublicMethods:false,
 		interval:33,
-		autoWindowResize: true,
+		autoResize: true,
 		callback:function(messageData){
 			$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
 								' <b>Height:</b> ' + messageData.height + 
@@ -50,7 +50,7 @@ Setting is used to override the default browser body tag style. As we cannot rel
 
 Setting the `log` option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.
 
-### autoWindowResize
+### autoResize
 
 	default: true
 	type: boolean
@@ -85,46 +85,46 @@ Set to zero to disable.
 	default: false
 	type: boolean
 
-If enabled library creates a `window.iFrameResizer` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.iFrameSizer.trigger()` method to have the iFrame resize to the new content.
+If enabled library creates a `window.iFrameResizer` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.parentIFrame.size()` method to have the iFrame resize to the new content.
 
 ### callback
 
-	type: boolean
+	type: function
 	
 Callback function when message is received.
 
 
 ## Methods
 
-To enable these methods you must set `enablePublicMethods` to `true`. This creates a `window.iFrameSizer` object in the iFrame.
+To enable these methods you must set `enablePublicMethods` to `true`. This creates a `window.parentIFrame` object in the iFrame.
 
-##### window.iFrameSizer.close()
+##### window.parentIFrame.close()
 
 Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.
 
-	if (window.iFrameSizer && window.iFrameSizer.close) {
-		window.iFrameSizer.close();
+	if (window.parentIFrame && window.parentIFrame.close) {
+		window.parentIFrame.close();
 	}
 
-##### window.iFrameSizer.trigger ([<span style="font-weight:normal">customHeight<b>,</b> customWidth</span>])
+##### window.parentIFrame.size ([<span style="font-weight:normal">customHeight<b>,</b> customWidth</span>])
 
 Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.
 
-	if (window.iFrameSizer && window.iFrameSizer.trigger) {
-		window.iFrameSizer.trigger();
+	if (window.parentIFrame && window.parentIFrame.size) {
+		window.parentIFrame.size();
 	}
 
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoWindowResize option to prevent auto resizing.
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing.
 
-	$('iframe').iFrameSizer({
+	$('iframe').iFrameResize({
 		enablePublicMethods: true,
-		autoWindowResize: false
+		autoResize: false
 	});
 
 Then just call trigger method with dimensions:
 
-	if (window.iFrameSizer && window.iFrameSizer.trigger) {
-		window.iFrameSizer.trigger(100); // Set height to 100px
+	if (window.parentIFrame && window.parentIFrame.size) {
+		window.parentIFrame.size(100); // Set height to 100px
 	}
 
 
@@ -132,22 +132,16 @@ Then just call trigger method with dimensions:
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging).
 
-### Tested browsers
+## Bower
 
-| Browser          | Version             | OS platform    | Working|
-|------------------|---------------------|----------------|--------|
-| IE8              | 8.0.7600            | Windows 7      | true   |
-| IE8 (IE7 mode)   | 8.0.7600            | Windows 7      | true   |
-| Chrome           | 32.0.1700.76        | Windows 7      | true   |
-| Firefox          | 7.0                 | Windows 7      | true   |
-| Chrome           | 33.0.1750.29 beta   | OS X 10.9.1    | true   |
-| Firefox          | 26.0                | OS X 10.9.1    | true   |
-| Safari           | 7.0.1 (9537.73.11)  | OS X 10.9.1    | true   |
+This library can be install via the [Bower](http://bower.io) Front-End package management system.
 
+    bower instal iframe-resizer
 
 ##Version History
+* v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
-* v1.2.0 Added autoWindowResize option, added height/width values to iFrame public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to public methods object in iFrame. 
+* v1.2.0 Added autoResize option, added height/width values to iFrame public trigger function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
 * v1.1.1 Added event type to messageData object.
 * v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.

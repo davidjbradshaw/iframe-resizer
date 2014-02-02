@@ -28,7 +28,7 @@
 				doWidth                : false, // Calculates dynamic width
 				interval               : 32,    // interval in ms to recalculate body height, 0 to disable refreshing
 				enablePublicMethods    : true,  // Enable methods within iframe hosted page 
-				autoWindowResize       : true,  // Trigering resize on window.change event
+				autoResize             : true,  // Trigering resize on events in iFrame
 				callback               : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> ' + messageData.iframe.id +
