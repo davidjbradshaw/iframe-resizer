@@ -94,6 +94,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['jshint','uglify','replace','qunit']);
-  grunt.registerTask('notest', ['jshint','uglify','replace']);
+  grunt.registerTask('notest',  ['jshint','uglify','replace']);
+  grunt.registerTask('test',    ['jshint','qunit']);
 
 };
