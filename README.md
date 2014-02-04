@@ -14,7 +14,7 @@ To set the library up for this create a basic iFrame tag with the following opti
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-Next we initialise the library on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.
+Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
 	$('iframe').iFrameResize({
 		log: false,
@@ -69,7 +69,7 @@ Calculate iFrame hosted content height.
 	default: false
 	type: boolean
 
-Calculate iFrame hosted content width.
+Calculate iFrame hosted content width. Enable this if using size method to set a custom width.
 
 ### interval
 
@@ -85,7 +85,7 @@ Set to zero to disable.
 	default: false
 	type: boolean
 
-If enabled library creates a `window.parentIFrame` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.parentIFrame.size()` method to have the iFrame resize to the new content.
+If enabled library creates a `window.parentIFrame` object in the browser, with `size()` and `close()` methods.
 
 ### callback
 
@@ -114,11 +114,12 @@ Manually force iFrame to resize. Incase the page is loaded out side the iFrame, 
 		window.parentIFrame.size();
 	}
 
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing.
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.
 
 	$('iframe').iFrameResize({
+		autoResize: false,
 		enablePublicMethods: true,
-		autoResize: false
+		doWidth: true
 	});
 
 Then just call size method with dimensions:
@@ -130,7 +131,7 @@ Then just call size method with dimensions:
 
 ## Browser compatibility
 
-Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging).
+Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
 
 ## Bower
 
@@ -139,6 +140,7 @@ This library can be install via the [Bower](http://bower.io) Front-End package m
     bower instal iframe-resizer
 
 ##Version History
+* v1.3.2 Minor documentation improvements.
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
 * v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
