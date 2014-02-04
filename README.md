@@ -151,5 +151,5 @@ This library can be install via the [Bower](http://bower.io) front-end package m
 * v1.0.0 Initial published release.
 
 ## License
-Copyright (c) 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
 Licensed under the MIT license.
