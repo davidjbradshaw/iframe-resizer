@@ -1,45 +1,44 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
+  // show elapsed time at the end
+  require('time-grunt')(grunt);
 
-    // show elapsed time at the end
-    require('time-grunt')(grunt);
+  // load all grunt tasks
+  require('load-grunt-tasks')(grunt);
 
-
-    // load all grunt tasks
-    require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+
     meta: {
-      version: '1.3.1',
-      bannerHost: '/*! iFrame Resizer (jquery.iframeSizer.min.js ) - v<%= meta.version %> - ' +
+      bannerLocal: '/*! iFrame Resizer (jquery.iframeSizer.min.js ) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Force cross domain iframes to size to content.\n' +
         ' *  Requires: iframeSizer.contentWindow.min.js to be loaded into the target frame.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
-        ' *  License: MIT and GPL\n */\n',
-      bannerIframe: '/*! iFrame Resizer (iframeSizer.contentWindow.min.js) - v<%= meta.version %> - ' +
+        ' *  License: MIT\n */\n',
+      bannerRemote: '/*! iFrame Resizer (iframeSizer.contentWindow.min.js) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Include this file in any page being loaded into an iframe\n' +
         ' *        to force the iframe to resize to the content size.\n' +
         ' *  Requires: jquery.iframeSizer.min.js on host page.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
-        ' *  License: MIT and GPL\n */\n'
+        ' *  License: MIT\n */\n'
     },
-    lint: {
-      files: ['src/*.js']
-    },
+
     qunit: {
       files: ['test/*.html']
     },
+
     jshint: {
       options: {
-      },
-      globals: {
-        jQuery:false,
-        require:true,
-        process:true
+          globals: {
+          jQuery:false,
+          require:true,
+          process:true
+        },
       },
       gruntfile: {
         src: 'Gruntfile.js'
@@ -48,6 +47,7 @@ module.exports = function(grunt) {
         src: 'src/**'
       },
     },
+
     uglify: {
       options: {
         sourceMaps:true,
@@ -55,24 +55,28 @@ module.exports = function(grunt) {
         report:'gzip',
       },
       local: {
-        src: ['<banner:meta.bannerHost>','src/jquery.iframeResizer.js'],
-        dest: 'js/jquery.iframeResizer.min.js',
-        options: {
+        options:{
+          banner:'<%= meta.bannerLocal %>',
           sourceMap: 'src/jquery.iframeResizer.map'
         },
+        src: ['src/jquery.iframeResizer.js'],
+        dest: 'js/jquery.iframeResizer.min.js',
       },
       remote: {
-        src: ['<banner:meta.bannerIframe>','src/iframeResizer.contentWindow.js'],
-        dest: 'js/iframeResizer.contentWindow.min.js',
         options: {
+          banner:'<%= meta.bannerRemote %>',
           sourceMap: 'src/iframeResizer.contentWindow.map'
         },
+        src: ['src/iframeResizer.contentWindow.js'],
+        dest: 'js/iframeResizer.contentWindow.min.js',
       }
     },
+
     watch: {
       files: ['src/**/*'],
       tasks: 'sefault'
     },
+
     replace: {
       min: {
         src: ['js/*.min.js'],
@@ -82,6 +86,7 @@ module.exports = function(grunt) {
           to: 'sourceMappingURL=..\/src\/'
         }]
       },
+
       map: {
         src: ['src/*.map'],
         overwrite: true,                 // overwrite matched source files
@@ -91,13 +96,14 @@ module.exports = function(grunt) {
         }]
       }
     },
+
     bump: {
       options: {
         files: ['package.json','bower.json','iframeResizer.jquery.json'],
-        updateConfigs: [],
+        updateConfigs: ['pkg'],
         commit: true,
         commitMessage: 'Release v%VERSION%',
-        commitFiles: ['package.json','bower.json','iframeResizer.jquery.json'], // '-a' for all files
+        commitFiles: ['-a'], // '-a' for all files
         createTag: true,
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
@@ -108,8 +114,13 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['jshint','uglify','replace','qunit']);
+  grunt.registerTask('default', ['notest','qunit']);
   grunt.registerTask('notest',  ['jshint','uglify','replace']);
   grunt.registerTask('test',    ['jshint','qunit']);
+
+  grunt.registerTask('postBump',['uglify','replace']);
+  grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);
+  grunt.registerTask('minor',   ['default','bump-only:minor','postBump']);
+  grunt.registerTask('major',   ['default','bump-only:major','postBump']);
 
 };
