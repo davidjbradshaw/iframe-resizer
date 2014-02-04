@@ -35,7 +35,7 @@
 
 <p>This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
 
-<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> library for the page hosting the iFrame. </p>
+<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> plugin for the page hosting the iFrame. </p>
 
 <p>The second one (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
 
@@ -48,7 +48,7 @@
 
 <p>Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.</p>
 
-<p>Next we initialise the library on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.</p>
+<p>Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
 <pre><code>$('iframe').iFrameResize({
     log: false,
@@ -115,7 +115,7 @@ type: boolean
 type: boolean
 </code></pre>
 
-<p>Calculate iFrame hosted content width.</p>
+<p>Calculate iFrame hosted content width. Enable this if using size method to set a custom width.</p>
 
 <h3>
 <a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
@@ -135,7 +135,7 @@ type: number
 type: boolean
 </code></pre>
 
-<p>If enabled library creates a <code>window.parentIFrame</code> object in the browser. Then whenever the content is changed in the iFrame you can call the <code>window.parentIFrame.size()</code> method to have the iFrame resize to the new content.</p>
+<p>If enabled library creates a <code>window.parentIFrame</code> object in the browser, with <code>size()</code> and <code>close()</code> methods.</p>
 
 <h3>
 <a name="callback" class="anchor" href="#callback"><span class="octicon octicon-link"></span></a>callback</h3>
@@ -170,11 +170,12 @@ type: boolean
 }
 </code></pre>
 
-<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoResize option to prevent auto resizing.</p>
+<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.</p>
 
 <pre><code>$('iframe').iFrameResize({
+    autoResize: false,
     enablePublicMethods: true,
-    autoResize: false
+    doWidth: true
 });
 </code></pre>
 
@@ -188,12 +189,12 @@ type: boolean
 <h2>
 <a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
 
-<p>Works with all browsers which support <a href="http://caniuse.com/#feat=x-doc-messaging">window.postMessage</a>.</p>
+<p>Works with all browsers which support <a href="http://caniuse.com/#feat=x-doc-messaging">window.postMessage</a> (IE8+).</p>
 
 <h2>
 <a name="bower" class="anchor" href="#bower"><span class="octicon octicon-link"></span></a>Bower</h2>
 
-<p>This library can be install via the <a href="http://bower.io">Bower</a> Front-End package management system.</p>
+<p>This library can be install via the <a href="http://bower.io">Bower</a> front-end package management system.</p>
 
 <pre><code>bower instal iframe-resizer
 </code></pre>
@@ -202,7 +203,8 @@ type: boolean
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.</li>
+<li>v1.3.5 Documentation improvements. Added Grunt-Bump to build script.</li>
+<li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.</li>
 <li>v1.2.5 Fix publish to <a href="https://plugins.jquery.com">plugins.jquery.com</a>.</li>
 <li>v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. </li>
 <li>v1.1.1 Added event type to messageData object.</li>
