@@ -2,7 +2,7 @@
 
 This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
-The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first ([jquery.iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js)) is a **jQuery** library for the page hosting the iFrame. 
+The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first ([jquery.iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js)) is a **jQuery** plugin for the page hosting the iFrame. 
 
 The second one ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
 
@@ -140,8 +140,8 @@ This library can be install via the [Bower](http://bower.io) front-end package m
     bower instal iframe-resizer
 
 ##Version History
-* v1.3.2 Documentation improvements.
-* v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.
+* v1.3.2 Documentation improvements. Added Grunt-Bump to build script.
+* v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
 * v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
 * v1.1.1 Added event type to messageData object.
