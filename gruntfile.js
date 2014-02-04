@@ -12,7 +12,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     meta: {
-      version: '1.0.0',
+      version: '1.3.1',
       bannerHost: '/*! iFrame Resizer (jquery.iframeSizer.min.js ) - v<%= meta.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Force cross domain iframes to size to content.\n' +
@@ -77,7 +77,7 @@ module.exports = function(grunt) {
       min: {
         src: ['js/*.min.js'],
         overwrite: true,                 // overwrite matched source files
-        replacements: [{ 
+        replacements: [{
           from: /sourceMappingURL=src\//g,
           to: 'sourceMappingURL=..\/src\/'
         }]
@@ -85,10 +85,25 @@ module.exports = function(grunt) {
       map: {
         src: ['src/*.map'],
         overwrite: true,                 // overwrite matched source files
-        replacements: [{ 
+        replacements: [{
           from: /src\//g,
           to: ''
         }]
+      }
+    },
+    bump: {
+      options: {
+        files: ['package.json','bower.json','iframeResizer.jquery.json'],
+        updateConfigs: [],
+        commit: true,
+        commitMessage: 'Release v%VERSION%',
+        commitFiles: ['package.json','bower.json','iframeResizer.jquery.json'], // '-a' for all files
+        createTag: true,
+        tagName: 'v%VERSION%',
+        tagMessage: 'Version %VERSION%',
+        push: true,
+        pushTo: 'upstream',
+        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
       }
     }
   });
