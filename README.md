@@ -135,12 +135,12 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 ## Bower
 
-This library can be install via the [Bower](http://bower.io) Front-End package management system.
+This library can be install via the [Bower](http://bower.io) front-end package management system.
 
     bower instal iframe-resizer
 
 ##Version History
-* v1.3.2 Minor documentation improvements.
+* v1.3.2 Documentation improvements.
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
 * v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
