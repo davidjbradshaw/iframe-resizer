@@ -118,7 +118,7 @@ module.exports = function(grunt) {
   grunt.registerTask('notest',  ['jshint','uglify','replace']);
   grunt.registerTask('test',    ['jshint','qunit']);
 
-  grunt.registerTask('postBump',['uglify','replace']);
+  grunt.registerTask('postBump',['uglify','replace','bump-commit']);
   grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);
   grunt.registerTask('minor',   ['default','bump-only:minor','postBump']);
   grunt.registerTask('major',   ['default','bump-only:major','postBump']);
