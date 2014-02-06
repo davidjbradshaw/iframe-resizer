@@ -111,14 +111,37 @@ module.exports = function(grunt) {
         pushTo: 'origin',
         gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
       }
+    },
+
+    shell: {
+      options:{
+        stdout: true,
+        stderr: true,
+        failOnError: true
+      },
+      deployExample: {
+        command: function(){
+
+          var
+            retStr = '',
+            fs = require('fs');
+
+          if (fs.existsSync('bin')) {
+              retStr = 'bin/deploy.sh';
+          }
+
+          return retStr;
+        }
+      }
     }
+
   });
 
   grunt.registerTask('default', ['notest','qunit']);
   grunt.registerTask('notest',  ['jshint','uglify','replace']);
   grunt.registerTask('test',    ['jshint','qunit']);
 
-  grunt.registerTask('postBump',['uglify','replace','bump-commit']);
+  grunt.registerTask('postBump',['uglify','replace','bump-commit','shell']);
   grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);
   grunt.registerTask('minor',   ['default','bump-only:minor','postBump']);
   grunt.registerTask('major',   ['default','bump-only:major','postBump']);
