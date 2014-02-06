@@ -27,10 +27,9 @@
       var callbackCounter = 0;
 
       $('iframe').iFrameSizer({
-        log:false,
+        log:true,
         doWidth:true,
         enablePublicMethods:true,
-        autoResize:false,
         callback:function(messageData){
           var msgType = 'size';
 
@@ -44,10 +43,14 @@
               break;
             case '3':
               ok( msgType === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected '+msgType);
+              ok( '100' === messageData.height, 'Height received = 100');
+              //ok( 100 === $('iframe').height(), 'IFrame height = 100'); Works in phaatomJS, but not chrome!
               document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'size200300', '*' );
               break;
             case '4':
               ok( msgType === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected '+msgType);
+              ok( '200' === messageData.height, 'Height received = 200');
+              ok( '300' === messageData.width, 'Width received = 300');
               start();
           }
         }

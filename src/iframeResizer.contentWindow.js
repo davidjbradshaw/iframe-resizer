@@ -18,8 +18,9 @@
 		base	= 10,
 		logging = false,
 		msgID	= '[iFrameSizer]',  //Must match host page msg ID
-		firstRun = true,
-		msgIdLen= msgID.length;
+		firstRun= true,
+		msgIdLen= msgID.length,
+		lastTrigger = '';
 
 	try{
 
@@ -88,7 +89,7 @@
 
 				setMargin();
 				setHeightAuto();
-log(autoResize);
+
 				if ( true === autoResize ) {
 					log('Auto Resize enabled');
 					initWindowListener();
@@ -128,11 +129,15 @@ log(autoResize);
 					currentHeight = (undefined !== customHeight)  ? customHeight : getOffset('Height') + 2*bodyMargin,
 					currentWidth  = (undefined !== customWidth )  ? customWidth  : getOffset('Width')  + 2*bodyMargin;
 
-				if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
+				if ('size' === lastTrigger && 'resize' === type){
+					log( 'Trigger event (' + calleeMsg + ') cancelled');
+					setTimeout(function(){lastTrigger = type;},50);
+				}
+				else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
 					height = currentHeight;
 					width = currentWidth;
 					log( 'Trigger event: ' + calleeMsg );
-
+					lastTrigger = type;
 					sendMsg();
 				}
 			}
@@ -145,7 +150,8 @@ log(autoResize);
 						window.parentIFrame.size(customHeight, customWidth);
 					},
 					size: function(customHeight, customWidth){
-						sendSize('size','window.parentIFrame.size()', customHeight, customWidth);
+						var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
+						sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
 					},
 					close: function(){
 						sendSize('close','window.parentIFrame.close()', 0, 0);
@@ -160,11 +166,11 @@ log(autoResize);
 						target = document.querySelector('body'),
 
 						config = {
-							childList: true, 
-							attributes: true, 
-							characterData: true, 
-							subtree: true, 
-							attributeOldValue: false, 
+							childList: true,
+							attributes: true,
+							characterData: true,
+							subtree: true,
+							attributeOldValue: false,
 							characterDataOldValue: false
 						},
 
