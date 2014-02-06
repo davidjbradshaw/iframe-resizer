@@ -80,7 +80,7 @@ module.exports = function(grunt) {
     replace: {
       min: {
         src: ['js/*.min.js'],
-        overwrite: true,                 // overwrite matched source files
+        overwrite: true,
         replacements: [{
           from: /sourceMappingURL=src\//g,
           to: 'sourceMappingURL=..\/src\/'
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
 
       map: {
         src: ['src/*.map'],
-        overwrite: true,                 // overwrite matched source files
+        overwrite: true,
         replacements: [{
           from: /src\//g,
           to: ''
@@ -103,7 +103,7 @@ module.exports = function(grunt) {
         updateConfigs: ['pkg'],
         commit: true,
         commitMessage: 'Release v%VERSION%',
-        commitFiles: ['.'], // '-a' for all files
+        commitFiles: ['-a'], // '-a' for all files
         createTag: true,
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
