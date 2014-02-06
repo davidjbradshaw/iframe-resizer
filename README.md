@@ -140,7 +140,7 @@ This library can be install via the [Bower](http://bower.io) front-end package m
     bower instal iframe-resizer
 
 ##Version History
-* v1.3.7 Stop reszie event firing for 50ms after size event.
+* v1.3.7 Stop reszie event firing for 50ms after size event. Added size(250) to example.
 * v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
 * v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.
