@@ -2,7 +2,7 @@
 
 This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
-The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first ([jquery.iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js)) is a **jQuery** library for the page hosting the iFrame. 
+The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first ([jquery.iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js)) is a **jQuery** plugin for the page hosting the iFrame. 
 
 The second one ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
 
@@ -14,7 +14,7 @@ To set the library up for this create a basic iFrame tag with the following opti
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-Next we initialise the library on the page hosting file for our iFrame. This example shows all the default options and the values returned to the callback function.
+Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
 	$('iframe').iFrameResize({
 		log: false,
@@ -37,13 +37,6 @@ To see this working take a look at the [example](http://davidjbradshaw.com/ifram
 
 ## Options
 
-### contentWindowBodyMagin
-
-	default: 8  (in px)
-	type: number
-
-Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
-
 ### log
 
 	default: false
@@ -58,6 +51,13 @@ Setting the `log` option to true will make the scripts in both the host page and
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable it if using size method with custom dimensions.
 
+### contentWindowBodyMagin
+
+	default: 8  (in px)
+	type: number
+
+Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
+
 ### doHeight
 
 	default: true
@@ -70,7 +70,14 @@ Calculate iFrame hosted content height.
 	default: false
 	type: boolean
 
-Calculate iFrame hosted content width.
+Calculate iFrame hosted content width. Enable this if using size method to set a custom width.
+
+### enablePublicMethods  
+
+	default: false
+	type: boolean
+
+If enabled library creates a `window.parentIFrame` object in the browser, with `size()` and `close()` methods.
 
 ### interval
 
@@ -80,13 +87,6 @@ Calculate iFrame hosted content width.
 In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the library falls back to using setInterval, to check for changes to the page size. Default values is equal to two frame refreshes at 60Hz, setting this to a higher value will make screen redraws noticeable to the user.
 
 Set to zero to disable.
-
-### enablePublicMethods  
-
-	default: false
-	type: boolean
-
-Create a `window.parentIFrame` object in the browser. When enabled the public parentIFrame object is attached to the window object to allow acces to the `size` and `close` methods.
 
 ### srolling
 
@@ -122,11 +122,12 @@ Manually force iFrame to resize. Incase the page is loaded out side the iFrame, 
 		window.parentIFrame.size();
 	}
 
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing.
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.
 
 	$('iframe').iFrameResize({
+		autoResize: false,
 		enablePublicMethods: true,
-		autoResize: false
+		doWidth: true
 	});
 
 Then just call size method with dimensions:
@@ -138,16 +139,20 @@ Then just call size method with dimensions:
 
 ## Browser compatibility
 
-Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging).
+Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
 
 ## Bower
 
-This library can be install via the [Bower](http://bower.io) Front-End package management system.
+This library can be install via the [Bower](http://bower.io) front-end package management system.
 
     bower instal iframe-resizer
 
 ##Version History
-* v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have deprecated and removed from docs, but remain in code for backwards compatabilty.
+* v1.4.0 Option to enable scrolling in iFrame, off by default.
+* v1.3.7 Stop reszie event firing for 50ms after size event. Added size(250) to example.
+* v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
+* v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
+* v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
 * v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
 * v1.1.1 Added event type to messageData object.
@@ -157,5 +162,5 @@ This library can be install via the [Bower](http://bower.io) Front-End package m
 * v1.0.0 Initial published release.
 
 ## License
-Copyright (c) 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
 Licensed under the MIT license.
