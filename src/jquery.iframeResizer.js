@@ -14,13 +14,14 @@
 		count              = 0,
 		settings           = {},
 		defaults           = {
-			log                     : false,
+			autoResize              : true,
 			contentWindowBodyMargin : 8,
 			doHeight                : true,
 			doWidth                 : false,
-			interval                : 0,
 			enablePublicMethods     : false,
-			autoResize        : true,
+			interval                : 0,
+			log                     : false,
+			scrolling				: false,
 			callback                : function(){}
 		};
 
@@ -121,8 +122,10 @@
 			//We have to call trigger twice, as we can not be sure if all 
 			//iframes have completed loading when this code runs.
 			function init(){
-				iframe.style.overflow = 'hidden';
-				iframe.scrolling = 'no';
+				if (settings.scrolling)
+					log('Scrolling iFrame enabled');
+				iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
+				iframe.scrolling = false === settings.scrolling ? 'no' : 'yes';
 
 				$(iframe).bind('load',function(){
 					trigger('iFrame.onload');

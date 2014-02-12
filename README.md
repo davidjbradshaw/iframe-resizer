@@ -18,12 +18,13 @@ Next we initialise the library on the page hosting file for our iFrame. This exa
 
 	$('iframe').iFrameResize({
 		log: false,
+		autoResize: true,
 		contentWindowBodyMargin:8,
 		doHeight:true,
 		doWidth:false,
 		enablePublicMethods:false,
 		interval:33,
-		autoResize: true,
+		scrolling:false,
 		callback:function(messageData){
 			$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
 								' <b>Height:</b> ' + messageData.height + 
@@ -85,7 +86,14 @@ Set to zero to disable.
 	default: false
 	type: boolean
 
-If enabled library creates a `window.parentIFrame` object in the browser. Then whenever the content is changed in the iFrame you can call the `window.parentIFrame.size()` method to have the iFrame resize to the new content.
+Create a `window.parentIFrame` object in the browser. When enabled the public parentIFrame object is attached to the window object to allow acces to the `size` and `close` methods.
+
+### srolling
+
+     default: false
+     type: boolean
+
+Enable scroll bars in iFrame.
 
 ### callback
 
