@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QUnit LoadHide</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+
+    <div style="width:600px;">
+      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+    </div>
+
+  </div>
+  <script src="resources/qunit.js"></script>
+  <script src="resources/jquery.js"></script>
+  <script src="../js/jquery.iframeResizer.min.js"></script>
+  <script>
+  
+    'use strict';
+    var msgId = '[iFrameSizerTest]:';
+
+    asyncTest( "scrolling not set", function() {
+      $('iframe').iFrameResize({
+        log:false,
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'' );
+          ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'' );
+          start();
+        }
+      });
+    });
+
+    asyncTest( "scrolling = false", function() {
+      $('iframe').iFrameResize({
+        log:false,
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'' );
+          ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'' );
+          start();
+        }
+      });
+    });
+
+    asyncTest( "scrolling = true", function() {
+      $('iframe').iFrameResize({
+        log:false,
+        scrolling:true,
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( 'show' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'show\'' );
+          ok( 'yes' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'yes\'' );
+          start();
+        }
+      });
+    });
+    
+  </script>
+</body>
+</html>
