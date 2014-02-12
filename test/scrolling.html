@@ -27,8 +27,8 @@
         log:false,
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
-          ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'' );
-          ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'' );
+          ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.' );
+          ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'.' );
           start();
         }
       });
@@ -39,8 +39,8 @@
         log:false,
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
-          ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'' );
-          ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'' );
+          ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.' );
+          ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'.' );
           start();
         }
       });
@@ -52,8 +52,8 @@
         scrolling:true,
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
-          ok( 'show' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'show\'' );
-          ok( 'yes' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'yes\'' );
+          ok( 'auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.' );
+          ok( 'yes' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'yes\'.' );
           start();
         }
       });
