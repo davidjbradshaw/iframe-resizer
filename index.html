@@ -52,12 +52,13 @@
 
 <pre><code>$('iframe').iFrameResize({
     log: false,
+    autoResize: true,
     contentWindowBodyMargin:8,
     doHeight:true,
     doWidth:false,
     enablePublicMethods:false,
     interval:33,
-    autoResize: true,
+    scrolling:false,
     callback:function(messageData){
         $('p#callback').html('&lt;b&gt;Frame ID:&lt;/b&gt; ' + messageData.iframe.id + 
                             ' &lt;b&gt;Height:&lt;/b&gt; ' + messageData.height + 
@@ -71,15 +72,6 @@
 
 <h2>
 <a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
-
-<h3>
-<a name="contentwindowbodymagin" class="anchor" href="#contentwindowbodymagin"><span class="octicon octicon-link"></span></a>contentWindowBodyMagin</h3>
-
-<pre><code>default: 8  (in px)
-type: number
-</code></pre>
-
-<p>Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.</p>
 
 <h3>
 <a name="log" class="anchor" href="#log"><span class="octicon octicon-link"></span></a>log</h3>
@@ -100,6 +92,15 @@ type: boolean
 <p>When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable it if using size method with custom dimensions.</p>
 
 <h3>
+<a name="contentwindowbodymagin" class="anchor" href="#contentwindowbodymagin"><span class="octicon octicon-link"></span></a>contentWindowBodyMagin</h3>
+
+<pre><code>default: 8  (in px)
+type: number
+</code></pre>
+
+<p>Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way we can work this out is to set it, 8px is the default option in FireFox. However, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.</p>
+
+<h3>
 <a name="doheight" class="anchor" href="#doheight"><span class="octicon octicon-link"></span></a>doHeight</h3>
 
 <pre><code>default: true
@@ -118,6 +119,15 @@ type: boolean
 <p>Calculate iFrame hosted content width. Enable this if using size method to set a custom width.</p>
 
 <h3>
+<a name="enablepublicmethods" class="anchor" href="#enablepublicmethods"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
+
+<pre><code>default: false
+type: boolean
+</code></pre>
+
+<p>If enabled library creates a <code>window.parentIFrame</code> object in the browser, with <code>size()</code> and <code>close()</code> methods.</p>
+
+<h3>
 <a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
 
 <pre><code>default: 33  (in ms)
@@ -129,13 +139,13 @@ type: number
 <p>Set to zero to disable.</p>
 
 <h3>
-<a name="enablepublicmethods" class="anchor" href="#enablepublicmethods"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
+<a name="srolling" class="anchor" href="#srolling"><span class="octicon octicon-link"></span></a>srolling</h3>
 
-<pre><code>default: false
-type: boolean
+<pre><code> default: false
+ type: boolean
 </code></pre>
 
-<p>If enabled library creates a <code>window.parentIFrame</code> object in the browser, with <code>size()</code> and <code>close()</code> methods.</p>
+<p>Enable scroll bars in iFrame.</p>
 
 <h3>
 <a name="callback" class="anchor" href="#callback"><span class="octicon octicon-link"></span></a>callback</h3>
@@ -203,6 +213,9 @@ type: boolean
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v1.4.0 Option to enable scrolling in iFrame, off by default.</li>
+<li>v1.3.7 Stop resize event firing for 50ms after size event. Added size(250) to example.</li>
+<li>v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.</li>
 <li>v1.3.5 Documentation improvements. Added Grunt-Bump to build script.</li>
 <li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.</li>
 <li>v1.2.5 Fix publish to <a href="https://plugins.jquery.com">plugins.jquery.com</a>.</li>
@@ -215,7 +228,7 @@ type: boolean
 </ul><h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>Copyright (c) 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>
+<p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>
 Licensed under the MIT license.</p>
       </section>
       <footer>
