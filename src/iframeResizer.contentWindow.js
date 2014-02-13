@@ -11,15 +11,15 @@
 (function() {
 
 	var
-		myID	= '',
-		target	= null,
-		height	= 1,
-		width	= 1,
-		base	= 10,
-		logging = false,
-		msgID	= '[iFrameSizer]',  //Must match host page msg ID
-		firstRun= true,
-		msgIdLen= msgID.length,
+		myID        = '',
+		target      = null,
+		height      = 1,
+		width       = 1,
+		base        = 10,
+		logging     = false,
+		msgID       = '[iFrameSizer]',  //Must match host page msg ID
+		firstRun    = true,
+		msgIdLen    = msgID.length,
 		lastTrigger = '';
 
 	try{
@@ -43,7 +43,7 @@
 		}
 
 		function warn(msg){
-			if (window.console){
+			if (window.console && (-1 === navigator.userAgent.indexOf('PhantomJS'))){
 				console.warn(formatLogMsg(msg));
 			}
 		}
@@ -51,22 +51,34 @@
 		function receiver(event) {
 			function init(){
 
-				function strBool(str){
-					return 'true' === str ? true : false;
+				function readData(){
+					function strBool(str){
+						return 'true' === str ? true : false;
+					}
+
+					var data = event.data.substr(msgIdLen).split(':');
+
+					myID             = data[0];
+					bodyMargin       = parseInt(data[1],base);
+					doWidth          = (undefined !== data[2]) ? strBool(data[2])		: false;
+					logging          = (undefined !== data[3]) ? strBool(data[3])		: false;
+					interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
+					publicMethods    = (undefined !== data[5]) ? strBool(data[5])		: false;
+					autoResize       = (undefined !== data[6]) ? strBool(data[6])		: true;
+					target           = event.source;	
 				}
 
 				function setMargin(){
 					document.body.style.margin = bodyMargin+'px';
 					log('Body margin set to '+bodyMargin+'px');
-
 				}
 
-                function setHeightAuto(){
-                    // Bug fix for infinity resizing of iframe
-                    document.documentElement.style.height = 'auto';
-                    document.body.style.height = 'auto';
-                    log('HTML & body height set to "auto"');
-                }
+				function setHeightAuto(){
+					// Stop infinity resizing of iframe
+					document.documentElement.style.height = 'auto';
+					document.body.style.height = 'auto';
+					log('HTML & body height set to "auto"');
+				}
 
 				function initWindowListener(){
 					addEventListener('resize', function(){
@@ -74,33 +86,81 @@
 					});
 				}
 
-				var data = event.data.substr(msgIdLen).split(':');
+				function startEventListeners(){
+					if ( true === autoResize ) {
+						initWindowListener();
+						setupMutationObserver();
+					}
+					else {
+						log('Auto Resize disabled');
+					}				
+				}
 
-				myID             = data[0];
-				bodyMargin       = parseInt(data[1],base);
-				doWidth          = (undefined !== data[2]) ? strBool(data[2])		: false;
-				logging          = (undefined !== data[3]) ? strBool(data[3])		: false;
-				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
-				publicMethods    = (undefined !== data[5]) ? strBool(data[5])		: false;
-				autoResize       = (undefined !== data[6]) ? strBool(data[6])		: true;
-				target           = event.source;
-
-				log('Initialising iframe');
-
+				log('Initialising iFrame');
+				readData();
 				setMargin();
 				setHeightAuto();
+				setupPublicMethods();
+				startEventListeners();
+			}
 
-				if ( true === autoResize ) {
-					log('Auto Resize enabled');
-					initWindowListener();
-					setupMutationObserver();
-				}
-				else {
-					log('Auto Resize disabled');
+			function sendSize(type,calleeMsg, customHeight, customWidth){
+
+				function getOffset(dimension){
+					return parseInt(document.body['offset'+dimension],base);
 				}
 
-				if (publicMethods){
-					setupPublicMethods();
+				function cancelTrigger(){
+					log( 'Trigger event (' + calleeMsg + ') cancelled');
+					setTimeout(function(){lastTrigger = type;},50);
+				}
+
+				function recordTrigger(){
+					log( 'Trigger event: ' + calleeMsg );
+					lastTrigger = type;
+				}
+
+				function sendMsg(){
+					var msg = myID + ':' + height + ':' + width  + ':' + type;
+					log('Sending msg to host page (' + msg + ')');
+					target.postMessage( msgID + msg, '*' );
+				}
+
+				function resizeIFrame(){
+					height = currentHeight;
+					width  = currentWidth;
+
+					recordTrigger();
+					sendMsg();
+				}
+
+				var
+					currentHeight = (undefined !== customHeight)  ? customHeight : getOffset('Height') + 2*bodyMargin,
+					currentWidth  = (undefined !== customWidth )  ? customWidth  : getOffset('Width')  + 2*bodyMargin;
+
+				if ('size' === lastTrigger && 'resize' === type)
+					cancelTrigger();
+				else if ((height !== currentHeight) || (doWidth && (width !== currentWidth)))
+					resizeIFrame();
+			}
+
+			function setupPublicMethods(){
+				if (publicMethods) {
+					log( 'Enabling public methods' );
+
+					window.parentIFrame = window.iFrameSizer = { //iFrameSizer name deprecated
+						trigger: function(customHeight, customWidth){ //deprecated method name
+							warn( 'trigger() method deprecated. Use size() instead.');
+							window.parentIFrame.size(customHeight, customWidth);
+						},
+						size: function(customHeight, customWidth){
+							var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
+							sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
+						},
+						close: function(){
+							sendSize('close','window.parentIFrame.close()', 0, 0);
+						}
+					};
 				}
 			}
 
@@ -113,75 +173,27 @@
 				}
 			}
 
-			function sendSize(type,calleeMsg, customHeight, customWidth){
-
-				function getOffset(dimension){
-					return parseInt(document.body['offset'+dimension],base);
-				}
-
-				function sendMsg(){
-					var msg = myID + ':' + height + ':' + width  + ':' + type;
-					target.postMessage( msgID + msg, '*' );
-					log( 'Sending msg to host page (' + msg + ')' );
-				}
-
-				var
-					currentHeight = (undefined !== customHeight)  ? customHeight : getOffset('Height') + 2*bodyMargin,
-					currentWidth  = (undefined !== customWidth )  ? customWidth  : getOffset('Width')  + 2*bodyMargin;
-
-				if ('size' === lastTrigger && 'resize' === type){
-					log( 'Trigger event (' + calleeMsg + ') cancelled');
-					setTimeout(function(){lastTrigger = type;},50);
-				}
-				else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
-					height = currentHeight;
-					width = currentWidth;
-					log( 'Trigger event: ' + calleeMsg );
-					lastTrigger = type;
-					sendMsg();
-				}
-			}
-
-			function setupPublicMethods(){
-				log( 'Enabling public methods' );
-
-				window.parentIFrame = window.iFrameSizer = { //iFrameSizer deprecated name
-					trigger: function(customHeight, customWidth){ //deprecated method name
-						window.parentIFrame.size(customHeight, customWidth);
-					},
-					size: function(customHeight, customWidth){
-						var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
-						sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
-					},
-					close: function(){
-						sendSize('close','window.parentIFrame.close()', 0, 0);
-					}
-				};
-			}
-
 			function setupMutationObserver(){
-
 				function createMutationObserver(){
 					var
 						target = document.querySelector('body'),
 
 						config = {
-							childList: true,
-							attributes: true,
-							characterData: true,
-							subtree: true,
-							attributeOldValue: false,
-							characterDataOldValue: false
+							attributes            : true,
+							attributeOldValue     : false,
+							characterData         : true,
+							characterDataOldValue : false,
+							childList             : true,
+							subtree               : true
 						},
 
 						observer = new MutationObserver(function(mutations) {
 							mutations.forEach(function(mutation) {
-								sendSize( 'mutationObserver','mutationObserver: ' + mutation.target + ' ' + mutation.type );
+								sendSize('mutationObserver','mutationObserver: ' + mutation.target + ' ' + mutation.type);
 							});
 						});
 
 					log('Setup MutationObserver');
-
 					observer.observe(target, config);
 				}
 
@@ -190,11 +202,10 @@
 				if (MutationObserver)
 					createMutationObserver();
 				else {
-					log('MutationObserver not supported in this browser!');
+					warn('MutationObserver not supported in this browser!');
 					initInterval();
 				}
 			}
-				
 
 			var bodyMargin,doWidth;
 
@@ -204,6 +215,7 @@
 				firstRun = false;
 			}
 		}
+
 		addEventListener('message', receiver);
 	}
 	catch(e){
