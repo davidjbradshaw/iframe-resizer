@@ -88,7 +88,7 @@ In browsers that don't support [mutationObserver](https://developer.mozilla.org/
 
 Set to zero to disable.
 
-### srolling
+### scrolling
 
     default: false
     type: boolean
