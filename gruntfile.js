@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         },
       },
       gruntfile: {
-        src: 'Gruntfile.js'
+        src: 'gruntfile.js'
       },
       code: {
         src: 'src/**/*.js'
