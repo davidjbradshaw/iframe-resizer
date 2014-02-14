@@ -24,9 +24,12 @@
 	
     asyncTest( "iFrame inteval timer ", function() {
 
-      var callbackCounter = 0;
+      var 
+          callbackCounter = 0,
+          started         = false;
 
       $('iframe').iFrameResize({
+        log:true,
         interval:1,
         callback:function(messageData){
           
@@ -36,12 +39,13 @@
               break;
             default:
               ok( true, 'iFrame detected content change');
-              if ('interval' === messageData.type){
+              if ('resize' !== messageData.type && (false === started)){
+                started = true;
                 ok( 'interval' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected interval.' );
                 start();
               }
-              else
-                document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'changeContent', '*' );
+              //else
+              //  document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'changeContent', '*' );
           }
         }
       });
