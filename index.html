@@ -139,10 +139,10 @@ type: number
 <p>Set to zero to disable.</p>
 
 <h3>
-<a name="srolling" class="anchor" href="#srolling"><span class="octicon octicon-link"></span></a>srolling</h3>
+<a name="scrolling" class="anchor" href="#scrolling"><span class="octicon octicon-link"></span></a>scrolling</h3>
 
-<pre><code> default: false
- type: boolean
+<pre><code>default: false
+type: boolean
 </code></pre>
 
 <p>Enable scroll bars in iFrame.</p>
@@ -150,10 +150,10 @@ type: number
 <h3>
 <a name="callback" class="anchor" href="#callback"><span class="octicon octicon-link"></span></a>callback</h3>
 
-<pre><code>type: function
+<pre><code>type: function ({iframe,height,width,type})
 </code></pre>
 
-<p>Callback function when message is received.</p>
+<p>Function called after iFrame resized. Passes in messageData object containing the iFrame, height, width and the type of event that triggered the iFrame to resize.</p>
 
 <h2>
 <a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
@@ -213,7 +213,7 @@ type: number
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v1.4.0 Option to enable scrolling in iFrame, off by default.</li>
+<li>v1.4.0 Option to enable scrolling in iFrame, off by default. Bower dependancies updated.</li>
 <li>v1.3.7 Stop resize event firing for 50ms after size event. Added size(250) to example.</li>
 <li>v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.</li>
 <li>v1.3.5 Documentation improvements. Added Grunt-Bump to build script.</li>
