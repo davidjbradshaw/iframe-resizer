@@ -90,16 +90,16 @@ Set to zero to disable.
 
 ### srolling
 
-     default: false
-     type: boolean
+    default: false
+    type: boolean
 
 Enable scroll bars in iFrame.
 
 ### callback
 
-	type: function
+	type: function ({iframe,height,width,type})
 	
-Callback function when message is received.
+Function called after iFrame resized. Passes in messageData object containing the iFrame, height, width and the type of event that triggered the iFrame to resize.
 
 
 ## Methods
