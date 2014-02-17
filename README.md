@@ -11,7 +11,7 @@ The code supports resizing the iFrame when the browser window changes size or th
 To set the library up for this create a basic iFrame tag with the following options.
 
 ```html
-	<iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>
+<iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>
 ```
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
