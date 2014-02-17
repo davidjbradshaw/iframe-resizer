@@ -16,22 +16,24 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 
 Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
-	$('iframe').iFrameResize({
-		log: false,
-		autoResize: true,
-		contentWindowBodyMargin:8,
-		doHeight:true,
-		doWidth:false,
-		enablePublicMethods:false,
-		interval:33,
-		scrolling:false,
-		callback:function(messageData){
-			$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
-								' <b>Height:</b> ' + messageData.height + 
-								' <b>Width:</b> ' + messageData.width +
-								' <b>Event type:</b> ' + messageData.type);
-		}
-	});
+```js
+$('iframe').iFrameResize({
+	log: false,
+	autoResize: true,
+	contentWindowBodyMargin:8,
+	doHeight:true,
+	doWidth:false,
+	enablePublicMethods:false,
+	interval:33,
+	scrolling:false,
+	callback:function(messageData){
+		$('p#callback').html('<b>Frame ID:</b> ' + messageData.iframe.id + 
+							' <b>Height:</b> ' + messageData.height + 
+							' <b>Width:</b> ' + messageData.width +
+							' <b>Event type:</b> ' + messageData.type);
+	}
+});
+```
 
 To see this working take a look at the [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
 
@@ -110,9 +112,11 @@ To enable these methods you must set `enablePublicMethods` to `true`. This creat
 
 Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.
 
-	if (window.parentIFrame && window.parentIFrame.close) {
-		window.parentIFrame.close();
-	}
+```js
+if (window.parentIFrame && window.parentIFrame.close) {
+	window.parentIFrame.close();
+}
+```
 
 ##### window.parentIFrame.size ([<span style="font-weight:normal">customHeight<b>,</b> customWidth</span>])
 
@@ -124,17 +128,21 @@ Manually force iFrame to resize. Incase the page is loaded out side the iFrame, 
 
 This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.
 
-	$('iframe').iFrameResize({
-		autoResize: false,
-		enablePublicMethods: true,
-		doWidth: true
-	});
+```js
+$('iframe').iFrameResize({
+	autoResize: false,
+	enablePublicMethods: true,
+	doWidth: true
+});
+```
 
 Then just call size method with dimensions:
 
-	if (window.parentIFrame && window.parentIFrame.size) {
-		window.parentIFrame.size(100); // Set height to 100px
-	}
+```js
+if (window.parentIFrame && window.parentIFrame.size) {
+	window.parentIFrame.size(100); // Set height to 100px
+}
+```
 
 
 ## Browser compatibility
