@@ -50,23 +50,23 @@
 
 <p>Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
-<pre><code>$('iframe').iFrameResize({
-    log: false,
-    autoResize: true,
-    contentWindowBodyMargin:8,
-    doHeight:true,
-    doWidth:false,
-    enablePublicMethods:false,
-    interval:33,
-    scrolling:false,
-    callback:function(messageData){
-        $('p#callback').html('&lt;b&gt;Frame ID:&lt;/b&gt; ' + messageData.iframe.id + 
-                            ' &lt;b&gt;Height:&lt;/b&gt; ' + messageData.height + 
-                            ' &lt;b&gt;Width:&lt;/b&gt; ' + messageData.width +
-                            ' &lt;b&gt;Event type:&lt;/b&gt; ' + messageData.type);
-    }
-});
-</code></pre>
+<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">({</span>
+    <span class="nx">log</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">autoResize</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">contentWindowBodyMargin</span><span class="o">:</span><span class="mi">8</span><span class="p">,</span>
+    <span class="nx">doHeight</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+    <span class="nx">doWidth</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="nx">enablePublicMethods</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="nx">interval</span><span class="o">:</span><span class="mi">33</span><span class="p">,</span>
+    <span class="nx">scrolling</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="nx">callback</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">messageData</span><span class="p">){</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s1">'p#callback'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">'&lt;b&gt;Frame ID:&lt;/b&gt; '</span> <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">iframe</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> 
+                            <span class="s1">' &lt;b&gt;Height:&lt;/b&gt; '</span> <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">height</span> <span class="o">+</span> 
+                            <span class="s1">' &lt;b&gt;Width:&lt;/b&gt; '</span> <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">width</span> <span class="o">+</span>
+                            <span class="s1">' &lt;b&gt;Event type:&lt;/b&gt; '</span> <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
 
 <p>To see this working take a look at the <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.</p>
 
@@ -165,10 +165,10 @@ type: boolean
 
 <p>Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.</p>
 
-<pre><code>if (window.parentIFrame &amp;&amp; window.parentIFrame.close) {
-    window.parentIFrame.close();
-}
-</code></pre>
+<div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span> <span class="o">&amp;&amp;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">close</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <h5>
 <a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight<b>,</b> customWidth])</h5>
@@ -182,19 +182,19 @@ type: boolean
 
 <p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.</p>
 
-<pre><code>$('iframe').iFrameResize({
-    autoResize: false,
-    enablePublicMethods: true,
-    doWidth: true
-});
-</code></pre>
+<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">({</span>
+    <span class="nx">autoResize</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">enablePublicMethods</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">doWidth</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+</pre></div>
 
 <p>Then just call size method with dimensions:</p>
 
-<pre><code>if (window.parentIFrame &amp;&amp; window.parentIFrame.size) {
-    window.parentIFrame.size(100); // Set height to 100px
-}
-</code></pre>
+<div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span> <span class="o">&amp;&amp;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// Set height to 100px</span>
+<span class="p">}</span>
+</pre></div>
 
 <h2>
 <a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
