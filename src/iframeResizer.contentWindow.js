@@ -166,6 +166,7 @@
 
 			function initInterval(){
 				if ( 0 !== interval ){
+					if (0 > interval) interval= -interval;
 					log('setInterval: '+interval+'ms');
 					setInterval(function(){
 						sendSize('interval','setInterval: '+interval);
@@ -200,7 +201,8 @@
 				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
 				if (MutationObserver)
-					createMutationObserver();
+					if (0 > interval) initInterval();
+					else createMutationObserver();
 				else {
 					warn('MutationObserver not supported in this browser!');
 					initInterval();

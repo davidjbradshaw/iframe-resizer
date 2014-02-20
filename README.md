@@ -90,6 +90,8 @@ If enabled library creates a `window.parentIFrame` object in the browser, with `
 
 In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the library falls back to using setInterval, to check for changes to the page size. Default values is equal to two frame refreshes at 60Hz, setting this to a higher value will make screen redraws noticeable to the user.
 
+Setting this property to a negative number will force the interval check to run instead of mutationObserver. This useful in cases where you have a lot of rapid changes to the DOM, as the browser may start to throttle calls to MutationObserver.
+
 Set to zero to disable.
 
 ### scrolling
@@ -124,9 +126,11 @@ if (window.parentIFrame && window.parentIFrame.close) {
 
 Manually force iFrame to resize. Incase the page is loaded out side the iFrame, you must test before making this call.
 
-	if (window.parentIFrame && window.parentIFrame.size) {
-		window.parentIFrame.size();
-	}
+```js
+if (window.parentIFrame && window.parentIFrame.size) {
+	window.parentIFrame.size();
+}
+```
 
 This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.
 
@@ -158,6 +162,7 @@ This library can be installed via the [Bower](http://bower.io) front-end package
     bower instal iframe-resizer
 
 ##Version History
+* v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver). This useful in cases where you have a lot of rapid changes to the DOM as the browser will throttle calls to MutationObserver. To enable this feature set the interval option to a negative number.
 * v1.4.0 Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
 * v1.3.7 Stop resize event firing for 50ms after size event. Added size(250) to example.
 * v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.

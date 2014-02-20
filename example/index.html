@@ -23,12 +23,13 @@
 
 			$('iframe').iFrameSizer({
 				log                    : true,  // For development
+				autoResize             : true,  // Trigering resize on events in iFrame
 				contentWindowBodyMargin: 8,     // Set the default browser body margin style (in px)
 				doHeight               : true,  // Calculates dynamic height
 				doWidth                : false, // Calculates dynamic width
-				interval               : 32,    // interval in ms to recalculate body height, 0 to disable refreshing
 				enablePublicMethods    : true,  // Enable methods within iframe hosted page 
-				autoResize             : true,  // Trigering resize on events in iFrame
+				interval               : 33,    // interval in ms to recalculate body height, 0 to disable refreshing
+				scrolling              : false, // Enable the scrollbars in the iFrame
 				callback               : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> ' + messageData.iframe.id +
