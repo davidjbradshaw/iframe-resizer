@@ -162,7 +162,7 @@ This library can be installed via the [Bower](http://bower.io) front-end package
     bower instal iframe-resizer
 
 ##Version History
-* v1.4.2 Code refactor.
+* v1.4.2 Code refactor. Fixed size(250) example in IE8.
 * v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 * v1.4.0 Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
 * v1.3.7 Stop resize event firing for 50ms after size event. Added size(250) to example.
