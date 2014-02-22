@@ -9,9 +9,9 @@
 ( function($) {
 
 	var
+		count              = 0,
 		msgId              = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen           = msgId.length,
-		count              = 0,
 		settings           = {},
 		defaults           = {
 			autoResize              : true,

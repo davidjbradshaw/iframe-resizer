@@ -5,6 +5,7 @@
 		<title>iFrame message passing test</title> 
 		<meta name="description" content="iFrame message passing test"> 
 		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	</head> 
 	<body> 
 
@@ -28,7 +29,7 @@
 				doHeight               : true,  // Calculates dynamic height
 				doWidth                : false, // Calculates dynamic width
 				enablePublicMethods    : true,  // Enable methods within iframe hosted page 
-				interval               : 33,    // interval in ms to recalculate body height, 0 to disable refreshing
+				interval               : 0,     // interval in ms to recalculate body height, 0 to disable refreshing
 				scrolling              : false, // Enable the scrollbars in the iFrame
 				callback               : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(

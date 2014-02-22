@@ -11,16 +11,18 @@
 (function() {
 
 	var
-		myID        = '',
-		target      = null,
-		height      = 1,
-		width       = 1,
 		base        = 10,
+		bodyMargin  = 0,
+		doWidth     = false,
+		height      = 1,
+		firstRun    = true,
+		lastTrigger = '',
 		logging     = false,
 		msgID       = '[iFrameSizer]',  //Must match host page msg ID
-		firstRun    = true,
 		msgIdLen    = msgID.length,
-		lastTrigger = '';
+		myID        = '',
+		target      = null,
+		width       = 1;
 
 	try{
 
@@ -112,7 +114,7 @@
 
 				function cancelTrigger(){
 					log( 'Trigger event (' + calleeMsg + ') cancelled');
-					setTimeout(function(){lastTrigger = type;},50);
+					setTimeout(function(){lastTrigger = type;},250);
 				}
 
 				function recordTrigger(){
@@ -138,7 +140,7 @@
 					currentHeight = (undefined !== customHeight)  ? customHeight : getOffset('Height') + 2*bodyMargin,
 					currentWidth  = (undefined !== customWidth )  ? customWidth  : getOffset('Width')  + 2*bodyMargin;
 
-				if ('size' === lastTrigger && 'resize' === type)
+				if (('size' === lastTrigger) && ('resize' === type))
 					cancelTrigger();
 				else if ((height !== currentHeight) || (doWidth && (width !== currentWidth)))
 					resizeIFrame();
@@ -208,8 +210,6 @@
 					initInterval();
 				}
 			}
-
-			var bodyMargin,doWidth;
 
 			if (msgID === event.data.substr(0,msgIdLen) && firstRun){ //Check msg ID
 				init();

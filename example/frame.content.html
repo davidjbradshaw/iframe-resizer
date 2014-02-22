@@ -12,7 +12,7 @@
 	<body> 
 
 		<b>iFrame</b> 
-		<a href='#' onclick="$('p:eq(0)').toggle();return false;">Toggle content</a>
+		<a href='#' onclick="$('p:eq(0)').toggle();if (window.parentIFrame) window.parentIFrame.size();return false;">Toggle content</a>
 		&nbsp;
 		<a href='#' onclick="if (window.parentIFrame) window.parentIFrame.size(250);return false;">Size(250)</a>
 		&nbsp;
