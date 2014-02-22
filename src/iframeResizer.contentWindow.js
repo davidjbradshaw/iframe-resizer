@@ -25,9 +25,9 @@
 	try{
 
 		function addEventListener(e,func){
-			if (window.addEventListener){
+			if ('addEventListener' in window){
 				window.addEventListener(e,func, false);
-			} else if (window.attachEvent){
+			} else if ('attachEvent' in window){
 				window.attachEvent('on'+e,func);
 			}
 		}
@@ -37,13 +37,13 @@
 		}
 
 		function log(msg){
-			if (logging && window.console){
+			if (logging && ('console' in window)){
 				console.log(formatLogMsg(msg));
 			}
 		}
 
 		function warn(msg){
-			if (window.console && (-1 === navigator.userAgent.indexOf('PhantomJS'))){
+			if ('console' in window){
 				console.warn(formatLogMsg(msg));
 			}
 		}

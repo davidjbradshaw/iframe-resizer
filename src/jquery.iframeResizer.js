@@ -37,7 +37,7 @@
 		}
 
 		// If not supported then just call callback
-		if (!window.requestAnimationFrame){
+		if (!(window.requestAnimationFrame)){
 			log(' RequestAnimationFrame not supported');
 			window.requestAnimationFrame = function(callback){
 				callback();
@@ -47,7 +47,7 @@
 	}
 
 	function log(msg){
-		if (settings && settings.log && window.console){
+		if (settings.log && ('console' in window)){
 			console.log(msgId + '[Host page]' + msg);
 		}
 	}
@@ -114,55 +114,47 @@
 
 		settings = $.extend( {}, defaults, options );
 
-		return this.each(function(){
-			function isIframe(){
-				return iframe.contentWindow ? true : false;
+		return this.filter('iframe').each(function(){
+
+			function scrolling(){
+				log('IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled'));
+				iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
+				iframe.scrolling = false === settings.scrolling ? 'no' : 'yes';
+			}
+
+			function ensureHasId(){
+				if (''===iframe.id){
+					iframe.id = 'iFrameSizer' + count++;
+					log(' Added missing iframe ID: '+iframe.id);
+				}
+			}
+
+			function trigger(calleeMsg){
+				var msg = iframe.id +
+						':' + settings.contentWindowBodyMargin +
+						':' + settings.doWidth +
+						':' + settings.log +
+						':' + settings.interval +
+						':' + settings.enablePublicMethods +
+						':' + settings.autoResize;
+				log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
+				iframe.contentWindow.postMessage( msgId + msg, '*' );
 			}
 
 			//We have to call trigger twice, as we can not be sure if all 
 			//iframes have completed loading when this code runs.
 			function init(){
-				if (settings.scrolling)
-					log('Scrolling iFrame enabled');
-				iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
-				iframe.scrolling = false === settings.scrolling ? 'no' : 'yes';
-
 				$(iframe).bind('load',function(){
 					trigger('iFrame.onload');
 				});
 				trigger('init');
 			}
 
-			function trigger(calleeMsg){
-
-				function ensureHasId(){
-					if (''===iframe.id){
-						iframe.id = 'iFrameSizer' + count++;
-						log(' Added missing iframe ID: '+iframe.id);
-					}
-				}
-
-				function postMessageToIframe(){
-					var msg = iframe.id +
-							':' + settings.contentWindowBodyMargin +
-							':' + settings.doWidth +
-							':' + settings.log +
-							':' + settings.interval +
-							':' + settings.enablePublicMethods +
-							':' + settings.autoResize;
-					log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
-					iframe.contentWindow.postMessage( msgId + msg, '*' );
-				}
-
-				ensureHasId();
-				postMessageToIframe();
-			}
-
 			var iframe = this;
 
-			if (isIframe()){
-				init();
-			}
+			scrolling();
+			ensureHasId();
+			init();
 		});
 	};
 
