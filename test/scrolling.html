@@ -24,7 +24,7 @@
 
     asyncTest( "scrolling not set", function() {
       $('iframe').iFrameResize({
-        log:false,
+        log:true,
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.' );

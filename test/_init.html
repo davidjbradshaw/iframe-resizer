@@ -25,7 +25,7 @@
 		asyncTest( "postMessage Response", function() {
 
       $('iframe').iFrameResize({
-        log:false,
+        log:true,
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
