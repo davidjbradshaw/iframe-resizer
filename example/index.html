@@ -33,9 +33,9 @@
 				scrolling              : false, // Enable the scrollbars in the iFrame
 				callback               : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(
-						'<b>Frame ID:</b> ' + messageData.iframe.id +
-						' <b>Height:</b> ' + messageData.height +
-						' <b>Width:</b> ' + messageData.width + 
+						'<b>Frame ID:</b> '    + messageData.iframe.id +
+						' <b>Height:</b> '     + messageData.height +
+						' <b>Width:</b> '      + messageData.width + 
 						' <b>Event type:</b> ' + messageData.type
 					);
 				}
