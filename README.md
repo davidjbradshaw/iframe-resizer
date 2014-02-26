@@ -1,4 +1,8 @@
-# Cross domain iFrame resize
+<span style="float:right">
+	[![Code Climate](https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png)](https://codeclimate.com/github/davidjbradshaw/iframe-resizer)
+	[![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
+</span>
+# Cross domain iFrame resize 
 
 This is a simple library to enable the resizing of cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
@@ -179,4 +183,4 @@ This library can be installed via the [Bower](http://bower.io) front-end package
 
 ## License
 Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
-Licensed under the MIT license.
+Licensed under the [MIT license](http://opensource.org/licenses/MIT).
