@@ -11,18 +11,21 @@
 (function() {
 
 	var
-		base        = 10,
-		bodyMargin  = 0,
-		doWidth     = false,
-		height      = 1,
-		firstRun    = true,
-		lastTrigger = '',
-		logging     = false,
-		msgID       = '[iFrameSizer]',  //Must match host page msg ID
-		msgIdLen    = msgID.length,
-		myID        = '',
-		target      = null,
-		width       = 1;
+		autoResize    = true,
+		base          = 10,
+		bodyMargin    = 0,
+		doWidth       = false,
+		height        = 1,
+		firstRun      = true,
+		interval      = 0,
+		lastTrigger   = '',
+		logging       = false,
+		msgID         = '[iFrameSizer]',  //Must match host page msg ID
+		msgIdLen      = msgID.length,
+		myID          = '',
+		publicMethods = false,
+		target        = null,
+		width         = 1;
 
 	try{
 
@@ -71,7 +74,7 @@
 				}
 
 				function setMargin(){
-					document.body.style.margin = bodyMargin+'px';
+					//document.body.style.margin = bodyMargin+'px';
 					log('Body margin set to '+bodyMargin+'px');
 				}
 
@@ -108,8 +111,8 @@
 
 			function sendSize(type,calleeMsg, customHeight, customWidth){
 
-				function getOffset(dimension){
-					return parseInt(document.body['offset'+dimension],base);
+				function getDimension(dimension){
+					return document.body['offset'+dimension] + 2*bodyMargin;//, document.documentElement['offset'+dimension]);
 				}
 
 				function cancelTrigger(){
@@ -137,13 +140,14 @@
 				}
 
 				var
-					currentHeight = (undefined !== customHeight)  ? customHeight : getOffset('Height') + 2*bodyMargin,
-					currentWidth  = (undefined !== customWidth )  ? customWidth  : getOffset('Width')  + 2*bodyMargin;
+					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),// + 2*bodyMargin,
+					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');//  + 2*bodyMargin;
 
-				if (('size' === lastTrigger) && ('resize' === type))
+				if (('size' === lastTrigger) && ('resize' === type)){
 					cancelTrigger();
-				else if ((height !== currentHeight) || (doWidth && (width !== currentWidth)))
+				} else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
 					resizeIFrame();
+				}
 			}
 
 			function setupPublicMethods(){
@@ -168,11 +172,10 @@
 
 			function initInterval(){
 				if ( 0 !== interval ){
-					if (0 > interval) interval= -interval;
 					log('setInterval: '+interval+'ms');
 					setInterval(function(){
 						sendSize('interval','setInterval: '+interval);
-					},interval);
+					},Math.abs(interval));
 				}
 			}
 
@@ -202,9 +205,13 @@
 
 				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
-				if (MutationObserver)
-					if (0 > interval) initInterval();
-					else createMutationObserver();
+				if (MutationObserver){
+					if (0 > interval) {
+						initInterval();
+					} else {
+						createMutationObserver();
+					}
+				}
 				else {
 					warn('MutationObserver not supported in this browser!');
 					initInterval();

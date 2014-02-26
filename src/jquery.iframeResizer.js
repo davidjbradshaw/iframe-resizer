@@ -93,8 +93,9 @@
 					log('iFrame '+messageData.iframe.id+' removed.');
 					$(messageData.iframe).remove();
 				}
-				else
+				else {
 					resize();
+				}
 			}
 
 			var messageData = {};
@@ -152,8 +153,8 @@
 
 			var iframe = this;
 
-			scrolling();
 			ensureHasId();
+			scrolling();
 			init();
 		});
 	};
