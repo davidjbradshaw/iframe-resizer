@@ -65,16 +65,16 @@
 
 					myID             = data[0];
 					bodyMargin       = parseInt(data[1],base);
-					doWidth          = (undefined !== data[2]) ? strBool(data[2])		: false;
-					logging          = (undefined !== data[3]) ? strBool(data[3])		: false;
+					doWidth          = (undefined !== data[2]) ? strBool(data[2])       : false;
+					logging          = (undefined !== data[3]) ? strBool(data[3])       : false;
 					interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
-					publicMethods    = (undefined !== data[5]) ? strBool(data[5])		: false;
-					autoResize       = (undefined !== data[6]) ? strBool(data[6])		: true;
+					publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : false;
+					autoResize       = (undefined !== data[6]) ? strBool(data[6])       : true;
 					target           = event.source;	
 				}
 
 				function setMargin(){
-					//document.body.style.margin = bodyMargin+'px';
+					document.body.style.margin = bodyMargin+'px';
 					log('Body margin set to '+bodyMargin+'px');
 				}
 
@@ -112,7 +112,7 @@
 			function sendSize(type,calleeMsg, customHeight, customWidth){
 
 				function getDimension(dimension){
-					return document.body['offset'+dimension] + 2*bodyMargin;//, document.documentElement['offset'+dimension]);
+					return document.body['offset'+dimension] + 2*bodyMargin;
 				}
 
 				function cancelTrigger(){
@@ -140,9 +140,8 @@
 				}
 
 				var
-					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),// + 2*bodyMargin,
-					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');//  + 2*bodyMargin;
-
+					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),
+					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');
 				if (('size' === lastTrigger) && ('resize' === type)){
 					cancelTrigger();
 				} else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
