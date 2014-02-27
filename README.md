@@ -163,7 +163,7 @@ This library can be installed via the [Bower](http://bower.io) front-end package
     bower instal iframe-resizer
 
 ##Version History
-* v1.4.4 Fix bodyMargin bug.
+* v1.4.4 Fixed bodyMargin bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
 * v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
