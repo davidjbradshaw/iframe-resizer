@@ -2,7 +2,7 @@
  * File: iframeSizer.contentWindow.js
  * Desc: Include this file in any page being loaded into an iframe
  *       to force the iframe to resize to the content size.
- * Requires: jquery.iframeSizer.js on host page.
+ * Requires: iframeSizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  * Date: 2013-06-14
@@ -14,7 +14,7 @@
 		autoResize    = true,
 		base          = 10,
 		bodyMargin    = 0,
-		doWidth       = false,
+		calculateWidth= false,
 		height        = 1,
 		firstRun      = true,
 		interval      = 0,
@@ -65,7 +65,7 @@
 
 					myID             = data[0];
 					bodyMargin       = parseInt(data[1],base);
-					doWidth          = (undefined !== data[2]) ? strBool(data[2])       : false;
+					calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : false;
 					logging          = (undefined !== data[3]) ? strBool(data[3])       : false;
 					interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
 					publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : false;
@@ -101,7 +101,7 @@
 				}
 
 				log('Initialising iFrame');
-				
+
 				readData();
 				setMargin();
 				stopInfiniteResizingOfIFrame();
@@ -145,7 +145,7 @@
 
 				if (('size' === lastTrigger) && ('resize' === type)){
 					cancelTrigger();
-				} else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
+				} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
 					resizeIFrame();
 				}
 			}

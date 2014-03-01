@@ -6,7 +6,7 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  * Date: 2013-06-14
  */
-( function($) {
+( function() {
 
 	var
 		count              = 0,
@@ -16,8 +16,8 @@
 		defaults           = {
 			autoResize              : true,
 			contentWindowBodyMargin : 8,
-			doHeight                : true,
-			doWidth                 : false,
+			calcHeight              : true,
+			calcWidth               : false,
 			enablePublicMethods     : false,
 			interval                : 0,
 			log                     : false,
@@ -25,8 +25,15 @@
 			callback                : function(){}
 		};
 
+	function addEventListener(obj,evt,func){
+		if ('addEventListener' in window){
+			obj.addEventListener(evt,func, false);
+		} else if ('attachEvent' in window){
+			obj.attachEvent('on'+evt,func);
+		}
+	}
 
-	function setupRAF(){
+	function setupRequestAnimationFrame(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
 			x;
@@ -43,7 +50,6 @@
 				callback();
 			};
 		}
-
 	}
 
 	function log(msg){
@@ -52,112 +58,124 @@
 		}
 	}
 
-	setupRAF();
+	function resizeIFrame(messageData){
+		function setDimension(dimension){
+			window.requestAnimationFrame(function RAF(){
+				messageData.iframe.style[dimension] = messageData[dimension] + 'px';
+				log(
+					' ' + messageData.iframe.id +
+					' ' + dimension +
+					' set to ' + messageData[dimension] + 'px'
+				);
+			});
+		}
 
-	$(window).bind('message',function(event){
+		if(settings.calcHeight){
+			setDimension('height');
+		}
 
-		function receiver(msg) {
-			function resize(){
-				function setDimension(dimension){
-					window.requestAnimationFrame(function(){
-						messageData.iframe.style[dimension] = messageData[dimension] + 'px';
-						log(
-							' ' + messageData.iframe.id +
-							' ' + dimension +
-							' set to ' + messageData[dimension] + 'px'
-						);
-					});
-				}
+		if(settings.calcWidth){
+			setDimension('width');
+		}
+	}
 
-				if(settings.doHeight){
-					setDimension('height');
-				}
+	function receiveMessageFromIFrame(event){
 
-				if(settings.doWidth){
-					setDimension('width');
-				}
+		function processMsg(){
+
+			var data	= msg.substr(msgIdLen).split(':');
+
+			messageData = {
+				iframe: document.getElementById(data[0]),
+				height: data[1],
+				width:  data[2],
+				type:   data[3]
+			};
+
+			if ('close' === messageData.type) {
+				log('iFrame '+messageData.iframe.id+' removed.');
+				messageData.iframe.parentNode.removeChild(messageData.iframe);
 			}
-
-			function processMsg(){
-
-				var data	= msg.substr(msgIdLen).split(':');
-
-				messageData = {
-					iframe: document.getElementById(data[0]),
-					height: data[1],
-					width:  data[2],
-					type:   data[3]
-				};
-
-				if ('close' === messageData.type){
-					log('iFrame '+messageData.iframe.id+' removed.');
-					$(messageData.iframe).remove();
-				}
-				else {
-					resize();
-				}
-			}
-
-			var messageData = {};
-
-			//check message is for us.
-			if (msgId === '' + msg.substr(0,msgIdLen)){
-				processMsg();
-				settings.callback(messageData);
+			else {
+				resizeIFrame(messageData);
 			}
 		}
 
-		receiver(event.originalEvent.data);
-	});
+		var 
+			msg = event.data,
+			messageData = {};
 
+		//check message is for us.
+		if (msgId === '' + msg.substr(0,msgIdLen)){
+			processMsg();
+			settings.callback(messageData);
+		}
+	}
 
-	$.fn.iFrameResize = $.fn.iFrameSizer = function(options){
+	function setupIFrame(element){
+		function scrolling(){
+			log('IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled'));
+			iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
+			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
+		}
 
-		settings = $.extend( {}, defaults, options );
-
-		return this.filter('iframe').each(function(){
-
-			function scrolling(){
-				log('IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled'));
-				iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
-				iframe.scrolling = false === settings.scrolling ? 'no' : 'yes';
+		function ensureHasId(){
+			if (''===iframe.id){
+				iframe.id = 'iFrameSizer' + count++;
+				log(' Added missing iframe ID: '+iframe.id);
 			}
+		}
 
-			function ensureHasId(){
-				if (''===iframe.id){
-					iframe.id = 'iFrameSizer' + count++;
-					log(' Added missing iframe ID: '+iframe.id);
-				}
-			}
+		function trigger(calleeMsg){
+			var msg = iframe.id +
+					':' + settings.contentWindowBodyMargin +
+					':' + settings.calcWidth +
+					':' + settings.log +
+					':' + settings.interval +
+					':' + settings.enablePublicMethods +
+					':' + settings.autoResize;
+			log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
+			iframe.contentWindow.postMessage( msgId + msg, '*' );
+		}
 
-			function trigger(calleeMsg){
-				var msg = iframe.id +
-						':' + settings.contentWindowBodyMargin +
-						':' + settings.doWidth +
-						':' + settings.log +
-						':' + settings.interval +
-						':' + settings.enablePublicMethods +
-						':' + settings.autoResize;
-				log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
-				iframe.contentWindow.postMessage( msgId + msg, '*' );
-			}
+		//We have to call trigger twice, as we can not be sure if all 
+		//iframes have completed loading when this code runs.
+		function init(){
+			addEventListener(iframe,'load',function(){
+				trigger('iFrame.onload');
+			});
+			trigger('init');
+		}
 
-			//We have to call trigger twice, as we can not be sure if all 
-			//iframes have completed loading when this code runs.
-			function init(){
-				$(iframe).bind('load',function(){
-					trigger('iFrame.onload');
-				});
-				trigger('init');
-			}
+        if(element && 'IFRAME' !== element.tagName) {
+            throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
+        }
 
-			var iframe = this;
+		/*jshint validthis:true */
+		var iframe = element || this;  // native || jQuery 
 
-			ensureHasId();
-			scrolling();
-			init();
-		});
+		ensureHasId();
+		scrolling();
+		init();
+	}
+
+	setupRequestAnimationFrame();
+
+	addEventListener(window,'message',receiveMessageFromIFrame);
+
+	//Native JS public function
+	window.iFrameResize = function iFrameResizeF(options,selecter){
+		for (var option in defaults) { settings[option] = options[option] || defaults[option]; }
+        Array.prototype.forEach.call( document.querySelectorAll( selector || 'iframe' ), setupIFrame );
 	};
 
-})( window.jQuery );
+	//jQuery public function
+	if ('jQuery' in window) {	
+		jQuery.fn.iFrameResize = function $iFrameResizeF(options) {
+			settings = $.extend( {}, defaults, options );
+			return this.filter('iframe').each(setupIFrame);
+		};
+	}
+
+})();
 

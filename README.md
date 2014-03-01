@@ -2,7 +2,7 @@
 
 This library enables the resizing of cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
-The package contains two minified JavaScript files in the [js](js) folder. The first ([jquery.iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js)) is a **jQuery** plugin for the page hosting the iFrame.
+The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is a **jQuery** plugin for the page hosting the iFrame.
 
 The second one ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
 
@@ -19,12 +19,12 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
 ```js
-$('iframe').iFrameResize({
+iFrameResize({
 	log: false,
 	autoResize: true,
 	contentWindowBodyMargin:8,
-	doHeight:true,
-	doWidth:false,
+	calcHeight:true,
+	calcWidth:false,
 	enablePublicMethods:false,
 	interval:33,
 	scrolling:false,
@@ -63,14 +63,14 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 
 Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work out the value is to set it. The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
 
-### doHeight
+### calcHeight
 
 	default: true
 	type: boolean
 
 Calculate iFrame hosted content height.
 
-### doWidth
+### calcWidth
 
 	default: false
 	type: boolean
@@ -133,13 +133,13 @@ if ('parentIFrame' in window) {
 }
 ```
 
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the calcWidth option if you wish to set the width.
 
 ```js
 $('iframe').iFrameResize({
 	autoResize: false,
 	enablePublicMethods: true,
-	doWidth: true
+	calcWidth: true
 });
 ```
 
@@ -152,9 +152,13 @@ if ('parentIFrame' in window) {
 ```
 
 
-## Browser compatibility
+## Browser compatibility (jQuery version)
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
+
+## Browser compatibility (native version)
+
+Works with all browsers which additionally support [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+). 
 
 ## Bower
 
@@ -162,7 +166,11 @@ This library can be installed via the [Bower](http://bower.io) front-end package
 
     bower instal iframe-resizer
 
+##Changes between version 1 and 2.
+
+
 ##Version History
+* v2.0.0 Native version added to host page script, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width).
 * v1.4.4 Fixed bodyMargin bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
