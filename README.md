@@ -153,11 +153,11 @@ if ('parentIFrame' in window) {
 
 
 ## Browser compatibility 
-####jQuery version
+###jQuery version
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
 
-####native versionß
+###Native version
 
 Works with all browsers which additionally support [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+). 
 
