@@ -152,11 +152,12 @@ if ('parentIFrame' in window) {
 ```
 
 
-## Browser compatibility (jQuery version)
+## Browser compatibility 
+####jQuery version
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
 
-## Browser compatibility (native version)
+####native versionß
 
 Works with all browsers which additionally support [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+). 
 
@@ -168,6 +169,7 @@ This library can be installed via the [Bower](http://bower.io) front-end package
 
 ##Changes between version 1 and 2.
 
+Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed calc(Height/Width). The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with and iFrame running version 1 of the iFrame script.
 
 ##Version History
 * v2.0.0 Native version added to host page script, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width).
