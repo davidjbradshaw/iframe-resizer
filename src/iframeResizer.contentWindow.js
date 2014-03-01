@@ -78,14 +78,13 @@
 					log('Body margin set to '+bodyMargin+'px');
 				}
 
-				function setHeightAuto(){
-					// Stop infinity resizing of iframe
+				function stopInfiniteResizingOfIFrame(){
 					document.documentElement.style.height = 'auto';
 					document.body.style.height = 'auto';
 					log('HTML & body height set to "auto"');
 				}
 
-				function initWindowListener(){
+				function initWindowResizeListener(){
 					addEventListener('resize', function(){
 						sendSize('resize','Window resized');
 					});
@@ -93,7 +92,7 @@
 
 				function startEventListeners(){
 					if ( true === autoResize ) {
-						initWindowListener();
+						initWindowResizeListener();
 						setupMutationObserver();
 					}
 					else {
@@ -102,9 +101,10 @@
 				}
 
 				log('Initialising iFrame');
+				
 				readData();
 				setMargin();
-				setHeightAuto();
+				stopInfiniteResizingOfIFrame();
 				setupPublicMethods();
 				startEventListeners();
 			}
@@ -142,6 +142,7 @@
 				var
 					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),
 					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');
+
 				if (('size' === lastTrigger) && ('resize' === type)){
 					cancelTrigger();
 				} else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
