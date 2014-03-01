@@ -166,7 +166,7 @@
 	//Native JS public function
 	window.iFrameResize = function iFrameResizeF(options,selecter){
 		for (var option in defaults) { settings[option] = options[option] || defaults[option]; }
-        Array.prototype.forEach.call( document.querySelectorAll( selector || 'iframe' ), setupIFrame );
+        Array.prototype.forEach.call( document.querySelectorAll( selecter || 'iframe' ), setupIFrame );
 	};
 
 	//jQuery public function
@@ -176,6 +176,4 @@
 			return this.filter('iframe').each(setupIFrame);
 		};
 	}
-
 })();
-
