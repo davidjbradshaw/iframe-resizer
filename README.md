@@ -160,7 +160,7 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 ###Native version
 
-Works with all browsers which additionally support [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+). 
+Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+). Or force standards mode and use the [MDN PolyFil](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) in IE8.
 
 ## Bower
 
