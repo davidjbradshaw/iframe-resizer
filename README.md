@@ -134,7 +134,7 @@ if ('parentIFrame' in window) {
 }
 ```
 
-##### window.parentIFrame.size ([<span style="font-weight:normal">customHeight<b>,</b> customWidth</span>])
+##### window.parentIFrame.size ([customHeight],[ customWidth])
 
 Manually force iFrame to resize. In case the page is loaded outside the iFrame, you should test before making this call.
 
