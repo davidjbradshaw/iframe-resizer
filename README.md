@@ -8,7 +8,7 @@ The package contains two minified JavaScript files in the [js](js) folder. The f
 iFrameResize([{options}],[selector]);
 ```
 
-and **jQuery**.
+and via **jQuery**.
 
 ```js
 $('iframe').iFrameResize([{options}]);
