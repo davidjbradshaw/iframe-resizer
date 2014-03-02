@@ -5,7 +5,6 @@
  * Requires: iframeSizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
- * Date: 2013-06-14
  */
 
 (function() {
@@ -154,11 +153,7 @@
 				if (publicMethods) {
 					log( 'Enabling public methods' );
 
-					window.parentIFrame = window.iFrameSizer = { //iFrameSizer name deprecated
-						trigger: function(customHeight, customWidth){ //deprecated method name
-							warn( 'trigger() method deprecated. Use size() instead.');
-							window.parentIFrame.size(customHeight, customWidth);
-						},
+					window.parentIFrame = window.iFrameSizer = {
 						size: function(customHeight, customWidth){
 							var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 							sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
@@ -203,7 +198,7 @@
 					observer.observe(target, config);
 				}
 
-				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 				if (MutationObserver){
 					if (0 > interval) {
@@ -232,4 +227,3 @@
 	}
 
 })();
-

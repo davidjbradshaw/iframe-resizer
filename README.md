@@ -22,7 +22,7 @@ Next we initialise the library on the page hosting our iFrame. This example show
 iFrameResize({
 	log: false,
 	autoResize: true,
-	contentWindowBodyMargin:8,
+	contentWindowBodyMargin:0,
 	calcHeight:true,
 	calcWidth:false,
 	enablePublicMethods:false,
@@ -59,10 +59,10 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 
 ### contentWindowBodyMagin
 
-	default: 8  (in px)
+	default: 0  (in px)
 	type: number
 
-Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way we can work out the value is to set it. The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
+Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way to work out the value is to set it. 
 
 ### calcHeight
 
@@ -170,7 +170,7 @@ This library can be installed via the [Bower](http://bower.io) front-end package
 
 ##Changes between version 1 and 2.
 
-Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed calc(Height/Width). 
+Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed calc(Height/Width). The default value for `contentWindowBodyMagin` has been changed from 8 to 0, as this is the most used value.
 
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with and iFrame running version 1 of the iFrame script.
 
