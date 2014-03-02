@@ -48,7 +48,7 @@ iFrameResize({
 });
 ```
 
-##Example
+###Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
 
 ## Options
