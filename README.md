@@ -120,7 +120,7 @@ Enable scroll bars in iFrame.
 Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
 
 
-## Methods
+## IFrame Methods
 
 To enable these methods you must set `enablePublicMethods` to `true`. This creates the `window.parentIFrame` object in the iFrame.
 
