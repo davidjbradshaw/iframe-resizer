@@ -2,13 +2,13 @@
 
 This library enables the resizing of same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
-The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) has both **native** JavaScript;
+The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting an iFranme. It can be called with **native** JavaScript;
 
 ```js
 iFrameResize([{options}],[selector]);
 ```
 
-and **jQuery** versions of the script for the page hosting the iFrame.
+and **jQuery**.
 
 ```js
 $('iframe').iFrameResize([{options}]);
