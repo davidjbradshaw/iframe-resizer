@@ -1,6 +1,6 @@
 # iFrame Resizer [![Code Climate](https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png)](https://codeclimate.com/github/davidjbradshaw/iframe-resizer) [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 
-This library enables the resizing of same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
+This library enables the resizing of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
@@ -18,7 +18,7 @@ The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/dav
 
 ### Typical setup
 
-The normal configuration is to have iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to set one of the dimensions of the iframe to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
+The normal configuration is to have iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 ```html
 <iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>
@@ -26,7 +26,7 @@ The normal configuration is to have iFrame resize when the browser window change
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
+Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
 ```js
 iFrameResize({
