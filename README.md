@@ -72,7 +72,7 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 	default: 8  (in px)
 	type: number
 
-Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way to work out the value is to set it. 
+Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way to reliably work out this value is to set it. 
 
 The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
 
