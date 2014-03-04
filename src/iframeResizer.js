@@ -150,7 +150,24 @@
 			trigger('init');
 		}
 
+		function beenHere(){
+			var retCode = false;
+
+			/*
+			if (){
+				
+			} else {
+				retCode = true;
+			}
+			*/
+			return retCode;
+		}
+
 		var iframe = this; 
+
+		if (beenHere()){
+			return void 0;
+		}
 
 		ensureHasId();
 		scrolling();
@@ -166,8 +183,20 @@
 			}
 		}
 
+		function processOptions(options){
+			options = options || {};
+
+			if ('object' !== typeof options){
+				throw new TypeError('Options is not an object.');
+			}
+
+			for (var option in defaults) { 
+				settings[option] = options[option] || defaults[option]; 
+			}
+		}
+
 		window.iFrameResize = function iFrameResizeF(options,selecter){
-			for (var option in defaults) { settings[option] = options[option] || defaults[option]; }
+			processOptions(options);
 			Array.prototype.forEach.call( document.querySelectorAll( selecter || 'iframe' ), init );
 		};		
 	}
