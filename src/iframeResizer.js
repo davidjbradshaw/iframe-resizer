@@ -14,7 +14,7 @@
 		settings           = {},
 		defaults           = {
 			autoResize              : true,
-			contentWindowBodyMargin : 0,
+			contentWindowBodyMargin : 8,
 			calcHeight              : true,
 			calcWidth               : false,
 			enablePublicMethods     : false,
