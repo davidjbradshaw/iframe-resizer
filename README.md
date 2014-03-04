@@ -69,10 +69,10 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 
 ### contentWindowBodyMagin
 
-	default: 0  (in px)
+	default: 8  (in px)
 	type: number
 
-Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way to work out the value is to set it. 
+Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way to work out the value is to set it. The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
 
 ### calcHeight
 
@@ -185,7 +185,7 @@ Version 2 makes a few changes that you need to be aware of when upgrading. The f
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with and iFrame running version 1 of the iFrame script.
 
 ##Version History
-* v2.0.0 Native version added to host page script, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width).
+* v2.0.0 Now works both with native JS and jQuery, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width).
 * v1.4.4 Fixed bodyMargin bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
