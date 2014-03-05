@@ -32,7 +32,7 @@ Then we initialise the library on the page hosting our iFrame. This example show
 iFrameResize({
 	log                     : false,
 	autoResize              : true,
-	contentWindowBodyMargin : 0,
+	contentWindowBodyMargin : 8,
 	calcHeight              : true,
 	calcWidth               : false,
 	enablePublicMethods     : false,
