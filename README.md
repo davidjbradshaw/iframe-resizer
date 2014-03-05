@@ -149,7 +149,7 @@ if ('parentIFrame' in window) {
 This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the calcWidth option if you wish to set the width.
 
 ```js
-$('iframe').iFrameResize({
+iFrameResize({
 	autoResize: false,
 	enablePublicMethods: true,
 	calcWidth: true
