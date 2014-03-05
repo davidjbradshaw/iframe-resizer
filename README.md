@@ -38,7 +38,7 @@ iFrameResize({
 	enablePublicMethods     : false,
 	interval                : 33,
 	scrolling               : false,
-	callback:function(messageData){
+	callback                : function(messageData){
 		$('p#callback').html('<b>Frame ID:</b> '   + messageData.iframe.id + 
 							' <b>Height:</b> '     + messageData.height + 
 							' <b>Width:</b> '      + messageData.width +
