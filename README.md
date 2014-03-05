@@ -32,12 +32,12 @@ Then we initialise the library on the page hosting our iFrame. This example show
 iFrameResize({
 	log                     : false,
 	autoResize              : true,
-	contentWindowBodyMargin :0,
-	calcHeight              :true,
-	calcWidth               :false,
-	enablePublicMethods     :false,
-	interval                :33,
-	scrolling               :false,
+	contentWindowBodyMargin : 0,
+	calcHeight              : true,
+	calcWidth               : false,
+	enablePublicMethods     : false,
+	interval                : 33,
+	scrolling               : false,
 	callback:function(messageData){
 		$('p#callback').html('<b>Frame ID:</b> '   + messageData.iframe.id + 
 							' <b>Height:</b> '     + messageData.height + 
