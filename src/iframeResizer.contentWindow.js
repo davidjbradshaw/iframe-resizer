@@ -213,7 +213,11 @@
 				}
 			}
 
-			if (msgID === event.data.substr(0,msgIdLen) && firstRun){ //Check msg ID
+			function isMessageForUs(){
+				return msgID === '' + event.data.substr(0,msgIdLen);
+			}
+
+			if (isMessageForUs() && firstRun){ //Check msg ID
 				init();
 				sendSize('init','Init message from host page');
 				firstRun = false;
