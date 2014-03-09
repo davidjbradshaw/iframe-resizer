@@ -190,24 +190,4 @@ Version 2 makes a few changes that you need to be aware of when upgrading. The f
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>.
 
 ##Version History
-* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width). Improved logging messages.
-* v1.4.4 Fixed bodyMargin bug.
-* v1.4.3 CodeCoverage fixes. Documentation improvements.
-* v1.4.2 Fixed size(250) example in IE8.
-* v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
-* v1.4.0 Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
-* v1.3.7 Stop resize event firing for 50ms after size event. Added size(250) to example.
-* v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
-* v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
-* v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.
-* v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
-* v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. 
-* v1.1.1 Added event type to messageData object.
-* v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
-* v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
-* v1.0.2 [#2](https://github.com/davidjbradshaw/iframe-resizer/issues/2) mime-type changed for IE8-10.
-* v1.0.0 Initial published release.
-
-## License
-Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
-Licensed under the [MIT license](http://opensource.org/licenses/MIT).
+* v2.0.0 Added native JS public function, renamed script filename
