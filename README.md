@@ -190,7 +190,7 @@ Version 2 makes a few changes that you need to be aware of when upgrading. The f
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>.
 
 ##Version History
-* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event.
+* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to calc(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example.
 * v1.4.4 Fixed bodyMargin bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
