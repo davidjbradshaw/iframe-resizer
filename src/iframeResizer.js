@@ -6,6 +6,7 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
 ( function() {
+    'use strict';
 
 	var
 		count              = 0,
@@ -116,12 +117,6 @@
 
 
 	function setupIFrame(){
-		function scrolling(){
-			log(' IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
-			iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
-			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
-		}
-
 		function ensureHasId(iframeID){
 			if (''===iframeID){
 				iframe.id = iframeID = 'iFrameSizer' + count++;
@@ -129,6 +124,12 @@
 			}
 
 			return iframeID;
+		}
+
+		function scrolling(){
+			log(' IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
+			iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
+			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
 		}
 
 		function trigger(calleeMsg){
@@ -153,6 +154,7 @@
 		}
 
 		var 
+            /*jshint validthis:true */
 			iframe   = this,
 			iframeID = ensureHasId(iframe.id);
 
