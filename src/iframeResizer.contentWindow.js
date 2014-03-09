@@ -142,7 +142,7 @@
 				var
 					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),
 					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');
-//('size' === lastTrigger) && ('interval' === lastTrigger)
+
 				if (lastTrigger in {size:1,interval:1} && ('resize' === type)){
 					cancelTrigger();
 				} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
