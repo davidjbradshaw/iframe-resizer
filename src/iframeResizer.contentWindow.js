@@ -8,6 +8,7 @@
  */
 
 (function() {
+    'use strict';
 
 	var
 		autoResize    = true,
@@ -116,7 +117,7 @@
 
 				function cancelTrigger(){
 					log( 'Trigger event (' + calleeMsg + ') cancelled');
-					setTimeout(function(){lastTrigger = type;},250);
+					setTimeout(function(){lastTrigger = type;},50);
 				}
 
 				function recordTrigger(){
@@ -141,8 +142,8 @@
 				var
 					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),
 					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');
-
-				if (('size' === lastTrigger) && ('resize' === type)){
+//('size' === lastTrigger) && ('interval' === lastTrigger)
+				if (lastTrigger in {size:1,interval:1} && ('resize' === type)){
 					cancelTrigger();
 				} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
 					resizeIFrame();
