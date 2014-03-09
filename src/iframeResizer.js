@@ -14,7 +14,7 @@
 		settings           = {},
 		defaults           = {
 			autoResize              : true,
-			contentWindowBodyMargin : 8,
+			contentWindowBodyMargin : 0,
 			calcHeight              : true,
 			calcWidth               : false,
 			enablePublicMethods     : false,
@@ -64,8 +64,8 @@
 				window.requestAnimationFrame(function RAF(){
 					messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 					log(
-						' ' + messageData.iframe.id +
-						' ' + dimension +
+						' IFrame (' + messageData.iframe.id +
+						') ' + dimension +
 						' set to ' + messageData[dimension] + 'px'
 					);
 				});
@@ -117,20 +117,22 @@
 
 	function setupIFrame(){
 		function scrolling(){
-			log('IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled'));
+			log(' IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
 			iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
 			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
 		}
 
-		function ensureHasId(){
-			if (''===iframe.id){
-				iframe.id = 'iFrameSizer' + count++;
-				log(' Added missing iframe ID: '+iframe.id);
+		function ensureHasId(iframeID){
+			if (''===iframeID){
+				iframe.id = iframeID = 'iFrameSizer' + count++;
+				log(' Added missing iframe ID: '+ iframeID);
 			}
+
+			return iframeID;
 		}
 
 		function trigger(calleeMsg){
-			var msg = iframe.id +
+			var msg = iframeID +
 					':' + settings.contentWindowBodyMargin +
 					':' + settings.calcWidth +
 					':' + settings.log +
@@ -150,26 +152,10 @@
 			trigger('init');
 		}
 
-		function beenHere(){
-			var retCode = false;
+		var 
+			iframe   = this,
+			iframeID = ensureHasId(iframe.id);
 
-			/*
-			if (){
-				
-			} else {
-				retCode = true;
-			}
-			*/
-			return retCode;
-		}
-
-		var iframe = this; 
-
-		if (beenHere()){
-			return void 0;
-		}
-
-		ensureHasId();
 		scrolling();
 		init();
 	}
