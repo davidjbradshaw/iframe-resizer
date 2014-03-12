@@ -8,7 +8,7 @@ The package contains two minified JavaScript files in the [js](js) folder. The f
 $('iframe').iFrameResize([{options}]);
 ```
 
-or with **native** JavaScript. (See notes below for using native version with IE8).
+or with **native** JavaScript. (See [notes](https://github.com/davidjbradshaw/iframe-resizer#native-version) below for using native version with IE8).
 
 ```js
 iFrameResize([{options}],[selector]);
