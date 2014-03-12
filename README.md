@@ -177,12 +177,15 @@ Additionally requires support for [Array.prototype.forEach](http://kangax.github
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 ```
-## Bower
+## Install via front-end package management systems
 
-This library can be installed via the [Bower](http://bower.io) front-end package management system.
+This library can be installed via [Bower](http://bower.io),
 
     bower install iframe-resizer
 
+and [Component.io](http://component.io).
+
+    component install davidjbradshaw/iframe-resizer
 
 ##Changes between version 1 and 2.
 
