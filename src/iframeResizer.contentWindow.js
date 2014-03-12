@@ -17,7 +17,7 @@
 		calculateWidth= false,
 		height        = 1,
 		firstRun      = true,
-		interval      = 0,
+		interval      = 32,
 		lastTrigger   = '',
 		logging       = false,
 		msgID         = '[iFrameSizer]',  //Must match host page msg ID
