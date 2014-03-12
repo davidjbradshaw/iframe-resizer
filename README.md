@@ -160,7 +160,7 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 This library can be installed via the [Bower](http://bower.io) front-end package management system.
 
-    bower instal iframe-resizer
+    bower install iframe-resizer
 
 ##Version History
 * v1.4.4 Fixed bodyMargin bug.
