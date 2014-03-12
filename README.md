@@ -181,7 +181,7 @@ Additionally requires support for [Array.prototype.forEach](http://kangax.github
 
 This library can be installed via the [Bower](http://bower.io) front-end package management system.
 
-    bower instal iframe-resizer
+    bower install iframe-resizer
 
 ##Changes between version 1 and 2.
 
