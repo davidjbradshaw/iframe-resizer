@@ -15,11 +15,11 @@
 		settings           = {},
 		defaults           = {
 			autoResize              : true,
-			contentWindowBodyMargin : 0,
+			contentWindowBodyMargin : 8,
 			sizeHeight              : true,
 			sizeWidth               : false,
 			enablePublicMethods     : false,
-			interval                : 0,
+			interval                : 32,
 			log                     : false,
 			scrolling				: false,
 			callback                : function(){}

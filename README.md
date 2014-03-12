@@ -36,7 +36,7 @@ iFrameResize({
 	sizeHeight              : true,
 	sizeWidth               : false,
 	enablePublicMethods     : false,
-	interval                : 33,
+	interval                : 32,
 	scrolling               : false,
 	callback                : function(messageData){
 		$('p#callback').html('<b>Frame ID:</b> '   + messageData.iframe.id + 
@@ -99,7 +99,7 @@ If enabled, a `window.parentIFrame` object is created in the iFrame. This contai
 
 ### interval
 
-	default: 33  (in ms)
+	default: 32  (in ms)
 	type: number
 
 In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the library falls back to using setInterval, to check for changes to the page size. The default value is equal to two frame refreshes at 60Hz, setting this to a higher value will make screen redraws noticeable to the user.
