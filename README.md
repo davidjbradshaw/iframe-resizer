@@ -81,14 +81,14 @@ The default value of 8px is the preset value in FireFox; however, you will most 
 	default: true
 	type: boolean
 
-Calculate iFrame content height.
+Resize iFrame to content height.
 
 ### sizeWidth
 
 	default: false
 	type: boolean
 
-Calculate iFrame content width.
+Resize iFrame to content width.
 
 ### enablePublicMethods  
 
