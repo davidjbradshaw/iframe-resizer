@@ -2,16 +2,16 @@
 
 This library enables the resizing of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
-The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
-
-```js
-iFrameResize([{options}],[selector]);
-```
-
-or via **jQuery**.
+The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called via **jQuery**;
 
 ```js
 $('iframe').iFrameResize([{options}]);
+```
+
+or with **native** JavaScript. (See notes below for using native version with IE8).
+
+```js
+iFrameResize([{options}],[selector]);
 ```
 
 The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
@@ -29,7 +29,7 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
 ```js
-iFrameResize({
+$('iframe').iFrameResize({
 	log                     : false,
 	autoResize              : true,
 	contentWindowBodyMargin : 8,
