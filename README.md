@@ -183,6 +183,7 @@ This library can be installed via the [Bower](http://bower.io) front-end package
 
     bower install iframe-resizer
 
+
 ##Changes between version 1 and 2.
 
 Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width). 
