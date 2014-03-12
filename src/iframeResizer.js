@@ -178,8 +178,10 @@
 				throw new TypeError('Options is not an object.');
 			}
 
-			for (var option in defaults) { 
-				settings[option] = options[option] || defaults[option]; 
+			for (var option in defaults) {
+				if (defaults.hasOwnProperty(option)){
+					settings[option] = options[option] || defaults[option];
+				}
 			}
 		}
 
