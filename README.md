@@ -179,11 +179,11 @@ Additionally requires support for [Array.prototype.forEach](http://kangax.github
 ```
 ## Install via Package Management Systems
 
-This library can be installed via [Bower](http://bower.io),
+This library can be installed via the [Bower](http://bower.io),
 
     bower install iframe-resizer
 
-and [Component.io](http://component.io).
+and [Component](http://component.io) front-end package management systems.
 
     component install davidjbradshaw/iframe-resizer
 
