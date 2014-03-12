@@ -126,7 +126,7 @@ Function called after iFrame resized. Passes in messageData object containing th
 
 To enable these methods you must set `enablePublicMethods` to `true`. This creates the `window.parentIFrame` object in the iFrame.
 
-##### window.parentIFrame.close()
+### window.parentIFrame.close()
 
 Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.
 
@@ -136,7 +136,7 @@ if ('parentIFrame' in window) {
 }
 ```
 
-##### window.parentIFrame.size ([customHeight],[ customWidth])
+### window.parentIFrame.size ([customHeight],[ customWidth])
 
 Manually force iFrame to resize. In case the page is loaded outside the iFrame, you should test before making this call.
 
