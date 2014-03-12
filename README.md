@@ -33,11 +33,11 @@ $('iframe').iFrameResize({
 	log                     : false,
 	autoResize              : true,
 	contentWindowBodyMargin : 8,
-	sizeHeight              : true,
-	sizeWidth               : false,
 	enablePublicMethods     : false,
 	interval                : 32,
 	scrolling               : false,
+	sizeHeight              : true,
+	sizeWidth               : false,
 	callback                : function(messageData){
 		$('p#callback').html('<b>Frame ID:</b> '   + messageData.iframe.id + 
 							' <b>Height:</b> '     + messageData.height + 
@@ -76,20 +76,6 @@ Setting is used to override the default browser body tag style. As we cannot rel
 
 The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
 
-### sizeHeight
-
-	default: true
-	type: boolean
-
-Resize iFrame to content height.
-
-### sizeWidth
-
-	default: false
-	type: boolean
-
-Resize iFrame to content width.
-
 ### enablePublicMethods  
 
 	default: false
@@ -114,6 +100,20 @@ Set to zero to disable.
     type: boolean
 
 Enable scroll bars in iFrame.
+
+### sizeHeight
+
+	default: true
+	type: boolean
+
+Resize iFrame to content height.
+
+### sizeWidth
+
+	default: false
+	type: boolean
+
+Resize iFrame to content width.
 
 ### callback
 
