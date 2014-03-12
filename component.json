@@ -19,8 +19,8 @@
   "dependencies": {},
   "development": {},
   "scripts": [
-    "js/iframe-resizer.min.js",
-    "js/iframe-resizer.contentWindow.min.js"
+    "js/iframeResizer.min.js",
+    "js/iframeResizer.contentWindow.min.js"
   ],
   "license": "MIT"
 }
