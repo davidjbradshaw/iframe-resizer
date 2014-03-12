@@ -31,35 +31,45 @@
       </header>
       <section>
         <h1>
-<a name="cross-domain-iframe-resize" class="anchor" href="#cross-domain-iframe-resize"><span class="octicon octicon-link"></span></a>Cross domain iFrame resize</h1>
+<a name="iframe-resizer--" class="anchor" href="#iframe-resizer--"><span class="octicon octicon-link"></span></a>iFrame Resizer <a href="https://codeclimate.com/github/davidjbradshaw/iframe-resizer"><img src="https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png" alt="Code Climate"></a> <a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a>
+</h1>
 
-<p>This library enables the resizing of cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
+<p>This library enables the resizing of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
 
-<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/jquery.iframeResizer.min.js">jquery.iframeResizer.min.js</a>) is a <strong>jQuery</strong> plugin for the page hosting the iFrame.</p>
+<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
 
-<p>The second one (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
+<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}],[</span><span class="nx">selector</span><span class="p">]);</span>
+</pre></div>
 
-<p>The code supports resizing the iFrame when the browser window changes size or the content of the iFrame changes. For this to work you need to set one of the dimensions to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
+<p>or via <strong>jQuery</strong>.</p>
 
-<p>To set the library up for this create a basic iFrame tag with the following options.</p>
+<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}]);</span>
+</pre></div>
+
+<p>The second file (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
+
+<h3>
+<a name="typical-setup" class="anchor" href="#typical-setup"><span class="octicon octicon-link"></span></a>Typical setup</h3>
+
+<p>The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
 
 <div class="highlight highlight-html"><pre><span class="nt">&lt;iframe</span> <span class="na">src=</span><span class="s">"http://anotherdomain.com/frame.content.html"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">scrolling=</span><span class="s">"no"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
 </pre></div>
 
 <p>Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.</p>
 
-<p>Next we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.</p>
+<p>Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
-<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">({</span>
-    <span class="nx">log</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">autoResize</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">contentWindowBodyMargin</span><span class="o">:</span><span class="mi">8</span><span class="p">,</span>
-    <span class="nx">doHeight</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
-    <span class="nx">doWidth</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
-    <span class="nx">enablePublicMethods</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
-    <span class="nx">interval</span><span class="o">:</span><span class="mi">33</span><span class="p">,</span>
-    <span class="nx">scrolling</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
-    <span class="nx">callback</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">messageData</span><span class="p">){</span>
+<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">({</span>
+    <span class="nx">log</span>                     <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">autoResize</span>              <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">contentWindowBodyMargin</span> <span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">sizeHeight</span>              <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">sizeWidth</span>               <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">enablePublicMethods</span>     <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">interval</span>                <span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="nx">scrolling</span>               <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">callback</span>                <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">messageData</span><span class="p">){</span>
         <span class="nx">$</span><span class="p">(</span><span class="s1">'p#callback'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">'&lt;b&gt;Frame ID:&lt;/b&gt; '</span>   <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">iframe</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> 
                             <span class="s1">' &lt;b&gt;Height:&lt;/b&gt; '</span>     <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">height</span> <span class="o">+</span> 
                             <span class="s1">' &lt;b&gt;Width:&lt;/b&gt; '</span>      <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">width</span> <span class="o">+</span>
@@ -68,6 +78,9 @@
     <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
+
+<h3>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h3>
 
 <p>To see this working take a look at this <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.</p>
 
@@ -99,25 +112,27 @@ type: boolean
 type: number
 </code></pre>
 
-<p>Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way we can work out the value is to set it. The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.</p>
+<p>Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way to reliably work out this value is to set it. </p>
+
+<p>The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.</p>
 
 <h3>
-<a name="doheight" class="anchor" href="#doheight"><span class="octicon octicon-link"></span></a>doHeight</h3>
+<a name="sizeheight" class="anchor" href="#sizeheight"><span class="octicon octicon-link"></span></a>sizeHeight</h3>
 
 <pre><code>default: true
 type: boolean
 </code></pre>
 
-<p>Calculate iFrame hosted content height.</p>
+<p>Resize iFrame to content height.</p>
 
 <h3>
-<a name="dowidth" class="anchor" href="#dowidth"><span class="octicon octicon-link"></span></a>doWidth</h3>
+<a name="sizewidth" class="anchor" href="#sizewidth"><span class="octicon octicon-link"></span></a>sizeWidth</h3>
 
 <pre><code>default: false
 type: boolean
 </code></pre>
 
-<p>Calculate iFrame hosted content width. Enable this if using size method to set a custom width.</p>
+<p>Resize iFrame to content width.</p>
 
 <h3>
 <a name="enablepublicmethods" class="anchor" href="#enablepublicmethods"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
@@ -131,7 +146,7 @@ type: boolean
 <h3>
 <a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
 
-<pre><code>default: 33  (in ms)
+<pre><code>default: 32  (in ms)
 type: number
 </code></pre>
 
@@ -159,7 +174,7 @@ type: boolean
 <p>Function called after iFrame resized. Passes in messageData object containing the <strong>iFrame</strong>, <strong>height</strong>, <strong>width</strong> and the <strong>type</strong> of event that triggered the iFrame to resize.</p>
 
 <h2>
-<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
+<a name="iframe-methods" class="anchor" href="#iframe-methods"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
 
 <p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates the <code>window.parentIFrame</code> object in the iFrame.</p>
 
@@ -174,7 +189,7 @@ type: boolean
 </pre></div>
 
 <h5>
-<a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight<b>,</b> customWidth])</h5>
+<a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight],[ customWidth])</h5>
 
 <p>Manually force iFrame to resize. In case the page is loaded outside the iFrame, you should test before making this call.</p>
 
@@ -183,12 +198,12 @@ type: boolean
 <span class="p">}</span>
 </pre></div>
 
-<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoResize option to prevent auto resizing and enable the doWidth option if you wish to set the width.</p>
+<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the autoResize option to prevent auto resizing and enable the sizeWidth option if you wish to set the width.</p>
 
-<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">({</span>
+<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">({</span>
     <span class="nx">autoResize</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">enablePublicMethods</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">doWidth</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="nx">sizeWidth</span><span class="o">:</span> <span class="kc">true</span>
 <span class="p">});</span>
 </pre></div>
 
@@ -202,20 +217,40 @@ type: boolean
 <h2>
 <a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
 
+<h3>
+<a name="jquery-version" class="anchor" href="#jquery-version"><span class="octicon octicon-link"></span></a>jQuery version</h3>
+
 <p>Works with all browsers which support <a href="http://caniuse.com/#feat=x-doc-messaging">window.postMessage</a> (IE8+).</p>
+
+<h3>
+<a name="native-version" class="anchor" href="#native-version"><span class="octicon octicon-link"></span></a>Native version</h3>
+
+<p>Additionally requires support for <a href="http://kangax.github.io/es5-compat-table/#Array.prototype.forEach">Array.prototype.forEach</a> (IE9+) and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll">document.querySelectorAll</a> (IE8 Standards Mode). For IE8 use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN PolyFil</a> and force <a href="http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode">Standards Mode</a> with the following meta tag.</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
+</pre></div>
 
 <h2>
 <a name="bower" class="anchor" href="#bower"><span class="octicon octicon-link"></span></a>Bower</h2>
 
 <p>This library can be installed via the <a href="http://bower.io">Bower</a> front-end package management system.</p>
 
-<pre><code>bower instal iframe-resizer
+<pre><code>bower install iframe-resizer
 </code></pre>
+
+<h2>
+<a name="changes-between-version-1-and-2" class="anchor" href="#changes-between-version-1-and-2"><span class="octicon octicon-link"></span></a>Changes between version 1 and 2.</h2>
+
+<p>Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width). </p>
+
+<p>The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>.</p>
 
 <h2>
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Removed deprecated methods.</li>
+<li>v1.4.4 Fixed bodyMargin bug.</li>
 <li>v1.4.3 CodeCoverage fixes. Documentation improvements.</li>
 <li>v1.4.2 Fixed size(250) example in IE8.</li>
 <li>v1.4.1 Setting <code>interval</code> to a negative number now forces the interval test to run instead of <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a>.</li>
@@ -236,8 +271,6 @@ type: boolean
 
 <p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>
 Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
-
-<p><a href="https://codeclimate.com/github/davidjbradshaw/iframe-resizer"><img src="https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png" alt="Code Climate"></a> <a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
