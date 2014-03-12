@@ -16,8 +16,8 @@
 		defaults           = {
 			autoResize              : true,
 			contentWindowBodyMargin : 0,
-			calcHeight              : true,
-			calcWidth               : false,
+			sizeHeight              : true,
+			sizeWidth               : false,
 			enablePublicMethods     : false,
 			interval                : 0,
 			log                     : false,
@@ -72,8 +72,8 @@
 				});
 			}
 
-			if( settings.calcHeight ) { setDimension('height'); }
-			if( settings.calcWidth  ) { setDimension('width');  }
+			if( settings.sizeHeight ) { setDimension('height'); }
+			if( settings.sizeWidth  ) { setDimension('width');  }
 		}
 
 		function closeIFrame(iframe){
@@ -135,7 +135,7 @@
 		function trigger(calleeMsg){
 			var msg = iframeID +
 					':' + settings.contentWindowBodyMargin +
-					':' + settings.calcWidth +
+					':' + settings.sizeWidth +
 					':' + settings.log +
 					':' + settings.interval +
 					':' + settings.enablePublicMethods +

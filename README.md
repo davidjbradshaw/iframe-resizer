@@ -33,8 +33,8 @@ iFrameResize({
 	log                     : false,
 	autoResize              : true,
 	contentWindowBodyMargin : 8,
-	calcHeight              : true,
-	calcWidth               : false,
+	sizeHeight              : true,
+	sizeWidth               : false,
 	enablePublicMethods     : false,
 	interval                : 33,
 	scrolling               : false,
@@ -76,14 +76,14 @@ Setting is used to override the default browser body tag style. As we cannot rel
 
 The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
 
-### calcHeight
+### sizeHeight
 
 	default: true
 	type: boolean
 
 Calculate iFrame content height.
 
-### calcWidth
+### sizeWidth
 
 	default: false
 	type: boolean
@@ -146,13 +146,13 @@ if ('parentIFrame' in window) {
 }
 ```
 
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the calcWidth option if you wish to set the width.
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the sizeWidth option if you wish to set the width.
 
 ```js
 iFrameResize({
 	autoResize: false,
 	enablePublicMethods: true,
-	calcWidth: true
+	sizeWidth: true
 });
 ```
 
