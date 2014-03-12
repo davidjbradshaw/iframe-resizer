@@ -1,0 +1,26 @@
+{
+  "name": "iframe-resizer",
+  "version": "1.4.4",
+  "repo": "davidjbradshaw/iframe-resizer",
+  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
+  "keywords": [
+    "Cross",
+    "Domain",
+    "iFrame",
+    "Resizing",
+    "Resizer",
+    "postMessage",
+    "content",
+    "resize",
+    "height",
+    "width",
+    "mutationObserver"
+  ],
+  "dependencies": {},
+  "development": {},
+  "scripts": [
+    "js/iframe-resizer.min.js",
+    "js/iframe-resizer.contentWindow.min.js"
+  ],
+  "license": "MIT"
+}
