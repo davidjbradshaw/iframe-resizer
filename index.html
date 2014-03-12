@@ -36,14 +36,14 @@
 
 <p>This library enables the resizing of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
 
-<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
-
-<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}],[</span><span class="nx">selector</span><span class="p">]);</span>
-</pre></div>
-
-<p>or via <strong>jQuery</strong>.</p>
+<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called via <strong>jQuery</strong>;</p>
 
 <div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}]);</span>
+</pre></div>
+
+<p>or with <strong>native</strong> JavaScript. (See <a href="https://github.com/davidjbradshaw/iframe-resizer#browser-compatibility">notes</a> below for using native version with IE8).</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}],[</span><span class="nx">selector</span><span class="p">]);</span>
 </pre></div>
 
 <p>The second file (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
@@ -60,15 +60,15 @@
 
 <p>Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
-<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">({</span>
+<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">({</span>
     <span class="nx">log</span>                     <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">autoResize</span>              <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="nx">contentWindowBodyMargin</span> <span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="nx">sizeHeight</span>              <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">sizeWidth</span>               <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">enablePublicMethods</span>     <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">interval</span>                <span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
     <span class="nx">scrolling</span>               <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">sizeHeight</span>              <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">sizeWidth</span>               <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">callback</span>                <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">messageData</span><span class="p">){</span>
         <span class="nx">$</span><span class="p">(</span><span class="s1">'p#callback'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">'&lt;b&gt;Frame ID:&lt;/b&gt; '</span>   <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">iframe</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> 
                             <span class="s1">' &lt;b&gt;Height:&lt;/b&gt; '</span>     <span class="o">+</span> <span class="nx">messageData</span><span class="p">.</span><span class="nx">height</span> <span class="o">+</span> 
@@ -117,24 +117,6 @@ type: number
 <p>The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.</p>
 
 <h3>
-<a name="sizeheight" class="anchor" href="#sizeheight"><span class="octicon octicon-link"></span></a>sizeHeight</h3>
-
-<pre><code>default: true
-type: boolean
-</code></pre>
-
-<p>Resize iFrame to content height.</p>
-
-<h3>
-<a name="sizewidth" class="anchor" href="#sizewidth"><span class="octicon octicon-link"></span></a>sizeWidth</h3>
-
-<pre><code>default: false
-type: boolean
-</code></pre>
-
-<p>Resize iFrame to content width.</p>
-
-<h3>
 <a name="enablepublicmethods" class="anchor" href="#enablepublicmethods"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
 
 <pre><code>default: false
@@ -164,6 +146,24 @@ type: boolean
 </code></pre>
 
 <p>Enable scroll bars in iFrame.</p>
+
+<h3>
+<a name="sizeheight" class="anchor" href="#sizeheight"><span class="octicon octicon-link"></span></a>sizeHeight</h3>
+
+<pre><code>default: true
+type: boolean
+</code></pre>
+
+<p>Resize iFrame to content height.</p>
+
+<h3>
+<a name="sizewidth" class="anchor" href="#sizewidth"><span class="octicon octicon-link"></span></a>sizeWidth</h3>
+
+<pre><code>default: false
+type: boolean
+</code></pre>
+
+<p>Resize iFrame to content width.</p>
 
 <h3>
 <a name="callback" class="anchor" href="#callback"><span class="octicon octicon-link"></span></a>callback</h3>
@@ -225,7 +225,7 @@ type: boolean
 <h3>
 <a name="native-version" class="anchor" href="#native-version"><span class="octicon octicon-link"></span></a>Native version</h3>
 
-<p>Additionally requires support for <a href="http://kangax.github.io/es5-compat-table/#Array.prototype.forEach">Array.prototype.forEach</a> (IE9+) and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll">document.querySelectorAll</a> (IE8 Standards Mode). For IE8 use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN PolyFil</a> and force <a href="http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode">Standards Mode</a> with the following meta tag.</p>
+<p>Additionally requires support for <a href="http://kangax.github.io/es5-compat-table/#Array.prototype.forEach">Array.prototype.forEach</a> (IE9+) and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll">document.querySelectorAll</a> (IE8 Standards Mode). For <strong>IE8</strong> use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN PolyFil</a> and force <a href="http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode">Standards Mode</a> with the following meta tag.</p>
 
 <div class="highlight highlight-html"><pre><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
 </pre></div>
