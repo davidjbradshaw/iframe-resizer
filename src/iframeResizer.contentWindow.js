@@ -2,22 +2,22 @@
  * File: iframeSizer.contentWindow.js
  * Desc: Include this file in any page being loaded into an iframe
  *       to force the iframe to resize to the content size.
- * Requires: jquery.iframeSizer.js on host page.
+ * Requires: iframeSizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
- * Date: 2013-06-14
  */
 
 (function() {
+    'use strict';
 
 	var
 		autoResize    = true,
 		base          = 10,
 		bodyMargin    = 0,
-		doWidth       = false,
+		calculateWidth= false,
 		height        = 1,
 		firstRun      = true,
-		interval      = 0,
+		interval      = 32,
 		lastTrigger   = '',
 		logging       = false,
 		msgID         = '[iFrameSizer]',  //Must match host page msg ID
@@ -65,7 +65,7 @@
 
 					myID             = data[0];
 					bodyMargin       = parseInt(data[1],base);
-					doWidth          = (undefined !== data[2]) ? strBool(data[2])       : false;
+					calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : false;
 					logging          = (undefined !== data[3]) ? strBool(data[3])       : false;
 					interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
 					publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : false;
@@ -78,14 +78,13 @@
 					log('Body margin set to '+bodyMargin+'px');
 				}
 
-				function setHeightAuto(){
-					// Stop infinity resizing of iframe
+				function stopInfiniteResizingOfIFrame(){
 					document.documentElement.style.height = 'auto';
 					document.body.style.height = 'auto';
 					log('HTML & body height set to "auto"');
 				}
 
-				function initWindowListener(){
+				function initWindowResizeListener(){
 					addEventListener('resize', function(){
 						sendSize('resize','Window resized');
 					});
@@ -93,7 +92,7 @@
 
 				function startEventListeners(){
 					if ( true === autoResize ) {
-						initWindowListener();
+						initWindowResizeListener();
 						setupMutationObserver();
 					}
 					else {
@@ -102,9 +101,10 @@
 				}
 
 				log('Initialising iFrame');
+
 				readData();
 				setMargin();
-				setHeightAuto();
+				stopInfiniteResizingOfIFrame();
 				setupPublicMethods();
 				startEventListeners();
 			}
@@ -117,7 +117,7 @@
 
 				function cancelTrigger(){
 					log( 'Trigger event (' + calleeMsg + ') cancelled');
-					setTimeout(function(){lastTrigger = type;},250);
+					setTimeout(function(){lastTrigger = type;},50);
 				}
 
 				function recordTrigger(){
@@ -142,9 +142,10 @@
 				var
 					currentHeight = (undefined !== customHeight)  ? customHeight : getDimension('Height'),
 					currentWidth  = (undefined !== customWidth )  ? customWidth  : getDimension('Width');
-				if (('size' === lastTrigger) && ('resize' === type)){
+
+				if (lastTrigger in {size:1,interval:1} && ('resize' === type)){
 					cancelTrigger();
-				} else if ((height !== currentHeight) || (doWidth && (width !== currentWidth))){
+				} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
 					resizeIFrame();
 				}
 			}
@@ -153,11 +154,7 @@
 				if (publicMethods) {
 					log( 'Enabling public methods' );
 
-					window.parentIFrame = window.iFrameSizer = { //iFrameSizer name deprecated
-						trigger: function(customHeight, customWidth){ //deprecated method name
-							warn( 'trigger() method deprecated. Use size() instead.');
-							window.parentIFrame.size(customHeight, customWidth);
-						},
+					window.parentIFrame = window.iFrameSizer = {
 						size: function(customHeight, customWidth){
 							var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 							sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
@@ -202,7 +199,7 @@
 					observer.observe(target, config);
 				}
 
-				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 				if (MutationObserver){
 					if (0 > interval) {
@@ -217,7 +214,11 @@
 				}
 			}
 
-			if (msgID === event.data.substr(0,msgIdLen) && firstRun){ //Check msg ID
+			function isMessageForUs(){
+				return msgID === '' + event.data.substr(0,msgIdLen);
+			}
+
+			if (isMessageForUs() && firstRun){ //Check msg ID
 				init();
 				sendSize('init','Init message from host page');
 				firstRun = false;
@@ -231,4 +232,3 @@
 	}
 
 })();
-

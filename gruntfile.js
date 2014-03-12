@@ -13,7 +13,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     meta: {
-      bannerLocal: '/*! iFrame Resizer (jquery.iframeSizer.min.js ) - v<%= pkg.version %> - ' +
+      bannerLocal: '/*! iFrame Resizer (iframeSizer.min.js ) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Force cross domain iframes to size to content.\n' +
         ' *  Requires: iframeSizer.contentWindow.min.js to be loaded into the target frame.\n' +
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Include this file in any page being loaded into an iframe\n' +
         ' *        to force the iframe to resize to the content size.\n' +
-        ' *  Requires: jquery.iframeSizer.min.js on host page.\n' +
+        ' *  Requires: iframeSizer.min.js on host page.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
         ' *  License: MIT\n */\n'
     },
@@ -57,10 +57,10 @@ module.exports = function(grunt) {
       local: {
         options:{
           banner:'<%= meta.bannerLocal %>',
-          sourceMap: 'src/jquery.iframeResizer.map'
+          sourceMap: 'src/iframeResizer.map'
         },
-        src: ['src/jquery.iframeResizer.js'],
-        dest: 'js/jquery.iframeResizer.min.js',
+        src: ['src/iframeResizer.js'],
+        dest: 'js/iframeResizer.min.js',
       },
       remote: {
         options: {

@@ -16,38 +16,11 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
-  <script src="../js/jquery.iframeResizer.min.js"></script>
+  <script src="../js/iframeResizer.min.js"></script>
   <script>
   
     'use strict';
     var msgId = '[iFrameSizerTest]:';
-  
-    asyncTest( "iFrame inteval timer ", function() {
-
-      var 
-          callbackCounter = 0,
-          started         = false;
-
-      $('iframe').iFrameResize({
-        log:true,
-        interval:1,
-        callback:function(messageData){
-          
-          switch  (''+(++callbackCounter)){
-            case '1':
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'changeContent', '*' );
-              break;
-            default:
-              ok( true, 'iFrame detected content change');
-              if ('resize' !== messageData.type && (false === started)){
-                started = true;
-                ok( 'interval' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected interval.' );
-                start();
-              }
-          }
-        }
-      });
-    });
   
     asyncTest( "iFrame negative inteval timer ", function() {
 

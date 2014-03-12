@@ -16,30 +16,25 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
-  <script src="../js/jquery.iframeResizer.min.js"></script>
+  <script src="../js/iframeResizer.min.js"></script>
   <script>
 
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-    asyncTest( "iFrame trigger Event", function() {
+    asyncTest( "iFrame change page", function() {
 
       var callbackCounter = 0;
 
-      $('iframe').iFrameSizer({
+      $('iframe').iFrameResize({
         log:true,
-        doWidth:true,
-        enablePublicMethods:true,
-        autoResize:false,
         callback:function(messageData){
-          var msgType = 'size';
-
           switch  (''+(++callbackCounter)){
             case '1':
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'jsTrigger', '*' );
+              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'pageChange', '*' );
               break;
             case '2':
-              ok( msgType === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected '+msgType);
+              ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init');
               start();
           }
         }
