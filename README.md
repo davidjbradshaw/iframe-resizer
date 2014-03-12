@@ -177,7 +177,7 @@ Additionally requires support for [Array.prototype.forEach](http://kangax.github
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 ```
-## Install via front-end package management systems
+## Install via Package Management Systems
 
 This library can be installed via [Bower](http://bower.io),
 
