@@ -72,7 +72,9 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 	default: null
 	type: string || number
 
-Setting is used to override the default browser body tag style. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. Number values are converted into px.
+Override the default body tag style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A Number value is converted into px.
+
+Using non px values create a performance overhead, as the have to be converted to px when the iFrame is sized.
 
 ### enablePublicMethods  
 
