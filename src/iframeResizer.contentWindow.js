@@ -80,7 +80,7 @@
 				if (undefined === bodyMarginStr){
 					bodyMarginStr = bodyMargin+'px';
 				}
-				if (undefined !== bodyMarginStr && '' !== bodyMarginStr){
+				if (undefined !== bodyMarginStr && '' !== bodyMarginStr && 'null' !== bodyMarginStr){
 					document.body.style.margin = bodyMarginStr;
 					log('Body margin set to '+bodyMarginStr);
 				}
