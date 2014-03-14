@@ -67,14 +67,12 @@ Setting the `log` option to true will make the scripts in both the host page and
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.
 
-### contentWindowBodyMagin
+### contentWindowBodyMargin
 
 	default: null
 	type: string || number
 
 Override the default body tag style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
-
-Using non *px* values creates a performance overhead, as they have to be converted to *px* when the iFrame is sized.
  
 ### enablePublicMethods  
 
