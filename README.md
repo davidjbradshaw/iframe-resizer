@@ -189,7 +189,7 @@ and [Component](http://component.io) front-end package management systems.
 
 Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width). 
 
-The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>, however, it should be noted that the V1 iframe script only accepts number values for contentWindowBodyMargin.
+The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>, however, it should be noted that the V1 iFrame script only accepts number values for contentWindowBodyMargin.
 
 ##Version History
 * v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Can now workout unsized margins inside the iFrame. The contentWindowBodyMargin propety now accepts any valid value for a CSS margin. Removed deprecated methods.
