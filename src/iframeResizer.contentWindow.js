@@ -119,12 +119,11 @@
 
 		function sendSize(type,calleeMsg, customHeight, customWidth){
 
+			// document.documentElement.offsetHeight is not reliable, so
+			// we have to jump through hoops to get the correct value.
 			function getIFrameHeight(){
-				// document.documentElement.offsetHeight is not reliable, so
-				// we have to jump through hoops to get the correct value.
 				function getComputedBodyStyle(prop) {
-
-					function getPixelValue(value) {
+					function convertUnitsToPxForIE8(value) {
 						var PIXEL = /^\d+(px)?$/i;
 
 						if (PIXEL.test(value)) {
@@ -151,7 +150,7 @@
 					if (document.defaultView && document.defaultView.getComputedStyle) {
 						retVal =  document.defaultView.getComputedStyle(el, null)[prop];
 					} else {//IE8
-						retVal =  getPixelValue(el.currentStyle[prop]);
+						retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
 					} 
 
 					return parseInt(retVal,base);

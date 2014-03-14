@@ -29,7 +29,7 @@
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
-          ok( 'iFrameSizer0' === messageData.iframe.id, 'iFrame id = iFrameSizer0.' );
+          ok( 'iFrameResizer0' === messageData.iframe.id, 'iFrame id = iFrameResizer0.' );
           ok( '600' === messageData.width, 'iFrame width = 600.' );
           start();
         }

@@ -120,30 +120,31 @@
 	function setupIFrame(){
 		function ensureHasId(iframeID){
 			if (''===iframeID){
-				iframe.id = iframeID = 'iFrameSizer' + count++;
+				iframe.id = iframeID = 'iFrameResizer' + count++;
 				log(' Added missing iframe ID: '+ iframeID);
 			}
 
 			return iframeID;
 		}
 
-		function scrolling(){
+		function setScrolling(){
 			log(' IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
 			iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
 			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
 		}
 
-		//The V1 iFrame script expects an int, where as in V2 we can send a
-		//CSS string value such as '1px 3em', so if 
+		//The V1 iFrame script expects an int, where as in V2 we can send a CSS
+		//string value such as '1px 3em', so if we have an int for V2, set V1=V2
+		//and then convert V2 to a string PX value.
 		function setupContentWindowBodyMarginValues(){
 			if (('number'===typeof(settings.contentWindowBodyMargin)) || ('0'===settings.contentWindowBodyMargin)){
 				settings.contentWindowBodyMarginV1 = settings.contentWindowBodyMargin;
-				settings.contentWindowBodyMargin = '' + settings.contentWindowBodyMargin + 'px';
+				settings.contentWindowBodyMargin   = '' + settings.contentWindowBodyMargin + 'px';
 			} 
 		}
 
-		function trigger(calleeMsg){
-			var msg = iframeID +
+		function createOutgoingMsg(){
+			return iframeID +
 					':' + settings.contentWindowBodyMarginV1 +
 					':' + settings.sizeWidth +
 					':' + settings.log +
@@ -151,17 +152,21 @@
 					':' + settings.enablePublicMethods +
 					':' + settings.autoResize+
 					':' + settings.contentWindowBodyMargin;
+		}
+
+		function trigger(calleeMsg,msg){
 			log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
 			iframe.contentWindow.postMessage( msgId + msg, '*' );
 		}
 
-		//We have to call trigger twice, as we can not be sure if all 
-		//iframes have completed loading when this code runs.
-		function init(){
+		function init(msg){
+			//We have to call trigger twice, as we can not be sure if all 
+			//iframes have completed loading when this code runs. The
+			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
-				trigger('iFrame.onload');
+				trigger('iFrame.onload',msg);
 			});
-			trigger('init');
+			trigger('init',msg);
 		}
 
 		var 
@@ -169,9 +174,9 @@
 			iframe   = this,
 			iframeID = ensureHasId(iframe.id);
 
-		scrolling();
+		setScrolling();
 		setupContentWindowBodyMarginValues();
-		init();
+		init(createOutgoingMsg());
 	}
 
 	function createNativePublicFunction(){
