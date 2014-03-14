@@ -29,10 +29,10 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
 
 ```js
-$('iframe').iFrameResize({
+iFrameResize({
 	log                     : false,
 	autoResize              : true,
-	contentWindowBodyMargin : 8,
+	contentWindowBodyMargin : null,
 	enablePublicMethods     : false,
 	interval                : 32,
 	scrolling               : false,
@@ -69,12 +69,10 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 
 ### contentWindowBodyMagin
 
-	default: 8  (in px)
-	type: number
+	default: null
+	type: string || number
 
-Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by `document.body.offsetHeight`. So the only way to reliably work out this value is to set it. 
-
-The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.
+Setting is used to override the default browser body tag style. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. Number values are converted into px.
 
 ### enablePublicMethods  
 
@@ -191,10 +189,10 @@ and [Component](http://component.io) front-end package management systems.
 
 Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width). 
 
-The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>.
+The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>, however, it should be noted that the V1 iframe script only accepts number values for contentWindowBodyMargin.
 
 ##Version History
-* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Removed deprecated methods.
+* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Can now workout unsized margins inside the iFrame. The contentWindowBodyMargin propety now accepts any valid value for a CSS margin. Removed deprecated methods.
 * v1.4.4 Fixed bodyMargin bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
@@ -213,5 +211,5 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 * v1.0.0 Initial published release.
 
 ## License
-Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT license](http://opensource.org/licenses/MIT).

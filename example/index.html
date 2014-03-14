@@ -40,15 +40,15 @@
 		<script type="text/javascript">
 
 			iFrameResize({
-				log                    : true,  // For development
-				autoResize             : true,  // Trigering resize on events in iFrame
-				contentWindowBodyMargin: 8,     // Set the default browser body margin style (in px)
-				sizeHeight             : true,  // Calculates dynamic height
-				sizeWidth              : false, // Calculates dynamic width
-				enablePublicMethods    : true,  // Enable methods within iframe hosted page 
-				interval               : 32,     // interval in ms to recalculate body height, 0 to disable refreshing
-				scrolling              : false, // Enable the scrollbars in the iFrame
-				callback               : function(messageData){ // Callback fn when message is received
+				log                     : true,  // For development
+				autoResize              : true,  // Trigering resize on events in iFrame
+				contentWindowBodyMargin : '',    // Set the default browser body margin style
+				enablePublicMethods     : true,  // Enable methods within iframe hosted page 
+				interval                : 32,    // interval in ms to recalculate body height, 0 to disable refreshing
+				scrolling               : false, // Enable the scrollbars in the iFrame
+				sizeHeight              : true,  // Calculates dynamic height
+				sizeWidth               : false, // Calculates dynamic width
+				callback                : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
 						' <b>Height:</b> '     + messageData.height +

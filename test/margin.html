@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QUnit LoadHide</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+
+    <div style="width:600px;">
+      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+    </div>
+
+  </div>
+  <script src="resources/qunit.js"></script>
+  <script src="resources/jquery.js"></script>
+  <script src="../js/iframeResizer.min.js"></script>
+  <script>
+  
+    'use strict';
+    var 
+      msgId = '[iFrameSizerTest]:',
+      baseHeight = 0;
+
+    asyncTest( "Margin setup", function() {
+      iFrameResize({
+        log:true,
+        contentWindowBodyMargin: 0,
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          start();
+          console.log('--');
+
+        }
+      });
+    });
+
+    asyncTest( "Margin V1", function() {
+      var margin = 10;
+      iFrameResize({
+        log:true,
+        contentWindowBodyMargin: 10,
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          //ok( baseHeight + (2*margin) === messageData.height,  baseHeight + (2*margin) +'='+ messageData.height);
+          start();
+          console.log('--');
+        }
+      });
+    });
+    
+    asyncTest( "Margin V2", function() {
+      iFrameResize({
+        log:true,
+        contentWindowBodyMargin: '5ex 5em',
+        callback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( '600' === messageData.width, 'iFrame width = 600.' );
+          start();
+        }
+      });
+    });
+ 
+  </script>
+</body>
+</html>

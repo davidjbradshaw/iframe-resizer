@@ -14,15 +14,16 @@
 		msgIdLen           = msgId.length,
 		settings           = {},
 		defaults           = {
-			autoResize              : true,
-			contentWindowBodyMargin : 8,
-			sizeHeight              : true,
-			sizeWidth               : false,
-			enablePublicMethods     : false,
-			interval                : 32,
-			log                     : false,
-			scrolling				: false,
-			callback                : function(){}
+			autoResize                : true,
+			contentWindowBodyMargin   : null,
+			contentWindowBodyMarginV1 : 8,
+			sizeHeight                : true,
+			sizeWidth                 : false,
+			enablePublicMethods       : false,
+			interval                  : 32,
+			log                       : false,
+			scrolling                 : false,
+			callback                  : function(){}
 		};
 
 	function addEventListener(obj,evt,func){
@@ -132,14 +133,24 @@
 			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
 		}
 
+		//The V1 iFrame script expects an int, where as in V2 we can send a
+		//CSS string value such as '1px 3em', so if 
+		function setupContentWindowBodyMarginValues(){
+			if (('number'===typeof(settings.contentWindowBodyMargin)) || ('0'===settings.contentWindowBodyMargin)){
+				settings.contentWindowBodyMarginV1 = settings.contentWindowBodyMargin;
+				settings.contentWindowBodyMargin = '' + settings.contentWindowBodyMargin + 'px';
+			} 
+		}
+
 		function trigger(calleeMsg){
 			var msg = iframeID +
-					':' + settings.contentWindowBodyMargin +
+					':' + settings.contentWindowBodyMarginV1 +
 					':' + settings.sizeWidth +
 					':' + settings.log +
 					':' + settings.interval +
 					':' + settings.enablePublicMethods +
-					':' + settings.autoResize;
+					':' + settings.autoResize+
+					':' + settings.contentWindowBodyMargin;
 			log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
 			iframe.contentWindow.postMessage( msgId + msg, '*' );
 		}
@@ -159,6 +170,7 @@
 			iframeID = ensureHasId(iframe.id);
 
 		scrolling();
+		setupContentWindowBodyMarginValues();
 		init();
 	}
 
@@ -180,7 +192,7 @@
 
 			for (var option in defaults) {
 				if (defaults.hasOwnProperty(option)){
-					settings[option] = options[option] || defaults[option];
+					settings[option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
 				}
 			}
 		}
