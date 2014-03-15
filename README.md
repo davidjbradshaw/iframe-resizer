@@ -2,16 +2,16 @@
 
 This library enables the resizing of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.
 
-The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called via **jQuery**;
-
-```js
-$('iframe').iFrameResize([{options}]);
-```
-
-or with **native** JavaScript. (See [notes](https://github.com/davidjbradshaw/iframe-resizer#browser-compatibility) below for using native version with IE8).
+The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
 iFrameResize([{options}],[selector]);
+```
+
+or via **jQuery**. (See [notes](https://github.com/davidjbradshaw/iframe-resizer#browser-compatibility) below for using native version with IE8).
+
+```js
+$('iframe').iFrameResize([{options}]);
 ```
 
 The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
@@ -26,27 +26,6 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.
-
-```js
-iFrameResize({
-	log                     : false,
-	autoResize              : true,
-	contentWindowBodyMargin : null,
-	enablePublicMethods     : false,
-	interval                : 32,
-	scrolling               : false,
-	sizeHeight              : true,
-	sizeWidth               : false,
-	callback                : function(messageData){
-		$('p#callback').html('<b>Frame ID:</b> '   + messageData.iframe.id + 
-							' <b>Height:</b> '     + messageData.height + 
-							' <b>Width:</b> '      + messageData.width +
-							' <b>Event type:</b> ' + messageData.type
-		);
-	}
-});
-```
 
 ###Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
@@ -192,7 +171,7 @@ Version 2 makes a few changes that you need to be aware of when upgrading. The f
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>, however, it should be noted that the V1 iFrame script only accepts number values for contentWindowBodyMargin.
 
 ##Version History
-* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Can now workout unsized margins inside the iFrame. The contentWindowBodyMargin propety now accepts any valid value for a CSS margin. Removed deprecated methods.
+* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The contentWindowBodyMargin propety now accepts any valid value for a CSS margin. Removed deprecated methods.
 * v1.4.4 Fixed bodyMargin bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
