@@ -15,8 +15,8 @@
 		settings           = {},
 		defaults           = {
 			autoResize                : true,
-			contentWindowBodyMargin   : null,
-			contentWindowBodyMarginV1 : 8,
+			bodyMargin   : null,
+			bodyMarginV1 : 8,
 			sizeHeight                : true,
 			sizeWidth                 : false,
 			enablePublicMethods       : false,
@@ -136,22 +136,22 @@
 		//The V1 iFrame script expects an int, where as in V2 expects a CSS
 		//string value such as '1px 3em', so if we have an int for V2, set V1=V2
 		//and then convert V2 to a string PX value.
-		function setupContentWindowBodyMarginValues(){
-			if (('number'===typeof(settings.contentWindowBodyMargin)) || ('0'===settings.contentWindowBodyMargin)){
-				settings.contentWindowBodyMarginV1 = settings.contentWindowBodyMargin;
-				settings.contentWindowBodyMargin   = '' + settings.contentWindowBodyMargin + 'px';
+		function setupBodyMarginValues(){
+			if (('number'===typeof(settings.bodyMargin)) || ('0'===settings.bodyMargin)){
+				settings.bodyMarginV1 = settings.bodyMargin;
+				settings.bodyMargin   = '' + settings.bodyMargin + 'px';
 			} 
 		}
 
 		function createOutgoingMsg(){
 			return iframeID +
-					':' + settings.contentWindowBodyMarginV1 +
+					':' + settings.bodyMarginV1 +
 					':' + settings.sizeWidth +
 					':' + settings.log +
 					':' + settings.interval +
 					':' + settings.enablePublicMethods +
 					':' + settings.autoResize+
-					':' + settings.contentWindowBodyMargin;
+					':' + settings.bodyMargin;
 		}
 
 		function trigger(calleeMsg,msg){
@@ -175,7 +175,7 @@
 			iframeID = ensureHasId(iframe.id);
 
 		setScrolling();
-		setupContentWindowBodyMarginValues();
+		setupBodyMarginValues();
 		init(createOutgoingMsg());
 	}
 
