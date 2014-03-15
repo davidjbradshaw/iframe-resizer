@@ -29,7 +29,7 @@
 	function addEventListener(obj,evt,func){
 		if ('addEventListener' in window){
 			obj.addEventListener(evt,func, false);
-		} else if ('attachEvent' in window){
+		} else if ('attachEvent' in window){//IE
 			obj.attachEvent('on'+evt,func);
 		}
 	}
@@ -102,7 +102,7 @@
 		}
 
 		function isMessageForUs(){
-			return msgId === '' + msg.substr(0,msgIdLen);
+			return msgId === '' + msg.substr(0,msgIdLen); //''+Protects against non-string msg
 		}
 
 		var 
@@ -133,7 +133,7 @@
 			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
 		}
 
-		//The V1 iFrame script expects an int, where as in V2 we can send a CSS
+		//The V1 iFrame script expects an int, where as in V2 expects a CSS
 		//string value such as '1px 3em', so if we have an int for V2, set V1=V2
 		//and then convert V2 to a string PX value.
 		function setupContentWindowBodyMarginValues(){
