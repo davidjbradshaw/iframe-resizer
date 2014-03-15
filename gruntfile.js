@@ -133,12 +133,18 @@ module.exports = function(grunt) {
           return retStr;
         }
       }
+    },
+
+    jsonlint: {
+      json: {
+        src: [ '*.json' ]
+      }
     }
 
   });
 
   grunt.registerTask('default', ['notest','qunit']);
-  grunt.registerTask('notest',  ['jshint','uglify','replace']);
+  grunt.registerTask('notest',  ['jsonlint','jshint','uglify','replace']);
   grunt.registerTask('test',    ['jshint','qunit']);
 
   grunt.registerTask('postBump',['uglify','replace','bump-commit','shell']);
