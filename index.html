@@ -59,10 +59,10 @@
 
 <p>Then we initialise the library on the page hosting our iFrame. This example shows all the default options and the values returned to the callback function.</p>
 
-<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">({</span>
+<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">({</span>
     <span class="nx">log</span>                     <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">autoResize</span>              <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">contentWindowBodyMargin</span> <span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">contentWindowBodyMargin</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="nx">enablePublicMethods</span>     <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">interval</span>                <span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
     <span class="nx">scrolling</span>               <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
@@ -105,15 +105,13 @@ type: boolean
 <p>When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.</p>
 
 <h3>
-<a name="contentwindowbodymagin" class="anchor" href="#contentwindowbodymagin"><span class="octicon octicon-link"></span></a>contentWindowBodyMagin</h3>
+<a name="contentwindowbodymargin" class="anchor" href="#contentwindowbodymargin"><span class="octicon octicon-link"></span></a>contentWindowBodyMargin</h3>
 
-<pre><code>default: 8  (in px)
-type: number
+<pre><code>default: null
+type: string || number
 </code></pre>
 
-<p>Setting is used to override the default browser body tag style. As we cannot reliably read this value and it's not included in the figure returned by <code>document.body.offsetHeight</code>. So the only way to reliably work out this value is to set it. </p>
-
-<p>The default value of 8px is the preset value in FireFox; however, you will most likely want to set this to zero so that the content of you iFrame is at the edge of the iFrame.</p>
+<p>Override the default body tag style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.</p>
 
 <h3>
 <a name="enablepublicmethods" class="anchor" href="#enablepublicmethods"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
@@ -177,8 +175,8 @@ type: boolean
 
 <p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates the <code>window.parentIFrame</code> object in the iFrame.</p>
 
-<h5>
-<a name="windowparentiframeclose" class="anchor" href="#windowparentiframeclose"><span class="octicon octicon-link"></span></a>window.parentIFrame.close()</h5>
+<h3>
+<a name="windowparentiframeclose" class="anchor" href="#windowparentiframeclose"><span class="octicon octicon-link"></span></a>window.parentIFrame.close()</h3>
 
 <p>Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.</p>
 
@@ -187,8 +185,8 @@ type: boolean
 <span class="p">}</span>
 </pre></div>
 
-<h5>
-<a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight],[ customWidth])</h5>
+<h3>
+<a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight],[ customWidth])</h3>
 
 <p>Manually force iFrame to resize. In case the page is loaded outside the iFrame, you should test before making this call.</p>
 
@@ -247,13 +245,13 @@ type: boolean
 
 <p>Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width). </p>
 
-<p>The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>.</p>
+<p>The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>, however, it should be noted that the V1 iFrame script only accepts number values for contentWindowBodyMargin.</p>
 
 <h2>
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Removed deprecated methods.</li>
+<li>v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional, renamed do(Heigh/Width) to size(Height/Width). Improved logging messages. Stop resize event firing for 50ms after interval event. Added multiple page example. Can now workout unsized margins inside the iFrame. The contentWindowBodyMargin propety now accepts any valid value for a CSS margin. Removed deprecated methods.</li>
 <li>v1.4.4 Fixed bodyMargin bug.</li>
 <li>v1.4.3 CodeCoverage fixes. Documentation improvements.</li>
 <li>v1.4.2 Fixed size(250) example in IE8.</li>
@@ -273,10 +271,8 @@ type: boolean
 </ul><h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>
+<p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>.
 Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
-
-<p><a href="https://codeclimate.com/github/davidjbradshaw/iframe-resizer"><img src="https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png" alt="Code Climate"></a> <a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
