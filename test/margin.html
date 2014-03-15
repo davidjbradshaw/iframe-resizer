@@ -27,7 +27,7 @@
     asyncTest( "Margin V2", function() {
       iFrameResize({
         log:true,
-        contentWindowBodyMargin: '5ex 5em',
+        bodyMargin: '5ex 5em',
         callback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( '600' === messageData.width, 'iFrame width = 600.' );
