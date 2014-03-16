@@ -101,6 +101,22 @@
 			}
 		}
 
+		function isMessageFromIFrame(){
+			var
+				origin  = event.origin,
+				src     = messageData.iframe.src;
+
+			if ((''+origin !== 'null') && (origin !== src.substr(0,origin.length))) {
+				throw new Error(
+					'Unexpect message received from: ' + origin +
+					' for ' + messageData.iframe.id + 
+					'. Message was: ' + event.data  
+				);
+			}
+
+			return true;
+		}
+
 		function isMessageForUs(){
 			return msgId === '' + msg.substr(0,msgIdLen); //''+Protects against non-string msg
 		}
@@ -111,8 +127,10 @@
 
 		if (isMessageForUs()){
 			messageData = processMsg();
-			actionMsg();
-			settings.callback(messageData);
+			if (isMessageFromIFrame()){
+				actionMsg();
+				settings.callback(messageData);
+			}
 		}
 	}
 

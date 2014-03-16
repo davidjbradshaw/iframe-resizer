@@ -33,7 +33,7 @@
 	function addEventListener(e,func){
 		if ('addEventListener' in window){
 			window.addEventListener(e,func, false);
-		} else if ('attachEvent' in window){
+		} else if ('attachEvent' in window){ //IE
 			window.attachEvent('on'+e,func);
 		}
 	}
@@ -156,7 +156,9 @@
 					return parseInt(retVal,base);
 				}
 
-				return document.body.offsetHeight + getComputedBodyStyle('marginTop') + getComputedBodyStyle('marginBottom');
+				return  document.body.offsetHeight +
+						getComputedBodyStyle('marginTop') +
+						getComputedBodyStyle('marginBottom');
 			}
 
 			function getIFrameWidth(){
@@ -200,14 +202,14 @@
 
 		function setupPublicMethods(){
 			if (publicMethods) {
-				log( 'Enabling public methods' );
+				log('Enable public methods');
 
 				window.parentIFrame = window.iFrameSizer = {
-					size: function(customHeight, customWidth){
+					size: function sizeF(customHeight, customWidth){
 						var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 						sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
 					},
-					close: function(){
+					close: function closeF(){
 						sendSize('close','window.parentIFrame.close()', 0, 0);
 					}
 				};
@@ -243,7 +245,7 @@
 						});
 					});
 
-				log('Setup MutationObserver');
+				log('Enable MutationObserver');
 				observer.observe(target, config);
 			}
 
