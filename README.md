@@ -123,7 +123,7 @@ if ('parentIFrame' in window) {
 }
 ```
 
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the autoResize option to prevent auto resizing and enable the sizeWidth option if you wish to set the width.
+This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the *autoResize* option to prevent auto resizing and enable the *sizeWidth* option if you wish to set the width. 
 
 ```js
 iFrameResize({
@@ -191,13 +191,13 @@ Version 2 makes a few changes that you need to be aware of when upgrading. The f
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <i>vice versa</i>, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.
 
 ##Version History
-* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed do(Heigh/Width) to size(Height/Width) and renamed contentWindowBodyMargin to bodyMargin. Improved logging messages. Stop resize event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The bodyMargin propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
-* v1.4.4 Fixed bodyMargin bug.
+* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)* and renamed *contentWindowBodyMargin* to *bodyMargin*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
+* v1.4.4 Fixed *bodyMargin* bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
 * v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 * v1.4.0 Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
-* v1.3.7 Stop resize event firing for 50ms after size event. Added size(250) to example.
+* v1.3.7 Stop *resize* event firing for 50ms after *size* event. Added size(250) to example.
 * v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
 * v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatabilty.
