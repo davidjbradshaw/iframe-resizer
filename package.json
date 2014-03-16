@@ -21,6 +21,7 @@
     "grunt-shell": "0.6.x"
   },
   "scripts": {
+    "build": "npm install && grunt",
     "test": "grunt test"
   },
   "engines": {

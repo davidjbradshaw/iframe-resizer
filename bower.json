@@ -5,15 +5,22 @@
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
   ],
-  "description": "jQuery pluggin for cross domain sizing iframes to content with support for window resizing.",
-  "main": "js/jquery.iframeResizer.min.js",
+  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
+  "main": "js/iframeResizer.min.js",
   "keywords": [
     "Cross",
     "Domain",
     "iFrame",
     "Resizing",
     "Resizer",
-    "postMessage"
+    "postMessage",
+    "content",
+    "resize",
+    "height",
+    "width",
+    "mutationObserver",
+    "RWD",
+    "responsive"
   ],
   "license": "MIT",
   "ignore": [
@@ -31,7 +38,5 @@
     "package.json",
     "bower.json"
   ],
-  "dependencies": {
-    "jQuery": ">=1.7"
-  }
+  "dependencies": {}
 }

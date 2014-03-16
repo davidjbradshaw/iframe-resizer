@@ -14,7 +14,9 @@
     "resize",
     "height",
     "width",
-    "mutationObserver"
+    "mutationObserver",
+    "RWD",
+    "responsive"
   ],
   "dependencies": {},
   "development": {},

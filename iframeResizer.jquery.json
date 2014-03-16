@@ -1,36 +1,40 @@
 {
-"name": "iframeResizer",
-"title": "Auto Iframe Resizer (Cross Domain)",
-"description": "This jQuery plugin keeps an iframe sized to it's content and works across domains. Configurable to scale both height and width and has options to deal with dynamic content reszing.",
-"keywords": [
-"iframe",
-"resizer",
-"cross-domain",
-"postMessage",
-"scale",
-"content"
-],
-"version": "1.4.4",
-"author": {
-"name": "David J. Bradshaw",
-"email": "davidjbradshaw+github@gmail.com"
-},
-"maintainers": [
-{
-"name": "David J. Bradshaw",
-"email": "davidjbradshaw+github@gmail.com"
-}
-],
-"licenses": [
-{
-"type": "MIT",
-"url": "https://github.com/jquery/jquery-color/blob/2.1.2/MIT-LICENSE.txt"
-}
-],
-"bugs": "https://github.com/davidjbradshaw/iframe-resizer/issues",
-"homepage": "http://davidjbradshaw.github.io/iframe-resizer/",
-"docs": "https://github.com/davidjbradshaw/iframe-resizer",
-"dependencies": {
-"jquery": ">=1.7"
-}
+	"name": "iframeResizer",
+	"title": "Iframe Resizer",
+	"description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
+	"keywords": [
+		"iframe",
+		"resizer",
+		"cross-domain",
+		"postMessage",
+		"scale",
+		"content",
+		"resize",
+		"height",
+		"width",
+		"mutationObserver",
+		"RWD",
+		"responsive"
+	],
+	"version": "1.4.4",
+	"author": {
+		"name": "David J. Bradshaw",
+		"email": "davidjbradshaw+github@gmail.com"
+	},
+	"maintainers": [{
+		"name": "David J. Bradshaw",
+		"email": "davidjbradshaw+github@gmail.com"
+	}
+	],
+	"licenses": [{
+		"type": "MIT",
+		"url": "https://github.com/jquery/jquery-color/blob/2.1.2/MIT-LICENSE.txt"
+	}
+	],
+	"bugs": "https://github.com/davidjbradshaw/iframe-resizer/issues",
+	"homepage": "http://davidjbradshaw.github.io/iframe-resizer/",
+	"docs": "https://github.com/davidjbradshaw/iframe-resizer",
+	"dependencies": {
+	"jquery": ">=1.0"
+	}
 }
