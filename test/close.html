@@ -30,7 +30,7 @@
         log:true,
         doWidth:true,
         enablePublicMethods:true,
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           switch  (''+(++callbackCounter)){
             case '1':
               document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'close', '*' );

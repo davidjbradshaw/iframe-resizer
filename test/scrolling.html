@@ -25,7 +25,7 @@
     asyncTest( "scrolling not set", function() {
       $('iframe').iFrameResize({
         log:true,
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.' );
           ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'.' );
@@ -38,7 +38,7 @@
       $('iframe').iFrameResize({
         log:true,
         scrolling:false,
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.' );
           ok( 'no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'.' );
@@ -51,7 +51,7 @@
       $('iframe').iFrameResize({
         log:true,
         scrolling:true,
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.' );
           ok( 'yes' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'yes\'.' );

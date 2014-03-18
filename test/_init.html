@@ -26,7 +26,7 @@
 
       iFrameResize({
         log:true,
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
           ok( 'iFrameResizer0' === messageData.iframe.id, 'iFrame id = iFrameResizer0.' );

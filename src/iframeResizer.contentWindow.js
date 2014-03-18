@@ -25,7 +25,7 @@
 		msgIdLen           = msgID.length,
 		myID               = '',
 		publicMethods      = false,
-		target             = null,
+		target             = window.parent,
 		triggerCancelTimer = 50,
 		width              = 1;
 
@@ -71,8 +71,7 @@
 				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
 				publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : false;
 				autoResize       = (undefined !== data[6]) ? strBool(data[6])       : true;
-				bodyMarginStr    = data[7];
-				target           = event.source;	
+				bodyMarginStr    = data[7];	
 			}
 
 			function setMargin(){

@@ -28,7 +28,7 @@
       iFrameResize({
         log:true,
         bodyMargin: '5ex 5em',
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( '600' === messageData.width, 'iFrame width = 600.' );
           start();

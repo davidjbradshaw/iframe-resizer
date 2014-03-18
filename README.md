@@ -92,7 +92,7 @@ Resize iFrame to content height.
 
 Resize iFrame to content width.
 
-### callback
+### resizedCallback
 
 	type: function ({iframe,height,width,type})
 	

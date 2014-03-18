@@ -15,15 +15,15 @@
 		settings           = {},
 		defaults           = {
 			autoResize                : true,
-			bodyMargin   : null,
-			bodyMarginV1 : 8,
+			bodyMargin                : null,
+			bodyMarginV1              : 8,
 			sizeHeight                : true,
 			sizeWidth                 : false,
 			enablePublicMethods       : false,
 			interval                  : 32,
 			log                       : false,
 			scrolling                 : false,
-			callback                  : function(){}
+			resizedCallback           : function(){}
 		};
 
 	function addEventListener(obj,evt,func){
@@ -129,7 +129,7 @@
 			messageData = processMsg();
 			if (isMessageFromIFrame()){
 				actionMsg();
-				settings.callback(messageData);
+				settings.resizedCallback(messageData);
 			}
 		}
 	}

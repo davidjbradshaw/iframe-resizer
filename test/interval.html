@@ -31,7 +31,7 @@
       $('iframe').iFrameResize({
         log:true,
         interval:-1,
-        callback:function(messageData){
+        resizedCallback:function(messageData){
           
           switch  (''+(++callbackCounter)){
             case '1':
