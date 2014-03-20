@@ -107,14 +107,16 @@
 				origin     = event.origin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
-			log(' Checking conection is from: '+remoteHost);
+			if (settings.secureConnection) {
+				log(' Checking conection is from: '+remoteHost);
 
-			if (settings.secureConnection && (''+origin !== 'null') && (origin !== remoteHost)) {
-				throw new Error(
-					'Unexpect message received from: ' + origin +
-					' for ' + messageData.iframe.id + 
-					'. Message was: ' + event.data  
-				);
+				if ((''+origin !== 'null') && (origin !== remoteHost)) {
+					throw new Error(
+						'Unexpect message received from: ' + origin +
+						' for ' + messageData.iframe.id +
+						'. Message was: ' + event.data
+					);
+				}
 			}
 
 			return true;

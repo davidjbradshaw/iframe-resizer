@@ -88,7 +88,7 @@ Enable scroll bars in iFrame.
 	default: true
 	type: boolean
 
-When set to true only incoming messages from the same domain listed in the `src` property of the iFrame tag will be accepted. If your iFrame navigates between different domains, you will need to disable this option.
+When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.
 
 ### sizeHeight
 
