@@ -26,7 +26,6 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
 
-
 ###Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
 
@@ -71,12 +70,25 @@ Setting this property to a negative number will force the interval check to run 
 
 Set to zero to disable.
 
+### resizedCallback
+
+	type: function ({iframe,height,width,type})
+	
+Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
+
 ### scrolling
 
     default: false
     type: boolean
 
 Enable scroll bars in iFrame.
+
+### secureConnection
+
+	default: true
+	type: boolean
+
+When set to true only incoming messages from the same domain listed in the `src` property of the iFrame tag will be accepted. If your iFrame navigates between different domains, you will need to disable this option.
 
 ### sizeHeight
 
@@ -92,12 +104,6 @@ Resize iFrame to content height.
 
 Resize iFrame to content width.
 
-### resizedCallback
-
-	type: function ({iframe,height,width,type})
-	
-Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
-
 
 ## IFrame Methods
 
@@ -105,7 +111,7 @@ To enable these methods you must set `enablePublicMethods` to `true`. This creat
 
 ### window.parentIFrame.close()
 
-Calling this function causes the parent page to remove the iFrame. This method should be contained in the following rapper, in case the page is not loaded inside an iFrame.
+Calling this function causes the parent page to remove the iFrame. This method should be contained in the following wrapper, in case the page is not loaded inside an iFrame.
 
 ```js
 if ('parentIFrame' in window) {
@@ -174,6 +180,8 @@ if (!Array.prototype.forEach){
 	};
 }
 ```
+
+
 ## Install via Package Management Systems
 
 This library can be installed via the [Bower](http://bower.io),
@@ -184,11 +192,13 @@ and [Component](http://component.io) front-end package management systems.
 
     component install davidjbradshaw/iframe-resizer
 
+
 ##Changes between version 1 and 2.
 
 Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width), contentWindowBodyMargin has been renamed bodyMargin and callback has been renamed resizedCallback.
 
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or *vice versa*, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.
+
 
 ##Version History
 * v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)*, renamed *contentWindowBodyMargin* to *bodyMargin* and renamed *callback* *resizedCallback*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
@@ -208,6 +218,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
 * v1.0.2 [#2](https://github.com/davidjbradshaw/iframe-resizer/issues/2) mime-type changed for IE8-10.
 * v1.0.0 Initial published release.
+
 
 ## License
 Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw).

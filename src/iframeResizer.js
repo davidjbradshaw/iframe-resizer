@@ -17,13 +17,14 @@
 			autoResize                : true,
 			bodyMargin                : null,
 			bodyMarginV1              : 8,
-			sizeHeight                : true,
-			sizeWidth                 : false,
 			enablePublicMethods       : false,
 			interval                  : 32,
 			log                       : false,
+			resizedCallback           : function(){},
 			scrolling                 : false,
-			resizedCallback           : function(){}
+			secureConnection          : true,
+			sizeHeight                : true,
+			sizeWidth                 : false
 		};
 
 	function addEventListener(obj,evt,func){
@@ -103,10 +104,12 @@
 
 		function isMessageFromIFrame(){
 			var
-				origin  = event.origin,
-				src     = messageData.iframe.src;
+				origin     = event.origin,
+				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
-			if ((''+origin !== 'null') && (origin !== src.substr(0,origin.length))) {
+			log(' Checking conection is from: '+remoteHost);
+
+			if (settings.secureConnection && (''+origin !== 'null') && (origin !== remoteHost)) {
 				throw new Error(
 					'Unexpect message received from: ' + origin +
 					' for ' + messageData.iframe.id + 
