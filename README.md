@@ -90,13 +90,6 @@ Function called after iFrame resized. Passes in messageData object containing th
 
 Enable scroll bars in iFrame.
 
-### checkOrigin
-
-	default: true
-	type: boolean
-
-When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.
-
 ### sizeHeight
 
 	default: true
