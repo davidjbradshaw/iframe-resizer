@@ -51,6 +51,13 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 	type: string || number
 
 Override the default body margin style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
+
+### checkOrigin
+
+	default: true
+	type: boolean
+
+When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.
  
 ### enablePublicMethods  
 
@@ -83,7 +90,7 @@ Function called after iFrame resized. Passes in messageData object containing th
 
 Enable scroll bars in iFrame.
 
-### secureConnection
+### checkOrigin
 
 	default: true
 	type: boolean
