@@ -17,12 +17,12 @@
 			autoResize                : true,
 			bodyMargin                : null,
 			bodyMarginV1              : 8,
+			checkOrigin               : true,
 			enablePublicMethods       : false,
 			interval                  : 32,
 			log                       : false,
 			resizedCallback           : function(){},
 			scrolling                 : false,
-			secureConnection          : true,
 			sizeHeight                : true,
 			sizeWidth                 : false
 		};
@@ -107,7 +107,7 @@
 				origin     = event.origin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
-			if (settings.secureConnection) {
+			if (settings.checkOrigin) {
 				log(' Checking conection is from: '+remoteHost);
 
 				if ((''+origin !== 'null') && (origin !== remoteHost)) {
@@ -173,7 +173,7 @@
 					':' + settings.log +
 					':' + settings.interval +
 					':' + settings.enablePublicMethods +
-					':' + settings.autoResize+
+					':' + settings.autoResize +
 					':' + settings.bodyMargin;
 		}
 
