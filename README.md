@@ -33,9 +33,6 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
 
 
 
-<i style="margin:20px 20px 25px;display:block">I would love to hear about where this code gets used, drop me an email at [dave@bradshaw.net](mailto:dave@bradshaw.net).</i>
-
-
 
 ## Options
 
@@ -125,23 +122,23 @@ To enable these methods you must set `enablePublicMethods` to `true`. This creat
 
 ```js
 if ('parentIFrame' in window) {
-	window.parentIFrame.close();
+	parentIFrame.close();
 }
 ```
 
-### window.parentIFrame.close()
+### parentIFrame.close()
 
 Remove the iFrame from the parent page. 
 
-### window.parentIFrame.getId()
+### parentIFrame.getId()
 
 Returns the ID of the iFrame that the page is contained in.
 
-### window.parentIFrame.sendMessage(message)
+### parentIFrame.sendMessage(message)
 
 Send string to containing page. The message is delivered to the `messageCallback` function.
 
-### window.parentIFrame.size ([customHeight],[ customWidth])
+### parentIFrame.size ([customHeight],[ customWidth])
 
 Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width. 
 
@@ -157,7 +154,7 @@ Then you can call the `size` method with dimensions:
 
 ```js
 if ('parentIFrame' in window) {
-	window.parentIFrame.size(100); // Set height to 100px
+	parentIFrame.size(100); // Set height to 100px
 }
 ```
 
