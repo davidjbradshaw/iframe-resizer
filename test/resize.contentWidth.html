@@ -10,12 +10,13 @@
   <div id="qunit-fixture">
 
     <div style="width:600px;">
-      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+      <iframe src="resources/frame.content.html" height="100%" scrolling="no"></iframe>
     </div>
 
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
   
@@ -30,14 +31,14 @@
         log:true,
         sizeHeight:false,
         sizeWidth:true,
+        interval:1,
         resizedCallback:function(messageData){
           switch  (''+(++callbackCounter)){
             case '1':
-              $('#qunit-fixture > div').height(500).width(1200);
+              sendMessage('width');
               break;
             case '2':
-              ok( 'resize' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected resize');
-              ok( '500' === messageData.height, 'iFrame height = 500.');
+              ok( 3000 < parseInt(messageData.width,10), 'iFrame width<3000');
               start();
           }
         }
