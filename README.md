@@ -1,6 +1,8 @@
 # iFrame Resizer [![Code Climate](https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png)](https://codeclimate.com/github/davidjbradshaw/iframe-resizer) [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 
-This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events, provides functions to allow the iFrame to set a custom size and checks the origin of incoming messages.
+This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. 
+
+The code also detects resize events, provides functions to allow the iFrame to set a custom size, close itself and send simple messages to the parent page. For security the hostpage automatically checks the origin of incoming messages are from the domain of the page listed in the `src` property of the iFrame.
 
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
@@ -28,6 +30,12 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 
 ###Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
+
+
+
+<i style="margin:20px 20px 25px;display:block">I would love to hear about where this code gets used, drop me an email at [dave@bradshaw.net](mailto:dave@bradshaw.net).</i>
+
+
 
 ## Options
 
@@ -64,7 +72,7 @@ When set to true, only allow incoming messages from the domain listed in the `sr
 	default: false
 	type: boolean
 
-If enabled, a `window.parentIFrame` object is created in the iFrame. This contains `size()` and `close()` methods.
+If enabled, a `window.parentIFrame` object is created in the iFrame. This contains `size()`, `getId()`, `sendMessage()` and `close()` methods.
 
 ### interval
 
@@ -76,6 +84,12 @@ In browsers that don't support [mutationObserver](https://developer.mozilla.org/
 Setting this property to a negative number will force the interval check to run instead of [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 
 Set to zero to disable.
+
+### messageCallback
+
+	type: function ({iframe,message})
+
+Receive message posted from iFrame with the `window.parentIFrame.sendMessage()` method.
 
 ### resizedCallback
 
@@ -107,11 +121,7 @@ Resize iFrame to content width.
 
 ## IFrame Methods
 
-To enable these methods you must set `enablePublicMethods` to `true`. This creates the `window.parentIFrame` object in the iFrame.
-
-### window.parentIFrame.close()
-
-Calling this function causes the parent page to remove the iFrame. This method should be contained in the following wrapper, in case the page is not loaded inside an iFrame.
+To enable these methods you must set `enablePublicMethods` to `true`. This creates the `window.parentIFrame` object in the iFrame. These method should be contained by a test for the `window.parentIFrame` object, in case the page is not loaded inside an iFrame. For example:
 
 ```js
 if ('parentIFrame' in window) {
@@ -119,17 +129,21 @@ if ('parentIFrame' in window) {
 }
 ```
 
+### window.parentIFrame.close()
+
+Remove the iFrame from the parent page. 
+
+### window.parentIFrame.getId()
+
+Returns the ID of the iFrame that the page is contained in.
+
+### window.parentIFrame.sendMessage(message)
+
+Send string to containing page. The message is delivered to the `messageCallback` function.
+
 ### window.parentIFrame.size ([customHeight],[ customWidth])
 
-Manually force iFrame to resize. In case the page is loaded outside the iFrame, you should test before making this call.
-
-```js
-if ('parentIFrame' in window) {
-	window.parentIFrame.size();
-}
-```
-
-This method also accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the *autoResize* option to prevent auto resizing and enable the *sizeWidth* option if you wish to set the width. 
+Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width. 
 
 ```js
 iFrameResize({
@@ -139,7 +153,7 @@ iFrameResize({
 });
 ```
 
-Then just call size method with dimensions:
+Then you can call the `size` method with dimensions:
 
 ```js
 if ('parentIFrame' in window) {
@@ -201,6 +215,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.
 * v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)*, renamed *contentWindowBodyMargin* to *bodyMargin* and renamed *callback* *resizedCallback*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
 * v1.4.4 Fixed *bodyMargin* bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
