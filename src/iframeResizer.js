@@ -21,6 +21,7 @@
 			enablePublicMethods       : false,
 			interval                  : 32,
 			log                       : false,
+			messageCallback           : function(){},
 			resizedCallback           : function(){},
 			scrolling                 : false,
 			sizeHeight                : true,
@@ -79,7 +80,7 @@
 		}
 
 		function closeIFrame(iframe){
-			log('iFrame '+iframe.id+' removed.');
+			log(' iFrame '+iframe.id+' removed.');
 			iframe.parentNode.removeChild(iframe);
 		}
 
@@ -100,6 +101,8 @@
 			} else {
 				resizeIFrame();
 			}
+			
+			settings.resizedCallback(messageData);
 		}
 
 		function isMessageFromIFrame(){
@@ -126,6 +129,17 @@
 			return msgId === '' + msg.substr(0,msgIdLen); //''+Protects against non-string msg
 		}
 
+		function forwardMsgFromIFrame(){
+			var receivedMsg = msg.substr(msg.lastIndexOf(':')+1);
+
+			log(' Received message "' + receivedMsg + '" from ' + messageData.iframe.id);
+
+			settings.messageCallback({
+				iframe: messageData.iframe,
+				message: receivedMsg
+			});
+		}
+
 		var 
 			msg = event.data,
 			messageData = {};
@@ -133,8 +147,11 @@
 		if (isMessageForUs()){
 			messageData = processMsg();
 			if (isMessageFromIFrame()){
-				actionMsg();
-				settings.resizedCallback(messageData);
+				if ('message' !== messageData.type){
+					actionMsg();
+				} else {
+					forwardMsgFromIFrame();
+				}
 			}
 		}
 	}

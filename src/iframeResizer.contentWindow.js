@@ -79,7 +79,7 @@
 				if (undefined === bodyMarginStr){
 					bodyMarginStr = bodyMargin+'px';
 				}
-				if (undefined !== bodyMarginStr && '' !== bodyMarginStr && 'null' !== bodyMarginStr){
+				if (('' !== bodyMarginStr) && ('null' !== bodyMarginStr)){
 					document.body.style.margin = bodyMarginStr;
 					log('Body margin set to '+bodyMarginStr);
 				}
@@ -174,18 +174,12 @@
 				lastTrigger = type;
 			}
 
-			function sendMsg(){
-				var msg = myID + ':' + height + ':' + width  + ':' + type;
-				log('Sending msg to host page (' + msg + ')');
-				target.postMessage( msgID + msg, '*' );
-			}
-
 			function resizeIFrame(){
 				height = currentHeight;
 				width  = currentWidth;
 
 				recordTrigger();
-				sendMsg();
+				sendMsg(height,width,type);
 			}
 
 			var
@@ -199,17 +193,29 @@
 			}
 		}
 
+		function sendMsg(height,width,type,msg){
+			var message = myID + ':' + height + ':' + width  + ':' + type + (undefined !== msg ? ':' + msg : '');
+			log('Sending message to host page (' + message + ')');
+			target.postMessage( msgID + message, '*' );
+		}
+
 		function setupPublicMethods(){
 			if (publicMethods) {
 				log('Enable public methods');
 
-				window.parentIFrame = window.iFrameSizer = {
+				window.parentIFrame = {
+					close: function closeF(){
+						sendSize('close','window.parentIFrame.close()', 0, 0);
+					},
+					getId: function getIdF(){
+						return myID;
+					},
+					sendMessage: function sendMessageF(msg){
+						sendMsg(0,0,'message',msg);
+					},
 					size: function sizeF(customHeight, customWidth){
 						var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 						sendSize('size','window.parentIFrame.size('+valString+')', customHeight, customWidth);
-					},
-					close: function closeF(){
-						sendSize('close','window.parentIFrame.close()', 0, 0);
 					}
 				};
 			}
@@ -239,9 +245,7 @@
 					},
 
 					observer = new MutationObserver(function(mutations) {
-						mutations.forEach(function(mutation) {
-							sendSize('mutationObserver','mutationObserver: ' + mutation.target + ' ' + mutation.type);
-						});
+						sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
 					});
 
 				log('Enable MutationObserver');
