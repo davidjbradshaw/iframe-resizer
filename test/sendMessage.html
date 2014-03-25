@@ -9,7 +9,7 @@
   <div id="qunit"></div>
   <div id="qunit-fixture">
 
-    <div style="width:400px;">
+    <div style="width:600px;">
       <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
     </div>
 
@@ -19,32 +19,26 @@
   <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
-
+  
     'use strict';
+    var msgId = '[iFrameSizerTest]:';
 
-    asyncTest( "iFrame close Event", function() {
+		asyncTest( "sendMessage", function() {
 
-      var callbackCounter = 0;
-
-      $('iframe').iFrameResize({
+      iFrameResize({
         log:true,
-        doWidth:true,
         enablePublicMethods:true,
         resizedCallback:function(messageData){
-          switch  (''+(++callbackCounter)){
-            case '1':
-              sendMessage('close');
-              break;
-            case '2':
-              ok( 'close' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected close');
-              ok( 0 === $('iframe').length , 'IFrame removed from page');
-              start();
-          }
+          ok( true, 'Receive init message back from iFrame.' );
+          sendMessage('chkSendMsg');
+        },
+        messageCallback:function(messageData){
+          ok( 'message test' === messageData.message, 'Receive message back from iFrame via sendMessage function.' );
+          start();
         }
       });
     });
-
-		
+    
   </script>
 </body>
 </html>

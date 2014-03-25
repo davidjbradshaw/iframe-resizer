@@ -93,10 +93,10 @@
 							}
 
 							function callMethod(methodName,val1,val2){
-								if (window.iFrameSizer) 
-										window.iFrameSizer[methodName](val1,val2);
+								if ('parentIFrame' in window) 
+										window.parentIFrame[methodName](val1,val2);
 									else
-										warn('window.iFrameSizer methods not enabled.')
+										warn('window.parentIFrame methods not enabled.')
 							}
 
 							var 
@@ -126,6 +126,16 @@
 								case 'jsTrigger':
 									changeContent();
 									callMethod('trigger');
+									break;
+								case 'chkHeight':
+									callMethod('sendMessage',document.body.offsetHeight);
+									break;
+								case 'chkSendMsg':
+									callMethod('sendMessage','message test');
+									break;
+								case 'chkGetId':
+									if ('parentIFrame' in window)
+										callMethod('sendMessage',window.parentIFrame.getId());
 									break;
 							}
 

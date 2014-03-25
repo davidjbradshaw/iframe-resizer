@@ -9,42 +9,41 @@
   <div id="qunit"></div>
   <div id="qunit-fixture">
 
-    <div style="width:400px;">
+    <div style="width:600px;">
       <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
     </div>
 
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
-  <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
-
+  
     'use strict';
-
-    asyncTest( "iFrame close Event", function() {
+    var msgId = '[iFrameSizerTest]:';
+    
+    asyncTest( "iFrame Resize height", function() {
 
       var callbackCounter = 0;
 
       $('iframe').iFrameResize({
         log:true,
-        doWidth:true,
-        enablePublicMethods:true,
+        sizeHeight:false,
+        sizeWidth:true,
         resizedCallback:function(messageData){
           switch  (''+(++callbackCounter)){
             case '1':
-              sendMessage('close');
+              $('#qunit-fixture > div').height(500).width(1200);
               break;
             case '2':
-              ok( 'close' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected close');
-              ok( 0 === $('iframe').length , 'IFrame removed from page');
+              ok( 'resize' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected resize');
+              ok( '500' === messageData.height, 'iFrame height = 500.');
               start();
           }
         }
       });
     });
-
-		
+    
   </script>
 </body>
 </html>
