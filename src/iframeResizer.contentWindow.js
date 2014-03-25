@@ -161,7 +161,10 @@
 			}
 
 			function getIFrameWidth(){
-				return document.documentElement.offsetWidth;
+				return Math.max(
+					document.documentElement.scrollWidth,
+					document.body.scrollWidth
+				);
 			}
 
 			function cancelTrigger(){
