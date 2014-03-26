@@ -33,7 +33,9 @@
         <h1>
 <a name="iframe-resizer" class="anchor" href="#iframe-resizer"><span class="octicon octicon-link"></span></a>iFrame Resizer</h1>
 
-<p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. The code also detects resize events and provides functions to allow the iFrame to set a custom size.</p>
+<p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. </p>
+
+<p>The code also detects resize events, provides functions to allow the iFrame to set a custom size, close itself and send simple messages to the parent page. For security the hostpage automatically checks the origin of incoming messages are from the domain of the page listed in the <code>src</code> property of the iFrame.</p>
 
 <p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
 
@@ -108,7 +110,7 @@ type: boolean
 type: boolean
 </code></pre>
 
-<p>If enabled, a <code>window.parentIFrame</code> object is created in the iFrame. This contains <code>size()</code> and <code>close()</code> methods.</p>
+<p>If enabled, a <code>window.parentIFrame</code> object is created in the iFrame. This contains <code>size()</code>, <code>getId()</code>, <code>sendMessage()</code> and <code>close()</code> methods.</p>
 
 <h3>
 <a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
@@ -122,6 +124,14 @@ type: number
 <p>Setting this property to a negative number will force the interval check to run instead of <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">mutationObserver</a>.</p>
 
 <p>Set to zero to disable.</p>
+
+<h3>
+<a name="messagecallback" class="anchor" href="#messagecallback"><span class="octicon octicon-link"></span></a>messageCallback</h3>
+
+<pre><code>type: function ({iframe,message})
+</code></pre>
+
+<p>Receive message posted from iFrame with the <code>window.parentIFrame.sendMessage()</code> method.</p>
 
 <h3>
 <a name="resizedcallback" class="anchor" href="#resizedcallback"><span class="octicon octicon-link"></span></a>resizedCallback</h3>
@@ -161,29 +171,32 @@ type: boolean
 <h2>
 <a name="iframe-methods" class="anchor" href="#iframe-methods"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
 
-<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates the <code>window.parentIFrame</code> object in the iFrame.</p>
-
-<h3>
-<a name="windowparentiframeclose" class="anchor" href="#windowparentiframeclose"><span class="octicon octicon-link"></span></a>window.parentIFrame.close()</h3>
-
-<p>Calling this function causes the parent page to remove the iFrame. This method should be contained in the following wrapper, in case the page is not loaded inside an iFrame.</p>
+<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates the <code>window.parentIFrame</code> object in the iFrame. These method should be contained by a test for the <code>window.parentIFrame</code> object, in case the page is not loaded inside an iFrame. For example:</p>
 
 <div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
 
 <h3>
-<a name="windowparentiframesize-customheight-customwidth" class="anchor" href="#windowparentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>window.parentIFrame.size ([customHeight],[ customWidth])</h3>
+<a name="parentiframeclose" class="anchor" href="#parentiframeclose"><span class="octicon octicon-link"></span></a>parentIFrame.close()</h3>
 
-<p>Manually force iFrame to resize. In case the page is loaded outside the iFrame, you should test before making this call.</p>
+<p>Remove the iFrame from the parent page. </p>
 
-<div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<h3>
+<a name="parentiframegetid" class="anchor" href="#parentiframegetid"><span class="octicon octicon-link"></span></a>parentIFrame.getId()</h3>
 
-<p>This method also accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the <em>autoResize</em> option to prevent auto resizing and enable the <em>sizeWidth</em> option if you wish to set the width. </p>
+<p>Returns the ID of the iFrame that the page is contained in.</p>
+
+<h3>
+<a name="parentiframesendmessagemessage" class="anchor" href="#parentiframesendmessagemessage"><span class="octicon octicon-link"></span></a>parentIFrame.sendMessage(message)</h3>
+
+<p>Send string to containing page. The message is delivered to the <code>messageCallback</code> function.</p>
+
+<h3>
+<a name="parentiframesize-customheight-customwidth" class="anchor" href="#parentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>parentIFrame.size ([customHeight],[ customWidth])</h3>
+
+<p>Manually force iFrame to resize. This method optionally accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the <code>autoResize</code> option to prevent auto resizing and enable the <code>sizeWidth</code> option if you wish to set the width. </p>
 
 <div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">({</span>
     <span class="nx">autoResize</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
@@ -192,10 +205,10 @@ type: boolean
 <span class="p">});</span>
 </pre></div>
 
-<p>Then just call size method with dimensions:</p>
+<p>Then you can call the <code>size</code> method with dimensions:</p>
 
 <div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nb">window</span><span class="p">.</span><span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// Set height to 100px</span>
+    <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// Set height to 100px</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -258,6 +271,7 @@ type: boolean
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.</li>
 <li>v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed <em>do(Heigh/Width)</em> to <em>size(Height/Width)</em>, renamed <em>contentWindowBodyMargin</em> to <em>bodyMargin</em> and renamed <em>callback</em> <em>resizedCallback</em>. Improved logging messages. Stop <em>resize</em> event firing for 50ms after <em>interval</em> event. Added multiple page example. Workout unsized margins inside the iFrame. The <em>bodyMargin</em> propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.</li>
 <li>v1.4.4 Fixed <em>bodyMargin</em> bug.</li>
 <li>v1.4.3 CodeCoverage fixes. Documentation improvements.</li>
@@ -279,8 +293,7 @@ type: boolean
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>.
-Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
-<a href="https://codeclimate.com/github/davidjbradshaw/iframe-resizer"><img src="https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png" alt="Code Climate"></a> <a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a></p>
+Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
       </section>
       <footer>
         <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
