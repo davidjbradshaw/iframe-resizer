@@ -11,23 +11,25 @@
     'use strict';
 
 	var
-		autoResize         = true,
-		base               = 10,
-		bodyMargin         = 0,
-		bodyMarginStr      = '',
-		calculateWidth     = false,
-		height             = 1,
-		firstRun           = true,
-		interval           = 32,
-		lastTrigger        = '',
-		logging            = false,
-		msgID              = '[iFrameSizer]',  //Must match host page msg ID
-		msgIdLen           = msgID.length,
-		myID               = '',
-		publicMethods      = false,
-		target             = window.parent,
-		triggerCancelTimer = 50,
-		width              = 1;
+		autoResize            = true,
+		base                  = 10,
+		bodyMargin            = 0,
+		bodyMarginStr         = '',
+		calculateWidth        = false,
+		height                = 1,
+		firstRun              = true,
+		heightCalcModeDefault = 'offset',
+		heightCalcMode        = heightCalcModeDefault,
+		interval              = 32,
+		lastTrigger           = '',
+		logging               = false,
+		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
+		msgIdLen              = msgID.length,
+		myID                  = '',
+		publicMethods         = false,
+		target                = window.parent,
+		triggerCancelTimer    = 50,
+		width                 = 1;
 
 
 	function addEventListener(e,func){
@@ -65,13 +67,14 @@
 				var data = event.data.substr(msgIdLen).split(':');
 
 				myID             = data[0];
-				bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : 0;
-				calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : false;
-				logging          = (undefined !== data[3]) ? strBool(data[3])       : false;
-				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : 33;
-				publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : false;
-				autoResize       = (undefined !== data[6]) ? strBool(data[6])       : true;
-				bodyMarginStr    = data[7];	
+				bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : bodyMargin;
+				calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : calculateWidth;
+				logging          = (undefined !== data[3]) ? strBool(data[3])       : logging;
+				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : interval;
+				publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : publicMethods;
+				autoResize       = (undefined !== data[6]) ? strBool(data[6])       : autoResize;
+				bodyMarginStr    = data[7];
+				heightCalcMode   = (undefined !== data[8]) ? data[8].toLowerCase()  : heightCalcMode;
 			}
 
 			function setMargin(){
@@ -97,6 +100,12 @@
 				});
 			}
 
+			function logHeightMode(){
+				if (heightCalcModeDefault !== heightCalcMode){
+					log('Height calculation method set to '+heightCalcMode+'Height');
+				}
+			}
+
 			function startEventListeners(){
 				if ( true === autoResize ) {
 					initWindowResizeListener();
@@ -104,13 +113,14 @@
 				}
 				else {
 					log('Auto Resize disabled');
-				}				
+				}
 			}
 
 			log('Initialising iFrame');
 
 			readData();
 			setMargin();
+			logHeightMode();
 			stopInfiniteResizingOfIFrame();
 			setupPublicMethods();
 			startEventListeners();
@@ -120,7 +130,7 @@
 
 			// document.documentElement.offsetHeight is not reliable, so
 			// we have to jump through hoops to get the correct value.
-			function getIFrameHeight(){
+			function getIFrameOffsetHeight(){
 				function getComputedBodyStyle(prop) {
 					function convertUnitsToPxForIE8(value) {
 						var PIXEL = /^\d+(px)?$/i;
@@ -129,7 +139,7 @@
 							return parseInt(value,base);
 						}
 
-						var 
+						var
 							style = el.style.left,
 							runtimeStyle = el.runtimeStyle.left;
 
@@ -142,7 +152,7 @@
 						return value;
 					}
 
-					var 
+					var
 						el = document.body,
 						retVal = 0;
 
@@ -150,7 +160,7 @@
 						retVal =  document.defaultView.getComputedStyle(el, null)[prop];
 					} else {//IE8
 						retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
-					} 
+					}
 
 					return parseInt(retVal,base);
 				}
@@ -159,6 +169,15 @@
 						getComputedBodyStyle('marginTop') +
 						getComputedBodyStyle('marginBottom');
 			}
+
+			function getIFrameScrollHeight(){
+				return document.documentElement.scrollHeight;
+			}
+
+			var getIFrameHeight = {
+				offset: getIFrameOffsetHeight,
+				scroll: getIFrameScrollHeight
+			};
 
 			function getIFrameWidth(){
 				return Math.max(
@@ -186,7 +205,7 @@
 			}
 
 			var
-				currentHeight = (undefined !== customHeight)  ? customHeight : getIFrameHeight(),
+				currentHeight = (undefined !== customHeight)  ? customHeight : getIFrameHeight[heightCalcMode](),
 				currentWidth  = (undefined !== customWidth )  ? customWidth  : getIFrameWidth();
 
 			if (lastTrigger in {size:1,interval:1} && ('resize' === type)){

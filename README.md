@@ -32,8 +32,6 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
 
 
-
-
 ## Options
 
 ### log
@@ -81,6 +79,13 @@ In browsers that don't support [mutationObserver](https://developer.mozilla.org/
 Setting this property to a negative number will force the interval check to run instead of [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 
 Set to zero to disable.
+
+### heightCalculationMethod
+
+	default: 'offset'
+	values: 'offset' | 'scroll'
+
+By default the heigh of the iFrame is calculated by converting the margin of the body to px and then adding the top and bottom figures to the height of the body tag. Setting this value to **scroll** will change this to instead use `document.documentElement.scrollHeight` to calculate the height; this can fix some problems, but comes with the side-effects of slightly over reporting the height and also DOM changes that reduce the size of the content won't always be reported, so the iFrame may not shrink with the content.
 
 ### messageCallback
 
@@ -159,6 +164,16 @@ if ('parentIFrame' in window) {
 ```
 
 
+##Troubleshooting
+It is possible to have CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clearfix div just before the close body tag.
+
+```html
+<div style="clear:both;"></div>
+```
+
+Alternatively you can set the `heightCalculationMethod` option to **scroll**. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section. 
+
+
 ## Browser compatibility 
 ###jQuery version
 
@@ -212,6 +227,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.1.1 Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
 * v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.
 * v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)*, renamed *contentWindowBodyMargin* to *bodyMargin* and renamed *callback* *resizedCallback*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
 * v1.4.4 Fixed *bodyMargin* bug.

@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "repo": "davidjbradshaw/iframe-resizer",
   "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
   "keywords": [

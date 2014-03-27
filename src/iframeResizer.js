@@ -19,6 +19,7 @@
 			bodyMarginV1              : 8,
 			checkOrigin               : true,
 			enablePublicMethods       : false,
+			heightCalculationMethod   : 'offset',
 			interval                  : 32,
 			log                       : false,
 			messageCallback           : function(){},
@@ -191,7 +192,8 @@
 					':' + settings.interval +
 					':' + settings.enablePublicMethods +
 					':' + settings.autoResize +
-					':' + settings.bodyMargin;
+					':' + settings.bodyMargin +
+					':' + settings.heightCalculationMethod;
 		}
 
 		function trigger(calleeMsg,msg){
