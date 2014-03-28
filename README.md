@@ -166,8 +166,8 @@ if ('parentIFrame' in window) {
 
 ##Troubleshooting
 
-### IFrame not correctly sizing
-It is possible to have CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clearfix div just before the close body tag.
+### IFrame not sizing correctly
+It is possible to write CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clearfix div just before the close body tag.
 
 ```html
 <div style="clear:both;"></div>
