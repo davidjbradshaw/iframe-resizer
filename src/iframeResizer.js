@@ -116,7 +116,7 @@
 
 				if ((''+origin !== 'null') && (origin !== remoteHost)) {
 					throw new Error(
-						'Unexpect message received from: ' + origin +
+						'Unexpected message received from: ' + origin +
 						' for ' + messageData.iframe.id +
 						'. Message was: ' + event.data
 					);
