@@ -175,7 +175,7 @@ It is possible to write CSS that causes the content to overflow the body tag, th
 
 Alternatively you can set the `heightCalculationMethod` option to **scroll**. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section. 
 
-### Unexpect message received error
+### Unexpected message received error
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behavour can be disabled by setting the `checkOrigin` option to **false**.
 
 
