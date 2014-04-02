@@ -5,8 +5,10 @@ module.exports = function(grunt) {
   require('time-grunt')(grunt);
 
   // load all grunt tasks
-  require('load-grunt-tasks')(grunt);
-
+  //require('load-grunt-tasks')(grunt);
+  require('jit-grunt')(grunt,{
+    replace:'grunt-text-replace'
+  });
 
   // Project configuration.
   grunt.initConfig({
@@ -16,14 +18,14 @@ module.exports = function(grunt) {
       bannerLocal: '/*! iFrame Resizer (iframeSizer.min.js ) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Force cross domain iframes to size to content.\n' +
-        ' *  Requires: iframeSizer.contentWindow.min.js to be loaded into the target frame.\n' +
+        ' *  Requires: iframeResizer.contentWindow.min.js to be loaded into the target frame.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
         ' *  License: MIT\n */\n',
       bannerRemote: '/*! iFrame Resizer (iframeSizer.contentWindow.min.js) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Include this file in any page being loaded into an iframe\n' +
         ' *        to force the iframe to resize to the content size.\n' +
-        ' *  Requires: iframeSizer.min.js on host page.\n' +
+        ' *  Requires: iframeResizer.min.js on host page.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
         ' *  License: MIT\n */\n'
     },
