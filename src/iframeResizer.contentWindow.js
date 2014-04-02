@@ -13,8 +13,10 @@
 	var
 		autoResize            = true,
 		base                  = 10,
+		bodyBackground        = '',
 		bodyMargin            = 0,
 		bodyMarginStr         = '',
+		bodyPadding           = '',
 		calculateWidth        = false,
 		height                = 1,
 		firstRun              = true,
@@ -27,6 +29,7 @@
 		msgIdLen              = msgID.length,
 		myID                  = '',
 		publicMethods         = false,
+		targetOriginDefault   = '*',
 		target                = window.parent,
 		triggerCancelTimer    = 50,
 		width                 = 1;
@@ -67,14 +70,31 @@
 				var data = event.data.substr(msgIdLen).split(':');
 
 				myID             = data[0];
-				bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : bodyMargin;
+				bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : bodyMargin; //For V1 compatibility
 				calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : calculateWidth;
 				logging          = (undefined !== data[3]) ? strBool(data[3])       : logging;
 				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : interval;
 				publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : publicMethods;
 				autoResize       = (undefined !== data[6]) ? strBool(data[6])       : autoResize;
-				bodyMarginStr    = data[7];
+				bodyMarginStr    = chkCSS('margin',data[7]);
 				heightCalcMode   = (undefined !== data[8]) ? data[8].toLowerCase()  : heightCalcMode;
+				bodyBackground   = data[9];
+				bodyPadding      = data[10];
+			}
+
+			function chkCSS(attr,value){
+				if (-1 !== value.indexOf('-')){
+					warn('Negative CSS value ignored for '+attr);
+					value='';
+				}
+				return value;
+			}
+
+			function setBodyStyle(attr,value){
+				if ((undefined !== value) && ('' !== value) && ('null' !== value)){
+					document.body.style[attr] = value;
+					log('Body '+attr+' set to '+value);
+				}
 			}
 
 			function setMargin(){
@@ -82,10 +102,7 @@
 				if (undefined === bodyMarginStr){
 					bodyMarginStr = bodyMargin+'px';
 				}
-				if (('' !== bodyMarginStr) && ('null' !== bodyMarginStr)){
-					document.body.style.margin = bodyMarginStr;
-					log('Body margin set to '+bodyMarginStr);
-				}
+				setBodyStyle('margin',bodyMarginStr);
 			}
 
 			function stopInfiniteResizingOfIFrame(){
@@ -120,6 +137,8 @@
 
 			readData();
 			setMargin();
+			setBodyStyle('background',bodyBackground);
+			setBodyStyle('padding',bodyPadding);
 			logHeightMode();
 			stopInfiniteResizingOfIFrame();
 			setupPublicMethods();
@@ -215,10 +234,23 @@
 			}
 		}
 
-		function sendMsg(height,width,type,msg){
-			var message = myID + ':' + height + ':' + width  + ':' + type + (undefined !== msg ? ':' + msg : '');
-			log('Sending message to host page (' + message + ')');
-			target.postMessage( msgID + message, '*' );
+		function sendMsg(height,width,type,msg,targetOrigin){
+			function setTargetOrigin(){
+				if (undefined === targetOrigin){
+					targetOrigin = targetOriginDefault;
+				} else {
+					log('Message targetOrigin: '+targetOrigin);
+				}
+			}
+
+			function sendToParent(){
+				var message = myID + ':' + height + ':' + width  + ':' + type + (undefined !== msg ? ':' + msg : '');
+				log('Sending message to host page (' + message + ')');
+				target.postMessage( msgID + message, targetOrigin);
+			}
+
+			setTargetOrigin();
+			sendToParent();
 		}
 
 		function setupPublicMethods(){
@@ -232,8 +264,12 @@
 					getId: function getIdF(){
 						return myID;
 					},
-					sendMessage: function sendMessageF(msg){
-						sendMsg(0,0,'message',msg);
+					sendMessage: function sendMessageF(msg,targetOrigin){
+						sendMsg(0,0,'message',msg,targetOrigin);
+					},
+					setTargetOrigin: function setTargetOriginF(targetOrigin){
+						log('Set targetOrigin: '+targetOrigin);
+						targetOriginDefault = targetOrigin;
 					},
 					size: function sizeF(customHeight, customWidth){
 						var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');

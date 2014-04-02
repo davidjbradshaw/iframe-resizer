@@ -15,8 +15,10 @@
 		settings           = {},
 		defaults           = {
 			autoResize                : true,
+			bodyBackground            : null,
 			bodyMargin                : null,
 			bodyMarginV1              : 8,
+			bodyPadding               : null,
 			checkOrigin               : true,
 			enablePublicMethods       : false,
 			heightCalculationMethod   : 'offset',
@@ -141,7 +143,7 @@
 			});
 		}
 
-		var 
+		var
 			msg = event.data,
 			messageData = {};
 
@@ -181,7 +183,7 @@
 			if (('number'===typeof(settings.bodyMargin)) || ('0'===settings.bodyMargin)){
 				settings.bodyMarginV1 = settings.bodyMargin;
 				settings.bodyMargin   = '' + settings.bodyMargin + 'px';
-			} 
+			}
 		}
 
 		function createOutgoingMsg(){
@@ -193,7 +195,9 @@
 					':' + settings.enablePublicMethods +
 					':' + settings.autoResize +
 					':' + settings.bodyMargin +
-					':' + settings.heightCalculationMethod;
+					':' + settings.heightCalculationMethod +
+					':' + settings.bodyBackground +
+					':' + settings.bodyPadding;
 		}
 
 		function trigger(calleeMsg,msg){
@@ -211,7 +215,7 @@
 			trigger('init',msg);
 		}
 
-		var 
+		var
             /*jshint validthis:true */
 			iframe   = this,
 			iframeID = ensureHasId(iframe.id);
@@ -247,7 +251,7 @@
 		window.iFrameResize = function iFrameResizeF(options,selecter){
 			processOptions(options);
 			Array.prototype.forEach.call( document.querySelectorAll( selecter || 'iframe' ), init );
-		};		
+		};
 	}
 
 	function createJQueryPublicMethod(){
