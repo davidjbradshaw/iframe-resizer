@@ -7,7 +7,9 @@ module.exports = function(grunt) {
   // load all grunt tasks
   //require('load-grunt-tasks')(grunt);
   require('jit-grunt')(grunt,{
-    replace:'grunt-text-replace'
+    'replace':'grunt-text-replace',
+    'bump-only':'grunt-bump',
+    'bump-commit':'grunt-bump'
   });
 
   // Project configuration.

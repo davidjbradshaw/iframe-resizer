@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
@@ -19,6 +19,9 @@
     "content",
     "resize",
     "height",
+    "autoheight",
+    "auto-height",
+    "iframe-auto-height",
     "height-iframe",
     "heightiframe",
     "width",
@@ -26,7 +29,9 @@
     "RWD",
     "responsive",
     "responsiveiframe",
-    "responsive-iframe"
+    "responsiveiframes",
+    "responsive-iframe",
+    "responsive-iframes"
   ],
   "license": "MIT",
   "ignore": [
