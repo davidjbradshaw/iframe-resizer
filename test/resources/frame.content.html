@@ -130,6 +130,9 @@
 								case 'chkHeight':
 									callMethod('sendMessage',document.body.offsetHeight);
 									break;
+								case 'chkBackground':
+									callMethod('sendMessage',document.body.style.background);
+									break;
 								case 'chkSendMsg':
 									callMethod('sendMessage','message test');
 									break;
