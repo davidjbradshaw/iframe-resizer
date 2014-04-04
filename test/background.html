@@ -16,23 +16,27 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
   
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-		asyncTest( "postMessage Response", function() {
+    var background='rgb(245, 222, 179)';
+
+    asyncTest( "getId", function() {
 
       iFrameResize({
         log:true,
-        bodyBackground:'wheat',
-        heightCalculationMethod:'Scroll',
+        bodyBackground:background,
+        enablePublicMethods:true,
         resizedCallback:function(messageData){
-          ok( true, 'Receive message back from iFrame.' );
-          ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
-          ok( 'iFrameResizer0' === messageData.iframe.id, 'iFrame id = iFrameResizer0.' );
-          ok( '600' === messageData.width, 'iFrame width = 600.' );
+          ok( true, 'Receive init message back from iFrame.' );
+          sendMessage('chkBackground');
+        },
+        messageCallback:function(messageData){
+          ok(background === messageData.message, 'Background = '+background );
           start();
         }
       });
