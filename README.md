@@ -247,6 +247,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 
 ##Version History
+* v2.2.1 Prevent error when incoming message is an object [[Torjus Eidet](https://github.com/torjue)].
 * v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.
 * v2.1.1 Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
 * v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.
