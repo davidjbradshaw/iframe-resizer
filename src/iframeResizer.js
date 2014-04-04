@@ -129,7 +129,7 @@
 		}
 
 		function isMessageForUs(){
-			return msgId === '' + msg.substr(0,msgIdLen); //''+Protects against non-string msg
+			return msgId === ('' + msg).substr(0,msgIdLen); //''+Protects against non-string msg
 		}
 
 		function forwardMsgFromIFrame(){
