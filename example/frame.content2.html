@@ -8,6 +8,8 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<style>
 			a { float:right; margin-left:10px;}
+			xmp{background-color: #eee;}
+			xmp:hover{margin:40px;}
 		</style>
 	</head> 
 	<body> 
@@ -17,9 +19,39 @@
 		</a>
 
 		<p>
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			Mouse over the code example below.
+
 		</p>
+		<xmp>
+<style>
+	xmp{background-color: #eee;}
+	xmp:hover{margin:40px;}
+</style>
+<script>
+	(function(){
+		function resize(){
+			if ('parentIFrame' in window) {
+				parentIFrame.size()
+			}
+		}
+
+		$('xmp').mouseover(resize).mouseout(resize);
+	})();
+</script>
+		</xmp>
 
 		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script> 
+
+		<script>
+			(function(){
+				function resize(){
+					if ('parentIFrame' in window) {
+						parentIFrame.size()
+					}
+				}
+
+				$('xmp').mouseover(resize).mouseout(resize);
+			})();
+		</script>
 	</body> 
 </html>

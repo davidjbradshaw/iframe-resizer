@@ -117,6 +117,12 @@
 				});
 			}
 
+			function initWindowClickListener(){
+				addEventListener('click', function(){
+					sendSize('click','Window clickd');
+				});
+			}
+
 			function logHeightMode(){
 				if (heightCalcModeDefault !== heightCalcMode){
 					log('Height calculation method set to '+heightCalcMode+'Height');
@@ -126,6 +132,7 @@
 			function startEventListeners(){
 				if ( true === autoResize ) {
 					initWindowResizeListener();
+					initWindowClickListener();
 					setupMutationObserver();
 				}
 				else {
