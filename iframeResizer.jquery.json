@@ -3,9 +3,6 @@
 	"title": "Iframe Resizer",
 	"description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
 	"keywords": [
-		"Cross",
-		"Domain",
-		"CrossDomain",
 		"Cross-Domain",
 		"iFrame",
 		"Resizing",
@@ -16,19 +13,12 @@
 		"height",
 		"autoheight",
 		"auto-height",
-		"iframe-auto-height",
-		"height-iframe",
-		"heightiframe",
 		"width",
 		"mutationObserver",
 		"RWD",
-		"responsive",
-		"responsiveiframe",
-		"responsiveiframes",
-		"responsive-iframe",
-		"responsive-iframes"
+		"responsive"
 	],
-	"version": "2.2.1",
+	"version": "2.2.2",
 	"author": {
 		"name": "David J. Bradshaw",
 		"email": "davidjbradshaw+github@gmail.com"

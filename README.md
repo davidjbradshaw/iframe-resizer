@@ -32,7 +32,6 @@ Note that scrolling is set to 'no', as older versions of IE don't allow this to 
 ###Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
 
-
 ## Options
 
 ### log
@@ -186,6 +185,21 @@ Alternatively you can set the `heightCalculationMethod` option to **scroll**. Th
 ### IFrame not initially sizing
 If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you need to either wrap your content in a relativele positioned `DIV` tag, or fall back to using the  `parentIFrame.size()` method to manually set the iFrame size from within the iFrame.
 
+###IFrame not detecting CSS resize events
+If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two option to work around this; the simple solution is to set the `inteval` option to **-32** and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. 
+
+The more complex solution is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the `parentIFrame.size()` method. With jQuery this can be done as follows.
+
+```js
+function resize(){
+	if ('parentIFrame' in window) {
+		parentIFrame.size()
+	}
+}
+
+$(*Element with hover class*).mouseover(resize).mouseout(resize);
+```
+
 ### Unexpected message received error
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behavour can be disabled by setting the `checkOrigin` option to **false**.
 
@@ -247,6 +261,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 
 ##Version History
+* v2.2.2 [#25](https://github.com/davidjbradshaw/iframe-resizer/issues/25) Added click listerner to Window, to detect CSS checkbox resize events.
 * v2.2.1 Prevent error when incoming message is an object [[Torjus Eidet](https://github.com/torjue)].
 * v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.
 * v2.1.1 Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
