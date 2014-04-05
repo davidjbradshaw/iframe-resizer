@@ -173,6 +173,9 @@ if ('parentIFrame' in window) {
 
 ##Troubleshooting
 
+### IFrame not initially sizing
+If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you need to either wrap your content in a relativele positioned `DIV` tag, or fall back to using the  `parentIFrame.size()` method to manually set the iFrame size from within the iFrame.
+
 ### IFrame not resizing correctly
 It is possible to write CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clearfix div just before the close body tag.
 
@@ -182,11 +185,8 @@ It is possible to write CSS that causes the content to overflow the body tag, th
 
 Alternatively you can set the `heightCalculationMethod` option to **scroll**. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section.
 
-### IFrame not initially sizing
-If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you need to either wrap your content in a relativele positioned `DIV` tag, or fall back to using the  `parentIFrame.size()` method to manually set the iFrame size from within the iFrame.
-
 ###IFrame not detecting CSS resize events
-If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two option to work around this; the simple solution is to set the `inteval` option to **-32** and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. 
+If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the `inteval` option to **-32** and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. 
 
 The more complex solution is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the `parentIFrame.size()` method. With jQuery this can be done as follows.
 
