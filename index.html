@@ -33,9 +33,11 @@
         <h1>
 <a name="iframe-resizer" class="anchor" href="#iframe-resizer"><span class="octicon octicon-link"></span></a>iFrame Resizer</h1>
 
+<p><a href="https://codeclimate.com/github/davidjbradshaw/iframe-resizer"><img src="https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png" alt="Code Climate"></a> <a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a></p>
+
 <p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fall back to setInterval for IE8-10. </p>
 
-<p>The code also detects resize events, provides functions to allow the iFrame to set a custom size, close itself and send simple messages to the parent page. For security the hostpage automatically checks the origin of incoming messages are from the domain of the page listed in the <code>src</code> property of the iFrame.</p>
+<p>The code also detects resize events, provides functions to allow the iFrame to set a custom size, close itself and send simple messages to the parent page. For security the hostpage automatically checks that the origin of incoming messages are from the domain of the page listed in the <code>src</code> property of the iFrame.</p>
 
 <p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
 
@@ -86,6 +88,15 @@ type: boolean
 <p>When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.</p>
 
 <h3>
+<a name="bodybackground" class="anchor" href="#bodybackground"><span class="octicon octicon-link"></span></a>bodyBackground</h3>
+
+<pre><code>default: null
+type: string 
+</code></pre>
+
+<p>Override the body background style in the iFrame. </p>
+
+<h3>
 <a name="bodymargin" class="anchor" href="#bodymargin"><span class="octicon octicon-link"></span></a>bodyMargin</h3>
 
 <pre><code>default: null
@@ -124,6 +135,15 @@ type: number
 <p>Setting this property to a negative number will force the interval check to run instead of <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">mutationObserver</a>.</p>
 
 <p>Set to zero to disable.</p>
+
+<h3>
+<a name="heightcalculationmethod" class="anchor" href="#heightcalculationmethod"><span class="octicon octicon-link"></span></a>heightCalculationMethod</h3>
+
+<pre><code>default: 'offset'
+values: 'offset' | 'scroll'
+</code></pre>
+
+<p>By default the heigh of the iFrame is calculated by converting the margin of the body to px and then adding the top and bottom figures to the height of the body tag. Setting this value to <strong>scroll</strong> will change this to instead use <code>document.documentElement.scrollHeight</code> to calculate the height; this can fix some problems, but comes with the side-effects of slightly over reporting the height and also DOM changes that reduce the size of the content won't always be reported, so the iFrame may not shrink with the content.</p>
 
 <h3>
 <a name="messagecallback" class="anchor" href="#messagecallback"><span class="octicon octicon-link"></span></a>messageCallback</h3>
@@ -189,9 +209,9 @@ type: boolean
 <p>Returns the ID of the iFrame that the page is contained in.</p>
 
 <h3>
-<a name="parentiframesendmessagemessage" class="anchor" href="#parentiframesendmessagemessage"><span class="octicon octicon-link"></span></a>parentIFrame.sendMessage(message)</h3>
+<a name="parentiframesendmessagemessagetargetorigin" class="anchor" href="#parentiframesendmessagemessagetargetorigin"><span class="octicon octicon-link"></span></a>parentIFrame.sendMessage(message,[targetOrigin])</h3>
 
-<p>Send string to containing page. The message is delivered to the <code>messageCallback</code> function.</p>
+<p>Send string to the containing page. The message is delivered to the <code>messageCallback</code> function. The <code>targetOrigin</code> option is used to restrict where the message is sent to; to stop an attacker mimicing your parent page. See the MDN documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage">postMessage</a> for more details.</p>
 
 <h3>
 <a name="parentiframesize-customheight-customwidth" class="anchor" href="#parentiframesize-customheight-customwidth"><span class="octicon octicon-link"></span></a>parentIFrame.size ([customHeight],[ customWidth])</h3>
@@ -211,6 +231,45 @@ type: boolean
     <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// Set height to 100px</span>
 <span class="p">}</span>
 </pre></div>
+
+<h2>
+<a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="octicon octicon-link"></span></a>Troubleshooting</h2>
+
+<h3>
+<a name="iframe-not-initially-sizing" class="anchor" href="#iframe-not-initially-sizing"><span class="octicon octicon-link"></span></a>IFrame not initially sizing</h3>
+
+<p>If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you need to either wrap your content in a relativele positioned <code>DIV</code> tag, or fall back to using the  <code>parentIFrame.size()</code> method to manually set the iFrame size from within the iFrame.</p>
+
+<h3>
+<a name="iframe-not-resizing-correctly" class="anchor" href="#iframe-not-resizing-correctly"><span class="octicon octicon-link"></span></a>IFrame not resizing correctly</h3>
+
+<p>It is possible to write CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clearfix div just before the close body tag.</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"clear:both;"</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre></div>
+
+<p>Alternatively you can set the <code>heightCalculationMethod</code> option to <strong>scroll</strong>. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section.</p>
+
+<h3>
+<a name="iframe-not-detecting-css-resize-events" class="anchor" href="#iframe-not-detecting-css-resize-events"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS resize events</h3>
+
+<p>If your page resizes via CSS <code>:hover</code> events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the <code>inteval</code> option to <strong>-32</strong> and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. </p>
+
+<p>The more complex solution is to create <code>mouseover</code> and <code>mouseout</code> event listeners on the elements that are resized via CSS and have these events call the <code>parentIFrame.size()</code> method. With jQuery this can be done as follows.</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">function</span> <span class="nx">resize</span><span class="p">(){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="o">*</span><span class="nx">Element</span> <span class="kd">with</span> <span class="nx">hover</span> <span class="kr">class</span><span class="o">*</span><span class="p">).</span><span class="nx">mouseover</span><span class="p">(</span><span class="nx">resize</span><span class="p">).</span><span class="nx">mouseout</span><span class="p">(</span><span class="nx">resize</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="unexpected-message-received-error" class="anchor" href="#unexpected-message-received-error"><span class="octicon octicon-link"></span></a>Unexpected message received error</h3>
+
+<p>By default the origin of incoming messages is checked against the <code>src</code> attribute of the iFrame. If they don't match an error is thrown. This behavour can be disabled by setting the <code>checkOrigin</code> option to <strong>false</strong>.</p>
 
 <h2>
 <a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
@@ -268,9 +327,18 @@ type: boolean
 <p>The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the hostpage script with an iFrame running version 1 of the iFrame script, or <em>vice versa</em>, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.</p>
 
 <h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
+
+<h2>
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.2.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/25">#25</a> Added click listerner to Window, to detect CSS checkbox resize events.</li>
+<li>v2.2.1 Prevent error when incoming message is an object [<a href="https://github.com/torjue">Torjus Eidet</a>].</li>
+<li>v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.</li>
+<li>v2.1.1 Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.</li>
 <li>v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.</li>
 <li>v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed <em>do(Heigh/Width)</em> to <em>size(Height/Width)</em>, renamed <em>contentWindowBodyMargin</em> to <em>bodyMargin</em> and renamed <em>callback</em> <em>resizedCallback</em>. Improved logging messages. Stop <em>resize</em> event firing for 50ms after <em>interval</em> event. Added multiple page example. Workout unsized margins inside the iFrame. The <em>bodyMargin</em> propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.</li>
 <li>v1.4.4 Fixed <em>bodyMargin</em> bug.</li>
