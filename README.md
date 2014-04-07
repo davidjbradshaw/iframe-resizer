@@ -3,7 +3,7 @@
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. 
 
-The code also detects resize events, provides functions to allow the iFrame to set a custom size, close itself and send simple messages to the parent page. For security the host-page automatically checks that the origin of incoming messages are from the domain of the page listed in the `src` property of the iFrame.
+The code also detects browser events that can cause the content to resize; provides functions to allow the iFrame to set a custom size and close itself and supports having multiple iFrames on the host-page. Additionally it provides for the sending of simple messages from the iFrame to the parent page. For security the host-page automatically checks that the origin of incoming messages are from the domain of the page listed in the `src` property of the iFrame.
 
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
@@ -11,7 +11,7 @@ The package contains two minified JavaScript files in the [js](js) folder. The f
 iFrameResize([{options}],[selector]);
 ```
 
-or via **jQuery**. (See [notes](https://github.com/davidjbradshaw/iframe-resizer#browser-compatibility) below for using native version with IE8).
+or via **jQuery**. (See [notes](#browser-compatibility) below for using native version with IE8).
 
 ```js
 $('iframe').iFrameResize([{options}]);
@@ -185,7 +185,7 @@ It is possible to write CSS that causes the content to overflow the body tag, th
 
 Alternatively you can set the `heightCalculationMethod` option to **scroll**. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section.
 
-###IFrame not detecting CSS resize events
+###IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the `interval` option to **-32** and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. 
 
 The more complex solution is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the `parentIFrame.size()` method. With jQuery this can be done as follows.
