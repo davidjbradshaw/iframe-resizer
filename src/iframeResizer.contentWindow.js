@@ -2,7 +2,7 @@
  * File: iframeSizer.contentWindow.js
  * Desc: Include this file in any page being loaded into an iframe
  *       to force the iframe to resize to the content size.
- * Requires: iframeSizer.js on host page.
+ * Requires: iframeResizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
@@ -119,7 +119,7 @@
 
 			function initWindowClickListener(){
 				addEventListener('click', function(){
-					sendSize('click','Window clickd');
+					sendSize('click','Window clicked');
 				});
 			}
 
