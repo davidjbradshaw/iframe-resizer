@@ -176,7 +176,7 @@ if ('parentIFrame' in window) {
 ##Troubleshooting
 
 ### IFrame not initially sizing
-If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you need to either wrap your content in a relatively positioned `DIV` tag, or fall back to using the  `parentIFrame.size()` method to manually set the iFrame size from within the iFrame.
+If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you could try wrapping your content in a relatively positioned `DIV` tag, or either of the two suggestions below.
 
 ### IFrame not resizing correctly
 It is possible to write CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clear-fix div just before the close body tag.
@@ -240,15 +240,8 @@ if (!Array.prototype.forEach){
 ```
 
 
-## Install via Package Management Systems
-
-This library can be installed via the [Bower](http://bower.io),
-
-    bower install iframe-resizer
-
-and [Component](http://component.io) front-end package management systems.
-
-    component install davidjbradshaw/iframe-resizer
+## Contributing
+In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 
 ##Changes between version 1 and 2.
@@ -256,10 +249,6 @@ and [Component](http://component.io) front-end package management systems.
 Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width), contentWindowBodyMargin has been renamed bodyMargin and callback has been renamed resizedCallback.
 
 The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the host-page script with an iFrame running version 1 of the iFrame script, or *vice versa*, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.
-
-
-## Contributing
-In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 
 ##Version History
