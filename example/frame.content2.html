@@ -5,11 +5,8 @@
 		<title>iFrame message passing test</title> 
 		<meta name="description" content="iFrame message passing test">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<style>
 			a { float:right; margin-left:10px;}
-			xmp{background-color: #eee;}
-			xmp:hover{margin:40px;}
 		</style>
 	</head> 
 	<body> 
@@ -20,38 +17,31 @@
 
 		<p>
 			Mouse over the code example below.
-
 		</p>
-		<xmp>
+
+		<xmp><!--  #code  --></xmp>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+
+		<div id="code">
 <style>
-	xmp{background-color: #eee;}
-	xmp:hover{margin:40px;}
+	xmp{background-color: #eee;padding:0 20px}
+	xmp:hover{border:#c33 solid 40px;}
 </style>
 <script>
 	(function(){
 		function resize(){
 			if ('parentIFrame' in window) {
-				parentIFrame.size()
+				parentIFrame.size();
 			}
 		}
 
 		$('xmp').mouseover(resize).mouseout(resize);
 	})();
 </script>
-		</xmp>
+		</div>
 
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script> 
-
-		<script>
-			(function(){
-				function resize(){
-					if ('parentIFrame' in window) {
-						parentIFrame.size()
-					}
-				}
-
-				$('xmp').mouseover(resize).mouseout(resize);
-			})();
-		</script>
+		<script>$('xmp').text($('#code').html());</script>
 	</body> 
 </html>
