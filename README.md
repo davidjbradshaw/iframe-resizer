@@ -273,7 +273,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
 * v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
-* v1.4.0 [#12](https://github.com/davidjbradshaw/iframe-resizer/issues/12) Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
+* v1.4.0 [#12](https://github.com/davidjbradshaw/iframe-resizer/issues/12) Option to enable scrolling in iFrame, off by default. [#13](https://github.com/davidjbradshaw/iframe-resizer/issues/13) Bower dependancies updated.
 * v1.3.7 Stop *resize* event firing for 50ms after *size* event. Added size(250) to example.
 * v1.3.6 [#11](https://github.com/davidjbradshaw/iframe-resizer/issues/11) Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
 * v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
