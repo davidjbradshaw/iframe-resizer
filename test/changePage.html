@@ -22,11 +22,13 @@
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
+    jQuery.noConflict();
+
     asyncTest( "iFrame change page", function() {
 
       var callbackCounter = 0;
 
-      $('iframe').iFrameResize({
+      jQuery('iframe').iFrameResize({
         log:true,
         resizedCallback:function(messageData){
           switch  (''+(++callbackCounter)){

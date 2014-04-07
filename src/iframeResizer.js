@@ -254,8 +254,8 @@
 		};
 	}
 
-	function createJQueryPublicMethod(){
-		jQuery.fn.iFrameResize = function $iFrameResizeF(options) {
+	function createJQueryPublicMethod($){
+		$.fn.iFrameResize = function $iFrameResizeF(options) {
 			settings = $.extend( {}, defaults, options );
 			return this.filter('iframe').each( setupIFrame ).end();
 		};
@@ -264,6 +264,6 @@
 	setupRequestAnimationFrame();
 	addEventListener(window,'message',iFrameListener);
 	createNativePublicFunction();
-	if ('jQuery' in window) { createJQueryPublicMethod(); }
+	if ('jQuery' in window) { createJQueryPublicMethod(jQuery); }
 
 })();
