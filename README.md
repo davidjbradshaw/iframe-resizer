@@ -264,18 +264,18 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 * v2.2.2 [#25](https://github.com/davidjbradshaw/iframe-resizer/issues/25) Added click listener to Window, to detect CSS checkbox resize events.
-* v2.2.1 Prevent error when incoming message is an object [[Torjus Eidet](https://github.com/torjue)].
+* v2.2.1 [#24](https://github.com/davidjbradshaw/iframe-resizer/issues/24) Prevent error when incoming message is an object [[Torjus Eidet](https://github.com/torjue)].
 * v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.
-* v2.1.1 Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
+* v2.1.1 [#16](https://github.com/davidjbradshaw/iframe-resizer/issues/16) Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
 * v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.
 * v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)*, renamed *contentWindowBodyMargin* to *bodyMargin* and renamed *callback* *resizedCallback*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
 * v1.4.4 Fixed *bodyMargin* bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
 * v1.4.1 Setting `interval` to a negative number now forces the interval test to run instead of [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
-* v1.4.0 Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
+* v1.4.0 [#12](https://github.com/davidjbradshaw/iframe-resizer/issues/12)Option to enable scrolling in iFrame, off by default. Bower dependancies updated.
 * v1.3.7 Stop *resize* event firing for 50ms after *size* event. Added size(250) to example.
-* v1.3.6 Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
+* v1.3.6 [#11](https://github.com/davidjbradshaw/iframe-resizer/issues/11)Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.
 * v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatibility.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
