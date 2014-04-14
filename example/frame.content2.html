@@ -5,7 +5,6 @@
 		<title>iFrame message passing test</title> 
 		<meta name="description" content="iFrame message passing test">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<style>
 			a { float:right; margin-left:10px;}
 		</style>
@@ -17,9 +16,32 @@
 		</a>
 
 		<p>
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			Mouse over the code example below.
 		</p>
 
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script> 
+		<xmp><!--  #code  --></xmp>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+
+		<div id="code">
+<style>
+	xmp{background-color: #eee;padding:0 20px}
+	xmp:hover{border:#c33 solid 40px;}
+</style>
+<script>
+	(function(){
+		function resize(){
+			if ('parentIFrame' in window) {
+				parentIFrame.size();
+			}
+		}
+
+		$('xmp').mouseover(resize).mouseout(resize);
+	})();
+</script>
+		</div>
+
+		<script>$('xmp').text($('#code').html());</script>
 	</body> 
 </html>

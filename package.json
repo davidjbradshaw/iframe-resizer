@@ -1,13 +1,30 @@
 {
-  "name": "iFrame_Resizer",
-  "version": "2.1.0",
+  "name": "iframe-resizer",
+  "version": "2.2.3",
+  "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
+  "authors": [
+    "David J. Bradshaw <dave@bradshaw.net>"
+  ],
+  "maintainers": [
+    {
+      "name": "David J. Bradshaw",
+      "email": "dave@bradshaw.net" 
+    } 
+  ],
+  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
   "repository": {
     "type": "git",
     "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
+  },
+  "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "dependencies": {},
+   "categories": ["UI", "Utilities"],
   "devDependencies": {
-    "grunt": "0.4.1",
+    "grunt": "0.4.x",
     "grunt-contrib-compress": "0.5.x",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-jshint": "~0.6.3",
@@ -16,9 +33,18 @@
     "grunt-text-replace":"0.3.x",
     "grunt-jsonlint":"1.0.x",
     "load-grunt-tasks": "~0.1.0",
-    "time-grunt": "~0.1.1",
+    "time-grunt": "0.x.x",
     "grunt-bump": "0.0.x",
-    "grunt-shell": "0.6.x"
+    "grunt-shell": "0.6.x",
+    "jit-grunt": "0.3.x"
+  },
+   "jam": {
+    "main": "js/iframeresizer.min.js",
+    "include": [
+      "js",
+      "src",
+      "README.md"
+    ]
   },
   "scripts": {
     "build": "npm install && grunt",
@@ -26,5 +52,37 @@
   },
   "engines": {
     "node": ">=0.8.0"
-  }
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "keywords": [
+    "Cross",
+    "Domain",
+    "CrossDomain",
+    "Cross-Domain",
+    "iFrame",
+    "Resizing",
+    "Resizer",
+    "postMessage",
+    "content",
+    "resize",
+    "height",
+    "autoheight",
+    "auto-height",
+    "iframe-auto-height",
+    "height-iframe",
+    "heightiframe",
+    "width",
+    "mutationObserver",
+    "RWD",
+    "responsive",
+    "responsiveiframe",
+    "responsiveiframes",
+    "responsive-iframe",
+    "responsive-iframes"
+  ]
 }

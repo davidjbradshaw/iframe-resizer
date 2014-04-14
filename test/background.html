@@ -9,41 +9,39 @@
   <div id="qunit"></div>
   <div id="qunit-fixture">
 
-    <div style="width:400px;">
+    <div style="width:600px;">
       <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
     </div>
 
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
-
+  
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-    jQuery.noConflict();
+    var background='rgb(245, 222, 179)';
 
-    asyncTest( "iFrame change page", function() {
+    asyncTest( "getId", function() {
 
-      var callbackCounter = 0;
-
-      jQuery('iframe').iFrameResize({
+      iFrameResize({
         log:true,
+        bodyBackground:background,
+        enablePublicMethods:true,
         resizedCallback:function(messageData){
-          switch  (''+(++callbackCounter)){
-            case '1':
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'pageChange', '*' );
-              break;
-            case '2':
-              ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init');
-              start();
-          }
+          ok( true, 'Receive init message back from iFrame.' );
+          sendMessage('chkBackground');
+        },
+        messageCallback:function(messageData){
+          ok(background === messageData.message, 'Background = '+background );
+          start();
         }
       });
     });
-
-		
+    
   </script>
 </body>
 </html>

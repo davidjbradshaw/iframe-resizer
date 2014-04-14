@@ -26,6 +26,8 @@
 
       iFrameResize({
         log:true,
+        bodyBackground:'wheat',
+        heightCalculationMethod:'Scroll',
         resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );

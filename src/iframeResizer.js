@@ -1,7 +1,7 @@
 /*
  * File: iframeSizer.js
  * Desc: Force cross domain iframes to size to content.
- * Requires: iframeSizer.contentWindow.js to be loaded into the target frame.
+ * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
@@ -15,10 +15,13 @@
 		settings           = {},
 		defaults           = {
 			autoResize                : true,
+			bodyBackground            : null,
 			bodyMargin                : null,
 			bodyMarginV1              : 8,
+			bodyPadding               : null,
 			checkOrigin               : true,
 			enablePublicMethods       : false,
+			heightCalculationMethod   : 'offset',
 			interval                  : 32,
 			log                       : false,
 			messageCallback           : function(){},
@@ -115,7 +118,7 @@
 
 				if ((''+origin !== 'null') && (origin !== remoteHost)) {
 					throw new Error(
-						'Unexpect message received from: ' + origin +
+						'Unexpected message received from: ' + origin +
 						' for ' + messageData.iframe.id +
 						'. Message was: ' + event.data
 					);
@@ -126,7 +129,7 @@
 		}
 
 		function isMessageForUs(){
-			return msgId === '' + msg.substr(0,msgIdLen); //''+Protects against non-string msg
+			return msgId === ('' + msg).substr(0,msgIdLen); //''+Protects against non-string msg
 		}
 
 		function forwardMsgFromIFrame(){
@@ -140,7 +143,7 @@
 			});
 		}
 
-		var 
+		var
 			msg = event.data,
 			messageData = {};
 
@@ -180,7 +183,7 @@
 			if (('number'===typeof(settings.bodyMargin)) || ('0'===settings.bodyMargin)){
 				settings.bodyMarginV1 = settings.bodyMargin;
 				settings.bodyMargin   = '' + settings.bodyMargin + 'px';
-			} 
+			}
 		}
 
 		function createOutgoingMsg(){
@@ -191,7 +194,10 @@
 					':' + settings.interval +
 					':' + settings.enablePublicMethods +
 					':' + settings.autoResize +
-					':' + settings.bodyMargin;
+					':' + settings.bodyMargin +
+					':' + settings.heightCalculationMethod +
+					':' + settings.bodyBackground +
+					':' + settings.bodyPadding;
 		}
 
 		function trigger(calleeMsg,msg){
@@ -209,7 +215,7 @@
 			trigger('init',msg);
 		}
 
-		var 
+		var
             /*jshint validthis:true */
 			iframe   = this,
 			iframeID = ensureHasId(iframe.id);
@@ -245,11 +251,11 @@
 		window.iFrameResize = function iFrameResizeF(options,selecter){
 			processOptions(options);
 			Array.prototype.forEach.call( document.querySelectorAll( selecter || 'iframe' ), init );
-		};		
+		};
 	}
 
-	function createJQueryPublicMethod(){
-		jQuery.fn.iFrameResize = function $iFrameResizeF(options) {
+	function createJQueryPublicMethod($){
+		$.fn.iFrameResize = function $iFrameResizeF(options) {
 			settings = $.extend( {}, defaults, options );
 			return this.filter('iframe').each( setupIFrame ).end();
 		};
@@ -258,6 +264,6 @@
 	setupRequestAnimationFrame();
 	addEventListener(window,'message',iFrameListener);
 	createNativePublicFunction();
-	if ('jQuery' in window) { createJQueryPublicMethod(); }
+	if ('jQuery' in window) { createJQueryPublicMethod(jQuery); }
 
 })();

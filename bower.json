@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "2.1.0",
+  "version": "2.2.3",
   "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
@@ -10,6 +10,8 @@
   "keywords": [
     "Cross",
     "Domain",
+    "CrossDomain",
+    "Cross-Domain",
     "iFrame",
     "Resizing",
     "Resizer",
@@ -17,10 +19,19 @@
     "content",
     "resize",
     "height",
+    "autoheight",
+    "auto-height",
+    "iframe-auto-height",
+    "height-iframe",
+    "heightiframe",
     "width",
     "mutationObserver",
     "RWD",
-    "responsive"
+    "responsive",
+    "responsiveiframe",
+    "responsiveiframes",
+    "responsive-iframe",
+    "responsive-iframes"
   ],
   "license": "MIT",
   "ignore": [
