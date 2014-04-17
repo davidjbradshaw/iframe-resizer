@@ -21,7 +21,7 @@
 			bodyPadding               : null,
 			checkOrigin               : true,
 			enablePublicMethods       : false,
-			heightCalculationMethod   : 'offset',
+			heightCalculationMethod   : 'bodyOffset',
 			interval                  : 32,
 			log                       : false,
 			messageCallback           : function(){},

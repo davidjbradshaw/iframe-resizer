@@ -20,7 +20,7 @@
 		calculateWidth        = false,
 		height                = 1,
 		firstRun              = true,
-		heightCalcModeDefault = 'offset',
+		heightCalcModeDefault = 'bodyOffset',
 		heightCalcMode        = heightCalcModeDefault,
 		interval              = 32,
 		lastTrigger           = '',
@@ -77,7 +77,7 @@
 				publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : publicMethods;
 				autoResize       = (undefined !== data[6]) ? strBool(data[6])       : autoResize;
 				bodyMarginStr    = chkCSS('margin',data[7]);
-				heightCalcMode   = (undefined !== data[8]) ? data[8].toLowerCase()  : heightCalcMode;
+				heightCalcMode   = (undefined !== data[8]) ? data[8]                : heightCalcMode;
 				bodyBackground   = data[9];
 				bodyPadding      = data[10];
 			}
@@ -93,7 +93,7 @@
 			function setBodyStyle(attr,value){
 				if ((undefined !== value) && ('' !== value) && ('null' !== value)){
 					document.body.style[attr] = value;
-					log('Body '+attr+' set to '+value);
+					log('Body '+attr+' set to "'+value+'"');
 				}
 			}
 
@@ -123,9 +123,13 @@
 				});
 			}
 
-			function logHeightMode(){
+			function checkHeightMode(){
 				if (heightCalcModeDefault !== heightCalcMode){
-					log('Height calculation method set to '+heightCalcMode+'Height');
+					if (!(heightCalcMode in getIFrameHeight)){
+						throw new Error(heightCalcMode + ' is not a valid option for heightCalcMode.');
+					}else{
+						log('Height calculation method set to "'+heightCalcMode+'"');
+					}
 				}
 			}
 
@@ -140,77 +144,107 @@
 				}
 			}
 
+			function injectClearFixIntoBodyElement(){
+				var clearFix = document.createElement('div');
+				clearFix.style.clear = 'both';
+				clearFix.style.display = 'block'; //Guard against this having been globally redefined in CSS.
+				document.body.appendChild(clearFix);
+			}
+
 			log('Initialising iFrame');
 
 			readData();
 			setMargin();
 			setBodyStyle('background',bodyBackground);
 			setBodyStyle('padding',bodyPadding);
-			logHeightMode();
+			injectClearFixIntoBodyElement();
+			checkHeightMode();
 			stopInfiniteResizingOfIFrame();
 			setupPublicMethods();
 			startEventListeners();
 		}
 
-		function sendSize(type,calleeMsg, customHeight, customWidth){
+		// document.documentElement.offsetHeight is not reliable, so
+		// we have to jump through hoops to get the correct value.
+		function getIFrameBodyOffsetHeight(){
+			function getComputedBodyStyle(prop) {
+				function convertUnitsToPxForIE8(value) {
+					var PIXEL = /^\d+(px)?$/i;
 
-			// document.documentElement.offsetHeight is not reliable, so
-			// we have to jump through hoops to get the correct value.
-			function getIFrameOffsetHeight(){
-				function getComputedBodyStyle(prop) {
-					function convertUnitsToPxForIE8(value) {
-						var PIXEL = /^\d+(px)?$/i;
-
-						if (PIXEL.test(value)) {
-							return parseInt(value,base);
-						}
-
-						var
-							style = el.style.left,
-							runtimeStyle = el.runtimeStyle.left;
-
-						el.runtimeStyle.left = el.currentStyle.left;
-						el.style.left = value || 0;
-						value = el.style.pixelLeft;
-						el.style.left = style;
-						el.runtimeStyle.left = runtimeStyle;
-
-						return value;
+					if (PIXEL.test(value)) {
+						return parseInt(value,base);
 					}
 
 					var
-						el = document.body,
-						retVal = 0;
+						style = el.style.left,
+						runtimeStyle = el.runtimeStyle.left;
 
-					if (document.defaultView && document.defaultView.getComputedStyle) {
-						retVal =  document.defaultView.getComputedStyle(el, null)[prop];
-					} else {//IE8
-						retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
-					}
+					el.runtimeStyle.left = el.currentStyle.left;
+					el.style.left = value || 0;
+					value = el.style.pixelLeft;
+					el.style.left = style;
+					el.runtimeStyle.left = runtimeStyle;
 
-					return parseInt(retVal,base);
+					return value;
 				}
 
-				return  document.body.offsetHeight +
-						getComputedBodyStyle('marginTop') +
-						getComputedBodyStyle('marginBottom');
+				var
+					el = document.body,
+					retVal = 0;
+
+				if (document.defaultView && document.defaultView.getComputedStyle) {
+					retVal =  document.defaultView.getComputedStyle(el, null)[prop];
+				} else {//IE8
+					retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
+				}
+
+				return parseInt(retVal,base);
 			}
 
-			function getIFrameScrollHeight(){
-				return document.documentElement.scrollHeight;
-			}
+			return  document.body.offsetHeight +
+					getComputedBodyStyle('marginTop') +
+					getComputedBodyStyle('marginBottom');
+		}
 
-			var getIFrameHeight = {
-				offset: getIFrameOffsetHeight,
-				scroll: getIFrameScrollHeight
-			};
+		function getIFrameBodyScrollHeight(){
+			return document.body.scrollHeight;
+		}
 
-			function getIFrameWidth(){
-				return Math.max(
-					document.documentElement.scrollWidth,
-					document.body.scrollWidth
-				);
-			}
+		function getIFrameDEOffsetHeight(){
+			return document.documentElement.offsetHeight;
+		}
+
+		function getIFrameDEScrollHeight(){
+			return document.documentElement.scrollHeight;
+		}
+
+		function getIFrameMaxHeight(){
+			return Math.max(
+				getIFrameBodyOffsetHeight(),
+				getIFrameBodyScrollHeight(),
+				getIFrameDEOffsetHeight(),
+				getIFrameDEScrollHeight()
+			);
+		}
+
+		var getIFrameHeight = {
+			offset                : getIFrameBodyOffsetHeight, //Backward compatability
+			bodyOffset            : getIFrameBodyOffsetHeight,
+			bodyScroll            : getIFrameBodyScrollHeight,
+			documentElementOffset : getIFrameDEOffsetHeight,
+			scroll                : getIFrameDEScrollHeight, //Backward compatability
+			documentElementScroll : getIFrameDEScrollHeight,
+			max                   : getIFrameMaxHeight
+		};
+
+		function getIFrameWidth(){
+			return Math.max(
+				document.documentElement.scrollWidth,
+				document.body.scrollWidth
+			);
+		}
+
+		function sendSize(type,calleeMsg, customHeight, customWidth){
 
 			function cancelTrigger(){
 				log( 'Trigger event (' + calleeMsg + ') cancelled');
@@ -234,7 +268,9 @@
 				currentHeight = (undefined !== customHeight)  ? customHeight : getIFrameHeight[heightCalcMode](),
 				currentWidth  = (undefined !== customWidth )  ? customWidth  : getIFrameWidth();
 
-			if (lastTrigger in {size:1,interval:1} && ('resize' === type)){
+			if (('interval' === lastTrigger) && ('resize' === type)){ //Prevent double resize
+				cancelTrigger();
+			} else if (('size' === lastTrigger) && (type in {resize:1,click:1})){ //Stop double trigger overridig size event
 				cancelTrigger();
 			} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
 				resizeIFrame();
