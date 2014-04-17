@@ -94,7 +94,7 @@ Set to zero to disable.
 	default: 'bodyOffset'
 	values: 'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 'max'
 
-By default the height of the iFrame is calculated by converting the margin of the `body` to px and then adding the top and bottom figures to the offsetHeight of the body tag. 
+By default the height of the iFrame is calculated by converting the margin of the `body` to px and then adding the top and bottom figures to the offsetHeight of the `body` tag. 
 
 In cases where CSS styles causes the content to flow outside the `body` you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
@@ -184,7 +184,9 @@ if ('parentIFrame' in window) {
 
 ##Troubleshooting
 
-The first step to investigate a problem, is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. The solutions to the three most common problems are outlined in this section.
+The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. 
+
+The solutions to the three most common problems are outlined in this section.
 
 ### IFrame not sizing correctly
 If a larger element of the content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, start with the **max** option and if that fixes things, try then to narrow it down to one of the other options.
@@ -205,7 +207,7 @@ $(*Element with hover class*).mouseover(resize).mouseout(resize);
 ```
 
 ### Unexpected message received error
-By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkorigin](#checkorigin) option to **false**.
+By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
 
 
 ## Browser compatibility 
