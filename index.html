@@ -66,7 +66,7 @@
 <h3>
 <a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h3>
 
-<p>To see this working take a look at this <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the console log.</p>
+<p>To see this working take a look at this <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the <a href="https://developer.mozilla.org/en-US/docs/Tools/Web_Console">console</a>.</p>
 
 <h2>
 <a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
@@ -141,11 +141,27 @@ type: number
 <h3>
 <a name="heightcalculationmethod" class="anchor" href="#heightcalculationmethod"><span class="octicon octicon-link"></span></a>heightCalculationMethod</h3>
 
-<pre><code>default: 'offset'
-values: 'offset' | 'scroll'
+<pre><code>default: 'bodyOffset'
+values: 'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 'max'
 </code></pre>
 
-<p>By default the heigh of the iFrame is calculated by converting the margin of the body to px and then adding the top and bottom figures to the height of the body tag. Setting this value to <strong>scroll</strong> will change this to instead use <code>document.documentElement.scrollHeight</code> to calculate the height; this can fix some problems, but comes with the side-effects of slightly over reporting the height and also DOM changes that reduce the size of the content won't always be reported, so the iFrame may not shrink with the content.</p>
+<p>By default the height of the iFrame is calculated by converting the margin of the <code>body</code> to px and then adding the top and bottom figures to the offsetHeight of the <code>body</code> tag. </p>
+
+<p>In cases where CSS styles causes the content to flow outside the <code>body</code> you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.</p>
+
+<ul>
+<li>
+<strong>bodyScroll</strong> uses <code>document.body.scrollHeight</code>
+</li>
+<li>
+<strong>documentElementOffset</strong> uses <code>document.documentElement.offsetHeight</code>
+</li>
+<li>
+<strong>documentElementScroll</strong> uses <code>document.documentElement.scrollHeight</code>
+</li>
+<li>
+<strong>max</strong> takes the largest value of the other four options</li>
+</ul><p><i>Note: Some of these methods will prevent an iFrame reducing in size in some browsers.</i></p>
 
 <h3>
 <a name="messagecallback" class="anchor" href="#messagecallback"><span class="octicon octicon-link"></span></a>messageCallback</h3>
@@ -193,7 +209,7 @@ type: boolean
 <h2>
 <a name="iframe-methods" class="anchor" href="#iframe-methods"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
 
-<p>To enable these methods you must set <code>enablePublicMethods</code> to <code>true</code>. This creates the <code>window.parentIFrame</code> object in the iFrame. These method should be contained by a test for the <code>window.parentIFrame</code> object, in case the page is not loaded inside an iFrame. For example:</p>
+<p>To enable these methods you must set <a href="#enablepublicmethods">enablePublicMethods</a> to <strong>true</strong>. This creates the <code>window.parentIFrame</code> object in the iFrame. These method should be contained by a test for the <code>window.parentIFrame</code> object, in case the page is not loaded inside an iFrame. For example:</p>
 
 <div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
@@ -237,27 +253,21 @@ type: boolean
 <h2>
 <a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="octicon octicon-link"></span></a>Troubleshooting</h2>
 
+<p>The first step to investigate a problem is to enable the <a href="#log">log</a> option and then open the <a href="https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console">JavaScript Console</a>. This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. </p>
+
+<p>The solutions to the three most common problems are outlined in this section.</p>
+
 <h3>
-<a name="iframe-not-initially-sizing" class="anchor" href="#iframe-not-initially-sizing"><span class="octicon octicon-link"></span></a>IFrame not initially sizing</h3>
+<a name="iframe-not-sizing-correctly" class="anchor" href="#iframe-not-sizing-correctly"><span class="octicon octicon-link"></span></a>IFrame not sizing correctly</h3>
 
-<p>If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you need to either wrap your content in a relatively positioned <code>DIV</code> tag, or fall back to using the  <code>parentIFrame.size()</code> method to manually set the iFrame size from within the iFrame.</p>
-
-<h3>
-<a name="iframe-not-resizing-correctly" class="anchor" href="#iframe-not-resizing-correctly"><span class="octicon octicon-link"></span></a>IFrame not resizing correctly</h3>
-
-<p>It is possible to write CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clear-fix div just before the close body tag.</p>
-
-<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"clear:both;"</span><span class="nt">&gt;&lt;/div&gt;</span>
-</pre></div>
-
-<p>Alternatively you can set the <code>heightCalculationMethod</code> option to <strong>scroll</strong>. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section.</p>
+<p>If a larger element of the content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, start with the <strong>max</strong> option and if that fixes things, try then to narrow it down to one of the other options.</p>
 
 <h3>
 <a name="iframe-not-detecting-css-hover-events" class="anchor" href="#iframe-not-detecting-css-hover-events"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS :hover events</h3>
 
-<p>If your page resizes via CSS <code>:hover</code> events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the <code>interval</code> option to <strong>-32</strong> and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. </p>
+<p>If your page resizes via CSS <code>:hover</code> events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the <a href="#interval">interval</a> option to <strong>-32</strong> and have the iFrame poll for changes in it's size. This has the down side of creating a small CPU overhead. </p>
 
-<p>The more complex solution is to create <code>mouseover</code> and <code>mouseout</code> event listeners on the elements that are resized via CSS and have these events call the <code>parentIFrame.size()</code> method. With jQuery this can be done as follows.</p>
+<p>The more complex solution is to create <code>mouseover</code> and <code>mouseout</code> event listeners on the elements that are resized via CSS and have these events call the <a href="##parentiframesize-customheight-customwidth">parentIFrame.size()</a> method. With jQuery this can be done as follows, once you have set the <a href="#enablepublicmethods">enablePublicMethods</a> option to <strong>true</strong>.</p>
 
 <div class="highlight highlight-js"><pre><span class="kd">function</span> <span class="nx">resize</span><span class="p">(){</span>
     <span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
@@ -271,7 +281,7 @@ type: boolean
 <h3>
 <a name="unexpected-message-received-error" class="anchor" href="#unexpected-message-received-error"><span class="octicon octicon-link"></span></a>Unexpected message received error</h3>
 
-<p>By default the origin of incoming messages is checked against the <code>src</code> attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the <code>checkOrigin</code> option to <strong>false</strong>.</p>
+<p>By default the origin of incoming messages is checked against the <code>src</code> attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the <a href="#checkorigin">checkOrigin</a> option to <strong>false</strong>.</p>
 
 <h2>
 <a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
@@ -309,17 +319,9 @@ type: boolean
 </pre></div>
 
 <h2>
-<a name="install-via-package-management-systems" class="anchor" href="#install-via-package-management-systems"><span class="octicon octicon-link"></span></a>Install via Package Management Systems</h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<p>This library can be installed via the <a href="http://bower.io">Bower</a>,</p>
-
-<pre><code>bower install iframe-resizer
-</code></pre>
-
-<p>and <a href="http://component.io">Component</a> front-end package management systems.</p>
-
-<pre><code>component install davidjbradshaw/iframe-resizer
-</code></pre>
+<p>In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
 
 <h2>
 <a name="changes-between-version-1-and-2" class="anchor" href="#changes-between-version-1-and-2"><span class="octicon octicon-link"></span></a>Changes between version 1 and 2.</h2>
@@ -329,14 +331,11 @@ type: boolean
 <p>The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the host-page script with an iFrame running version 1 of the iFrame script, or <em>vice versa</em>, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.</p>
 
 <h2>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
-
-<p>In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
-
-<h2>
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.3.0 Added extra <em>heightCalculationMethod</em> options. Inject clearFix into 'body' to work around CSS floats preventing the height being correctly calculated. Added meaningful error message for non-valid values in <em>heightCalculationMethod</em>. Stop <strong>click</strong> events firing for 50ms after <strong>size</strong> events. Fixed hover example in old IE.</li>
+<li>v2.2.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/26">#26</a> Locally scope jQuery to $, so there is no dependancy on it being defined globally.</li>
 <li>v2.2.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/25">#25</a> Added click listener to Window, to detect CSS checkbox resize events.</li>
 <li>v2.2.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/24">#24</a> Prevent error when incoming message is an object [<a href="https://github.com/torjue">Torjus Eidet</a>].</li>
 <li>v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.</li>
