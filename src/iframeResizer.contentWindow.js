@@ -20,7 +20,7 @@
 		calculateWidth        = false,
 		height                = 1,
 		firstRun              = true,
-		heightCalcModeDefault = 'bodyOffset',
+		heightCalcModeDefault = 'offset',
 		heightCalcMode        = heightCalcModeDefault,
 		interval              = 32,
 		lastTrigger           = '',
@@ -82,75 +82,6 @@
 				bodyPadding      = data[10];
 			}
 
-			function chkCSS(attr,value){
-				if (-1 !== value.indexOf('-')){
-					warn('Negative CSS value ignored for '+attr);
-					value='';
-				}
-				return value;
-			}
-
-			function setBodyStyle(attr,value){
-				if ((undefined !== value) && ('' !== value) && ('null' !== value)){
-					document.body.style[attr] = value;
-					log('Body '+attr+' set to "'+value+'"');
-				}
-			}
-
-			function setMargin(){
-				//If called via V1 script, convert bodyMargin from int to str 
-				if (undefined === bodyMarginStr){
-					bodyMarginStr = bodyMargin+'px';
-				}
-				setBodyStyle('margin',bodyMarginStr);
-			}
-
-			function stopInfiniteResizingOfIFrame(){
-				document.documentElement.style.height = 'auto';
-				document.body.style.height = 'auto';
-				log('HTML & body height set to "auto"');
-			}
-
-			function initWindowResizeListener(){
-				addEventListener('resize', function(){
-					sendSize('resize','Window resized');
-				});
-			}
-
-			function initWindowClickListener(){
-				addEventListener('click', function(){
-					sendSize('click','Window clicked');
-				});
-			}
-
-			function checkHeightMode(){
-				if (heightCalcModeDefault !== heightCalcMode){
-					if (!(heightCalcMode in getIFrameHeight)){
-						throw new Error(heightCalcMode + ' is not a valid option for heightCalcMode.');
-					}else{
-						log('Height calculation method set to "'+heightCalcMode+'"');
-					}
-				}
-			}
-
-			function startEventListeners(){
-				if ( true === autoResize ) {
-					initWindowResizeListener();
-					initWindowClickListener();
-					setupMutationObserver();
-				}
-				else {
-					log('Auto Resize disabled');
-				}
-			}
-
-			function injectClearFixIntoBodyElement(){
-				var clearFix = document.createElement('div');
-				clearFix.style.clear = 'both';
-				clearFix.style.display = 'block'; //Guard against this having been globally redefined in CSS.
-				document.body.appendChild(clearFix);
-			}
-
 			log('Initialising iFrame');
 
 			readData();
@@ -164,8 +95,78 @@
 			startEventListeners();
 		}
 
+		function chkCSS(attr,value){
+			if (-1 !== value.indexOf('-')){
+				warn('Negative CSS value ignored for '+attr);
+				value='';
+			}
+			return value;
+		}
+
+		function setBodyStyle(attr,value){
+			if ((undefined !== value) && ('' !== value) && ('null' !== value)){
+				document.body.style[attr] = value;
+				log('Body '+attr+' set to "'+value+'"');
+			}
+		}
+
+		function setMargin(){
+			//If called via V1 script, convert bodyMargin from int to str 
+			if (undefined === bodyMarginStr){
+				bodyMarginStr = bodyMargin+'px';
+			}
+			setBodyStyle('margin',bodyMarginStr);
+		}
+
+		function stopInfiniteResizingOfIFrame(){
+			document.documentElement.style.height = 'auto';
+			document.body.style.height = 'auto';
+			log('HTML & body height set to "auto"');
+		}
+
+		function initWindowResizeListener(){
+			addEventListener('resize', function(){
+				sendSize('resize','Window resized');
+			});
+		}
+
+		function initWindowClickListener(){
+			addEventListener('click', function(){
+				sendSize('click','Window clicked');
+			});
+		}
+
+		function checkHeightMode(){
+			if (heightCalcModeDefault !== heightCalcMode){
+				if (!(heightCalcMode in getIFrameHeight)){
+					warn(heightCalcMode + ' is not a valid option for heightCalcMode.');
+					heightCalcMode='bodyScroll';
+				}
+				log('Height calculation method set to "'+heightCalcMode+'"');
+			}
+		}
+
+		function startEventListeners(){
+			if ( true === autoResize ) {
+				initWindowResizeListener();
+				initWindowClickListener();
+				setupMutationObserver();
+			}
+			else {
+				log('Auto Resize disabled');
+			}
+		}
+
+		function injectClearFixIntoBodyElement(){
+			var clearFix = document.createElement('div');
+			clearFix.style.clear = 'both';
+			clearFix.style.display = 'block'; //Guard against this having been globally redefined in CSS.
+			document.body.appendChild(clearFix);
+		}
+
+
 		// document.documentElement.offsetHeight is not reliable, so
-		// we have to jump through hoops to get the correct value.
+		// we have to jump through hoops to get a better value.
 		function getIFrameBodyOffsetHeight(){
 			function getComputedBodyStyle(prop) {
 				function convertUnitsToPxForIE8(value) {
@@ -218,13 +219,21 @@
 			return document.documentElement.scrollHeight;
 		}
 
-		function getIFrameMaxHeight(){
-			return Math.max(
+		function getAllHeights(){
+			return [
 				getIFrameBodyOffsetHeight(),
 				getIFrameBodyScrollHeight(),
 				getIFrameDEOffsetHeight(),
 				getIFrameDEScrollHeight()
-			);
+			];
+		}
+
+		function getIFrameMaxHeight(){
+			return Math.max.apply(null,getAllHeights());
+		}
+
+		function getIFrameMinHeight(){
+			return Math.min.apply(null,getAllHeights());
 		}
 
 		var getIFrameHeight = {
@@ -234,7 +243,8 @@
 			documentElementOffset : getIFrameDEOffsetHeight,
 			scroll                : getIFrameDEScrollHeight, //Backward compatability
 			documentElementScroll : getIFrameDEScrollHeight,
-			max                   : getIFrameMaxHeight
+			max                   : getIFrameMaxHeight,
+			min                   : getIFrameMinHeight
 		};
 
 		function getIFrameWidth(){
@@ -309,6 +319,10 @@
 					},
 					sendMessage: function sendMessageF(msg,targetOrigin){
 						sendMsg(0,0,'message',msg,targetOrigin);
+					},
+					setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
+						heightCalcMode = heightCalculationMethod;
+						checkHeightMode();
 					},
 					setTargetOrigin: function setTargetOriginF(targetOrigin){
 						log('Set targetOrigin: '+targetOrigin);

@@ -140,6 +140,12 @@
 									if ('parentIFrame' in window)
 										callMethod('sendMessage',window.parentIFrame.getId());
 									break;
+								case 'setHeightCalculationMethod':
+									if ('parentIFrame' in window){
+										parentIFrame.setHeightCalculationMethod('max');
+										callMethod('size');
+									}
+									break;
 								case 'width':
 									$('p').width(3000);
 									break;
