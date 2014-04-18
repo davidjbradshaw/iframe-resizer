@@ -101,7 +101,8 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **bodyScroll** uses `document.body.scrollHeight`
 * **documentElementOffset** uses `document.documentElement.offsetHeight`
 * **documentElementScroll** uses `document.documentElement.scrollHeight`
-* **max** takes the largest value of the other four options
+* **max** takes the largest value of the main four options
+* **min** takes the smallest value of the main four options
 
 <i>Note: Some of these methods will prevent an iFrame reducing in size in some browsers.</i>
 
@@ -149,19 +150,23 @@ if ('parentIFrame' in window) {
 }
 ```
 
-### parentIFrame.close()
+### close()
 
 Remove the iFrame from the parent page. 
 
-### parentIFrame.getId()
+### getId()
 
 Returns the ID of the iFrame that the page is contained in.
 
-### parentIFrame.sendMessage(message,[targetOrigin])
+### sendMessage(message,[targetOrigin])
 
 Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicing your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
 
-### parentIFrame.size ([customHeight],[ customWidth])
+### setHeightCalculationMethod(heightCalculationMethod)
+
+Change the method use to workout the height of the iFrame. 
+
+### size ([customHeight],[ customWidth])
 
 Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width. 
 
@@ -256,6 +261,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.3.1 Added setHeightCalculationMethod() method in iFrame. Added *min* option to *heightCalculationMethod. Invalid value for *heightCalculationMethod* is now a warning rather than an error and now falls back to the default value.
 * v2.3.0 Added extra *heightCalculationMethod* options. Inject clearFix into 'body' to work around CSS floats preventing the height being correctly calculated. Added meaningful error message for non-valid values in *heightCalculationMethod*. Stop **click** events firing for 50ms after **size** events. Fixed hover example in old IE.
 * v2.2.3 [#26](https://github.com/davidjbradshaw/iframe-resizer/issues/26) Locally scope jQuery to $, so there is no dependancy on it being defined globally.
 * v2.2.2 [#25](https://github.com/davidjbradshaw/iframe-resizer/issues/25) Added click listener to Window, to detect CSS checkbox resize events.
