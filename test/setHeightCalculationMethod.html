@@ -16,24 +16,31 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
   
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-		asyncTest( "postMessage Response", function() {
+		asyncTest( "setHeightCalculationMethod", function() {
+
+      var callbackCounter = 0;
 
       iFrameResize({
         log:true,
-        bodyBackground:'wheat',
-        heightCalculationMethod:'max',
+        enablePublicMethods:true,
         resizedCallback:function(messageData){
-          ok( true, 'Receive message back from iFrame.' );
-          ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
-          ok( 'iFrameResizer0' === messageData.iframe.id, 'iFrame id = iFrameResizer0.' );
-          ok( '600' === messageData.width, 'iFrame width = 600.' );
-          start();
+
+          switch  (''+(++callbackCounter)){
+            case '1':
+              sendMessage('setHeightCalculationMethod');  
+              break;
+            default:
+              ok( true, 'iFrame detected content change');
+              start();
+          }
+
         }
       });
     });

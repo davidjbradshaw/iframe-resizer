@@ -1,7 +1,7 @@
 # iFrame Resizer 
 [![Bower version](https://badge.fury.io/bo/iframe-resizer.png)](http://badge.fury.io/bo/iframe-resizer) [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer) [![Code Climate](https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png)](https://codeclimate.com/github/davidjbradshaw/iframe-resizer) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fall back to setInterval for IE8-10. 
+This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fallback to setInterval for IE8-10. 
 
 The code also detects browser events that can cause the content to resize; provides functions to allow the iFrame to set a custom size and close itself. Plus it supports having multiple iFrames on the host-page and additionally provides for the sending of simple messages from the iFrame to the parent page. 
 
@@ -32,7 +32,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the [troubleshooting](#troubleshooting) section below.
 
 ###Example
-To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the console log.
+To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
 
 ## Options
 
@@ -91,10 +91,20 @@ Set to zero to disable.
 
 ### heightCalculationMethod
 
-	default: 'offset'
-	values: 'offset' | 'scroll'
+	default: 'bodyOffset'
+	values: 'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 'max'
 
-By default the heigh of the iFrame is calculated by converting the margin of the body to px and then adding the top and bottom figures to the height of the body tag. Setting this value to **scroll** will change this to instead use `document.documentElement.scrollHeight` to calculate the height; this can fix some problems, but comes with the side-effects of slightly over reporting the height and also DOM changes that reduce the size of the content won't always be reported, so the iFrame may not shrink with the content.
+By default the height of the iFrame is calculated by converting the margin of the `body` to px and then adding the top and bottom figures to the offsetHeight of the `body` tag. 
+
+In cases where CSS styles causes the content to flow outside the `body` you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
+
+* **bodyScroll** uses `document.body.scrollHeight`
+* **documentElementOffset** uses `document.documentElement.offsetHeight`
+* **documentElementScroll** uses `document.documentElement.scrollHeight`
+* **max** takes the largest value of the main four options
+* **min** takes the smallest value of the main four options
+
+<i>Note: Some of these methods will prevent an iFrame reducing in size in some browsers.</i>
 
 ### messageCallback
 
@@ -132,7 +142,7 @@ Resize iFrame to content width.
 
 ## IFrame Methods
 
-To enable these methods you must set `enablePublicMethods` to `true`. This creates the `window.parentIFrame` object in the iFrame. These method should be contained by a test for the `window.parentIFrame` object, in case the page is not loaded inside an iFrame. For example:
+To enable these methods you must set [enablePublicMethods](#enablepublicmethods) to **true**. This creates the `window.parentIFrame` object in the iFrame. These method should be contained by a test for the `window.parentIFrame` object, in case the page is not loaded inside an iFrame. For example:
 
 ```js
 if ('parentIFrame' in window) {
@@ -140,19 +150,23 @@ if ('parentIFrame' in window) {
 }
 ```
 
-### parentIFrame.close()
+### close()
 
 Remove the iFrame from the parent page. 
 
-### parentIFrame.getId()
+### getId()
 
 Returns the ID of the iFrame that the page is contained in.
 
-### parentIFrame.sendMessage(message,[targetOrigin])
+### sendMessage(message,[targetOrigin])
 
 Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicing your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
 
-### parentIFrame.size ([customHeight],[ customWidth])
+### setHeightCalculationMethod(heightCalculationMethod)
+
+Change the method use to workout the height of the iFrame. 
+
+### size ([customHeight],[ customWidth])
 
 Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width. 
 
@@ -175,22 +189,17 @@ if ('parentIFrame' in window) {
 
 ##Troubleshooting
 
-### IFrame not initially sizing
-If the majority of the content is removed from the normal document flow, through the use of absolute positioning of top level elements, it can prevent the browser working out the correct size of the page. In such cases you could try wrapping your content in a relatively positioned `DIV` tag, or either of the two suggestions below.
+The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. 
 
-### IFrame not resizing correctly
-It is possible to write CSS that causes the content to overflow the body tag, this will prevent the iFrame being correctly sized. If this is the case the simplest fix is to add a clear-fix div just before the close body tag.
+The solutions to the three most common problems are outlined in this section.
 
-```html
-<div style="clear:both;"></div>
-```
-
-Alternatively you can set the `heightCalculationMethod` option to **scroll**. This will change how the iFrame calculates its height; however, it does have some side effects that are discussed in the options section.
+### IFrame not sizing correctly
+If a larger element of the content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, start with the **max** option and if that fixes things, try then to narrow it down to one of the other options.
 
 ###IFrame not detecting CSS :hover events
-If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the `interval` option to **-32** and have the iFrame pole for changes in it's size. This has the down side of creating a small CPU overhead. 
+If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the [interval](#interval) option to **-32** and have the iFrame poll for changes in it's size. This has the down side of creating a small CPU overhead. 
 
-The more complex solution is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the `parentIFrame.size()` method. With jQuery this can be done as follows.
+The more complex solution is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
 
 ```js
 function resize(){
@@ -203,7 +212,7 @@ $(*Element with hover class*).mouseover(resize).mouseout(resize);
 ```
 
 ### Unexpected message received error
-By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the `checkOrigin` option to **false**.
+By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
 
 
 ## Browser compatibility 
@@ -252,6 +261,8 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.3.1 Added setHeightCalculationMethod() method in iFrame. Added *min* option to the height calculation methods. Invalid value for *heightCalculationMethod* is now a warning rather than an error and now falls back to the default value.
+* v2.3.0 Added extra *heightCalculationMethod* options. Inject clearFix into 'body' to work around CSS floats preventing the height being correctly calculated. Added meaningful error message for non-valid values in *heightCalculationMethod*. Stop **click** events firing for 50ms after **size** events. Fixed hover example in old IE.
 * v2.2.3 [#26](https://github.com/davidjbradshaw/iframe-resizer/issues/26) Locally scope jQuery to $, so there is no dependancy on it being defined globally.
 * v2.2.2 [#25](https://github.com/davidjbradshaw/iframe-resizer/issues/25) Added click listener to Window, to detect CSS checkbox resize events.
 * v2.2.1 [#24](https://github.com/davidjbradshaw/iframe-resizer/issues/24) Prevent error when incoming message is an object [[Torjus Eidet](https://github.com/torjue)].
