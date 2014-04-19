@@ -89,7 +89,7 @@
 			interval         = (undefined !== data[4]) ? parseInt(data[4],base) : interval;
 			publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : publicMethods;
 			autoResize       = (undefined !== data[6]) ? strBool(data[6])       : autoResize;
-			bodyMarginStr    = chkCSS('margin',data[7]);
+			bodyMarginStr    = data[7];
 			heightCalcMode   = (undefined !== data[8]) ? data[8]                : heightCalcMode;
 			bodyBackground   = data[9];
 			bodyPadding      = data[10];
@@ -115,6 +115,7 @@
 			if (undefined === bodyMarginStr){
 				bodyMarginStr = bodyMargin+'px';
 			}
+			chkCSS('margin',bodyMarginStr);
 			setBodyStyle('margin',bodyMarginStr);
 		}
 
