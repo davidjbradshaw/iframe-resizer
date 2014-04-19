@@ -62,26 +62,6 @@
 	function receiver(event) {
 		function init(){
 
-			function readData(){
-				function strBool(str){
-					return 'true' === str ? true : false;
-				}
-
-				var data = event.data.substr(msgIdLen).split(':');
-
-				myID             = data[0];
-				bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : bodyMargin; //For V1 compatibility
-				calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : calculateWidth;
-				logging          = (undefined !== data[3]) ? strBool(data[3])       : logging;
-				interval         = (undefined !== data[4]) ? parseInt(data[4],base) : interval;
-				publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : publicMethods;
-				autoResize       = (undefined !== data[6]) ? strBool(data[6])       : autoResize;
-				bodyMarginStr    = chkCSS('margin',data[7]);
-				heightCalcMode   = (undefined !== data[8]) ? data[8]                : heightCalcMode;
-				bodyBackground   = data[9];
-				bodyPadding      = data[10];
-			}
-
 			log('Initialising iFrame');
 
 			readData();
@@ -93,6 +73,26 @@
 			stopInfiniteResizingOfIFrame();
 			setupPublicMethods();
 			startEventListeners();
+		}
+
+		function readData(){
+			function strBool(str){
+				return 'true' === str ? true : false;
+			}
+
+			var data = event.data.substr(msgIdLen).split(':');
+
+			myID             = data[0];
+			bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : bodyMargin; //For V1 compatibility
+			calculateWidth   = (undefined !== data[2]) ? strBool(data[2])       : calculateWidth;
+			logging          = (undefined !== data[3]) ? strBool(data[3])       : logging;
+			interval         = (undefined !== data[4]) ? parseInt(data[4],base) : interval;
+			publicMethods    = (undefined !== data[5]) ? strBool(data[5])       : publicMethods;
+			autoResize       = (undefined !== data[6]) ? strBool(data[6])       : autoResize;
+			bodyMarginStr    = chkCSS('margin',data[7]);
+			heightCalcMode   = (undefined !== data[8]) ? data[8]                : heightCalcMode;
+			bodyBackground   = data[9];
+			bodyPadding      = data[10];
 		}
 
 		function chkCSS(attr,value){
@@ -162,148 +162,6 @@
 			clearFix.style.clear = 'both';
 			clearFix.style.display = 'block'; //Guard against this having been globally redefined in CSS.
 			document.body.appendChild(clearFix);
-		}
-
-
-		// document.documentElement.offsetHeight is not reliable, so
-		// we have to jump through hoops to get a better value.
-		function getIFrameBodyOffsetHeight(){
-			function getComputedBodyStyle(prop) {
-				function convertUnitsToPxForIE8(value) {
-					var PIXEL = /^\d+(px)?$/i;
-
-					if (PIXEL.test(value)) {
-						return parseInt(value,base);
-					}
-
-					var
-						style = el.style.left,
-						runtimeStyle = el.runtimeStyle.left;
-
-					el.runtimeStyle.left = el.currentStyle.left;
-					el.style.left = value || 0;
-					value = el.style.pixelLeft;
-					el.style.left = style;
-					el.runtimeStyle.left = runtimeStyle;
-
-					return value;
-				}
-
-				var
-					el = document.body,
-					retVal = 0;
-
-				if (document.defaultView && document.defaultView.getComputedStyle) {
-					retVal =  document.defaultView.getComputedStyle(el, null)[prop];
-				} else {//IE8
-					retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
-				}
-
-				return parseInt(retVal,base);
-			}
-
-			return  document.body.offsetHeight +
-					getComputedBodyStyle('marginTop') +
-					getComputedBodyStyle('marginBottom');
-		}
-
-		function getIFrameBodyScrollHeight(){
-			return document.body.scrollHeight;
-		}
-
-		function getIFrameDEOffsetHeight(){
-			return document.documentElement.offsetHeight;
-		}
-
-		function getIFrameDEScrollHeight(){
-			return document.documentElement.scrollHeight;
-		}
-
-		function getAllHeights(){
-			return [
-				getIFrameBodyOffsetHeight(),
-				getIFrameBodyScrollHeight(),
-				getIFrameDEOffsetHeight(),
-				getIFrameDEScrollHeight()
-			];
-		}
-
-		function getIFrameMaxHeight(){
-			return Math.max.apply(null,getAllHeights());
-		}
-
-		function getIFrameMinHeight(){
-			return Math.min.apply(null,getAllHeights());
-		}
-
-		var getIFrameHeight = {
-			offset                : getIFrameBodyOffsetHeight, //Backward compatability
-			bodyOffset            : getIFrameBodyOffsetHeight,
-			bodyScroll            : getIFrameBodyScrollHeight,
-			documentElementOffset : getIFrameDEOffsetHeight,
-			scroll                : getIFrameDEScrollHeight, //Backward compatability
-			documentElementScroll : getIFrameDEScrollHeight,
-			max                   : getIFrameMaxHeight,
-			min                   : getIFrameMinHeight
-		};
-
-		function getIFrameWidth(){
-			return Math.max(
-				document.documentElement.scrollWidth,
-				document.body.scrollWidth
-			);
-		}
-
-		function sendSize(type,calleeMsg, customHeight, customWidth){
-
-			function cancelTrigger(){
-				log( 'Trigger event (' + calleeMsg + ') cancelled');
-				setTimeout(function(){ lastTrigger = type; },triggerCancelTimer);
-			}
-
-			function recordTrigger(){
-				log( 'Trigger event: ' + calleeMsg );
-				lastTrigger = type;
-			}
-
-			function resizeIFrame(){
-				height = currentHeight;
-				width  = currentWidth;
-
-				recordTrigger();
-				sendMsg(height,width,type);
-			}
-
-			var
-				currentHeight = (undefined !== customHeight)  ? customHeight : getIFrameHeight[heightCalcMode](),
-				currentWidth  = (undefined !== customWidth )  ? customWidth  : getIFrameWidth();
-
-			if (('interval' === lastTrigger) && ('resize' === type)){ //Prevent double resize
-				cancelTrigger();
-			} else if (('size' === lastTrigger) && (type in {resize:1,click:1})){ //Stop double trigger overridig size event
-				cancelTrigger();
-			} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
-				resizeIFrame();
-			}
-		}
-
-		function sendMsg(height,width,type,msg,targetOrigin){
-			function setTargetOrigin(){
-				if (undefined === targetOrigin){
-					targetOrigin = targetOriginDefault;
-				} else {
-					log('Message targetOrigin: '+targetOrigin);
-				}
-			}
-
-			function sendToParent(){
-				var message = myID + ':' + height + ':' + width  + ':' + type + (undefined !== msg ? ':' + msg : '');
-				log('Sending message to host page (' + message + ')');
-				target.postMessage( msgID + message, targetOrigin);
-			}
-
-			setTargetOrigin();
-			sendToParent();
 		}
 
 		function setupPublicMethods(){
@@ -381,6 +239,149 @@
 				initInterval();
 			}
 		}
+
+
+		// document.documentElement.offsetHeight is not reliable, so
+		// we have to jump through hoops to get a better value.
+		function getBodyOffsetHeight(){
+			function getComputedBodyStyle(prop) {
+				function convertUnitsToPxForIE8(value) {
+					var PIXEL = /^\d+(px)?$/i;
+
+					if (PIXEL.test(value)) {
+						return parseInt(value,base);
+					}
+
+					var
+						style = el.style.left,
+						runtimeStyle = el.runtimeStyle.left;
+
+					el.runtimeStyle.left = el.currentStyle.left;
+					el.style.left = value || 0;
+					value = el.style.pixelLeft;
+					el.style.left = style;
+					el.runtimeStyle.left = runtimeStyle;
+
+					return value;
+				}
+
+				var
+					el = document.body,
+					retVal = 0;
+
+				if (document.defaultView && document.defaultView.getComputedStyle) {
+					retVal =  document.defaultView.getComputedStyle(el, null)[prop];
+				} else {//IE8
+					retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
+				}
+
+				return parseInt(retVal,base);
+			}
+
+			return  document.body.offsetHeight +
+					getComputedBodyStyle('marginTop') +
+					getComputedBodyStyle('marginBottom');
+		}
+
+		function getBodyScrollHeight(){
+			return document.body.scrollHeight;
+		}
+
+		function getDEOffsetHeight(){
+			return document.documentElement.offsetHeight;
+		}
+
+		function getDEScrollHeight(){
+			return document.documentElement.scrollHeight;
+		}
+
+		function getAllHeights(){
+			return [
+				getBodyOffsetHeight(),
+				getBodyScrollHeight(),
+				getDEOffsetHeight(),
+				getDEScrollHeight()
+			];
+		}
+
+		function getMaxHeight(){
+			return Math.max.apply(null,getAllHeights());
+		}
+
+		function getMinHeight(){
+			return Math.min.apply(null,getAllHeights());
+		}
+
+		var getHeight = {
+			offset                : getBodyOffsetHeight, //Backward compatability
+			bodyOffset            : getBodyOffsetHeight,
+			bodyScroll            : getBodyScrollHeight,
+			documentElementOffset : getDEOffsetHeight,
+			scroll                : getDEScrollHeight, //Backward compatability
+			documentElementScroll : getDEScrollHeight,
+			max                   : getMaxHeight,
+			min                   : getMinHeight
+		};
+
+		function getWidth(){
+			return Math.max(
+				document.documentElement.scrollWidth,
+				document.body.scrollWidth
+			);
+		}
+
+		function sendSize(type,calleeMsg, customHeight, customWidth){
+
+			function cancelTrigger(){
+				log( 'Trigger event (' + calleeMsg + ') cancelled');
+				setTimeout(function(){ lastTrigger = type; },triggerCancelTimer);
+			}
+
+			function recordTrigger(){
+				log( 'Trigger event: ' + calleeMsg );
+				lastTrigger = type;
+			}
+
+			function resizeIFrame(){
+				height = currentHeight;
+				width  = currentWidth;
+
+				recordTrigger();
+				sendMsg(height,width,type);
+			}
+
+			var
+				currentHeight = (undefined !== customHeight)  ? customHeight : getIFrameHeight[heightCalcMode](),
+				currentWidth  = (undefined !== customWidth )  ? customWidth  : getIFrameWidth();
+
+			if (('interval' === lastTrigger) && ('resize' === type)){ //Prevent double resize
+				cancelTrigger();
+			} else if (('size' === lastTrigger) && (type in {resize:1,click:1})){ //Stop double trigger overridig size event
+				cancelTrigger();
+			} else if ((height !== currentHeight) || (calculateWidth && width !== currentWidth)){
+				resizeIFrame();
+			}
+		}
+
+		function sendMsg(height,width,type,msg,targetOrigin){
+			function setTargetOrigin(){
+				if (undefined === targetOrigin){
+					targetOrigin = targetOriginDefault;
+				} else {
+					log('Message targetOrigin: '+targetOrigin);
+				}
+			}
+
+			function sendToParent(){
+				var message = myID + ':' + height + ':' + width  + ':' + type + (undefined !== msg ? ':' + msg : '');
+				log('Sending message to host page (' + message + ')');
+				target.postMessage( msgID + message, targetOrigin);
+			}
+
+			setTargetOrigin();
+			sendToParent();
+		}
+
 
 		function isMessageForUs(){
 			return msgID === '' + event.data.substr(0,msgIdLen);
