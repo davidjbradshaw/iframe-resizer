@@ -33,7 +33,8 @@
   "development": {},
   "scripts": [
     "js/iframeResizer.min.js",
-    "js/iframeResizer.contentWindow.min.js"
+    "js/iframeResizer.contentWindow.min.js",
+    "src"
   ],
   "license": "MIT"
 }
