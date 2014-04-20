@@ -40,14 +40,15 @@
     "bower_components",
     "test",
     "tests",
-    "examples",
-    "src",
+    "example",
     "*.md",
     "AUTHORS.txt",
     "grunt.js",
     "gruntfile.js",
     "package.json",
-    "bower.json"
+    "bower.json",
+    "component.json",
+    "iframeResizer.jquery.json"
   ],
   "dependencies": {}
 }
