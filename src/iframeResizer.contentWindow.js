@@ -61,9 +61,7 @@
 
 	function receiver(event) {
 		function init(){
-
 			log('Initialising iFrame');
-
 			readData();
 			setMargin();
 			setBodyStyle('background',bodyBackground);
@@ -76,11 +74,12 @@
 		}
 
 		function readData(){
+
+			var data = event.data.substr(msgIdLen).split(':');
+
 			function strBool(str){
 				return 'true' === str ? true : false;
 			}
-
-			var data = event.data.substr(msgIdLen).split(':');
 
 			myID             = data[0];
 			bodyMargin       = (undefined !== data[1]) ? parseInt(data[1],base) : bodyMargin; //For V1 compatibility
@@ -140,7 +139,7 @@
 		function checkHeightMode(){
 			if (heightCalcModeDefault !== heightCalcMode){
 				if (!(heightCalcMode in getHeight)){
-					warn(heightCalcMode + ' is not a valid option for heightCalcMode.');
+					warn(heightCalcMode + ' is not a valid option for heightCalculationMethod.');
 					heightCalcMode='bodyScroll';
 				}
 				log('Height calculation method set to "'+heightCalcMode+'"');
@@ -205,6 +204,9 @@
 		}
 
 		function setupMutationObserver(){
+
+			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+			
 			function createMutationObserver(){
 				var
 					target = document.querySelector('body'),
@@ -225,8 +227,6 @@
 				log('Enable MutationObserver');
 				observer.observe(target, config);
 			}
-
-			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 			if (MutationObserver){
 				if (0 > interval) {
@@ -333,6 +333,10 @@
 
 		function sendSize(type,calleeMsg, customHeight, customWidth){
 
+			var
+				currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode](),
+				currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth();
+
 			function cancelTrigger(){
 				log( 'Trigger event (' + calleeMsg + ') cancelled');
 				setTimeout(function(){ lastTrigger = type; },triggerCancelTimer);
@@ -350,10 +354,6 @@
 				recordTrigger();
 				sendMsg(height,width,type);
 			}
-
-			var
-				currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode](),
-				currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth();
 
 			if (('interval' === lastTrigger) && ('resize' === type)){ //Prevent double resize
 				cancelTrigger();
