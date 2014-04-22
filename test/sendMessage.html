@@ -21,7 +21,9 @@
   <script>
   
     'use strict';
-    var msgId = '[iFrameSizerTest]:';
+    var
+        count = 0,
+        msgId = '[iFrameSizerTest]:';
 
 		asyncTest( "sendMessage", function() {
 
@@ -34,7 +36,13 @@
         },
         messageCallback:function(messageData){
           ok( 'message test' === messageData.message, 'Receive message back from iFrame via sendMessage function.' );
-          start();
+          if (2===count){
+            sendMessage('chkSendMsg');
+            count++;
+          } else {
+            start();
+          }
+          
         }
       });
     });
