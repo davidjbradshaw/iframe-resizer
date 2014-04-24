@@ -28,11 +28,12 @@
 
       $('iframe').iFrameResize({
         log:true,
+        interval:1000,
         resizedCallback:function(messageData){
           
           switch  (''+(++callbackCounter)){
             case '1':
-              $('#qunit-fixture > div').width(500);
+              setTimeout(function(){$('#qunit-fixture > div').width(500);},50);
               break;
             case '2':
               ok( 'resize' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected resize');
