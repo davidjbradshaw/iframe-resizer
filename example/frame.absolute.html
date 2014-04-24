@@ -1,0 +1,65 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<meta charset="utf-8"> 
+		<title>iFrame message passing test</title> 
+		<meta name="description" content="iFrame message passing test">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<style>
+			a.back { float:right; }
+			body {border:solid 1px red;}
+			p{padding:5px 212px 5px 5px;margin:0 0 5px;}
+			#abs{
+				position: absolute;
+				top:0;
+				right:0;
+				width: 200px;
+				height: 600px;
+				background-color: wheat;
+			}
+		</style>
+	</head> 
+	<body> 
+
+		<p>
+			<b>iFrame</b>
+			<a href="frame.content.html" class="back">Back to page 1</a>
+		</p>
+		<p>
+			This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red border on this page. This prevents the normal height calculation, which is based on the body tag from returning the correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other page height propeties. 
+		</p>
+		<p>
+			Use the dropdown to change the sizing method of the page, select <b>bodyScroll</b> or <b>max</b> to get this page to size correctly.
+		</p>
+		<p>
+			<b>Height Calculation Method</b>
+			<select name="heightCalculationMethod">
+			  <option>bodyOffset</option> 
+			  <option>bodyScroll</option>
+			  <option>documentElementOffset</option>
+			  <option>documentElementScroll</option> 
+			  <option>max</option>
+			  <option>min</option>
+			</select>
+		</p>
+		<p>
+			<i>This option should be used sparingly, as the alternate methods can be less acurate at working out the correct page size, can cause screen flicker and can sometimes fail to reduce in size when the frame content changes in browsers that do not support mutationObservers (See <a href="http://caniuse.com/mutationobserver">caniuse.com</a> for details).</i>
+		</p>
+		
+		<div id="abs">Absolute positioned element</div>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+		<script>
+
+			$('select').on('change',function(){
+				if ('parentIFrame' in window){
+					parentIFrame.setHeightCalculationMethod($(this).val());
+					parentIFrame.size();
+				}
+			});
+
+		</script>
+
+	</body> 
+</html>
