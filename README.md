@@ -104,7 +104,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **max** takes the largest value of the main four options
 * **min** takes the smallest value of the main four options
 
-<i>Note: Some of these methods will prevent an iFrame reducing in size in some browsers.</i>
+<i>Note: Setting this property to value other than **bodyOffset** or **documentElementOffset** will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
 ### messageCallback
 
@@ -261,12 +261,13 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.4.0 Improved handling of alternate sizing methods, so that they will now shrink on all trigger events, except *Interval*. Prevent error when incoming message to iFrame is an object.
 * v2.3.2 Fix backwards compatibility issue between V2 iFrame and V1 hostpage scripts.
 * v2.3.1 Added setHeightCalculationMethod() method in iFrame. Added *min* option to the height calculation methods. Invalid value for *heightCalculationMethod* is now a warning rather than an error and now falls back to the default value.
 * v2.3.0 Added extra *heightCalculationMethod* options. Inject clearFix into 'body' to work around CSS floats preventing the height being correctly calculated. Added meaningful error message for non-valid values in *heightCalculationMethod*. Stop **click** events firing for 50ms after **size** events. Fixed hover example in old IE.
 * v2.2.3 [#26](https://github.com/davidjbradshaw/iframe-resizer/issues/26) Locally scope jQuery to $, so there is no dependancy on it being defined globally.
 * v2.2.2 [#25](https://github.com/davidjbradshaw/iframe-resizer/issues/25) Added click listener to Window, to detect CSS checkbox resize events.
-* v2.2.1 [#24](https://github.com/davidjbradshaw/iframe-resizer/issues/24) Prevent error when incoming message is an object [[Torjus Eidet](https://github.com/torjue)].
+* v2.2.1 [#24](https://github.com/davidjbradshaw/iframe-resizer/issues/24) Prevent error when incoming message to host page is an object [[Torjus Eidet](https://github.com/torjue)].
 * v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.
 * v2.1.1 [#16](https://github.com/davidjbradshaw/iframe-resizer/issues/16) Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
 * v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.
