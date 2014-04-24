@@ -5,11 +5,9 @@
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
   ],
-  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
+  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames. (Dependacy free)",
   "main": "js/iframeResizer.min.js",
   "keywords": [
-    "Cross",
-    "Domain",
     "CrossDomain",
     "Cross-Domain",
     "iFrame",
@@ -28,27 +26,16 @@
     "mutationObserver",
     "RWD",
     "responsive",
-    "responsiveiframe",
     "responsiveiframes",
-    "responsive-iframe",
     "responsive-iframes"
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests",
     "example",
-    "*.md",
-    "AUTHORS.txt",
-    "grunt.js",
+    "test",
     "gruntfile.js",
-    "package.json",
-    "bower.json",
-    "component.json",
-    "iframeResizer.jquery.json"
+    "*.md",
+    "*.json"
   ],
   "dependencies": {}
 }
