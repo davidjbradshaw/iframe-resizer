@@ -106,6 +106,8 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>Note: Setting this property to value other than **bodyOffset** or **documentElementOffset** will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
+<i>Additionally these options can be slightly less accurate at calculating the correct height and will cause increased screen flicker. Writting CSS that keeps the content within the body tag is a better solution than using this option.</i>
+
 ### messageCallback
 
 	type: function ({iframe,message})
@@ -194,7 +196,7 @@ The first step to investigate a problem is to enable the [log](#log) option and 
 The solutions to the three most common problems are outlined in this section.
 
 ### IFrame not sizing correctly
-If a larger element of the content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, start with the **max** option and if that fixes things, try then to narrow it down to one of the other options.
+If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, start with the **max** option and if that fixes things, try then to narrow it down to one of the other options.
 
 ###IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the [interval](#interval) option to **-32** and have the iFrame poll for changes in it's size. This has the down side of creating a small CPU overhead. 
