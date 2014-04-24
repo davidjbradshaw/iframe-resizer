@@ -351,6 +351,9 @@
 		}
 
 		function recordTrigger(){
+			if (!(triggerEvent in {'resetPage':1,'init':1})){
+				log('--');
+			}
 			log( 'Trigger event: ' + triggerEventDesc );
 			lastTriggerEvent = triggerEvent;
 		}
@@ -410,6 +413,7 @@
 
 
 	function resetIFrame(triggerEventDesc){
+		log('--');
 		log('Reset trigger event: ' + triggerEventDesc);
 		sendMsg(0,0,'reset');
 	}

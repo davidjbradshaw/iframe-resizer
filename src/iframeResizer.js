@@ -78,12 +78,18 @@
 				);
 			}
 
-			window.requestAnimationFrame(function RAF(){
+			function resize(){
 				if( settings.sizeHeight ) { setDimension('height'); }
 				if( settings.sizeWidth  ) { setDimension('width');  }
 				setPagePosition();
-				log(' --');
-			});
+			}
+
+			if('resetPage' !== messageData.type ){
+				log(' Requesting animation frame');
+				window.requestAnimationFrame(resize);
+			} else {
+				resize();
+			}
 		}
 
 		function closeIFrame(iframe){
@@ -192,12 +198,23 @@
 			log(' IFrame ('+iframe.id+') '+dimension+' reset by '+('init'===mode?'host page':'iFrame'));
 		}
 
-		if (settings.heightCalculationMethod in resetRequiredMethods){
-			getPagePosition();
+		function reset(){
 			if( settings.sizeHeight ) { setDimension('height'); }
 			if( settings.sizeWidth  ) { setDimension('width');  }
-			if ('init' !== mode){ trigger('reset','reset',iframe); }
+			if('init' !== mode)       { trigger('reset','reset',iframe); }
 		}
+
+		function checkRAF(){
+			if('init'!==mode){
+				log(' Requesting animation frame for reset');
+				window.requestAnimationFrame(reset);
+			} else {
+				reset();
+			}
+		}
+
+		getPagePosition();
+		checkRAF();
 	}
 
 	function trigger(calleeMsg,msg,iframe){
@@ -252,7 +269,9 @@
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
 				trigger('iFrame.onload',msg,iframe);
-				resetIFrame(iframe,'init');
+				if (settings.heightCalculationMethod in resetRequiredMethods){
+					resetIFrame(iframe,'init');
+				}
 			});
 			trigger('init',msg,iframe);
 		}
