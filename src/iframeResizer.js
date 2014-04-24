@@ -9,11 +9,13 @@
     'use strict';
 
 	var
-		count              = 0,
-		msgId              = '[iFrameSizer]', //Must match iframe msg ID
-		msgIdLen           = msgId.length,
-		settings           = {},
-		defaults           = {
+		count                = 0,
+		msgId                = '[iFrameSizer]', //Must match iframe msg ID
+		msgIdLen             = msgId.length,
+		pagePosition         = null,
+		resetRequiredMethods = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
+		settings             = {},
+		defaults             = {
 			autoResize                : true,
 			bodyBackground            : null,
 			bodyMargin                : null,
@@ -68,18 +70,20 @@
 	function iFrameListener(event){
 		function resizeIFrame(){
 			function setDimension(dimension){
-				window.requestAnimationFrame(function RAF(){
-					messageData.iframe.style[dimension] = messageData[dimension] + 'px';
-					log(
-						' IFrame (' + messageData.iframe.id +
-						') ' + dimension +
-						' set to ' + messageData[dimension] + 'px'
-					);
-				});
+				messageData.iframe.style[dimension] = messageData[dimension] + 'px';
+				log(
+					' IFrame (' + messageData.iframe.id +
+					') ' + dimension +
+					' set to ' + messageData[dimension] + 'px'
+				);
 			}
 
-			if( settings.sizeHeight ) { setDimension('height'); }
-			if( settings.sizeWidth  ) { setDimension('width');  }
+			window.requestAnimationFrame(function RAF(){
+				if( settings.sizeHeight ) { setDimension('height'); }
+				if( settings.sizeWidth  ) { setDimension('width');  }
+				setPagePosition();
+				log(' --');
+			});
 		}
 
 		function closeIFrame(iframe){
@@ -99,13 +103,21 @@
 		}
 
 		function actionMsg(){
-			if ('close' === messageData.type) {
-				closeIFrame(messageData.iframe);
-			} else {
-				resizeIFrame();
+			switch(messageData.type){
+				case 'close':
+					closeIFrame(messageData.iframe);
+					settings.resizedCallback(messageData);
+					break;
+				case 'message':
+					forwardMsgFromIFrame();
+					break;
+				case 'reset':
+					resetIFrame(messageData.iframe);
+					break;
+				default:
+					resizeIFrame();
+					settings.resizedCallback(messageData);
 			}
-			
-			settings.resizedCallback(messageData);
 		}
 
 		function isMessageFromIFrame(){
@@ -150,13 +162,47 @@
 		if (isMessageForUs()){
 			messageData = processMsg();
 			if (isMessageFromIFrame()){
-				if ('message' !== messageData.type){
-					actionMsg();
-				} else {
-					forwardMsgFromIFrame();
-				}
+				actionMsg();
 			}
 		}
+	}
+
+
+	function getPagePosition (){
+		if(null === pagePosition){
+			pagePosition = {
+				x: (window.pageXOffset !== undefined) ? window.pageXOffset : document.documentElement.scrollLeft,
+				y: (window.pageYOffset !== undefined) ? window.pageYOffset : document.documentElement.scrollTop
+			};
+			log(' Get position: '+pagePosition.x+','+pagePosition.y);
+		}
+	}
+
+	function setPagePosition(){
+		if(null !== pagePosition){
+			window.scrollTo(pagePosition.x,pagePosition.y);
+			log(' Set position: '+pagePosition.x+','+pagePosition.y);
+			pagePosition = null;
+		}
+	}
+
+	function resetIFrame(iframe,mode){
+		function setDimension(dimension){
+			iframe.style[dimension] = 0;
+			log(' IFrame ('+iframe.id+') '+dimension+' reset by '+('init'===mode?'host page':'iFrame'));
+		}
+
+		if (settings.heightCalculationMethod in resetRequiredMethods){
+			getPagePosition();
+			if( settings.sizeHeight ) { setDimension('height'); }
+			if( settings.sizeWidth  ) { setDimension('width');  }
+			if ('init' !== mode){ trigger('reset','reset',iframe); }
+		}
+	}
+
+	function trigger(calleeMsg,msg,iframe){
+		log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
+		iframe.contentWindow.postMessage( msgId + msg, '*' );
 	}
 
 
@@ -200,19 +246,15 @@
 					':' + settings.bodyPadding;
 		}
 
-		function trigger(calleeMsg,msg){
-			log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
-			iframe.contentWindow.postMessage( msgId + msg, '*' );
-		}
-
 		function init(msg){
 			//We have to call trigger twice, as we can not be sure if all 
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
-				trigger('iFrame.onload',msg);
+				trigger('iFrame.onload',msg,iframe);
+				resetIFrame(iframe,'init');
 			});
-			trigger('init',msg);
+			trigger('init',msg,iframe);
 		}
 
 		var
