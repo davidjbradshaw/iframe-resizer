@@ -123,7 +123,7 @@ type: boolean
 type: boolean
 </code></pre>
 
-<p>If enabled, a <code>window.parentIFrame</code> object is created in the iFrame. This contains <code>size()</code>, <code>getId()</code>, <code>sendMessage()</code> and <code>close()</code> methods.</p>
+<p>If enabled, a <code>window.parentIFrame</code> object is created in the iFrame that contains methods outlined <a href="#iframe-methods">below</a>.</p>
 
 <h3>
 <a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
@@ -163,7 +163,9 @@ values: 'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElement
 <strong>max</strong> takes the largest value of the main four options</li>
 <li>
 <strong>min</strong> takes the smallest value of the main four options</li>
-</ul><p><i>Note: Some of these methods will prevent an iFrame reducing in size in some browsers.</i></p>
+</ul><p><i>Note: Setting this property to value other than <strong>bodyOffset</strong> or <strong>documentElementOffset</strong> will prevent the <a href="#interval">interval</a> trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">mutationObserver</a> event is not supported. To overcome this you need to manually trigger a page resize by calling the <a href="#size-customheight-customwidth">parentIFrame.size()</a> method when you remove content from the page.</i></p>
+
+<p><i>Additionally these alternatives calculation methods can sometime be slightly less accurate at calculating the correct height.</i></p>
 
 <h3>
 <a name="messagecallback" class="anchor" href="#messagecallback"><span class="octicon octicon-link"></span></a>messageCallback</h3>
@@ -267,7 +269,7 @@ type: boolean
 <h3>
 <a name="iframe-not-sizing-correctly" class="anchor" href="#iframe-not-sizing-correctly"><span class="octicon octicon-link"></span></a>IFrame not sizing correctly</h3>
 
-<p>If a larger element of the content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, start with the <strong>max</strong> option and if that fixes things, try then to narrow it down to one of the other options.</p>
+<p>If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, start with the <strong>max</strong> option and if that fixes things, try then to narrow it down to one of the other options.</p>
 
 <h3>
 <a name="iframe-not-detecting-css-hover-events" class="anchor" href="#iframe-not-detecting-css-hover-events"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS :hover events</h3>
@@ -341,12 +343,14 @@ type: boolean
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.</li>
+<li>v2.4.0 Improved handling of alternate sizing methods, so that they will now shrink on all trigger events, except <em>Interval</em>. Prevent error when incoming message to iFrame is an object.</li>
 <li>v2.3.2 Fix backwards compatibility issue between V2 iFrame and V1 hostpage scripts.</li>
 <li>v2.3.1 Added setHeightCalculationMethod() method in iFrame. Added <em>min</em> option to the height calculation methods. Invalid value for <em>heightCalculationMethod</em> is now a warning rather than an error and now falls back to the default value.</li>
 <li>v2.3.0 Added extra <em>heightCalculationMethod</em> options. Inject clearFix into 'body' to work around CSS floats preventing the height being correctly calculated. Added meaningful error message for non-valid values in <em>heightCalculationMethod</em>. Stop <strong>click</strong> events firing for 50ms after <strong>size</strong> events. Fixed hover example in old IE.</li>
 <li>v2.2.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/26">#26</a> Locally scope jQuery to $, so there is no dependancy on it being defined globally.</li>
 <li>v2.2.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/25">#25</a> Added click listener to Window, to detect CSS checkbox resize events.</li>
-<li>v2.2.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/24">#24</a> Prevent error when incoming message is an object [<a href="https://github.com/torjue">Torjus Eidet</a>].</li>
+<li>v2.2.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/24">#24</a> Prevent error when incoming message to host page is an object [<a href="https://github.com/torjue">Torjus Eidet</a>].</li>
 <li>v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.</li>
 <li>v2.1.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/16">#16</a> Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.</li>
 <li>v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.</li>
