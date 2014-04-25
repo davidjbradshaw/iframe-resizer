@@ -263,7 +263,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
-* v2.4.1 Fix screen flicker issue with scroll hight calculation methods in v2.4.0.
+* v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.
 * v2.4.0 Improved handling of alternate sizing methods, so that they will now shrink on all trigger events, except *Interval*. Prevent error when incoming message to iFrame is an object.
 * v2.3.2 Fix backwards compatibility issue between V2 iFrame and V1 hostpage scripts.
 * v2.3.1 Added setHeightCalculationMethod() method in iFrame. Added *min* option to the height calculation methods. Invalid value for *heightCalculationMethod* is now a warning rather than an error and now falls back to the default value.
