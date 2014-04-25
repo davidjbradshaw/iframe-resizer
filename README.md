@@ -102,7 +102,6 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **documentElementOffset** uses `document.documentElement.offsetHeight`
 * **documentElementScroll** uses `document.documentElement.scrollHeight`
 * **max** takes the largest value of the main four options
-* **min** takes the smallest value of the main four options
 
 <i>Note: Setting this property to value other than **bodyOffset** or **documentElementOffset** will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
@@ -263,6 +262,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.4.2 Fix missing 'px' unit when resetting height.
 * v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.
 * v2.4.0 Improved handling of alternate sizing methods, so that they will now shrink on all trigger events, except *Interval*. Prevent error when incoming message to iFrame is an object.
 * v2.3.2 Fix backwards compatibility issue between V2 iFrame and V1 hostpage scripts.

@@ -194,14 +194,17 @@
 
 	function resetIFrame(messageData){
 		function setDimension(dimension){
-			messageData.iframe.style[dimension] = messageData[dimension];
-			log(' IFrame ('+messageData.iframe.id+') '+dimension+' reset by '+('init'===messageData.type?'host page':'iFrame'));
+			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
+			log(' IFrame ('+messageData.iframe.id+') '+dimension+' reset to '+messageData[dimension]+' by '+('init'===messageData.type?'host page':'iFrame'));
 		}
 
 		function reset(){
 			if( settings.sizeHeight ) { setDimension('height'); }
 			if( settings.sizeWidth  ) { setDimension('width');  }
-			if('init' !== messageData.type) { trigger('reset','reset',messageData.iframe); }
+			if('init' !== messageData.type) { setTimeout(function(){
+					trigger('reset','reset',messageData.iframe);
+				},1000);
+			}
 		}
 
 		function checkRAF(){
