@@ -329,7 +329,8 @@
 		scroll                : getDEScrollHeight, //Backward compatability
 		documentElementScroll : getDEScrollHeight,
 		max                   : getMaxHeight,
-		min                   : getMinHeight
+		min                   : getMinHeight,
+		grow                  : getMaxHeight
 	};
 
 	function getWidth(){
@@ -351,7 +352,7 @@
 		}
 
 		function recordTrigger(){
-			if (!(triggerEvent in {'resetPage':1,'init':1})){
+			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
 				log('--');
 			}
 			log( 'Trigger event: ' + triggerEventDesc );
@@ -374,7 +375,7 @@
 		function isSizeChangeDetected(){
 			return	(height !== currentHeight) || 
 					(calculateWidth && width !== currentWidth) || 
-					('resetPage' === triggerEvent);
+					(triggerEvent in {'reset':1,'resetPage':1});
 		}
 
 		function isForceResizableEvent(){
@@ -413,9 +414,14 @@
 
 
 	function resetIFrame(triggerEventDesc){
+		var hcm = heightCalcMode;
+		heightCalcMode = heightCalcModeDefault;
+
 		log('--');
 		log('Reset trigger event: ' + triggerEventDesc);
-		sendMsg(0,0,'reset');
+		sendSize('reset','Reset page size');
+
+		heightCalcMode = hcm;
 	}
 
 	function sendMsg(height,width,triggerEvent,msg,targetOrigin){

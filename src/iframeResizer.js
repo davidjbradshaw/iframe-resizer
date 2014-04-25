@@ -118,7 +118,7 @@
 					forwardMsgFromIFrame();
 					break;
 				case 'reset':
-					resetIFrame(messageData.iframe);
+					resetIFrame(messageData);
 					break;
 				default:
 					resizeIFrame();
@@ -192,20 +192,20 @@
 		}
 	}
 
-	function resetIFrame(iframe,mode){
+	function resetIFrame(messageData){
 		function setDimension(dimension){
-			iframe.style[dimension] = 0;
-			log(' IFrame ('+iframe.id+') '+dimension+' reset by '+('init'===mode?'host page':'iFrame'));
+			messageData.iframe.style[dimension] = messageData[dimension];
+			log(' IFrame ('+messageData.iframe.id+') '+dimension+' reset by '+('init'===messageData.type?'host page':'iFrame'));
 		}
 
 		function reset(){
 			if( settings.sizeHeight ) { setDimension('height'); }
 			if( settings.sizeWidth  ) { setDimension('width');  }
-			if('init' !== mode)       { trigger('reset','reset',iframe); }
+			if('init' !== messageData.type) { trigger('reset','reset',messageData.iframe); }
 		}
 
 		function checkRAF(){
-			if('init'!==mode){
+			if('init'!==messageData.type){
 				log(' Requesting animation frame for reset');
 				window.requestAnimationFrame(reset);
 			} else {
@@ -268,9 +268,15 @@
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
+				log(' --');
 				trigger('iFrame.onload',msg,iframe);
 				if (settings.heightCalculationMethod in resetRequiredMethods){
-					resetIFrame(iframe,'init');
+					resetIFrame({
+						iframe:iframe,
+						height:0,
+						width:0,
+						type:'init'
+					});
 				}
 			});
 			trigger('init',msg,iframe);
