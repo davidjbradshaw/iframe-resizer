@@ -353,9 +353,8 @@
 
 		function recordTrigger(){
 			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
-				log('--');
+				log( 'Trigger event: ' + triggerEventDesc );
 			}
-			log( 'Trigger event: ' + triggerEventDesc );
 			lastTriggerEvent = triggerEvent;
 		}
 
@@ -417,7 +416,6 @@
 		var hcm = heightCalcMode;
 		heightCalcMode = heightCalcModeDefault;
 
-		log('--');
 		log('Reset trigger event: ' + triggerEventDesc);
 		sendSize('reset','Reset page size');
 

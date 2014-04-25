@@ -82,6 +82,7 @@
 				if( settings.sizeHeight ) { setDimension('height'); }
 				if( settings.sizeWidth  ) { setDimension('width');  }
 				setPagePosition();
+				log(' --');
 			}
 
 			if('resetPage' !== messageData.type ){
@@ -201,10 +202,7 @@
 		function reset(){
 			if( settings.sizeHeight ) { setDimension('height'); }
 			if( settings.sizeWidth  ) { setDimension('width');  }
-			if('init' !== messageData.type) { setTimeout(function(){
-					trigger('reset','reset',messageData.iframe);
-				},1000);
-			}
+			trigger('reset','reset',messageData.iframe);
 		}
 
 		function checkRAF(){
@@ -271,7 +269,6 @@
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
-				log(' --');
 				trigger('iFrame.onload',msg,iframe);
 				if (settings.heightCalculationMethod in resetRequiredMethods){
 					resetIFrame({
