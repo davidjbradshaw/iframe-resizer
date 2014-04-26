@@ -26,7 +26,6 @@
 		heightCalcMode        = heightCalcModeDefault,
 		initMsg               = '',
 		interval              = 32,
-		lastSize              = '',
 		lastTriggerEvent      = '',
 		logging               = false,
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
@@ -34,7 +33,6 @@
 		myID                  = '',
 		publicMethods         = false,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
-		reset                 = false,
 		targetOriginDefault   = '*',
 		target                = window.parent,
 		width                 = 1;
@@ -368,7 +366,7 @@
 
 		function isDoubleFiredEvent(){
 			return  (!(lastTriggerEvent in doubleEventList) && (triggerEvent in doubleEventList)) ||
-					(('click' ===lastTriggerEvent) && ('resize'==triggerEvent));
+					(('click' ===lastTriggerEvent) && ('resize'===triggerEvent));
 		}
 
 		function isSizeChangeDetected(){
