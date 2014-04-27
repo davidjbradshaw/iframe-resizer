@@ -24,6 +24,7 @@
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
 		heightCalcMode        = heightCalcModeDefault,
+		initLock              = true,
 		initMsg               = '',
 		interval              = 32,
 		logging               = false,
@@ -459,9 +460,14 @@
 				init();
 				sendSize('init','Init message from host page');
 				firstRun = false;
+				setTimeout(function(){ initLock = false;},eventCancelTimer);
 			} else if ('reset' === event.data.split(']')[1]){
-				log('Page size reset by host page');
-				triggerReset('resetPage');
+				if (!initLock){
+					log('Page size reset by host page');
+					triggerReset('resetPage');
+				} else {
+					log('Page reset ignored by init');
+				}
 			} else if (event.data !== initMsg){
 				warn('Unexpected message ('+event.data+')');
 			}

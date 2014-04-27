@@ -10,6 +10,7 @@
 
 	var
 		count                = 0,
+		firstRun             = true,
 		msgId                = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen             = msgId.length,
 		pagePosition         = null,
@@ -154,6 +155,7 @@
 		if (isMessageForUs()){
 			messageData = processMsg();
 			if (isMessageFromIFrame()){
+				firstRun = false;
 				actionMsg();
 			}
 		}
@@ -264,7 +266,7 @@
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
 				trigger('iFrame.onload',msg,iframe);
-				if (settings.heightCalculationMethod in resetRequiredMethods){
+				if (!firstRun && settings.heightCalculationMethod in resetRequiredMethods){
 					resetIFrame({
 						iframe:iframe,
 						height:0,
