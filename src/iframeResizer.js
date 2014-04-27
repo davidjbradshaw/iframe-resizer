@@ -69,28 +69,13 @@
 
 	function iFrameListener(event){
 		function resizeIFrame(){
-			function setDimension(dimension){
-				messageData.iframe.style[dimension] = messageData[dimension] + 'px';
-				log(
-					' IFrame (' + messageData.iframe.id +
-					') ' + dimension +
-					' set to ' + messageData[dimension] + 'px'
-				);
-			}
-
 			function resize(){
-				if( settings.sizeHeight ) { setDimension('height'); }
-				if( settings.sizeWidth  ) { setDimension('width');  }
+				setSize(messageData);
 				setPagePosition();
 				log(' --');
 			}
 
-			if('resetPage' !== messageData.type ){
-				log(' Requesting animation frame');
-				window.requestAnimationFrame(resize);
-			} else {
-				resize();
-			}
+			syncResize(resize,messageData,'resetPage');
 		}
 
 		function closeIFrame(iframe){
@@ -194,28 +179,37 @@
 	}
 
 	function resetIFrame(messageData){
-		function setDimension(dimension){
-			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
-			log(' IFrame ('+messageData.iframe.id+') '+dimension+' reset to '+messageData[dimension]+' by '+('init'===messageData.type?'host page':'iFrame'));
-		}
-
 		function reset(){
-			if( settings.sizeHeight ) { setDimension('height'); }
-			if( settings.sizeWidth  ) { setDimension('width');  }
+			setSize(messageData);
 			trigger('reset','reset',messageData.iframe);
 		}
 
-		function checkRAF(){
-			if('init'!==messageData.type){
-				log(' Requesting animation frame for reset');
-				window.requestAnimationFrame(reset);
-			} else {
-				reset();
-			}
+		log(' Size reset requested by '+('init'===messageData.type?'host page':'iFrame'));
+		getPagePosition();
+		syncResize(reset,messageData,'init');
+	}
+
+	function setSize(messageData){
+		function setDimension(dimension){
+			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
+			log(
+				' IFrame (' + messageData.iframe.id +
+				') ' + dimension +
+				' set to ' + messageData[dimension] + 'px'
+			);
 		}
 
-		getPagePosition();
-		checkRAF();
+		if( settings.sizeHeight ) { setDimension('height'); }
+		if( settings.sizeWidth  ) { setDimension('width');  }
+	}
+
+	function syncResize(func,messageData,doNotSync){
+		if(doNotSync!==messageData.type){
+			log(' Requesting animation frame');
+			window.requestAnimationFrame(func);
+		} else {
+			func();
+		}
 	}
 
 	function trigger(calleeMsg,msg,iframe){
