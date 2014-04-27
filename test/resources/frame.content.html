@@ -103,6 +103,8 @@
 								data = event.data.substr(msgIdLen).split(':'),
 								test = data[1];
 
+							console.info(test);
+
 							switch (test){
 								case 'changeContent':
 									setInterval(function(){changeContent();},2);
