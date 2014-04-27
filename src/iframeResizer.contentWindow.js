@@ -404,8 +404,9 @@
 
 	function lockTrigger(){
 		triggerLocked = true;
+		log('Trigger event lock on');
 		clearTimeout(triggerLockedTimer);
-		triggerLockedTimer = setTimeout(function(){ triggerLocked = false;},eventCancelTimer);
+		triggerLockedTimer = setTimeout(function(){ triggerLocked = false;log('Trigger event lock off');},eventCancelTimer);
 	}
 
 	function triggerReset(triggerEvent){
