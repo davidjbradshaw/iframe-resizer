@@ -19,14 +19,13 @@
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
-		eventCancelTimer      = 48,
+		eventCancelTimer      = 42,
 		height                = 1,
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
 		heightCalcMode        = heightCalcModeDefault,
 		initMsg               = '',
 		interval              = 32,
-		lastTriggerEvent      = '',
 		logging               = false,
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
@@ -35,6 +34,8 @@
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		targetOriginDefault   = '*',
 		target                = window.parent,
+		triggerLocked         = false,
+		triggerLockedTimer    = null,
 		width                 = 1;
 
 
@@ -194,6 +195,7 @@
 				},
 				size: function sizeF(customHeight, customWidth){
 					var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
+					lockTrigger();
 					sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
 				}
 			};
@@ -344,78 +346,81 @@
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode](),
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth();
 
-		function cancelEvent(){
-			log( 'Trigger event (' + triggerEventDesc + ') cancelled');
-			setTimeout(function(){ lastTriggerEvent = triggerEvent; },eventCancelTimer);
-		}
-
 		function recordTrigger(){
 			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
 				log( 'Trigger event: ' + triggerEventDesc );
 			}
-			lastTriggerEvent = triggerEvent;
 		}
 
 		function resizeIFrame(){
 			height = currentHeight;
 			width  = currentWidth;
 
-			recordTrigger();
 			sendMsg(height,width,triggerEvent);
 		}
 
 		function isDoubleFiredEvent(){
-			return  (!(lastTriggerEvent in doubleEventList) && (triggerEvent in doubleEventList)) ||
-					(('click' ===lastTriggerEvent) && ('resize'===triggerEvent));
+			return  triggerLocked && (triggerEvent in doubleEventList);
 		}
 
 		function isSizeChangeDetected(){
 			return	(height !== currentHeight) || 
-					(calculateWidth && width !== currentWidth) || 
-					(triggerEvent in {'reset':1,'resetPage':1});
+					(calculateWidth && width !== currentWidth);
 		}
 
 		function isForceResizableEvent(){
 			return !(triggerEvent in {'init':1,'interval':1,'size':1});
 		}
 
-		function isForceResizableHieghtCalcMode(){
+		function isForceResizableHeightCalcMode(){
 			return (heightCalcMode in resetRequiredMethods);
 		}
 
 		function logIgnored(){
-			log('Trigger event (' + triggerEventDesc + ') ignored, no change in size detected');
+			log('No change in size detected');
+			log('--');
 		}
 
 		function checkDownSizing(){
-			lastTriggerEvent = triggerEvent;
-			if (isForceResizableEvent()){
-				if  (isForceResizableHieghtCalcMode()){
-					resetIFrame(triggerEventDesc);
-				} else {
-					logIgnored();
-				}
-			} else if(triggerEvent in doubleEventList){
+			if (isForceResizableEvent() && isForceResizableHeightCalcMode()){
+				resetIFrame(triggerEventDesc);
+			} else if (!(triggerEvent in {'resize':1,'interval':1})){
+				recordTrigger();
 				logIgnored();
 			}
 		}
 
-		if (isDoubleFiredEvent()){ 
-			cancelEvent();
-		} else if (isSizeChangeDetected()){
-			resizeIFrame();
-		} else {
-			checkDownSizing();
-		}	
+		if (!isDoubleFiredEvent()){ 
+			if (isSizeChangeDetected()){
+				recordTrigger();
+				lockTrigger();
+				resizeIFrame();
+			} else {
+				checkDownSizing();
+			}
+		}
 	}
 
+	function lockTrigger(){
+		triggerLocked = true;
+		clearTimeout(triggerLockedTimer);
+		triggerLockedTimer = setTimeout(function(){ triggerLocked = false;},eventCancelTimer);
+	}
+
+	function triggerReset(triggerEvent){
+		height = getHeight[heightCalcMode]();
+		width  = getWidth();
+
+		sendMsg(height,width,triggerEvent);
+	}
 
 	function resetIFrame(triggerEventDesc){
 		var hcm = heightCalcMode;
 		heightCalcMode = heightCalcModeDefault;
 
 		log('Reset trigger event: ' + triggerEventDesc);
-		sendSize('reset','Reset page size');
+		lockTrigger();
+		triggerReset('reset');
 
 		heightCalcMode = hcm;
 	}
@@ -436,7 +441,6 @@
 
 			log('Sending message to host page (' + message + ')');
 			target.postMessage( msgID + message, targetOrigin);
-		
 		}
 
 		setTargetOrigin();
@@ -456,7 +460,8 @@
 				sendSize('init','Init message from host page');
 				firstRun = false;
 			} else if ('reset' === event.data.split(']')[1]){
-				sendSize('resetPage','Page size reset by host page');
+				log('Page size reset by host page');
+				triggerReset('resetPage');
 			} else if (event.data !== initMsg){
 				warn('Unexpected message ('+event.data+')');
 			}
