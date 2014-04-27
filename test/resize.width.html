@@ -42,14 +42,16 @@
               setTimeout(function(){resize(300);},100);
               break;
             case '2':
+              setTimeout(function(){resize(600)},1000);
               ok( 'resize' === messageData.type, '1 Received '+messageData.type+' message back from iFrame. Expected resize');
               ok( '300' === messageData.width, '2 iFrame width = '+messageData.width+'. Expected 300.');
-              setTimeout(function(){resize(600)},50);
               break;
-            case '3':
+            default:
               ok( 'resetPage' === messageData.type, '3 Received '+messageData.type+' message back from iFrame. Expected resetPage');
-              ok( '600' === messageData.width, '4 iFrame width = '+messageData.width+'. Expected 600.');
-              start();
+              if ('600' === messageData.width){
+                ok( '600' === messageData.width, '4 iFrame width = '+messageData.width+'. Expected 600.');
+                start();
+              }
           }
         }
       });
