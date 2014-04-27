@@ -1,5 +1,5 @@
 # iFrame Resizer 
-[![Bower version](https://badge.fury.io/bo/iframe-resizer.png)](http://badge.fury.io/bo/iframe-resizer) [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer) [![Code Climate](https://codeclimate.com/github/davidjbradshaw/iframe-resizer.png)](https://codeclimate.com/github/davidjbradshaw/iframe-resizer) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![Bower version](https://badge.fury.io/bo/iframe-resizer.png)](http://badge.fury.io/bo/iframe-resizer) [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)  [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fallback to setInterval for IE8-10. 
 
@@ -105,7 +105,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>Note: Setting this property to value other than **bodyOffset** or **documentElementOffset** will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
-<i>Additionally these alternatives calculation methods can sometime be slightly less accurate at calculating the correct height.</i>
+<i>Additionally these alternatives calculation methods can sometime be slightly less accurate at calculating the correct height and can work differently across mainstream browsers.</i>
 
 ### messageCallback
 
@@ -195,7 +195,7 @@ The first step to investigate a problem is to enable the [log](#log) option and 
 The solutions to the three most common problems are outlined in this section.
 
 ### IFrame not sizing correctly
-If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, start with the **max** option and if that fixes things, try then to narrow it down to one of the other options.
+If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** option to avoid cross browser differences. 
 
 ###IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the [interval](#interval) option to **-32** and have the iFrame poll for changes in it's size. This has the down side of creating a small CPU overhead. 
@@ -262,6 +262,7 @@ The method names deprecated in version 1.3.0 have now been removed. Versions 1 a
 
 
 ##Version History
+* v2.4.3 Simplified handling of double fired events. Fixed test coverage.
 * v2.4.2 Fix missing 'px' unit when resetting height.
 * v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.
 * v2.4.0 Improved handling of alternate sizing methods, so that they will now shrink on all trigger events, except *Interval*. Prevent error when incoming message to iFrame is an object.

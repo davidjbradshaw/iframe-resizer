@@ -42,7 +42,7 @@
               setTimeout(function(){resize(300);},100);
               break;
             case '2':
-              setTimeout(function(){resize(600)},1000);
+              setTimeout(function(){resize(600)},100);
               ok( 'resize' === messageData.type, '1 Received '+messageData.type+' message back from iFrame. Expected resize');
               ok( '300' === messageData.width, '2 iFrame width = '+messageData.width+'. Expected 300.');
               break;
