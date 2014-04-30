@@ -229,7 +229,7 @@ Additionally requires support for [Array.prototype.forEach](http://kangax.github
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 ```
 
-and use the [MDN PolyFil](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) on the host page.
+and use the [MDN PolyFill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) on the host page.
 
 ```js
 if (!Array.prototype.forEach){
