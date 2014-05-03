@@ -205,11 +205,13 @@ The more complex solution is to create `mouseover` and `mouseout` event listener
 ```js
 function resize(){
 	if ('parentIFrame' in window) {
-		parentIFrame.size()
+		setTimeout(function(){ // Fix FireFox timing issue
+			parentIFrame.size();
+		},0);
 	}
 }
 
-$(*Element with hover class*).mouseover(resize).mouseout(resize);
+$('xmp').hover(resize);
 ```
 
 ### Unexpected message received error
@@ -254,14 +256,8 @@ if (!Array.prototype.forEach){
 In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 
-##Changes between version 1 and 2.
-
-Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width), contentWindowBodyMargin has been renamed bodyMargin and callback has been renamed resizedCallback.
-
-The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the host-page script with an iFrame running version 1 of the iFrame script, or *vice versa*, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.
-
-
 ##Version History
+* v2.4.4 [#33](https://github.com/davidjbradshaw/iframe-resizer/issues/33) Squash unexpected message warning when using nested iFrames. Fixed :Hover example in FireFox.
 * v2.4.3 Simplified handling of double fired events. Fixed test coverage.
 * v2.4.2 Fix missing 'px' unit when resetting height.
 * v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.

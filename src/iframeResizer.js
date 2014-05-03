@@ -73,7 +73,7 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
-				log(' --');
+				//log(' --');
 			}
 
 			syncResize(resize,messageData,'resetPage');
@@ -89,6 +89,7 @@
 
 			return {
 				iframe: document.getElementById(data[0]),
+				id:     data[0],
 				height: data[1],
 				width:  data[2],
 				type:   data[3]
@@ -148,12 +149,20 @@
 			});
 		}
 
+		function checkIFrameExists(){
+			if (null === messageData.iFrame) {
+				throw new Error('iFrame ('++messageData.id') does not exist.');
+			}
+		}
+
 		var
 			msg = event.data,
 			messageData = {};
 
 		if (isMessageForUs()){
+			log(' Received: '+msg);
 			messageData = processMsg();
+			checkIFrameExists();
 			if (isMessageFromIFrame()){
 				firstRun = false;
 				actionMsg();
