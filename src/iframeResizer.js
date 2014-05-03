@@ -151,7 +151,7 @@
 
 		function checkIFrameExists(){
 			if (null === messageData.iFrame) {
-				throw new Error('iFrame ('++messageData.id') does not exist.');
+				throw new Error('iFrame ('+messageData.id+') does not exist.');
 			}
 		}
 

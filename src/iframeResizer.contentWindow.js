@@ -279,7 +279,7 @@
 				el = document.body,
 				retVal = 0;
 
-			if ('defaultView' in document && ('getComputedStyle' in document.defaultView) {
+			if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
 				retVal =  document.defaultView.getComputedStyle(el, null)[prop];
 			} else {//IE8
 				retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
