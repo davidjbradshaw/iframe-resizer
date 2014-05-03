@@ -11,7 +11,7 @@
 	</head> 
 	<body> 
 
-		<b>iFrame</b>
+		<b>iFrame :Hover Example</b>
 		<a href="frame.content.html">Back to page 1</a>
 		</a>
 
@@ -26,19 +26,19 @@
 
 		<div id="code">
 <style>
-	xmp{background-color: #eee;padding:0 20px;display:block;}
-	xmp:hover{border:#c33 solid 40px;}
+    xmp{background-color: #eee;padding:0 20px;display:block;}
+    xmp:hover{border:#c33 solid 40px;}
 </style>
 <script>
-	(function(){
-		function resize(){
-			if ('parentIFrame' in window) {
-				parentIFrame.size();
-			}
-		}
-
-		$('xmp').mouseover(resize).mouseout(resize);
-	})();
+    (function(){
+        $('xmp').hover(function(){
+            if ('parentIFrame' in window) {
+                setTimeout(function(){ // Fix FireFox timing issue
+                    parentIFrame.size();
+                },0);
+            }
+        });
+    })();
 </script>
 		</div>
 
