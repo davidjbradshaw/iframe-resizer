@@ -279,7 +279,7 @@
 				el = document.body,
 				retVal = 0;
 
-			if (document.defaultView && document.defaultView.getComputedStyle) {
+			if ('defaultView' in document && ('getComputedStyle' in document.defaultView) {
 				retVal =  document.defaultView.getComputedStyle(el, null)[prop];
 			} else {//IE8
 				retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
@@ -379,13 +379,12 @@
 
 		function logIgnored(){
 			log('No change in size detected');
-			log('--');
 		}
 
 		function checkDownSizing(){
 			if (isForceResizableEvent() && isForceResizableHeightCalcMode()){
 				resetIFrame(triggerEventDesc);
-			} else if (!(triggerEvent in {'resize':1,'interval':1})){
+			} else if (!(triggerEvent in {'interval':1})){
 				recordTrigger();
 				logIgnored();
 			}
@@ -399,14 +398,22 @@
 			} else {
 				checkDownSizing();
 			}
+		} else {
+			log('Trigger event cancelled: '+triggerEvent);
 		}
 	}
 
 	function lockTrigger(){
-		triggerLocked = true;
-		log('Trigger event lock on');
+		if (!triggerLocked){
+			triggerLocked = true;
+			log('Trigger event lock on');
+		}
 		clearTimeout(triggerLockedTimer);
-		triggerLockedTimer = setTimeout(function(){ triggerLocked = false;log('Trigger event lock off');},eventCancelTimer);
+		triggerLockedTimer = setTimeout(function(){ 
+			triggerLocked = false;
+			log('Trigger event lock off');
+			log('--');
+		},eventCancelTimer);
 	}
 
 	function triggerReset(triggerEvent){
@@ -449,6 +456,9 @@
 		sendToParent();
 	}
 
+	function isMiddleTier(){
+		return ('iframeResizer' in window);
+	}
 
 	function receiver(event) {
 		function isMessageForUs(){
@@ -469,7 +479,7 @@
 				} else {
 					log('Page reset ignored by init');
 				}
-			} else if (event.data !== initMsg){
+			} else if (event.data !== initMsg && !isMiddleTier()){
 				warn('Unexpected message ('+event.data+')');
 			}
 		}
