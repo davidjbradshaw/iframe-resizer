@@ -13,6 +13,7 @@
 		firstRun             = true,
 		msgId                = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen             = msgId.length,
+		page                 = ':'+location.href, //Uncoment to debug nested iFrames
 		pagePosition         = null,
 		resetRequiredMethods = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings             = {},
@@ -63,7 +64,7 @@
 
 	function log(msg){
 		if (settings.log && ('console' in window)){
-			console.log(msgId + '[Host page]' + msg);
+			console.log(msgId + '[Host page'+page+']' + msg);
 		}
 	}
 
@@ -115,6 +116,7 @@
 		}
 
 		function isMessageFromIFrame(){
+
 			var
 				origin     = event.origin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
@@ -138,6 +140,17 @@
 			return msgId === ('' + msg).substr(0,msgIdLen); //''+Protects against non-string msg
 		}
 
+		function isMessageFromMetaParent(){
+			//test if this message is from a parent above us.
+			var retCode = messageData.type in {'true':1,'false':1};
+
+			if (retCode){
+				log(' Ignoring init message from meta parent page');
+			}
+
+			return retCode;
+		}
+
 		function forwardMsgFromIFrame(){
 			var receivedMsg = msg.substr(msg.lastIndexOf(':')+1);
 
@@ -150,9 +163,10 @@
 		}
 
 		function checkIFrameExists(){
-			if (null === messageData.iFrame) {
-				throw new Error('iFrame ('+messageData.id+') does not exist.');
+			if (null === messageData.iframe) {
+				throw new Error('iFrame ('+messageData.id+') does not exist on ' + page);
 			}
+			return true;
 		}
 
 		var
@@ -162,8 +176,7 @@
 		if (isMessageForUs()){
 			log(' Received: '+msg);
 			messageData = processMsg();
-			checkIFrameExists();
-			if (isMessageFromIFrame()){
+			if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
 				firstRun = false;
 				actionMsg();
 			}

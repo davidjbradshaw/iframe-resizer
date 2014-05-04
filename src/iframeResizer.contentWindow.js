@@ -365,7 +365,7 @@
 		}
 
 		function isSizeChangeDetected(){
-			return	(height !== currentHeight) || 
+			return	(height !== currentHeight) ||
 					(calculateWidth && width !== currentWidth);
 		}
 
@@ -390,7 +390,7 @@
 			}
 		}
 
-		if (!isDoubleFiredEvent()){ 
+		if (!isDoubleFiredEvent()){
 			if (isSizeChangeDetected()){
 				recordTrigger();
 				lockTrigger();
@@ -409,7 +409,7 @@
 			log('Trigger event lock on');
 		}
 		clearTimeout(triggerLockedTimer);
-		triggerLockedTimer = setTimeout(function(){ 
+		triggerLockedTimer = setTimeout(function(){
 			triggerLocked = false;
 			log('Trigger event lock off');
 			log('--');
@@ -444,7 +444,7 @@
 		}
 
 		function sendToParent(){
-			var 
+			var
 				size  = height + ':' + width,
 				message = myID + ':' +  size + ':' + triggerEvent + (undefined !== msg ? ':' + msg : '');
 
@@ -457,7 +457,7 @@
 	}
 
 	function isMiddleTier(){
-		return ('iframeResizer' in window);
+		return ('iframeResize' in window);
 	}
 
 	function receiver(event) {
@@ -479,9 +479,10 @@
 				} else {
 					log('Page reset ignored by init');
 				}
-			} else if (event.data !== initMsg && !isMiddleTier()){
+			} /* TODO fix with nested iFrames
+			else if (event.data !== initMsg && !isMiddleTier()){
 				warn('Unexpected message ('+event.data+')');
-			}
+			}*/
 		}
 	}
 
