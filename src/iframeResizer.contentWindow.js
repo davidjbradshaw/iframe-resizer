@@ -457,7 +457,7 @@
 	}
 
 	function isMiddleTier(){
-		return ('iframeResize' in window);
+		return ('iFrameResize' in window);
 	}
 
 	function receiver(event) {
@@ -479,10 +479,9 @@
 				} else {
 					log('Page reset ignored by init');
 				}
-			} /* TODO fix with nested iFrames
-			else if (event.data !== initMsg && !isMiddleTier()){
+			} else if (event.data !== initMsg && !isMiddleTier()){
 				warn('Unexpected message ('+event.data+')');
-			}*/
+			}
 		}
 	}
 
