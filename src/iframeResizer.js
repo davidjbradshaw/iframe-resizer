@@ -63,7 +63,7 @@
 	}
 
 	function log(msg){
-		if (settings.log && ('console' in window)){
+		if (settings.log && (typeof console === 'object')){
 			console.log(msgId + '[Host page'+page+']' + msg);
 		}
 	}
