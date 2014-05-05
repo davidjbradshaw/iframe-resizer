@@ -53,13 +53,13 @@
 	}
 
 	function log(msg){
-		if (logging && (typeof window.console == 'object')){
+		if (logging && ('object' === typeof window.console)){
 			console.log(formatLogMsg(msg));
 		}
 	}
 
 	function warn(msg){
-		if (typeof window.console == 'object'){
+		if ('object' === typeof window.console){
 			console.warn(formatLogMsg(msg));
 		}
 	}
@@ -229,31 +229,23 @@
 					subtree               : true
 				},
 
-				imageload = function(){
-						sendSize('imageload','imageload');
-				},
-
-				observeload = function(element){
+				observeLoad = function(element){
 					if (element.height === undefined || element.width === undefined){
-						if (!element.addEventListener) {
-							element.attachEvent('load', imageload, false);
-						}
-						else {
-							element.addEventListener('load', imageload, false);
-						}
+						addEventListener('load', function imageLoaded(){
+							sendSize('imageload','Image loaded');
+						});
 					}
 				},
 
 				observer = new MutationObserver(function(mutations) {
 					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
-					for (var i = mutations.length - 1; i >= 0; i--) {
-						if (mutations[i].type == 'attributes' && mutations[i].attributeName == 'src'){ 
-							observeload(mutations[i].target);
-						}
-						if (mutations[i].type == 'childList'){
-							var images = mutations[i].target.querySelectorAll('img');
-							for (var j = images.length - 1; j >= 0; j--) {
-								observeload(images[j]);
+					for (var mutation in mutations) {
+						if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
+							observeLoad(mutation.target);
+						} else if (mutation.type === 'childList'){
+							var images = mutation.target.querySelectorAll('img');
+							for (var image in images) {
+								observeLoad(image);
 							}
 						}
 					}
