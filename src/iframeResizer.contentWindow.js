@@ -233,7 +233,7 @@
 						sendSize('imageload','imageload');
 				},
 
-				observeload = function(element) {
+				observeload = function(element){
 					if (element.height === undefined || element.width === undefined){
 						if (!element.addEventListener) {
 							element.attachEvent('load', imageload, false);
@@ -247,10 +247,10 @@
 				observer = new MutationObserver(function(mutations) {
 					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
 					for (var i = mutations.length - 1; i >= 0; i--) {
-						if ( mutations[i].type == 'attributes' && mutations[i].attributeName == 'src'){ 
+						if (mutations[i].type == 'attributes' && mutations[i].attributeName == 'src'){ 
 							observeload(mutations[i].target);
 						}
-						if ( mutations[i].type == 'childList'){
+						if (mutations[i].type == 'childList'){
 							var images = mutations[i].target.querySelectorAll('img');
 							for (var j = images.length - 1; j >= 0; j--) {
 								observeload(images[j]);
