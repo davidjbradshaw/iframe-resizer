@@ -231,6 +231,7 @@
 
 				observeLoad = function(element){
 					if (element.height === undefined || element.width === undefined){
+						log('Attached listener to image load event');
 						addEventListener(element,'load', function imageLoaded(){
 							sendSize('imageload','Image loaded');
 						});

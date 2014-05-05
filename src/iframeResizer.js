@@ -13,7 +13,7 @@
 		firstRun             = true,
 		msgId                = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen             = msgId.length,
-		page                 = ':'+location.href, //Uncoment to debug nested iFrames
+		page                 =  '', //:'+location.href, //Uncoment to debug nested iFrames
 		pagePosition         = null,
 		resetRequiredMethods = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings             = {},
