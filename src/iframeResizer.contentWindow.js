@@ -53,13 +53,13 @@
 	}
 
 	function log(msg){
-		if (logging && ('console' in window)){
+		if (logging && (typeof window.console == 'object')){
 			console.log(formatLogMsg(msg));
 		}
 	}
 
 	function warn(msg){
-		if ('console' in window){
+		if (typeof window.console == 'object'){
 			console.warn(formatLogMsg(msg));
 		}
 	}
