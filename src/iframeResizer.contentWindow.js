@@ -8,7 +8,7 @@
  */
 
 (function() {
-    'use strict';
+	'use strict';
 
 	var
 		autoResize            = true,
@@ -53,13 +53,13 @@
 	}
 
 	function log(msg){
-		if (logging && ('console' in window)){
+		if (logging && (typeof window.console == 'object')){
 			console.log(formatLogMsg(msg));
 		}
 	}
 
 	function warn(msg){
-		if ('console' in window){
+		if (typeof window.console == 'object'){
 			console.warn(formatLogMsg(msg));
 		}
 	}
@@ -229,8 +229,24 @@
 					subtree               : true
 				},
 
+				imageload = function(){
+						sendSize('imageload','imageload');
+				},
+
 				observer = new MutationObserver(function(mutations) {
 					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
+					for (var i = mutations.length - 1; i >= 0; i--) {
+						if ( mutations[i].type == 'attributes' && mutations[i].attributeName == 'src'){
+							mutations[i].target.addEventListener('load', imageload, false);
+						}
+						if ( mutations[i].type == 'childList'){
+							var images = mutations[i].target.querySelectorAll('img');
+							console.log(images);
+							for (var j = images.length - 1; j >= 0; j--) {
+								images[j].addEventListener('load', imageload, false);
+							}
+						}
+					}
 				});
 
 			log('Enable MutationObserver');
