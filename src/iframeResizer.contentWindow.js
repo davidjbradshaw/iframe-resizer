@@ -40,11 +40,11 @@
 		width                 = 1;
 
 
-	function addEventListener(e,func){
+	function addEventListener(el,evt,func){
 		if ('addEventListener' in window){
-			window.addEventListener(e,func, false);
+			el.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){ //IE
-			window.attachEvent('on'+e,func);
+			el.attachEvent('on'+e,func);
 		}
 	}
 
@@ -130,13 +130,13 @@
 	}
 
 	function initWindowResizeListener(){
-		addEventListener('resize', function(){
+		addEventListener(window,'resize', function(){
 			sendSize('resize','Window resized');
 		});
 	}
 
 	function initWindowClickListener(){
-		addEventListener('click', function(){
+		addEventListener(window,'click', function(){
 			sendSize('click','Window clicked');
 		});
 	}
@@ -231,7 +231,7 @@
 
 				observeLoad = function(element){
 					if (element.height === undefined || element.width === undefined){
-						addEventListener('load', function imageLoaded(){
+						addEventListener(element,'load', function imageLoaded(){
 							sendSize('imageload','Image loaded');
 						});
 					}
@@ -503,6 +503,6 @@
 		}
 	}
 
-	addEventListener('message', receiver);
+	addEventListener(window, 'message', receiver);
 
 })();
