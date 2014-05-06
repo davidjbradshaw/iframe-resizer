@@ -33,8 +33,6 @@
         <h1>
 <a name="iframe-resizer" class="anchor" href="#iframe-resizer"><span class="octicon octicon-link"></span></a>iFrame Resizer</h1>
 
-<p><a href="http://badge.fury.io/bo/iframe-resizer"><img src="https://badge.fury.io/bo/iframe-resizer.png" alt="Bower version"></a> <a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a>  <a href="http://gruntjs.com/"><img src="https://cdn.gruntjs.com/builtwith.png" alt="Built with Grunt"></a></p>
-
 <p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fallback to setInterval for IE8-10. </p>
 
 <p>The code also detects browser events that can cause the content to resize; provides functions to allow the iFrame to set a custom size and close itself. Plus it supports having multiple iFrames on the host-page and additionally provides for the sending of simple messages from the iFrame to the parent page. </p>
