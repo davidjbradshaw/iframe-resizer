@@ -303,7 +303,8 @@
 				retVal = 0;
 
 			if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
-				retVal =  document.defaultView.getComputedStyle(el, null)[prop];
+				retVal = document.defaultView.getComputedStyle(el, null);
+				retVal = (null !== retVal) ? retVal[prop] : 0;
 			} else {//IE8
 				retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
 			}
