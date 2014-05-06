@@ -198,9 +198,7 @@ The solutions to the three most common problems are outlined in this section.
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** option to avoid cross browser differences. 
 
 ###IFrame not detecting CSS :hover events
-If your page resizes via CSS `:hover` events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the [interval](#interval) option to **-32** and have the iFrame poll for changes in it's size. This has the down side of creating a small CPU overhead. 
-
-The more complex solution is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
+If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
 
 ```js
 function resize(){
@@ -211,7 +209,7 @@ function resize(){
 	}
 }
 
-$('xmp').hover(resize);
+$(*Element with hover style*).hover(resize);
 ```
 
 ### Unexpected message received error
