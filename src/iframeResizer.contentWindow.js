@@ -19,7 +19,7 @@
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
-		eventCancelTimer      = 42,
+		eventCancelTimer      = 64,
 		height                = 1,
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
