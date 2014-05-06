@@ -257,7 +257,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 
 ##Version History
-* v2.4.5 [#42] Prevent error in FireFox when body is hidden by CSS [[Scott Otis](/Scotis)]. 
+* v2.4.5 [#42](https://github.com/davidjbradshaw/iframe-resizer/issues/42) Prevent error in FireFox when body is hidden by CSS [[Scott Otis](/Scotis)]. 
 * v2.4.4 Enable nested iFrames ([#31](https://github.com/davidjbradshaw/iframe-resizer/issues/31) Filter incoming iFrame message in hostpage script. [#33](https://github.com/davidjbradshaw/iframe-resizer/issues/33) Squash unexpected message warning when using nested iFrames. Improved logging for nested iFrames). [#38](https://github.com/davidjbradshaw/iframe-resizer/issues/38) Detect late image loads that cause a resize due to async image loading in WebKit [[Yassin](/ynh)]. Fixed :Hover example in FireFox. Increased trigger timeout lock to 64ms. 
 * v2.4.3 Simplified handling of double fired events. Fixed test coverage.
 * v2.4.2 Fix missing 'px' unit when resetting height.
