@@ -212,6 +212,28 @@
 		}
 	}
 
+	function setupInjectElementLoadListners(mutations){
+		function addLoadListener(element){
+			if (element.height === undefined || element.width === undefined || 0 === element.height || 0 === element.width){
+				log('Attach listerner to '+element.src);
+				addEventListener(element,'load', function imageLoaded(){
+					sendSize('imageLoad','Image loaded');
+				});
+			}
+		}
+
+		mutations.forEach(function (mutation) {
+			if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
+				addLoadListener(mutation.target);
+			} else if (mutation.type === 'childList'){
+				var images = mutation.target.querySelectorAll('img');
+				Array.prototype.forEach.call(images,function (image) {
+					addLoadListener(image);
+				});
+			}
+		});
+	}
+
 	function setupMutationObserver(){
 
 		var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -229,27 +251,9 @@
 					subtree               : true
 				},
 
-				observeLoad = function(element){
-					if (element.height === undefined || element.width === undefined){
-						log('Attached listener to image load event');
-						addEventListener(element,'load', function imageLoaded(){
-							sendSize('imageload','Image loaded');
-						});
-					}
-				},
-
 				observer = new MutationObserver(function(mutations) {
 					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
-					for (var mutation in mutations) {
-						if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
-							observeLoad(mutation.target);
-						} else if (mutation.type === 'childList'){
-							var images = mutation.target.querySelectorAll('img');
-							for (var image in images) {
-								observeLoad(image);
-							}
-						}
-					}
+					setupInjectElementLoadListners(mutations); //Deal with WebKit asyncing image loading when tags are injected into the page
 				});
 
 			log('Enable MutationObserver');
