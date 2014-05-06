@@ -304,8 +304,7 @@
 
 			if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
 				retVal = document.defaultView.getComputedStyle(el, null);
-				if(retVal == null) retVal = {marginTop: 0, marginBottom: 0};
-				retVal = retVal[prop];
+				retVal = (null !== retVal) ? retVal[prop] : 0;
 			} else {//IE8
 				retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
 			}
