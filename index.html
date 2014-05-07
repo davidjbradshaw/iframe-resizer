@@ -270,17 +270,17 @@ type: boolean
 <h3>
 <a name="iframe-not-detecting-css-hover-events" class="anchor" href="#iframe-not-detecting-css-hover-events"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS :hover events</h3>
 
-<p>If your page resizes via CSS <code>:hover</code> events, these won't be detect by default. Their are two options to work around this; the simple solution is to set the <a href="#interval">interval</a> option to <strong>-32</strong> and have the iFrame poll for changes in it's size. This has the down side of creating a small CPU overhead. </p>
-
-<p>The more complex solution is to create <code>mouseover</code> and <code>mouseout</code> event listeners on the elements that are resized via CSS and have these events call the <a href="##parentiframesize-customheight-customwidth">parentIFrame.size()</a> method. With jQuery this can be done as follows, once you have set the <a href="#enablepublicmethods">enablePublicMethods</a> option to <strong>true</strong>.</p>
+<p>If your page resizes via CSS <code>:hover</code> events, these won't be detect by default. It is however possible to create <code>mouseover</code> and <code>mouseout</code> event listeners on the elements that are resized via CSS and have these events call the <a href="##parentiframesize-customheight-customwidth">parentIFrame.size()</a> method. With jQuery this can be done as follows, once you have set the <a href="#enablepublicmethods">enablePublicMethods</a> option to <strong>true</strong>.</p>
 
 <div class="highlight highlight-js"><pre><span class="kd">function</span> <span class="nx">resize</span><span class="p">(){</span>
     <span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">()</span>
+        <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="c1">// Fix FireFox timing issue</span>
+            <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">();</span>
+        <span class="p">},</span><span class="mi">0</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="nx">$</span><span class="p">(</span><span class="o">*</span><span class="nx">Element</span> <span class="kd">with</span> <span class="nx">hover</span> <span class="kr">class</span><span class="o">*</span><span class="p">).</span><span class="nx">mouseover</span><span class="p">(</span><span class="nx">resize</span><span class="p">).</span><span class="nx">mouseout</span><span class="p">(</span><span class="nx">resize</span><span class="p">);</span>
+<span class="nx">$</span><span class="p">(</span><span class="o">*</span><span class="nx">Element</span> <span class="kd">with</span> <span class="nx">hover</span> <span class="nx">style</span><span class="o">*</span><span class="p">).</span><span class="nx">hover</span><span class="p">(</span><span class="nx">resize</span><span class="p">);</span>
 </pre></div>
 
 <h3>
@@ -304,7 +304,7 @@ type: boolean
 <div class="highlight highlight-html"><pre><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
 </pre></div>
 
-<p>and use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN PolyFil</a> on the host page.</p>
+<p>and use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN PolyFill</a> on the host page.</p>
 
 <div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span><span class="p">){</span>
     <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fun</span> <span class="cm">/*, thisArg */</span><span class="p">){</span>
@@ -329,16 +329,11 @@ type: boolean
 <p>In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
 
 <h2>
-<a name="changes-between-version-1-and-2" class="anchor" href="#changes-between-version-1-and-2"><span class="octicon octicon-link"></span></a>Changes between version 1 and 2.</h2>
-
-<p>Version 2 makes a few changes that you need to be aware of when upgrading. The filename of the host page script has been renamed from jquery.iframeResizer.min.js to iframeResizer.min.js in order to reflect that jQuery is now an optional way of calling the script. The do(Heigh/Width) options have been renamed size(Height/Width), contentWindowBodyMargin has been renamed bodyMargin and callback has been renamed resizedCallback.</p>
-
-<p>The method names deprecated in version 1.3.0 have now been removed. Versions 1 and 2 remain compatable with each other so you can use version 2 of the host-page script with an iFrame running version 1 of the iFrame script, or <em>vice versa</em>, however, it should be noted that the V1 iFrame script only accepts number values for bodyMargin.</p>
-
-<h2>
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.4.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/41">#41</a> Prevent error in FireFox when body is hidden by CSS [<a href="/Scotis">Scott Otis</a>]. </li>
+<li>v2.4.4 Enable nested iFrames (<a href="https://github.com/davidjbradshaw/iframe-resizer/issues/31">#31</a> Filter incoming iFrame message in hostpage script. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/33">#33</a> Squash unexpected message warning when using nested iFrames. Improved logging for nested iFrames). <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/38">#38</a> Detect late image loads that cause a resize due to async image loading in WebKit [<a href="/ynh">Yassin</a>]. Fixed :Hover example in FireFox. Increased trigger timeout lock to 64ms. </li>
 <li>v2.4.3 Simplified handling of double fired events. Fixed test coverage.</li>
 <li>v2.4.2 Fix missing 'px' unit when resetting height.</li>
 <li>v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.</li>
@@ -361,9 +356,9 @@ type: boolean
 <li>v1.3.7 Stop <em>resize</em> event firing for 50ms after <em>size</em> event. Added size(250) to example.</li>
 <li>v1.3.6 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/11">#11</a> Updated jQuery to v1.11.0 in example due to IE11 having issues with jQuery v1.10.1.</li>
 <li>v1.3.5 Documentation improvements. Added Grunt-Bump to build script.</li>
-<li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs, but remain in code for backwards compatibility.</li>
+<li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs.</li>
 <li>v1.2.5 Fix publish to <a href="https://plugins.jquery.com">plugins.jquery.com</a>.</li>
-<li>v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to window.parentIFrame object in iFrame. </li>
+<li>v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to parentIFrame object in iFrame. </li>
 <li>v1.1.1 Added event type to messageData object.</li>
 <li>v1.1.0 Added DOM <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> trigger to better detect content changes in iFrame, <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/7">#7</a> Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.</li>
 <li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
