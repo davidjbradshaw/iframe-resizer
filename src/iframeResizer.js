@@ -13,7 +13,7 @@
 		firstRun             = true,
 		msgId                = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen             = msgId.length,
-		page                 = ':'+location.href, //Uncoment to debug nested iFrames
+		page                 =  '', //:'+location.href, //Uncoment to debug nested iFrames
 		pagePosition         = null,
 		resetRequiredMethods = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings             = {},
@@ -63,7 +63,7 @@
 	}
 
 	function log(msg){
-		if (settings.log && ('console' in window)){
+		if (settings.log && (typeof console === 'object')){
 			console.log(msgId + '[Host page'+page+']' + msg);
 		}
 	}
@@ -74,7 +74,6 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
-				//log(' --');
 			}
 
 			syncResize(resize,messageData,'resetPage');
@@ -95,24 +94,6 @@
 				width:  data[2],
 				type:   data[3]
 			};
-		}
-
-		function actionMsg(){
-			switch(messageData.type){
-				case 'close':
-					closeIFrame(messageData.iframe);
-					settings.resizedCallback(messageData);
-					break;
-				case 'message':
-					forwardMsgFromIFrame();
-					break;
-				case 'reset':
-					resetIFrame(messageData);
-					break;
-				default:
-					resizeIFrame();
-					settings.resizedCallback(messageData);
-			}
 		}
 
 		function isMessageFromIFrame(){
@@ -152,13 +133,9 @@
 		}
 
 		function forwardMsgFromIFrame(){
-			var receivedMsg = msg.substr(msg.lastIndexOf(':')+1);
-
-			log(' Received message "' + receivedMsg + '" from ' + messageData.iframe.id);
-
 			settings.messageCallback({
 				iframe: messageData.iframe,
-				message: receivedMsg
+				message: msg.substr(msg.lastIndexOf(':')+1)
 			});
 		}
 
@@ -167,6 +144,24 @@
 				throw new Error('iFrame ('+messageData.id+') does not exist on ' + page);
 			}
 			return true;
+		}
+
+		function actionMsg(){
+			switch(messageData.type){
+				case 'close':
+					closeIFrame(messageData.iframe);
+					settings.resizedCallback(messageData);
+					break;
+				case 'message':
+					forwardMsgFromIFrame();
+					break;
+				case 'reset':
+					resetIFrame(messageData);
+					break;
+				default:
+					resizeIFrame();
+					settings.resizedCallback(messageData);
+			}
 		}
 
 		var

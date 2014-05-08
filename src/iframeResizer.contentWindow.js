@@ -8,7 +8,7 @@
  */
 
 (function() {
-    'use strict';
+	'use strict';
 
 	var
 		autoResize            = true,
@@ -19,7 +19,7 @@
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
-		eventCancelTimer      = 42,
+		eventCancelTimer      = 64,
 		height                = 1,
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
@@ -40,11 +40,11 @@
 		width                 = 1;
 
 
-	function addEventListener(e,func){
+	function addEventListener(el,evt,func){
 		if ('addEventListener' in window){
-			window.addEventListener(e,func, false);
+			el.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){ //IE
-			window.attachEvent('on'+e,func);
+			el.attachEvent('on'+e,func);
 		}
 	}
 
@@ -53,13 +53,13 @@
 	}
 
 	function log(msg){
-		if (logging && ('console' in window)){
+		if (logging && ('object' === typeof window.console)){
 			console.log(formatLogMsg(msg));
 		}
 	}
 
 	function warn(msg){
-		if ('console' in window){
+		if ('object' === typeof window.console){
 			console.warn(formatLogMsg(msg));
 		}
 	}
@@ -130,13 +130,13 @@
 	}
 
 	function initWindowResizeListener(){
-		addEventListener('resize', function(){
+		addEventListener(window,'resize', function(){
 			sendSize('resize','Window resized');
 		});
 	}
 
 	function initWindowClickListener(){
-		addEventListener('click', function(){
+		addEventListener(window,'click', function(){
 			sendSize('click','Window clicked');
 		});
 	}
@@ -212,6 +212,28 @@
 		}
 	}
 
+	function setupInjectElementLoadListners(mutations){
+		function addLoadListener(element){
+			if (element.height === undefined || element.width === undefined || 0 === element.height || 0 === element.width){
+				log('Attach listerner to '+element.src);
+				addEventListener(element,'load', function imageLoaded(){
+					sendSize('imageLoad','Image loaded');
+				});
+			}
+		}
+
+		mutations.forEach(function (mutation) {
+			if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
+				addLoadListener(mutation.target);
+			} else if (mutation.type === 'childList'){
+				var images = mutation.target.querySelectorAll('img');
+				Array.prototype.forEach.call(images,function (image) {
+					addLoadListener(image);
+				});
+			}
+		});
+	}
+
 	function setupMutationObserver(){
 
 		var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -231,6 +253,7 @@
 
 				observer = new MutationObserver(function(mutations) {
 					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
+					setupInjectElementLoadListners(mutations); //Deal with WebKit asyncing image loading when tags are injected into the page
 				});
 
 			log('Enable MutationObserver');
@@ -280,7 +303,8 @@
 				retVal = 0;
 
 			if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
-				retVal =  document.defaultView.getComputedStyle(el, null)[prop];
+				retVal = document.defaultView.getComputedStyle(el, null);
+				retVal = (null !== retVal) ? retVal[prop] : 0;
 			} else {//IE8
 				retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
 			}
@@ -485,6 +509,6 @@
 		}
 	}
 
-	addEventListener('message', receiver);
+	addEventListener(window, 'message', receiver);
 
 })();

@@ -115,6 +115,9 @@
 								case 'pageChange':
 									location.href = '../../example/frame.content2.html';
 									break;
+								case 'nested':
+									location.href = 'frame.nested.html';
+									break;
 								case 'size':
 									changeContent();
 									callMethod('size');
@@ -151,6 +154,9 @@
 								case 'width':
 									$('p').width(3000);
 									break;
+								case 'image':
+									$('p').html('<img src="djb.jpg">');
+									break;
 							}
 
 						}
@@ -166,7 +172,7 @@
 					warn(e);
 				}
 
-			 })();
+			})();
 		</script>
 	</body> 
 </html>
