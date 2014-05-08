@@ -44,7 +44,7 @@
 		if ('addEventListener' in window){
 			el.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){ //IE
-			el.attachEvent('on'+e,func);
+			el.attachEvent('on'+evt,func);
 		}
 	}
 
