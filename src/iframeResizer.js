@@ -6,7 +6,7 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
 ( function() {
-    'use strict';
+    'use strict'; 
 
 	var
 		count                = 0,
@@ -53,12 +53,8 @@
 			window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
 		}
 
-		// If not supported then just call callback
 		if (!(window.requestAnimationFrame)){
 			log(' RequestAnimationFrame not supported');
-			window.requestAnimationFrame = function(callback){
-				callback();
-			};
 		}
 	}
 
@@ -109,7 +105,8 @@
 					throw new Error(
 						'Unexpected message received from: ' + origin +
 						' for ' + messageData.iframe.id +
-						'. Message was: ' + event.data
+						'. Message was: ' + event.data +
+						'. This error can be disabled by adding the checkOrigin: false option.'
 					);
 				}
 			}
@@ -223,7 +220,7 @@
 	}
 
 	function syncResize(func,messageData,doNotSync){
-		if(doNotSync!==messageData.type){
+		if(doNotSync!==messageData.type && window.requestAnimationFrame){
 			log(' Requesting animation frame');
 			window.requestAnimationFrame(func);
 		} else {
