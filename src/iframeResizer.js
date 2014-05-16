@@ -6,18 +6,19 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
 ( function() {
-    'use strict'; 
+    'use strict';
 
 	var
-		count                = 0,
-		firstRun             = true,
-		msgId                = '[iFrameSizer]', //Must match iframe msg ID
-		msgIdLen             = msgId.length,
-		page                 =  '', //:'+location.href, //Uncoment to debug nested iFrames
-		pagePosition         = null,
-		resetRequiredMethods = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
-		settings             = {},
-		defaults             = {
+		count                 = 0,
+		firstRun              = true,
+		msgId                 = '[iFrameSizer]', //Must match iframe msg ID
+		msgIdLen              = msgId.length,
+		page                  =  '', //:'+location.href, //Uncoment to debug nested iFrames
+		pagePosition          = null,
+		requestAnimationFrame = window.requestAnimationFrame,
+		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
+		settings              = {},
+		defaults              = {
 			autoResize                : true,
 			bodyBackground            : null,
 			bodyMargin                : null,
@@ -49,11 +50,11 @@
 			x;
 
 		// Remove vendor prefixing if prefixed and break early if not
-		for (x = 0; x < vendors.length && !window.requestAnimationFrame; x += 1) {
-			window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+		for (x = 0; x < vendors.length && !requestAnimationFrame; x += 1) {
+			requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
 		}
 
-		if (!(window.requestAnimationFrame)){
+		if (!(requestAnimationFrame)){
 			log(' RequestAnimationFrame not supported');
 		}
 	}
@@ -220,9 +221,9 @@
 	}
 
 	function syncResize(func,messageData,doNotSync){
-		if(doNotSync!==messageData.type && window.requestAnimationFrame){
+		if(doNotSync!==messageData.type && requestAnimationFrame){
 			log(' Requesting animation frame');
-			window.requestAnimationFrame(func);
+			requestAnimationFrame(func);
 		} else {
 			func();
 		}
