@@ -1,6 +1,6 @@
 /*
- * File: iframeSizer.js
- * Desc: Force cross domain iframes to size to content.
+ * File: iframeReizer.js
+ * Desc: Force iframes to size to content.
  * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
@@ -131,9 +131,12 @@
 		}
 
 		function forwardMsgFromIFrame(){
+			var msgBody = msg.substr(msg.lastIndexOf(':message:')+9);
+
+			log(' MessageCallback passed: {'+ messageData.iframe.id + ',' + msgBody + '}');
 			settings.messageCallback({
 				iframe: messageData.iframe,
-				message: msg.substr(msg.lastIndexOf(':message:')+9)
+				message: msgBody
 			});
 			log('--');
 		}
