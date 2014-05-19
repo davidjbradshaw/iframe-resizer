@@ -135,8 +135,9 @@
 		function forwardMsgFromIFrame(){
 			settings.messageCallback({
 				iframe: messageData.iframe,
-				message: msg.substr(msg.lastIndexOf(':')+1)
+				message: msg.substr(msg.lastIndexOf(':message:')+9)
 			});
+			log('--');
 		}
 
 		function checkIFrameExists(){
