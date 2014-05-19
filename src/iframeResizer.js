@@ -77,8 +77,9 @@
 		}
 
 		function closeIFrame(iframe){
-			log(' iFrame '+iframe.id+' removed.');
+			log(' Removing iFrame: '+iframe.id);
 			iframe.parentNode.removeChild(iframe);
+			log(' --');
 		}
 
 		function processMsg(){
@@ -120,7 +121,8 @@
 		}
 
 		function isMessageFromMetaParent(){
-			//test if this message is from a parent above us.
+			//test if this message is from a parent above us. This is an ugly test, however, updating
+			//the message format would break backwards compatibity.
 			var retCode = messageData.type in {'true':1,'false':1};
 
 			if (retCode){
@@ -133,12 +135,12 @@
 		function forwardMsgFromIFrame(){
 			var msgBody = msg.substr(msg.lastIndexOf(':message:')+9);
 
-			log(' MessageCallback passed: {'+ messageData.iframe.id + ',' + msgBody + '}');
+			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({
 				iframe: messageData.iframe,
 				message: msgBody
 			});
-			log('--');
+			log(' --');
 		}
 
 		function checkIFrameExists(){
