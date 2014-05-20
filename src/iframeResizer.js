@@ -11,6 +11,8 @@
 	var
 		count                 = 0,
 		firstRun              = true,
+		msgHeader             = 'message',
+		msgHeaderLen          = msgHeader.length,
 		msgId                 = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen              = msgId.length,
 		page                  =  '', //:'+location.href, //Uncoment to debug nested iFrames
@@ -133,7 +135,7 @@
 		}
 
 		function forwardMsgFromIFrame(){
-			var msgBody = msg.substr(msg.lastIndexOf(':message:')+9);
+			var msgBody = msg.substr(msg.indexOf(':')+msgHeaderLen+6);
 
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({

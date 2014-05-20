@@ -35,7 +35,7 @@
           sendMessage('chkSendMsg');
         },
         messageCallback:function(messageData){
-          ok( 'message test' === messageData.message, 'Receive message back from iFrame via sendMessage function.' );
+          ok( 'message: test' === messageData.message, 'Receive message back from iFrame via sendMessage function.' );
           if (2===count){
             sendMessage('chkSendMsg');
             count++;
