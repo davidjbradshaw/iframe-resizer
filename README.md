@@ -212,7 +212,7 @@ function resize(){
 $(*Element with hover style*).hover(resize);
 ```
 
-### PDF and ODF Files
+### PDF and OpenDocument Files
 It is not posible to add the required JavaScript to PDF and ODF files. However, it is possible to get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the JavaScript needed by this project.
 
 ### Unexpected message received error
