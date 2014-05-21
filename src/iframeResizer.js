@@ -135,7 +135,7 @@
 		}
 
 		function forwardMsgFromIFrame(){
-			var msgBody = msg.substr(msg.indexOf(':')+msgHeaderLen+6);
+			var msgBody = msg.substr(msg.indexOf(':')+msgHeaderLen+6); //6 === ':0:0:' + ':'
 
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({
