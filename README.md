@@ -213,7 +213,7 @@ $(*Element with hover style*).hover(resize);
 ```
 
 ### PDF and OpenDocument Files
-It is not posible to add the required JavaScript to PDF and ODF files. However, it is possible to get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the JavaScript needed by this project.
+It is not posible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the JavaScript needed by this project.
 
 ### Unexpected message received error
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
