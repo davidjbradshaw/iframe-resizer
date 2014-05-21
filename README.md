@@ -192,7 +192,7 @@ if ('parentIFrame' in window) {
 
 The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. 
 
-The solutions to the three most common problems are outlined in this section.
+Solutions for the most common problems are outlined in this section.
 
 ### IFrame not sizing correctly
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** option to avoid cross browser differences. 
@@ -211,6 +211,9 @@ function resize(){
 
 $(*Element with hover style*).hover(resize);
 ```
+
+### PDF and ODF Files
+It is not posible to add the required JavaScript to PDF and ODF files. However, it is possible to get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the JavaScript needed by this project.
 
 ### Unexpected message received error
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
@@ -256,7 +259,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.4.8 Fix issue when message past to messageCallback contians a colon.
+* v2.4.8 Fix issue when message past to messageCallback contains a colon.
 * v2.4.7 [#49](https://github.com/davidjbradshaw/iframe-resizer/issues/49) Deconflict requestAnimationFrame.
 * v2.4.6 [#46](https://github.com/davidjbradshaw/iframe-resizer/issues/46) Fix iFrame event listener in IE8.
 * v2.4.5 [#41](https://github.com/davidjbradshaw/iframe-resizer/issues/41) Prevent error in FireFox when body is hidden by CSS [[Scott Otis](/Scotis)]. 
