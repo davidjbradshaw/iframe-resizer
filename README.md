@@ -103,7 +103,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **documentElementScroll** uses `document.documentElement.scrollHeight`
 * **max** takes the largest value of the main four options
 * **min** takes the smallest value of the main four options
-* **grow** same as **max* but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
+* **grow** same as **max** but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
 
 <i>Note: Setting this property to value other than **bodyOffset** or **documentElementOffset** will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
@@ -261,7 +261,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2,4.9 Added **grow** heightCalculationMethod.
+* v2.4.9 Added **grow** *heightCalculationMethod*. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52)Added **sendMessage** example.
 * v2.4.8 Fix issue when message past to messageCallback contains a colon.
 * v2.4.7 [#49](https://github.com/davidjbradshaw/iframe-resizer/issues/49) Deconflict requestAnimationFrame.
 * v2.4.6 [#46](https://github.com/davidjbradshaw/iframe-resizer/issues/46) Fix iFrame event listener in IE8.
