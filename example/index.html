@@ -52,6 +52,13 @@
 						' <b>Width:</b> '      + messageData.width + 
 						' <b>Event type:</b> ' + messageData.type
 					);
+				},
+				messageCallback         : function(messageData){
+					$('p#callback').html(
+						'<b>Frame ID:</b> '    + messageData.iframe.id +
+						' <b>Message:</b> '    + messageData.message
+					);
+					alert(messageData.message);
 				}
 			});
 
