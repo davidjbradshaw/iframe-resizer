@@ -261,7 +261,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.4.9 Added **grow** *heightCalculationMethod*. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52)Added **sendMessage** example.
+* v2.4.9 Added **grow** *heightCalculationMethod*. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52) Added **sendMessage** example.
 * v2.4.8 Fix issue when message past to messageCallback contains a colon.
 * v2.4.7 [#49](https://github.com/davidjbradshaw/iframe-resizer/issues/49) Deconflict requestAnimationFrame.
 * v2.4.6 [#46](https://github.com/davidjbradshaw/iframe-resizer/issues/46) Fix iFrame event listener in IE8.
