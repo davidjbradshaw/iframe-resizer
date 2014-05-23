@@ -109,7 +109,7 @@
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
 			if (settings.checkOrigin) {
-				log(' Checking conection is from: '+remoteHost);
+				log(' Checking connection is from: '+remoteHost);
 
 				if ((''+origin !== 'null') && (origin !== remoteHost)) {
 					throw new Error(
@@ -162,7 +162,7 @@
 			switch(messageData.type){
 				case 'close':
 					closeIFrame(messageData.iframe);
-					//settings.resizedCallback(messageData);
+					settings.resizedCallback(messageData); //To be removed.
 					break;
 				case 'message':
 					forwardMsgFromIFrame();
