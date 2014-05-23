@@ -52,7 +52,7 @@
 
 			iFrameResize({
 				log                     : true,                  // Enable console logging
-				enablePublicMethods     : true,                  // Enable methods within iframe hosted page
+				enablePublicMethods     : true,                  // Enable methods within iFrame hosted page
 				resizedCallback         : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
@@ -68,7 +68,7 @@
 					);
 					alert(messageData.message);
 				},
-				closedCallback         : function(id){ // Callback fn when message is received
+				closedCallback         : function(id){ /// Callback fn when iFrame is closed
 					$('p#callback').html(
 						'<b>IFrame (</b>'    + id +
 						'<b>) removed from page.</b>'
