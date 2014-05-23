@@ -31,15 +31,12 @@
         doWidth:true,
         enablePublicMethods:true,
         resizedCallback:function(messageData){
-          switch  (''+(++callbackCounter)){
-            case '1':
-              sendMessage('close');
-              break;
-            case '2':
-              ok( 'close' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected close');
-              ok( 0 === $('iframe').length , 'IFrame removed from page');
-              start();
-          }
+          if (0===callbackCounter++)
+            sendMessage('close');
+        },
+        closedCallback:function(){
+          ok( 0 === $('iframe').length , 'IFrame removed from page');
+          start();
         }
       });
     });

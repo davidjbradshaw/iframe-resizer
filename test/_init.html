@@ -28,11 +28,9 @@
         log:true,
         bodyBackground:'wheat',
         heightCalculationMethod:'max',
-        resizedCallback:function(messageData){
-          ok( true, 'Receive message back from iFrame.' );
-          ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init' );
-          ok( 'iFrameResizer0' === messageData.iframe.id, 'iFrame id = iFrameResizer0.' );
-          ok( '600' === messageData.width, 'iFrame width = 600.' );
+        initCallback:function(iframe){
+          ok( true, 'Receive init message back from iFrame.' );
+          ok( 'iFrameResizer0' === iframe.id, 'iFrame id = iFrameResizer0.' );
           start();
         }
       });

@@ -31,11 +31,13 @@
 			heightCalculationMethod   : 'offset',
 			interval                  : 32,
 			log                       : false,
-			messageCallback           : function(){},
-			resizedCallback           : function(){},
 			scrolling                 : false,
 			sizeHeight                : true,
-			sizeWidth                 : false
+			sizeWidth                 : false,
+			closedCallback            : function(){},
+			initCallback              : function(){},
+			messageCallback           : function(){},
+			resizedCallback           : function(){}
 		};
 
 	function addEventListener(obj,evt,func){
@@ -73,14 +75,18 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
+				settings.resizedCallback(messageData);
 			}
 
 			syncResize(resize,messageData,'resetPage');
 		}
 
 		function closeIFrame(iframe){
-			log(' Removing iFrame: '+iframe.id);
+			var iframeID = iframe.id;
+
+			log(' Removing iFrame: '+iframeID);
 			iframe.parentNode.removeChild(iframe);
+			settings.closedCallback(iframeID);
 			log(' --');
 		}
 
@@ -156,7 +162,7 @@
 			switch(messageData.type){
 				case 'close':
 					closeIFrame(messageData.iframe);
-					settings.resizedCallback(messageData);
+					//settings.resizedCallback(messageData);
 					break;
 				case 'message':
 					forwardMsgFromIFrame();
@@ -164,9 +170,12 @@
 				case 'reset':
 					resetIFrame(messageData);
 					break;
+				case 'init':
+					resizeIFrame();
+					settings.initCallback(messageData.iframe);
+					break;
 				default:
 					resizeIFrame();
-					settings.resizedCallback(messageData);
 			}
 		}
 
@@ -334,7 +343,7 @@
 			}
 		}
 
-		window.iFrameResize = function iFrameResizeF(options,selecter){
+		return function iFrameResizeF(options,selecter){
 			processOptions(options);
 			Array.prototype.forEach.call( document.querySelectorAll( selecter || 'iframe' ), init );
 		};
@@ -349,7 +358,13 @@
 
 	setupRequestAnimationFrame();
 	addEventListener(window,'message',iFrameListener);
-	createNativePublicFunction();
+
 	if ('jQuery' in window) { createJQueryPublicMethod(jQuery); }
+
+	if (typeof define === 'function' && define.amd) {
+		define({ iFrameResize: createNativePublicFunction() });
+	} else {
+		window.iFrameResize = createNativePublicFunction();
+	}
 
 })();
