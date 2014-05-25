@@ -20,6 +20,7 @@
 		requestAnimationFrame = window.requestAnimationFrame,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings              = {},
+		
 		defaults              = {
 			autoResize                : true,
 			bodyBackground            : null,
@@ -31,9 +32,14 @@
 			heightCalculationMethod   : 'offset',
 			interval                  : 32,
 			log                       : false,
+			maxHeight                 : Infinity,
+			maxWidth                  : Infinity,
+			minHeight                 : 0,
+			minWidth                  : 0,
 			scrolling                 : false,
 			sizeHeight                : true,
 			sizeWidth                 : false,
+			tolerance                 : 0,
 			closedCallback            : function(){},
 			initCallback              : function(){},
 			messageCallback           : function(){},
@@ -100,6 +106,32 @@
 				width:  data[2],
 				type:   data[3]
 			};
+		}
+
+		function ensureInRange(Dimension){
+			var
+				max  = Number(settings['max'+Dimension]),
+				min  = Number(settings['min'+Dimension]),
+				dimension = Dimension.toLowerCase(),
+				size = Number(messageData[dimension]);
+
+			if (min>max){
+				throw new Error('Value for min'+Dimension+' can not be greater than max'+Dimension);
+			}
+
+			log(' Checking '+dimension+' is in range '+min+'-'+max);
+
+			if (size<min) {
+				size=min;
+				log(' Set '+dimension+' to min value');
+			}
+
+			if (size>max) {
+				size=max;
+				log(' Set '+dimension+' to max value');
+			}
+
+			messageData[dimension]=''+size;
 		}
 
 		function isMessageFromIFrame(){
@@ -186,6 +218,9 @@
 		if (isMessageForUs()){
 			log(' Received: '+msg);
 			messageData = processMsg();
+			ensureInRange('Height');
+			ensureInRange('Width');
+
 			if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
 				firstRun = false;
 				actionMsg();
@@ -224,7 +259,7 @@
 	}
 
 	function setSize(messageData){
-		function setDimension(dimension){
+		function setDimension(dimension,min,max){
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
 				' IFrame (' + messageData.iframe.id +
@@ -233,8 +268,8 @@
 			);
 		}
 
-		if( settings.sizeHeight ) { setDimension('height'); }
-		if( settings.sizeWidth  ) { setDimension('width');  }
+		if( settings.sizeHeight) { setDimension('height'); }
+		if( settings.sizeWidth ) { setDimension('width'); }
 	}
 
 	function syncResize(func,messageData,doNotSync){
@@ -253,6 +288,20 @@
 
 
 	function setupIFrame(){
+		function setLimits(){
+			function addStyle(style){
+				if ((Infinity !== settings[style]) && (0 !== settings[style])){
+					iframe.style[style] = settings[style] + 'px';
+					log(' Set '+style+' = '+settings[style]+'px');
+				}
+			}
+
+			addStyle('maxHeight');
+			addStyle('minHeight');
+			addStyle('maxWidth');
+			addStyle('minWidth');
+		}
+
 		function ensureHasId(iframeID){
 			if (''===iframeID){
 				iframe.id = iframeID = 'iFrameResizer' + count++;
@@ -280,16 +329,17 @@
 
 		function createOutgoingMsg(){
 			return iframeID +
-					':' + settings.bodyMarginV1 +
-					':' + settings.sizeWidth +
-					':' + settings.log +
-					':' + settings.interval +
-					':' + settings.enablePublicMethods +
-					':' + settings.autoResize +
-					':' + settings.bodyMargin +
-					':' + settings.heightCalculationMethod +
-					':' + settings.bodyBackground +
-					':' + settings.bodyPadding;
+				':' + settings.bodyMarginV1 +
+				':' + settings.sizeWidth +
+				':' + settings.log +
+				':' + settings.interval +
+				':' + settings.enablePublicMethods +
+				':' + settings.autoResize +
+				':' + settings.bodyMargin +
+				':' + settings.heightCalculationMethod +
+				':' + settings.bodyBackground +
+				':' + settings.bodyPadding +
+				':' + settings.tolerance;
 		}
 
 		function init(msg){
@@ -316,6 +366,7 @@
 			iframeID = ensureHasId(iframe.id);
 
 		setScrolling();
+		setLimits();
 		setupBodyMarginValues();
 		init(createOutgoingMsg());
 	}
@@ -362,7 +413,7 @@
 	if ('jQuery' in window) { createJQueryPublicMethod(jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
-		define({ iFrameResize: createNativePublicFunction() });
+		define(function (){ return createNativePublicFunction(); });
 	} else {
 		window.iFrameResize = createNativePublicFunction();
 	}
