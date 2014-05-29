@@ -39,49 +39,49 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
 ### log
 
 	default: false
-	type: boolean
+	type:    boolean
 
 Setting the `log` option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.
 
 ### autoResize
 
 	default: true
-	type: boolean
+	type:    boolean
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.
 
 ### bodyBackground
 
 	default: null
-	type: string 
+	type:    string 
 
 Override the body background style in the iFrame. 
 
 ### bodyMargin
 
 	default: null
-	type: string || number
+	type:    string || number
 
 Override the default body margin style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
 
 ### checkOrigin
 
 	default: true
-	type: boolean
+	type:    boolean
 
 When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.
  
 ### enablePublicMethods  
 
 	default: false
-	type: boolean
+	type:    boolean
 
 If enabled, a `window.parentIFrame` object is created in the iFrame that contains methods outlined [below](#iframe-methods).
 
 ### interval
 
 	default: 32  (in ms)
-	type: number
+	type:    number
 
 In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the library falls back to using setInterval, to check for changes to the page size. The default value is equal to two frame refreshes at 60Hz, setting this to a higher value will make screen redraws noticeable to the user.
 
@@ -92,9 +92,10 @@ Set to zero to disable.
 ### heightCalculationMethod
 
 	default: 'bodyOffset'
-	values: 'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 'max'
+	values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 
+	         'max' | 'min' | 'grow' | 'lowestElement'
 
-By default the height of the iFrame is calculated by converting the margin of the `body` to px and then adding the top and bottom figures to the offsetHeight of the `body` tag. 
+By default the height of the iFrame is calculated by converting the margin of the `body` to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the `body` tag. 
 
 In cases where CSS styles causes the content to flow outside the `body` you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
@@ -104,43 +105,83 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **max** takes the largest value of the main four options
 * **min** takes the smallest value of the main four options
 * **grow** same as **max** but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
+* **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point.  
 
-<i>Note: Setting this property to value other than **bodyOffset** or **documentElementOffset** will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
+<i>Notes:</i>
 
-<i>Additionally these alternatives calculation methods can sometime be slightly less accurate at calculating the correct height and can work differently across mainstream browsers.</i>
+<i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
-### messageCallback
+<i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
 
-	type: function ({iframe,message})
+### maxHeight / maxWidth
 
-Receive message posted from iFrame with the `window.parentIFrame.sendMessage()` method.
+    default: infinity
+    type:    integer
 
-### resizedCallback
+Set maximum height/width of iFrame.
 
-	type: function ({iframe,height,width,type})
-	
-Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
+### minHeight / minWidth
+
+    default: 0
+    type:    integer
+
+Set minimum height/width of iFrame.
 
 ### scrolling
 
     default: false
-    type: boolean
+    type:    integer
 
 Enable scroll bars in iFrame.
 
 ### sizeHeight
 
 	default: true
-	type: boolean
+	type:    boolean
 
 Resize iFrame to content height.
 
 ### sizeWidth
 
 	default: false
-	type: boolean
+	type:    boolean
 
 Resize iFrame to content width.
+
+<!--
+### tolerance
+
+	default: 0
+	type:    integer
+	
+Set amount iFrame content size has to change by, before triggering resize of the iFrame.
+-->
+
+## Callback Methods
+
+### closedCallback
+
+	type: function (iframeID)
+
+Called when iFrame is closed via `parentIFrame.close()` method.
+
+### initCallback
+
+	type: function (iframe)
+
+Initial setup callback function.
+
+### messageCallback
+
+	type: function ({iframe,message})
+
+Receive message posted from iFrame with the `parentIFrame.sendMessage()` method.
+
+### resizedCallback
+
+	type: function ({iframe,height,width,type})
+	
+Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
 
 
 ## IFrame Methods
@@ -163,7 +204,7 @@ Returns the ID of the iFrame that the page is contained in.
 
 ### sendMessage(message,[targetOrigin])
 
-Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicing your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
+Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
 
 ### setHeightCalculationMethod(heightCalculationMethod)
 
@@ -197,7 +238,7 @@ The first step to investigate a problem is to enable the [log](#log) option and 
 Solutions for the most common problems are outlined in this section.
 
 ### IFrame not sizing correctly
-If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** option to avoid cross browser differences. 
+If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences. 
 
 ###IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
@@ -215,7 +256,7 @@ $(*Element with hover style*).hover(resize);
 ```
 
 ### PDF and OpenDocument Files
-It is not posible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the JavaScript needed by this project.
+It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the JavaScript needed by this project.
 
 ### Unexpected message received error
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
@@ -261,17 +302,17 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.4.9 Added **grow** *heightCalculationMethod*. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52) Added **sendMessage** example.
-* v2.4.8 Fix issue when message past to messageCallback contains a colon.
+* v2.5.0 Added *minHeight*, *maxHeight*, *minWidth* and *maxWidth* options. Added *initCallback* and *closedCallback* functions (Close event calling *resizedCallback* is deprecated). Added **grow** and **lowestElement** *heightCalculationMethods*. Added AMD support. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52) Added *sendMessage* example. [#54](https://github.com/davidjbradshaw/iframe-resizer/issues/54) Work around IE8's borked JS execution stack. [#55](https://github.com/davidjbradshaw/iframe-resizer/issues/55) Check datatype of passed in options.
+* v2.4.8 Fix issue when message passed to messageCallback contains a colon.
 * v2.4.7 [#49](https://github.com/davidjbradshaw/iframe-resizer/issues/49) Deconflict requestAnimationFrame.
 * v2.4.6 [#46](https://github.com/davidjbradshaw/iframe-resizer/issues/46) Fix iFrame event listener in IE8.
 * v2.4.5 [#41](https://github.com/davidjbradshaw/iframe-resizer/issues/41) Prevent error in FireFox when body is hidden by CSS [[Scott Otis](/Scotis)]. 
-* v2.4.4 Enable nested iFrames ([#31](https://github.com/davidjbradshaw/iframe-resizer/issues/31) Filter incoming iFrame message in hostpage script. [#33](https://github.com/davidjbradshaw/iframe-resizer/issues/33) Squash unexpected message warning when using nested iFrames. Improved logging for nested iFrames). [#38](https://github.com/davidjbradshaw/iframe-resizer/issues/38) Detect late image loads that cause a resize due to async image loading in WebKit [[Yassin](/ynh)]. Fixed :Hover example in FireFox. Increased trigger timeout lock to 64ms. 
+* v2.4.4 Enable nested iFrames ([#31](https://github.com/davidjbradshaw/iframe-resizer/issues/31) Filter incoming iFrame message in host-page script. [#33](https://github.com/davidjbradshaw/iframe-resizer/issues/33) Squash unexpected message warning when using nested iFrames. Improved logging for nested iFrames). [#38](https://github.com/davidjbradshaw/iframe-resizer/issues/38) Detect late image loads that cause a resize due to async image loading in WebKit [[Yassin](/ynh)]. Fixed :Hover example in FireFox. Increased trigger timeout lock to 64ms. 
 * v2.4.3 Simplified handling of double fired events. Fixed test coverage.
 * v2.4.2 Fix missing 'px' unit when resetting height.
 * v2.4.1 Fix screen flicker issue with scroll height calculation methods in v2.4.0.
 * v2.4.0 Improved handling of alternate sizing methods, so that they will now shrink on all trigger events, except *Interval*. Prevent error when incoming message to iFrame is an object.
-* v2.3.2 Fix backwards compatibility issue between V2 iFrame and V1 hostpage scripts.
+* v2.3.2 Fix backwards compatibility issue between V2 iFrame and V1 host-page scripts.
 * v2.3.1 Added setHeightCalculationMethod() method in iFrame. Added *min* option to the height calculation methods. Invalid value for *heightCalculationMethod* is now a warning rather than an error and now falls back to the default value.
 * v2.3.0 Added extra *heightCalculationMethod* options. Inject clearFix into 'body' to work around CSS floats preventing the height being correctly calculated. Added meaningful error message for non-valid values in *heightCalculationMethod*. Stop **click** events firing for 50ms after **size** events. Fixed hover example in old IE.
 * v2.2.3 [#26](https://github.com/davidjbradshaw/iframe-resizer/issues/26) Locally scope jQuery to $, so there is no dependancy on it being defined globally.
@@ -280,7 +321,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 * v2.2.0 Added targetOrigin option to sendMessage function. Added bodyBackground option. Expanded troubleshooting section.
 * v2.1.1 [#16](https://github.com/davidjbradshaw/iframe-resizer/issues/16) Option to change the height calculation method in the iFrame from offsetHeight to scrollHeight. Troubleshooting section added to docs.
 * v2.1.0 Added sendMessage() and getId() to window.parentIFrame. Changed width calculation to use scrollWidth. Removed deprecated object name in iFrame.
-* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)*, renamed *contentWindowBodyMargin* to *bodyMargin* and renamed *callback* *resizedCallback*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* propety now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
+* v2.0.0 Added native JS public function, renamed script filename to reflect that jQuery is now optional. Renamed *do(Heigh/Width)* to *size(Height/Width)*, renamed *contentWindowBodyMargin* to *bodyMargin* and renamed *callback* *resizedCallback*. Improved logging messages. Stop *resize* event firing for 50ms after *interval* event. Added multiple page example. Workout unsized margins inside the iFrame. The *bodyMargin* property now accepts any valid value for a CSS margin. Check message origin is iFrame. Removed deprecated methods.
 * v1.4.4 Fixed *bodyMargin* bug.
 * v1.4.3 CodeCoverage fixes. Documentation improvements.
 * v1.4.2 Fixed size(250) example in IE8.
