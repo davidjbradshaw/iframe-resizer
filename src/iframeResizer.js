@@ -5,7 +5,7 @@
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
-( function() {
+;( function() {
     'use strict';
 
 	var
@@ -20,7 +20,7 @@
 		requestAnimationFrame = window.requestAnimationFrame,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings              = {},
-		
+
 		defaults              = {
 			autoResize                : true,
 			bodyBackground            : null,
@@ -173,7 +173,7 @@
 		}
 
 		function forwardMsgFromIFrame(){
-			var msgBody = msg.substr(msg.indexOf(':')+msgHeaderLen+6); //6 === ':0:0:' + ':'
+			var msgBody = msg.substr(msg.indexOf(':')+msgHeaderLen+6); //6 === ':0:0:' + ':' (Ideas to name this magic number most welcome)
 
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({
@@ -222,8 +222,8 @@
 			ensureInRange('Width');
 
 			if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
-				firstRun = false;
 				actionMsg();
+				firstRun = false;
 			}
 		}
 	}
@@ -347,8 +347,11 @@
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
+				var fr = firstRun;   // Reduce scope of var to function, because IE8's JS execution
+                                     // context stack is borked and this value gets externally
+                                     // changed midway through running this function.
 				trigger('iFrame.onload',msg,iframe);
-				if (!firstRun && settings.heightCalculationMethod in resetRequiredMethods){
+				if (!fr && settings.heightCalculationMethod in resetRequiredMethods){
 					resetIFrame({
 						iframe:iframe,
 						height:0,
@@ -371,6 +374,12 @@
 		init(createOutgoingMsg());
 	}
 
+	function checkOptions(options){
+		if ('object' !== typeof options){
+			throw new TypeError('Options is not an object.');
+		}
+	}
+
 	function createNativePublicFunction(){
 		function init(element){
 			if('IFRAME' !== element.tagName) {
@@ -383,9 +392,7 @@
 		function processOptions(options){
 			options = options || {};
 
-			if ('object' !== typeof options){
-				throw new TypeError('Options is not an object.');
-			}
+			checkOptions(options);
 
 			for (var option in defaults) {
 				if (defaults.hasOwnProperty(option)){
@@ -402,6 +409,7 @@
 
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
+			checkOptions(options);
 			settings = $.extend( {}, defaults, options );
 			return this.filter('iframe').each( setupIFrame ).end();
 		};

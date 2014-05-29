@@ -7,7 +7,7 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
 
-(function() {
+;(function() {
 	'use strict';
 
 	var
