@@ -19,7 +19,7 @@
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
-		eventCancelTimer      = 64,
+		eventCancelTimer      = 128,
 		height                = 1,
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
@@ -185,6 +185,9 @@
 				},
 				reset: function resetF(){
 					resetIFrame('parentIFrame.size');
+				},
+				scrollTo: function scrollToF(x,y){
+					sendMsg(x,y,'scrollTo');
 				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
 					sendMsg(0,0,'message',msg,targetOrigin);
@@ -526,6 +529,8 @@
 
 		function initFromParent(){
 			initMsg = event.data;
+			target  = event.source;
+
 			init();
 			firstRun = false;
 			setTimeout(function(){ initLock = false;},eventCancelTimer);

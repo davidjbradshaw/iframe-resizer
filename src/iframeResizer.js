@@ -190,6 +190,15 @@
 			return true;
 		}
 
+		function scrollRequestFromChild(){
+			log(' Reposition requested from iFrame');
+			pagePosition = {
+				x: messageData.width,
+				y: messageData.height
+			};
+			setPagePosition();
+		}
+
 		function actionMsg(){
 			switch(messageData.type){
 				case 'close':
@@ -198,6 +207,9 @@
 					break;
 				case 'message':
 					forwardMsgFromIFrame();
+					break;
+				case 'scrollTo':
+					crollRequestFromChild();
 					break;
 				case 'reset':
 					resetIFrame(messageData);
@@ -259,7 +271,7 @@
 	}
 
 	function setSize(messageData){
-		function setDimension(dimension,min,max){
+		function setDimension(dimension){
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
 				' IFrame (' + messageData.iframe.id +
@@ -305,7 +317,7 @@
 		function ensureHasId(iframeID){
 			if (''===iframeID){
 				iframe.id = iframeID = 'iFrameResizer' + count++;
-				log(' Added missing iframe ID: '+ iframeID);
+				log(' Added missing iframe ID: '+ iframeID +' (' + iframe.src + ')');
 			}
 
 			return iframeID;
