@@ -553,8 +553,14 @@
 			return ('iFrameResize' in window);
 		}
 
+		function isInitMsg(){
+			//test if this message is from a child below us. This is an ugly test, however, updating
+			//the message format would break backwards compatibity.
+			return event.data.split(':')[2] in {'true':1,'false':1};
+		}
+
 		if (isMessageForUs()){
-			if (firstRun){ //Check msg ID
+			if (firstRun && isInitMsg()){ //Check msg ID
 				initFromParent();
 			} else if ('reset' === getMessageType()){
 				resetFromParent();

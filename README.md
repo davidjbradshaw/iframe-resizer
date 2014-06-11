@@ -302,7 +302,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.5.1 #58 Fixed endless loop with unnested iframe.
+* v2.5.1 [#58](https://github.com/davidjbradshaw/iframe-resizer/issues/58) Fixed endless loop and margin issues with an unnested mid-tier iframe. [#59](https://github.com/davidjbradshaw/iframe-resizer/issues/59) Fixed main property of [Bower](http://bower.io/) config file.
 * v2.5.0 Added *minHeight*, *maxHeight*, *minWidth* and *maxWidth* options. Added *initCallback* and *closedCallback* functions (Close event calling *resizedCallback* is deprecated). Added **grow** and **lowestElement** *heightCalculationMethods*. Added AMD support. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52) Added *sendMessage* example. [#54](https://github.com/davidjbradshaw/iframe-resizer/issues/54) Work around IE8's borked JS execution stack. [#55](https://github.com/davidjbradshaw/iframe-resizer/issues/55) Check datatype of passed in options.
 * v2.4.8 Fix issue when message passed to messageCallback contains a colon.
 * v2.4.7 [#49](https://github.com/davidjbradshaw/iframe-resizer/issues/49) Deconflict requestAnimationFrame.
