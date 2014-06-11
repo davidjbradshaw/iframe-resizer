@@ -5,7 +5,7 @@
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
   ],
-  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, multiple and nested iFrames. (Dependacy free and works with IE8+)",
+  "description": "Responsively keep same and cross domain iFrames sized to their content with support for window/content resizing, multiple and nested iFrames. (Dependacy free and works with IE8+)",
   "main": "js/iframeResizer.min.js",
   "keywords": [
     "CrossDomain",
