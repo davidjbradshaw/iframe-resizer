@@ -394,7 +394,7 @@
 
 	function createNativePublicFunction(){
 		function init(element){
-			if('IFRAME' !== element.tagName) {
+			if('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
 				setupIFrame.call(element);
