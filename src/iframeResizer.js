@@ -6,7 +6,7 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
 ;( function() {
-    'use strict';
+	'use strict';
 
 	var
 		count                 = 0,
@@ -75,13 +75,14 @@
 		}
 	}
 
-
 	function iFrameListener(event){
 		function resizeIFrame(){
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
-				settings.resizedCallback(messageData);
+				if('resizedCallback' in settings) {
+					settings.resizedCallback(messageData);
+				}
 			}
 
 			syncResize(resize,messageData,'resetPage');
@@ -203,7 +204,9 @@
 			switch(messageData.type){
 				case 'close':
 					closeIFrame(messageData.iframe);
-					settings.resizedCallback(messageData); //To be removed.
+					if ('resizedCallback' in settings) {
+						settings.resizedCallback(messageData); //To be removed.
+					}
 					break;
 				case 'message':
 					forwardMsgFromIFrame();
@@ -216,7 +219,9 @@
 					break;
 				case 'init':
 					resizeIFrame();
-					settings.initCallback(messageData.iframe);
+					if ('initCallback' in settings) {
+						settings.initCallback(messageData.iframe);
+					}
 					break;
 				default:
 					resizeIFrame();
@@ -355,13 +360,13 @@
 		}
 
 		function init(msg){
-			//We have to call trigger twice, as we can not be sure if all 
+			//We have to call trigger twice, as we can not be sure if all
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
 				var fr = firstRun;   // Reduce scope of var to function, because IE8's JS execution
-                                     // context stack is borked and this value gets externally
-                                     // changed midway through running this function.
+									 // context stack is borked and this value gets externally
+									 // changed midway through running this function.
 				trigger('iFrame.onload',msg,iframe);
 				if (!fr && settings.heightCalculationMethod in resetRequiredMethods){
 					resetIFrame({
@@ -376,7 +381,7 @@
 		}
 
 		var
-            /*jshint validthis:true */
+			/*jshint validthis:true */
 			iframe   = this,
 			iframeID = ensureHasId(iframe.id);
 
