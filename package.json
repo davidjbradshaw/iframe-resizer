@@ -16,10 +16,6 @@
     "type": "git",
     "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
-  },
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "dependencies": {},
    "categories": ["UI", "Utilities"],
