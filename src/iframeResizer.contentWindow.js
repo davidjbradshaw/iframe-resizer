@@ -118,7 +118,7 @@
 	}
 
 	function setMargin(){
-		//If called via V1 script, convert bodyMargin from int to str 
+		//If called via V1 script, convert bodyMargin from int to str
 		if (undefined === bodyMarginStr){
 			bodyMarginStr = bodyMargin+'px';
 		}
@@ -400,7 +400,7 @@
 
 	function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
 
-		var	currentHeight,currentWidth;
+		var currentHeight,currentWidth;
 
 		function recordTrigger(){
 			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
@@ -428,11 +428,11 @@
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth();
 
-			return	checkTolarance(height,currentHeight) ||
+			return  checkTolarance(height,currentHeight) ||
 					(calculateWidth && checkTolarance(width,currentWidth));
 
-			//return	(height !== currentHeight) ||
-			//		(calculateWidth && width !== currentWidth);
+			//return    (height !== currentHeight) ||
+			//      (calculateWidth && width !== currentWidth);
 		}
 
 		function isForceResizableEvent(){
