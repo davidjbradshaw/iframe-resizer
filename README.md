@@ -148,14 +148,14 @@ Resize iFrame to content height.
 
 Resize iFrame to content width.
 
-<!--
+
 ### tolerance
 
 	default: 0
 	type:    integer
 	
-Set amount iFrame content size has to change by, before triggering resize of the iFrame.
--->
+Set the number of pixels the iFrame content size has to change by, before triggering resize of the iFrame.
+
 
 ## Callback Methods
 
@@ -202,6 +202,10 @@ Remove the iFrame from the parent page.
 
 Returns the ID of the iFrame that the page is contained in.
 
+### scrollTo(x,y)
+
+Scroll the parent page to the coordinates x and y.
+
 ### sendMessage(message,[targetOrigin])
 
 Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
@@ -238,7 +242,14 @@ The first step to investigate a problem is to enable the [log](#log) option and 
 Solutions for the most common problems are outlined in this section.
 
 ### IFrame not sizing correctly
-If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences. It's also important to have `<!DOCTYPE html>` in both frames otherwise shrinking will not work.
+If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences. 
+
+### IFrame not downsizing
+Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_type_declaration) in the iFrame can sometimes prevent downsizing. At it's most simplest this can be the following.
+
+```html
+<!DOCTYPE html>
+``` 
 
 ###IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
@@ -302,6 +313,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
+* v2.6.0 Added *parentIFrame.scollTo()* method. Added *Tolerance* option. [#85](https://github.com/davidjbradshaw/iframe-resizer/issues/85) Update troubleshooting guide [[https://github.com/kevinsproles](Kevin Sproles)].
 * v2.5.2 [#67](https://github.com/davidjbradshaw/iframe-resizer/issues/67) Allow lowercase `<iframe>` tags for XHTML complience [[SlimerDude](https://github.com/SlimerDude)]. [#69](https://github.com/davidjbradshaw/iframe-resizer/issues/69) Fix watch task typo in gruntfile.js [[Matthew Hupman](https://github.com/mhupman)]. Remove trailing comma in heightCalcMethods array [#76](https://github.com/davidjbradshaw/iframe-resizer/issues/76) [[Fabio Scala](https://github.com/fabioscala)].
 * v2.5.1 [#58](https://github.com/davidjbradshaw/iframe-resizer/issues/58) Fixed endless loop and margin issues with an unnested mid-tier iframe. [#59](https://github.com/davidjbradshaw/iframe-resizer/issues/59) Fixed main property of [Bower](http://bower.io/) config file.
 * v2.5.0 Added *minHeight*, *maxHeight*, *minWidth* and *maxWidth* options. Added *initCallback* and *closedCallback* functions (Close event calling *resizedCallback* is deprecated). Added **grow** and **lowestElement** *heightCalculationMethods*. Added AMD support. [#52](https://github.com/davidjbradshaw/iframe-resizer/issues/52) Added *sendMessage* example. [#54](https://github.com/davidjbradshaw/iframe-resizer/issues/54) Work around IE8's borked JS execution stack. [#55](https://github.com/davidjbradshaw/iframe-resizer/issues/55) Check datatype of passed in options.
