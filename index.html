@@ -218,7 +218,14 @@ type:    boolean
 
 <p>Resize iFrame to content width.</p>
 
+<h3>
+<a name="tolerance" class="anchor" href="#tolerance"><span class="octicon octicon-link"></span></a>tolerance</h3>
 
+<pre><code>default: 0
+type:    integer
+</code></pre>
+
+<p>Set the number of pixels the iFrame content size has to change by, before triggering resize of the iFrame.</p>
 
 <h2>
 <a name="callback-methods" class="anchor" href="#callback-methods"><span class="octicon octicon-link"></span></a>Callback Methods</h2>
@@ -276,6 +283,11 @@ type:    boolean
 <p>Returns the ID of the iFrame that the page is contained in.</p>
 
 <h3>
+<a name="scrolltoxy" class="anchor" href="#scrolltoxy"><span class="octicon octicon-link"></span></a>scrollTo(x,y)</h3>
+
+<p>Scroll the parent page to the coordinates x and y.</p>
+
+<h3>
 <a name="sendmessagemessagetargetorigin" class="anchor" href="#sendmessagemessagetargetorigin"><span class="octicon octicon-link"></span></a>sendMessage(message,[targetOrigin])</h3>
 
 <p>Send string to the containing page. The message is delivered to the <code>messageCallback</code> function. The <code>targetOrigin</code> option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage">postMessage</a> for more details.</p>
@@ -315,6 +327,14 @@ type:    boolean
 <a name="iframe-not-sizing-correctly" class="anchor" href="#iframe-not-sizing-correctly"><span class="octicon octicon-link"></span></a>IFrame not sizing correctly</h3>
 
 <p>If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, normally you will be best off selecting the <strong>max</strong> or <strong>lowestElement</strong> options to avoid cross browser differences. </p>
+
+<h3>
+<a name="iframe-not-downsizing" class="anchor" href="#iframe-not-downsizing"><span class="octicon octicon-link"></span></a>IFrame not downsizing</h3>
+
+<p>Not having a valid <a href="http://en.wikipedia.org/wiki/Document_type_declaration">HTML document type</a> in the iFrame can sometimes prevent downsizing. At it's most simplest this can be the following.</p>
+
+<div class="highlight highlight-html"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</pre></div>
 
 <h3>
 <a name="iframe-not-detecting-css-hover-events" class="anchor" href="#iframe-not-detecting-css-hover-events"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS :hover events</h3>
@@ -386,6 +406,7 @@ type:    boolean
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.6.0 Added <em>parentIFrame.scollTo()</em> method. Added <em>Tolerance</em> option. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/85">#85</a> Update troubleshooting guide [<a href="Kevin%20Sproles">https://github.com/kevinsproles</a>].</li>
 <li>v2.5.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/67">#67</a> Allow lowercase <code>&lt;iframe&gt;</code> tags for XHTML complience [<a href="https://github.com/SlimerDude">SlimerDude</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/69">#69</a> Fix watch task typo in gruntfile.js [<a href="https://github.com/mhupman">Matthew Hupman</a>]. Remove trailing comma in heightCalcMethods array <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/76">#76</a> [<a href="https://github.com/fabioscala">Fabio Scala</a>].</li>
 <li>v2.5.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/58">#58</a> Fixed endless loop and margin issues with an unnested mid-tier iframe. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/59">#59</a> Fixed main property of <a href="http://bower.io/">Bower</a> config file.</li>
 <li>v2.5.0 Added <em>minHeight</em>, <em>maxHeight</em>, <em>minWidth</em> and <em>maxWidth</em> options. Added <em>initCallback</em> and <em>closedCallback</em> functions (Close event calling <em>resizedCallback</em> is deprecated). Added <strong>grow</strong> and <strong>lowestElement</strong> <em>heightCalculationMethods</em>. Added AMD support. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/52">#52</a> Added <em>sendMessage</em> example. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/54">#54</a> Work around IE8's borked JS execution stack. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/55">#55</a> Check datatype of passed in options.</li>
