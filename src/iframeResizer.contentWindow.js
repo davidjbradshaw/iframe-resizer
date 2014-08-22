@@ -187,7 +187,7 @@
 					resetIFrame('parentIFrame.size');
 				},
 				scrollTo: function scrollToF(x,y){
-					sendMsg(x,y,'scrollTo');
+					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses hieght/width
 				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
 					sendMsg(0,0,'message',msg,targetOrigin);

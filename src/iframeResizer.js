@@ -209,7 +209,7 @@
 					forwardMsgFromIFrame();
 					break;
 				case 'scrollTo':
-					crollRequestFromChild();
+					scrollRequestFromChild();
 					break;
 				case 'reset':
 					resetIFrame(messageData);
