@@ -421,6 +421,7 @@
 
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
+			options = options || {};
 			checkOptions(options);
 			settings = $.extend( {}, defaults, options );
 			return this.filter('iframe').each( setupIFrame ).end();
