@@ -245,7 +245,9 @@ Solutions for the most common problems are outlined in this section.
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences. 
 
 ### IFrame not downsizing
-Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_type_declaration) in the iFrame can sometimes prevent downsizing. At it's most simplest this can be the following.
+The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the `html` or `body` elements, but it could be on any element in the page.
+
+Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_type_declaration) in the iFrame can also sometimes prevent downsizing. At it's most simplest this can be the following.
 
 ```html
 <!DOCTYPE html>
