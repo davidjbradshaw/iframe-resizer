@@ -204,7 +204,15 @@
 					var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 					lockTrigger();
 					sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
+				},
+				setAutoResize: function setAutoResizeF(isAutoResize){
+					autoResize = isAutoResize;
+					// autoResize true force to reset
+					if(autoResize){
+						resetIFrame('parentIFrame.size');	
+					}
 				}
+				
 			};
 		}
 	}
@@ -519,7 +527,11 @@
 		}
 
 		setTargetOrigin();
-		sendToParent();
+		// autoResize false 
+		if(autoResize){
+			sendToParent();	
+		}
+		
 	}
 
 	function receiver(event) {
