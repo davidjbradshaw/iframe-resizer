@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 
     watch: {
       files: ['src/**/*'],
-      tasks: 'sefault'
+      tasks: 'default'
     },
 
     replace: {

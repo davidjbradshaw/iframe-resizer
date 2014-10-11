@@ -190,6 +190,15 @@
 			return true;
 		}
 
+		function scrollRequestFromChild(){
+			log(' Reposition requested from iFrame');
+			pagePosition = {
+				x: messageData.width,
+				y: messageData.height
+			};
+			setPagePosition();
+		}
+
 		function actionMsg(){
 			switch(messageData.type){
 				case 'close':
@@ -198,6 +207,9 @@
 					break;
 				case 'message':
 					forwardMsgFromIFrame();
+					break;
+				case 'scrollTo':
+					scrollRequestFromChild();
 					break;
 				case 'reset':
 					resetIFrame(messageData);
@@ -259,7 +271,7 @@
 	}
 
 	function setSize(messageData){
-		function setDimension(dimension,min,max){
+		function setDimension(dimension){
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
 				' IFrame (' + messageData.iframe.id +
@@ -305,7 +317,7 @@
 		function ensureHasId(iframeID){
 			if (''===iframeID){
 				iframe.id = iframeID = 'iFrameResizer' + count++;
-				log(' Added missing iframe ID: '+ iframeID);
+				log(' Added missing iframe ID: '+ iframeID +' (' + iframe.src + ')');
 			}
 
 			return iframeID;
@@ -343,7 +355,7 @@
 		}
 
 		function init(msg){
-			//We have to call trigger twice, as we can not be sure if all 
+			//We have to call trigger twice, as we can not be sure if all
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
@@ -382,7 +394,7 @@
 
 	function createNativePublicFunction(){
 		function init(element){
-			if('IFRAME' !== element.tagName) {
+			if('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
 				setupIFrame.call(element);
@@ -409,6 +421,7 @@
 
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
+			options = options || {};
 			checkOptions(options);
 			settings = $.extend( {}, defaults, options );
 			return this.filter('iframe').each( setupIFrame ).end();
@@ -418,7 +431,7 @@
 	setupRequestAnimationFrame();
 	addEventListener(window,'message',iFrameListener);
 
-	if ('jQuery' in window) { createJQueryPublicMethod(jQuery); }
+    if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
 		define(function (){ return createNativePublicFunction(); });
