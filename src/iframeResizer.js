@@ -5,7 +5,7 @@
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  */
-;( function() {
+;(function() {
     'use strict';
 
 	var
@@ -431,7 +431,7 @@
 	setupRequestAnimationFrame();
 	addEventListener(window,'message',iFrameListener);
 
-    if (window.jQuery) { createJQueryPublicMethod(jQuery); }
+	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
 		define(function (){ return createNativePublicFunction(); });
