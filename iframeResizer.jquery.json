@@ -1,7 +1,7 @@
 {
 	"name": "iframeResizer",
 	"title": "Iframe Resizer",
-	"description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, multiple and nested iFrames. (Dependacy free and works with IE8+)",
+	"description": "Responsively keep same and cross domain iFrames sized to their content with support for window/content resizing, multiple and nested iFrames. (Works with IE8+)",
 	"keywords": [
 		"Cross-Domain",
 		"iFrame",
@@ -17,7 +17,7 @@
 		"RWD",
 		"responsive"
 	],
-	"version": "2.5.1",
+	"version": "2.6.1",
 	"author": {
 		"name": "David J. Bradshaw",
 		"email": "davidjbradshaw+github@gmail.com"

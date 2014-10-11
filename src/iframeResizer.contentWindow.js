@@ -19,7 +19,7 @@
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
-		eventCancelTimer      = 64,
+		eventCancelTimer      = 128,
 		height                = 1,
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
@@ -185,6 +185,9 @@
 				},
 				reset: function resetF(){
 					resetIFrame('parentIFrame.size');
+				},
+				scrollTo: function scrollToF(x,y){
+					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses hieght/width
 				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
 					sendMsg(0,0,'message',msg,targetOrigin);
@@ -385,7 +388,7 @@
 		max                   : getMaxHeight,
 		min                   : getMinHeight,
 		grow                  : getMaxHeight,
-		lowestElement         : getBestHeight,
+		lowestElement         : getBestHeight
 	};
 
 	function getWidth(){
