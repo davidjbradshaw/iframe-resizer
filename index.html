@@ -167,7 +167,9 @@ values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElemen
 <li>
 <strong>lowestElement</strong> Loops though every element in the the DOM and finds the lowest bottom point.<br>
 </li>
-</ul><p><i>Notes:</i></p>
+</ul>
+
+<p><i>Notes:</i></p>
 
 <p><i>The <strong>bodyScroll</strong>, <strong>documentElementScroll</strong>, <strong>max</strong> and <strong>min</strong> options can cause screen flicker and will prevent the <a href="#interval">interval</a> trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">mutationObserver</a> event is not supported. To overcome this you need to manually trigger a page resize by calling the <a href="#size-customheight-customwidth">parentIFrame.size()</a> method when you remove content from the page.</i></p>
 
@@ -331,7 +333,9 @@ type:    integer
 <h3>
 <a name="iframe-not-downsizing" class="anchor" href="#iframe-not-downsizing"><span class="octicon octicon-link"></span></a>IFrame not downsizing</h3>
 
-<p>Not having a valid <a href="http://en.wikipedia.org/wiki/Document_type_declaration">HTML document type</a> in the iFrame can sometimes prevent downsizing. At it's most simplest this can be the following.</p>
+<p>The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the <code>html</code> or <code>body</code> elements, but it could be on any element in the page.</p>
+
+<p>Not having a valid <a href="http://en.wikipedia.org/wiki/Document_type_declaration">HTML document type</a> in the iFrame can also sometimes prevent downsizing. At it's most simplest this can be the following.</p>
 
 <div class="highlight highlight-html"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 </pre></div>
@@ -406,7 +410,8 @@ type:    integer
 <a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v2.6.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/91">#91</a> Fixed issue with jQuery requiring empty object if no options are being set.</li>
+<li>v2.6.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/104">#104</a> Fixed issue with jQuery.noConflict [<a href="https://github.com/flyingleafe">Dmitry Mukhutdinov</a>].</li>
+<li>v2.6.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/91">#91</a> Fixed issue with jQuery version requiring empty object if no options are being set.</li>
 <li>v2.6.0 Added <em>parentIFrame.scollTo()</em> method. Added <em>Tolerance</em> option. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/85">#85</a> Update troubleshooting guide [<a href="https://github.com/kevinsproles">Kevin Sproles</a>].</li>
 <li>v2.5.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/67">#67</a> Allow lowercase <code>&lt;iframe&gt;</code> tags for XHTML complience [<a href="https://github.com/SlimerDude">SlimerDude</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/69">#69</a> Fix watch task typo in gruntfile.js [<a href="https://github.com/mhupman">Matthew Hupman</a>]. Remove trailing comma in heightCalcMethods array <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/76">#76</a> [<a href="https://github.com/fabioscala">Fabio Scala</a>].</li>
 <li>v2.5.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/58">#58</a> Fixed endless loop and margin issues with an unnested mid-tier iframe. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/59">#59</a> Fixed main property of <a href="http://bower.io/">Bower</a> config file.</li>
@@ -446,7 +451,9 @@ type:    integer
 <li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
 <li>v1.0.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/2">#2</a> mime-type changed for IE8-10.</li>
 <li>v1.0.0 Initial published release.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>.
