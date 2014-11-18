@@ -84,6 +84,9 @@
 				settings.resizedCallback(messageData);
 			}
 
+			ensureInRange('Height');
+			ensureInRange('Width');
+			
 			syncResize(resize,messageData,'resetPage');
 		}
 
@@ -230,8 +233,6 @@
 		if (isMessageForUs()){
 			log(' Received: '+msg);
 			messageData = processMsg();
-			ensureInRange('Height');
-			ensureInRange('Width');
 
 			if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
 				actionMsg();

@@ -315,6 +315,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
+* v2.6.3 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Fixed issue with the range check sometimes causing non-resizing messages to be rejected.
 * v2.6.2 [#104](https://github.com/davidjbradshaw/iframe-resizer/issues/104) Fixed issue with jQuery.noConflict [[Dmitry Mukhutdinov](https://github.com/flyingleafe)].
 * v2.6.1 [#91](https://github.com/davidjbradshaw/iframe-resizer/issues/91) Fixed issue with jQuery version requiring empty object if no options are being set.
 * v2.6.0 Added *parentIFrame.scollTo()* method. Added *Tolerance* option. [#85](https://github.com/davidjbradshaw/iframe-resizer/issues/85) Update troubleshooting guide [[Kevin Sproles](https://github.com/kevinsproles)].
