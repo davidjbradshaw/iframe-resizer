@@ -31,7 +31,7 @@
       </header>
       <section>
         <h1>
-<a name="iframe-resizer" class="anchor" href="#iframe-resizer"><span class="octicon octicon-link"></span></a>iFrame Resizer</h1>
+<a id="iframe-resizer" class="anchor" href="#iframe-resizer" aria-hidden="true"><span class="octicon octicon-link"></span></a>iFrame Resizer</h1>
 
 <p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fallback to setInterval for IE8-10. </p>
 
@@ -41,36 +41,33 @@
 
 <p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
 
-<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}],[</span><span class="nx">selector</span><span class="p">]);</span>
-</pre></div>
+<div class="highlight highlight-js"><pre>iFrameResize([{options}],[selector]);</pre></div>
 
 <p>or via <strong>jQuery</strong>. (See <a href="#browser-compatibility">notes</a> below for using native version with IE8).</p>
 
-<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">).</span><span class="nx">iFrameResize</span><span class="p">([{</span><span class="nx">options</span><span class="p">}]);</span>
-</pre></div>
+<div class="highlight highlight-js"><pre>$(<span class="pl-s1"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>).iFrameResize([{options}]);</pre></div>
 
 <p>The second file (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>) is a <strong>native</strong> JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.</p>
 
 <h3>
-<a name="typical-setup" class="anchor" href="#typical-setup"><span class="octicon octicon-link"></span></a>Typical setup</h3>
+<a id="typical-setup" class="anchor" href="#typical-setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Typical setup</h3>
 
 <p>The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
 
-<div class="highlight highlight-html"><pre><span class="nt">&lt;iframe</span> <span class="na">src=</span><span class="s">"http://anotherdomain.com/frame.content.html"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">scrolling=</span><span class="s">"no"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-</pre></div>
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">iframe</span> <span class="pl-e">src</span>=<span class="pl-s1"><span class="pl-pds">"</span>http://anotherdomain.com/frame.content.html<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s1"><span class="pl-pds">"</span>100%<span class="pl-pds">"</span></span> <span class="pl-e">scrolling</span>=<span class="pl-s1"><span class="pl-pds">"</span>no<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">iframe</span>&gt;</pre></div>
 
 <p>Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the <a href="#troubleshooting">troubleshooting</a> section below.</p>
 
 <h3>
-<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h3>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
 
 <p>To see this working take a look at this <a href="http://davidjbradshaw.com/iframe-resizer/example/">example</a> and watch the <a href="https://developer.mozilla.org/en-US/docs/Tools/Web_Console">console</a>.</p>
 
 <h2>
-<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h2>
 
 <h3>
-<a name="log" class="anchor" href="#log"><span class="octicon octicon-link"></span></a>log</h3>
+<a id="log" class="anchor" href="#log" aria-hidden="true"><span class="octicon octicon-link"></span></a>log</h3>
 
 <pre><code>default: false
 type:    boolean
@@ -79,7 +76,7 @@ type:    boolean
 <p>Setting the <code>log</code> option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.</p>
 
 <h3>
-<a name="autoresize" class="anchor" href="#autoresize"><span class="octicon octicon-link"></span></a>autoResize</h3>
+<a id="autoresize" class="anchor" href="#autoresize" aria-hidden="true"><span class="octicon octicon-link"></span></a>autoResize</h3>
 
 <pre><code>default: true
 type:    boolean
@@ -88,7 +85,7 @@ type:    boolean
 <p>When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.</p>
 
 <h3>
-<a name="bodybackground" class="anchor" href="#bodybackground"><span class="octicon octicon-link"></span></a>bodyBackground</h3>
+<a id="bodybackground" class="anchor" href="#bodybackground" aria-hidden="true"><span class="octicon octicon-link"></span></a>bodyBackground</h3>
 
 <pre><code>default: null
 type:    string 
@@ -97,7 +94,7 @@ type:    string
 <p>Override the body background style in the iFrame. </p>
 
 <h3>
-<a name="bodymargin" class="anchor" href="#bodymargin"><span class="octicon octicon-link"></span></a>bodyMargin</h3>
+<a id="bodymargin" class="anchor" href="#bodymargin" aria-hidden="true"><span class="octicon octicon-link"></span></a>bodyMargin</h3>
 
 <pre><code>default: null
 type:    string || number
@@ -106,7 +103,7 @@ type:    string || number
 <p>Override the default body margin style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.</p>
 
 <h3>
-<a name="checkorigin" class="anchor" href="#checkorigin"><span class="octicon octicon-link"></span></a>checkOrigin</h3>
+<a id="checkorigin" class="anchor" href="#checkorigin" aria-hidden="true"><span class="octicon octicon-link"></span></a>checkOrigin</h3>
 
 <pre><code>default: true
 type:    boolean
@@ -115,7 +112,7 @@ type:    boolean
 <p>When set to true, only allow incoming messages from the domain listed in the <code>src</code> property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.</p>
 
 <h3>
-<a name="enablepublicmethods" class="anchor" href="#enablepublicmethods"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
+<a id="enablepublicmethods" class="anchor" href="#enablepublicmethods" aria-hidden="true"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
 
 <pre><code>default: false
 type:    boolean
@@ -124,7 +121,7 @@ type:    boolean
 <p>If enabled, a <code>window.parentIFrame</code> object is created in the iFrame that contains methods outlined <a href="#iframe-methods">below</a>.</p>
 
 <h3>
-<a name="interval" class="anchor" href="#interval"><span class="octicon octicon-link"></span></a>interval</h3>
+<a id="interval" class="anchor" href="#interval" aria-hidden="true"><span class="octicon octicon-link"></span></a>interval</h3>
 
 <pre><code>default: 32  (in ms)
 type:    number
@@ -137,7 +134,7 @@ type:    number
 <p>Set to zero to disable.</p>
 
 <h3>
-<a name="heightcalculationmethod" class="anchor" href="#heightcalculationmethod"><span class="octicon octicon-link"></span></a>heightCalculationMethod</h3>
+<a id="heightcalculationmethod" class="anchor" href="#heightcalculationmethod" aria-hidden="true"><span class="octicon octicon-link"></span></a>heightCalculationMethod</h3>
 
 <pre><code>default: 'bodyOffset'
 values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 
@@ -176,7 +173,7 @@ values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElemen
 <p><i>The <strong>lowestElement</strong> option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to <strong>max</strong> or <strong>grow</strong> in IE10 and below.</i></p>
 
 <h3>
-<a name="maxheight--maxwidth" class="anchor" href="#maxheight--maxwidth"><span class="octicon octicon-link"></span></a>maxHeight / maxWidth</h3>
+<a id="maxheight--maxwidth" class="anchor" href="#maxheight--maxwidth" aria-hidden="true"><span class="octicon octicon-link"></span></a>maxHeight / maxWidth</h3>
 
 <pre><code>default: infinity
 type:    integer
@@ -185,7 +182,7 @@ type:    integer
 <p>Set maximum height/width of iFrame.</p>
 
 <h3>
-<a name="minheight--minwidth" class="anchor" href="#minheight--minwidth"><span class="octicon octicon-link"></span></a>minHeight / minWidth</h3>
+<a id="minheight--minwidth" class="anchor" href="#minheight--minwidth" aria-hidden="true"><span class="octicon octicon-link"></span></a>minHeight / minWidth</h3>
 
 <pre><code>default: 0
 type:    integer
@@ -194,7 +191,7 @@ type:    integer
 <p>Set minimum height/width of iFrame.</p>
 
 <h3>
-<a name="scrolling" class="anchor" href="#scrolling"><span class="octicon octicon-link"></span></a>scrolling</h3>
+<a id="scrolling" class="anchor" href="#scrolling" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrolling</h3>
 
 <pre><code>default: false
 type:    integer
@@ -203,7 +200,7 @@ type:    integer
 <p>Enable scroll bars in iFrame.</p>
 
 <h3>
-<a name="sizeheight" class="anchor" href="#sizeheight"><span class="octicon octicon-link"></span></a>sizeHeight</h3>
+<a id="sizeheight" class="anchor" href="#sizeheight" aria-hidden="true"><span class="octicon octicon-link"></span></a>sizeHeight</h3>
 
 <pre><code>default: true
 type:    boolean
@@ -212,7 +209,7 @@ type:    boolean
 <p>Resize iFrame to content height.</p>
 
 <h3>
-<a name="sizewidth" class="anchor" href="#sizewidth"><span class="octicon octicon-link"></span></a>sizeWidth</h3>
+<a id="sizewidth" class="anchor" href="#sizewidth" aria-hidden="true"><span class="octicon octicon-link"></span></a>sizeWidth</h3>
 
 <pre><code>default: false
 type:    boolean
@@ -221,7 +218,7 @@ type:    boolean
 <p>Resize iFrame to content width.</p>
 
 <h3>
-<a name="tolerance" class="anchor" href="#tolerance"><span class="octicon octicon-link"></span></a>tolerance</h3>
+<a id="tolerance" class="anchor" href="#tolerance" aria-hidden="true"><span class="octicon octicon-link"></span></a>tolerance</h3>
 
 <pre><code>default: 0
 type:    integer
@@ -230,10 +227,10 @@ type:    integer
 <p>Set the number of pixels the iFrame content size has to change by, before triggering resize of the iFrame.</p>
 
 <h2>
-<a name="callback-methods" class="anchor" href="#callback-methods"><span class="octicon octicon-link"></span></a>Callback Methods</h2>
+<a id="callback-methods" class="anchor" href="#callback-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Callback Methods</h2>
 
 <h3>
-<a name="closedcallback" class="anchor" href="#closedcallback"><span class="octicon octicon-link"></span></a>closedCallback</h3>
+<a id="closedcallback" class="anchor" href="#closedcallback" aria-hidden="true"><span class="octicon octicon-link"></span></a>closedCallback</h3>
 
 <pre><code>type: function (iframeID)
 </code></pre>
@@ -241,7 +238,7 @@ type:    integer
 <p>Called when iFrame is closed via <code>parentIFrame.close()</code> method.</p>
 
 <h3>
-<a name="initcallback" class="anchor" href="#initcallback"><span class="octicon octicon-link"></span></a>initCallback</h3>
+<a id="initcallback" class="anchor" href="#initcallback" aria-hidden="true"><span class="octicon octicon-link"></span></a>initCallback</h3>
 
 <pre><code>type: function (iframe)
 </code></pre>
@@ -249,7 +246,7 @@ type:    integer
 <p>Initial setup callback function.</p>
 
 <h3>
-<a name="messagecallback" class="anchor" href="#messagecallback"><span class="octicon octicon-link"></span></a>messageCallback</h3>
+<a id="messagecallback" class="anchor" href="#messagecallback" aria-hidden="true"><span class="octicon octicon-link"></span></a>messageCallback</h3>
 
 <pre><code>type: function ({iframe,message})
 </code></pre>
@@ -257,7 +254,7 @@ type:    integer
 <p>Receive message posted from iFrame with the <code>parentIFrame.sendMessage()</code> method.</p>
 
 <h3>
-<a name="resizedcallback" class="anchor" href="#resizedcallback"><span class="octicon octicon-link"></span></a>resizedCallback</h3>
+<a id="resizedcallback" class="anchor" href="#resizedcallback" aria-hidden="true"><span class="octicon octicon-link"></span></a>resizedCallback</h3>
 
 <pre><code>type: function ({iframe,height,width,type})
 </code></pre>
@@ -265,151 +262,145 @@ type:    integer
 <p>Function called after iFrame resized. Passes in messageData object containing the <strong>iFrame</strong>, <strong>height</strong>, <strong>width</strong> and the <strong>type</strong> of event that triggered the iFrame to resize.</p>
 
 <h2>
-<a name="iframe-methods" class="anchor" href="#iframe-methods"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
+<a id="iframe-methods" class="anchor" href="#iframe-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
 
 <p>To enable these methods you must set <a href="#enablepublicmethods">enablePublicMethods</a> to <strong>true</strong>. This creates the <code>window.parentIFrame</code> object in the iFrame. These method should be contained by a test for the <code>window.parentIFrame</code> object, in case the page is not loaded inside an iFrame. For example:</p>
 
-<div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (<span class="pl-s1"><span class="pl-pds">'</span>parentIFrame<span class="pl-pds">'</span></span> <span class="pl-k">in</span> <span class="pl-s3">window</span>) {
+    parentIFrame.<span class="pl-s3">close</span>();
+}</pre></div>
 
 <h3>
-<a name="close" class="anchor" href="#close"><span class="octicon octicon-link"></span></a>close()</h3>
+<a id="close" class="anchor" href="#close" aria-hidden="true"><span class="octicon octicon-link"></span></a>close()</h3>
 
 <p>Remove the iFrame from the parent page. </p>
 
 <h3>
-<a name="getid" class="anchor" href="#getid"><span class="octicon octicon-link"></span></a>getId()</h3>
+<a id="getid" class="anchor" href="#getid" aria-hidden="true"><span class="octicon octicon-link"></span></a>getId()</h3>
 
 <p>Returns the ID of the iFrame that the page is contained in.</p>
 
 <h3>
-<a name="scrolltoxy" class="anchor" href="#scrolltoxy"><span class="octicon octicon-link"></span></a>scrollTo(x,y)</h3>
+<a id="scrolltoxy" class="anchor" href="#scrolltoxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrollTo(x,y)</h3>
 
 <p>Scroll the parent page to the coordinates x and y.</p>
 
 <h3>
-<a name="sendmessagemessagetargetorigin" class="anchor" href="#sendmessagemessagetargetorigin"><span class="octicon octicon-link"></span></a>sendMessage(message,[targetOrigin])</h3>
+<a id="sendmessagemessagetargetorigin" class="anchor" href="#sendmessagemessagetargetorigin" aria-hidden="true"><span class="octicon octicon-link"></span></a>sendMessage(message,[targetOrigin])</h3>
 
 <p>Send string to the containing page. The message is delivered to the <code>messageCallback</code> function. The <code>targetOrigin</code> option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage">postMessage</a> for more details.</p>
 
 <h3>
-<a name="setheightcalculationmethodheightcalculationmethod" class="anchor" href="#setheightcalculationmethodheightcalculationmethod"><span class="octicon octicon-link"></span></a>setHeightCalculationMethod(heightCalculationMethod)</h3>
+<a id="setheightcalculationmethodheightcalculationmethod" class="anchor" href="#setheightcalculationmethodheightcalculationmethod" aria-hidden="true"><span class="octicon octicon-link"></span></a>setHeightCalculationMethod(heightCalculationMethod)</h3>
 
 <p>Change the method use to workout the height of the iFrame. </p>
 
 <h3>
-<a name="size-customheight-customwidth" class="anchor" href="#size-customheight-customwidth"><span class="octicon octicon-link"></span></a>size ([customHeight],[ customWidth])</h3>
+<a id="size-customheight-customwidth" class="anchor" href="#size-customheight-customwidth" aria-hidden="true"><span class="octicon octicon-link"></span></a>size ([customHeight],[ customWidth])</h3>
 
 <p>Manually force iFrame to resize. This method optionally accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the <code>autoResize</code> option to prevent auto resizing and enable the <code>sizeWidth</code> option if you wish to set the width. </p>
 
-<div class="highlight highlight-js"><pre><span class="nx">iFrameResize</span><span class="p">({</span>
-    <span class="nx">autoResize</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">enablePublicMethods</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">sizeWidth</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-js"><pre>iFrameResize({
+    autoResize<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+    enablePublicMethods<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    sizeWidth<span class="pl-k">:</span> <span class="pl-c1">true</span>
+});</pre></div>
 
 <p>Then you can call the <code>size</code> method with dimensions:</p>
 
-<div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// Set height to 100px</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (<span class="pl-s1"><span class="pl-pds">'</span>parentIFrame<span class="pl-pds">'</span></span> <span class="pl-k">in</span> <span class="pl-s3">window</span>) {
+    parentIFrame.<span class="pl-sc">size</span>(<span class="pl-c1">100</span>); <span class="pl-c">// Set height to 100px</span>
+}</pre></div>
 
 <h2>
-<a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="octicon octicon-link"></span></a>Troubleshooting</h2>
+<a id="troubleshooting" class="anchor" href="#troubleshooting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Troubleshooting</h2>
 
 <p>The first step to investigate a problem is to enable the <a href="#log">log</a> option and then open the <a href="https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console">JavaScript Console</a>. This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. </p>
 
 <p>Solutions for the most common problems are outlined in this section.</p>
 
 <h3>
-<a name="iframe-not-sizing-correctly" class="anchor" href="#iframe-not-sizing-correctly"><span class="octicon octicon-link"></span></a>IFrame not sizing correctly</h3>
+<a id="iframe-not-sizing-correctly" class="anchor" href="#iframe-not-sizing-correctly" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame not sizing correctly</h3>
 
 <p>If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, normally you will be best off selecting the <strong>max</strong> or <strong>lowestElement</strong> options to avoid cross browser differences. </p>
 
 <h3>
-<a name="iframe-not-downsizing" class="anchor" href="#iframe-not-downsizing"><span class="octicon octicon-link"></span></a>IFrame not downsizing</h3>
+<a id="iframe-not-downsizing" class="anchor" href="#iframe-not-downsizing" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame not downsizing</h3>
 
 <p>The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the <code>html</code> or <code>body</code> elements, but it could be on any element in the page.</p>
 
 <p>Not having a valid <a href="http://en.wikipedia.org/wiki/Document_type_declaration">HTML document type</a> in the iFrame can also sometimes prevent downsizing. At it's most simplest this can be the following.</p>
 
-<div class="highlight highlight-html"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
-</pre></div>
+<div class="highlight highlight-html"><pre>&lt;!DOCTYPE html&gt;</pre></div>
 
 <h3>
-<a name="iframe-not-detecting-css-hover-events" class="anchor" href="#iframe-not-detecting-css-hover-events"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS :hover events</h3>
+<a id="iframe-not-detecting-css-hover-events" class="anchor" href="#iframe-not-detecting-css-hover-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame not detecting CSS :hover events</h3>
 
 <p>If your page resizes via CSS <code>:hover</code> events, these won't be detect by default. It is however possible to create <code>mouseover</code> and <code>mouseout</code> event listeners on the elements that are resized via CSS and have these events call the <a href="##parentiframesize-customheight-customwidth">parentIFrame.size()</a> method. With jQuery this can be done as follows, once you have set the <a href="#enablepublicmethods">enablePublicMethods</a> option to <strong>true</strong>.</p>
 
-<div class="highlight highlight-js"><pre><span class="kd">function</span> <span class="nx">resize</span><span class="p">(){</span>
-    <span class="k">if</span> <span class="p">(</span><span class="s1">'parentIFrame'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="c1">// Fix FireFox timing issue</span>
-            <span class="nx">parentIFrame</span><span class="p">.</span><span class="nx">size</span><span class="p">();</span>
-        <span class="p">},</span><span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight highlight-js"><pre><span class="pl-st">function</span> <span class="pl-en">resize</span>(){
+    <span class="pl-k">if</span> (<span class="pl-s1"><span class="pl-pds">'</span>parentIFrame<span class="pl-pds">'</span></span> <span class="pl-k">in</span> <span class="pl-s3">window</span>) {
+        <span class="pl-s3">setTimeout</span>(<span class="pl-st">function</span>(){ <span class="pl-c">// Fix FireFox timing issue</span>
+            parentIFrame.<span class="pl-sc">size</span>();
+        },<span class="pl-c1">0</span>);
+    }
+}
 
-<span class="nx">$</span><span class="p">(</span><span class="o">*</span><span class="nx">Element</span> <span class="kd">with</span> <span class="nx">hover</span> <span class="nx">style</span><span class="o">*</span><span class="p">).</span><span class="nx">hover</span><span class="p">(</span><span class="nx">resize</span><span class="p">);</span>
-</pre></div>
+$(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<span class="pl-k">*</span>).hover(resize);</pre></div>
 
 <h3>
-<a name="pdf-and-opendocument-files" class="anchor" href="#pdf-and-opendocument-files"><span class="octicon octicon-link"></span></a>PDF and OpenDocument Files</h3>
+<a id="pdf-and-opendocument-files" class="anchor" href="#pdf-and-opendocument-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>PDF and OpenDocument Files</h3>
 
 <p>It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using <a href="http://viewerjs.org/">ViewerJS</a> to render these files inside a HTML page, that also contains the iFrame JavaScript file (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>).</p>
 
 <h3>
-<a name="unexpected-message-received-error" class="anchor" href="#unexpected-message-received-error"><span class="octicon octicon-link"></span></a>Unexpected message received error</h3>
+<a id="unexpected-message-received-error" class="anchor" href="#unexpected-message-received-error" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unexpected message received error</h3>
 
 <p>By default the origin of incoming messages is checked against the <code>src</code> attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the <a href="#checkorigin">checkOrigin</a> option to <strong>false</strong>.</p>
 
 <h2>
-<a name="browser-compatibility" class="anchor" href="#browser-compatibility"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
+<a id="browser-compatibility" class="anchor" href="#browser-compatibility" aria-hidden="true"><span class="octicon octicon-link"></span></a>Browser compatibility</h2>
 
 <h3>
-<a name="jquery-version" class="anchor" href="#jquery-version"><span class="octicon octicon-link"></span></a>jQuery version</h3>
+<a id="jquery-version" class="anchor" href="#jquery-version" aria-hidden="true"><span class="octicon octicon-link"></span></a>jQuery version</h3>
 
 <p>Works with all browsers which support <a href="http://caniuse.com/#feat=x-doc-messaging">window.postMessage</a> (IE8+).</p>
 
 <h3>
-<a name="native-version" class="anchor" href="#native-version"><span class="octicon octicon-link"></span></a>Native version</h3>
+<a id="native-version" class="anchor" href="#native-version" aria-hidden="true"><span class="octicon octicon-link"></span></a>Native version</h3>
 
 <p>Additionally requires support for <a href="http://kangax.github.io/es5-compat-table/#Array.prototype.forEach">Array.prototype.forEach</a> (IE9+) and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll">document.querySelectorAll</a> (IE8 Standards Mode). For <strong>IE8</strong> force <a href="http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode">Standards Mode</a>,</p>
 
-<div class="highlight highlight-html"><pre><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
-</pre></div>
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">meta</span> <span class="pl-e">http-equiv</span>=<span class="pl-s1"><span class="pl-pds">"</span>X-UA-Compatible<span class="pl-pds">"</span></span> <span class="pl-e">content</span>=<span class="pl-s1"><span class="pl-pds">"</span>IE=edge<span class="pl-pds">"</span></span>&gt;</pre></div>
 
 <p>and use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN PolyFill</a> on the host page.</p>
 
-<div class="highlight highlight-js"><pre><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span><span class="p">){</span>
-    <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fun</span> <span class="cm">/*, thisArg */</span><span class="p">){</span>
-        <span class="s2">"use strict"</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">===</span> <span class="k">void</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">fun</span> <span class="o">!==</span> <span class="s2">"function"</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">();</span>
+<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (<span class="pl-k">!</span><span class="pl-s3">Array</span>.<span class="pl-sc">prototype</span>.forEach){
+    <span class="pl-s3">Array</span>.<span class="pl-sc">prototype</span>.<span class="pl-en">forEach</span> <span class="pl-k">=</span> <span class="pl-st">function</span>(<span class="pl-vpf">fun</span> /*, <span class="pl-vpf">thisArg</span> */){
+        <span class="pl-s1"><span class="pl-pds">"</span>use strict<span class="pl-pds">"</span></span>;
+        <span class="pl-k">if</span> (<span class="pl-v">this</span> <span class="pl-k">===</span> <span class="pl-k">void</span> <span class="pl-c1">0</span> <span class="pl-k">||</span> <span class="pl-v">this</span> <span class="pl-k">===</span> <span class="pl-c1">null</span> <span class="pl-k">||</span> <span class="pl-k">typeof</span> fun <span class="pl-k">!==</span> <span class="pl-s1"><span class="pl-pds">"</span>function<span class="pl-pds">"</span></span>) <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">TypeError</span>();
 
-        <span class="kd">var</span>
-            <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">(</span><span class="k">this</span><span class="p">),</span>
-            <span class="nx">len</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="nx">thisArg</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="o">?</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="k">void</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="pl-s">var</span>
+            t <span class="pl-k">=</span> <span class="pl-s3">Object</span>(<span class="pl-v">this</span>),
+            len <span class="pl-k">=</span> t.<span class="pl-sc">length</span> <span class="pl-k">&gt;&gt;&gt;</span> <span class="pl-c1">0</span>,
+            thisArg <span class="pl-k">=</span> arguments.<span class="pl-sc">length</span> <span class="pl-k">&gt;=</span> <span class="pl-c1">2</span> <span class="pl-k">?</span> arguments[<span class="pl-c1">1</span>] <span class="pl-k">:</span> <span class="pl-k">void</span> <span class="pl-c1">0</span>;
 
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="k">in</span> <span class="nx">t</span><span class="p">)</span>
-                <span class="nx">fun</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">thisArg</span><span class="p">,</span> <span class="nx">t</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
-    <span class="p">};</span>
-<span class="p">}</span>
-</pre></div>
+        <span class="pl-k">for</span> (<span class="pl-s">var</span> i <span class="pl-k">=</span> <span class="pl-c1">0</span>; i <span class="pl-k">&lt;</span> len; i<span class="pl-k">++</span>)
+            <span class="pl-k">if</span> (i <span class="pl-k">in</span> t)
+                fun.<span class="pl-s3">call</span>(thisArg, t[i], i, t);
+    };
+}</pre></div>
 
 <h2>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <p>In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
 
 <h2>
-<a name="version-history" class="anchor" href="#version-history"><span class="octicon octicon-link"></span></a>Version History</h2>
+<a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.6.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/115">#115</a> Fixed issue with the range check sometimes causing non-resizing messages to be rejected.</li>
 <li>v2.6.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/104">#104</a> Fixed issue with jQuery.noConflict [<a href="https://github.com/flyingleafe">Dmitry Mukhutdinov</a>].</li>
 <li>v2.6.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/91">#91</a> Fixed issue with jQuery version requiring empty object if no options are being set.</li>
 <li>v2.6.0 Added <em>parentIFrame.scollTo()</em> method. Added <em>Tolerance</em> option. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/85">#85</a> Update troubleshooting guide [<a href="https://github.com/kevinsproles">Kevin Sproles</a>].</li>
@@ -454,7 +445,7 @@ type:    integer
 </ul>
 
 <h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>Copyright © 2013-14 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>.
 Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
