@@ -122,6 +122,12 @@
 									changeContent();
 									callMethod('size');
 									break;
+								case 'autoResize':
+									callMethod('setAutoResize',true);
+									setTimeout(function(){
+										changeContent();
+										},500);	
+									break;
 								case 'size100':
 									callMethod('size',100);
 									break;
