@@ -403,7 +403,6 @@
 
 		function processOptions(options){
 			options = options || {};
-
 			checkOptions(options);
 
 			for (var option in defaults) {
