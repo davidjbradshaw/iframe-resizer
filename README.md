@@ -130,7 +130,7 @@ Set minimum height/width of iFrame.
 ### scrolling
 
     default: false
-    type:    integer
+    type:    boolean
 
 Enable scroll bars in iFrame.
 
