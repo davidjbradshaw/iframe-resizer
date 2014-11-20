@@ -7,7 +7,7 @@ The code also detects browser events that can cause the content to resize; provi
 
 For security, by default the host-page automatically checks that the origin of incoming messages are from the domain of the page listed in the `src` property of the iFrame.
 
-The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
+The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
 iFrameResize([{options}],[selector]);
