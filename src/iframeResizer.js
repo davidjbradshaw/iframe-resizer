@@ -448,7 +448,9 @@
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
-		define(function (){ return createNativePublicFunction(); });
+		define([],createNativePublicFunction);
+	} else if (typeof exports === 'object') {
+		module.exports = createNativePublicFunction();
 	} else {
 		window.iFrameResize = createNativePublicFunction();
 	}
