@@ -31,7 +31,9 @@
 
 			<a href="frame.content.html" class="back">Back to page 1</a>
 			&nbsp;
-			<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999999);return false;">Bottom</a>		
+			<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;">Bottom</a>
+			&nbsp;
+			<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;">Scroll to iFrame</a>		
 		</p>
 		<p>
 			This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red border on this page. This prevents the normal height calculation, which is based on the body tag from returning the correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other page height propeties. 

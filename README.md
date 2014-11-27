@@ -206,6 +206,10 @@ Returns the ID of the iFrame that the page is contained in.
 
 Scroll the parent page to the coordinates x and y.
 
+### scrollToOffset(x,y)
+
+Scroll the parent page to the coordinates x and y relative to the position of the iFrame.
+
 ### sendMessage(message,[targetOrigin])
 
 Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
@@ -318,6 +322,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
+* v2.6.4 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Added *parentIFrame.scollToOffset()* method. 
 * v2.6.3 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Fixed issue with the range check sometimes causing non-resizing messages to be rejected.
 * v2.6.2 [#104](https://github.com/davidjbradshaw/iframe-resizer/issues/104) Fixed issue with jQuery.noConflict [[Dmitry Mukhutdinov](https://github.com/flyingleafe)].
 * v2.6.1 [#91](https://github.com/davidjbradshaw/iframe-resizer/issues/91) Fixed issue with jQuery version requiring empty object if no options are being set.

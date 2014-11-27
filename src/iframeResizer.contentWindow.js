@@ -189,6 +189,9 @@
 				scrollTo: function scrollToF(x,y){
 					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses hieght/width
 				},
+				scrollToOffset: function scrollToF(x,y){
+					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses hieght/width
+				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
 					sendMsg(0,0,'message',msg,targetOrigin);
 				},
