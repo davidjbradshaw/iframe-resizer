@@ -269,7 +269,7 @@ $(*Element with hover style*).hover(resize);
 ```
 
 ### ParentIframe not found errors
-To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to ture.
+To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to true.
 
 ### PDF and OpenDocument files
 It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the iFrame JavaScript file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)).
