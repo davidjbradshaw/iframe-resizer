@@ -39,7 +39,7 @@
 
 <p>For security, by default the host-page automatically checks that the origin of incoming messages are from the domain of the page listed in the <code>src</code> property of the iFrame.</p>
 
-<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw2.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
+<p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
 
 <div class="highlight highlight-js"><pre>iFrameResize([{options}],[selector]);</pre></div>
 
@@ -194,7 +194,7 @@ type:    integer
 <a id="scrolling" class="anchor" href="#scrolling" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrolling</h3>
 
 <pre><code>default: false
-type:    integer
+type:    boolean
 </code></pre>
 
 <p>Enable scroll bars in iFrame.</p>
@@ -349,7 +349,12 @@ type:    integer
 $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<span class="pl-k">*</span>).hover(resize);</pre></div>
 
 <h3>
-<a id="pdf-and-opendocument-files" class="anchor" href="#pdf-and-opendocument-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>PDF and OpenDocument Files</h3>
+<a id="parentiframe-not-found-errors" class="anchor" href="#parentiframe-not-found-errors" aria-hidden="true"><span class="octicon octicon-link"></span></a>ParentIframe not found errors</h3>
+
+<p>To call methods in the iFrame, you need to set the <a href="#enablepublicmethods">enablePublicMethods</a> option to true.</p>
+
+<h3>
+<a id="pdf-and-opendocument-files" class="anchor" href="#pdf-and-opendocument-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>PDF and OpenDocument files</h3>
 
 <p>It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using <a href="http://viewerjs.org/">ViewerJS</a> to render these files inside a HTML page, that also contains the iFrame JavaScript file (<a href="https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js">iframeResizer.contentWindow.min.js</a>).</p>
 
