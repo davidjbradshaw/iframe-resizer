@@ -286,6 +286,11 @@ type:    integer
 <p>Scroll the parent page to the coordinates x and y.</p>
 
 <h3>
+<a id="scrolltooffsetxy" class="anchor" href="#scrolltooffsetxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrollToOffset(x,y)</h3>
+
+<p>Scroll the parent page to the coordinates x and y relative to the position of the iFrame.</p>
+
+<h3>
 <a id="sendmessagemessagetargetorigin" class="anchor" href="#sendmessagemessagetargetorigin" aria-hidden="true"><span class="octicon octicon-link"></span></a>sendMessage(message,[targetOrigin])</h3>
 
 <p>Send string to the containing page. The message is delivered to the <code>messageCallback</code> function. The <code>targetOrigin</code> option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage">postMessage</a> for more details.</p>
@@ -405,10 +410,11 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.6.4 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/115">#115</a> Added <em>parentIFrame.scrollToOffset()</em> method. </li>
 <li>v2.6.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/115">#115</a> Fixed issue with the range check sometimes causing non-resizing messages to be rejected.</li>
 <li>v2.6.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/104">#104</a> Fixed issue with jQuery.noConflict [<a href="https://github.com/flyingleafe">Dmitry Mukhutdinov</a>].</li>
 <li>v2.6.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/91">#91</a> Fixed issue with jQuery version requiring empty object if no options are being set.</li>
-<li>v2.6.0 Added <em>parentIFrame.scollTo()</em> method. Added <em>Tolerance</em> option. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/85">#85</a> Update troubleshooting guide [<a href="https://github.com/kevinsproles">Kevin Sproles</a>].</li>
+<li>v2.6.0 Added <em>parentIFrame.scrollTo()</em> method. Added <em>Tolerance</em> option. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/85">#85</a> Update troubleshooting guide [<a href="https://github.com/kevinsproles">Kevin Sproles</a>].</li>
 <li>v2.5.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/67">#67</a> Allow lowercase <code>&lt;iframe&gt;</code> tags for XHTML complience [<a href="https://github.com/SlimerDude">SlimerDude</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/69">#69</a> Fix watch task typo in gruntfile.js [<a href="https://github.com/mhupman">Matthew Hupman</a>]. Remove trailing comma in heightCalcMethods array <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/76">#76</a> [<a href="https://github.com/fabioscala">Fabio Scala</a>].</li>
 <li>v2.5.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/58">#58</a> Fixed endless loop and margin issues with an unnested mid-tier iframe. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/59">#59</a> Fixed main property of <a href="http://bower.io/">Bower</a> config file.</li>
 <li>v2.5.0 Added <em>minHeight</em>, <em>maxHeight</em>, <em>minWidth</em> and <em>maxWidth</em> options. Added <em>initCallback</em> and <em>closedCallback</em> functions (Close event calling <em>resizedCallback</em> is deprecated). Added <strong>grow</strong> and <strong>lowestElement</strong> <em>heightCalculationMethods</em>. Added AMD support. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/52">#52</a> Added <em>sendMessage</em> example. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/54">#54</a> Work around IE8's borked JS execution stack. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/55">#55</a> Check datatype of passed in options.</li>
