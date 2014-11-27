@@ -449,7 +449,7 @@
 
 	if (typeof define === 'function' && define.amd) {
 		define([],createNativePublicFunction);
-	} else if (typeof exports === 'object') {
+	} else if (typeof exports === 'object') { //Node for browserfy
 		module.exports = createNativePublicFunction();
 	} else {
 		window.iFrameResize = createNativePublicFunction();
