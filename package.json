@@ -8,8 +8,8 @@
   "maintainers": [
     {
       "name": "David J. Bradshaw",
-      "email": "dave@bradshaw.net" 
-    } 
+      "email": "dave@bradshaw.net"
+    }
   ],
   "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
   "repository": {
@@ -18,22 +18,25 @@
   },
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "dependencies": {},
-   "categories": ["UI", "Utilities"],
+  "categories": [
+    "UI",
+    "Utilities"
+  ],
   "devDependencies": {
     "grunt": "0.4.x",
-    "grunt-contrib-compress": "0.5.x",
-    "grunt-contrib-uglify": "~0.6.0",
-    "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-watch": "~0.5.2",
-    "grunt-contrib-qunit": "0.3.0",
-    "grunt-jsonlint":"1.0.x",
-    "load-grunt-tasks": "~0.1.0",
-    "time-grunt": "0.x.x",
     "grunt-bump": "0.0.x",
+    "grunt-contrib-compress": "0.5.x",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-qunit": "0.3.0",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-contrib-watch": "~0.5.2",
+    "grunt-jsonlint": "1.0.x",
     "grunt-shell": "0.6.x",
-    "jit-grunt": "0.3.x"
+    "jit-grunt": "0.3.x",
+    "load-grunt-tasks": "~0.1.0",
+    "time-grunt": "0.x.x"
   },
-   "jam": {
+  "jam": {
     "main": "js/iframeresizer.min.js",
     "include": [
       "js",
