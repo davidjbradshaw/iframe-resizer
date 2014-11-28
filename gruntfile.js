@@ -7,7 +7,6 @@ module.exports = function(grunt) {
   // load all grunt tasks
   //require('load-grunt-tasks')(grunt);
   require('jit-grunt')(grunt,{
-    'replace':'grunt-text-replace',
     'bump-only':'grunt-bump',
     'bump-commit':'grunt-bump'
   });
@@ -54,14 +53,14 @@ module.exports = function(grunt) {
 
     uglify: {
       options: {
-        sourceMaps:true,
+        sourceMap:true,
         sourceMapIncludeSources:true,
         report:'gzip',
       },
       local: {
         options:{
           banner:'<%= meta.bannerLocal %>',
-          sourceMap: 'src/iframeResizer.map'
+          sourceMapName: 'src/iframeResizer.map'
         },
         src: ['src/iframeResizer.js'],
         dest: 'js/iframeResizer.min.js',
@@ -69,7 +68,7 @@ module.exports = function(grunt) {
       remote: {
         options: {
           banner:'<%= meta.bannerRemote %>',
-          sourceMap: 'src/iframeResizer.contentWindow.map'
+          sourceMapName: 'src/iframeResizer.contentWindow.map'
         },
         src: ['src/iframeResizer.contentWindow.js'],
         dest: 'js/iframeResizer.contentWindow.min.js',
@@ -79,26 +78,6 @@ module.exports = function(grunt) {
     watch: {
       files: ['src/**/*'],
       tasks: 'default'
-    },
-
-    replace: {
-      min: {
-        src: ['js/*.min.js'],
-        overwrite: true,
-        replacements: [{
-          from: /sourceMappingURL=src\//g,
-          to: 'sourceMappingURL=..\/src\/'
-        }]
-      },
-
-      map: {
-        src: ['src/*.map'],
-        overwrite: true,
-        replacements: [{
-          from: /src\//g,
-          to: ''
-        }]
-      }
     },
 
     bump: {
@@ -148,10 +127,10 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['notest','qunit']);
-  grunt.registerTask('notest',  ['jsonlint','jshint','uglify','replace']);
+  grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
   grunt.registerTask('test',    ['jshint','qunit']);
 
-  grunt.registerTask('postBump',['uglify','replace','bump-commit','shell']);
+  grunt.registerTask('postBump',['uglify','bump-commit','shell']);
   grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);
   grunt.registerTask('minor',   ['default','bump-only:minor','postBump']);
   grunt.registerTask('major',   ['default','bump-only:major','postBump']);
