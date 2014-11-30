@@ -36,14 +36,6 @@
     "load-grunt-tasks": "~0.1.0",
     "time-grunt": "0.x.x"
   },
-  "jam": {
-    "main": "js/iframeresizer.min.js",
-    "include": [
-      "js",
-      "src",
-      "README.md"
-    ]
-  },
   "scripts": {
     "build": "npm install && grunt",
     "test": "grunt test"
