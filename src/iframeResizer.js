@@ -194,11 +194,13 @@
 		}
 
 		function getIFramePosition(){
-			var iPos = messageData.iframe.getBoundingClientRect();
+			var
+				iFramePosition = messageData.iframe.getBoundingClientRect(),
+				pagePosition   = getPagePosition();
 
 			return {
-				x: Number(iPos.left) + Number(window.scrollX),
-				y: Number(iPos.top) + Number(window.scrollY)
+				x: Number(iFramePosition.left) + Number(pagePosition.x),
+				y: Number(iFramePosition.top)  + Number(pagePosition.y)
 			};
 		}
 
