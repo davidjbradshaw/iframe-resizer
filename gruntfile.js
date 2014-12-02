@@ -60,7 +60,6 @@ module.exports = function(grunt) {
       local: {
         options:{
           banner:'<%= meta.bannerLocal %>',
-          sourceMapName: 'src/iframeResizer.map'
         },
         src: ['src/iframeResizer.js'],
         dest: 'js/iframeResizer.min.js',
@@ -68,7 +67,6 @@ module.exports = function(grunt) {
       remote: {
         options: {
           banner:'<%= meta.bannerRemote %>',
-          sourceMapName: 'src/iframeResizer.contentWindow.map'
         },
         src: ['src/iframeResizer.contentWindow.js'],
         dest: 'js/iframeResizer.contentWindow.min.js',
