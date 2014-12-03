@@ -207,7 +207,15 @@
 					var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 					lockTrigger();
 					sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
+				},
+				setAutoResize: function setAutoResizeF(isAutoResize){
+					autoResize = isAutoResize;
+					// autoResize true force to reset
+					if(autoResize){
+						resetIFrame('parentIFrame.size');	
+					}
 				}
+				
 			};
 		}
 	}
@@ -215,8 +223,12 @@
 	function initInterval(){
 		if ( 0 !== interval ){
 			log('setInterval: '+interval+'ms');
+			
 			setInterval(function(){
+				// when set autoResize false stop sendResize
+				if(autoResize){
 				sendSize('interval','setInterval: '+interval);
+				}
 			},Math.abs(interval));
 		}
 	}
@@ -261,8 +273,11 @@
 				},
 
 				observer = new MutationObserver(function(mutations) {
-					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
-					setupInjectElementLoadListners(mutations); //Deal with WebKit asyncing image loading when tags are injected into the page
+					// when set autoResize false disable observer
+					if(autoResize){
+						sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
+						setupInjectElementLoadListners(mutations); //Deal with WebKit asyncing image loading when tags are injected into the page
+					}	
 				});
 
 			log('Enable MutationObserver');
@@ -425,7 +440,8 @@
 		function isSizeChangeDetected(){
 			function checkTolarance(a,b){
 				var retVal = Math.abs(a-b) <= tolerance;
-				return !retVal;
+				// when autoResize false disbale size detected 
+				return !retVal && autoResize;
 			}
 
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
@@ -522,7 +538,8 @@
 		}
 
 		setTargetOrigin();
-		sendToParent();
+		sendToParent();	
+		
 	}
 
 	function receiver(event) {
