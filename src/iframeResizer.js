@@ -43,7 +43,8 @@
 			closedCallback            : function(){},
 			initCallback              : function(){},
 			messageCallback           : function(){},
-			resizedCallback           : function(){}
+			resizedCallback           : function(){},
+			scrollCallback            : function(){return true;}
 		};
 
 	function addEventListener(obj,evt,func){
@@ -195,12 +196,13 @@
 
 		function getIFramePosition(){
 			var
-				iFramePosition = messageData.iframe.getBoundingClientRect(),
-				pagePosition   = getPagePosition();
+				iFramePosition = messageData.iframe.getBoundingClientRect();
+
+			getPagePosition();
 
 			return {
-				x: Number(iFramePosition.left) + Number(pagePosition.x),
-				y: Number(iFramePosition.top)  + Number(pagePosition.y)
+				x: parseInt(iFramePosition.left, 10) + parseInt(pagePosition.x, 10),
+				y: parseInt(iFramePosition.top, 10)  + parseInt(pagePosition.y, 10)
 			};
 		}
 
@@ -212,7 +214,38 @@
 				x: Number(messageData.width) + offset.x,
 				y: Number(messageData.height) + offset.y
 			};
-			setPagePosition();
+
+			scrollTo();
+
+			log(' --');
+		}
+
+		function scrollTo(){
+			if (settings.scrollCallback(pagePosition)){
+				setPagePosition();
+			}
+		}
+
+		function findTarget(href){
+			function jumpToTaget(target){
+				var jumpPosition = getElementPosition(target);
+
+				log('Moving to in page link ('+href+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
+				pagePosition = {
+					x: jumpPosition.x,
+					y: jumpPosition.y
+				};
+
+			scrollTo();
+
+			log(' --');
+			}
+
+			var	target = document.querySelector(href) || document.querySelector('[name="'+href.substr(1,999)+'"]');
+				
+			if (null !== target){
+				jumpToTaget(target);
+			} 
 		}
 
 		function actionMsg(){
@@ -229,6 +262,9 @@
 					break;
 				case 'scrollToOffset':
 					scrollRequestFromChild(true);
+					break;
+				case 'inPageLink':
+					location.href = messageData.message;
 					break;
 				case 'reset':
 					resetIFrame(messageData);
@@ -264,14 +300,14 @@
 				x: (window.pageXOffset !== undefined) ? window.pageXOffset : document.documentElement.scrollLeft,
 				y: (window.pageYOffset !== undefined) ? window.pageYOffset : document.documentElement.scrollTop
 			};
-			log(' Get position: '+pagePosition.x+','+pagePosition.y);
+			log(' Get page position: '+pagePosition.x+','+pagePosition.y);
 		}
 	}
 
 	function setPagePosition(){
 		if(null !== pagePosition){
 			window.scrollTo(pagePosition.x,pagePosition.y);
-			log(' Set position: '+pagePosition.x+','+pagePosition.y);
+			log(' Set page position: '+pagePosition.x+','+pagePosition.y);
 			pagePosition = null;
 		}
 	}

@@ -34,6 +34,8 @@
 			<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;">Bottom</a>
 			&nbsp;
 			<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;">Scroll to iFrame</a>		
+			&nbsp;
+			<a href='#test' class="back" >Jump to anchor</a>		
 		</p>
 		<p>
 			This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red border on this page. This prevents the normal height calculation, which is based on the body tag from returning the correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other page height propeties. 
@@ -57,7 +59,8 @@
 		<p>
 			<i>This option should be used sparingly, as the alternate methods can be less acurate at working out the correct page size, can cause screen flicker and can sometimes fail to reduce in size when the frame content changes in browsers that do not support mutationObservers (See <a href="http://caniuse.com/mutationobserver">caniuse.com</a> for details).</i>
 		</p>
-		
+		<a name="test">Test in page anchor</a>
+
 		<div id="abs">
 			Absolute positioned element
 			<a href='#' class="top" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,0);return false;">Top</a>

@@ -77,6 +77,7 @@
 		stopInfiniteResizingOfIFrame();
 		setupPublicMethods();
 		startEventListeners();
+		setupInPageLinks();
 		sendSize('init','Init message from host page');
 	}
 
@@ -172,6 +173,88 @@
 		document.body.appendChild(clearFix);
 	}
 
+	function setupInPageLinks(){
+
+		function getPagePosition (){
+			return {
+				x: (window.pageXOffset !== undefined) ? window.pageXOffset : document.documentElement.scrollLeft,
+				y: (window.pageYOffset !== undefined) ? window.pageYOffset : document.documentElement.scrollTop
+			};
+		}
+
+		function getElementPosition(el){
+			var
+				elPosition   = el.getBoundingClientRect(),
+				pagePosition = getPagePosition();
+
+			return {
+				x: parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
+				y: parseInt(elPosition.top,10)  + parseInt(pagePosition.y,10)
+			};
+		}
+
+		function findTarget(href){
+			function jumpToTaget(target){
+				var jumpPosition = getElementPosition(target);
+
+				log('Moving to in page link ('+href+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
+				sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
+			}
+
+			var	target = document.querySelector(href) || document.querySelector('[name="'+href.substr(1,999)+'"]');
+				
+			if (null !== target){
+				jumpToTaget(target);
+			} else {
+				log('In page link (' + href + ') not found in iFrame, so sending to parent');
+				sendMsg(0,0,'inPageLink',href);
+			}
+		}
+
+		function checkLocationHash(){
+			var hash = location.hash;
+
+			if ('' !== hash && '#' !== hash){
+				findTarget(hash);
+			}
+		}
+
+		function bindAnchors(){
+			function setupLink(el){
+				function linkClicked(e){
+					e.preventDefault();
+
+					/*jshint validthis:true */
+					findTarget(this.getAttribute('href'));
+				}
+
+				if ('#' !== el.getAttribute('href')){
+					addEventListener(el,'click',linkClicked);
+				}
+			}
+		
+			Array.prototype.forEach.call( document.querySelectorAll( 'a[href^="#"]' ), setupLink );
+		}
+
+		function bindLocationHash(){
+			addEventListener(window,'hashchange',checkLocationHash);
+		}
+
+		function initCheck(){ //check if page loaded with location hash after init resize
+			setTimeout(checkLocationHash,eventCancelTimer);
+		}
+
+		if(Array.prototype.forEach && document.querySelectorAll){
+			log('Setting up location.hash handlers');
+			bindAnchors();
+			bindLocationHash();
+			initCheck();
+		} else {
+			warn('In page linking not fully supported in this browser! (See README.md for IE8 workaround)');
+		}
+
+	}
+
 	function setupPublicMethods(){
 		if (publicMethods) {
 			log('Enable public methods');
@@ -187,10 +270,10 @@
 					resetIFrame('parentIFrame.size');
 				},
 				scrollTo: function scrollToF(x,y){
-					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses hieght/width
+					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses height/width
 				},
 				scrollToOffset: function scrollToF(x,y){
-					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses hieght/width
+					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
 				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
 					sendMsg(0,0,'message',msg,targetOrigin);
