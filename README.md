@@ -322,7 +322,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.7.0 [#129](https://github.com/davidjbradshaw/iframe-resizer/issues/129) Parse data passed *parentIFrame.sendMessage()* into JSON to allow complex data types to be sent to *messageCallback()*.
+* v2.7.0 [#129](https://github.com/davidjbradshaw/iframe-resizer/issues/129) Parse data passed to *parentIFrame.sendMessage()* into JSON to allow complex data types to be sent to *messageCallback()*.
 * v2.6.5 [#107](https://github.com/davidjbradshaw/iframe-resizer/issues/107) Added Node support for use with Browserify.
 * v2.6.4 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Added *parentIFrame.scrollToOffset()* method. 
 * v2.6.3 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Fixed issue with the range check sometimes causing non-resizing messages to be rejected.
