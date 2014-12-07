@@ -181,7 +181,7 @@
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({
 				iframe: messageData.iframe,
-				message: msgBody
+				message: JSON.parse(msgBody)
 			});
 			log(' --');
 		}

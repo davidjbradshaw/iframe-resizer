@@ -193,7 +193,7 @@
 					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses hieght/width
 				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
-					sendMsg(0,0,'message',msg,targetOrigin);
+					sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
 				},
 				setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
 					heightCalcMode = heightCalculationMethod;

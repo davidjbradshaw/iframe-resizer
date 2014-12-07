@@ -25,7 +25,7 @@
         count = 0,
         msgId = '[iFrameSizerTest]:';
 
-		asyncTest( "sendMessage", function() {
+    asyncTest( "sendMessage (string)", function() {
 
       iFrameResize({
         log:true,
@@ -35,14 +35,24 @@
           sendMessage('chkSendMsg');
         },
         messageCallback:function(messageData){
-          ok( 'message: test' === messageData.message, 'Receive message back from iFrame via sendMessage function.' );
-          if (2===count){
-            sendMessage('chkSendMsg');
-            count++;
-          } else {
-            start();
-          }
-          
+          ok( 'message: test string' === messageData.message, 'Receive string message back from iFrame via sendMessage function.' );
+          start();
+        }
+      });
+    });
+
+    asyncTest( "sendMessage (object)", function() {
+
+      iFrameResize({
+        log:true,
+        enablePublicMethods:true,
+        resizedCallback:function(messageData){
+          ok( true, 'Receive init message back from iFrame.' );
+          sendMessage('chkSendObj');
+        },
+        messageCallback:function(messageData){
+          ok( 'test object' === messageData.message.message, 'Receive object message back from iFrame via sendMessage function.' );
+          start();
         }
       });
     });
