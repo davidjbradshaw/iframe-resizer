@@ -221,31 +221,34 @@
 		}
 
 		function scrollTo(){
-			if (settings.scrollCallback(pagePosition)){
+			if (false !== settings.scrollCallback(pagePosition)){
 				setPagePosition();
 			}
 		}
 
-		function findTarget(href){
+		function findTarget(hash){
 			function jumpToTaget(target){
 				var jumpPosition = getElementPosition(target);
 
-				log('Moving to in page link ('+href+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
+				log('Moving to in page link ('+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
 				pagePosition = {
 					x: jumpPosition.x,
 					y: jumpPosition.y
 				};
 
-			scrollTo();
-
-			log(' --');
+				scrollTo();
+				log(' --');
 			}
 
-			var	target = document.querySelector(href) || document.querySelector('[name="'+href.substr(1,999)+'"]');
+			var	target = document.querySelector(hash) || document.querySelector('[name="'+hash.substr(1,999)+'"]');
 				
 			if (null !== target){
 				jumpToTaget(target);
-			} 
+			} else {
+				if (window.parentIFrame){
+					parentIFrame.moveToAnchor(hash);
+				}
+			}
 		}
 
 		function actionMsg(){
@@ -264,7 +267,7 @@
 					scrollRequestFromChild(true);
 					break;
 				case 'inPageLink':
-					location.href = messageData.message;
+					findTarget(messageData.message);
 					break;
 				case 'reset':
 					resetIFrame(messageData);

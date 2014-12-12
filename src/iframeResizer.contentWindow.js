@@ -26,6 +26,7 @@
 		heightCalcMode        = heightCalcModeDefault,
 		initLock              = true,
 		initMsg               = '',
+		inPageLinks           = {},
 		interval              = 32,
 		logging               = false,
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
@@ -77,7 +78,7 @@
 		stopInfiniteResizingOfIFrame();
 		setupPublicMethods();
 		startEventListeners();
-		setupInPageLinks();
+		inPageLinks = setupInPageLinks();
 		sendSize('init','Init message from host page');
 	}
 
@@ -253,6 +254,9 @@
 			warn('In page linking not fully supported in this browser! (See README.md for IE8 workaround)');
 		}
 
+		return {
+			findTarget:findTarget
+		};
 	}
 
 	function setupPublicMethods(){
@@ -266,8 +270,11 @@
 				getId: function getIdF(){
 					return myID;
 				},
+				moveToAnchor: function moveToAnchorF(hash){
+					inPageLinks.findTarget(hash);
+				},
 				reset: function resetF(){
-					resetIFrame('parentIFrame.size');
+					resetIFrame('parentIFrame.reset');
 				},
 				scrollTo: function scrollToF(x,y){
 					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses height/width
