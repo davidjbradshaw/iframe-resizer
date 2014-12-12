@@ -194,9 +194,9 @@
 		}
 
 		function getIFramePosition(){
-			var
-				iFramePosition = messageData.iframe.getBoundingClientRect(),
-				pagePosition   = getPagePosition();
+			var iFramePosition = messageData.iframe.getBoundingClientRect();
+
+			getPagePosition();
 
 			return {
 				x: Number(iFramePosition.left) + Number(pagePosition.x),
