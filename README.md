@@ -257,7 +257,7 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 <!DOCTYPE html>
 ```
 
-###Iframe not resizing
+###IFrame not resizing
 The most common cause of this is not placing the ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page. Now is the time to give up all hope of ever getting the iFrame to size to the content; As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
 
 ###IFrame not detecting CSS :hover events
