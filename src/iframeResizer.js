@@ -194,9 +194,9 @@
 			return true;
 		}
 
-		function getIFramePosition(){
+		function getElementPosition(target){
 			var
-				iFramePosition = messageData.iframe.getBoundingClientRect();
+				iFramePosition = target.getBoundingClientRect();
 
 			getPagePosition();
 
@@ -207,7 +207,7 @@
 		}
 
 		function scrollRequestFromChild(addOffset){
-			var offset = addOffset ? getIFramePosition() : {x:0,y:0};
+			var offset = addOffset ? getElementPosition(messageData.iframe) : {x:0,y:0};
 
 			log(' Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 			pagePosition = {
@@ -236,45 +236,45 @@
 					y: jumpPosition.y
 				};
 
-			scrollTo();
+				scrollTo();
 
-			log(' --');
+				log(' --');
 			}
 
 			var	target = document.querySelector(href) || document.querySelector('[name="'+href.substr(1,999)+'"]');
 				
 			if (null !== target){
 				jumpToTaget(target);
-			} 
+			}
 		}
 
 		function actionMsg(){
 			switch(messageData.type){
-				case 'close':
-					closeIFrame(messageData.iframe);
-					settings.resizedCallback(messageData); //To be removed.
-					break;
-				case 'message':
-					forwardMsgFromIFrame();
-					break;
-				case 'scrollTo':
-					scrollRequestFromChild(false);
-					break;
-				case 'scrollToOffset':
-					scrollRequestFromChild(true);
-					break;
-				case 'inPageLink':
-					location.href = messageData.message;
-					break;
-				case 'reset':
-					resetIFrame(messageData);
-					break;
-				case 'init':
-					resizeIFrame();
-					settings.initCallback(messageData.iframe);
-					break;
-				default:
-					resizeIFrame();
+			case 'close':
+				closeIFrame(messageData.iframe);
+				settings.resizedCallback(messageData); //To be removed.
+				break;
+			case 'message':
+				forwardMsgFromIFrame();
+				break;
+			case 'scrollTo':
+				scrollRequestFromChild(false);
+				break;
+			case 'scrollToOffset':
+				scrollRequestFromChild(true);
+				break;
+			case 'inPageLink':
+				findTarget(messageData.message);
+				break;
+			case 'reset':
+				resetIFrame(messageData);
+				break;
+			case 'init':
+				resizeIFrame();
+				settings.initCallback(messageData.iframe);
+				break;
+			default:
+				resizeIFrame();
 			}
 		}
 
