@@ -158,6 +158,7 @@
 		if ( true === autoResize ) {
 			initWindowResizeListener();
 			initWindowClickListener();
+			initTransitionListener();
 			setupMutationObserver();
 		}
 		else {
@@ -241,6 +242,18 @@
 				});
 			}
 		});
+	}
+
+	function initTransitionListener(){
+		function onTransitionEnd(e){
+			if (e.propertyName === 'height' || e.propertyName === 'width') {
+				sendSize('transitionend','Transition end');
+			}
+		}
+		addEventListener(window,'transitionend', onTransitionEnd)
+		addEventListener(window,'webkitTransitionEnd', onTransitionEnd)
+		addEventListener(window,'oTransitionEnd',onTransitionEnd)
+		addEventListener(window,'otransitionend',onTransitionEnd)
 	}
 
 	function setupMutationObserver(){
