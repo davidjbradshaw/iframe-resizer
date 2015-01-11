@@ -250,10 +250,10 @@
 				sendSize('transitionend','Transition end');
 			}
 		}
-		addEventListener(window,'transitionend', onTransitionEnd)
-		addEventListener(window,'webkitTransitionEnd', onTransitionEnd)
-		addEventListener(window,'oTransitionEnd',onTransitionEnd)
-		addEventListener(window,'otransitionend',onTransitionEnd)
+		addEventListener(window,'transitionend', onTransitionEnd);
+		addEventListener(window,'webkitTransitionEnd', onTransitionEnd);
+		addEventListener(window,'oTransitionEnd',onTransitionEnd);
+		addEventListener(window,'otransitionend',onTransitionEnd);
 	}
 
 	function setupMutationObserver(){
