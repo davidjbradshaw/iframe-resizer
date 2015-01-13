@@ -194,9 +194,9 @@
 			return true;
 		}
 
-		function getIFramePosition(){
+		function getElementPosition(target){
 			var
-				iFramePosition = messageData.iframe.getBoundingClientRect();
+				iFramePosition = target.getBoundingClientRect();
 
 			getPagePosition();
 
@@ -207,7 +207,7 @@
 		}
 
 		function scrollRequestFromChild(addOffset){
-			var offset = addOffset ? getIFramePosition() : {x:0,y:0};
+			var offset = addOffset ? getElementPosition(messageData.iframe) : {x:0,y:0};
 
 			log(' Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 			pagePosition = {

@@ -187,7 +187,7 @@
 			var
 				elPosition   = el.getBoundingClientRect(),
 				pagePosition = getPagePosition();
-
+ 
 			return {
 				x: parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
 				y: parseInt(elPosition.top,10)  + parseInt(pagePosition.y,10)
