@@ -246,6 +246,7 @@
 				jumpToTaget(target);
 			} else {
 				if (window.parentIFrame){
+					log('Passing #'+hash+' to meta parent');
 					parentIFrame.moveToAnchor(hash);
 				}
 			}
