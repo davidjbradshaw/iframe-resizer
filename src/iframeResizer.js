@@ -206,7 +206,7 @@
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({
 				iframe: messageData.iframe,
-				message: msgBody
+				message: JSON.parse(msgBody)
 			});
 			log(' --');
 		}
@@ -221,6 +221,9 @@
 		function getElementPosition(target){
 			var
 				iFramePosition = target.getBoundingClientRect();
+
+		//function getIFramePosition(){
+		//	var iFramePosition = messageData.iframe.getBoundingClientRect();
 
 			getPagePosition();
 

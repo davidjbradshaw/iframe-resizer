@@ -134,16 +134,34 @@
 		log('HTML & body height set to "auto"');
 	}
 
-	function initWindowResizeListener(){
-		addEventListener(window,'resize', function(){
-			sendSize('resize','Window resized');
-		});
+
+	function addTriggerEvent(options){
+		function addListener(eventName){
+			addEventListener(window,eventName,function(e){
+				sendSize(options.eventName,options.eventType);
+			});
+		}
+
+		if(options.eventNames && Array.prototype.map){
+			options.eventName = options.eventNames[0];
+			options.eventNames.map(addListener);
+		} else {
+			addListener(options.eventName);
+		}
+
+		log('Added event listener: ' + options.eventType);
 	}
 
-	function initWindowClickListener(){
-		addEventListener(window,'click', function(){
-			sendSize('click','Window clicked');
-		});
+	function initEventListeners(){
+		addTriggerEvent({ eventType: 'Animation Start',           eventNames: ['animationstart','webkitAnimationStart'] });
+		addTriggerEvent({ eventType: 'Animation Iteration',       eventNames: ['animationiteration','webkitAnimationIteration'] });
+		addTriggerEvent({ eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
+		addTriggerEvent({ eventType: 'Device Orientation Change', eventName:  'deviceorientation' });
+		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
+		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
+		//addTriggerEvent({ eventType: 'Window Mouse Down',         eventName:  'mousedown' });
+		//addTriggerEvent({ eventType: 'Window Mouse Up',           eventName:  'mouseup' });
+		addTriggerEvent({ eventType: 'Window Resized',            eventName:  'resize' });	
 	}
 
 	function checkHeightMode(){
@@ -158,8 +176,7 @@
 
 	function startEventListeners(){
 		if ( true === autoResize ) {
-			initWindowResizeListener();
-			initWindowClickListener();
+			initEventListeners();
 			setupMutationObserver();
 		}
 		else {
@@ -283,7 +300,7 @@
 					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
 				},
 				sendMessage: function sendMessageF(msg,targetOrigin){
-					sendMsg(0,0,'message',msg,targetOrigin);
+					sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
 				},
 				setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
 					heightCalcMode = heightCalculationMethod;

@@ -145,7 +145,10 @@
 									callMethod('sendMessage',document.body.style.background);
 									break;
 								case 'chkSendMsg':
-									callMethod('sendMessage','message: test');
+									callMethod('sendMessage','message: test string');
+									break;
+								case 'chkSendObj':
+									callMethod('sendMessage',{message: 'test object'});
 									break;
 								case 'chkGetId':
 									if ('parentIFrame' in window)

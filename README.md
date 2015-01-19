@@ -212,7 +212,7 @@ Scroll the parent page to the coordinates x and y relative to the position of th
 
 ### sendMessage(message,[targetOrigin])
 
-Send string to the containing page. The message is delivered to the `messageCallback` function. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
+Send data to the containing page, `message` can be any data type that can be serialized into JSON. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
 
 ### setHeightCalculationMethod(heightCalculationMethod)
 
@@ -255,7 +255,10 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 
 ```html
 <!DOCTYPE html>
-``` 
+```
+
+###IFrame not resizing
+The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
 
 ###IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
@@ -322,6 +325,8 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
+* v2.7.1 [#131](https://github.com/davidjbradshaw/iframe-resizer/issues/131) Fix code that works out position of iFrame on host page.
+* v2.7.0 [#129](https://github.com/davidjbradshaw/iframe-resizer/issues/129) Parse data passed to *parentIFrame.sendMessage()* into JSON to allow complex data types to be sent to *messageCallback()*.
 * v2.6.5 [#107](https://github.com/davidjbradshaw/iframe-resizer/issues/107) Added Node support for use with Browserify.
 * v2.6.4 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Added *parentIFrame.scrollToOffset()* method. 
 * v2.6.3 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Fixed issue with the range check sometimes causing non-resizing messages to be rejected.
