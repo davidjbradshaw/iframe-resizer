@@ -502,7 +502,7 @@
 
 	function createNativePublicFunction(){
 		function init(element){
-			if('IFRAME' !== element.tagName.toUpperCase()) {
+			if(element.tagName && 'IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
 				setupIFrame.call(element);
@@ -520,9 +520,29 @@
 			}
 		}
 
-		return function iFrameResizeF(options,selecter){
+		function getIframes(target){
+			Array.prototype.forEach.call( document.querySelectorAll( target ), init );
+		}
+
+		return function iFrameResizeF(options,target){
 			processOptions(options);
-			Array.prototype.forEach.call( document.querySelectorAll( selecter || 'iframe' ), init );
+			switch (typeof(target)){
+				case 'undefined':
+					log(' Attaching to all iFrames');
+					getIframes('iframe');
+					break;
+				case 'string':
+					log(' Attaching via selector ('+target+')');
+					getIframes(target);
+					break;
+				case 'object':
+					log(' Attaching to passed in iFrame object');
+					init(target);
+					break;
+				default:
+					throw new TypeError('Unexpected data type ('+typeof(target)+').');
+			}
+			
 		};
 	}
 
@@ -531,6 +551,7 @@
 			options = options || {};
 			checkOptions(options);
 			settings = $.extend( {}, defaults, options );
+			log(' Attaching via jQuery');
 			return this.filter('iframe').each( setupIFrame ).end();
 		};
 	}
