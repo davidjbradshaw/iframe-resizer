@@ -222,9 +222,6 @@
 			var
 				iFramePosition = target.getBoundingClientRect();
 
-		//function getIFramePosition(){
-		//	var iFramePosition = messageData.iframe.getBoundingClientRect();
-
 			getPagePosition();
 
 			return {
