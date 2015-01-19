@@ -183,6 +183,12 @@ Receive message posted from iFrame with the `parentIFrame.sendMessage()` method.
 	
 Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
 
+### scrollCallback
+
+	type: function ({x,y})
+
+Called before the page is repositioned after a request from the iFrame, due to ethier an in page link, or a direct request from either [parentIFrame.scrollTo()](#scrolltoxy) or [parentIFrame.scrollToOffset()](#scrolltooffsetxy). If this callback function returns false, it will stop the library from repositioning the page, so that you can implement your own animatied page scrolling instead.
+
 
 ## IFrame Methods
 
@@ -325,6 +331,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
+* v2.8.0 [#68](https://github.com/davidjbradshaw/iframe-resizer/issues/68) Added support for in page links and scrollCallback function. [#140](https://github.com/davidjbradshaw/iframe-resizer/issues/140) Added listener for *transitionend* event [[Mat Brown](https://github.com/outoftime)]. Added listeners for animation events. Added listener for *deviceorientation* event.
 * v2.7.1 [#131](https://github.com/davidjbradshaw/iframe-resizer/issues/131) Fix code that works out position of iFrame on host page.
 * v2.7.0 [#129](https://github.com/davidjbradshaw/iframe-resizer/issues/129) Parse data passed to *parentIFrame.sendMessage()* into JSON to allow complex data types to be sent to *messageCallback()*.
 * v2.6.5 [#107](https://github.com/davidjbradshaw/iframe-resizer/issues/107) Added Node support for use with Browserify.
