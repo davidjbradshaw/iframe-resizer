@@ -70,12 +70,35 @@
 		}
 	}
 
+	function getMyID(){
+		var retStr = 'Host page';
+
+		if (window.top!==window.self){
+			if (window.parentIFrame){
+				retStr = window.parentIFrame.getId();
+			} else {
+				retStr = 'Nested host page';
+			}
+		}
+
+		return retStr;
+	}
+
+	function formatLogMsg(msg){
+		return msgId + '[' + getMyID() + ']' + msg;
+	}
+
 	function log(msg){
-		if (settings.log && (typeof console === 'object')){
-			console.log(msgId + '[Host page'+page+']' + msg);
+		if (settings.log && ('object' === typeof window.console)){
+			console.log(formatLogMsg(msg));
 		}
 	}
 
+	function warn(msg){
+		if ('object' === typeof window.console){
+			console.warn(formatLogMsg(msg));
+		}
+	}
 
 	function iFrameListener(event){
 		function resizeIFrame(){
@@ -139,7 +162,6 @@
 		}
 
 		function isMessageFromIFrame(){
-
 			var
 				origin     = event.origin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
@@ -176,9 +198,11 @@
 			return retCode;
 		}
 
-		function forwardMsgFromIFrame(){
-			var msgBody = msg.substr(msg.indexOf(':')+msgHeaderLen+6); //6 === ':0:0:' + ':' (Ideas to name this magic number most welcome)
+		function getMsgBody(offset){
+			return msg.substr(msg.indexOf(':')+msgHeaderLen+offset);
+		}
 
+		function forwardMsgFromIFrame(msgBody){
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
 			settings.messageCallback({
 				iframe: messageData.iframe,
@@ -207,17 +231,41 @@
 		}
 
 		function scrollRequestFromChild(addOffset){
-			var offset = addOffset ? getElementPosition(messageData.iframe) : {x:0,y:0};
+			function reposition(){
+				pagePosition = newPosition;
 
+				scrollTo();
+
+				log(' --');
+			}
+
+			function calcOffset(){
+				return {
+					x: Number(messageData.width) + offset.x,
+					y: Number(messageData.height) + offset.y
+				};
+			}
+
+			var 
+				offset = addOffset ? getElementPosition(messageData.iframe) : {x:0,y:0},
+				newPosition = calcOffset();
+			
 			log(' Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
-			pagePosition = {
-				x: Number(messageData.width) + offset.x,
-				y: Number(messageData.height) + offset.y
-			};
 
-			scrollTo();
+			if(window.top!==window.self){
+				if (window.parentIFrame){
+					if (addOffset){
+						parentIFrame.scrollToOffset(newPosition.x,newPosition.y);
+					} else {
+						parentIFrame.scrollTo(messageData.width,messageData.height);
+					}
+				} else {
+					warn(' Unable to scroll to requested position, window.parentIFrame not found');
+				}
+			} else {
+				reposition();
+			}
 
-			log(' --');
 		}
 
 		function scrollTo(){
@@ -230,7 +278,7 @@
 			function jumpToTaget(target){
 				var jumpPosition = getElementPosition(target);
 
-				log('Moving to in page link ('+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
+				log(' Moving to in page link ('+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
 				pagePosition = {
 					x: jumpPosition.x,
 					y: jumpPosition.y
@@ -239,16 +287,19 @@
 				scrollTo();
 				log(' --');
 			}
-
-			var	target = document.querySelector(hash) || document.querySelector('[name="'+hash.substr(1,999)+'"]');
 				
-			if (null !== target){
+			var	target = document.querySelector(hash) || document.querySelector('[name="'+hash.substr(1,999)+'"]');
+
+			if(window.top!==window.self){
+				if (window.parentIFrame){
+					parentIFrame.moveToAnchor(hash);
+				} else {
+					warn(' In page link '+hash+' not found and window.parentIFrame not found');
+				}
+			} else if (null !== target){
 				jumpToTaget(target);
 			} else {
-				if (window.parentIFrame){
-					log('Passing #'+hash+' to meta parent');
-					parentIFrame.moveToAnchor(hash);
-				}
+				warn(' In page link '+hash+' not found');
 			}
 		}
 
@@ -259,7 +310,7 @@
 					settings.resizedCallback(messageData); //To be removed.
 					break;
 				case 'message':
-					forwardMsgFromIFrame();
+					forwardMsgFromIFrame(getMsgBody(6));
 					break;
 				case 'scrollTo':
 					scrollRequestFromChild(false);
@@ -268,7 +319,7 @@
 					scrollRequestFromChild(true);
 					break;
 				case 'inPageLink':
-					findTarget(messageData.message);
+					findTarget(getMsgBody(9));
 					break;
 				case 'reset':
 					resetIFrame(messageData);
