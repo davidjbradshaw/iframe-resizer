@@ -261,6 +261,14 @@ type:    integer
 
 <p>Function called after iFrame resized. Passes in messageData object containing the <strong>iFrame</strong>, <strong>height</strong>, <strong>width</strong> and the <strong>type</strong> of event that triggered the iFrame to resize.</p>
 
+<h3>
+<a id="scrollcallback" class="anchor" href="#scrollcallback" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrollCallback</h3>
+
+<pre><code>type: function ({x,y})
+</code></pre>
+
+<p>Called before the page is repositioned after a request from the iFrame, due to ethier an in page link, or a direct request from either <a href="#scrolltoxy">parentIFrame.scrollTo()</a> or <a href="#scrolltooffsetxy">parentIFrame.scrollToOffset()</a>. If this callback function returns false, it will stop the library from repositioning the page, so that you can implement your own animatied page scrolling instead.</p>
+
 <h2>
 <a id="iframe-methods" class="anchor" href="#iframe-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
 
@@ -415,6 +423,7 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.8.0 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/68">#68</a> Added support for in page links and scrollCallback function. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/140">#140</a> Added listener for <em>transitionend</em> event [<a href="https://github.com/outoftime">Mat Brown</a>]. Added listeners for animation events. Added listener for <em>deviceorientation</em> event.</li>
 <li>v2.7.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/131">#131</a> Fix code that works out position of iFrame on host page.</li>
 <li>v2.7.0 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/129">#129</a> Parse data passed to <em>parentIFrame.sendMessage()</em> into JSON to allow complex data types to be sent to <em>messageCallback()</em>.</li>
 <li>v2.6.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/107">#107</a> Added Node support for use with Browserify.</li>
