@@ -500,6 +500,17 @@
 		}
 	}
 
+	function processOptions(options){
+		options = options || {};
+		checkOptions(options);
+
+		for (var option in defaults) {
+			if (defaults.hasOwnProperty(option)){
+				settings[option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
+			}
+		}
+	}
+
 	function createNativePublicFunction(){
 		function init(element){
 			if(element.tagName && 'IFRAME' !== element.tagName.toUpperCase()) {
@@ -509,31 +520,12 @@
 			}
 		}
 
-		function processOptions(options){
-			options = options || {};
-			checkOptions(options);
-
-			for (var option in defaults) {
-				if (defaults.hasOwnProperty(option)){
-					settings[option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
-				}
-			}
-		}
-
-		function getIframes(target){
-			Array.prototype.forEach.call( document.querySelectorAll( target ), init );
-		}
-
 		return function iFrameResizeF(options,target){
 			processOptions(options);
 			switch (typeof(target)){
 				case 'undefined':
-					log(' Attaching to all iFrames');
-					getIframes('iframe');
-					break;
 				case 'string':
-					log(' Attaching via selector ('+target+')');
-					getIframes(target);
+					Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), init );
 					break;
 				case 'object':
 					log(' Attaching to passed in iFrame object');
@@ -548,10 +540,7 @@
 
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
-			options = options || {};
-			checkOptions(options);
-			settings = $.extend( {}, defaults, options );
-			log(' Attaching via jQuery');
+			processOptions(options);
 			return this.filter('iframe').each( setupIFrame ).end();
 		};
 	}
