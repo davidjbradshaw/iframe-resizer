@@ -528,7 +528,6 @@
 					Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), init );
 					break;
 				case 'object':
-					log(' Attaching to passed in iFrame object');
 					init(target);
 					break;
 				default:
