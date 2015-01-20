@@ -10,13 +10,13 @@ For security, by default the host-page automatically checks that the origin of i
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
-iFrameResize([{options}],[selector]);
+iFrameResize( [{options}], [css selector] || [iframe] );
 ```
 
 or via **jQuery**. (See [notes](#browser-compatibility) below for using native version with IE8).
 
 ```js
-$('iframe').iFrameResize([{options}]);
+$('iframe').iFrameResize( [{options}] );
 ```
 
 The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
@@ -331,7 +331,8 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.8.0 [#68](https://github.com/davidjbradshaw/iframe-resizer/issues/68) Added support for in page links and scrollCallback function. [#140](https://github.com/davidjbradshaw/iframe-resizer/issues/140) Added listener for *transitionend* event [[Mat Brown](https://github.com/outoftime)]. Added listeners for animation events. Added listener for *deviceorientation* event.
+* v2.8.1 [#138](https://github.com/davidjbradshaw/iframe-resizer/issues/138) Add option to pass in iFrame object, instead of selector.
+* v2.8.0 [#68](https://github.com/davidjbradshaw/iframe-resizer/issues/68) Added support for in page links and *scrollCallback()* function. [#140](https://github.com/davidjbradshaw/iframe-resizer/issues/140) Added listener for *transitionend* event [[Mat Brown](https://github.com/outoftime)]. Added listeners for animation events. Added listener for *deviceorientation* event. Improved logging for nested iFrames.
 * v2.7.1 [#131](https://github.com/davidjbradshaw/iframe-resizer/issues/131) Fix code that works out position of iFrame on host page.
 * v2.7.0 [#129](https://github.com/davidjbradshaw/iframe-resizer/issues/129) Parse data passed to *parentIFrame.sendMessage()* into JSON to allow complex data types to be sent to *messageCallback()*.
 * v2.6.5 [#107](https://github.com/davidjbradshaw/iframe-resizer/issues/107) Added Node support for use with Browserify.
