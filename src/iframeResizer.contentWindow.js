@@ -229,10 +229,15 @@
 			}
 		}
 
+		function isIdValid (id) {
+			re = /^\#[A-Za-z]+[\w\-]*$/;
+			return re.test(id);
+		}
+
 		function checkLocationHash(){
 			var hash = location.hash;
 
-			if ('' !== hash && '#' !== hash){
+			if (isIdValid (hash)){
 				findTarget(hash);
 			}
 		}
