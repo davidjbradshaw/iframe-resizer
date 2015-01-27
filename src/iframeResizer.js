@@ -274,11 +274,14 @@
 			}
 		}
 
-		function findTarget(hash){
-			function jumpToTaget(target){
+		function findTarget(location){
+			var hash = location.split("#")[1] || "";
+			var hashData = decodeURIComponent(hash);
+
+			function jumpToTarget(target){
 				var jumpPosition = getElementPosition(target);
 
-				log(' Moving to in page link ('+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
+				log(' Moving to in page link (#'+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
 				pagePosition = {
 					x: jumpPosition.x,
 					y: jumpPosition.y
@@ -287,19 +290,23 @@
 				scrollTo();
 				log(' --');
 			}
-				
-			var	target = document.querySelector(hash) || document.querySelector('[name="'+hash.substr(1,999)+'"]');
+
+			var target = document.getElementById(hashData);
+
+			if (!target) {
+				target = document.getElementsByName(hashData)[0];
+			}
 
 			if(window.top!==window.self){
 				if (window.parentIFrame){
 					parentIFrame.moveToAnchor(hash);
 				} else {
-					warn(' In page link '+hash+' not found and window.parentIFrame not found');
+					log(' In page link #'+hash+' not found and window.parentIFrame not found');
 				}
-			} else if (null !== target){
-				jumpToTaget(target);
+			} else if (target){
+				jumpToTarget(target);
 			} else {
-				warn(' In page link '+hash+' not found');
+				log(' In page link #'+hash+' not found');
 			}
 		}
 

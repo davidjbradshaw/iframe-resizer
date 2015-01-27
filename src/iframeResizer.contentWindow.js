@@ -211,34 +211,34 @@
 			};
 		}
 
-		function findTarget(href){
-			function jumpToTaget(target){
+		function findTarget(location){
+			var hash = location.split("#")[1] || "";
+			var hashData = decodeURIComponent(hash);
+
+			function jumpToTarget(target){
 				var jumpPosition = getElementPosition(target);
 
-				log('Moving to in page link ('+href+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
+				log('Moving to in page link (#'+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
 				sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
 			}
 
-			var	target = document.querySelector(href) || document.querySelector('[name="'+href.substr(1,999)+'"]');
-				
-			if (null !== target){
-				jumpToTaget(target);
+			var target = document.getElementById(hashData);
+
+			if (!target) {
+				target = document.getElementsByName(hashData)[0];
+			}
+
+			if (target){
+				jumpToTarget(target);
 			} else {
-				log('In page link (' + href + ') not found in iFrame, so sending to parent');
-				sendMsg(0,0,'inPageLink',href);
+				log('In page link (#' + hash + ') not found in iFrame, so sending to parent');
+				sendMsg(0,0,'inPageLink','#'+hash);
 			}
 		}
 
-		function isIdValid (id) {
-			re = /^\#[A-Za-z]+[\w\-]*$/;
-			return re.test(id);
-		}
-
 		function checkLocationHash(){
-			var hash = location.hash;
-
-			if (isIdValid (hash)){
-				findTarget(hash);
+			if ('' !== location.hash && '#' !== location.hash){
+				findTarget(location.href);
 			}
 		}
 
