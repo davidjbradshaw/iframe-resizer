@@ -331,7 +331,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ##Version History
 
-* v2.8.2 [#145](https://github.com/davidjbradshaw/iframe-resizer/issues/145) Fixed in page links, to work with HTML IDs that are not valid CSS IDs [[Erin Millard](https://github.com/ezzatron)].
+* v2.8.2 [#145](https://github.com/davidjbradshaw/iframe-resizer/issues/145) Fixed in page links, to work with HTML IDs that are not valid CSS IDs [[Erin Millard](https://github.com/ezzatron)]. Moved map files from src to js folder.
 * v2.8.1 [#138](https://github.com/davidjbradshaw/iframe-resizer/issues/138) Added option to pass in iFrame object, instead of selector.
 * v2.8.0 [#68](https://github.com/davidjbradshaw/iframe-resizer/issues/68) Added support for in page links and *scrollCallback()* function. [#140](https://github.com/davidjbradshaw/iframe-resizer/issues/140) Added listener for *transitionend* event [[Mat Brown](https://github.com/outoftime)]. Added listeners for animation events. Added listener for *deviceorientation* event. Improved logging for nested iFrames.
 * v2.7.1 [#131](https://github.com/davidjbradshaw/iframe-resizer/issues/131) Fix code that works out position of iFrame on host page.
