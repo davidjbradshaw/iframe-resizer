@@ -291,11 +291,7 @@
 				log(' --');
 			}
 
-			var target = document.getElementById(hashData);
-
-			if (!target) {
-				target = document.getElementsByName(hashData)[0];
-			}
+			var target = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
 			if(window.top!==window.self){
 				if (window.parentIFrame){

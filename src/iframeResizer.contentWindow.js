@@ -222,11 +222,7 @@
 				sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
 			}
 
-			var target = document.getElementById(hashData);
-
-			if (!target) {
-				target = document.getElementsByName(hashData)[0];
-			}
+			var target = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
 			if (target){
 				jumpToTarget(target);
