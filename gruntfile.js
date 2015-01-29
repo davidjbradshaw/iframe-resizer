@@ -115,6 +115,9 @@ module.exports = function(grunt) {
 
           return retStr;
         }
+      },
+      npm:{
+        command: 'npm publish'
       }
     },
 
