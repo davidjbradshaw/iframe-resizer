@@ -514,9 +514,11 @@
 		}
 	}
 
-	function createNativePublicFunction(){
+	function factory(){
 		function init(element){
-			if(element.tagName && 'IFRAME' !== element.tagName.toUpperCase()) {
+			if(!element.tagName) {
+                throw new TypeError('Object is not a valid DOM element');
+            } else if ('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
 				setupIFrame.call(element);
@@ -553,11 +555,11 @@
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
-		define([],createNativePublicFunction);
+		define([],factory);
 	} else if (typeof exports === 'object') { //Node for browserfy
-		module.exports = createNativePublicFunction();
+		module.exports = factory();
 	} else {
-		window.iFrameResize = createNativePublicFunction();
+		window.iFrameResize = factory();
 	}
 
 })();
