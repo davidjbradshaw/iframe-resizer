@@ -263,7 +263,30 @@
 			setTimeout(checkLocationHash,eventCancelTimer);
 		}
 
-		if(Array.prototype.forEach && document.querySelectorAll){
+		function hasConflictingHashChangeHandlers(){
+			if (window.Ember !== undefined){
+				if (window.App && window.App.__container__ && window.App.__container__.lookup){
+					return function _is_ember_router_hash_location_impl(){
+						var ember_router,
+							location_key;
+						try{
+							ember_router = window.App.__container__.lookup('router:main');
+							location_key = ember_router.get && ember_router.get('location.implementation');
+						} catch (ignore) { /* no-op */ }
+						if ('hash' === location_key){
+							log('Ember hash change conflict detected.');
+							return true;
+						}
+					}();
+				}
+			}
+			return false;
+		}
+
+		if (hasConflictingHashChangeHandlers()){
+			log('Skipping location.hash handlers due to conflict');
+			return null;
+		} else if(Array.prototype.forEach && document.querySelectorAll){
 			log('Setting up location.hash handlers');
 			bindAnchors();
 			bindLocationHash();
@@ -289,7 +312,9 @@
 					return myID;
 				},
 				moveToAnchor: function moveToAnchorF(hash){
-					inPageLinks.findTarget(hash);
+					if (inPageLinks && inPageLinks.findTarget) {
+						inPageLinks.findTarget(hash);
+					}
 				},
 				reset: function resetF(){
 					resetIFrame('parentIFrame.reset');
