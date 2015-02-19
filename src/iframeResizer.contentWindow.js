@@ -568,7 +568,7 @@
 			}
 		}
 
-		if (!isDoubleFiredEvent() || !eventCancelTimer){
+		if (!isDoubleFiredEvent()){
 			if (isSizeChangeDetected()){
 				recordTrigger();
 				lockTrigger();
@@ -582,6 +582,7 @@
 	}
 
 	function lockTrigger(){
+		if (!eventCancelTimer) return;
 		if (!triggerLocked){
 			triggerLocked = true;
 			log('Trigger event lock on');
