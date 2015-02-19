@@ -112,7 +112,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>Notes:</i>
 
-<i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
+<i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page. The [eventCancelTimer](#eventCancelTimer) should also be set to a non-zero integer to prevent flicker; `128` milliseconds is recommended.</i>
 
 <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
 
@@ -159,6 +159,14 @@ Resize iFrame to content width.
 	
 Set the number of pixels the iFrame content size has to change by, before triggering resize of the iFrame.
 
+### eventCancelTimer
+
+	default: 0 (in ms)
+	type:    integer
+
+Set the length of time for the trigger to lock before communicating up to the parent page to trigger further resizing. If set to zero, there will be no locking.
+
+For the **bodyScroll**, **documentElementScroll**, **max**, and **min** [heightCalculationMethod](#heightCalculationMethod) options, you should set this to a non-zero number to prevent screen flicker; `128` milliseconds is recommended.
 
 ## Callback Methods
 

@@ -19,7 +19,7 @@
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
-		eventCancelTimer      = 128,
+		eventCancelTimer      = 0,
 		height                = 1,
 		firstRun              = true,
 		heightCalcModeDefault = 'offset',
@@ -102,6 +102,7 @@
 		bodyBackground   = data[9];
 		bodyPadding      = data[10];
 		tolerance        = (undefined !== data[11]) ? Number(data[11]) : tolerance;
+		eventCancelTimer = (undefined !== data[12]) ? Number(data[12]) : eventCancelTimer;
 	}
 
 	function chkCSS(attr,value){
@@ -581,6 +582,7 @@
 	}
 
 	function lockTrigger(){
+		if (!eventCancelTimer) return;
 		if (!triggerLocked){
 			triggerLocked = true;
 			log('Trigger event lock on');
