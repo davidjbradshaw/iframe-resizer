@@ -40,6 +40,7 @@
 			sizeHeight                : true,
 			sizeWidth                 : false,
 			tolerance                 : 0,
+			eventCancelTimer          : 0,
 			closedCallback            : function(){},
 			initCallback              : function(){},
 			messageCallback           : function(){},
@@ -462,7 +463,8 @@
 				':' + settings.heightCalculationMethod +
 				':' + settings.bodyBackground +
 				':' + settings.bodyPadding +
-				':' + settings.tolerance;
+				':' + settings.tolerance +
+				':' + settings.eventCancelTimer;
 		}
 
 		function init(msg){
