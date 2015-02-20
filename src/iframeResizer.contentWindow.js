@@ -90,18 +90,19 @@
 			return 'true' === str ? true : false;
 		}
 
-		myID             = data[0];
-		bodyMargin       = (undefined !== data[1]) ? Number(data[1])   : bodyMargin; //For V1 compatibility
-		calculateWidth   = (undefined !== data[2]) ? strBool(data[2])  : calculateWidth;
-		logging          = (undefined !== data[3]) ? strBool(data[3])  : logging;
-		interval         = (undefined !== data[4]) ? Number(data[4])   : interval;
-		publicMethods    = (undefined !== data[5]) ? strBool(data[5])  : publicMethods;
-		autoResize       = (undefined !== data[6]) ? strBool(data[6])  : autoResize;
-		bodyMarginStr    = data[7];
-		heightCalcMode   = (undefined !== data[8]) ? data[8]           : heightCalcMode;
-		bodyBackground   = data[9];
-		bodyPadding      = data[10];
-		tolerance        = (undefined !== data[11]) ? Number(data[11]) : tolerance;
+		myID               = data[0];
+		bodyMargin         = (undefined !== data[1]) ? Number(data[1])   : bodyMargin; //For V1 compatibility
+		calculateWidth     = (undefined !== data[2]) ? strBool(data[2])  : calculateWidth;
+		logging            = (undefined !== data[3]) ? strBool(data[3])  : logging;
+		interval           = (undefined !== data[4]) ? Number(data[4])   : interval;
+		publicMethods      = (undefined !== data[5]) ? strBool(data[5])  : publicMethods;
+		autoResize         = (undefined !== data[6]) ? strBool(data[6])  : autoResize;
+		bodyMarginStr      = data[7];
+		heightCalcMode     = (undefined !== data[8]) ? data[8]           : heightCalcMode;
+		bodyBackground     = data[9];
+		bodyPadding        = data[10];
+		tolerance          = (undefined !== data[11]) ? Number(data[11]) : tolerance;
+		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
 	}
 
 	function chkCSS(attr,value){
@@ -120,7 +121,7 @@
 	}
 
 	function setMargin(){
-		//If called via V1 script, convert bodyMargin from int to str 
+		//If called via V1 script, convert bodyMargin from int to str
 		if (undefined === bodyMarginStr){
 			bodyMarginStr = bodyMargin+'px';
 		}
@@ -161,7 +162,7 @@
 		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
 		//addTriggerEvent({ eventType: 'Window Mouse Down',         eventName:  'mousedown' });
 		//addTriggerEvent({ eventType: 'Window Mouse Up',           eventName:  'mouseup' });
-		addTriggerEvent({ eventType: 'Window Resized',            eventName:  'resize' });	
+		addTriggerEvent({ eventType: 'Window Resized',            eventName:  'resize' });
 	}
 
 	function checkHeightMode(){
@@ -204,7 +205,7 @@
 			var
 				elPosition   = el.getBoundingClientRect(),
 				pagePosition = getPagePosition();
- 
+
 			return {
 				x: parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
 				y: parseInt(elPosition.top,10)  + parseInt(pagePosition.y,10)
@@ -251,7 +252,7 @@
 					addEventListener(el,'click',linkClicked);
 				}
 			}
-		
+
 			Array.prototype.forEach.call( document.querySelectorAll( 'a[href^="#"]' ), setupLink );
 		}
 
@@ -263,13 +264,21 @@
 			setTimeout(checkLocationHash,eventCancelTimer);
 		}
 
-		if(Array.prototype.forEach && document.querySelectorAll){
-			log('Setting up location.hash handlers');
-			bindAnchors();
-			bindLocationHash();
-			initCheck();
+		function enableInPageLinks(){
+			if(Array.prototype.forEach && document.querySelectorAll){
+				log('Setting up location.hash handlers');
+				bindAnchors();
+				bindLocationHash();
+				initCheck();
+			} else {
+				warn('In page linking not fully supported in this browser! (See README.md for IE8 workaround)');
+			}
+		}
+
+		if(inPageLinks.enable){
+			enableInPageLinks();
 		} else {
-			warn('In page linking not fully supported in this browser! (See README.md for IE8 workaround)');
+			log('In page linking not enabled');
 		}
 
 		return {

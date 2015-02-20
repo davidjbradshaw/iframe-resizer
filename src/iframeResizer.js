@@ -28,6 +28,7 @@
 			bodyMarginV1              : 8,
 			bodyPadding               : null,
 			checkOrigin               : true,
+			enableInPageLinks         : false,
 			enablePublicMethods       : false,
 			heightCalculationMethod   : 'offset',
 			interval                  : 32,
@@ -110,7 +111,7 @@
 
 			ensureInRange('Height');
 			ensureInRange('Width');
-			
+
 			syncResize(resize,messageData,'resetPage');
 		}
 
@@ -246,10 +247,10 @@
 				};
 			}
 
-			var 
+			var
 				offset = addOffset ? getElementPosition(messageData.iframe) : {x:0,y:0},
 				newPosition = calcOffset();
-			
+
 			log(' Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 
 			if(window.top!==window.self){
@@ -462,7 +463,8 @@
 				':' + settings.heightCalculationMethod +
 				':' + settings.bodyBackground +
 				':' + settings.bodyPadding +
-				':' + settings.tolerance;
+				':' + settings.tolerance +
+				':' + settings.enableInPageLinks;
 		}
 
 		function init(msg){
@@ -538,7 +540,7 @@
 				default:
 					throw new TypeError('Unexpected data type ('+typeof(target)+').');
 			}
-			
+
 		};
 	}
 
