@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 ![license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)
 
-This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It provides a range of features to address the most common issues with using iFrames, these include.
+This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It provides a range of features to address the most common issues with using iFrames, these include:
 
 * Heigh and width resizing of the iFrame to content size.
 * Works with multiple and nested iFrames.
