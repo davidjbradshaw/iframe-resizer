@@ -33,11 +33,29 @@
         <h1>
 <a id="iframe-resizer" class="anchor" href="#iframe-resizer" aria-hidden="true"><span class="octicon octicon-link"></span></a>iFrame Resizer</h1>
 
-<p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a> to pass messages between the host page and the iFrame and when available <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> to detect DOM changes, with a fallback to setInterval for IE8-10. </p>
+<p><a href="http://badge.fury.io/bo/iframe-resizer"><img src="https://badge.fury.io/bo/iframe-resizer.svg" alt="Bower version"></a>
+<a href="http://badge.fury.io/js/iframe-resizer"><img src="https://badge.fury.io/js/iframe-resizer.svg" alt="NPM version"></a>
+<a href="https://travis-ci.org/davidjbradshaw/iframe-resizer"><img src="https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master" alt="Build Status"></a>
+<img src="http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat" alt="license"></p>
 
-<p>The code also detects browser events that can cause the content to resize; provides functions to allow the iFrame to set a custom size and close itself. Plus it supports having multiple iFrames on the host-page and additionally provides for the sending of simple messages from the iFrame to the parent page. </p>
+<p>This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It provides a range of features to address the most common issues with using iFrames, these include:</p>
 
-<p>For security, by default the host-page automatically checks that the origin of incoming messages are from the domain of the page listed in the <code>src</code> property of the iFrame.</p>
+<ul>
+<li>Heigh and width resizing of the iFrame to content size.</li>
+<li>Works with multiple and nested iFrames.</li>
+<li>Automatic domain authentication for cross domain iFrames.</li>
+<li>Provides a range of page size calculation methods to support complex CSS layouts.</li>
+<li>Detects changes to the DOM that can cause the page to resize using <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a>.</li>
+<li>Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Device Orientation and Mouse events).</li>
+<li>Simplified messaging from iFrame to host page via <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a>.</li>
+<li>Fixes in page links in iFrame and supports links from the iFrame to the parent page.</li>
+<li>Provides custom sizing and scrolling methods.</li>
+<li>Works with <a href="http://viewerjs.org/">ViewerJS</a> to support PDF and ODF documents.</li>
+<li>Fallback support down to IE8.</li>
+</ul>
+
+<h3>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started</h3>
 
 <p>The package contains two minified JavaScript files in the <a href="js">js</a> folder. The first (<a href="https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">iframeResizer.min.js</a>) is for the page hosting the iFrames. It can be called with <strong>native</strong> JavaScript;</p>
 
@@ -88,10 +106,10 @@ type:    boolean
 <a id="bodybackground" class="anchor" href="#bodybackground" aria-hidden="true"><span class="octicon octicon-link"></span></a>bodyBackground</h3>
 
 <pre><code>default: null
-type:    string 
+type:    string
 </code></pre>
 
-<p>Override the body background style in the iFrame. </p>
+<p>Override the body background style in the iFrame.</p>
 
 <h3>
 <a id="bodymargin" class="anchor" href="#bodymargin" aria-hidden="true"><span class="octicon octicon-link"></span></a>bodyMargin</h3>
@@ -110,6 +128,15 @@ type:    boolean
 </code></pre>
 
 <p>When set to true, only allow incoming messages from the domain listed in the <code>src</code> property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.</p>
+
+<h3>
+<a id="enableinpagelinks" class="anchor" href="#enableinpagelinks" aria-hidden="true"><span class="octicon octicon-link"></span></a>enableInPageLinks</h3>
+
+<pre><code>default: false
+type:    boolean
+</code></pre>
+
+<p>When enabled in page linking inside the iFrame and from the iFrame to the parent page with be enabled.</p>
 
 <h3>
 <a id="enablepublicmethods" class="anchor" href="#enablepublicmethods" aria-hidden="true"><span class="octicon octicon-link"></span></a>enablePublicMethods</h3>
@@ -137,11 +164,11 @@ type:    number
 <a id="heightcalculationmethod" class="anchor" href="#heightcalculationmethod" aria-hidden="true"><span class="octicon octicon-link"></span></a>heightCalculationMethod</h3>
 
 <pre><code>default: 'bodyOffset'
-values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 
+values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
          'max' | 'min' | 'grow' | 'lowestElement'
 </code></pre>
 
-<p>By default the height of the iFrame is calculated by converting the margin of the <code>body</code> to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the <code>body</code> tag. </p>
+<p>By default the height of the iFrame is calculated by converting the margin of the <code>body</code> to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the <code>body</code> tag.</p>
 
 <p>In cases where CSS styles causes the content to flow outside the <code>body</code> you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.</p>
 
@@ -162,8 +189,7 @@ values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElemen
 <li>
 <strong>grow</strong> same as <strong>max</strong> but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size</li>
 <li>
-<strong>lowestElement</strong> Loops though every element in the the DOM and finds the lowest bottom point.<br>
-</li>
+<strong>lowestElement</strong> Loops though every element in the the DOM and finds the lowest bottom point.</li>
 </ul>
 
 <p><i>Notes:</i></p>
@@ -281,7 +307,7 @@ type:    integer
 <h3>
 <a id="close" class="anchor" href="#close" aria-hidden="true"><span class="octicon octicon-link"></span></a>close()</h3>
 
-<p>Remove the iFrame from the parent page. </p>
+<p>Remove the iFrame from the parent page.</p>
 
 <h3>
 <a id="getid" class="anchor" href="#getid" aria-hidden="true"><span class="octicon octicon-link"></span></a>getId()</h3>
@@ -306,12 +332,12 @@ type:    integer
 <h3>
 <a id="setheightcalculationmethodheightcalculationmethod" class="anchor" href="#setheightcalculationmethodheightcalculationmethod" aria-hidden="true"><span class="octicon octicon-link"></span></a>setHeightCalculationMethod(heightCalculationMethod)</h3>
 
-<p>Change the method use to workout the height of the iFrame. </p>
+<p>Change the method use to workout the height of the iFrame.</p>
 
 <h3>
 <a id="size-customheight-customwidth" class="anchor" href="#size-customheight-customwidth" aria-hidden="true"><span class="octicon octicon-link"></span></a>size ([customHeight],[ customWidth])</h3>
 
-<p>Manually force iFrame to resize. This method optionally accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the <code>autoResize</code> option to prevent auto resizing and enable the <code>sizeWidth</code> option if you wish to set the width. </p>
+<p>Manually force iFrame to resize. This method optionally accepts two arguments: <strong>customHeight</strong> &amp; <strong>customWidth</strong>. To use them you need first to disable the <code>autoResize</code> option to prevent auto resizing and enable the <code>sizeWidth</code> option if you wish to set the width.</p>
 
 <div class="highlight highlight-js"><pre>iFrameResize({
     autoResize<span class="pl-k">:</span> <span class="pl-c1">false</span>,
@@ -328,14 +354,14 @@ type:    integer
 <h2>
 <a id="troubleshooting" class="anchor" href="#troubleshooting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Troubleshooting</h2>
 
-<p>The first step to investigate a problem is to enable the <a href="#log">log</a> option and then open the <a href="https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console">JavaScript Console</a>. This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. </p>
+<p>The first step to investigate a problem is to enable the <a href="#log">log</a> option and then open the <a href="https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console">JavaScript Console</a>. This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.</p>
 
 <p>Solutions for the most common problems are outlined in this section.</p>
 
 <h3>
 <a id="iframe-not-sizing-correctly" class="anchor" href="#iframe-not-sizing-correctly" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame not sizing correctly</h3>
 
-<p>If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, normally you will be best off selecting the <strong>max</strong> or <strong>lowestElement</strong> options to avoid cross browser differences. </p>
+<p>If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the <a href="#heightcalculationmethod">heightCalculationMethod</a> to uses one of the other sizing methods, normally you will be best off selecting the <strong>max</strong> or <strong>lowestElement</strong> options to avoid cross browser differences.</p>
 
 <h3>
 <a id="iframe-not-downsizing" class="anchor" href="#iframe-not-downsizing" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame not downsizing</h3>
@@ -423,6 +449,7 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.8.4 Added switch for inPageLinking support.</li>
 <li>v2.8.3 Throw error if passed a non-DOM object.</li>
 <li>v2.8.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/145">#145</a> Fixed in page links, to work with HTML IDs that are not valid CSS IDs [<a href="https://github.com/ezzatron">Erin Millard</a>]. Moved map files from src to js folder. Added to NPM.</li>
 <li>v2.8.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/138">#138</a> Added option to pass in iFrame object, instead of selector.</li>
@@ -430,7 +457,7 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <li>v2.7.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/131">#131</a> Fix code that works out position of iFrame on host page.</li>
 <li>v2.7.0 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/129">#129</a> Parse data passed to <em>parentIFrame.sendMessage()</em> into JSON to allow complex data types to be sent to <em>messageCallback()</em>.</li>
 <li>v2.6.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/107">#107</a> Added Node support for use with Browserify.</li>
-<li>v2.6.4 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/115">#115</a> Added <em>parentIFrame.scrollToOffset()</em> method. </li>
+<li>v2.6.4 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/115">#115</a> Added <em>parentIFrame.scrollToOffset()</em> method.</li>
 <li>v2.6.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/115">#115</a> Fixed issue with the range check sometimes causing non-resizing messages to be rejected.</li>
 <li>v2.6.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/104">#104</a> Fixed issue with jQuery.noConflict [<a href="https://github.com/flyingleafe">Dmitry Mukhutdinov</a>].</li>
 <li>v2.6.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/91">#91</a> Fixed issue with jQuery version requiring empty object if no options are being set.</li>
@@ -441,7 +468,7 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <li>v2.4.8 Fix issue when message passed to messageCallback contains a colon.</li>
 <li>v2.4.7 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/49">#49</a> Deconflict requestAnimationFrame.</li>
 <li>v2.4.6 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/46">#46</a> Fix iFrame event listener in IE8.</li>
-<li>v2.4.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/41">#41</a> Prevent error in FireFox when body is hidden by CSS [<a href="/Scotis">Scott Otis</a>]. </li>
+<li>v2.4.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/41">#41</a> Prevent error in FireFox when body is hidden by CSS [<a href="/Scotis">Scott Otis</a>].</li>
 <li>v2.4.4 Enable nested iFrames (<a href="https://github.com/davidjbradshaw/iframe-resizer/issues/31">#31</a> Filter incoming iFrame message in host-page script. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/33">#33</a> Squash unexpected message warning when using nested iFrames. Improved logging for nested iFrames). <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/38">#38</a> Detect late image loads that cause a resize due to async image loading in WebKit [<a href="/ynh">Yassin</a>]. Fixed :Hover example in FireFox. Increased trigger timeout lock to 64ms. </li>
 <li>v2.4.3 Simplified handling of double fired events. Fixed test coverage.</li>
 <li>v2.4.2 Fix missing 'px' unit when resetting height.</li>
@@ -467,7 +494,7 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <li>v1.3.5 Documentation improvements. Added Grunt-Bump to build script.</li>
 <li>v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs.</li>
 <li>v1.2.5 Fix publish to <a href="https://plugins.jquery.com">plugins.jquery.com</a>.</li>
-<li>v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to parentIFrame object in iFrame. </li>
+<li>v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All <a href="https://github.com/jmav">Jure Mav</a>]. Plus setInterval now only runs in browsers that don't support <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> and is on by default, sourceMaps added and close() method introduced to parentIFrame object in iFrame.</li>
 <li>v1.1.1 Added event type to messageData object.</li>
 <li>v1.1.0 Added DOM <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> trigger to better detect content changes in iFrame, <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/7">#7</a> Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.</li>
 <li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
