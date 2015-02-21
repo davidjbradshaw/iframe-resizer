@@ -4,13 +4,12 @@
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 ![license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)
 
-This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It includes a range of features to address the most common issues with using iFrames, these include.
+This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It contains a range of features to address the most common issues with using iFrames, these include.
 
 * Heigh and width resizing of the iFrame to content size.
-* Supports cross domain iFrames.
 * Works with multiple and nested iFrames.
-* Provides a range of page size calculation methods to support complex CSS.
-* Domain authentication for cross domain iFrames.
+* Automatic domain authentication for cross domain iFrames.
+* Provides a range of page size calculation methods to support complex CSS layouts.
 * Detects changes to the DOM that can cause the page to resize using [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 * Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Device Orientation and Mouse events).
 * Simplified messaging from iFrame to host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
