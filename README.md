@@ -18,7 +18,7 @@ This library enables the automatic resizing of the height and width of both same
 * Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
 * Fallback support down to IE8.
 
-###Getting started
+### Getting started
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
@@ -43,7 +43,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the [troubleshooting](#troubleshooting) section below.
 
-###Example
+### Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
 
 ## Options
@@ -264,7 +264,7 @@ if ('parentIFrame' in window) {
 ```
 
 
-##Troubleshooting
+## Troubleshooting
 
 The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.
 
@@ -282,10 +282,10 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 <!DOCTYPE html>
 ```
 
-###IFrame not resizing
+### IFrame not resizing
 The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
 
-###IFrame not detecting CSS :hover events
+### IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
 
 ```js
@@ -311,11 +311,11 @@ By default the origin of incoming messages is checked against the `src` attribut
 
 
 ## Browser compatibility
-###jQuery version
+### jQuery version
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
 
-###Native version
+### Native version
 
 Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+) and [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode),
 
@@ -348,7 +348,7 @@ if (!Array.prototype.forEach){
 In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 
-##Version History
+## Version History
 
 * v2.8.4 Added switch for inPageLinking support.
 * v2.8.3 Throw error if passed a non-DOM object.
