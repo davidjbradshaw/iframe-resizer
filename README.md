@@ -62,6 +62,8 @@ Setting the `log` option to true will make the scripts in both the host page and
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.
 
+<i>Note: When set to false the iFrame will still inititally size to the contained content, only additional resizing events are disabled.</i>
+
 ### bodyBackground
 
 	default: null
@@ -88,7 +90,7 @@ When set to true, only allow incoming messages from the domain listed in the `sr
 	default: false
 	type:    boolean
 
-When enabled in page linking inside the iFrame and from the iFrame to the parent page with be enabled.
+When enabled in page linking inside the iFrame and from the iFrame to the parent page will be enabled.
 
 ### enablePublicMethods
 
@@ -300,8 +302,19 @@ function resize(){
 $(*Element with hover style*).hover(resize);
 ```
 
-### ParentIframe not found errors
-To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to true.
+### ParentIFrame not found errors
+To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to true. The `parentIFrame` object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
+
+```js
+if(top !== self) { // Check we are in an iFrame
+	var timer = setInterval(function(){
+		if ('parentIFrame' in window) {
+			clearTimeout(timer);
+			...
+		}
+	},32);
+}
+```
 
 ### PDF and OpenDocument files
 It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the iFrame JavaScript file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)).
