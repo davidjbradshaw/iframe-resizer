@@ -550,9 +550,6 @@
 
 			return	checkTolarance(height,currentHeight) ||
 					(calculateWidth && checkTolarance(width,currentWidth));
-
-			//return	(height !== currentHeight) ||
-			//		(calculateWidth && width !== currentWidth);
 		}
 
 		function isForceResizableEvent(){
