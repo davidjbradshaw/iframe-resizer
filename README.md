@@ -270,7 +270,7 @@ if ('parentIFrame' in window) {
 
 The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.
 
-Solutions for the most common problems are outlined in this section.
+Solutions for the most common problems are outlined in this section and you can also ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer).
 
 ### IFrame not sizing correctly
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences.
