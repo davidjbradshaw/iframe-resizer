@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
-		<meta name="description" content="iFrame message passing test"> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
 		<meta name="viewport" content="width=device-width">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<script type="text/javascript">
@@ -12,7 +12,7 @@
 				Array.prototype.forEach = function(fun /*, thisArg */){
 				"use strict";
 				if (this === void 0 || this === null || typeof fun !== "function") throw new TypeError();
-				
+
 				var
 				t = Object(this),
 				len = t.length >>> 0,
@@ -24,8 +24,8 @@
 				};
 			}
 		</script>
-	</head> 
-	<body> 
+	</head>
+	<body>
 		<h2>Automagically resizing iFrame</h2>
 		<p>Resize window or click one of the links in the iFrame to watch it resize.<a name="anchorParentTest"></a></p>
 		<div style="margin:20px;">
@@ -39,17 +39,18 @@
 		</div>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.min.js"></script> 
+		<script type="text/javascript" src="../js/iframeResizer.min.js"></script>
 		<script type="text/javascript">
 
 			iFrameResize({
 				log                     : true,                  // Enable console logging
 				enablePublicMethods     : true,                  // Enable methods within iframe hosted page
+				enableInPageLinks       : true,
 				resizedCallback         : function(messageData){ // Callback fn when resize is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
 						' <b>Height:</b> '     + messageData.height +
-						' <b>Width:</b> '      + messageData.width + 
+						' <b>Width:</b> '      + messageData.width +
 						' <b>Event type:</b> ' + messageData.type
 					);
 				},
@@ -68,8 +69,6 @@
 				}
 			});
 
-
 		</script>
-
-	</body> 
+	</body>
 </html>

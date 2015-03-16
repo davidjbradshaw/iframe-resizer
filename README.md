@@ -1,15 +1,24 @@
-# iFrame Resizer 
+# iFrame Resizer
 [![Bower version](https://badge.fury.io/bo/iframe-resizer.svg)](http://badge.fury.io/bo/iframe-resizer)
 [![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
-[![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer) 
+[![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 ![license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)
 
-This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It uses [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage) to pass messages between the host page and the iFrame and when available [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) to detect DOM changes, with a fallback to setInterval for IE8-10. 
+This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit the contained content. It provides a range of features to address the most common issues with using iFrames, these include:
 
-The code also detects browser events that can cause the content to resize; provides functions to allow the iFrame to set a custom size and close itself. Plus it supports having multiple iFrames on the host-page and additionally provides for the sending of simple messages from the iFrame to the parent page. 
+* Height and width resizing of the iFrame to content size.
+* Works with multiple and nested iFrames.
+* Automatic domain authentication for cross domain iFrames.
+* Provides a range of page size calculation methods to support complex CSS layouts.
+* Detects changes to the DOM that can cause the page to resize using [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
+* Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Device Orientation and Mouse events).
+* Simplified messaging from iFrame to host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
+* Fixes in page links in iFrame and supports links from the iFrame to the parent page.
+* Provides custom sizing and scrolling methods.
+* Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
+* Fallback support down to IE8.
 
-For security, by default the host-page automatically checks that the origin of incoming messages are from the domain of the page listed in the `src` property of the iFrame.
-
+### Getting started
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
@@ -22,7 +31,7 @@ or via **jQuery**. (See [notes](#browser-compatibility) below for using native v
 $('iframe').iFrameResize( [{options}] );
 ```
 
-The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependancies and won't do anything until it's activated by a message from the containing page</i>.
+The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependencies and won't do anything until it's activated by a message from the containing page</i>.
 
 ### Typical setup
 
@@ -34,7 +43,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the [troubleshooting](#troubleshooting) section below.
 
-###Example
+### Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
 
 ## Options
@@ -53,12 +62,14 @@ Setting the `log` option to true will make the scripts in both the host page and
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.
 
+<i>Note: When set to false the iFrame will still inititally size to the contained content, only additional resizing events are disabled.</i>
+
 ### bodyBackground
 
 	default: null
-	type:    string 
+	type:    string
 
-Override the body background style in the iFrame. 
+Override the body background style in the iFrame.
 
 ### bodyMargin
 
@@ -73,8 +84,15 @@ Override the default body margin style in the iFrame. A string can be any valid 
 	type:    boolean
 
 When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.
- 
-### enablePublicMethods  
+
+### enableInPageLinks
+
+	default: false
+	type:    boolean
+
+When enabled in page linking inside the iFrame and from the iFrame to the parent page will be enabled.
+
+### enablePublicMethods
 
 	default: false
 	type:    boolean
@@ -95,10 +113,10 @@ Set to zero to disable.
 ### heightCalculationMethod
 
 	default: 'bodyOffset'
-	values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' | 
+	values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
 	         'max' | 'min' | 'grow' | 'lowestElement'
 
-By default the height of the iFrame is calculated by converting the margin of the `body` to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the `body` tag. 
+By default the height of the iFrame is calculated by converting the margin of the `body` to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the `body` tag.
 
 In cases where CSS styles causes the content to flow outside the `body` you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
@@ -108,7 +126,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **max** takes the largest value of the main four options
 * **min** takes the smallest value of the main four options
 * **grow** same as **max** but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
-* **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point.  
+* **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point.
 
 <i>Notes:</i>
 
@@ -156,7 +174,7 @@ Resize iFrame to content width.
 
 	default: 0
 	type:    integer
-	
+
 Set the number of pixels the iFrame content size has to change by, before triggering resize of the iFrame.
 
 
@@ -183,7 +201,7 @@ Receive message posted from iFrame with the `parentIFrame.sendMessage()` method.
 ### resizedCallback
 
 	type: function ({iframe,height,width,type})
-	
+
 Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
 
 ### scrollCallback
@@ -205,7 +223,7 @@ if ('parentIFrame' in window) {
 
 ### close()
 
-Remove the iFrame from the parent page. 
+Remove the iFrame from the parent page.
 
 ### getId()
 
@@ -225,11 +243,11 @@ Send data to the containing page, `message` can be any data type that can be ser
 
 ### setHeightCalculationMethod(heightCalculationMethod)
 
-Change the method use to workout the height of the iFrame. 
+Change the method use to workout the height of the iFrame.
 
 ### size ([customHeight],[ customWidth])
 
-Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width. 
+Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width.
 
 ```js
 iFrameResize({
@@ -248,14 +266,14 @@ if ('parentIFrame' in window) {
 ```
 
 
-##Troubleshooting
+## Troubleshooting
 
-The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages. 
+The first step to investigate a problem is to enable the [log](#log) option and then open the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.
 
-Solutions for the most common problems are outlined in this section.
+Solutions for the most common problems are outlined in this section and you can also ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer).
 
 ### IFrame not sizing correctly
-If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences. 
+If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences.
 
 ### IFrame not downsizing
 The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the `html` or `body` elements, but it could be on any element in the page.
@@ -266,10 +284,10 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 <!DOCTYPE html>
 ```
 
-###IFrame not resizing
+### IFrame not resizing
 The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
 
-###IFrame not detecting CSS :hover events
+### IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
 
 ```js
@@ -284,8 +302,19 @@ function resize(){
 $(*Element with hover style*).hover(resize);
 ```
 
-### ParentIframe not found errors
-To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to true.
+### ParentIFrame not found errors
+To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to true. The `parentIFrame` object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
+
+```js
+if(top !== self) { // Check we are in an iFrame
+	var timer = setInterval(function(){
+		if ('parentIFrame' in window) {
+			clearTimeout(timer);
+			...
+		}
+	},32);
+}
+```
 
 ### PDF and OpenDocument files
 It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the iFrame JavaScript file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)).
@@ -294,12 +323,12 @@ It is not possible to add the required JavaScript to PDF and ODF files. However,
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
 
 
-## Browser compatibility 
-###jQuery version
+## Browser compatibility
+### jQuery version
 
 Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
 
-###Native version
+### Native version
 
 Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+) and [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode),
 
@@ -332,8 +361,9 @@ if (!Array.prototype.forEach){
 In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 
-##Version History
+## Version History
 
+* v2.8.4 Added switch for inPageLinking support.
 * v2.8.3 Throw error if passed a non-DOM object.
 * v2.8.2 [#145](https://github.com/davidjbradshaw/iframe-resizer/issues/145) Fixed in page links, to work with HTML IDs that are not valid CSS IDs [[Erin Millard](https://github.com/ezzatron)]. Moved map files from src to js folder. Added to NPM.
 * v2.8.1 [#138](https://github.com/davidjbradshaw/iframe-resizer/issues/138) Added option to pass in iFrame object, instead of selector.
@@ -341,7 +371,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 * v2.7.1 [#131](https://github.com/davidjbradshaw/iframe-resizer/issues/131) Fix code that works out position of iFrame on host page.
 * v2.7.0 [#129](https://github.com/davidjbradshaw/iframe-resizer/issues/129) Parse data passed to *parentIFrame.sendMessage()* into JSON to allow complex data types to be sent to *messageCallback()*.
 * v2.6.5 [#107](https://github.com/davidjbradshaw/iframe-resizer/issues/107) Added Node support for use with Browserify.
-* v2.6.4 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Added *parentIFrame.scrollToOffset()* method. 
+* v2.6.4 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Added *parentIFrame.scrollToOffset()* method.
 * v2.6.3 [#115](https://github.com/davidjbradshaw/iframe-resizer/issues/115) Fixed issue with the range check sometimes causing non-resizing messages to be rejected.
 * v2.6.2 [#104](https://github.com/davidjbradshaw/iframe-resizer/issues/104) Fixed issue with jQuery.noConflict [[Dmitry Mukhutdinov](https://github.com/flyingleafe)].
 * v2.6.1 [#91](https://github.com/davidjbradshaw/iframe-resizer/issues/91) Fixed issue with jQuery version requiring empty object if no options are being set.
@@ -352,7 +382,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 * v2.4.8 Fix issue when message passed to messageCallback contains a colon.
 * v2.4.7 [#49](https://github.com/davidjbradshaw/iframe-resizer/issues/49) Deconflict requestAnimationFrame.
 * v2.4.6 [#46](https://github.com/davidjbradshaw/iframe-resizer/issues/46) Fix iFrame event listener in IE8.
-* v2.4.5 [#41](https://github.com/davidjbradshaw/iframe-resizer/issues/41) Prevent error in FireFox when body is hidden by CSS [[Scott Otis](/Scotis)]. 
+* v2.4.5 [#41](https://github.com/davidjbradshaw/iframe-resizer/issues/41) Prevent error in FireFox when body is hidden by CSS [[Scott Otis](/Scotis)].
 * v2.4.4 Enable nested iFrames ([#31](https://github.com/davidjbradshaw/iframe-resizer/issues/31) Filter incoming iFrame message in host-page script. [#33](https://github.com/davidjbradshaw/iframe-resizer/issues/33) Squash unexpected message warning when using nested iFrames. Improved logging for nested iFrames). [#38](https://github.com/davidjbradshaw/iframe-resizer/issues/38) Detect late image loads that cause a resize due to async image loading in WebKit [[Yassin](/ynh)]. Fixed :Hover example in FireFox. Increased trigger timeout lock to 64ms. 
 * v2.4.3 Simplified handling of double fired events. Fixed test coverage.
 * v2.4.2 Fix missing 'px' unit when resetting height.
@@ -378,7 +408,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 * v1.3.5 Documentation improvements. Added Grunt-Bump to build script.
 * v1.3.0 IFrame code now uses default values if called with an old version of the host page script. Improved function naming. Old names have been deprecated and removed from docs.
 * v1.2.5 Fix publish to [plugins.jquery.com](https://plugins.jquery.com).
-* v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to parentIFrame object in iFrame. 
+* v1.2.0 Added autoResize option, added height/width values to iFrame public size function, set HTML tag height to auto, improved documentation [All [Jure Mav](https://github.com/jmav)]. Plus setInterval now only runs in browsers that don't support [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) and is on by default, sourceMaps added and close() method introduced to parentIFrame object in iFrame.
 * v1.1.1 Added event type to messageData object.
 * v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
