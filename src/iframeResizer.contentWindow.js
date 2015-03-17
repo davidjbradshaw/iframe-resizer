@@ -292,7 +292,7 @@
 
 			window.parentIFrame = {
 				close: function closeF(){
-					sendSize('close','parentIFrame.close()', 0, 0);
+					sendSize('close','parentIFrame.close()', Infinity, Infinity);
 				},
 				getId: function getIdF(){
 					return myID;
