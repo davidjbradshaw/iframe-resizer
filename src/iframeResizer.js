@@ -4,6 +4,7 @@
  * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
+ * Contributor: Reed Dadoune - reed@dadoune.com
  */
 ;(function() {
 	'use strict';
