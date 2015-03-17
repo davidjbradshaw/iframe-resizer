@@ -307,9 +307,9 @@ To call methods in the iFrame, you need to set the [enablePublicMethods](#enable
 
 ```js
 if(top !== self) { // Check we are in an iFrame
-	var timer = setInterval(function(){
+	var interval = setInterval(function(){
 		if ('parentIFrame' in window) {
-			clearTimeout(timer);
+			clearInterval(interval);
 			...
 		}
 	},32);
