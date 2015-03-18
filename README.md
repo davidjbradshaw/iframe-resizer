@@ -363,6 +363,7 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ## Version History
 
+* v2.8.5 [#173](https://github.com/davidjbradshaw/iframe-resizer/issues/173) Scope setting to iFrame. [#171](https://github.com/davidjbradshaw/iframe-resizer/issues/171) Fixed *parentIFrame.close()* to work with 0 height iframes [Both [Reed Dadoune](https://github.com/ReedD)].
 * v2.8.4 Added switch for inPageLinking support.
 * v2.8.3 Throw error if passed a non-DOM object.
 * v2.8.2 [#145](https://github.com/davidjbradshaw/iframe-resizer/issues/145) Fixed in page links, to work with HTML IDs that are not valid CSS IDs [[Erin Millard](https://github.com/ezzatron)]. Moved map files from src to js folder. Added to NPM.
