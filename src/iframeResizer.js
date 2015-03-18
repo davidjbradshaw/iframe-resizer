@@ -503,12 +503,15 @@
 		function processOptions(options){
 			options = options || {};
 			settings[iframeID] = {};
+
 			checkOptions(options);
+
 			for (var option in defaults) {
 				if (defaults.hasOwnProperty(option)){
 					settings[iframeID][option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
 				}
 			}
+
 			logEnabled = settings[iframeID].log;
 		}
 
