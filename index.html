@@ -395,9 +395,9 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <p>To call methods in the iFrame, you need to set the <a href="#enablepublicmethods">enablePublicMethods</a> option to true. The <code>parentIFrame</code> object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">if</span>(top <span class="pl-k">!==</span> self) { <span class="pl-c">// Check we are in an iFrame</span>
-    <span class="pl-s">var</span> timer <span class="pl-k">=</span> <span class="pl-s3">setInterval</span>(<span class="pl-st">function</span>(){
+    <span class="pl-s">var</span> interval <span class="pl-k">=</span> <span class="pl-s3">setInterval</span>(<span class="pl-st">function</span>(){
         <span class="pl-k">if</span> (<span class="pl-s1"><span class="pl-pds">'</span>parentIFrame<span class="pl-pds">'</span></span> <span class="pl-k">in</span> <span class="pl-s3">window</span>) {
-            <span class="pl-s3">clearTimeout</span>(timer);
+            <span class="pl-s3">clearInterval</span>(interval);
             ...
         }
     },<span class="pl-c1">32</span>);
@@ -455,6 +455,7 @@ $(<span class="pl-k">*</span>Element <span class="pl-k">with</span> hover style<
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.8.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/173">#173</a> Scope setting to iFrame. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/171">#171</a> Fixed <em>parentIFrame.close()</em> to work with 0 height iframes [Both <a href="https://github.com/ReedD">Reed Dadoune</a>].</li>
 <li>v2.8.4 Added switch for inPageLinking support.</li>
 <li>v2.8.3 Throw error if passed a non-DOM object.</li>
 <li>v2.8.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/145">#145</a> Fixed in page links, to work with HTML IDs that are not valid CSS IDs [<a href="https://github.com/ezzatron">Erin Millard</a>]. Moved map files from src to js folder. Added to NPM.</li>
