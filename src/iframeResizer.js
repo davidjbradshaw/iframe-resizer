@@ -4,13 +4,15 @@
  * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
+ * Contributor: Reed Dadoune - reed@dadoune.com
  */
 ;(function() {
-    'use strict';
+	'use strict';
 
 	var
 		count                 = 0,
 		firstRun              = true,
+		logEnabled            = false,
 		msgHeader             = 'message',
 		msgHeaderLen          = msgHeader.length,
 		msgId                 = '[iFrameSizer]', //Must match iframe msg ID
@@ -90,7 +92,7 @@
 	}
 
 	function log(msg){
-		if (settings.log && ('object' === typeof window.console)){
+		if (logEnabled && ('object' === typeof window.console)){
 			console.log(formatLogMsg(msg));
 		}
 	}
@@ -106,7 +108,7 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
-				settings.resizedCallback(messageData);
+				settings[iframeID].resizedCallback(messageData);
 			}
 
 			ensureInRange('Height');
@@ -120,7 +122,7 @@
 
 			log(' Removing iFrame: '+iframeID);
 			iframe.parentNode.removeChild(iframe);
-			settings.closedCallback(iframeID);
+			settings[iframeID].closedCallback(iframeID);
 			log(' --');
 		}
 
@@ -138,8 +140,8 @@
 
 		function ensureInRange(Dimension){
 			var
-				max  = Number(settings['max'+Dimension]),
-				min  = Number(settings['min'+Dimension]),
+				max  = Number(settings[iframeID]['max'+Dimension]),
+				min  = Number(settings[iframeID]['min'+Dimension]),
 				dimension = Dimension.toLowerCase(),
 				size = Number(messageData[dimension]);
 
@@ -167,7 +169,7 @@
 				origin     = event.origin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
-			if (settings.checkOrigin) {
+			if (settings[iframeID].checkOrigin) {
 				log(' Checking connection is from: '+remoteHost);
 
 				if ((''+origin !== 'null') && (origin !== remoteHost)) {
@@ -205,7 +207,7 @@
 
 		function forwardMsgFromIFrame(msgBody){
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
-			settings.messageCallback({
+			settings[iframeID].messageCallback({
 				iframe: messageData.iframe,
 				message: JSON.parse(msgBody)
 			});
@@ -270,7 +272,7 @@
 		}
 
 		function scrollTo(){
-			if (false !== settings.scrollCallback(pagePosition)){
+			if (false !== settings[iframeID].scrollCallback(pagePosition)){
 				setPagePosition();
 			}
 		}
@@ -311,7 +313,7 @@
 			switch(messageData.type){
 				case 'close':
 					closeIFrame(messageData.iframe);
-					settings.resizedCallback(messageData); //To be removed.
+					settings[iframeID].resizedCallback(messageData); //To be removed.
 					break;
 				case 'message':
 					forwardMsgFromIFrame(getMsgBody(6));
@@ -330,7 +332,7 @@
 					break;
 				case 'init':
 					resizeIFrame();
-					settings.initCallback(messageData.iframe);
+					settings[iframeID].initCallback(messageData.iframe);
 					break;
 				default:
 					resizeIFrame();
@@ -339,11 +341,14 @@
 
 		var
 			msg = event.data,
-			messageData = {};
+			messageData = {},
+			iframeID = null;
 
 		if (isMessageForUs()){
-			log(' Received: '+msg);
 			messageData = processMsg();
+			iframeID    = messageData.id;
+			logEnabled  = settings[iframeID].log;
+			log(' Received: '+msg);
 
 			if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
 				actionMsg();
@@ -386,14 +391,14 @@
 		function setDimension(dimension){
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
-				' IFrame (' + messageData.iframe.id +
+				' IFrame (' + iframeID +
 				') ' + dimension +
 				' set to ' + messageData[dimension] + 'px'
 			);
 		}
-
-		if( settings.sizeHeight) { setDimension('height'); }
-		if( settings.sizeWidth ) { setDimension('width'); }
+		var iframeID = messageData.iframe.id;
+		if( settings[iframeID].sizeHeight) { setDimension('height'); }
+		if( settings[iframeID].sizeWidth ) { setDimension('width'); }
 	}
 
 	function syncResize(func,messageData,doNotSync){
@@ -411,12 +416,12 @@
 	}
 
 
-	function setupIFrame(){
+	function setupIFrame(options){
 		function setLimits(){
 			function addStyle(style){
-				if ((Infinity !== settings[style]) && (0 !== settings[style])){
-					iframe.style[style] = settings[style] + 'px';
-					log(' Set '+style+' = '+settings[style]+'px');
+				if ((Infinity !== settings[iframeID][style]) && (0 !== settings[iframeID][style])){
+					iframe.style[style] = settings[iframeID][style] + 'px';
+					log(' Set '+style+' = '+settings[iframeID][style]+'px');
 				}
 			}
 
@@ -429,6 +434,7 @@
 		function ensureHasId(iframeID){
 			if (''===iframeID){
 				iframe.id = iframeID = 'iFrameResizer' + count++;
+				logEnabled = (options || {}).log;
 				log(' Added missing iframe ID: '+ iframeID +' (' + iframe.src + ')');
 			}
 
@@ -436,35 +442,35 @@
 		}
 
 		function setScrolling(){
-			log(' IFrame scrolling ' + (settings.scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
-			iframe.style.overflow = false === settings.scrolling ? 'hidden' : 'auto';
-			iframe.scrolling      = false === settings.scrolling ? 'no' : 'yes';
+			log(' IFrame scrolling ' + (settings[iframeID].scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
+			iframe.style.overflow = false === settings[iframeID].scrolling ? 'hidden' : 'auto';
+			iframe.scrolling      = false === settings[iframeID].scrolling ? 'no' : 'yes';
 		}
 
 		//The V1 iFrame script expects an int, where as in V2 expects a CSS
 		//string value such as '1px 3em', so if we have an int for V2, set V1=V2
 		//and then convert V2 to a string PX value.
 		function setupBodyMarginValues(){
-			if (('number'===typeof(settings.bodyMargin)) || ('0'===settings.bodyMargin)){
-				settings.bodyMarginV1 = settings.bodyMargin;
-				settings.bodyMargin   = '' + settings.bodyMargin + 'px';
+			if (('number'===typeof(settings[iframeID].bodyMargin)) || ('0'===settings[iframeID].bodyMargin)){
+				settings[iframeID].bodyMarginV1 = settings[iframeID].bodyMargin;
+				settings[iframeID].bodyMargin   = '' + settings[iframeID].bodyMargin + 'px';
 			}
 		}
 
 		function createOutgoingMsg(){
 			return iframeID +
-				':' + settings.bodyMarginV1 +
-				':' + settings.sizeWidth +
-				':' + settings.log +
-				':' + settings.interval +
-				':' + settings.enablePublicMethods +
-				':' + settings.autoResize +
-				':' + settings.bodyMargin +
-				':' + settings.heightCalculationMethod +
-				':' + settings.bodyBackground +
-				':' + settings.bodyPadding +
-				':' + settings.tolerance +
-				':' + settings.enableInPageLinks;
+				':' + settings[iframeID].bodyMarginV1 +
+				':' + settings[iframeID].sizeWidth +
+				':' + settings[iframeID].log +
+				':' + settings[iframeID].interval +
+				':' + settings[iframeID].enablePublicMethods +
+				':' + settings[iframeID].autoResize +
+				':' + settings[iframeID].bodyMargin +
+				':' + settings[iframeID].heightCalculationMethod +
+				':' + settings[iframeID].bodyBackground +
+				':' + settings[iframeID].bodyPadding +
+				':' + settings[iframeID].tolerance +
+				':' + settings[iframeID].enableInPageLinks;
 		}
 
 		function init(msg){
@@ -476,7 +482,7 @@
                                      // context stack is borked and this value gets externally
                                      // changed midway through running this function.
 				trigger('iFrame.onload',msg,iframe);
-				if (!fr && settings.heightCalculationMethod in resetRequiredMethods){
+				if (!fr && settings[iframeID].heightCalculationMethod in resetRequiredMethods){
 					resetIFrame({
 						iframe:iframe,
 						height:0,
@@ -488,54 +494,61 @@
 			trigger('init',msg,iframe);
 		}
 
+		function checkOptions(options){
+			if ('object' !== typeof options){
+				throw new TypeError('Options is not an object.');
+			}
+		}
+
+		function processOptions(options){
+			options = options || {};
+			settings[iframeID] = {};
+
+			checkOptions(options);
+
+			for (var option in defaults) {
+				if (defaults.hasOwnProperty(option)){
+					settings[iframeID][option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
+				}
+			}
+
+			logEnabled = settings[iframeID].log;
+		}
+
 		var
-            /*jshint validthis:true */
+			/*jshint validthis:true */
 			iframe   = this,
 			iframeID = ensureHasId(iframe.id);
 
+		processOptions(options);
 		setScrolling();
 		setLimits();
 		setupBodyMarginValues();
 		init(createOutgoingMsg());
 	}
 
-	function checkOptions(options){
-		if ('object' !== typeof options){
-			throw new TypeError('Options is not an object.');
-		}
-	}
-
-	function processOptions(options){
-		options = options || {};
-		checkOptions(options);
-
-		for (var option in defaults) {
-			if (defaults.hasOwnProperty(option)){
-				settings[option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
-			}
-		}
-	}
 
 	function factory(){
-		function init(element){
+		function init(element, options){
 			if(!element.tagName) {
-                throw new TypeError('Object is not a valid DOM element');
-            } else if ('IFRAME' !== element.tagName.toUpperCase()) {
+				throw new TypeError('Object is not a valid DOM element');
+			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
-				setupIFrame.call(element);
+				setupIFrame.call(element, options);
 			}
 		}
 
 		return function iFrameResizeF(options,target){
-			processOptions(options);
 			switch (typeof(target)){
 				case 'undefined':
 				case 'string':
-					Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), init );
+					Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), function (element) {
+						init(element, options);
+					});
 					break;
 				case 'object':
-					init(target);
+					init(target, options);
 					break;
 				default:
 					throw new TypeError('Unexpected data type ('+typeof(target)+').');
@@ -546,8 +559,9 @@
 
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
-			processOptions(options);
-			return this.filter('iframe').each( setupIFrame ).end();
+			return this.filter('iframe').each(function (index, element) {
+				setupIFrame.call(element, options);
+			}).end();
 		};
 	}
 

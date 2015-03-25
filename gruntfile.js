@@ -102,6 +102,9 @@ module.exports = function(grunt) {
         stderr: true,
         failOnError: true
       },
+      npm:{
+        command: 'npm publish'
+      },
       deployExample: {
         command: function(){
 
@@ -115,9 +118,6 @@ module.exports = function(grunt) {
 
           return retStr;
         }
-      },
-      npm:{
-        command: 'npm publish'
       }
     },
 

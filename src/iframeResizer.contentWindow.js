@@ -292,7 +292,7 @@
 
 			window.parentIFrame = {
 				close: function closeF(){
-					sendSize('close','parentIFrame.close()', 0, 0);
+					sendMsg(0,0,'close');
 				},
 				getId: function getIdF(){
 					return myID;
