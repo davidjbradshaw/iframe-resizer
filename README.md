@@ -134,7 +134,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
 
-<i>**If the default option doesn't work then the best solution is often to use **lowestElement** in modern browsers and **max** in IE10 downwards**</i>
+<i>**If the default option doesn't work then the best solution is often to use** lowestElement **in modern browsers and** max **in IE10 downwards**</i>
 
 ```js
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
