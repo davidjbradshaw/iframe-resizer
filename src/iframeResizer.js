@@ -17,7 +17,6 @@
 		msgHeaderLen          = msgHeader.length,
 		msgId                 = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen              = msgId.length,
-		page                  =  '', //:'+location.href, //Uncoment to debug nested iFrames
 		pagePosition          = null,
 		requestAnimationFrame = window.requestAnimationFrame,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
@@ -216,7 +215,7 @@
 
 		function checkIFrameExists(){
 			if (null === messageData.iframe) {
-				warn('iFrame ('+messageData.id+') does not exist on ' + page);
+				warn(' IFrame ('+messageData.id+') not found');
 				return false;
 			}
 			return true;
