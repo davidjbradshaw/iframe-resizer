@@ -162,7 +162,7 @@
 		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
 		//addTriggerEvent({ eventType: 'Window Mouse Down',         eventName:  'mousedown' });
 		//addTriggerEvent({ eventType: 'Window Mouse Up',           eventName:  'mouseup' });
-		addTriggerEvent({ eventType: 'Window Resized',            eventName:  'resize' });
+		//addTriggerEvent({ eventType: 'IFrame Resized',            eventName:  'resize' });
 	}
 
 	function checkHeightMode(){
@@ -662,6 +662,10 @@
 			}
 		}
 
+		function resizeFromParent(){
+			sendSize('resizeParent','Parent window resized');
+		}
+
 		function getMessageType(){
 			return event.data.split(']')[1];
 		}
@@ -681,6 +685,8 @@
 				initFromParent();
 			} else if ('reset' === getMessageType()){
 				resetFromParent();
+			} else if ('resize' === getMessageType()){
+				resizeFromParent();
 			} else if (event.data !== initMsg && !isMiddleTier()){
 				warn('Unexpected message ('+event.data+')');
 			}

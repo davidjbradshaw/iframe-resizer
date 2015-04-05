@@ -21,6 +21,7 @@
 		requestAnimationFrame = window.requestAnimationFrame,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings              = {},
+		timer                 = null,
 
 		defaults              = {
 			autoResize                : true,
@@ -122,6 +123,7 @@
 			log(' Removing iFrame: '+iframeID);
 			iframe.parentNode.removeChild(iframe);
 			settings[iframeID].closedCallback(iframeID);
+			delete settings[iframeID];
 			log(' --');
 		}
 
@@ -313,7 +315,6 @@
 			switch(messageData.type){
 				case 'close':
 					closeIFrame(messageData.iframe);
-					settings[iframeID].resizedCallback(messageData); //To be removed.
 					break;
 				case 'message':
 					forwardMsgFromIFrame(getMsgBody(6));
@@ -379,7 +380,7 @@
 	function resetIFrame(messageData){
 		function reset(){
 			setSize(messageData);
-			trigger('reset','reset',messageData.iframe);
+			trigger('reset','reset',messageData.iframe,messageData.id);
 		}
 
 		log(' Size reset requested by '+('init'===messageData.type?'host page':'iFrame'));
@@ -410,14 +411,14 @@
 		}
 	}
 
-	function trigger(calleeMsg,msg,iframe){
+	function trigger(calleeMsg,msg,iframe,id){
 		if(iframe && iframe.contentWindow){
 			log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
 			iframe.contentWindow.postMessage( msgId + msg, '*' );
 		} else {
 			warn('[' + calleeMsg + '] IFrame not found');
+			if(settings[id]) delete settings[id];
 		}
-		
 	}
 
 
@@ -532,6 +533,22 @@
 		init(createOutgoingMsg());
 	}
 
+	function throttle(fn,time){
+		if (null === timer){
+			timer = setTimeout(function(){
+				timer = null;
+				fn();
+			}, time);
+		}
+	}
+
+	function winResize(){
+		throttle(function(){
+			for (var iframeId in settings){
+				trigger('Window resize','resize',document.getElementById(iframeId),iframeId);
+			}
+		},66);
+	}
 
 	function factory(){
 		function init(element, options){
@@ -558,7 +575,6 @@
 				default:
 					throw new TypeError('Unexpected data type ('+typeof(target)+').');
 			}
-
 		};
 	}
 
@@ -572,6 +588,7 @@
 
 	setupRequestAnimationFrame();
 	addEventListener(window,'message',iFrameListener);
+	addEventListener(window,'resize', winResize);
 
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
