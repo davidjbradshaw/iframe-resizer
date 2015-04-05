@@ -216,7 +216,8 @@
 
 		function checkIFrameExists(){
 			if (null === messageData.iframe) {
-				throw new Error('iFrame ('+messageData.id+') does not exist on ' + page);
+				warn('iFrame ('+messageData.id+') does not exist on ' + page);
+				return false;
 			}
 			return true;
 		}
@@ -411,8 +412,13 @@
 	}
 
 	function trigger(calleeMsg,msg,iframe){
-		log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
-		iframe.contentWindow.postMessage( msgId + msg, '*' );
+		if(iframe && iframe.contentWindow){
+			log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
+			iframe.contentWindow.postMessage( msgId + msg, '*' );
+		} else {
+			warn('[' + calleeMsg + '] IFrame not found');
+		}
+		
 	}
 
 
