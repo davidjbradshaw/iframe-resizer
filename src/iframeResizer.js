@@ -39,6 +39,7 @@
 			maxWidth                  : Infinity,
 			minHeight                 : 0,
 			minWidth                  : 0,
+			resizeFrom                : 'parent',
 			scrolling                 : false,
 			sizeHeight                : true,
 			sizeWidth                 : false,
@@ -476,7 +477,8 @@
 				':' + settings[iframeID].bodyBackground +
 				':' + settings[iframeID].bodyPadding +
 				':' + settings[iframeID].tolerance +
-				':' + settings[iframeID].enableInPageLinks;
+				':' + settings[iframeID].enableInPageLinks +
+				':' + settings[iframeID].resizeFrom;
 		}
 
 		function init(msg){
@@ -545,7 +547,9 @@
 	function winResize(){
 		throttle(function(){
 			for (var iframeId in settings){
-				trigger('Window resize','resize',document.getElementById(iframeId),iframeId);
+				if('parent' === settings[iframeId].resizeFrom){
+					trigger('Window resize','resize',document.getElementById(iframeId),iframeId);
+				}
 			}
 		},66);
 	}

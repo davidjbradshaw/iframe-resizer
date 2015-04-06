@@ -134,7 +134,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
 
-<i>**If the default option doesn't work then the best solution is often to use** lowestElement **in modern browsers and** max **in IE10 downwards**</i>
+<i>**If the default option doesn't work then the best solution is often to use** lowestElement **in modern browsers and** max **in IE10 downwards.**</i>
 
 ```js
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
@@ -157,6 +157,13 @@ Set maximum height/width of iFrame.
     type:    integer
 
 Set minimum height/width of iFrame.
+
+### resizeFrom
+
+    default: 'parent'
+    values: 'parent', 'iframe'   
+
+Listern for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized inderpendently of the browser window. <i>Selecting this value can cause issues with some hight calculation methods on mobile devices</i>.
 
 ### scrolling
 
@@ -373,7 +380,8 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ## Version History
 
-* v2.8.5 [#173](https://github.com/davidjbradshaw/iframe-resizer/issues/173) Scope setting to iFrame. [#171](https://github.com/davidjbradshaw/iframe-resizer/issues/171) Fixed *parentIFrame.close()* to work with 0 height iframes [Both [Reed Dadoune](https://github.com/ReedD)].
+* v2.8.6 [#163](https://github.com/davidjbradshaw/iframe-resizer/issues/163) Moved window resize event detection from iFrame to parent page. [#160](https://github.com/davidjbradshaw/iframe-resizer/issues/160) Warn, rather than error, if iFrame has been unexpectantly removed from page. The *parentIFrame.close()* method nolonger calls *resizedCallback()*.
+* v2.8.5 [#173](https://github.com/davidjbradshaw/iframe-resizer/issues/173) Scope settings to iFrame. [#171](https://github.com/davidjbradshaw/iframe-resizer/issues/171) Fixed *parentIFrame.close()* to work with 0 height iframes [Both [Reed Dadoune](https://github.com/ReedD)].
 * v2.8.4 Added switch for inPageLinking support.
 * v2.8.3 Throw error if passed a non-DOM object.
 * v2.8.2 [#145](https://github.com/davidjbradshaw/iframe-resizer/issues/145) Fixed in page links, to work with HTML IDs that are not valid CSS IDs [[Erin Millard](https://github.com/ezzatron)]. Moved map files from src to js folder. Added to NPM.
