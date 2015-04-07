@@ -374,10 +374,6 @@ if (!Array.prototype.forEach){
 ```
 
 
-## Contributing
-In lieu of a formal style-guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-
 ## Version History
 
 * v2.8.6 [#163](https://github.com/davidjbradshaw/iframe-resizer/issues/163) Moved window resize event detection from iFrame to parent page. [#160](https://github.com/davidjbradshaw/iframe-resizer/issues/160) Warn, rather than error, if iFrame has been unexpectantly removed from page. The *parentIFrame.close()* method nolonger calls *resizedCallback()*.
@@ -437,4 +433,4 @@ In lieu of a formal style-guide, take care to maintain the existing coding style
 
 ## License
 Copyright &copy; 2013-14 [David J. Bradshaw](https://github.com/davidjbradshaw).
-Licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Licensed under the [MIT License](LICENSE).
