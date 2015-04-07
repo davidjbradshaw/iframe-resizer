@@ -9,8 +9,7 @@ process easy and effective for everyone involved.
 
 The [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues) is
 the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests)
-and [submitting pull requests](#pull-requests), but please respect the following
-restrictions:
+and [submitting pull requests](#pull-requests).
 
 **Please do not use the issue tracker for personal support requests.  These should be raised on 
 Stack Overflow ([`iframe-resizer`](http://stackoverflow.com/questions/tagged/iframe-resizer) tag).**
@@ -23,9 +22,8 @@ Good bug reports are extremely helpful, so thanks!
 
 Guidelines for bug reports:
 
-0. **Validate and lint your code** &mdash; [validate your HTML](http://html5.validator.nu)
-   and [lint your HTML](https://github.com/twbs/bootlint) to ensure your
-   problem isn't caused by a simple error in your own code.
+0. **Lint your code** &mdash; Use [jshint](http://jshint.com/)
+   to ensure your problem isn't caused by a simple error in your own code.
 
 1. **Use the GitHub issue search** &mdash; check if the issue has already been
    reported.
@@ -75,7 +73,7 @@ help. They should remain focused in scope and avoid containing unrelated
 commits.
 
 **Please ask first** before embarking on any significant pull request (e.g.
-implementing features, refactoring code, porting to a different language),
+implementing features or refactoring code),
 otherwise you risk spending a lot of time working on something that the
 project's developers might not want to merge into the project.
 
