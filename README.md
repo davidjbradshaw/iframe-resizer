@@ -39,6 +39,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 ```html
 <iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>
+<script>iFrameResize({log:true})</script>
 ```
 
 Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the [troubleshooting](#troubleshooting) section below.
@@ -337,7 +338,7 @@ iFrameResize( {
 	minSize:100
 });
 ```
-<i>Please set the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
+<i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
 ### ParentIFrame not found errors
 To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to **true**. The `parentIFrame` object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
