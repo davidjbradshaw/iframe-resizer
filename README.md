@@ -120,13 +120,13 @@ By default the height of the iFrame is calculated by converting the margin of th
 
 In cases where CSS styles causes the content to flow outside the `body` you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
-* **bodyScroll** uses `document.body.scrollHeight`
+* **bodyScroll** uses `document.body.scrollHeight` <sup>*</sup>
 * **documentElementOffset** uses `document.documentElement.offsetHeight`
-* **documentElementScroll** uses `document.documentElement.scrollHeight`
-* **max** takes the largest value of the main four options
-* **min** takes the smallest value of the main four options
+* **documentElementScroll** uses `document.documentElement.scrollHeight` <sup>*</sup>
+* **max** takes the largest value of the main four options <sup>*</sup>
+* **min** takes the smallest value of the main four options <sup>*</sup>
 * **grow** same as **max** but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
-* **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point.
+* **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point <sup>†</sup>
 
 <i>Notes:</i>
 
@@ -140,9 +140,9 @@ iFrameResize( {
 });
 ```
 
-<i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
+<sup>†</sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome 34 can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
 
-<i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
+<sup>*</sup> <i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
 
 ### maxHeight / maxWidth
@@ -288,7 +288,10 @@ if ('parentIFrame' in window) {
 
 The first steps to investigate a problem is to make sure you are using the latest version and then enable the [log](#log) option, which outputs everything that happens to the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.
 
-Solutions for the most common problems are outlined in this section and you can also ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer) with the `iframe-resizer` tag.
+Solutions for the most common problems are outlined in this section. If you need futher help, then pleasr ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer) with the `iframe-resizer` tag.
+
+Bug reports and pull requests are welcome on the [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues). Please read the [contributing guidelines](https://github.com/davidjbradshaw/iframe-resizer/CONTRIBUTING.md) before openning a ticket, as this will ensure a faster resolution.
+
 
 ### IFrame not sizing correctly
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences.
@@ -306,7 +309,7 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
 
 ### IFrame not detecting CSS :hover events
-If your page resizes via CSS `:hover` events, these won't be detect by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
+If your page resizes via CSS `:hover` events, these won't be detected by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**.
 
 ```js
 function resize(){
@@ -320,8 +323,24 @@ function resize(){
 $(*Element with hover style*).hover(resize);
 ```
 
+### IFrame flickers
+
+Some of the alternate [height calculation methods](#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new heigt can be worked out. This effect can be reduced by setting a [minSize](#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
+
+In modern browsers, if the default [height calculation method](#heightcalculationmethod) does not work, then it is normally best to use **lowestElement** and then provide a fallback to **max** in IE10 downwards.
+
+```js
+var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
+
+iFrameResize( {
+	heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
+	minSize:100
+});
+```
+__Please set the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options__
+
 ### ParentIFrame not found errors
-To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to true. The `parentIFrame` object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
+To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to **true**. The `parentIFrame` object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
 
 ```js
 if(top !== self) { // Check we are in an iFrame
