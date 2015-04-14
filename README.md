@@ -140,9 +140,9 @@ iFrameResize( {
 });
 ```
 
-<sup>†</sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
+<sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. It is recommend to fallback to **max** or **grow** in IE10 and below.</i>
 
-<sup>*</sup> <i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
+<sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
 
 ### maxHeight / maxWidth
@@ -325,9 +325,9 @@ $(*Element with hover style*).hover(resize);
 
 ### IFrame flickers
 
-Some of the alternate [height calculation methods](#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new heigt can be worked out. This effect can be reduced by setting a [minSize](#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
+Some of the alternate [height calculation methods](#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new height can be worked out. This effect can be reduced by setting a [minSize](#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
 
-In modern browsers, if the default [height calculation method](#heightcalculationmethod) does not work, then it is normally best to use **lowestElement** and then provide a fallback to **max** in IE10 downwards.
+In modern browsers, if the default [height calculation method](#heightcalculationmethod) does not work, then it is normally best to use **lowestElement**, which is flicker free, and then provide a fallback to **max** in IE10 downwards.
 
 ```js
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
@@ -337,7 +337,7 @@ iFrameResize( {
 	minSize:100
 });
 ```
-__Please set the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options__
+<i>Please set the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
 ### ParentIFrame not found errors
 To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to **true**. The `parentIFrame` object then becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
