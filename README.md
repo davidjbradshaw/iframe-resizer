@@ -291,7 +291,7 @@ The first steps to investigate a problem is to make sure you are using the lates
 
 Solutions for the most common problems are outlined in this section. If you need futher help, then pleasr ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer) with the `iframe-resizer` tag.
 
-Bug reports and pull requests are welcome on the [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues). Please read the [contributing guidelines](https://github.com/davidjbradshaw/iframe-resizer/blob/master/blob/master/CONTRIBUTING.md) before openning a ticket, as this will ensure a faster resolution.
+Bug reports and pull requests are welcome on the [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues). Please read the [contributing guidelines](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CONTRIBUTING.md) before openning a ticket, as this will ensure a faster resolution.
 
 
 ### IFrame not sizing correctly
