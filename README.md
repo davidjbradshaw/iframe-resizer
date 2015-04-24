@@ -165,7 +165,7 @@ Set minimum height/width of iFrame.
     default: 'parent'
     values: 'parent', 'iframe'   
 
-Listern for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized inderpendently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
+Listen for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
 
 ### scrolling
 
@@ -227,7 +227,7 @@ Function called after iFrame resized. Passes in messageData object containing th
 
 	type: function ({x,y})
 
-Called before the page is repositioned after a request from the iFrame, due to ethier an in page link, or a direct request from either [parentIFrame.scrollTo()](#scrolltoxy) or [parentIFrame.scrollToOffset()](#scrolltooffsetxy). If this callback function returns false, it will stop the library from repositioning the page, so that you can implement your own animatied page scrolling instead.
+Called before the page is repositioned after a request from the iFrame, due to either an in page link, or a direct request from either [parentIFrame.scrollTo()](#scrolltoxy) or [parentIFrame.scrollToOffset()](#scrolltooffsetxy). If this callback function returns false, it will stop the library from repositioning the page, so that you can implement your own animated page scrolling instead.
 
 
 ## IFrame Methods
@@ -289,7 +289,7 @@ if ('parentIFrame' in window) {
 
 The first steps to investigate a problem is to make sure you are using the latest version and then enable the [log](#log) option, which outputs everything that happens to the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.
 
-Solutions for the most common problems are outlined in this section. If you need futher help, then pleasr ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer) with the `iframe-resizer` tag.
+Solutions for the most common problems are outlined in this section. If you need futher help, then please ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/iframe-resizer) with the `iframe-resizer` tag.
 
 Bug reports and pull requests are welcome on the [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues). Please read the [contributing guidelines](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CONTRIBUTING.md) before openning a ticket, as this will ensure a faster resolution.
 
