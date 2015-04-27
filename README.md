@@ -38,7 +38,7 @@ The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/dav
 The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 ```html
-<iframe src="http://anotherdomain.com/frame.content.html" width="100%" scrolling="no"></iframe>
+<iframe src="http://anotherdomain.com/iframe.html" width="100%" scrolling="no"></iframe>
 <script>iFrameResize({log:true})</script>
 ```
 
