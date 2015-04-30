@@ -9,6 +9,12 @@
 ;(function() {
 	'use strict';
 
+	var window = window;
+
+	if (typeof window === "undefined") {
+		window = global;
+	}
+
 	var
 		count                 = 0,
 		firstRun              = true,

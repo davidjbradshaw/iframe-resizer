@@ -10,6 +10,12 @@
 ;(function() {
 	'use strict';
 
+	var window = window;
+
+	if (typeof window === "undefined") {
+		window = global;
+	}
+
 	var
 		autoResize            = true,
 		base                  = 10,
