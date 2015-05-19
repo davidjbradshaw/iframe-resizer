@@ -166,20 +166,39 @@
 			messageData[dimension]=''+size;
 		}
 
+		function checkAllowedOrigin(origin,checkOrigin,remoteHost){
+			function checkList(){
+				log(' Checking connection is from list of origins: ' + checkOrigin);
+				var i;
+				for (i = 0; i < checkOrigin.length; i++) {
+					if (checkOrigin[i] === origin) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			function checkSingle(){
+				log(' Checking connection is from: '+remoteHost);
+				return origin == remoteHost;
+			}
+
+			return checkOrigin.constructor === Array ? checkList() : checkSingle();
+		}
+
 		function isMessageFromIFrame(){
 			var
 				origin     = event.origin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
-			if (settings[iframeID].checkOrigin) {
-				log(' Checking connection is from: '+remoteHost);
-
-				if ((''+origin !== 'null') && (origin !== remoteHost)) {
+			var checkOrigin = settings[iframeID].checkOrigin;
+			if (checkOrigin) {
+				if ((''+origin !== 'null') && !checkAllowedOrigin(origin,checkOrigin,remoteHost)) {
 					throw new Error(
 						'Unexpected message received from: ' + origin +
 						' for ' + messageData.iframe.id +
 						'. Message was: ' + event.data +
-						'. This error can be disabled by adding the checkOrigin: false option.'
+						'. This error can be disabled by adding the checkOrigin: false option or providing of array of trusted domains.'
 					);
 				}
 			}

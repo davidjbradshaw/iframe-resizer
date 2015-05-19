@@ -82,9 +82,9 @@ Override the default body margin style in the iFrame. A string can be any valid 
 ### checkOrigin
 
 	default: true
-	type:    boolean
+	type:    boolean || array
 
-When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.
+When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to provide an array of domains or disable this option.
 
 ### enableInPageLinks
 
