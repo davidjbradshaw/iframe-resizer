@@ -166,39 +166,40 @@
 			messageData[dimension]=''+size;
 		}
 
-		function checkAllowedOrigin(origin,checkOrigin,remoteHost){
-			function checkList(){
-				log(' Checking connection is from allowed list of origins: ' + checkOrigin);
-				var i;
-				for (i = 0; i < checkOrigin.length; i++) {
-					if (checkOrigin[i] === origin) {
-						return true;
-					}
-				}
-				return false;
-			}
-
-			function checkSingle(){
-				log(' Checking connection is from: '+remoteHost);
-				return origin == remoteHost;
-			}
-
-			return checkOrigin.constructor === Array ? checkList() : checkSingle();
-		}
 
 		function isMessageFromIFrame(){
+			function checkAllowedOrigin(){
+				function checkList(){
+					log(' Checking connection is from allowed list of origins: ' + checkOrigin);
+					var i;
+					for (i = 0; i < checkOrigin.length; i++) {
+						if (checkOrigin[i] === origin) {
+							return true;
+						}
+					}
+					return false;
+				}
+
+				function checkSingle(){
+					log(' Checking connection is from: '+remoteHost);
+					return origin == remoteHost;
+				}
+
+				return checkOrigin.constructor === Array ? checkList() : checkSingle();
+			}
+
 			var
 				origin     = event.origin,
+				checkOrigin = settings[iframeID].checkOrigin,
 				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
 
-			var checkOrigin = settings[iframeID].checkOrigin;
 			if (checkOrigin) {
-				if ((''+origin !== 'null') && !checkAllowedOrigin(origin,checkOrigin,remoteHost)) {
+				if ((''+origin !== 'null') && !checkAllowedOrigin()) {
 					throw new Error(
 						'Unexpected message received from: ' + origin +
 						' for ' + messageData.iframe.id +
 						'. Message was: ' + event.data +
-						'. This error can be disabled by adding the checkOrigin: false option or providing of array of trusted domains.'
+						'. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.'
 					);
 				}
 			}
