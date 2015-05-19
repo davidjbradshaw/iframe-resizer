@@ -5,6 +5,7 @@
  * Requires: iframeResizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
+ * Contributor: Ian Caunce - ian@hallnet.co.uk
  */
 
 ;(function() {
