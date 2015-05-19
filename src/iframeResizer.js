@@ -341,6 +341,17 @@
 			}
 		}
 
+		function hasSettings(iframeID){
+			var retBool = true;
+
+			if (!settings[iframeID]){
+				retBool = false;
+				warn('No settings for ' iframeID);
+			}
+
+			return retBool;
+		}
+
 		var
 			msg = event.data,
 			messageData = {},
@@ -349,12 +360,15 @@
 		if (isMessageForUs()){
 			messageData = processMsg();
 			iframeID    = messageData.id;
-			logEnabled  = settings[iframeID].log;
-			log(' Received: '+msg);
 
-			if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
-				actionMsg();
-				firstRun = false;
+			if (hasSettings(iframeID)){
+				logEnabled  = settings[iframeID].log;
+				log(' Received: '+msg);
+
+				if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
+					actionMsg();
+					firstRun = false;
+				}
 			}
 		}
 	}
