@@ -588,6 +588,11 @@
 	}
 
 	function factory(){
+
+		setupRequestAnimationFrame();
+		addEventListener(window,'message',iFrameListener);
+		addEventListener(window,'resize', winResize);
+
 		function init(element, options){
 			if(!element.tagName) {
 				throw new TypeError('Object is not a valid DOM element');
@@ -623,10 +628,6 @@
 		};
 	}
 
-	setupRequestAnimationFrame();
-	addEventListener(window,'message',iFrameListener);
-	addEventListener(window,'resize', winResize);
-
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
@@ -634,7 +635,7 @@
 	} else if (typeof module === 'object' && typeof module.exports === 'object') { //Node for browserfy
 		module.exports = factory();
 	} else {
-		window.iFrameResize = factory();
+		window.iFrameResize = window.iFrameResize || factory();
 	}
 
 })();
