@@ -168,7 +168,7 @@
 
 		function checkAllowedOrigin(origin,checkOrigin,remoteHost){
 			function checkList(){
-				log(' Checking connection is from list of origins: ' + checkOrigin);
+				log(' Checking connection is from allowed list of origins: ' + checkOrigin);
 				var i;
 				for (i = 0; i < checkOrigin.length; i++) {
 					if (checkOrigin[i] === origin) {
@@ -213,7 +213,7 @@
 		function isMessageFromMetaParent(){
 			//test if this message is from a parent above us. This is an ugly test, however, updating
 			//the message format would break backwards compatibity.
-			var retCode = messageData.type in {'true':1,'false':1};
+			var retCode = messageData.type in {'true':1,'false':1,'undefined':1};
 
 			if (retCode){
 				log(' Ignoring init message from meta parent page');
@@ -365,7 +365,7 @@
 
 			if (!settings[iframeID]){
 				retBool = false;
-				warn('No settings for ' iframeID);
+				warn(messageData.type + ' No settings for ' + iframeID + '. Message was: ' + msg);
 			}
 
 			return retBool;
@@ -380,11 +380,11 @@
 			messageData = processMsg();
 			iframeID    = messageData.id;
 
-			if (hasSettings(iframeID)){
+			if (!isMessageFromMetaParent() && hasSettings(iframeID)){
 				logEnabled  = settings[iframeID].log;
 				log(' Received: '+msg);
 
-				if ( !isMessageFromMetaParent() && checkIFrameExists() && isMessageFromIFrame() ){
+				if ( checkIFrameExists() && isMessageFromIFrame() ){
 					actionMsg();
 					firstRun = false;
 				}
