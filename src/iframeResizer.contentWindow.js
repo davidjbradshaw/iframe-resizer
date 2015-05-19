@@ -5,6 +5,7 @@
  * Requires: iframeResizer.js on host page.
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
+ * Contributor: Ian Caunce - ian@hallnet.co.uk
  */
 
 ;(function() {
@@ -685,14 +686,18 @@
 		}
 
 		if (isMessageForUs()){
-			if (firstRun && isInitMsg()){ //Check msg ID
+			if (firstRun === false) {
+				if ('reset' === getMessageType()){
+					resetFromParent();
+				} else if ('resize' === getMessageType()){
+					resizeFromParent();
+				} else if (event.data !== initMsg && !isMiddleTier()){
+					warn('Unexpected message ('+event.data+')');
+				}
+			} else if (isInitMsg()) {
 				initFromParent();
-			} else if ('reset' === getMessageType()){
-				resetFromParent();
-			} else if ('resize' === getMessageType()){
-				resizeFromParent();
-			} else if (event.data !== initMsg && !isMiddleTier()){
-				warn('Unexpected message ('+event.data+')');
+			} else {
+				warn('Received message of type ('+getMessageType()+') before initialization.');
 			}
 		}
 	}
