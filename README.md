@@ -397,8 +397,8 @@ if (!Array.prototype.forEach){
 
 ## Version History
 
-* v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [Nickolay Ribal](https://github.com/elektronik2k5)].
-[#167](https://github.com/davidjbradshaw/iframe-resizer/issues/167) Added WebPack support [Stephan Salat](https://github.com/ssalat)].
+* v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
+[#167](https://github.com/davidjbradshaw/iframe-resizer/issues/167) Added WebPack support [[Stephan Salat](https://github.com/ssalat)].
 * v2.8.6 [#163](https://github.com/davidjbradshaw/iframe-resizer/issues/163) Moved window resize event detection from iFrame to parent page. [#160](https://github.com/davidjbradshaw/iframe-resizer/issues/160) Warn, rather than error, if iFrame has been unexpectantly removed from page. The *parentIFrame.close()* method nolonger calls *resizedCallback()*.
 * v2.8.5 [#173](https://github.com/davidjbradshaw/iframe-resizer/issues/173) Scope settings to iFrame. [#171](https://github.com/davidjbradshaw/iframe-resizer/issues/171) Fixed *parentIFrame.close()* to work with 0 height iframes [Both [Reed Dadoune](https://github.com/ReedD)].
 * v2.8.4 Added switch for inPageLinking support.
