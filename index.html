@@ -6,7 +6,7 @@
     <title>Iframe-resizer by davidjbradshaw</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
@@ -67,7 +67,7 @@
 
 <p>The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.</p>
 
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">iframe</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://anotherdomain.com/frame.content.html<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>100%<span class="pl-pds">"</span></span> <span class="pl-e">scrolling</span>=<span class="pl-s"><span class="pl-pds">"</span>no<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">iframe</span>&gt;
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">iframe</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://anotherdomain.com/iframe.html<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>100%<span class="pl-pds">"</span></span> <span class="pl-e">scrolling</span>=<span class="pl-s"><span class="pl-pds">"</span>no<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">iframe</span>&gt;
 <span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;iFrameResize({log<span class="pl-k">:</span><span class="pl-c1">true</span>})&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
 
 <p>Note that scrolling is set to 'no', as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the <a href="#troubleshooting">troubleshooting</a> section below.</p>
@@ -122,10 +122,10 @@ type:    string || number
 <a id="checkorigin" class="anchor" href="#checkorigin" aria-hidden="true"><span class="octicon octicon-link"></span></a>checkOrigin</h3>
 
 <pre><code>default: true
-type:    boolean
+type:    boolean || array
 </code></pre>
 
-<p>When set to true, only allow incoming messages from the domain listed in the <code>src</code> property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to disable this option.</p>
+<p>When set to true, only allow incoming messages from the domain listed in the <code>src</code> property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to provide an array of domains or disable this option.</p>
 
 <h3>
 <a id="enableinpagelinks" class="anchor" href="#enableinpagelinks" aria-hidden="true"><span class="octicon octicon-link"></span></a>enableInPageLinks</h3>
@@ -232,7 +232,7 @@ type:    integer
 values: 'parent', 'iframe'   
 </code></pre>
 
-<p>Listern for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized inderpendently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.</p>
+<p>Listen for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.</p>
 
 <h3>
 <a id="scrolling" class="anchor" href="#scrolling" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrolling</h3>
@@ -311,7 +311,7 @@ type:    integer
 <pre><code>type: function ({x,y})
 </code></pre>
 
-<p>Called before the page is repositioned after a request from the iFrame, due to ethier an in page link, or a direct request from either <a href="#scrolltoxy">parentIFrame.scrollTo()</a> or <a href="#scrolltooffsetxy">parentIFrame.scrollToOffset()</a>. If this callback function returns false, it will stop the library from repositioning the page, so that you can implement your own animatied page scrolling instead.</p>
+<p>Called before the page is repositioned after a request from the iFrame, due to either an in page link, or a direct request from either <a href="#scrolltoxy">parentIFrame.scrollTo()</a> or <a href="#scrolltooffsetxy">parentIFrame.scrollToOffset()</a>. If this callback function returns false, it will stop the library from repositioning the page, so that you can implement your own animated page scrolling instead.</p>
 
 <h2>
 <a id="iframe-methods" class="anchor" href="#iframe-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>IFrame Methods</h2>
@@ -374,7 +374,7 @@ type:    integer
 
 <p>The first steps to investigate a problem is to make sure you are using the latest version and then enable the <a href="#log">log</a> option, which outputs everything that happens to the <a href="https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console">JavaScript Console</a>. This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.</p>
 
-<p>Solutions for the most common problems are outlined in this section. If you need futher help, then pleasr ask questions on <a href="http://stackoverflow.com/questions/tagged/iframe-resizer">StackOverflow</a> with the <code>iframe-resizer</code> tag.</p>
+<p>Solutions for the most common problems are outlined in this section. If you need futher help, then please ask questions on <a href="http://stackoverflow.com/questions/tagged/iframe-resizer">StackOverflow</a> with the <code>iframe-resizer</code> tag.</p>
 
 <p>Bug reports and pull requests are welcome on the <a href="https://github.com/davidjbradshaw/iframe-resizer/issues">issue tracker</a>. Please read the <a href="https://github.com/davidjbradshaw/iframe-resizer/blob/master/CONTRIBUTING.md">contributing guidelines</a> before openning a ticket, as this will ensure a faster resolution.</p>
 
@@ -489,6 +489,8 @@ iFrameResize( {
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.8.7 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/205">#205</a> Fix race condition when page resized during page init [<a href="https://github.com/IanCaunce">Ian Caunce</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/203">#203</a> Added option for <em>checkOrigin</em> to have list of allowed domains for the iFrame [<a href="https://github.com/andrej2k">Andrej Golcov</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/202">#202</a> Handle script being loaded more than once [<a href="https://github.com/elektronik2k5">Nickolay Ribal</a>].
+<a href="https://github.com/davidjbradshaw/iframe-resizer/issues/167">#167</a> Added WebPack support [<a href="https://github.com/ssalat">Stephan Salat</a>].</li>
 <li>v2.8.6 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/163">#163</a> Moved window resize event detection from iFrame to parent page. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/160">#160</a> Warn, rather than error, if iFrame has been unexpectantly removed from page. The <em>parentIFrame.close()</em> method nolonger calls <em>resizedCallback()</em>.</li>
 <li>v2.8.5 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/173">#173</a> Scope settings to iFrame. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/171">#171</a> Fixed <em>parentIFrame.close()</em> to work with 0 height iframes [Both <a href="https://github.com/ReedD">Reed Dadoune</a>].</li>
 <li>v2.8.4 Added switch for inPageLinking support.</li>
