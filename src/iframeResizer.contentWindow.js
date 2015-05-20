@@ -299,32 +299,41 @@
 				close: function closeF(){
 					sendMsg(0,0,'close');
 				},
+				
 				getId: function getIdF(){
 					return myID;
 				},
+
 				moveToAnchor: function moveToAnchorF(hash){
 					inPageLinks.findTarget(hash);
 				},
+
 				reset: function resetF(){
 					resetIFrame('parentIFrame.reset');
 				},
+
 				scrollTo: function scrollToF(x,y){
 					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses height/width
 				},
+
 				scrollToOffset: function scrollToF(x,y){
 					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
 				},
+
 				sendMessage: function sendMessageF(msg,targetOrigin){
 					sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
 				},
+
 				setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
 					heightCalcMode = heightCalculationMethod;
 					checkHeightMode();
 				},
+
 				setTargetOrigin: function setTargetOriginF(targetOrigin){
 					log('Set targetOrigin: '+targetOrigin);
 					targetOriginDefault = targetOrigin;
 				},
+
 				size: function sizeF(customHeight, customWidth){
 					var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 					lockTrigger();
@@ -553,8 +562,7 @@
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth();
 
-			return	checkTolarance(height,currentHeight) ||
-					(calculateWidth && checkTolarance(width,currentWidth));
+			return	checkTolarance(height,currentHeight) || (calculateWidth && checkTolarance(width,currentWidth));
 		}
 
 		function isForceResizableEvent(){
@@ -680,17 +688,24 @@
 		}
 
 		function isInitMsg(){
-			//test if this message is from a child below us. This is an ugly test, however, updating
+			//Test if this message is from a child below us. This is an ugly test, however, updating
 			//the message format would break backwards compatibity.
 			return event.data.split(':')[2] in {'true':1,'false':1};
 		}
 
 		if (isMessageForUs()){
-			if (firstRun === false) {
-				if (getMessageType() in {'reset':1,'resize':1}){
-					resetFromParent();
-				} else if (event.data !== initMsg && !isMiddleTier()){
-					warn('Unexpected message ('+event.data+')');
+			if (false === firstRun) {
+				switch (getMessageType()){
+					case 'reset':
+						resetFromParent();
+						break;
+					case 'resize':
+						resizeFromParent();
+						break;
+					default:
+						if (!isMiddleTier()){
+							warn('Unexpected message ('+event.data+')');
+						}
 				}
 			} else if (isInitMsg()) {
 				initFromParent();
