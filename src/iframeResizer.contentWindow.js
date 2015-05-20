@@ -687,10 +687,8 @@
 
 		if (isMessageForUs()){
 			if (firstRun === false) {
-				if ('reset' === getMessageType()){
+				if (getMessageType() in {'reset':1,'resize':1}){
 					resetFromParent();
-				} else if ('resize' === getMessageType()){
-					resizeFromParent();
 				} else if (event.data !== initMsg && !isMiddleTier()){
 					warn('Unexpected message ('+event.data+')');
 				}
