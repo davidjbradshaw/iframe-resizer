@@ -482,6 +482,30 @@
 		return maxBottomVal;
 	}
 
+	function getLowestVisibleElementHeight() {
+		var
+			allElements       = document.querySelectorAll('body *'),
+			allElementsLength = allElements.length,
+			maxBottomVal      = 0,
+			timer             = new Date().getTime();
+
+		for (var i = 0; i < allElementsLength; i++) {
+			var element = allElements[i];
+			if (element.offsetWidth === 0 || element.offsetHeight === 0) continue;
+			var elementBottomVal = element.getBoundingClientRect().bottom
+			if (elementBottomVal > maxBottomVal) {
+				maxBottomVal = elementBottomVal;
+			}
+		}
+
+		timer = new Date().getTime() - timer;
+
+		log('Parsed '+allElementsLength+' HTML elements');
+		log('LowestVisibleElement bottom position calculated in ' + timer + 'ms');
+
+		return maxBottomVal;
+	}
+
 	function getAllHeights(){
 		return [
 			getBodyOffsetHeight(),
@@ -513,7 +537,8 @@
 		max                   : getMaxHeight,
 		min                   : getMinHeight,
 		grow                  : getMaxHeight,
-		lowestElement         : getBestHeight
+		lowestElement         : getBestHeight,
+		lowestVisibleElement  : getLowestVisibleElementHeight
 	};
 
 	function getWidth(){
