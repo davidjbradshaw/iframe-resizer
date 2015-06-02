@@ -1,6 +1,8 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
+  'Use strict';
+
   // show elapsed time at the end
   require('time-grunt')(grunt);
 
