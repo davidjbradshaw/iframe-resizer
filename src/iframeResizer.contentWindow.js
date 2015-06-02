@@ -21,8 +21,8 @@
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
 		eventCancelTimer      = 128,
-		height                = 1,
 		firstRun              = true,
+		height                = 1,
 		heightCalcModeDefault = 'offset',
 		heightCalcMode        = heightCalcModeDefault,
 		initLock              = true,
@@ -141,7 +141,7 @@
 
 	function addTriggerEvent(options){
 		function addListener(eventName){
-			addEventListener(window,eventName,function(e){
+			addEventListener(window,eventName,function(){
 				sendSize(options.eventName,options.eventType);
 			});
 		}
@@ -299,7 +299,7 @@
 				close: function closeF(){
 					sendMsg(0,0,'close');
 				},
-				
+
 				getId: function getIdF(){
 					return myID;
 				},
@@ -696,21 +696,21 @@
 		if (isMessageForUs()){
 			if (false === firstRun) {
 				switch (getMessageType()){
-					case 'reset':
-						resetFromParent();
-						break;
-					case 'resize':
-						resizeFromParent();
-						break;
-					default:
-						if (!isMiddleTier()){
-							warn('Unexpected message ('+event.data+')');
-						}
+				case 'reset':
+					resetFromParent();
+					break;
+				case 'resize':
+					resizeFromParent();
+					break;
+				default:
+					if (!isMiddleTier()){
+						warn('Unexpected message ('+event.data+')');
+					}
 				}
 			} else if (isInitMsg()) {
 				initFromParent();
 			} else {
-				warn('Received message of type ('+getMessageType()+') before initialization.');
+				log('Ignored message of type "' + getMessageType() + '". Received before initialization.');
 			}
 		}
 	}

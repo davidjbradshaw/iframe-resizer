@@ -182,7 +182,7 @@
 
 				function checkSingle(){
 					log(' Checking connection is from: '+remoteHost);
-					return origin == remoteHost;
+					return origin === remoteHost;
 				}
 
 				return checkOrigin.constructor === Array ? checkList() : checkSingle();
@@ -606,17 +606,17 @@
 
 		return function iFrameResizeF(options,target){
 			switch (typeof(target)){
-				case 'undefined':
-				case 'string':
-					Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), function (element) {
-						init(element, options);
-					});
-					break;
-				case 'object':
-					init(target, options);
-					break;
-				default:
-					throw new TypeError('Unexpected data type ('+typeof(target)+').');
+			case 'undefined':
+			case 'string':
+				Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), function (element) {
+					init(element, options);
+				});
+				break;
+			case 'object':
+				init(target, options);
+				break;
+			default:
+				throw new TypeError('Unexpected data type ('+typeof(target)+').');
 			}
 		};
 	}
