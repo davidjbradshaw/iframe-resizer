@@ -1,4 +1,4 @@
- # iFrame Resizer
+# iFrame Resizer
 [![Bower version](https://badge.fury.io/bo/iframe-resizer.svg)](http://badge.fury.io/bo/iframe-resizer)
 [![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
