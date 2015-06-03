@@ -587,7 +587,7 @@
 		}
 
 		if (!isDoubleFiredEvent()){
-			if (isSizeChangeDetected()){
+			if (isSizeChangeDetected() || 'init' === triggerEvent){
 				recordTrigger();
 				lockTrigger();
 				resizeIFrame();
