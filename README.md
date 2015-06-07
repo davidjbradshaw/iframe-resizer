@@ -315,9 +315,8 @@ If your page resizes via CSS `:hover` events, these won't be detected by default
 ```js
 function resize(){
 	if ('parentIFrame' in window) {
-		setTimeout(function(){ // Fix FireFox timing issue
-			parentIFrame.size();
-		},0);
+		// Fix race condition in FireFox with setTimeout
+		setTimeout(parentIFrame.size.bind(parentIFrame),0);
 	}
 }
 
