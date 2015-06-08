@@ -189,9 +189,9 @@
 			}
 
 			var
-				origin     = event.origin,
+				origin      = event.origin,
 				checkOrigin = settings[iframeID].checkOrigin,
-				remoteHost = messageData.iframe.src.split('/').slice(0,3).join('/');
+				remoteHost  = messageData.iframe.src.split('/').slice(0,3).join('/');
 
 			if (checkOrigin) {
 				if ((''+origin !== 'null') && !checkAllowedOrigin()) {
@@ -212,7 +212,7 @@
 		}
 
 		function isMessageFromMetaParent(){
-			//test if this message is from a parent above us. This is an ugly test, however, updating
+			//Test if this message is from a parent above us. This is an ugly test, however, updating
 			//the message format would break backwards compatibity.
 			var retCode = messageData.type in {'true':1,'false':1,'undefined':1};
 
@@ -281,9 +281,9 @@
 			if(window.top!==window.self){
 				if (window.parentIFrame){
 					if (addOffset){
-						parentIFrame.scrollToOffset(newPosition.x,newPosition.y);
+						window.parentIFrame.scrollToOffset(newPosition.x,newPosition.y);
 					} else {
-						parentIFrame.scrollTo(messageData.width,messageData.height);
+						window.parentIFrame.scrollTo(messageData.width,messageData.height);
 					}
 				} else {
 					warn(' Unable to scroll to requested position, window.parentIFrame not found');
@@ -295,15 +295,12 @@
 		}
 
 		function scrollTo(){
-			if (false !== settings[iframeID].scrollCallback(pagePosition)){
+			if (false !== settings[iframeID].scrollCallback(pagePosition)) {
 				setPagePosition();
 			}
 		}
 
 		function findTarget(location){
-			var hash = location.split("#")[1] || "";
-			var hashData = decodeURIComponent(hash);
-
 			function jumpToTarget(target){
 				var jumpPosition = getElementPosition(target);
 
@@ -317,11 +314,14 @@
 				log(' --');
 			}
 
-			var target = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
+			var
+				hash     = location.split('#')[1] || '',
+				hashData = decodeURIComponent(hash),
+				target   = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
 			if(window.top!==window.self){
 				if (window.parentIFrame){
-					parentIFrame.moveToAnchor(hash);
+					window.parentIFrame.moveToAnchor(hash);
 				} else {
 					log(' In page link #'+hash+' not found and window.parentIFrame not found');
 				}
@@ -452,7 +452,9 @@
 			iframe.contentWindow.postMessage( msgId + msg, '*' );
 		} else {
 			warn('[' + calleeMsg + '] IFrame not found');
-			if(settings[id]) delete settings[id];
+			if(settings[id]) {
+				delete settings[id];
+			}
 		}
 	}
 
@@ -589,11 +591,6 @@
 	}
 
 	function factory(){
-
-		setupRequestAnimationFrame();
-		addEventListener(window,'message',iFrameListener);
-		addEventListener(window,'resize', winResize);
-
 		function init(element, options){
 			if(!element.tagName) {
 				throw new TypeError('Object is not a valid DOM element');
@@ -603,6 +600,10 @@
 				setupIFrame.call(element, options);
 			}
 		}
+
+		setupRequestAnimationFrame();
+		addEventListener(window,'message',iFrameListener);
+		addEventListener(window,'resize', winResize);
 
 		return function iFrameResizeF(options,target){
 			switch (typeof(target)){
