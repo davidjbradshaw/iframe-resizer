@@ -163,9 +163,9 @@ Set minimum height/width of iFrame.
 ### resizeFrom
 
     default: 'parent'
-    values: 'parent', 'iframe'   
+    values: 'parent', 'child'   
 
-Listen for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
+Listen for resize events from the parent page, or the iFrame. Select the 'child' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
 
 ### scrolling
 

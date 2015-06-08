@@ -3,6 +3,7 @@
  * Desc: Include this file in any page being loaded into an iframe
  *       to force the iframe to resize to the content size.
  * Requires: iframeResizer.js on host page.
+ * Doc: https://github.com/davidjbradshaw/iframe-resizer
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  * Contributor: Ian Caunce - ian@hallnet.co.uk
