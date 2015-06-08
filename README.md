@@ -396,7 +396,7 @@ if (!Array.prototype.forEach){
 
 ## Version History
 
-* v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iframe not sized during initialisation. Lower message about resize message before init from 'warn' to 'log'. Updated hover example.
+* v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before init from 'warn' to 'log'. Updated hover example.
 * v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
 [#167](https://github.com/davidjbradshaw/iframe-resizer/issues/167) Added WebPack support [[Stephan Salat](https://github.com/ssalat)].
 * v2.8.6 [#163](https://github.com/davidjbradshaw/iframe-resizer/issues/163) Moved window resize event detection from iFrame to parent page. [#160](https://github.com/davidjbradshaw/iframe-resizer/issues/160) Warn, rather than error, if iFrame has been unexpectantly removed from page. The *parentIFrame.close()* method nolonger calls *resizedCallback()*.
