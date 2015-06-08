@@ -599,7 +599,7 @@
 	}
 
 	function factory(){
-		function init(element, options){
+		function init(options,element){
 			if(!element.tagName) {
 				throw new TypeError('Object is not a valid DOM element');
 			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
@@ -617,12 +617,13 @@
 			switch (typeof(target)){
 			case 'undefined':
 			case 'string':
-				Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), function (element) {
-					init(element, options);
-				});
+				Array.prototype.forEach.call( 
+					document.querySelectorAll( target || 'iframe' ), 
+					init.bind(undefined, options)
+				);
 				break;
 			case 'object':
-				init(target, options);
+				init(options,target);
 				break;
 			default:
 				throw new TypeError('Unexpected data type ('+typeof(target)+').');
