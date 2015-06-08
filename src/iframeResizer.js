@@ -11,7 +11,6 @@
 
 	var
 		count                 = 0,
-		firstRun              = true,
 		logEnabled            = false,
 		msgHeader             = 'message',
 		msgHeaderLen          = msgHeader.length,
@@ -109,7 +108,7 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
-				settings[iframeID].resizedCallback(messageData);
+				settings[iframeId].resizedCallback(messageData);
 			}
 
 			ensureInRange('Height');
@@ -119,12 +118,12 @@
 		}
 
 		function closeIFrame(iframe){
-			var iframeID = iframe.id;
+			var iframeId = iframe.id;
 
-			log(' Removing iFrame: '+iframeID);
+			log(' Removing iFrame: '+iframeId);
 			iframe.parentNode.removeChild(iframe);
-			settings[iframeID].closedCallback(iframeID);
-			delete settings[iframeID];
+			settings[iframeId].closedCallback(iframeId);
+			delete settings[iframeId];
 			log(' --');
 		}
 
@@ -142,8 +141,8 @@
 
 		function ensureInRange(Dimension){
 			var
-				max  = Number(settings[iframeID]['max'+Dimension]),
-				min  = Number(settings[iframeID]['min'+Dimension]),
+				max  = Number(settings[iframeId]['max'+Dimension]),
+				min  = Number(settings[iframeId]['min'+Dimension]),
 				dimension = Dimension.toLowerCase(),
 				size = Number(messageData[dimension]);
 
@@ -190,7 +189,7 @@
 
 			var
 				origin      = event.origin,
-				checkOrigin = settings[iframeID].checkOrigin,
+				checkOrigin = settings[iframeId].checkOrigin,
 				remoteHost  = messageData.iframe.src.split('/').slice(0,3).join('/');
 
 			if (checkOrigin) {
@@ -229,7 +228,7 @@
 
 		function forwardMsgFromIFrame(msgBody){
 			log(' MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
-			settings[iframeID].messageCallback({
+			settings[iframeId].messageCallback({
 				iframe: messageData.iframe,
 				message: JSON.parse(msgBody)
 			});
@@ -295,7 +294,7 @@
 		}
 
 		function scrollTo(){
-			if (false !== settings[iframeID].scrollCallback(pagePosition)) {
+			if (false !== settings[iframeId].scrollCallback(pagePosition)){
 				setPagePosition();
 			}
 		}
@@ -354,19 +353,19 @@
 					break;
 				case 'init':
 					resizeIFrame();
-					settings[iframeID].initCallback(messageData.iframe);
+					settings[iframeId].initCallback(messageData.iframe);
 					break;
 				default:
 					resizeIFrame();
 			}
 		}
 
-		function hasSettings(iframeID){
+		function hasSettings(iframeId){
 			var retBool = true;
 
-			if (!settings[iframeID]){
+			if (!settings[iframeId]){
 				retBool = false;
-				warn(messageData.type + ' No settings for ' + iframeID + '. Message was: ' + msg);
+				warn(messageData.type + ' No settings for ' + iframeId + '. Message was: ' + msg);
 			}
 
 			return retBool;
@@ -375,19 +374,19 @@
 		var
 			msg = event.data,
 			messageData = {},
-			iframeID = null;
+			iframeId = null;
 
 		if (isMessageForUs()){
 			messageData = processMsg();
-			iframeID    = messageData.id;
+			iframeId    = messageData.id;
 
-			if (!isMessageFromMetaParent() && hasSettings(iframeID)){
-				logEnabled  = settings[iframeID].log;
+			if (!isMessageFromMetaParent() && hasSettings(iframeId)){
+				logEnabled  = settings[iframeId].log;
 				log(' Received: '+msg);
 
 				if ( checkIFrameExists() && isMessageFromIFrame() ){
+					settings[iframeId].firstRun = false;
 					actionMsg();
-					firstRun = false;
 				}
 			}
 		}
@@ -427,14 +426,14 @@
 		function setDimension(dimension){
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
-				' IFrame (' + iframeID +
+				' IFrame (' + iframeId +
 				') ' + dimension +
 				' set to ' + messageData[dimension] + 'px'
 			);
 		}
-		var iframeID = messageData.iframe.id;
-		if( settings[iframeID].sizeHeight) { setDimension('height'); }
-		if( settings[iframeID].sizeWidth ) { setDimension('width'); }
+		var iframeId = messageData.iframe.id;
+		if( settings[iframeId].sizeHeight) { setDimension('height'); }
+		if( settings[iframeId].sizeWidth ) { setDimension('width'); }
 	}
 
 	function syncResize(func,messageData,doNotSync){
@@ -462,9 +461,9 @@
 	function setupIFrame(options){
 		function setLimits(){
 			function addStyle(style){
-				if ((Infinity !== settings[iframeID][style]) && (0 !== settings[iframeID][style])){
-					iframe.style[style] = settings[iframeID][style] + 'px';
-					log(' Set '+style+' = '+settings[iframeID][style]+'px');
+				if ((Infinity !== settings[iframeId][style]) && (0 !== settings[iframeId][style])){
+					iframe.style[style] = settings[iframeId][style] + 'px';
+					log(' Set '+style+' = '+settings[iframeId][style]+'px');
 				}
 			}
 
@@ -474,47 +473,47 @@
 			addStyle('minWidth');
 		}
 
-		function ensureHasId(iframeID){
-			if (''===iframeID){
-				iframe.id = iframeID = 'iFrameResizer' + count++;
+		function ensureHasId(iframeId){
+			if (''===iframeId){
+				iframe.id = iframeId = 'iFrameResizer' + count++;
 				logEnabled = (options || {}).log;
-				log(' Added missing iframe ID: '+ iframeID +' (' + iframe.src + ')');
+				log(' Added missing iframe ID: '+ iframeId +' (' + iframe.src + ')');
 			}
 
-			return iframeID;
+			return iframeId;
 		}
 
 		function setScrolling(){
-			log(' IFrame scrolling ' + (settings[iframeID].scrolling ? 'enabled' : 'disabled') + ' for ' + iframeID);
-			iframe.style.overflow = false === settings[iframeID].scrolling ? 'hidden' : 'auto';
-			iframe.scrolling      = false === settings[iframeID].scrolling ? 'no' : 'yes';
+			log(' IFrame scrolling ' + (settings[iframeId].scrolling ? 'enabled' : 'disabled') + ' for ' + iframeId);
+			iframe.style.overflow = false === settings[iframeId].scrolling ? 'hidden' : 'auto';
+			iframe.scrolling      = false === settings[iframeId].scrolling ? 'no' : 'yes';
 		}
 
 		//The V1 iFrame script expects an int, where as in V2 expects a CSS
 		//string value such as '1px 3em', so if we have an int for V2, set V1=V2
 		//and then convert V2 to a string PX value.
 		function setupBodyMarginValues(){
-			if (('number'===typeof(settings[iframeID].bodyMargin)) || ('0'===settings[iframeID].bodyMargin)){
-				settings[iframeID].bodyMarginV1 = settings[iframeID].bodyMargin;
-				settings[iframeID].bodyMargin   = '' + settings[iframeID].bodyMargin + 'px';
+			if (('number'===typeof(settings[iframeId].bodyMargin)) || ('0'===settings[iframeId].bodyMargin)){
+				settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin;
+				settings[iframeId].bodyMargin   = '' + settings[iframeId].bodyMargin + 'px';
 			}
 		}
 
 		function createOutgoingMsg(){
-			return iframeID +
-				':' + settings[iframeID].bodyMarginV1 +
-				':' + settings[iframeID].sizeWidth +
-				':' + settings[iframeID].log +
-				':' + settings[iframeID].interval +
-				':' + settings[iframeID].enablePublicMethods +
-				':' + settings[iframeID].autoResize +
-				':' + settings[iframeID].bodyMargin +
-				':' + settings[iframeID].heightCalculationMethod +
-				':' + settings[iframeID].bodyBackground +
-				':' + settings[iframeID].bodyPadding +
-				':' + settings[iframeID].tolerance +
-				':' + settings[iframeID].enableInPageLinks +
-				':' + settings[iframeID].resizeFrom;
+			return iframeId +
+				':' + settings[iframeId].bodyMarginV1 +
+				':' + settings[iframeId].sizeWidth +
+				':' + settings[iframeId].log +
+				':' + settings[iframeId].interval +
+				':' + settings[iframeId].enablePublicMethods +
+				':' + settings[iframeId].autoResize +
+				':' + settings[iframeId].bodyMargin +
+				':' + settings[iframeId].heightCalculationMethod +
+				':' + settings[iframeId].bodyBackground +
+				':' + settings[iframeId].bodyPadding +
+				':' + settings[iframeId].tolerance +
+				':' + settings[iframeId].enableInPageLinks +
+				':' + settings[iframeId].resizeFrom;
 		}
 
 		function init(msg){
@@ -522,11 +521,11 @@
 			//iframes have completed loading when this code runs. The
 			//event listener also catches the page changing in the iFrame.
 			addEventListener(iframe,'load',function(){
-				var fr = firstRun;   // Reduce scope of var to function, because IE8's JS execution
-                                     // context stack is borked and this value gets externally
-                                     // changed midway through running this function.
+				var fr = settings[iframeId].firstRun;   // Reduce scope of var to function, because IE8's JS execution
+                                                        // context stack is borked and this value gets externally
+                                                        // changed midway through running this function.
 				trigger('iFrame.onload',msg,iframe);
-				if (!fr && settings[iframeID].heightCalculationMethod in resetRequiredMethods){
+				if (!fr && settings[iframeId].heightCalculationMethod in resetRequiredMethods){
 					resetIFrame({
 						iframe:iframe,
 						height:0,
@@ -546,23 +545,25 @@
 
 		function processOptions(options){
 			options = options || {};
-			settings[iframeID] = {};
+			settings[iframeId] = {
+				firstRun: true
+			};
 
 			checkOptions(options);
 
 			for (var option in defaults) {
 				if (defaults.hasOwnProperty(option)){
-					settings[iframeID][option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
+					settings[iframeId][option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
 				}
 			}
 
-			logEnabled = settings[iframeID].log;
+			logEnabled = settings[iframeId].log;
 		}
 
 		var
 			/*jshint validthis:true */
 			iframe   = this,
-			iframeID = ensureHasId(iframe.id);
+			iframeId = ensureHasId(iframe.id);
 
 		processOptions(options);
 		setScrolling();
@@ -581,9 +582,15 @@
 	}
 
 	function winResize(){
+		function isIFrameResizeEnabled(iframeId) {
+			return	'parent' === settings[iframeId].resizeFrom &&
+					settings[iframeId].autoResize &&
+					!settings[iframeId].firstRun;
+		}
+
 		throttle(function(){
 			for (var iframeId in settings){
-				if('parent' === settings[iframeId].resizeFrom){
+				if(isIFrameResizeEnabled(iframeId)){
 					trigger('Window resize','resize',document.getElementById(iframeId),iframeId);
 				}
 			}
