@@ -367,30 +367,13 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 ### Native version
 
-Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+) and [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode),
+Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+) and [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode) and use the [MDN PolyFill](https://developer.mozilla.org/) on the host page.
 
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-```
-
-and use the [MDN PolyFill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) on the host page.
-
-```js
-if (!Array.prototype.forEach){
-	Array.prototype.forEach = function(fun /*, thisArg */){
-		"use strict";
-		if (this === void 0 || this === null || typeof fun !== "function") throw new TypeError();
-
-		var
-			t = Object(this),
-			len = t.length >>> 0,
-			thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-
-		for (var i = 0; i < len; i++)
-			if (i in t)
-				fun.call(thisArg, t[i], i, t);
-	};
-}
+<!--[if lte IE 8]>
+	<script type="text/javascript" src="../js/ie8.polyfils.min.js"></script>
+<![endif]-->
 ```
 
 
