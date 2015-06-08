@@ -619,7 +619,10 @@
 			case 'string':
 				Array.prototype.forEach.call( 
 					document.querySelectorAll( target || 'iframe' ), 
-					init.bind(undefined, options)
+					//init.bind(undefined, options) to change in V3.
+					function (element){
+						init(options,element);
+					}
 				);
 				break;
 			case 'object':
