@@ -367,7 +367,7 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 ### Native version
 
-Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+) and [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode) and use the [MDN PolyFill](https://developer.mozilla.org/) on the host page.
+Additionally requires support for [Array.prototype.forEach](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) and [Function.prototype.bind](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) (IE9+), plus [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode) and include the [IE8 PolyFils](https://github.com/davidjbradshaw/iframe-resizer/blob/master/src/ie8.polyfils.js) on the host page.
 
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -379,6 +379,7 @@ Additionally requires support for [Array.prototype.forEach](http://kangax.github
 
 ## Version History
 
+* v2.9.0 Added *iframe.iFrameResizer.close()* and *iframe.iFrameResizer.resize()* methods to bound iFrames. Ignore calls to setup an already bound iFrame. Improved event handling. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*.
 * v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.
 * v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
 [#167](https://github.com/davidjbradshaw/iframe-resizer/issues/167) Added WebPack support [[Stephan Salat](https://github.com/ssalat)].
