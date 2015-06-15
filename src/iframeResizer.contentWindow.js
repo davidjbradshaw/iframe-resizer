@@ -352,31 +352,33 @@
 		}
 	}
 
-	function setupInjectElementLoadListners(mutations){
-		function addLoadListener(element){
-			if (element.height === undefined || element.width === undefined || 0 === element.height || 0 === element.width){
-				log('Attach listerner to '+element.src);
-				addEventListener(element,'load', function imageLoaded(){
+	function setupMutationObserver(){
+
+		function addImageLoadListners(mutation) {
+			function addImageLoadListener(element){
+				function imageLoaded(){
 					sendSize('imageLoad','Image loaded');
-				});
+				}
+
+				if (element.height === undefined || element.width === undefined || 0 === element.height || 0 === element.width){
+					log('Attach listerner to ' + element.src);
+					element.addEventListener('load', imageLoaded, false);
+				}
+			}
+
+			if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
+				addImageLoadListener(mutation.target);
+			} else if (mutation.type === 'childList'){
+				Array.prototype.forEach.call(mutation.target.querySelectorAll('img'), addImageLoadListener);
 			}
 		}
 
-		mutations.forEach(function (mutation) {
-			if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
-				addLoadListener(mutation.target);
-			} else if (mutation.type === 'childList'){
-				var images = mutation.target.querySelectorAll('img');
-				Array.prototype.forEach.call(images,function (image) {
-					addLoadListener(image);
-				});
-			}
-		});
-	}
+		function mutationObserved(mutations) {
+			sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
 
-	function setupMutationObserver(){
-
-		var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+			//Deal with WebKit asyncing image loading when tags are injected into the page
+			mutations.forEach(addImageLoadListners);
+		}
 
 		function createMutationObserver(){
 			var
@@ -391,17 +393,18 @@
 					subtree               : true
 				},
 
-				observer = new MutationObserver(function(mutations) {
-					sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
-					setupInjectElementLoadListners(mutations); //Deal with WebKit asyncing image loading when tags are injected into the page
-				});
+				observer = new MutationObserver(mutationObserved);
 
 			log('Enable MutationObserver');
 			observer.observe(target, config);
 		}
 
+		var
+			forceIntervalTimer = 0 > interval,
+			MutationObserver   = window.MutationObserver || window.WebKitMutationObserver;
+
 		if (MutationObserver){
-			if (0 > interval) {
+			if (forceIntervalTimer) {
 				initInterval();
 			} else {
 				createMutationObserver();
