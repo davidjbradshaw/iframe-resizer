@@ -132,7 +132,7 @@
 			var data = msg.substr(msgIdLen).split(':');
 
 			return {
-				iframe: document.getElementById(data[0]),
+				iframe: settings[data[0]].iframe,
 				id:     data[0],
 				height: data[1],
 				width:  data[2],
@@ -372,6 +372,17 @@
 			return retBool;
 		}
 
+		function firstRun() {
+			settings[iframeId].firstRun = false;
+
+			if(Function.prototype.bind){ //Ignore unpolyfilled IE8.
+				settings[iframeId].iframe.iFrameResizer = {
+					close:  closeIFrame.bind(settings[iframeId].iframe),
+					resize: trigger.bind('Window resize', 'resize', settings[iframeId].iframe)
+				};
+			}
+		}
+
 		var
 			msg = event.data,
 			messageData = {},
@@ -386,7 +397,7 @@
 				log(' Received: '+msg);
 
 				if ( checkIFrameExists() && isMessageFromIFrame() ){
-					settings[iframeId].firstRun = false;
+					if(settings[iframeId].firstRun) firstRun();
 					actionMsg();
 				}
 			}
@@ -459,7 +470,7 @@
 	}
 
 
-	function setupIFrame(options){
+	function setupIFrame(iframe,options){
 		function setLimits(){
 			function addStyle(style){
 				if ((Infinity !== settings[iframeId][style]) && (0 !== settings[iframeId][style])){
@@ -547,7 +558,8 @@
 		function processOptions(options){
 			options = options || {};
 			settings[iframeId] = {
-				firstRun: true
+				firstRun: true,
+				iframe: iframe
 			};
 
 			checkOptions(options);
@@ -561,16 +573,21 @@
 			logEnabled = settings[iframeId].log;
 		}
 
-		var
-			/*jshint validthis:true */
-			iframe   = this,
-			iframeId = ensureHasId(iframe.id);
+		function beenHere(){
+			return (iframeId in settings);
+		}
 
-		processOptions(options);
-		setScrolling();
-		setLimits();
-		setupBodyMarginValues();
-		init(createOutgoingMsg());
+		var iframeId = ensureHasId(iframe.id);
+
+		if (!beenHere()){
+			processOptions(options);
+			setScrolling();
+			setLimits();
+			setupBodyMarginValues();
+			init(createOutgoingMsg());
+		} else {
+			warn(' Ignored iFrame, already setup.');
+		}
 	}
 
 	function throttle(fn,time){
@@ -605,7 +622,7 @@
 			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
-				setupIFrame.call(element, options);
+				setupIFrame(element, options);
 			}
 		}
 
@@ -637,7 +654,7 @@
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
 			return this.filter('iframe').each(function (index, element) {
-				setupIFrame.call(element, options);
+				setupIFrame(element, options);
 			}).end();
 		};
 	}
