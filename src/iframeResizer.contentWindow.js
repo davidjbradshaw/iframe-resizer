@@ -142,9 +142,11 @@
 
 	function addTriggerEvent(options){
 		function addListener(eventName){
-			addEventListener(window,eventName,function(){
+			function handleEvent(){
 				sendSize(options.eventName,options.eventType);
-			});
+			}
+
+			addEventListener(window,eventName,handleEvent);
 		}
 
 		if(options.eventNames && Array.prototype.map){
