@@ -17,7 +17,7 @@
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
   <script>
-   var myOwnJquery = jQuery.noConflict(true);
+    //var myOwnJquery = jQuery.noConflict(true);
   </script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
@@ -27,7 +27,7 @@
 
    asyncTest("init with jQuery.noConflict", function() {
        try {
-           iFrameResize({
+           $('iframe').iFrameResize({
                log:true,
                bodyBackground:'wheat',
                heightCalculationMethod:'max',
@@ -37,7 +37,9 @@
                }
            });
        } catch(e) {
-           ok(false);
+          console.log(e);
+          ok(false);
+          start();
        }
    });
   </script>

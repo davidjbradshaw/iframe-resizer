@@ -163,9 +163,9 @@ Set minimum height/width of iFrame.
 ### resizeFrom
 
     default: 'parent'
-    values: 'parent', 'iframe'   
+    values: 'parent', 'child'   
 
-Listen for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
+Listen for resize events from the parent page, or the iFrame. Select the 'child' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
 
 ### scrolling
 
@@ -367,36 +367,20 @@ Works with all browsers which support [window.postMessage](http://caniuse.com/#f
 
 ### Native version
 
-Additionally requires support for [Array.prototype.forEach](http://kangax.github.io/es5-compat-table/#Array.prototype.forEach) (IE9+) and [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode),
+Additionally requires support for [Array.prototype.forEach](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) and [Function.prototype.bind](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) (IE9+), plus [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode) and include the [IE8 PolyFils](https://github.com/davidjbradshaw/iframe-resizer/blob/master/src/ie8.polyfils.js) on the host page.
 
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-```
-
-and use the [MDN PolyFill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) on the host page.
-
-```js
-if (!Array.prototype.forEach){
-	Array.prototype.forEach = function(fun /*, thisArg */){
-		"use strict";
-		if (this === void 0 || this === null || typeof fun !== "function") throw new TypeError();
-
-		var
-			t = Object(this),
-			len = t.length >>> 0,
-			thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-
-		for (var i = 0; i < len; i++)
-			if (i in t)
-				fun.call(thisArg, t[i], i, t);
-	};
-}
+<!--[if lte IE 8]>
+	<script type="text/javascript" src="../js/ie8.polyfils.min.js"></script>
+<![endif]-->
 ```
 
 
 ## Version History
 
-* v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iframe not sized during initialisation. Lower message about resize message before init from 'warn' to 'log'. Updated hover example.
+* v2.9.0 Added *iframe.iFrameResizer.close()* and *iframe.iFrameResizer.resize()* methods to bound iFrames. Ignore calls to setup an already bound iFrame. Improved event handling. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*.
+* v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.
 * v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
 [#167](https://github.com/davidjbradshaw/iframe-resizer/issues/167) Added WebPack support [[Stephan Salat](https://github.com/ssalat)].
 * v2.8.6 [#163](https://github.com/davidjbradshaw/iframe-resizer/issues/163) Moved window resize event detection from iFrame to parent page. [#160](https://github.com/davidjbradshaw/iframe-resizer/issues/160) Warn, rather than error, if iFrame has been unexpectantly removed from page. The *parentIFrame.close()* method nolonger calls *resizedCallback()*.

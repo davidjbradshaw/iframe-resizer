@@ -2,6 +2,7 @@
  * File: iframeResizer.js
  * Desc: Force iframes to size to content.
  * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
+ * Doc: https://github.com/davidjbradshaw/iframe-resizer
  * Author: David J. Bradshaw - dave@bradshaw.net
  * Contributor: Jure Mav - jure.mav@gmail.com
  * Contributor: Reed Dadoune - reed@dadoune.com
@@ -131,7 +132,7 @@
 			var data = msg.substr(msgIdLen).split(':');
 
 			return {
-				iframe: document.getElementById(data[0]),
+				iframe: settings[data[0]].iframe,
 				id:     data[0],
 				height: data[1],
 				width:  data[2],
@@ -371,6 +372,17 @@
 			return retBool;
 		}
 
+		function firstRun() {
+			settings[iframeId].firstRun = false;
+
+			if(Function.prototype.bind){ //Ignore unpolyfilled IE8.
+				settings[iframeId].iframe.iFrameResizer = {
+					close:  closeIFrame.bind(settings[iframeId].iframe),
+					resize: trigger.bind('Window resize', 'resize', settings[iframeId].iframe)
+				};
+			}
+		}
+
 		var
 			msg = event.data,
 			messageData = {},
@@ -385,7 +397,7 @@
 				log(' Received: '+msg);
 
 				if ( checkIFrameExists() && isMessageFromIFrame() ){
-					settings[iframeId].firstRun = false;
+					if(settings[iframeId].firstRun) firstRun();
 					actionMsg();
 				}
 			}
@@ -458,7 +470,7 @@
 	}
 
 
-	function setupIFrame(options){
+	function setupIFrame(iframe,options){
 		function setLimits(){
 			function addStyle(style){
 				if ((Infinity !== settings[iframeId][style]) && (0 !== settings[iframeId][style])){
@@ -546,7 +558,8 @@
 		function processOptions(options){
 			options = options || {};
 			settings[iframeId] = {
-				firstRun: true
+				firstRun: true,
+				iframe: iframe
 			};
 
 			checkOptions(options);
@@ -560,16 +573,21 @@
 			logEnabled = settings[iframeId].log;
 		}
 
-		var
-			/*jshint validthis:true */
-			iframe   = this,
-			iframeId = ensureHasId(iframe.id);
+		function beenHere(){
+			return (iframeId in settings);
+		}
 
-		processOptions(options);
-		setScrolling();
-		setLimits();
-		setupBodyMarginValues();
-		init(createOutgoingMsg());
+		var iframeId = ensureHasId(iframe.id);
+
+		if (!beenHere()){
+			processOptions(options);
+			setScrolling();
+			setLimits();
+			setupBodyMarginValues();
+			init(createOutgoingMsg());
+		} else {
+			warn(' Ignored iFrame, already setup.');
+		}
 	}
 
 	function throttle(fn,time){
@@ -598,13 +616,13 @@
 	}
 
 	function factory(){
-		function init(element, options){
+		function init(options,element){
 			if(!element.tagName) {
 				throw new TypeError('Object is not a valid DOM element');
 			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
-				setupIFrame.call(element, options);
+				setupIFrame(element, options);
 			}
 		}
 
@@ -616,12 +634,16 @@
 			switch (typeof(target)){
 			case 'undefined':
 			case 'string':
-				Array.prototype.forEach.call( document.querySelectorAll( target || 'iframe' ), function (element) {
-					init(element, options);
-				});
+				Array.prototype.forEach.call( 
+					document.querySelectorAll( target || 'iframe' ), 
+					//init.bind(undefined, options) to change in V3.
+					function (element){
+						init(options,element);
+					}
+				);
 				break;
 			case 'object':
-				init(target, options);
+				init(options,target);
 				break;
 			default:
 				throw new TypeError('Unexpected data type ('+typeof(target)+').');
@@ -632,7 +654,7 @@
 	function createJQueryPublicMethod($){
 		$.fn.iFrameResize = function $iFrameResizeF(options) {
 			return this.filter('iframe').each(function (index, element) {
-				setupIFrame.call(element, options);
+				setupIFrame(element, options);
 			}).end();
 		};
 	}

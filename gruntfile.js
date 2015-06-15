@@ -74,6 +74,14 @@ module.exports = function(grunt) {
         },
         src: ['src/iframeResizer.contentWindow.js'],
         dest: 'js/iframeResizer.contentWindow.min.js',
+      },
+      polyfil: {
+        options: {
+          banner:'// IE8 polyfils for iframeResizer.js\n',
+          sourceMapName: 'js/ie8.polyfils.map'
+        },
+        src: ['src/ie8.polyfils.js'],
+        dest: 'js/ie8.polyfils.min.js',
       }
     },
 
