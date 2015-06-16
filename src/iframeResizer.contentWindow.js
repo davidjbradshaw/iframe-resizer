@@ -380,7 +380,7 @@
 			sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
 
 			//Deal with WebKit asyncing image loading when tags are injected into the page
-			mutations.forEach(addImageLoadListners);
+			addImageLoadListners(mutations[0]);
 		}
 
 		function createMutationObserver(){
@@ -723,7 +723,7 @@
 					resizeFromParent();
 					break;
 				default:
-					if (!isMiddleTier()){
+					if (!isMiddleTier() && !isInitMsg()){
 						warn('Unexpected message ('+event.data+')');
 					}
 				}
