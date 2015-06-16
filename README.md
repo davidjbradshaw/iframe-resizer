@@ -132,7 +132,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>Notes:</i>
 
-<i>**If the default option doesn't work then the best solutions are to either use** taggedElement ** or to use** lowestElement **in modern browsers and** max **in IE10 downwards.**</i>
+<i>**If the default option doesn't work then the best solutions are either to use** taggedElement** or to use** lowestElement **in modern browsers and** max **in IE10 downwards.**</i>
 
 ```js
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
