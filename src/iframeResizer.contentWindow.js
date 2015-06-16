@@ -36,7 +36,7 @@
 		myID                  = '',
 		publicMethods         = false,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
-		resizeFrom            = 'parent',
+		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
 		target                = window.parent,
 		tolerance             = 0,
@@ -106,7 +106,7 @@
 		bodyPadding        = data[10];
 		tolerance          = (undefined !== data[11]) ? Number(data[11]) : tolerance;
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
-		resizeFrom         = (undefined !== data[13]) ? strBool(data[13]): resizeFrom;
+		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 	}
 
 	function chkCSS(attr,value){
@@ -476,22 +476,21 @@
 	}
 
 	//From https://github.com/guardian/iframe-messenger
-	function getLowestElementHeight() {
+	function getLowestElementHeight(elements) {
 		var
-			allElements       = document.querySelectorAll('body *'),
-			allElementsLength = allElements.length,
-			maxBottomVal      = 0,
-			timer             = new Date().getTime();
+			elementsLength = elements.length,
+			maxBottomVal   = 0,
+			timer          = new Date().getTime();
 
-		for (var i = 0; i < allElementsLength; i++) {
-			if (allElements[i].getBoundingClientRect().bottom > maxBottomVal) {
-				maxBottomVal = allElements[i].getBoundingClientRect().bottom;
+		for (var i = 0; i < elementsLength; i++) {
+			if (elements[i].getBoundingClientRect().bottom > maxBottomVal) {
+				maxBottomVal = elements[i].getBoundingClientRect().bottom;
 			}
 		}
 
 		timer = new Date().getTime() - timer;
 
-		log('Parsed '+allElementsLength+' HTML elements');
+		log('Parsed '+elementsLength+' HTML elements');
 		log('LowestElement bottom position calculated in ' + timer + 'ms');
 
 		return maxBottomVal;
@@ -515,7 +514,21 @@
 	}
 
 	function getBestHeight(){
-		return Math.max(getBodyOffsetHeight(),getLowestElementHeight());
+		return Math.max(
+			getBodyOffsetHeight(),
+			getLowestElementHeight(document.querySelectorAll('body *'))
+		);
+	}
+
+	function getTaggedElements(){
+		function noTaggedElementsFound(){
+			warn('No tagged elements found on page');
+			return height; //current height
+		}
+
+		var elements = document.querySelectorAll('[data-iframe-height]');
+
+		return 0 === elements.length ?  noTaggedElementsFound() : getLowestElementHeight(elements);
 	}
 
 	var getHeight = {
@@ -528,7 +541,8 @@
 		max                   : getMaxHeight,
 		min                   : getMinHeight,
 		grow                  : getMaxHeight,
-		lowestElement         : getBestHeight
+		lowestElement         : getBestHeight,
+		taggedElement         : getTaggedElements
 	};
 
 	function getWidth(){

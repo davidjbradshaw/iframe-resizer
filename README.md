@@ -128,10 +128,11 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **min** takes the smallest value of the main four options <sup>*</sup>
 * **grow** same as **max** but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
 * **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point <sup>†</sup>
+* **taggedElement** Finds the bottom of the lowest element with a `data-iframe-height` attribute
 
 <i>Notes:</i>
 
-<i>**If the default option doesn't work then the best solution is often to use** lowestElement **in modern browsers and** max **in IE10 downwards.**</i>
+<i>**If the default option doesn't work then the best solutions are to either use** taggedElement ** or to use** lowestElement **in modern browsers and** max **in IE10 downwards.**</i>
 
 ```js
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
@@ -298,7 +299,7 @@ Bug reports and pull requests are welcome on the [issue tracker](https://github.
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences.
 
 ### IFrame not downsizing
-The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the `html` or `body` elements, but it could be on any element in the page.
+The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the `html` or `body` elements, but it could be on any element in the page. This can sometimes be got around by using the `taggedElement` height calculation method and added a `data-iframe-height` attribute to the element that you want to define the bottom position of the page. You may find it useful to use `position: relative` on this element to define a bottom margin or allow space for a floating footer.
 
 Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_type_declaration) in the iFrame can also sometimes prevent downsizing. At it's most simplest this can be the following.
 
@@ -379,7 +380,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 
 ## Version History
 
-* v2.9.0 Added *iframe.iFrameResizer.close()* and *iframe.iFrameResizer.resize()* methods to bound iFrames. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with resizeFrom not having default option in iFrame, if called from old version in parent page.
+* v2.9.0 Added *taggedElement* height calculation method. Added *iframe.iFrameResizer.close()* and *iframe.iFrameResizer.resize()* methods to bound iFrames. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with resizeFrom not having default option in iFrame, if called from old version in parent page.
 * v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.
 * v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
 [#167](https://github.com/davidjbradshaw/iframe-resizer/issues/167) Added WebPack support [[Stephan Salat](https://github.com/ssalat)].
