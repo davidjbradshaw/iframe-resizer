@@ -167,7 +167,7 @@
 		addTriggerEvent({ eventType: 'Animation Start',           eventNames: ['animationstart','webkitAnimationStart'] });
 		addTriggerEvent({ eventType: 'Animation Iteration',       eventNames: ['animationiteration','webkitAnimationIteration'] });
 		addTriggerEvent({ eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
-		addTriggerEvent({ eventType: 'Device Orientation Change', eventName:  'orientationchange' });
+		addTriggerEvent({ eventType: 'Orientation Change',        eventName:  'orientationchange' });
 		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
 		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
 		//addTriggerEvent({ eventType: 'Window Mouse Down',         eventName:  'mousedown' });
