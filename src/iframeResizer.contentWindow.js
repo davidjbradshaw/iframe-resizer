@@ -374,9 +374,7 @@
 	function setupMutationObserver(){
 		function addImageLoadListners(mutation) {
 			function addImageLoadListener(element){
-				function imageLoaded(){
-					sendSize('imageLoad','Image loaded');
-				}
+				var imageLoaded = sendSize.bind(null,'imageLoad','Image loaded',undefined,undefined);
 
 				if (isNotSet(element.height) || isNotSet(element.width)) {
 					log('Attach listerner to ' + element.src);
