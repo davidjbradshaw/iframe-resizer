@@ -32,7 +32,7 @@
 			checkOrigin               : true,
 			enableInPageLinks         : false,
 			enablePublicMethods       : false,
-			heightCalculationMethod   : 'offset',
+			heightCalculationMethod   : 'bodyOffset',
 			interval                  : 32,
 			log                       : false,
 			maxHeight                 : Infinity,

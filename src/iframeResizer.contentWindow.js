@@ -24,7 +24,7 @@
 		eventCancelTimer      = 128,
 		firstRun              = true,
 		height                = 1,
-		heightCalcModeDefault = 'offset',
+		heightCalcModeDefault = 'bodyOffset',
 		heightCalcMode        = heightCalcModeDefault,
 		initLock              = true,
 		initMsg               = '',
@@ -438,57 +438,39 @@
 
 	// document.documentElement.offsetHeight is not reliable, so
 	// we have to jump through hoops to get a better value.
-	function getBodyOffsetHeight(){
-		function getComputedBodyStyle(prop) {
-			function convertUnitsToPxForIE8(value) {
-				var PIXEL = /^\d+(px)?$/i;
+	function getComputedBodyStyle(prop) {
+		function convertUnitsToPxForIE8(value) {
+			var PIXEL = /^\d+(px)?$/i;
 
-				if (PIXEL.test(value)) {
-					return parseInt(value,base);
-				}
-
-				var
-					style = el.style.left,
-					runtimeStyle = el.runtimeStyle.left;
-
-				el.runtimeStyle.left = el.currentStyle.left;
-				el.style.left = value || 0;
-				value = el.style.pixelLeft;
-				el.style.left = style;
-				el.runtimeStyle.left = runtimeStyle;
-
-				return value;
+			if (PIXEL.test(value)) {
+				return parseInt(value,base);
 			}
 
 			var
-				el = document.body,
-				retVal = 0;
+				style = el.style.left,
+				runtimeStyle = el.runtimeStyle.left;
 
-			if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
-				retVal = document.defaultView.getComputedStyle(el, null);
-				retVal = (null !== retVal) ? retVal[prop] : 0;
-			} else {//IE8
-				retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
-			}
+			el.runtimeStyle.left = el.currentStyle.left;
+			el.style.left = value || 0;
+			value = el.style.pixelLeft;
+			el.style.left = style;
+			el.runtimeStyle.left = runtimeStyle;
 
-			return parseInt(retVal,base);
+			return value;
 		}
 
-		return  document.body.offsetHeight +
-				getComputedBodyStyle('marginTop') +
-				getComputedBodyStyle('marginBottom');
-	}
+		var
+			el = document.body,
+			retVal = 0;
 
-	function getBodyScrollHeight(){
-		return document.body.scrollHeight;
-	}
+		if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
+			retVal = document.defaultView.getComputedStyle(el, null);
+			retVal = (null !== retVal) ? retVal[prop] : 0;
+		} else {//IE8
+			retVal =  convertUnitsToPxForIE8(el.currentStyle[prop]);
+		}
 
-	function getDEOffsetHeight(){
-		return document.documentElement.offsetHeight;
-	}
-
-	function getDEScrollHeight(){
-		return document.documentElement.scrollHeight;
+		return parseInt(retVal,base);
 	}
 
 	//Idea from https://github.com/guardian/iframe-messenger
@@ -514,26 +496,11 @@
 
 	function getAllHeights(){
 		return [
-			getBodyOffsetHeight(),
-			getBodyScrollHeight(),
-			getDEOffsetHeight(),
-			getDEScrollHeight()
+			getHeight.bodyOffset(),
+			getHeight.bodyScroll(),
+			getHeight.documentElementOffset(),
+			getHeight.documentElementScroll()
 		];
-	}
-
-	function getMaxHeight(){
-		return Math.max.apply(null,getAllHeights());
-	}
-
-	function getMinHeight(){
-		return Math.min.apply(null,getAllHeights());
-	}
-
-	function getBestHeight(){
-		return Math.max(
-			getBodyOffsetHeight(),
-			getMaxElement('bottom',document.querySelectorAll('body *'))
-		);
 	}
 
 	function getTaggedElements(side,tag){
@@ -544,52 +511,76 @@
 
 		var elements = document.querySelectorAll(tag);
 
-		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement('bottom',elements);
+		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement(side,elements);
 	}
 
-	function getTaggedElementsHeight(){
-		getTaggedElements('bottom','[data-iframe-height]');
-	}
-
-	function getTaggedElementsWidth(){
-		getTaggedElements('left','[data-iframe-width]');
-	}
-
-
-	function getBodyScrollWidth(){
-		return document.body.scrollWidth;
-	}
-
-	function getDEScrollWidth(){
-		return document.documentElement.scrollWidth;
-	}
-
-	function getMaxWidth(){
-		return Math.max(
-			getBodyScrollWidth(),
-			getDEScrollWidth()
-		);
+	function getAllElements(){
+		return document.querySelectorAll('body *');
 	}
 
 	var
 		getHeight = {
-			offset                : getBodyOffsetHeight, //Backward compatability
-			bodyOffset            : getBodyOffsetHeight,
-			bodyScroll            : getBodyScrollHeight,
-			documentElementOffset : getDEOffsetHeight,
-			scroll                : getDEScrollHeight, //Backward compatability
-			documentElementScroll : getDEScrollHeight,
-			max                   : getMaxHeight,
-			min                   : getMinHeight,
-			grow                  : getMaxHeight,
-			lowestElement         : getBestHeight,
-			taggedElement         : getTaggedElementsHeight
+			bodyOffset: function getBodyOffsetHeight(){
+				return  document.body.offsetHeight + getComputedBodyStyle('marginTop') + getComputedBodyStyle('marginBottom');
+			},
+
+			offset: function(){
+				return getHeight.bodyOffset(); //Backwards compatability
+			},
+
+			bodyScroll: function getBodyScrollHeight(){
+				return document.body.scrollHeight;
+			},
+
+			documentElementOffset: function getDEOffsetHeight(){
+				return document.documentElement.offsetHeight;
+			},
+
+			documentElementScroll: function getDEScrollHeight(){
+				return document.documentElement.scrollHeight;
+			},
+
+			max: function getMaxHeight(){
+				return Math.max.apply(null,getAllHeights());
+			},
+
+			min: function getMinHeight(){
+				return Math.min.apply(null,getAllHeights());
+			},
+
+			grow: function growHeight(){
+				return getHeight.max(); //Run max without the forced downsizing
+			},
+
+			lowestElement: function getBestHeight(){
+				return Math.max(getBodyOffsetHeight(), getMaxElement('bottom',getAllElements()));
+			},
+
+			taggedElement: function getTaggedElementsHeight(){
+				getTaggedElements('bottom','[data-iframe-height]');
+			}
 		},
+
 		getWidth = {
-			bodyScroll            : getBodyScrollWidth,
-			documentElementScroll : getDEScrollWidth,
-			max                   : getMaxWidth,
-			taggedElement         : getTaggedElementsWidth
+			bodyScroll: function getBodyScrollWidth(){
+				return document.body.scrollWidth;
+			},
+
+			documentElementScroll: function getDEScrollWidth(){
+				return document.documentElement.scrollWidth;
+			},
+
+			max: function getMaxWidth(){
+				return Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll());
+			},
+
+			leftMostElement: function getLeftMostElement(){
+				return getMaxElement('left', getAllElements());
+			},
+
+			taggedElement: function getTaggedElementsWidth(){
+				return getTaggedElements('left', '[data-iframe-width]');
+			}
 		};
 
 
@@ -619,7 +610,7 @@
 				var retVal = Math.abs(a-b) <= tolerance;
 				return !retVal;
 			}
-
+			
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth[widthCalcMode]();
 
