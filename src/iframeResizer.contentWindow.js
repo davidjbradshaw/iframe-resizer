@@ -505,11 +505,11 @@
 
 	function getTaggedElements(side,tag){
 		function noTaggedElementsFound(){
-			warn('No tagged elements found on page');
+			warn('No tagged elements ('+tag+') found on page');
 			return height; //current height
 		}
 
-		var elements = document.querySelectorAll(tag);
+		var elements = document.querySelectorAll('['+tag+']');
 
 		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement(side,elements);
 	}
@@ -553,11 +553,11 @@
 			},
 
 			lowestElement: function getBestHeight(){
-				return Math.max(getBodyOffsetHeight(), getMaxElement('bottom',getAllElements()));
+				return Math.max(getHeight.bodyOffset(), getMaxElement('bottom',getAllElements()));
 			},
 
 			taggedElement: function getTaggedElementsHeight(){
-				getTaggedElements('bottom','[data-iframe-height]');
+				return getTaggedElements('bottom','data-iframe-height');
 			}
 		},
 
@@ -579,7 +579,7 @@
 			},
 
 			taggedElement: function getTaggedElementsWidth(){
-				return getTaggedElements('left', '[data-iframe-width]');
+				return getTaggedElements('left', 'data-iframe-width');
 			}
 		};
 
@@ -610,7 +610,7 @@
 				var retVal = Math.abs(a-b) <= tolerance;
 				return !retVal;
 			}
-			
+
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth[widthCalcMode]();
 
