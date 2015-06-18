@@ -367,15 +367,18 @@
 		}
 	}
 
-	function setupMutationObserver(){
+	function isNotSet(item){
+		return undefined === item || 0 === item;
+	}
 
+	function setupMutationObserver(){
 		function addImageLoadListners(mutation) {
 			function addImageLoadListener(element){
 				function imageLoaded(){
 					sendSize('imageLoad','Image loaded');
 				}
 
-				if (element.height === undefined || element.width === undefined || 0 === element.height || 0 === element.width){
+				if (isNotSet(element.height) || isNotSet(element.width)) {
 					log('Attach listerner to ' + element.src);
 					element.addEventListener('load', imageLoaded, false);
 				}
@@ -384,7 +387,10 @@
 			if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
 				addImageLoadListener(mutation.target);
 			} else if (mutation.type === 'childList'){
-				Array.prototype.forEach.call(mutation.target.querySelectorAll('img'), addImageLoadListener);
+				Array.prototype.forEach.call(
+					mutation.target.querySelectorAll('img'), 
+					addImageLoadListener
+				);
 			}
 		}
 
@@ -583,7 +589,7 @@
 		},
 		getWidth = {
 			bodyScroll            : getBodyScrollWidth,
-			documentElementOffset : getDEOffsetWidth,
+			documentElementScroll : getDEScrollWidth,
 			max                   : getMaxWidth,
 			taggedElement         : getTaggedElementsWidth
 		};
