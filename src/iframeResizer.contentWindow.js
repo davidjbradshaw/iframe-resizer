@@ -42,7 +42,9 @@
 		tolerance             = 0,
 		triggerLocked         = false,
 		triggerLockedTimer    = null,
-		width                 = 1;
+		width                 = 1,
+		widthCalcModeDefault  = 'max',
+		widthCalcMode         = widthCalcModeDefault;
 
 
 	function addEventListener(el,evt,func){
@@ -71,8 +73,8 @@
 
 
 	function init(){
-		log('Initialising iFrame');
 		readData();
+		log('Initialising iFrame ('+location.href+')');
 		setMargin();
 		setBodyStyle('background',bodyBackground);
 		setBodyStyle('padding',bodyPadding);
@@ -107,6 +109,7 @@
 		tolerance          = (undefined !== data[11]) ? Number(data[11]) : tolerance;
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
 		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
+		widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
 	}
 
 	function chkCSS(attr,value){
@@ -475,25 +478,25 @@
 		return document.documentElement.scrollHeight;
 	}
 
-	//From https://github.com/guardian/iframe-messenger
-	function getLowestElementHeight(elements) {
+	//Idea from https://github.com/guardian/iframe-messenger
+	function getMaxElement(side,elements) {
 		var
 			elementsLength = elements.length,
-			maxBottomVal   = 0,
+			maxVal         = 0,
 			timer          = new Date().getTime();
 
 		for (var i = 0; i < elementsLength; i++) {
-			if (elements[i].getBoundingClientRect().bottom > maxBottomVal) {
-				maxBottomVal = elements[i].getBoundingClientRect().bottom;
+			if (elements[i].getBoundingClientRect()[side] > maxVal) {
+				maxVal = elements[i].getBoundingClientRect()[side];
 			}
 		}
 
 		timer = new Date().getTime() - timer;
 
 		log('Parsed '+elementsLength+' HTML elements');
-		log('LowestElement bottom position calculated in ' + timer + 'ms');
+		log('Element position calculated in ' + timer + 'ms');
 
-		return maxBottomVal;
+		return maxVal;
 	}
 
 	function getAllHeights(){
@@ -516,41 +519,55 @@
 	function getBestHeight(){
 		return Math.max(
 			getBodyOffsetHeight(),
-			getLowestElementHeight(document.querySelectorAll('body *'))
+			getMaxElement('bottom',document.querySelectorAll('body *'))
 		);
 	}
 
-	function getTaggedElements(){
+	function getTaggedElements(side,tag){
 		function noTaggedElementsFound(){
 			warn('No tagged elements found on page');
 			return height; //current height
 		}
 
-		var elements = document.querySelectorAll('[data-iframe-height]');
+		var elements = document.querySelectorAll(tag);
 
-		return 0 === elements.length ?  noTaggedElementsFound() : getLowestElementHeight(elements);
+		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement('bottom',elements);
 	}
 
-	var getHeight = {
-		offset                : getBodyOffsetHeight, //Backward compatability
-		bodyOffset            : getBodyOffsetHeight,
-		bodyScroll            : getBodyScrollHeight,
-		documentElementOffset : getDEOffsetHeight,
-		scroll                : getDEScrollHeight, //Backward compatability
-		documentElementScroll : getDEScrollHeight,
-		max                   : getMaxHeight,
-		min                   : getMinHeight,
-		grow                  : getMaxHeight,
-		lowestElement         : getBestHeight,
-		taggedElement         : getTaggedElements
-	};
+	function getTaggedElementsHeight(){
+		getTaggedElements('bottom','[data-iframe-height]');
+	}
 
-	function getWidth(){
+	function getTaggedElementsWidth(){
+		getTaggedElements('left','[data-iframe-width]');
+	}
+
+	function getMaxWidth(){
 		return Math.max(
 			document.documentElement.scrollWidth,
 			document.body.scrollWidth
 		);
 	}
+
+	var
+		getHeight = {
+			offset                : getBodyOffsetHeight, //Backward compatability
+			bodyOffset            : getBodyOffsetHeight,
+			bodyScroll            : getBodyScrollHeight,
+			documentElementOffset : getDEOffsetHeight,
+			scroll                : getDEScrollHeight, //Backward compatability
+			documentElementScroll : getDEScrollHeight,
+			max                   : getMaxHeight,
+			min                   : getMinHeight,
+			grow                  : getMaxHeight,
+			lowestElement         : getBestHeight,
+			taggedElement         : getTaggedElementsHeight
+		},
+		getWidth = {
+			max                   : getMaxWidth,
+			taggedElement         : getTaggedElementsWidth
+		};
+
 
 	function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
 
@@ -580,7 +597,7 @@
 			}
 
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
-			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth();
+			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth[widthCalcMode]();
 
 			return	checkTolarance(height,currentHeight) || (calculateWidth && checkTolarance(width,currentWidth));
 		}
@@ -634,7 +651,7 @@
 
 	function triggerReset(triggerEvent){
 		height = getHeight[heightCalcMode]();
-		width  = getWidth();
+		width  = getWidth[widthCalcMode]();
 
 		sendMsg(height,width,triggerEvent);
 	}
