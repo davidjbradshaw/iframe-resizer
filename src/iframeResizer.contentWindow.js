@@ -551,10 +551,19 @@
 		getTaggedElements('left','[data-iframe-width]');
 	}
 
+
+	function getBodyScrollWidth(){
+		return document.body.scrollWidth;
+	}
+
+	function getDEScrollWidth(){
+		return document.documentElement.scrollWidth;
+	}
+
 	function getMaxWidth(){
 		return Math.max(
-			document.documentElement.scrollWidth,
-			document.body.scrollWidth
+			getBodyScrollWidth(),
+			getDEScrollWidth()
 		);
 	}
 
@@ -573,6 +582,8 @@
 			taggedElement         : getTaggedElementsHeight
 		},
 		getWidth = {
+			bodyScroll            : getBodyScrollWidth,
+			documentElementOffset : getDEOffsetWidth,
 			max                   : getMaxWidth,
 			taggedElement         : getTaggedElementsWidth
 		};
