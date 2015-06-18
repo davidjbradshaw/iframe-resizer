@@ -229,10 +229,10 @@ type:    integer
 <a id="resizefrom" class="anchor" href="#resizefrom" aria-hidden="true"><span class="octicon octicon-link"></span></a>resizeFrom</h3>
 
 <pre><code>default: 'parent'
-values: 'parent', 'iframe'   
+values: 'parent', 'child'   
 </code></pre>
 
-<p>Listen for resize events from the parent page, or the iFrame. Select the 'iframe' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.</p>
+<p>Listen for resize events from the parent page, or the iFrame. Select the 'child' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.</p>
 
 <h3>
 <a id="scrolling" class="anchor" href="#scrolling" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrolling</h3>
@@ -404,9 +404,8 @@ type:    integer
 
 <div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">resize</span>(){
     <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">'</span>parentIFrame<span class="pl-pds">'</span></span> <span class="pl-k">in</span> <span class="pl-c1">window</span>) {
-        <span class="pl-c1">setTimeout</span>(<span class="pl-k">function</span>(){ <span class="pl-c">// Fix FireFox timing issue</span>
-            parentIFrame.<span class="pl-c1">size</span>();
-        },<span class="pl-c1">0</span>);
+        <span class="pl-c">// Fix race condition in FireFox with setTimeout</span>
+        <span class="pl-c1">setTimeout</span>(parentIFrame.<span class="pl-c1">size</span>.bind(parentIFrame),<span class="pl-c1">0</span>);
     }
 }
 
@@ -489,6 +488,8 @@ iFrameResize( {
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
+<li>v2.8.9 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/220">#220</a> Switched from using deviceorientation to orientationchange event listner [<a href="https://github.com/kobelb">Brandon Kobel</a>].</li>
+<li>v2.8.8 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/213">#213</a> Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.</li>
 <li>v2.8.7 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/205">#205</a> Fix race condition when page resized during page init [<a href="https://github.com/IanCaunce">Ian Caunce</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/203">#203</a> Added option for <em>checkOrigin</em> to have list of allowed domains for the iFrame [<a href="https://github.com/andrej2k">Andrej Golcov</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/202">#202</a> Handle script being loaded more than once [<a href="https://github.com/elektronik2k5">Nickolay Ribal</a>].
 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/167">#167</a> Added WebPack support [<a href="https://github.com/ssalat">Stephan Salat</a>].</li>
 <li>v2.8.6 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/163">#163</a> Moved window resize event detection from iFrame to parent page. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/160">#160</a> Warn, rather than error, if iFrame has been unexpectantly removed from page. The <em>parentIFrame.close()</em> method nolonger calls <em>resizedCallback()</em>.</li>
