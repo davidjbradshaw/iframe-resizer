@@ -80,6 +80,7 @@
 		setBodyStyle('padding',bodyPadding);
 		injectClearFixIntoBodyElement();
 		checkHeightMode();
+		checkWidthMode();
 		stopInfiniteResizingOfIFrame();
 		setupPublicMethods();
 		startEventListeners();
@@ -176,14 +177,22 @@
 		}
 	}
 
-	function checkHeightMode(){
-		if (heightCalcModeDefault !== heightCalcMode){
-			if (!(heightCalcMode in getHeight)){
-				warn(heightCalcMode + ' is not a valid option for heightCalculationMethod.');
-				heightCalcMode='bodyScroll';
+	function checkCalcMode(calcMode,calcModeDefault,modes,type){
+		if (calcModeDefault !== calcMode){
+			if (!(calcMode in modes)){
+				warn(calcMode + ' is not a valid option for '+type+'CalculationMethod.');
+				calcMode=calcModeDefault;
 			}
-			log('Height calculation method set to "'+heightCalcMode+'"');
+			log(type+' calculation method set to "'+calcMode+'"');
 		}
+	}
+
+	function checkHeightMode(){
+		checkCalcMode(heightCalcMode,heightCalcModeDefault,getHeight,'height');
+	}
+
+	function checkWidthMode(){
+		checkCalcMode(widthCalcMode,widthCalcModeDefault,getWidth,'width');
 	}
 
 	function startEventListeners(){
@@ -224,7 +233,7 @@
 		}
 
 		function findTarget(location){
-			var hash = location.split("#")[1] || "";
+			var hash = location.split('#')[1] || '';
 			var hashData = decodeURIComponent(hash);
 
 			function jumpToTarget(target){

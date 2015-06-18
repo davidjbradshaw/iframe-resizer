@@ -44,6 +44,7 @@
 			sizeHeight                : true,
 			sizeWidth                 : false,
 			tolerance                 : 0,
+			widthCalculationMethod    : 'max',
 			closedCallback            : function(){},
 			initCallback              : function(){},
 			messageCallback           : function(){},
@@ -525,7 +526,8 @@
 				':' + settings[iframeId].bodyPadding +
 				':' + settings[iframeId].tolerance +
 				':' + settings[iframeId].enableInPageLinks +
-				':' + settings[iframeId].resizeFrom;
+				':' + settings[iframeId].resizeFrom +
+				':' + settings[iframeId].widthCalculationMethod;
 		}
 
 		function init(msg){
