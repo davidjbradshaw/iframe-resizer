@@ -311,7 +311,7 @@ if ('parentIFrame' in window) {
 
 ##IFrame Object Methods
 
-Once the iFrame has been initialized, an `iframeResizer` object is bound to it. This has the following methods available. 
+Once the iFrame has been initialized, an `iFrameResizer` object is bound to it. This has the following methods available. 
 
 ### close()
 
@@ -319,7 +319,7 @@ Remove the iFrame from the page.
 
 ### resize()
 
-Tell the iFrame to resize it's self.
+Tell the iFrame to resize itself.
 
 
 ## Troubleshooting

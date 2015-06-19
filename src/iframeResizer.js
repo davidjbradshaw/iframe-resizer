@@ -378,8 +378,14 @@
 
 			if(Function.prototype.bind){ //Ignore unpolyfilled IE8.
 				settings[iframeId].iframe.iFrameResizer = {
-					close:  closeIFrame.bind(null,settings[iframeId].iframe),
-					resize: trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe)
+					close        : closeIFrame.bind(null,settings[iframeId].iframe),
+					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
+					moveToAnchor : function(anchor){
+						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe);
+					},
+					sendMessage  : function(message){
+						trigger('Send Message','message:#'+message, settings[iframeId].iframe);
+					}
 				};
 			}
 		}

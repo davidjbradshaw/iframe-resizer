@@ -770,6 +770,9 @@
 				case 'resize':
 					resizeFromParent();
 					break;
+				case 'moveToAnchor':
+					inPageLinks.findTarget();
+					break;
 				default:
 					if (!isMiddleTier() && !isInitMsg()){
 						warn('Unexpected message ('+event.data+')');
