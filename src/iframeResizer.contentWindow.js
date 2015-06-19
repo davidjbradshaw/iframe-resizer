@@ -35,7 +35,7 @@
 		msgIdLen              = msgID.length,
 		myID                  = '',
 		publicMethods         = false,
-		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
+		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
 		target                = window.parent,
@@ -494,12 +494,12 @@
 		return maxVal;
 	}
 
-	function getAllHeights(){
+	function getAll(dimention){
 		return [
-			getHeight.bodyOffset(),
-			getHeight.bodyScroll(),
-			getHeight.documentElementOffset(),
-			getHeight.documentElementScroll()
+			dimention.bodyOffset(),
+			dimention.bodyScroll(),
+			dimention.documentElementOffset(),
+			dimention.documentElementScroll()
 		];
 	}
 
@@ -541,11 +541,11 @@
 			},
 
 			max: function getMaxHeight(){
-				return Math.max.apply(null,getAllHeights());
+				return Math.max.apply(null,getAllHeights(getHeight));
 			},
 
 			min: function getMinHeight(){
-				return Math.min.apply(null,getAllHeights());
+				return Math.min.apply(null,getAllHeights(getHeight));
 			},
 
 			grow: function growHeight(){
@@ -566,12 +566,28 @@
 				return document.body.scrollWidth;
 			},
 
+			bodyOffset: function getBodyOffsetWidth(){
+				return document.body.offsetWidth;
+			},
+
 			documentElementScroll: function getDEScrollWidth(){
 				return document.documentElement.scrollWidth;
 			},
 
-			max: function getMaxWidth(){
+			documentElementOffset: function getDEOffsetWidth(){
+				return document.documentElement.offsetWidth;
+			},
+
+			scroll: function getMaxWidth(){
 				return Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll());
+			},
+
+			max: function getMaxWidth(){
+				return Math.max.apply(null,getAllHeights(getWidth));
+			},
+
+			min: function getMinWidth(){
+				return Math.min.apply(null,getAllHeights(getWidth));
 			},
 
 			leftMostElement: function getLeftMostElement(){
@@ -621,8 +637,8 @@
 			return !(triggerEvent in {'init':1,'interval':1,'size':1});
 		}
 
-		function isForceResizableHeightCalcMode(){
-			return (heightCalcMode in resetRequiredMethods);
+		function isForceResizableCalcMode(){
+			return (heightCalcMode in resetRequiredMethods || widthCalcMode in resetRequiredMethods);
 		}
 
 		function logIgnored(){
@@ -630,7 +646,7 @@
 		}
 
 		function checkDownSizing(){
-			if (isForceResizableEvent() && isForceResizableHeightCalcMode()){
+			if (isForceResizableEvent() && isForceResizableCalcMode()){
 				resetIFrame(triggerEventDesc);
 			} else if (!(triggerEvent in {'interval':1})){
 				recordTrigger();
