@@ -34,6 +34,7 @@
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
 		myID                  = '',
+		origin                = location.protocol + location.hostname + location.port,
 		publicMethods         = false,
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
@@ -86,6 +87,7 @@
 		startEventListeners();
 		inPageLinks = setupInPageLinks();
 		sendSize('init','Init message from host page');
+		//sendMsg(0,0,'origin',origin);
 	}
 
 	function readData(){
@@ -111,6 +113,7 @@
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
 		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 		widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
+		targetOriginDefault= (undefined !== data[15]) ? data[15].replace(/\|/g,':') : targetOriginDefault;
 	}
 
 	function chkCSS(attr,value){
@@ -494,7 +497,7 @@
 		return maxVal;
 	}
 
-	function getAll(dimention){
+	function getAllMeasurements(dimention){
 		return [
 			dimention.bodyOffset(),
 			dimention.bodyScroll(),
@@ -541,11 +544,11 @@
 			},
 
 			max: function getMaxHeight(){
-				return Math.max.apply(null,getAllHeights(getHeight));
+				return Math.max.apply(null,getAllMeasurements(getHeight));
 			},
 
 			min: function getMinHeight(){
-				return Math.min.apply(null,getAllHeights(getHeight));
+				return Math.min.apply(null,getAllMeasurements(getHeight));
 			},
 
 			grow: function growHeight(){
@@ -583,11 +586,11 @@
 			},
 
 			max: function getMaxWidth(){
-				return Math.max.apply(null,getAllHeights(getWidth));
+				return Math.max.apply(null,getAllMeasurements(getWidth));
 			},
 
 			min: function getMinWidth(){
-				return Math.min.apply(null,getAllHeights(getWidth));
+				return Math.min.apply(null,getAllMeasurements(getWidth));
 			},
 
 			leftMostElement: function getLeftMostElement(){
