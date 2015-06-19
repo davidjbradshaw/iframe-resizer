@@ -197,29 +197,29 @@ Resize iFrame to content width.
 
 Set the number of pixels the iFrame content size has to change by, before triggering resize of the iFrame.
 
-	### widthCalculationMethod
+### widthCalculationMethod
 
-		default: 'scroll'
-		values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
-		         'max' | 'min' | 'scroll' | 'leftMostElement' | 'taggedElement'
+	default: 'scroll'
+	values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
+	         'max' | 'min' | 'scroll' | 'leftMostElement' | 'taggedElement'
 
-	By default the width of the page is worked out by taking the greater of the **documentElement** and **body** scrollWidth values.
+By default the width of the page is worked out by taking the greater of the **documentElement** and **body** scrollWidth values.
 
-	Some CSS technics may require you to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
+Some CSS technics may require you to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
-	* **bodyOffset** uses `document.body.offsetWidth`
-	* **bodyScroll** uses `document.body.scrollWidth` <sup>*</sup>
-	* **documentElementOffset** uses `document.documentElement.offsetWidth`
-	* **documentElementScroll** uses `document.documentElement.scrollWidth` <sup>*</sup>
-	* **scroll** takes the largest value of the two scroll options
-	* **max** takes the largest value of the main four options <sup>*</sup>
-	* **min** takes the smallest value of the main four options <sup>*</sup>
-	* **leftMostElement** Loops though every element in the the DOM and finds the left most point <sup>†</sup>
-	* **taggedElement** Finds the left most element with a `data-iframe-width` attribute
+* **bodyOffset** uses `document.body.offsetWidth`
+* **bodyScroll** uses `document.body.scrollWidth` <sup>*</sup>
+* **documentElementOffset** uses `document.documentElement.offsetWidth`
+* **documentElementScroll** uses `document.documentElement.scrollWidth` <sup>*</sup>
+* **scroll** takes the largest value of the two scroll options
+* **max** takes the largest value of the main four options <sup>*</sup>
+* **min** takes the smallest value of the main four options <sup>*</sup>
+* **leftMostElement** Loops though every element in the the DOM and finds the left most point <sup>†</sup>
+* **taggedElement** Finds the left most element with a `data-iframe-width` attribute
 
-	<sup> † </sup> <i>The **leftMostElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
+<sup> † </sup> <i>The **leftMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
-	<sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
+<sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
 
 ## Callback Methods
@@ -416,7 +416,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 
 ## Version History
 
-* v2.9.0 [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added *taggedElement* size calculation method. Added *iframe.iFrameResizer.close()* and *iframe.iFrameResizer.resize()* methods to bound iFrames. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with resizeFrom not having default option in iFrame, if called from old version in parent page.
+* v2.9.0 Added *taggedElement* size calculation method. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added *iframe.iFrameResizer.close()* and *iframe.iFrameResizer.resize()* methods to bound iFrames. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with resizeFrom not having default option in iFrame, if called from old version in parent page.
 * v2.8.9 [#220](https://github.com/davidjbradshaw/iframe-resizer/issues/220) Switched from using *deviceorientation* to *orientationchange* event listner [[Brandon Kobel](https://github.com/kobelb)].
 * v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.
 * v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
