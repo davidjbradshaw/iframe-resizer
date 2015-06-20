@@ -30,7 +30,7 @@
 			bodyMarginV1              : 8,
 			bodyPadding               : null,
 			checkOrigin               : true,
-			enableInPageLinks         : false,
+			inPageLinks         : false,
 			enablePublicMethods       : true,
 			heightCalculationMethod   : 'bodyOffset',
 			interval                  : 32,
@@ -353,7 +353,10 @@
 				resetIFrame(messageData);
 				break;
 			case 'init':
+				resizeIFrame();
 				settings[iframeId].initCallback(messageData.iframe);
+				settings[iframeId].resizedCallback(messageData);
+				break;
 			default:
 				resizeIFrame();
 				settings[iframeId].resizedCallback(messageData);
@@ -533,7 +536,7 @@
 				':' + settings[iframeId].bodyBackground +
 				':' + settings[iframeId].bodyPadding +
 				':' + settings[iframeId].tolerance +
-				':' + settings[iframeId].enableInPageLinks +
+				':' + settings[iframeId].inPageLinks +
 				':' + settings[iframeId].resizeFrom +
 				':' + settings[iframeId].widthCalculationMethod;
 			}
