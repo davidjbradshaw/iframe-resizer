@@ -16,6 +16,7 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="resources/testLib.js"></script>
   <script src="../js/ie8.polyfils.min.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
@@ -34,7 +35,7 @@
         resizedCallback:function(messageData){
           switch  (''+(++callbackCounter)){
             case '1':
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'pageChange', '*' );
+              sendMessage('pageChange');
               break;
             case '2':
               ok( 'init' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected init');
@@ -44,7 +45,6 @@
       });
     });
 
-		
   </script>
 </body>
 </html>

@@ -16,9 +16,10 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="resources/testLib.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
-  
+
     'use strict';
 
      function mutationObserverTest(){ 
@@ -29,10 +30,10 @@
         $('iframe').iFrameResize({
         log:true,
           resizedCallback:function(messageData){
-            
+
             switch  (''+(++callbackCounter)){
               case '1':
-                document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'changeContent', '*' );
+                sendMessage('changeContent');
                 break;
               case '2':
                 ok( true, 'iFrame detected content change');

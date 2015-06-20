@@ -17,7 +17,6 @@
 		msgHeaderLen          = msgHeader.length,
 		msgId                 = '[iFrameSizer]', //Must match iframe msg ID
 		msgIdLen              = msgId.length,
-		//origin                = location.protocol + '//' + location.hostname + (80 !== location.port ? ':' + location.port :''),
 		pagePosition          = null,
 		requestAnimationFrame = window.requestAnimationFrame,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
@@ -32,7 +31,7 @@
 			bodyPadding               : null,
 			checkOrigin               : true,
 			enableInPageLinks         : false,
-			enablePublicMethods       : false,
+			enablePublicMethods       : true,
 			heightCalculationMethod   : 'bodyOffset',
 			interval                  : 32,
 			log                       : false,
@@ -40,17 +39,15 @@
 			maxWidth                  : Infinity,
 			minHeight                 : 0,
 			minWidth                  : 0,
-			//origin                    : 'file://' !== origin ? origin.replace(/:/g,'|') : '*',
 			resizeFrom                : 'parent',
 			scrolling                 : false,
 			sizeHeight                : true,
 			sizeWidth                 : false,
-			//targetOrigin              : '*',
 			tolerance                 : 0,
 			widthCalculationMethod    : 'max',
 			closedCallback            : function(){},
 			initCallback              : function(){},
-			messageCallback           : function(){},
+			messageCallback           : function(){warn('MessageCallback function not defined');},
 			resizedCallback           : function(){},
 			scrollCallback            : function(){return true;}
 		};
@@ -212,7 +209,7 @@
 		}
 
 		function isMessageForUs(){
-			return msgId === ('' + msg).substr(0,msgIdLen); //''+Protects against non-string msg
+			return msgId === (('' + msg).substr(0,msgIdLen)) && (msg.substr(msgIdLen).split(':')[0] in settings); //''+Protects against non-string msg
 		}
 
 		function isMessageFromMetaParent(){
@@ -338,33 +335,30 @@
 
 		function actionMsg(){
 			switch(messageData.type){
-				case 'close':
-					closeIFrame(messageData.iframe);
-					break;
-				case 'message':
-					forwardMsgFromIFrame(getMsgBody(6));
-					break;
-				case 'scrollTo':
-					scrollRequestFromChild(false);
-					break;
-				case 'scrollToOffset':
-					scrollRequestFromChild(true);
-					break;
-				case 'inPageLink':
-					findTarget(getMsgBody(9));
-					break;
-				case 'reset':
-					resetIFrame(messageData);
-					break;
-				//case 'origin':
-				//	settings[iframeId].targetOrigin = getMsgBody(5);
-				//	break;
-				case 'init':
-					resizeIFrame();
-					settings[iframeId].initCallback(messageData.iframe);
-					break;
-				default:
-					resizeIFrame();
+			case 'close':
+				closeIFrame(messageData.iframe);
+				break;
+			case 'message':
+				forwardMsgFromIFrame(getMsgBody(6));
+				break;
+			case 'scrollTo':
+				scrollRequestFromChild(false);
+				break;
+			case 'scrollToOffset':
+				scrollRequestFromChild(true);
+				break;
+			case 'inPageLink':
+				findTarget(getMsgBody(9));
+				break;
+			case 'reset':
+				resetIFrame(messageData);
+				break;
+			case 'init':
+				resizeIFrame();
+				settings[iframeId].initCallback(messageData.iframe);
+				break;
+			default:
+				resizeIFrame();
 			}
 		}
 
@@ -387,10 +381,11 @@
 					close        : closeIFrame.bind(null,settings[iframeId].iframe),
 					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
 					moveToAnchor : function(anchor){
-						trigger('Move to anchor','inPageLink:#'+anchor, settings[iframeId].iframe);
+						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe);
 					},
 					sendMessage  : function(message){
-						trigger('Send Message','message:#'+message, settings[iframeId].iframe);
+						message = JSON.stringify(message);
+						trigger('Send Message','message:'+message, settings[iframeId].iframe);
 					}
 				};
 			}
@@ -414,7 +409,10 @@
 					actionMsg();
 				}
 			}
+		} else {
+			log(' Ignored: '+msg);
 		}
+
 	}
 
 
@@ -473,7 +471,6 @@
 	function trigger(calleeMsg,msg,iframe,id){
 		if(iframe && iframe.contentWindow){
 			log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
-			//iframe.contentWindow.postMessage( msgId + msg, settings[id  || iframe.id].targetOrigin );
 			iframe.contentWindow.postMessage( msgId + msg, '*' );
 		} else {
 			warn('[' + calleeMsg + '] IFrame not found');
@@ -540,9 +537,8 @@
 				':' + settings[iframeId].tolerance +
 				':' + settings[iframeId].enableInPageLinks +
 				':' + settings[iframeId].resizeFrom +
-				':' + settings[iframeId].widthCalculationMethod ;//+
-				//':' + settings[iframeId].origin;
-		}
+				':' + settings[iframeId].widthCalculationMethod;
+			}
 
 		function checkReset(){
 			// Reduce scope of firstRun to function, because IE8's JS execution
@@ -563,7 +559,6 @@
 		//event listener also catches the page changing in the iFrame.
 		function init(msg){
 			function iFrameLoaded(){
-				//settings[iframeId].targetOrigin = '*';
 				trigger('iFrame.onload',msg,iframe);
 				checkReset();
 			}

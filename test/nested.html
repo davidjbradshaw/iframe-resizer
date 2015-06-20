@@ -10,16 +10,17 @@
   <div id="qunit-fixture">
 
     <div style="width:600px;">
-      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+      <iframe id="parent" src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
     </div>
 
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
   <script src="resources/testLib.js"></script>
-  <script src="../js/iframeResizer.min.js"></script>
+  <script src="../js/ie8.polyfils.min.js"></script>
+  <script src="../src/iframeResizer.js"></script>
   <script>
-  
+
     'use strict';
     var
         count = 0,
@@ -40,7 +41,7 @@
         }
       });
     });
-    
+
   </script>
 </body>
 </html>

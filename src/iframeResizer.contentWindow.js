@@ -34,8 +34,7 @@
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
 		myID                  = '',
-		origin                = location.protocol + location.hostname + location.port,
-		publicMethods         = false,
+		publicMethods         = true,
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
@@ -45,7 +44,8 @@
 		triggerLockedTimer    = null,
 		width                 = 1,
 		widthCalcModeDefault  = 'max',
-		widthCalcMode         = widthCalcModeDefault;
+		widthCalcMode         = widthCalcModeDefault,
+		messageCallback       = function(){warn('MessageCallback function not defined');};
 
 
 	function addEventListener(el,evt,func){
@@ -74,7 +74,8 @@
 
 
 	function init(){
-		readData();
+		readDataFromParent();
+		readDataFromPage();
 		log('Initialising iFrame ('+location.href+')');
 		setMargin();
 		setBodyStyle('background',bodyBackground);
@@ -87,16 +88,17 @@
 		startEventListeners();
 		inPageLinks = setupInPageLinks();
 		sendSize('init','Init message from host page');
-		//sendMsg(0,0,'origin',origin);
 	}
 
-	function readData(){
-
-		var data = initMsg.substr(msgIdLen).split(':');
+	function readDataFromParent(){
 
 		function strBool(str){
 			return 'true' === str ? true : false;
 		}
+
+		var data = initMsg.substr(msgIdLen).split(':');
+
+		log('Reading data from parent');
 
 		myID               = data[0];
 		bodyMargin         = (undefined !== data[1]) ? Number(data[1])   : bodyMargin; //For V1 compatibility
@@ -113,8 +115,25 @@
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
 		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 		widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
-		targetOriginDefault= (undefined !== data[15]) ? data[15].replace(/\|/g,':') : targetOriginDefault;
 	}
+
+	function readDataFromPage(){
+		function readData(){
+			var data = window.iFrameResizer;
+
+			log('Reading data from page: ' + JSON.stringify(data));
+
+			messageCallback     = (undefined !== data.messageCallback ) ? data.messageCallback : messageCallback;
+			targetOriginDefault = (undefined !== data.targetOrigin ) ? data.targetOrigin : targetOriginDefault;
+			heightCalcMode      = (undefined !== data.heightCalculationMethod ) ? data.heightCalculationMethod : heightCalcMode;
+			widthCalcMode       = (undefined !== data.widthCalculationMethod )  ? data.widthCalculationMethod  : widthCalcMode;
+		}
+
+		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
+			readData();
+		}
+	}
+
 
 	function chkCSS(attr,value){
 		if (-1 !== value.indexOf('-')){
@@ -173,8 +192,6 @@
 		addTriggerEvent({ eventType: 'Orientation Change',        eventName:  'orientationchange' });
 		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
 		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
-		//addTriggerEvent({ eventType: 'Window Mouse Down',         eventName:  'mousedown' });
-		//addTriggerEvent({ eventType: 'Window Mouse Up',           eventName:  'mouseup' });
 		if('child' === resizeFrom){
 			addTriggerEvent({ eventType: 'IFrame Resized',        eventName:  'resize' });
 		}
@@ -345,6 +362,11 @@
 				setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
 					heightCalcMode = heightCalculationMethod;
 					checkHeightMode();
+				},
+
+				setWidthCalculationMethod: function setWidthCalculationMethodF(widthCalculationMethod){
+					widthCalcMode = widthCalculationMethod;
+					checkWidthMode();
 				},
 
 				setTargetOrigin: function setTargetOriginF(targetOrigin){
@@ -750,12 +772,29 @@
 			sendSize('resizeParent','Parent window resized');
 		}
 
+		function moveToAnchor(){
+			var anchor = getData();
+			inPageLinks.findTarget(anchor);
+		}
+
 		function getMessageType(){
-			return event.data.split(']')[1];
+			return event.data.split(']')[1].split(':')[0];
+		}
+
+		function getData(){
+			return event.data.split(':')[1];
 		}
 
 		function isMiddleTier(){
 			return ('iFrameResize' in window);
+		}
+
+		function messageFromParent(){
+			var msgBody = getData();
+
+			log('MessageCallback called from parent: ' + msgBody );
+			messageCallback(JSON.parse(msgBody));
+			log(' --');
 		}
 
 		function isInitMsg(){
@@ -764,28 +803,39 @@
 			return event.data.split(':')[2] in {'true':1,'false':1};
 		}
 
-		if (isMessageForUs()){
-			if (false === firstRun) {
-				switch (getMessageType()){
-				case 'reset':
-					resetFromParent();
-					break;
-				case 'resize':
-					resizeFromParent();
-					break;
-				case 'moveToAnchor':
-					inPageLinks.findTarget();
-					break;
-				default:
-					if (!isMiddleTier() && !isInitMsg()){
-						warn('Unexpected message ('+event.data+')');
-					}
+		function callFromParent(){
+			switch (getMessageType()){
+			case 'reset':
+				resetFromParent();
+				break;
+			case 'resize':
+				resizeFromParent();
+				break;
+			case 'moveToAnchor':
+				moveToAnchor();
+				break;
+			case 'message':
+				messageFromParent();
+				break;
+			default:
+				if (!isMiddleTier() && !isInitMsg()){
+					warn('Unexpected message ('+event.data+')');
 				}
+			}
+		}
+
+		function processMessage(){
+			if (false === firstRun) {
+				callFromParent();
 			} else if (isInitMsg()) {
 				initFromParent();
 			} else {
 				log('Ignored message of type "' + getMessageType() + '". Received before initialization.');
 			}
+		}
+
+		if (isMessageForUs()){
+			processMessage();
 		}
 	}
 

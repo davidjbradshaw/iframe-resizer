@@ -17,6 +17,7 @@
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
   <script src="resources/testLib.js"></script>
+  <script src="../js/ie8.polyfils.min.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
 
@@ -31,7 +32,6 @@
         doWidth:true,
         enablePublicMethods:true,
         resizedCallback:function(messageData){
-          if (0===callbackCounter++)
             sendMessage('close');
         },
         closedCallback:function(){
@@ -41,7 +41,6 @@
       });
     });
 
-		
   </script>
 </body>
 </html>

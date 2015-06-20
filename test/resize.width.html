@@ -18,7 +18,7 @@
   <script src="resources/jquery.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
   <script>
-  
+
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
@@ -26,7 +26,7 @@
       console.info('Size width:'+size);
       $('#qunit-fixture > div').width(size);
     }
-    
+
     asyncTest( "iFrame Resize Event", function() {
 
       var callbackCounter = 0;
@@ -37,7 +37,7 @@
         heightCalculationMethod:'max',
         resizeFrom:'child',
         resizedCallback:function(messageData){
-          
+
           switch  (''+(++callbackCounter)){
             case '1':
               setTimeout(function(){resize(300);},150);
@@ -58,7 +58,6 @@
       });
     });
 
-		
   </script>
 </body>
 </html>

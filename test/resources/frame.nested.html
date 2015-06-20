@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
-		<meta name="description" content="iFrame message passing test"> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
 		<meta name="viewport" content="width=device-width">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<script type="text/javascript">
@@ -12,7 +12,7 @@
 				Array.prototype.forEach = function(fun /*, thisArg */){
 				"use strict";
 				if (this === void 0 || this === null || typeof fun !== "function") throw new TypeError();
-				
+
 				var
 				t = Object(this),
 				len = t.length >>> 0,
@@ -27,10 +27,10 @@
 		<style>
 			*, *:before, *:after {box-model: border-box;}
 			a { float:right; margin-left:10px;}
-			
+
 			h2 {margin-top: 0;}
 		</style>
-	</head> 
+	</head>
 	<body>
 		<h2>Nested iFrame</h2>
 		<p>Resize window or click one of the links in the nested iFrame to watch it resize.</p>
@@ -40,9 +40,9 @@
 		<p id="callback">
 		</p>
 
-		<script type="text/javascript" src="../../js/iframeResizer.contentWindow.min.js"></script> 
+		<script type="text/javascript" src="../../js/iframeResizer.contentWindow.min.js"></script>
 		<script src="jquery.js"></script>
-		<script type="text/javascript" src="../../js/iframeResizer.min.js"></script>
+		<script type="text/javascript" src="../../src/iframeResizer.js"></script>
 		<script type="text/javascript" src="../../js/ie8.polyfils.min.js"></script>
 		<script type="text/javascript">
 
@@ -52,7 +52,6 @@
 					setTimeout(function(){parentIFrame.sendMessage('nested')},50);
 				}
 			});
-
 
 		</script>
 

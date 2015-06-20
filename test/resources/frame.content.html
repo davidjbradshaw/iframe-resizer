@@ -49,18 +49,13 @@
 		<p>
 			On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.
 		</p>
-		
 
-		<script type="text/javascript" src="../../js/iframeResizer.contentWindow.min.js"></script>
+
 		<script type="text/javascript">
 
 			(function() {
 
-				var
-					msgID	= '[iFrameSizerTest]',  //Must match host page msg ID
-					firstRun = true,
-					logging = true,
-					msgIdLen= msgID.length;
+				var logging = true;
 
 				try{
 
@@ -71,117 +66,116 @@
 							window.attachEvent('on'+e,func);
 						}
 					}
-				
+
 					function log(msg){
 						if (logging && window.console){
-							console.log(msg);
+							console.info('[Test] '+msg);
 						}
 					}
 
 					function warn(msg){
 						if (window.console){
-							console.warn(msg);
+							console.warn('[Test] '+msg);
 						}
 					}
 
-					function receiver(event) {
 
-						function init(){
-							
-							function changeContent(){
-								$('p').eq(0).remove();
-							}
+					function init(test){
 
-							function callMethod(methodName,val1,val2){
-								if ('parentIFrame' in window) 
-										window.parentIFrame[methodName](val1,val2);
-									else
-										warn('window.parentIFrame methods not enabled.')
-							}
+						function changeContent(){
+							$('p').eq(0).remove();
+						}
 
-							var 
-								data = event.data.substr(msgIdLen).split(':'),
-								test = data[1];
+						function callMethod(methodName,val1,val2){
+							if ('parentIFrame' in window) 
+									window.parentIFrame[methodName](val1,val2);
+								else
+									warn('window.parentIFrame methods not enabled.')
+						}
 
-							console.info(test);
 
-							switch (test){
-								case 'changeContent':
-									setInterval(function(){changeContent();},2);
-									break;
-								case 'close':
-									callMethod('close');
-									break;
-								case 'pageChange':
-									location.href = '../../example/frame.hover.html';
-									break;
-								case 'nested':
-									location.href = 'frame.nested.html';
-									break;
-								case 'size':
+						console.info(test);
+
+						switch (test){
+							case 'changeContent':
+								setInterval(function(){changeContent();},2);
+								break;
+							case 'close':
+								callMethod('close');
+								break;
+							case 'pageChange':
+								location.href = '../../example/frame.hover.html';
+								break;
+							case 'nested':
+								location.href = 'frame.nested.html';
+								break;
+							case 'size':
+								changeContent();
+								callMethod('size');
+								break;
+							case 'autoResize':
+								callMethod('setAutoResize',true);
+								setTimeout(function(){
 									changeContent();
+									},500);	
+								break;
+							case 'size100':
+								callMethod('size',100);
+								break;
+							case 'size200300':
+								callMethod('size',200,300);
+								break;
+							case 'jsTrigger':
+								changeContent();
+								callMethod('trigger');
+								break;
+							case 'chkHeight':
+								callMethod('sendMessage',document.body.offsetHeight);
+								break;
+							case 'chkBackground':
+								callMethod('sendMessage',document.body.style.background);
+								break;
+							case 'chkSendMsg':
+								callMethod('sendMessage','message: test string');
+								break;
+							case 'chkSendObj':
+								callMethod('sendMessage',{message: 'test object'});
+								break;
+							case 'chkGetId':
+								if ('parentIFrame' in window)
+									callMethod('sendMessage',window.parentIFrame.getId());
+								break;
+							case 'setHeightCalculationMethod':
+								if ('parentIFrame' in window){
+									parentIFrame.setHeightCalculationMethod('max');
 									callMethod('size');
-									break;
-								case 'autoResize':
-									callMethod('setAutoResize',true);
-									setTimeout(function(){
-										changeContent();
-										},500);	
-									break;
-								case 'size100':
-									callMethod('size',100);
-									break;
-								case 'size200300':
-									callMethod('size',200,300);
-									break;
-								case 'jsTrigger':
-									changeContent();
-									callMethod('trigger');
-									break;
-								case 'chkHeight':
-									callMethod('sendMessage',document.body.offsetHeight);
-									break;
-								case 'chkBackground':
-									callMethod('sendMessage',document.body.style.background);
-									break;
-								case 'chkSendMsg':
-									callMethod('sendMessage','message: test string');
-									break;
-								case 'chkSendObj':
-									callMethod('sendMessage',{message: 'test object'});
-									break;
-								case 'chkGetId':
-									if ('parentIFrame' in window)
-										callMethod('sendMessage',window.parentIFrame.getId());
-									break;
-								case 'setHeightCalculationMethod':
-									if ('parentIFrame' in window){
-										parentIFrame.setHeightCalculationMethod('max');
-										callMethod('size');
-									}
-									break;
-								case 'width':
-									$('p').width(3000);
-									break;
-								case 'image':
-									$('p').html('<img src="djb.jpg">');
-									break;
-							}
-
+								}
+								break;
+							case 'width':
+								$('p').width(3000);
+								break;
+							case 'image':
+								$('p').html('<img src="djb.jpg">');
+								break;
 						}
 
-
-						if (msgID === event.data.substr(0,msgIdLen) ){ //Check msg ID
-							init();
-						}
 					}
-					addEventListener('message', receiver);
+
+					window.iFrameResizer = {
+						messageCallback: init
+					}
 				}
 				catch(e){
 					warn(e);
 				}
 
+
+
+
 			})();
 		</script>
+
+
+		<script type="text/javascript" src="../../js/iframeResizer.contentWindow.min.js"></script>
 	</body> 
 </html>

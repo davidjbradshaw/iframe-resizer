@@ -16,7 +16,9 @@
   </div>
   <script src="resources/qunit.js"></script>
   <script src="resources/jquery.js"></script>
+  <script src="../js/ie8.polyfils.min.js"></script>
   <script src="../js/iframeResizer.min.js"></script>
+  <script src="resources/testLib.js"></script>
   <script>
 
     'use strict';
@@ -36,17 +38,17 @@
 
           switch  (''+(++callbackCounter)){
             case '1':
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + msgType, '*' );
+              sendMessage( msgType);
               break;
             case '2':
               ok( msgType === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected '+msgType);
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'size100', '*' );
+              sendMessage('size100');
               break;
             case '3':
               ok( msgType === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected '+msgType);
               ok( '100' === messageData.height, 'Height received = 100');
               //ok( 100 === $('iframe').height(), 'IFrame height = 100'); Works in phaatomJS, but not chrome!
-              document.getElementsByTagName('iframe')[0].contentWindow.postMessage( msgId + 'size200300', '*' );
+              sendMessage('size200300');
               break;
             case '4':
               ok( msgType === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected '+msgType);
