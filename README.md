@@ -261,7 +261,7 @@ Called before the page is repositioned after a request from the iFrame, due to e
 
 ## IFrame Page Options
 
-The following options can be set from with in the iFrame page by creating a `window.iFrameResizer` before the JavaScript file is loaded into the page.
+The following options can be set from within the iFrame page by creating a `window.iFrameResizer` object before the JavaScript file is loaded into the page.
 
 ```html
 <script>
@@ -275,6 +275,7 @@ The following options can be set from with in the iFrame page by creating a `win
 ### targetOrigin
 
 	default: '*'
+	type: string
 
 This option allows you to restrict the domain of the parent page, to prevent other sites mimicing your parent page.
 
@@ -284,9 +285,10 @@ This option allows you to restrict the domain of the parent page, to prevent oth
 
 Receive message posted from the parent page with the `iframe.iFrameResizer.sendMessage()` method (See below for details).
 
-### heightCalculationMethod / ### widthCalculationMethod
+### heightCalculationMethod / widthCalculationMethod
 
     default: null
+    type: string
 
 These options can be used to override the option set in the parent page (See above for details on available values). This can be useful when moving between pages in the iFrame that require different values for these options.
 
