@@ -110,7 +110,6 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition();
-				settings[iframeId].resizedCallback(messageData);
 			}
 
 			ensureInRange('Height');
@@ -354,11 +353,10 @@
 				resetIFrame(messageData);
 				break;
 			case 'init':
-				resizeIFrame();
 				settings[iframeId].initCallback(messageData.iframe);
-				break;
 			default:
 				resizeIFrame();
+				settings[iframeId].resizedCallback(messageData);
 			}
 		}
 
