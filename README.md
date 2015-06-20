@@ -441,7 +441,7 @@ By default the origin of incoming messages is checked against the `src` attribut
 ## Browser compatibility
 ### jQuery version
 
-Works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+).
+Basic support works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+). Some advanced features require the native version polyfil.
 
 ### Native version
 
