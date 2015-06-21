@@ -396,6 +396,7 @@ if (!Array.prototype.forEach){
 
 ## Version History
 
+* v2.8.10 Fixed bug with resizeFrom option not having default value in iFrame, if called from old version in parent page.
 * v2.8.9 [#220](https://github.com/davidjbradshaw/iframe-resizer/issues/220) Switched from using deviceorientation to orientationchange event listner [[Brandon Kobel](https://github.com/kobelb)].
 * v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.
 * v2.8.7 [#205](https://github.com/davidjbradshaw/iframe-resizer/issues/205) Fix race condition when page resized during page init [[Ian Caunce](https://github.com/IanCaunce)]. [#203](https://github.com/davidjbradshaw/iframe-resizer/issues/203) Added option for *checkOrigin* to have list of allowed domains for the iFrame [[Andrej Golcov](https://github.com/andrej2k)]. [#202](https://github.com/davidjbradshaw/iframe-resizer/issues/202) Handle script being loaded more than once [[Nickolay Ribal](https://github.com/elektronik2k5)].
