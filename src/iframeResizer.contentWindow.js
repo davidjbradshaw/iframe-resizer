@@ -36,7 +36,7 @@
 		myID                  = '',
 		publicMethods         = false,
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
-		resizeFrom            = 'parent',
+		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
 		target                = window.parent,
 		tolerance             = 0,
@@ -106,7 +106,7 @@
 		bodyPadding        = data[10];
 		tolerance          = (undefined !== data[11]) ? Number(data[11]) : tolerance;
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
-		resizeFrom         = data[13];
+		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 	}
 
 	function chkCSS(attr,value){
