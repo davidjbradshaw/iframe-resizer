@@ -34,7 +34,7 @@
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
 		myID                  = '',
-		publicMethods         = true,
+		//publicMethods         = true,
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
@@ -105,7 +105,7 @@
 		calculateWidth     = (undefined !== data[2]) ? strBool(data[2])  : calculateWidth;
 		logging            = (undefined !== data[3]) ? strBool(data[3])  : logging;
 		interval           = (undefined !== data[4]) ? Number(data[4])   : interval;
-		publicMethods      = (undefined !== data[5]) ? strBool(data[5])  : publicMethods;
+		//publicMethods      = (undefined !== data[5]) ? strBool(data[5])  : publicMethods;
 		autoResize         = (undefined !== data[6]) ? strBool(data[6])  : autoResize;
 		bodyMarginStr      = data[7];
 		heightCalcMode     = (undefined !== data[8]) ? data[8]           : heightCalcMode;
@@ -327,7 +327,7 @@
 	}
 
 	function setupPublicMethods(){
-		if (publicMethods) {
+		//if (publicMethods) {
 			log('Enable public methods');
 
 			window.parentIFrame = {
@@ -380,7 +380,7 @@
 					sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
 				}
 			};
-		}
+		//}
 	}
 
 	function initInterval(){
