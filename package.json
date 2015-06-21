@@ -44,12 +44,7 @@
   "engines": {
     "node": ">=0.8.0"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
-    }
-  ],
+ "license" : "MIT",
   "keywords": [
     "Cross",
     "Domain",
