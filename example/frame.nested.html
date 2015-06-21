@@ -1,33 +1,15 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
-		<meta name="description" content="iFrame message passing test"> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
 		<meta name="viewport" content="width=device-width">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<script type="text/javascript">
-			//MDN PolyFil for IE8 (This is not needed if you use the jQuery version)
-			if (!Array.prototype.forEach){
-				Array.prototype.forEach = function(fun /*, thisArg */){
-				"use strict";
-				if (this === void 0 || this === null || typeof fun !== "function") throw new TypeError();
-				
-				var
-				t = Object(this),
-				len = t.length >>> 0,
-				thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-
-				for (var i = 0; i < len; i++)
-				if (i in t)
-					fun.call(thisArg, t[i], i, t);
-				};
-			}
-		</script>
 		<style>
 			*, *:before, *:after {box-model: border-box;}
 			a { float:right; margin-left:10px;}
-			
+
 			h2 {margin-top: 0;}
 			body{margin:8px !important}
 		</style>
@@ -43,31 +25,36 @@
 		</p>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.min.js"></script> 
+		<script type="text/javascript" src="../js/ie8.polyfil.min.js"></script>
+		<script type="text/javascript" src="../js/iframeResizer.min.js"></script>
 		<script type="text/javascript">
-
 
 			var level = document.location.search.replace(/\?/,'') || 0;
 
 			$('iframe').attr('id','nestedIFrame'+level).attr('src','frame.content.html?'+level);
 
+			/*
+			 * If you do not understand what the code below does, then please just use the
+			 * following call in your own code.
+			 *
+			 *   iFrameResize({log:true});
+			 *
+			 * Once you have it working, set the log option to false.
+			 */
+
 			iFrameResize({
 				log                     : true,                  // Enable console logging
-				enablePublicMethods     : true,                  // Enable methods within iFrame hosted page
+				inPageLinks             : true,
 				resizedCallback         : function(messageData){ // Callback fn when message is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
 						' <b>Height:</b> '     + messageData.height +
-						' <b>Width:</b> '      + messageData.width + 
+						' <b>Width:</b> '      + messageData.width +
 						' <b>Event type:</b> ' + messageData.type
 					);
 				},
 				messageCallback         : function(messageData){ // Callback fn when message is received
-					$('p#callback').html(
-						'<b>Frame ID:</b> '    + messageData.iframe.id +
-						' <b>Message:</b> '    + messageData.message
-					);
-					alert(messageData.message);
+					parentIFrame.sendMessage(messageData.message + ' (via ' + $('iframe').attr('id') + ')');
 				},
 				closedCallback         : function(id){ /// Callback fn when iFrame is closed
 					$('p#callback').html(
@@ -79,7 +66,7 @@
 
 
 		</script>
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script> 
+		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
 
 	</body> 
 </html>

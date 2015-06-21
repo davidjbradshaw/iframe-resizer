@@ -27,7 +27,7 @@
 	</head>
 	<body>
 		<h2>Automagically resizing iFrame</h2>
-		<p>Resize window or click one of the links in the iFrame to watch it resize.<a name="anchorParentTest"></a></p>
+		<p>Resize window or click one of the links in the iFrame to watch it resize. Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.</p>
 		<div style="margin:20px;">
 			<iframe src="frame.content.html" width="100%" scrolling="no"></iframe>
 		</div>
@@ -58,8 +58,7 @@
 
 			iFrameResize({
 				log                     : true,                  // Enable console logging
-				enablePublicMethods     : true,                  // Enable methods within iframe hosted page
-				enableInPageLinks       : true,
+				inPageLinks             : true,
 				resizedCallback         : function(messageData){ // Callback fn when resize is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
