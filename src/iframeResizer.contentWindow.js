@@ -627,8 +627,6 @@
 
 	function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
 
-		var	currentHeight,currentWidth;
-
 		function recordTrigger(){
 			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
 				log( 'Trigger event: ' + triggerEventDesc );
@@ -663,7 +661,7 @@
 		}
 
 		function isForceResizableCalcMode(){
-			return (heightCalcMode in resetRequiredMethods || widthCalcMode in resetRequiredMethods);
+			return (heightCalcMode in resetRequiredMethods) || (calculateWidth && widthCalcMode in resetRequiredMethods);
 		}
 
 		function logIgnored(){
@@ -678,6 +676,8 @@
 				logIgnored();
 			}
 		}
+
+		var	currentHeight,currentWidth;
 
 		if (!isDoubleFiredEvent()){
 			if (isSizeChangeDetected() || 'init' === triggerEvent){
