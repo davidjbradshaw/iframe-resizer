@@ -44,7 +44,7 @@
 			sizeHeight                : true,
 			sizeWidth                 : false,
 			tolerance                 : 0,
-			widthCalculationMethod    : 'max',
+			widthCalculationMethod    : 'scroll',
 			closedCallback            : function(){},
 			initCallback              : function(){},
 			messageCallback           : function(){warn('MessageCallback function not defined');},
@@ -181,6 +181,7 @@
 				}
 
 				function checkSingle(){
+					var remoteHost  = settings[iframeId].remoteHost;
 					log(' Checking connection is from: '+remoteHost);
 					return origin === remoteHost;
 				}
@@ -190,8 +191,7 @@
 
 			var
 				origin      = event.origin,
-				checkOrigin = settings[iframeId].checkOrigin,
-				remoteHost  = messageData.iframe.src.split('/').slice(0,3).join('/');
+				checkOrigin = settings[iframeId].checkOrigin;
 
 			if (checkOrigin) {
 				if ((''+origin !== 'null') && !checkAllowedOrigin()) {
@@ -382,11 +382,11 @@
 					close        : closeIFrame.bind(null,settings[iframeId].iframe),
 					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
 					moveToAnchor : function(anchor){
-						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe);
+						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe,iframeId);
 					},
 					sendMessage  : function(message){
 						message = JSON.stringify(message);
-						trigger('Send Message','message:'+message, settings[iframeId].iframe);
+						trigger('Send Message','message:'+message, settings[iframeId].iframe,iframeId);
 					}
 				};
 			}
@@ -472,7 +472,7 @@
 	function trigger(calleeMsg,msg,iframe,id){
 		if(iframe && iframe.contentWindow){
 			log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
-			iframe.contentWindow.postMessage( msgId + msg, '*' );
+			iframe.contentWindow.postMessage( msgId + msg, settings[id || iframe.id].targetOrigin );
 		} else {
 			warn('[' + calleeMsg + '] IFrame not found');
 			if(settings[id]) {
@@ -574,20 +574,30 @@
 			}
 		}
 
-		function processOptions(options){
-			options = options || {};
-			settings[iframeId] = {
-				firstRun: true,
-				iframe: iframe
-			};
-
-			checkOptions(options);
-
+		function copyOptions(options){
 			for (var option in defaults) {
 				if (defaults.hasOwnProperty(option)){
 					settings[iframeId][option] = options.hasOwnProperty(option) ? options[option] : defaults[option];
 				}
 			}
+		}
+
+		function getTargetOrigin (remoteHost){
+			return 'file://' === remoteHost ? '*' : remoteHost; //Deal with Chrome wierdness.
+		}
+
+		function processOptions(options){
+			options = options || {};
+			settings[iframeId] = {
+				firstRun : true,
+				iframe     : iframe,
+				remoteHost : iframe.src.split('/').slice(0,3).join('/')
+			};
+
+			checkOptions(options);
+			copyOptions(options);
+
+			settings[iframeId].targetOrigin = true === settings[iframeId].checkOrigin ? getTargetOrigin(settings[iframeId].remoteHost) : '*';
 
 			logEnabled = settings[iframeId].log;
 		}
@@ -653,12 +663,9 @@
 			switch (typeof(target)){
 			case 'undefined':
 			case 'string':
-				Array.prototype.forEach.call( 
-					document.querySelectorAll( target || 'iframe' ), 
-					//init.bind(undefined, options) to change in V3.
-					function (element){
-						init(options,element);
-					}
+				Array.prototype.forEach.call(
+					document.querySelectorAll( target || 'iframe' ),
+					init.bind(undefined, options)
 				);
 				break;
 			case 'object':
