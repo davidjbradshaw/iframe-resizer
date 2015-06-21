@@ -1,8 +1,8 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
 		<meta name="description" content="iFrame message passing test">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -10,10 +10,10 @@
 			*, *:before, *:after {box-model: border-box;}
 			a { float:right; margin-left:10px;}
 		</style>
-	</head> 
-	<body> 
+	</head>
+	<body>
 
-		<b>iFrame</b> 
+		<b>iFrame</b>
 		<a href='#' onclick="$('p:eq(0)').toggle();return false;">Toggle content</a>
 		&nbsp;
 		<a href='#' onclick="if ('parentIFrame' in window) window.parentIFrame.size(250);return false;">Size(250)</a>
@@ -45,8 +45,7 @@
 			$('#nested').attr('href','frame.nested.html?'+(++level));
 
 		</script>
-		
 
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script> 
+		<script type="text/javascript" src="../src/iframeResizer.contentWindow.js"></script>
 	</body>
 </html>

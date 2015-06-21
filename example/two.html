@@ -27,7 +27,7 @@
 		<![endif]-->
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.min.js"></script>
+		<script type="text/javascript" src="../src/iframeResizer.js"></script>
 		<script type="text/javascript">
 
 			/*
@@ -56,7 +56,7 @@
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
 						' <b>Message:</b> '    + messageData.message
 					);
-					alert(messageData.message);
+					alert(messageData.message + ' (' + messageData.iframe.id + ')' );
 				},
 				closedCallback         : function(id){ // Callback fn when iFrame is closed
 					$('p#callback').html(
