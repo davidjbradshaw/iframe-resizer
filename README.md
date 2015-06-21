@@ -401,6 +401,35 @@ function resize(){
 $(*Element with hover style*).hover(resize);
 ```
 
+### IFrame not detecting textarea resizes
+
+Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
+
+	$(document).ready(function(){
+		function resize(){
+			if ('parentIFrame' in window) parentIFrame.size();
+		}
+
+		var $textareas = $('textarea');
+
+		// store init (default) state
+		$textareas.data('x', $textareas.outerWidth()).data('y', $textareas.outerHeight());
+
+		$textareas.on('mouseover mouseup mouseout',function(){
+
+			var $this = $(this);
+
+			if (  $this.outerWidth()  != $this.data('x') || $this.outerHeight() != $this.data('y') ){
+				resize();
+			}
+
+			// store new height/width
+			$this.data('x', $this.outerWidth()).data('y', $this.outerHeight());
+		});
+
+		$(window).on('mouseout',resize);
+	});
+
 ### IFrame flickers
 
 Some of the alternate [height calculation methods](#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new height can be worked out. This effect can be reduced by setting a [minSize](#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
