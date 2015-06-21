@@ -163,7 +163,7 @@ Set minimum height/width of iFrame.
 ### resizeFrom
 
     default: 'parent'
-    values: 'parent', 'child'   
+    values: 'parent', 'child'
 
 Listen for resize events from the parent page, or the iFrame. Select the 'child' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
 
@@ -322,6 +322,35 @@ function resize(){
 
 $(*Element with hover style*).hover(resize);
 ```
+
+### IFrame not detecting textarea resizes
+
+Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
+
+	$(document).ready(function(){
+		function resize(){
+			if ('parentIFrame' in window) parentIFrame.size();
+		}
+
+		var $textareas = $('textarea');
+
+		// store init (default) state
+		$textareas.data('x', $textareas.outerWidth()).data('y', $textareas.outerHeight());
+
+		$textareas.on('mouseover mouseup mouseout',function(){
+
+			var $this = $(this);
+
+			if (  $this.outerWidth()  != $this.data('x') || $this.outerHeight() != $this.data('y') ){
+				resize();
+			}
+
+			// store new height/width
+			$this.data('x', $this.outerWidth()).data('y', $this.outerHeight());
+		});
+
+		$(window).on('mouseout',resize);
+	});
 
 ### IFrame flickers
 
