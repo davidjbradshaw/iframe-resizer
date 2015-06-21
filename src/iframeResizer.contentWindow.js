@@ -75,8 +75,8 @@
 
 	function init(){
 		readDataFromParent();
-		readDataFromPage();
 		log('Initialising iFrame ('+location.href+')');
+		readDataFromPage();
 		setMargin();
 		setBodyStyle('background',bodyBackground);
 		setBodyStyle('padding',bodyPadding);
@@ -97,8 +97,6 @@
 		}
 
 		var data = initMsg.substr(msgIdLen).split(':');
-
-		log('Reading data from parent');
 
 		myID               = data[0];
 		bodyMargin         = (undefined !== data[1]) ? Number(data[1])   : bodyMargin; //For V1 compatibility
@@ -190,8 +188,12 @@
 		addTriggerEvent({ eventType: 'Animation Iteration',       eventNames: ['animationiteration','webkitAnimationIteration'] });
 		addTriggerEvent({ eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
 		addTriggerEvent({ eventType: 'Orientation Change',        eventName:  'orientationchange' });
+		addTriggerEvent({ eventType: 'Input',                     eventName:  'input' });
+		addTriggerEvent({ eventType: 'Drag',                      eventName:  'drag' });
+		addTriggerEvent({ eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
 		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
 		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
+		addTriggerEvent({ eventType: 'Mouse Up',                  eventName:  'mouseup' });
 		if('child' === resizeFrom){
 			addTriggerEvent({ eventType: 'IFrame Resized',        eventName:  'resize' });
 		}
