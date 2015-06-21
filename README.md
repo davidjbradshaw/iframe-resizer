@@ -405,30 +405,28 @@ $(*Element with hover style*).hover(resize);
 
 Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
 
-	$(document).ready(function(){
-		function resize(){
-			if ('parentIFrame' in window) parentIFrame.size();
-		}
+	function resize(){
+		if ('parentIFrame' in window) parentIFrame.size();
+	}
 
-		var $textareas = $('textarea');
+	var $textareas = $('textarea');
 
-		// store init (default) state
-		$textareas.data('x', $textareas.outerWidth()).data('y', $textareas.outerHeight());
+	$textareas
+		.data('x', $textareas.outerWidth())
+		.data('y', $textareas.outerHeight())
+		.on('mouseover mouseup mouseout',function(){
+			var $textarea = $(this);
 
-		$textareas.on('mouseover mouseup mouseout',function(){
-
-			var $this = $(this);
-
-			if (  $this.outerWidth()  != $this.data('x') || $this.outerHeight() != $this.data('y') ){
+			if ($textarea.outerWidth() !== $textarea.data('x') || $textarea.outerHeight() !== $textarea.data('y')){
 				resize();
 			}
 
-			// store new height/width
-			$this.data('x', $this.outerWidth()).data('y', $this.outerHeight());
+			$textarea
+				.data('x', $textarea.outerWidth())
+				.data('y', $textarea.outerHeight());
 		});
 
-		$(window).on('mouseout',resize);
-	});
+	$(window).on('mouseout',resize);
 
 ### IFrame flickers
 
