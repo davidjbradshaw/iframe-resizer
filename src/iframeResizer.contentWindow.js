@@ -253,9 +253,6 @@
 		}
 
 		function findTarget(location){
-			var hash = location.split('#')[1] || '';
-			var hashData = decodeURIComponent(hash);
-
 			function jumpToTarget(target){
 				var jumpPosition = getElementPosition(target);
 
@@ -263,7 +260,10 @@
 				sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
 			}
 
-			var target = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
+			var
+				hash     = location.split('#')[1] || location, //Remove # if present
+				hashData = decodeURIComponent(hash),
+				target   = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
 			if (target){
 				jumpToTarget(target);
