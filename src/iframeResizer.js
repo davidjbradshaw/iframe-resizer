@@ -539,7 +539,7 @@
 				':' + settings[iframeId].inPageLinks +
 				':' + settings[iframeId].resizeFrom +
 				':' + settings[iframeId].widthCalculationMethod;
-			}
+		}
 
 		function checkReset(){
 			// Reduce scope of firstRun to function, because IE8's JS execution
