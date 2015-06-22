@@ -272,7 +272,7 @@ This option allows you to restrict the domain of the parent page, to prevent oth
 
 ### messageCallback
 
-	type: function ({iframe,message})
+	type: function (message)
 
 Receive message posted from the parent page with the `iframe.iFrameResizer.sendMessage()` method (See below for details).
 
@@ -405,28 +405,20 @@ $(*Element with hover style*).hover(resize);
 
 Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
 
-	function resize(){
-		if ('parentIFrame' in window) parentIFrame.size();
+```js
+function store(){
+	this.x = this.offsetWidth;
+	this.y = this.offsetHeight;
+}
+
+$('textarea').each(store).on('mouseover mouseout',function(){
+	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+		if ('parentIFrame' in window)
+			parentIFrame.size();
+		store.call(this);
 	}
-
-	var $textareas = $('textarea');
-
-	$textareas
-		.data('x', $textareas.outerWidth())
-		.data('y', $textareas.outerHeight())
-		.on('mouseover mouseup mouseout',function(){
-			var $textarea = $(this);
-
-			if ($textarea.outerWidth() !== $textarea.data('x') || $textarea.outerHeight() !== $textarea.data('y')){
-				resize();
-			}
-
-			$textarea
-				.data('x', $textarea.outerWidth())
-				.data('y', $textarea.outerHeight());
-		});
-
-	$(window).on('mouseout',resize);
+});
+```
 
 ### IFrame flickers
 
