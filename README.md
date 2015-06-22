@@ -413,9 +413,10 @@ function store(){
 
 $('textarea').each(store).on('mouseover mouseout',function(){
 	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
-		if ('parentIFrame' in window)
+		if ('parentIFrame' in window){
 			parentIFrame.size();
-		store.call(this);
+			store.call(this);
+		}
 	}
 });
 ```
