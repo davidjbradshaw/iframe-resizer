@@ -30,7 +30,7 @@
 			bodyMarginV1              : 8,
 			bodyPadding               : null,
 			checkOrigin               : true,
-			inPageLinks         : false,
+			inPageLinks               : false,
 			enablePublicMethods       : true,
 			heightCalculationMethod   : 'bodyOffset',
 			interval                  : 32,

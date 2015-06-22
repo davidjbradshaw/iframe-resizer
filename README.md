@@ -287,7 +287,7 @@ These options can be used to override the option set in the parent page (See abo
 
 ## IFrame Page Methods
 
-These methods are available in the iFrame <!--, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**. This creates--> via the `window.parentIFrame` object. These method should be contained by a test for the `window.parentIFrame` object, in case the page is not loaded inside an iFrame. For example:
+These methods are available in the iFrame via the `window.parentIFrame` object. These method should be contained by a test for the `window.parentIFrame` object, in case the page is not loaded inside an iFrame. For example:
 
 ```js
 if ('parentIFrame' in window) {
@@ -388,7 +388,7 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
 
 ### IFrame not detecting CSS :hover events
-If your page resizes via CSS `:hover` events, these won't be detected by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows<!--, once you have set the [enablePublicMethods](#enablepublicmethods) option to **true**-->.
+If your page resizes via CSS `:hover` events, these won't be detected by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows
 
 ```js
 function resize(){
@@ -437,7 +437,7 @@ iFrameResize({
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
 ### ParentIFrame not found errors
-<!--To call methods in the iFrame, you need to set the [enablePublicMethods](#enablepublicmethods) option to **true**.--> The `parentIFrame` object becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
+The `parentIFrame` object becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
 
 ```js
 if(top !== self) { // Check we are in an iFrame
@@ -476,7 +476,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 
 ## Version History
 
-* v3.0.0 Added *taggedElement* size calculation method. [#199](https://github.com/davidjbradshaw/iframe-resizer/issues/199) Added in page options to iFrame. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added methods to bound iFrames to comunicate from parent to iFrame. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with resizeFrom not having default option in iFrame, if called from old version in parent page. Public methods in iFrame now always enabled and option removed. EnableInPageLinks renamed inPageLinks. Added two iframe example.
+* v3.0.0 Added *taggedElement* size calculation method. [#199](https://github.com/davidjbradshaw/iframe-resizer/issues/199) Added in page options to iFrame. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added methods to bound iFrames to comunicate from parent to iFrame. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with resizeFrom not having default option in iFrame, if called from old version in parent page. Fixed bug with nested inPageLinks. Public methods in iFrame now always enabled and option removed. Renamed enableInPageLinks to inPageLinks. Added two iframe example.
 * v2.8.10 Fixed bug with resizeFrom option not having default value in iFrame, if called from old version in parent page.
 * v2.8.9 [#220](https://github.com/davidjbradshaw/iframe-resizer/issues/220) Switched from using *deviceorientation* to *orientationchange* event listner [[Brandon Kobel](https://github.com/kobelb)].
 * v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.

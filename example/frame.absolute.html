@@ -1,9 +1,11 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
 		<meta name="description" content="iFrame message passing test">
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<style>
 			a.back { float:right; margin-left:8px;}
 			body {border:solid 1px red;}
@@ -23,8 +25,8 @@
 				margin:5px;
 			}
 		</style>
-	</head> 
-	<body> 
+	</head>
+	<body>
 
 		<p>
 			<b>iFrame</b>
@@ -33,13 +35,13 @@
 			&nbsp;
 			<a href="#"" class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;">Bottom</a>
 			&nbsp;
-			<a href="#"" class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;">Scroll to iFrame</a>		
+			<a href="#"" class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;">Scroll to iFrame</a>
 			&nbsp;
-			<a href="#test" class="back" >Jump to iFrame anchor</a>	
-			<a href="#anchorParentTest" class="back" >Jump to parent anchor</a>		
+			<a href="#test" class="back" >Jump to iFrame anchor</a>
+			<a href="#anchorParentTest" class="back" >Jump to parent anchor</a>
 		</p>
 		<p>
-			This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red border on this page. This prevents the normal height calculation, which is based on the body tag from returning the correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other page height propeties. 
+			This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red border on this page. This prevents the normal height calculation, which is based on the body tag from returning the correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other page height propeties.
 		</p>
 		<p>
 			Use the dropdown to change the sizing method of the page, select the different sizing options to see how the effect the page. Note that they can have different effects in different browsers, so you are normally best off selecting <b>max</b> if you need to change away from the default <b>bodyOffset</b> option.
@@ -69,7 +71,8 @@
 		</div>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+		<script type="text/javascript" src="../js/ie8.polyfils.min.js"></script>
+		<script type="text/javascript" src="../src/iframeResizer.contentWindow.js"></script>
 		<script>
 
 			$('select').on('change',function(){
@@ -81,5 +84,5 @@
 
 		</script>
 
-	</body> 
+	</body>
 </html>

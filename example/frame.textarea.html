@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<style>
+			a { float:right; margin-left:10px;}
+		</style>
+	</head>
+	<body>
+
+		<b>iFrame TextArea Example</b>
+		<a href="frame.content.html">Back to page 1</a>
+		</a>
+
+		<p>
+			Resize the textarea below.
+		</p>
+
+		<textarea id="textArea">Resize me</textarea>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="../js/iframeResizer.contentWindow.min.js"></script>
+
+		<script>
+
+			function resize(){
+				if ('parentIFrame' in window) parentIFrame.size();
+			}
+
+			var $textareas = $('textarea');
+
+			$textareas
+				.data('x', $textareas.outerWidth())
+				.data('y', $textareas.outerHeight())
+				.on('mouseover mouseup mouseout',function(){
+					var $textarea = $(this);
+
+					if ($textarea.outerWidth() !== $textarea.data('x') || $textarea.outerHeight() !== $textarea.data('y')){
+						resize();
+					}
+
+					$textarea
+						.data('x', $textarea.outerWidth())
+						.data('y', $textarea.outerHeight());
+				});
+
+			$(window).on('mouseout',resize);
+
+		</script>
+
+	</body>
+</html>

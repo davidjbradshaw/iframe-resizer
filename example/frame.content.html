@@ -22,6 +22,8 @@
 		&nbsp;
 		<a href="frame.hover.html">:Hover</a>
 		&nbsp;
+		<a href="frame.textarea.html">TextArea</a>
+		&nbsp;
 		<a href="frame.absolute.html">Absolute Position</a>
 		&nbsp;
 		<a href='#' onclick="if ('parentIFrame' in window) window.parentIFrame.sendMessage('Hello from the iFrame');return false;">Send Message</a>
@@ -39,11 +41,16 @@
 		</p>
 
 		<script>
-
 			var level = document.location.search.replace(/\?/,'') || 0;
-
 			$('#nested').attr('href','frame.nested.html?'+(++level));
+		</script>
 
+		<script>
+			var iFrameResizer = {
+					messageCallback: function(message){
+						alert(message,parentIFrame.getId());
+					}
+				}
 		</script>
 
 		<script type="text/javascript" src="../src/iframeResizer.contentWindow.js"></script>

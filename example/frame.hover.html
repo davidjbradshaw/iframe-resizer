@@ -8,8 +8,8 @@
 		<style>
 			a { float:right; margin-left:10px;}
 		</style>
-	</head> 
-	<body> 
+	</head>
+	<body>
 
 		<b>iFrame :Hover Example</b>
 		<a href="frame.content.html">Back to page 1</a>
@@ -20,6 +20,12 @@
 		</p>
 
 		<xmp><!--  #code  --></xmp>
+
+		<script>
+			var iFrameResizer = {
+					heightCalculationMethod:'lowestElement'
+				}
+		</script>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
@@ -42,5 +48,5 @@
 </div>
 
 		<script>$('xmp').text('<xmp>'+$('#code').html()+'<xmp>');</script>
-	</body> 
+	</body>
 </html>
