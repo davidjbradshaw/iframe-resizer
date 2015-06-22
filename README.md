@@ -406,18 +406,16 @@ $(*Element with hover style*).hover(resize);
 Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
 
 ```js
-function store(){
-	this.x = this.offsetWidth;
-	this.y = this.offsetHeight;
+function storeTextAreaSize(){
+    this.x = this.offsetWidth;
+    this.y = this.offsetHeight;
 }
 
-$('textarea').each(store).on('mouseover mouseout',function(){
-	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
-		if ('parentIFrame' in window){
-			parentIFrame.size();
-			store.call(this);
-		}
-	}
+$('textarea').each(storeTextAreaSize).on('mouseover mouseout',function(){
+    if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+        storeTextAreaSize.call(this);
+        if ('parentIFrame' in window) parentIFrame.size();
+    }
 });
 ```
 
