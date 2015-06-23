@@ -26,28 +26,19 @@
 
 		<script>
 
-			function resize(){
-				if ('parentIFrame' in window) parentIFrame.size();
+
+			function store(){
+				this.x = this.offsetWidth;
+				this.y = this.offsetHeight;
 			}
 
-			var $textareas = $('textarea');
+			$('textarea').each(store).on('mouseover mouseout',function(){
+				if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+					if ('parentIFrame' in window) parentIFrame.size();
+					store.call(this);
+				}
+			});
 
-			$textareas
-				.data('x', $textareas.outerWidth())
-				.data('y', $textareas.outerHeight())
-				.on('mouseover mouseup mouseout',function(){
-					var $textarea = $(this);
-
-					if ($textarea.outerWidth() !== $textarea.data('x') || $textarea.outerHeight() !== $textarea.data('y')){
-						resize();
-					}
-
-					$textarea
-						.data('x', $textarea.outerWidth())
-						.data('y', $textarea.outerHeight());
-				});
-
-			$(window).on('mouseout',resize);
 
 		</script>
 

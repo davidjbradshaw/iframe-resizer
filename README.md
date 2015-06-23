@@ -405,28 +405,21 @@ $(*Element with hover style*).hover(resize);
 
 Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
 
-	function resize(){
-		if ('parentIFrame' in window) parentIFrame.size();
+```js
+function store(){
+	this.x = this.offsetWidth;
+	this.y = this.offsetHeight;
+}
+
+$('textarea').each(store).on('mouseover mouseout',function(){
+	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+		if ('parentIFrame' in window){
+			parentIFrame.size();
+			store.call(this);
+		}
 	}
-
-	var $textareas = $('textarea');
-
-	$textareas
-		.data('x', $textareas.outerWidth())
-		.data('y', $textareas.outerHeight())
-		.on('mouseover mouseup mouseout',function(){
-			var $textarea = $(this);
-
-			if ($textarea.outerWidth() !== $textarea.data('x') || $textarea.outerHeight() !== $textarea.data('y')){
-				resize();
-			}
-
-			$textarea
-				.data('x', $textarea.outerWidth())
-				.data('y', $textarea.outerHeight());
-		});
-
-	$(window).on('mouseout',resize);
+});
+```
 
 ### IFrame flickers
 
@@ -445,7 +438,7 @@ iFrameResize({
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
 ### ParentIFrame not found errors
-The `parentIFrame` object becomes available once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
+The `parentIFrame` object becomes is created once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
 
 ```js
 if(top !== self) { // Check we are in an iFrame
