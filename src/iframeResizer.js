@@ -245,8 +245,7 @@
 		}
 
 		function getElementPosition(target){
-			var
-				iFramePosition = target.getBoundingClientRect();
+			var iFramePosition = target.getBoundingClientRect();
 
 			getPagePosition();
 
@@ -259,9 +258,7 @@
 		function scrollRequestFromChild(addOffset){
 			function reposition(){
 				pagePosition = newPosition;
-
 				scrollTo();
-
 				log(' --');
 			}
 
@@ -280,11 +277,7 @@
 
 			if(window.top!==window.self){
 				if (window.parentIFrame){
-					if (addOffset){
-						window.parentIFrame.scrollToOffset(newPosition.x,newPosition.y);
-					} else {
-						window.parentIFrame.scrollTo(messageData.width,messageData.height);
-					}
+					window.parentIFrame['scrollTo'+(addOffset?'Offset':'')](newPosition.x,newPosition.y);
 				} else {
 					warn(' Unable to scroll to requested position, window.parentIFrame not found');
 				}
@@ -333,6 +326,9 @@
 		}
 
 		function actionMsg(){
+
+			if(settings[iframeId].firstRun) firstRun();
+
 			switch(messageData.type){
 			case 'close':
 				closeIFrame(messageData.iframe);
@@ -379,11 +375,15 @@
 
 			if(Function.prototype.bind){ //Ignore unpolyfilled IE8.
 				settings[iframeId].iframe.iFrameResizer = {
+
 					close        : closeIFrame.bind(null,settings[iframeId].iframe),
+
 					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
+
 					moveToAnchor : function(anchor){
 						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe,iframeId);
 					},
+
 					sendMessage  : function(message){
 						message = JSON.stringify(message);
 						trigger('Send Message','message:'+message, settings[iframeId].iframe,iframeId);
@@ -406,7 +406,6 @@
 				log(' Received: '+msg);
 
 				if ( checkIFrameExists() && isMessageFromIFrame() ){
-					if(settings[iframeId].firstRun) firstRun();
 					actionMsg();
 				}
 			}

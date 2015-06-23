@@ -189,10 +189,10 @@
 		addTriggerEvent({ eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
 		addTriggerEvent({ eventType: 'Orientation Change',        eventName:  'orientationchange' });
 		addTriggerEvent({ eventType: 'Input',                     eventName:  'input' });
-		addTriggerEvent({ eventType: 'Drag',                      eventName:  'drag' });
+		//addTriggerEvent({ eventType: 'Drag',                      eventName:  'drag' });
 		addTriggerEvent({ eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
 		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
-		addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
+		//addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
 		addTriggerEvent({ eventType: 'Mouse Up',                  eventName:  'mouseup' });
 		if('child' === resizeFrom){
 			addTriggerEvent({ eventType: 'IFrame Resized',        eventName:  'resize' });
@@ -229,7 +229,7 @@
 
 	function injectClearFixIntoBodyElement(){
 		var clearFix = document.createElement('div');
-		clearFix.style.clear = 'both';
+		clearFix.style.clear   = 'both';
 		clearFix.style.display = 'block'; //Guard against this having been globally redefined in CSS.
 		document.body.appendChild(clearFix);
 	}

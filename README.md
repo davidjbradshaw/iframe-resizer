@@ -272,7 +272,7 @@ This option allows you to restrict the domain of the parent page, to prevent oth
 
 ### messageCallback
 
-	type: function ({iframe,message})
+	type: function (message)
 
 Receive message posted from the parent page with the `iframe.iFrameResizer.sendMessage()` method (See below for details).
 
@@ -413,9 +413,9 @@ function store(){
 
 $('textarea').each(store).on('mouseover mouseout',function(){
 	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+		store.call(this);
 		if ('parentIFrame' in window){
 			parentIFrame.size();
-			store.call(this);
 		}
 	}
 });
