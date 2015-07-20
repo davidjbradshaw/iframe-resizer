@@ -9,7 +9,7 @@
  * Contributor: Ian Caunce - ian@hallnet.co.uk
  */
 
-;(function() {
+;(function(window) {
 	'use strict';
 
 	var
@@ -843,4 +843,4 @@
 
 	addEventListener(window, 'message', receiver);
 
-})();
+})(window || {});

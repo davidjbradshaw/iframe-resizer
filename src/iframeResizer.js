@@ -7,7 +7,7 @@
  * Contributor: Jure Mav - jure.mav@gmail.com
  * Contributor: Reed Dadoune - reed@dadoune.com
  */
-;(function() {
+;(function(window) {
 	'use strict';
 
 	var
@@ -694,4 +694,4 @@
 		window.iFrameResize = window.iFrameResize || factory();
 	}
 
-})();
+})(window || {});
