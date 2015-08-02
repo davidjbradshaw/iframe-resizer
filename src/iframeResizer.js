@@ -627,20 +627,40 @@
 		}
 	}
 
-	function winResize(){
+	function resizeIFrames(event){
+		throttle(function(){
+			sendTriggerMsg('Window '+event,'resize');
+		},66);
+	}
+
+	function tabVisible() {
+		if('visible' === document.visibilityState) {
+			sendTriggerMsg('Tab Visable','resize');
+		}
+	}
+
+	function sendTriggerMsg(eventName,event){
 		function isIFrameResizeEnabled(iframeId) {
 			return	'parent' === settings[iframeId].resizeFrom &&
 					settings[iframeId].autoResize &&
 					!settings[iframeId].firstRun;
 		}
 
-		throttle(function(){
-			for (var iframeId in settings){
-				if(isIFrameResizeEnabled(iframeId)){
-					trigger('Window resize','resize',document.getElementById(iframeId),iframeId);
-				}
+		for (var iframeId in settings){
+			if(isIFrameResizeEnabled(iframeId)){
+				trigger(eventName,event,document.getElementById(iframeId),iframeId);
 			}
-		},66);
+		}
+	}
+
+	function setupEventListeners(){
+		addEventListener(window,'message',iFrameListener);
+
+		addEventListener(window,'resize', function(){resizeIFrames('resize');});
+
+		addEventListener(document,'visibilitychange',tabVisible);
+		addEventListener(document,'-webkit-visibilitychange',tabVisible); //Andriod 4.4
+		addEventListener(window,'focusin',function(){resizeIFrames('focus');}); //IE8-9
 	}
 
 	function factory(){
@@ -655,8 +675,7 @@
 		}
 
 		setupRequestAnimationFrame();
-		addEventListener(window,'message',iFrameListener);
-		addEventListener(window,'resize', winResize);
+		setupEventListeners();
 
 		return function iFrameResizeF(options,target){
 			switch (typeof(target)){

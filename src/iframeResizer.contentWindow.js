@@ -771,7 +771,7 @@
 		}
 
 		function resizeFromParent(){
-			sendSize('resizeParent','Parent window resized');
+			sendSize('resizeParent','Parent window requested size check');
 		}
 
 		function moveToAnchor(){
