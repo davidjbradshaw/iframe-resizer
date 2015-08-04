@@ -12,7 +12,7 @@ This library enables the automatic resizing of the height and width of both same
 * Provides a range of page size calculation methods to support complex CSS layouts.
 * Detects changes to the DOM that can cause the page to resize using [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 * Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Device Orientation and Mouse events).
-* Simplified messaging from iFrame to host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
+* Simplified messaging between iFrame abd host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
 * Fixes in page links in iFrame and supports links between the iFrame and parent page.
 * Provides custom sizing and scrolling methods.
 * Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
@@ -38,7 +38,8 @@ The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/dav
 The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library only to update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 ```html
-<iframe src="http://anotherdomain.com/iframe.html" width="100%" scrolling="no"></iframe>
+<style>iframe{width:100%}</style>
+<iframe src="http://anotherdomain.com/iframe.html" scrolling="no"></iframe>
 <script>iFrameResize({log:true})</script>
 ```
 
@@ -88,7 +89,7 @@ When set to true, only allow incoming messages from the domain listed in the `sr
 
 ### inPageLinks
 
-	default: true
+	default: false
 	type:    boolean
 
 When enabled in page linking inside the iFrame and from the iFrame to the parent page will be enabled.
@@ -477,7 +478,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 
 ## Version History
 
-* v3.0.0 Added *taggedElement* size calculation method. [#199](https://github.com/davidjbradshaw/iframe-resizer/issues/199) Added in page options to iFrame. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added methods to bound iFrames to comunicate from parent to iFrame. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Fixed bug with nested inPageLinks. Public methods in iFrame now always enabled and option removed. Renamed enableInPageLinks to inPageLinks. Added double iFrame example.
+* v3.0.0 Added *taggedElement* size calculation method. [#199](https://github.com/davidjbradshaw/iframe-resizer/issues/199) Added in page options to iFrame. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added methods to bound iFrames to comunicate from parent to iFrame. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Added detection for tab focus. Fixed bug with nested inPageLinks. Public methods in iFrame now always enabled and option removed. Renamed enableInPageLinks to inPageLinks. Added double iFrame example.
 * v2.8.10 Fixed bug with resizeFrom option not having default value in iFrame, if called from old version in parent page.
 * v2.8.9 [#220](https://github.com/davidjbradshaw/iframe-resizer/issues/220) Switched from using *deviceorientation* to *orientationchange* event listner [[Brandon Kobel](https://github.com/kobelb)].
 * v2.8.8 [#213](https://github.com/davidjbradshaw/iframe-resizer/issues/213) Ensure initCallback fires when iFrame not sized during initialisation. Check autoResize option before resizing from parent. Lower message about resize before initialisation from 'warn' to 'log'. Updated hover example.
