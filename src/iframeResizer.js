@@ -627,33 +627,33 @@
 		}
 	}
 
-	function resizeIFrames(event){
-		throttle(function(){
-			sendTriggerMsg('Window '+event,'resize');
-		},66);
-	}
-
-	function tabVisible() {
-		if('visible' === document.visibilityState) {
-			sendTriggerMsg('Tab Visable','resize');
-		}
-	}
-
-	function sendTriggerMsg(eventName,event){
-		function isIFrameResizeEnabled(iframeId) {
-			return	'parent' === settings[iframeId].resizeFrom &&
-					settings[iframeId].autoResize &&
-					!settings[iframeId].firstRun;
+	function setupEventListeners(){
+		function resizeIFrames(event){
+			throttle(function(){
+				sendTriggerMsg('Window '+event,'resize');
+			},66);
 		}
 
-		for (var iframeId in settings){
-			if(isIFrameResizeEnabled(iframeId)){
-				trigger(eventName,event,document.getElementById(iframeId),iframeId);
+		function tabVisible() {
+			if('hidden' !== document.visibilityState) {
+				sendTriggerMsg('Tab Visable','resize');
 			}
 		}
-	}
 
-	function setupEventListeners(){
+		function sendTriggerMsg(eventName,event){
+			function isIFrameResizeEnabled(iframeId) {
+				return	'parent' === settings[iframeId].resizeFrom &&
+						settings[iframeId].autoResize &&
+						!settings[iframeId].firstRun;
+			}
+
+			for (var iframeId in settings){
+				if(isIFrameResizeEnabled(iframeId)){
+					trigger(eventName,event,document.getElementById(iframeId),iframeId);
+				}
+			}
+		}
+
 		addEventListener(window,'message',iFrameListener);
 
 		addEventListener(window,'resize', function(){resizeIFrames('resize');});
@@ -662,6 +662,7 @@
 		addEventListener(document,'-webkit-visibilitychange',tabVisible); //Andriod 4.4
 		addEventListener(window,'focusin',function(){resizeIFrames('focus');}); //IE8-9
 	}
+
 
 	function factory(){
 		function init(options,element){
