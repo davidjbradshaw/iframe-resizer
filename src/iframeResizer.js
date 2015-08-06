@@ -370,12 +370,6 @@
 			return retBool;
 		}
 
-		function iFrameReadyMsgReceived(){
-			for (var iframeId in settings){
-				trigger('IFrame Ready',createOutgoingMsg(iframeId),document.getElementById(iframeId),iframeId);
-			}
-		}
-
 		function firstRun() {
 			settings[iframeId].firstRun = false;
 
@@ -403,9 +397,7 @@
 			messageData = {},
 			iframeId = null;
 
-		if('[iFrameResizerChild]Ready' === msg){
-			iFrameReadyMsgReceived();
-		} else if (isMessageForUs()){
+		if (isMessageForUs()){
 			messageData = processMsg();
 			iframeId    = messageData.id;
 
@@ -488,24 +480,6 @@
 		}
 	}
 
-	function createOutgoingMsg(iframeId){
-		return iframeId +
-			':' + settings[iframeId].bodyMarginV1 +
-			':' + settings[iframeId].sizeWidth +
-			':' + settings[iframeId].log +
-			':' + settings[iframeId].interval +
-			':' + settings[iframeId].enablePublicMethods +
-			':' + settings[iframeId].autoResize +
-			':' + settings[iframeId].bodyMargin +
-			':' + settings[iframeId].heightCalculationMethod +
-			':' + settings[iframeId].bodyBackground +
-			':' + settings[iframeId].bodyPadding +
-			':' + settings[iframeId].tolerance +
-			':' + settings[iframeId].inPageLinks +
-			':' + settings[iframeId].resizeFrom +
-			':' + settings[iframeId].widthCalculationMethod;
-		}
-
 
 	function setupIFrame(iframe,options){
 		function setLimits(){
@@ -546,6 +520,24 @@
 				settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin;
 				settings[iframeId].bodyMargin   = '' + settings[iframeId].bodyMargin + 'px';
 			}
+		}
+
+		function createOutgoingMsg(){
+			return iframeId +
+				':' + settings[iframeId].bodyMarginV1 +
+				':' + settings[iframeId].sizeWidth +
+				':' + settings[iframeId].log +
+				':' + settings[iframeId].interval +
+				':' + settings[iframeId].enablePublicMethods +
+				':' + settings[iframeId].autoResize +
+				':' + settings[iframeId].bodyMargin +
+				':' + settings[iframeId].heightCalculationMethod +
+				':' + settings[iframeId].bodyBackground +
+				':' + settings[iframeId].bodyPadding +
+				':' + settings[iframeId].tolerance +
+				':' + settings[iframeId].inPageLinks +
+				':' + settings[iframeId].resizeFrom +
+				':' + settings[iframeId].widthCalculationMethod;
 		}
 
 		function checkReset(){
@@ -590,15 +582,16 @@
 		}
 
 		function getTargetOrigin (remoteHost){
-			return 'file://' === remoteHost ? '*' : remoteHost; //Deal with Chrome wierdness.
+			if ('' === remoteHost || 'file://' === remoteHost) remoteHost = '*';
+			return remoteHost;
 		}
 
 		function processOptions(options){
 			options = options || {};
 			settings[iframeId] = {
-				firstRun : true,
-				iframe     : iframe,
-				remoteHost : iframe.src.split('/').slice(0,3).join('/')
+				firstRun	: true,
+				iFrame  	: iframe,
+				remoteHost	: iframe.src.split('/').slice(0,3).join('/')
 			};
 
 			checkOptions(options);
@@ -620,7 +613,7 @@
 			setScrolling();
 			setLimits();
 			setupBodyMarginValues();
-			init(createOutgoingMsg(iframeId));
+			init(createOutgoingMsg());
 		} else {
 			warn(' Ignored iFrame, already setup.');
 		}
