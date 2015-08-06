@@ -843,6 +843,6 @@
 
 	addEventListener(window, 'message', receiver);
 
-	window.parent.postMessage('[iFrameResizerChild]Ready','*');
+	//window.parent.postMessage('[iFrameResizerChild]Ready','*');
 
 })(window || {});
