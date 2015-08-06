@@ -370,6 +370,12 @@
 			return retBool;
 		}
 
+		function iFrameReadyMsgReceived(){
+			for (var iframeId in settings){
+				trigger('IFrame Ready',createOutgoingMsg(iframeId),document.getElementById(iframeId),iframeId);
+			}
+		}
+
 		function firstRun() {
 			settings[iframeId].firstRun = false;
 
@@ -398,9 +404,7 @@
 			iframeId = null;
 
 		if('[iFrameResizerChild]Ready' === msg){
-			for (iframeId in settings){
-				trigger('IFrame Ready',createOutgoingMsg(iframeId),document.getElementById(iframeId),iframeId);
-			}
+			iFrameReadyMsgReceived();
 		} else if (isMessageForUs()){
 			messageData = processMsg();
 			iframeId    = messageData.id;
