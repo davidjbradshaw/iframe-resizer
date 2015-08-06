@@ -397,7 +397,11 @@
 			messageData = {},
 			iframeId = null;
 
-		if (isMessageForUs()){
+		if('[iFrameResizerChild]Ready' === msg){
+			for (iframeId in settings){
+				trigger('IFrame Ready',createOutgoingMsg(iframeId),document.getElementById(iframeId),iframeId);
+			}
+		} else if (isMessageForUs()){
 			messageData = processMsg();
 			iframeId    = messageData.id;
 
@@ -480,6 +484,24 @@
 		}
 	}
 
+	function createOutgoingMsg(iframeId){
+		return iframeId +
+			':' + settings[iframeId].bodyMarginV1 +
+			':' + settings[iframeId].sizeWidth +
+			':' + settings[iframeId].log +
+			':' + settings[iframeId].interval +
+			':' + settings[iframeId].enablePublicMethods +
+			':' + settings[iframeId].autoResize +
+			':' + settings[iframeId].bodyMargin +
+			':' + settings[iframeId].heightCalculationMethod +
+			':' + settings[iframeId].bodyBackground +
+			':' + settings[iframeId].bodyPadding +
+			':' + settings[iframeId].tolerance +
+			':' + settings[iframeId].inPageLinks +
+			':' + settings[iframeId].resizeFrom +
+			':' + settings[iframeId].widthCalculationMethod;
+		}
+
 
 	function setupIFrame(iframe,options){
 		function setLimits(){
@@ -520,24 +542,6 @@
 				settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin;
 				settings[iframeId].bodyMargin   = '' + settings[iframeId].bodyMargin + 'px';
 			}
-		}
-
-		function createOutgoingMsg(){
-			return iframeId +
-				':' + settings[iframeId].bodyMarginV1 +
-				':' + settings[iframeId].sizeWidth +
-				':' + settings[iframeId].log +
-				':' + settings[iframeId].interval +
-				':' + settings[iframeId].enablePublicMethods +
-				':' + settings[iframeId].autoResize +
-				':' + settings[iframeId].bodyMargin +
-				':' + settings[iframeId].heightCalculationMethod +
-				':' + settings[iframeId].bodyBackground +
-				':' + settings[iframeId].bodyPadding +
-				':' + settings[iframeId].tolerance +
-				':' + settings[iframeId].inPageLinks +
-				':' + settings[iframeId].resizeFrom +
-				':' + settings[iframeId].widthCalculationMethod;
 		}
 
 		function checkReset(){
@@ -612,7 +616,7 @@
 			setScrolling();
 			setLimits();
 			setupBodyMarginValues();
-			init(createOutgoingMsg());
+			init(createOutgoingMsg(iframeId));
 		} else {
 			warn(' Ignored iFrame, already setup.');
 		}
