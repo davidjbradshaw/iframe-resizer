@@ -43,7 +43,7 @@
 		triggerLocked         = false,
 		triggerLockedTimer    = null,
 		width                 = 1,
-		widthCalcModeDefault  = 'max',
+		widthCalcModeDefault  = 'scroll',
 		widthCalcMode         = widthCalcModeDefault,
 		messageCallback       = function(){warn('MessageCallback function not defined');};
 
