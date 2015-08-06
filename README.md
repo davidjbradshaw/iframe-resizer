@@ -374,7 +374,7 @@ Bug reports and pull requests are welcome on the [issue tracker](https://github.
 
 
 ### IFrame not sizing correctly
-If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods, normally you will be best off selecting the **max** or **lowestElement** options to avoid cross browser differences.
+If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods.
 
 ### IFrame not downsizing
 The most likely cause of this problem is having set the height of an element to be 100% of the page somewhere in your CSS. This is normally on the `html` or `body` elements, but it could be on any element in the page. This can sometimes be got around by using the `taggedElement` height calculation method and added a `data-iframe-height` attribute to the element that you want to define the bottom position of the page. You may find it useful to use `position: relative` on this element to define a bottom margin or allow space for a floating footer.
