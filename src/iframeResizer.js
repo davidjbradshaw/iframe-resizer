@@ -13,6 +13,7 @@
 	var
 		count                 = 0,
 		logEnabled            = false,
+		hiddenCheckEnabled    = false,
 		msgHeader             = 'message',
 		msgHeaderLen          = msgHeader.length,
 		msgId                 = '[iFrameSizer]', //Must match iframe msg ID
@@ -454,9 +455,28 @@
 				' set to ' + messageData[dimension] + 'px'
 			);
 		}
+
+		function chkZero(dimension){
+			//FireFox sets dimension of hidden iFrames to zero.
+			//So if we detect that set up an event to check for
+			//when iFrame becomes visible.
+
+			if (!hiddenCheckEnabled && '0' === messageData[dimension]){
+				hiddenCheckEnabled = true;
+				log(' Hidden iFrame detected, creating visibility listener');
+				fixHiddenIFrames();
+			}
+		}
+
+		function processDimension(dimension){
+			setDimension(dimension);
+			chkZero(dimension);
+		}
+
 		var iframeId = messageData.iframe.id;
-		if( settings[iframeId].sizeHeight) { setDimension('height'); }
-		if( settings[iframeId].sizeWidth ) { setDimension('width'); }
+		
+		if( settings[iframeId].sizeHeight) { processDimension('height'); }
+		if( settings[iframeId].sizeWidth ) { processDimension('width'); }
 	}
 
 	function syncResize(func,messageData,doNotSync){
@@ -590,7 +610,7 @@
 			options = options || {};
 			settings[iframeId] = {
 				firstRun	: true,
-				iFrame  	: iframe,
+				iframe		: iframe,
 				remoteHost	: iframe.src.split('/').slice(0,3).join('/')
 			};
 
@@ -626,6 +646,50 @@
 				fn();
 			}, time);
 		}
+	}
+
+	function isVisible(el) {
+		return (null !== el.offsetParent);
+	}
+
+	function fixHiddenIFrames(){
+		function mutationObserved(mutations){
+			function checkIFrames(settingId){
+				function chkDimension(dimension){
+					return '0px' === settings[settingId].iframe.style[dimension];
+				}
+
+				if (isVisible(settings[settingId].iframe) && (chkDimension('height') || chkDimension('width'))){
+					trigger('Visibility change', 'resize', settings[settingId].iframe,settingId);
+				}
+			}
+
+			for (var settingId in settings){
+				checkIFrames(settingId);
+			}
+		}
+
+		function createMutationObserver(){
+			var
+				target = document.querySelector('body'),
+
+				config = {
+					attributes            : true,
+					attributeOldValue     : false,
+					characterData         : true,
+					characterDataOldValue : false,
+					childList             : true,
+					subtree               : true
+				},
+
+				observer = new MutationObserver(mutationObserved);
+
+			observer.observe(target, config);
+		}
+
+		var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+		if (MutationObserver) createMutationObserver();
 	}
 
 	function setupEventListeners(){
