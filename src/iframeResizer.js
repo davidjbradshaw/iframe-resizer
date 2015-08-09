@@ -653,8 +653,8 @@
 	}
 
 	function fixHiddenIFrames(){
-		function mutationObserved(mutations){
-			function checkIFrames(settingId){
+		function checkIFrames(){
+			function checkIFrame(settingId){
 				function chkDimension(dimension){
 					return '0px' === settings[settingId].iframe.style[dimension];
 				}
@@ -665,8 +665,13 @@
 			}
 
 			for (var settingId in settings){
-				checkIFrames(settingId);
+				checkIFrame(settingId);
 			}
+		}
+
+		function mutationObserved(mutations){
+			log( 'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type);
+			throttle(checkIFrames,16);
 		}
 
 		function createMutationObserver(){
