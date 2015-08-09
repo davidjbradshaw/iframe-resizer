@@ -670,7 +670,7 @@
 		}
 
 		function mutationObserved(mutations){
-			log( 'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type);
+			log(' Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type);
 			throttle(checkIFrames,16);
 		}
 
