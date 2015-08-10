@@ -11,7 +11,7 @@ This library enables the automatic resizing of the height and width of both same
 * Automatic domain authentication for cross domain iFrames.
 * Provides a range of page size calculation methods to support complex CSS layouts.
 * Detects changes to the DOM that can cause the page to resize using [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
-* Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Device Orientation and Mouse events).
+* Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Orientation Change and Mouse events).
 * Simplified messaging between iFrame and host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
 * Fixes in page links in iFrame and supports links between the iFrame and parent page.
 * Provides custom sizing and scrolling methods.
@@ -485,7 +485,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 
 ## Version History
 
-* v3.1.0 Added option to allow iFrame to kick start init, if script is late loaded.  Fix issue in FireFox, where hidden iframes are given a size of zero. Fixed default width in iFrame to be *scroll*, instead of *max* when called with old version of parent script. [#236](https://github.com/davidjbradshaw/iframe-resizer/issues/236) Cope with iFrames that don't have a *src* value.
+* v3.1.0 Added support for hidden iFrames in FireFox. Added option to allow iFrame to kick start init, if script is late loaded. Improved handling of parent page events. [#236](https://github.com/davidjbradshaw/iframe-resizer/issues/236) Cope with iFrames that don't have a *src* value.
 * v3.0.0 Added *taggedElement* size calculation method. [#199](https://github.com/davidjbradshaw/iframe-resizer/issues/199) Added in page options to iFrame. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added methods to bound iFrames to comunicate from parent to iFrame. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Added detection for tab focus. Fixed bug with nested inPageLinks. Public methods in iFrame now always enabled and option removed. Renamed enableInPageLinks to inPageLinks. Added double iFrame example.
 * v2.8.10 Fixed bug with resizeFrom option not having default value in iFrame, if called from old version in parent page.
 * v2.8.9 [#220](https://github.com/davidjbradshaw/iframe-resizer/issues/220) Switched from using *deviceorientation* to *orientationchange* event listner [[Brandon Kobel](https://github.com/kobelb)].
