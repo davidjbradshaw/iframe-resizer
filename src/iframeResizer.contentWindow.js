@@ -189,11 +189,10 @@
 		addTriggerEvent({ eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
 		addTriggerEvent({ eventType: 'Orientation Change',        eventName:  'orientationchange' });
 		addTriggerEvent({ eventType: 'Input',                     eventName:  'input' });
-		//addTriggerEvent({ eventType: 'Drag',                      eventName:  'drag' });
 		addTriggerEvent({ eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
 		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
-		//addTriggerEvent({ eventType: 'Window Clicked',            eventName:  'click' });
 		addTriggerEvent({ eventType: 'Mouse Up',                  eventName:  'mouseup' });
+		addTriggerEvent({ eventType: 'Mouse Down',                eventName:  'mousedown' });
 		if('child' === resizeFrom){
 			addTriggerEvent({ eventType: 'IFrame Resized',        eventName:  'resize' });
 		}

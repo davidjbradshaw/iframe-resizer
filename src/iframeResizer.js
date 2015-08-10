@@ -699,14 +699,22 @@
 
 	function setupEventListeners(){
 		function resizeIFrames(event){
-			throttle(function(){
+			function resize(){
 				sendTriggerMsg('Window '+event,'resize');
-			},66);
+			}
+
+			log(' Trigger event: '+event);
+			throttle(resize,16);
 		}
 
 		function tabVisible() {
-			if('hidden' !== document.visibilityState) {
+			function resize(){
 				sendTriggerMsg('Tab Visable','resize');
+			}
+			
+			if('hidden' !== document.visibilityState) {
+				log(' Trigger event: Visiblity change');
+				throttle(resize,16);
 			}
 		}
 
@@ -731,6 +739,7 @@
 		addEventListener(document,'visibilitychange',tabVisible);
 		addEventListener(document,'-webkit-visibilitychange',tabVisible); //Andriod 4.4
 		addEventListener(window,'focusin',function(){resizeIFrames('focus');}); //IE8-9
+		addEventListener(window,'focus',function(){resizeIFrames('focus');});
 	}
 
 
