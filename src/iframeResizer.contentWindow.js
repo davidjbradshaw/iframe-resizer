@@ -34,7 +34,6 @@
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
 		myID                  = '',
-		//publicMethods         = true,
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
@@ -103,7 +102,6 @@
 		calculateWidth     = (undefined !== data[2]) ? strBool(data[2])  : calculateWidth;
 		logging            = (undefined !== data[3]) ? strBool(data[3])  : logging;
 		interval           = (undefined !== data[4]) ? Number(data[4])   : interval;
-		//publicMethods      = (undefined !== data[5]) ? strBool(data[5])  : publicMethods;
 		autoResize         = (undefined !== data[6]) ? strBool(data[6])  : autoResize;
 		bodyMarginStr      = data[7];
 		heightCalcMode     = (undefined !== data[8]) ? data[8]           : heightCalcMode;
@@ -328,60 +326,58 @@
 	}
 
 	function setupPublicMethods(){
-		//if (publicMethods) {
-			log('Enable public methods');
+		log('Enable public methods');
 
-			window.parentIFrame = {
-				close: function closeF(){
-					sendMsg(0,0,'close');
-				},
+		window.parentIFrame = {
+			close: function closeF(){
+				sendMsg(0,0,'close');
+			},
 
-				getId: function getIdF(){
-					return myID;
-				},
+			getId: function getIdF(){
+				return myID;
+			},
 
-				moveToAnchor: function moveToAnchorF(hash){
-					inPageLinks.findTarget(hash);
-				},
+			moveToAnchor: function moveToAnchorF(hash){
+				inPageLinks.findTarget(hash);
+			},
 
-				reset: function resetF(){
-					resetIFrame('parentIFrame.reset');
-				},
+			reset: function resetF(){
+				resetIFrame('parentIFrame.reset');
+			},
 
-				scrollTo: function scrollToF(x,y){
-					sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses height/width
-				},
+			scrollTo: function scrollToF(x,y){
+				sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses height/width
+			},
 
-				scrollToOffset: function scrollToF(x,y){
-					sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
-				},
+			scrollToOffset: function scrollToF(x,y){
+				sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
+			},
 
-				sendMessage: function sendMessageF(msg,targetOrigin){
-					sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
-				},
+			sendMessage: function sendMessageF(msg,targetOrigin){
+				sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
+			},
 
-				setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
-					heightCalcMode = heightCalculationMethod;
-					checkHeightMode();
-				},
+			setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
+				heightCalcMode = heightCalculationMethod;
+				checkHeightMode();
+			},
 
-				setWidthCalculationMethod: function setWidthCalculationMethodF(widthCalculationMethod){
-					widthCalcMode = widthCalculationMethod;
-					checkWidthMode();
-				},
+			setWidthCalculationMethod: function setWidthCalculationMethodF(widthCalculationMethod){
+				widthCalcMode = widthCalculationMethod;
+				checkWidthMode();
+			},
 
-				setTargetOrigin: function setTargetOriginF(targetOrigin){
-					log('Set targetOrigin: '+targetOrigin);
-					targetOriginDefault = targetOrigin;
-				},
+			setTargetOrigin: function setTargetOriginF(targetOrigin){
+				log('Set targetOrigin: '+targetOrigin);
+				targetOriginDefault = targetOrigin;
+			},
 
-				size: function sizeF(customHeight, customWidth){
-					var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
-					lockTrigger();
-					sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
-				}
-			};
-		//}
+			size: function sizeF(customHeight, customWidth){
+				var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
+				lockTrigger();
+				sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
+			}
+		};
 	}
 
 	function initInterval(){
