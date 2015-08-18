@@ -41,6 +41,7 @@
 		tolerance             = 0,
 		triggerLocked         = false,
 		triggerLockedTimer    = null,
+		throttledTimer        = 0,
 		width                 = 1,
 		widthCalcModeDefault  = 'scroll',
 		widthCalcMode         = widthCalcModeDefault,
@@ -54,6 +55,49 @@
 			el.attachEvent('on'+evt,func);
 		}
 	}
+
+	//Based on underscore.js
+	function throttle(func) {
+		var
+			context, args, result,
+			timeout = null,
+			previous = 0,
+			later = function() {
+				previous = getNow();
+				timeout = null;
+				result = func.apply(context, args);
+				if (!timeout) context = args = null;
+			};
+
+		return function() {
+			var now = getNow();
+
+			if (!previous) previous = now;
+
+			var remaining = throttledTimer - (now - previous);
+
+			context = this;
+			args = arguments;
+
+			if (remaining <= 0 || remaining > throttledTimer) {
+				if (timeout) {
+					clearTimeout(timeout);
+					timeout = null;
+				}
+				previous = now;
+				result = func.apply(context, args);
+				if (!timeout) context = args = null;
+			} else if (!timeout) {
+				timeout = setTimeout(later, remaining);
+			}
+			return result;
+		};
+	}
+
+	var getNow = Date.now || function() {
+		return new Date().getTime();
+	};
+
 
 	function formatLogMsg(msg){
 		return msgID + '[' + myID + ']' + ' ' + msg;
@@ -408,7 +452,7 @@
 				addImageLoadListener(mutation.target);
 			} else if (mutation.type === 'childList'){
 				Array.prototype.forEach.call(
-					mutation.target.querySelectorAll('img'), 
+					mutation.target.querySelectorAll('img'),
 					addImageLoadListener
 				);
 			}
@@ -500,7 +544,7 @@
 		var
 			elementsLength = elements.length,
 			maxVal         = 0,
-			timer          = new Date().getTime();
+			timer          = getNow();
 
 		for (var i = 0; i < elementsLength; i++) {
 			if (elements[i].getBoundingClientRect()[side] > maxVal) {
@@ -508,10 +552,15 @@
 			}
 		}
 
-		timer = new Date().getTime() - timer;
+		timer = getNow() - timer;
 
 		log('Parsed '+elementsLength+' HTML elements');
 		log('Element position calculated in ' + timer + 'ms');
+
+		if(timer > throttledTimer/2){
+			throttledTimer = 2*timer;
+			log('Event throttle increased to ' + throttledTimer + 'ms');
+		}
 
 		return maxVal;
 	}
@@ -622,23 +671,13 @@
 		};
 
 
-	function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
-
-		function recordTrigger(){
-			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
-				log( 'Trigger event: ' + triggerEventDesc );
-			}
-		}
+	function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth){
 
 		function resizeIFrame(){
 			height = currentHeight;
 			width  = currentWidth;
 
 			sendMsg(height,width,triggerEvent);
-		}
-
-		function isDoubleFiredEvent(){
-			return  triggerLocked && (triggerEvent in doubleEventList);
 		}
 
 		function isSizeChangeDetected(){
@@ -669,21 +708,37 @@
 			if (isForceResizableEvent() && isForceResizableCalcMode()){
 				resetIFrame(triggerEventDesc);
 			} else if (!(triggerEvent in {'interval':1})){
-				recordTrigger();
 				logIgnored();
 			}
 		}
 
 		var	currentHeight,currentWidth;
 
-		if (!isDoubleFiredEvent()){
-			if (isSizeChangeDetected() || 'init' === triggerEvent){
-				recordTrigger();
-				lockTrigger();
-				resizeIFrame();
-			} else {
-				checkDownSizing();
+		if (isSizeChangeDetected() || 'init' === triggerEvent){
+			lockTrigger();
+			resizeIFrame();
+		} else {
+			checkDownSizing();
+		}
+	}
+
+	var sizeIFrameThrottled = throttle(sizeIFrame);
+
+	function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
+
+		function recordTrigger(){
+			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
+				log( 'Trigger event: ' + triggerEventDesc );
 			}
+		}
+
+		function isDoubleFiredEvent(){
+			return  triggerLocked && (triggerEvent in doubleEventList);
+		}
+
+		if (!isDoubleFiredEvent()){
+			recordTrigger();
+			sizeIFrameThrottled(triggerEvent, triggerEventDesc, customHeight, customWidth);
 		} else {
 			log('Trigger event cancelled: '+triggerEvent);
 		}
