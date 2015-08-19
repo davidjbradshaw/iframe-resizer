@@ -474,7 +474,7 @@
 		}
 
 		var iframeId = messageData.iframe.id;
-		
+
 		if( settings[iframeId].sizeHeight) { processDimension('height'); }
 		if( settings[iframeId].sizeWidth ) { processDimension('width'); }
 	}
@@ -489,9 +489,11 @@
 	}
 
 	function trigger(calleeMsg,msg,iframe,id){
+		id = id || iframe.id;
+
 		if(iframe && iframe.contentWindow){
-			log('[' + calleeMsg + '] Sending msg to iframe ('+msg+')');
-			iframe.contentWindow.postMessage( msgId + msg, settings[id || iframe.id].targetOrigin );
+			log('[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+')');
+			iframe.contentWindow.postMessage( msgId + msg, settings[id].targetOrigin );
 		} else {
 			warn('[' + calleeMsg + '] IFrame not found');
 			if(settings[id]) {
