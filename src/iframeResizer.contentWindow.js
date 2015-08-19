@@ -66,13 +66,17 @@
 				previous = getNow();
 				timeout = null;
 				result = func.apply(context, args);
-				if (!timeout) context = args = null;
+				if (!timeout) {
+					context = args = null;
+				}
 			};
 
 		return function() {
 			var now = getNow();
 
-			if (!previous) previous = now;
+			if (!previous) {
+				previous = now;
+			}
 
 			var remaining = throttledTimer - (now - previous);
 
@@ -84,12 +88,18 @@
 					clearTimeout(timeout);
 					timeout = null;
 				}
+
 				previous = now;
 				result = func.apply(context, args);
-				if (!timeout) context = args = null;
+
+				if (!timeout) {
+					context = args = null;
+				}
+
 			} else if (!timeout) {
 				timeout = setTimeout(later, remaining);
 			}
+
 			return result;
 		};
 	}
@@ -725,7 +735,6 @@
 	var sizeIFrameThrottled = throttle(sizeIFrame);
 
 	function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
-
 		function recordTrigger(){
 			if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
 				log( 'Trigger event: ' + triggerEventDesc );
