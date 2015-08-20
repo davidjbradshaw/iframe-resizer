@@ -484,9 +484,12 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 <![endif]-->
 ```
 
+
 ## Upgrading to version 3
 
 The requirements for IE8 support in version 3 have changed from version 2. If you still require IE8 support than you will need to ensure you include the new ie8.polyfil.js file, as outlined above.
+
+The parentIFrame methods object in the iFrame is now always available and the `enablePublicMethods` option has been removed. The `enableInPageLinks` option has been rename to `inPageLinks`.
 
 
 ## Version History
