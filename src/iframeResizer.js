@@ -371,6 +371,12 @@
 			return retBool;
 		}
 
+		function iFrameReadyMsgReceived(){
+			for (var iframeId in settings){
+				trigger('iFrame requested init',createOutgoingMsg(iframeId),document.getElementById(iframeId),iframeId);
+			}
+		}
+
 		function firstRun() {
 			settings[iframeId].firstRun = false;
 
@@ -398,7 +404,9 @@
 			messageData = {},
 			iframeId = null;
 
-		if (isMessageForUs()){
+		if('[iFrameResizerChild]Ready' === msg){
+			iFrameReadyMsgReceived();
+		} else if (isMessageForUs()){
 			messageData = processMsg();
 			iframeId    = messageData.id;
 
@@ -495,11 +503,29 @@
 			log('[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+')');
 			iframe.contentWindow.postMessage( msgId + msg, settings[id].targetOrigin );
 		} else {
-			warn('[' + calleeMsg + '] IFrame not found');
+			warn('[' + calleeMsg + '] IFrame('+id+') not found');
 			if(settings[id]) {
 				delete settings[id];
 			}
 		}
+	}
+
+	function createOutgoingMsg(iframeId){
+		return iframeId +
+			':' + settings[iframeId].bodyMarginV1 +
+			':' + settings[iframeId].sizeWidth +
+			':' + settings[iframeId].log +
+			':' + settings[iframeId].interval +
+			':' + settings[iframeId].enablePublicMethods +
+			':' + settings[iframeId].autoResize +
+			':' + settings[iframeId].bodyMargin +
+			':' + settings[iframeId].heightCalculationMethod +
+			':' + settings[iframeId].bodyBackground +
+			':' + settings[iframeId].bodyPadding +
+			':' + settings[iframeId].tolerance +
+			':' + settings[iframeId].inPageLinks +
+			':' + settings[iframeId].resizeFrom +
+			':' + settings[iframeId].widthCalculationMethod;
 	}
 
 
@@ -542,24 +568,6 @@
 				settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin;
 				settings[iframeId].bodyMargin   = '' + settings[iframeId].bodyMargin + 'px';
 			}
-		}
-
-		function createOutgoingMsg(){
-			return iframeId +
-				':' + settings[iframeId].bodyMarginV1 +
-				':' + settings[iframeId].sizeWidth +
-				':' + settings[iframeId].log +
-				':' + settings[iframeId].interval +
-				':' + settings[iframeId].enablePublicMethods +
-				':' + settings[iframeId].autoResize +
-				':' + settings[iframeId].bodyMargin +
-				':' + settings[iframeId].heightCalculationMethod +
-				':' + settings[iframeId].bodyBackground +
-				':' + settings[iframeId].bodyPadding +
-				':' + settings[iframeId].tolerance +
-				':' + settings[iframeId].inPageLinks +
-				':' + settings[iframeId].resizeFrom +
-				':' + settings[iframeId].widthCalculationMethod;
 		}
 
 		function checkReset(){
@@ -635,7 +643,7 @@
 			setScrolling();
 			setLimits();
 			setupBodyMarginValues();
-			init(createOutgoingMsg());
+			init(createOutgoingMsg(iframeId));
 		} else {
 			warn(' Ignored iFrame, already setup.');
 		}
@@ -713,7 +721,7 @@
 			function resize(){
 				sendTriggerMsg('Tab Visable','resize');
 			}
-			
+
 			if('hidden' !== document.visibilityState) {
 				log(' Trigger event: Visiblity change');
 				throttle(resize,16);

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<style>
+			*, *:before, *:after {box-model: border-box;}
+			a { float:right; margin-left:10px;}
+
+			h2 {margin-top: 0;}
+		</style>
+	</head>
+	<body>
+		<h2>Late load JS test</h2>
+		<p>Load JS with require after load event has fired.</p>
+		<div style="margin:20px;">
+		</div>
+
+		<script src="jquery.js"></script>
+		<script>
+			$(document).ready(function(){
+				setTimeout(function(){
+					console.log('Load Script');
+					$.getScript('../../js/iframeResizer.contentWindow.min.js');
+				},500);
+			});
+		</script>
+
+	</body>
+</html>

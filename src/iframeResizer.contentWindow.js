@@ -900,6 +900,15 @@
 		}
 	}
 
+	//Normally the parent kicks things off when it detects the iFrame has loaded.
+	//If this script is async-loaded, then tell parent page to retry init.
+	function chkLateLoaded(){
+		if('loading' !== document.readyState){
+			window.parent.postMessage('[iFrameResizerChild]Ready','*');
+		}
+	}
+
 	addEventListener(window, 'message', receiver);
+	chkLateLoaded();
 
 })(window || {});
