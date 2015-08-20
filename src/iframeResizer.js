@@ -633,7 +633,7 @@
 		}
 
 		function beenHere(){
-			return (iframeId in settings);
+			return (iframeId in settings && 'iFrameResizer' in iframe);
 		}
 
 		var iframeId = ensureHasId(iframe.id);
