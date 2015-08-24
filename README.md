@@ -22,7 +22,7 @@ This library enables the automatic resizing of the height and width of both same
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
-iFrameResize( [{options}], [css selector] || [iframe] );
+var iframes = iFrameResize( [{options}], [css selector] || [iframe] );
 ```
 
 or via **jQuery**. (See [notes](#browser-compatibility) below for using native version with IE8).
