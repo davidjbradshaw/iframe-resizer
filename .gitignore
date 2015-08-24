@@ -4,3 +4,4 @@ bin
 example/test.html
 test/*.off
 npm-debug.log
+bower_components
