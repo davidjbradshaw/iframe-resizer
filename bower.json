@@ -6,7 +6,10 @@
     "David J. Bradshaw <dave@bradshaw.net>"
   ],
   "description": "Responsively keep same and cross domain iFrames sized to their content with support for window/content resizing, multiple and nested iFrames. (Dependacy free and works with IE8+)",
-  "main": ["src/iframeResizer.js", "src/iframeResizer.contentWindow.js"],
+  "main": [
+    "src/iframeResizer.js",
+    "src/iframeResizer.contentWindow.js"
+  ],
   "keywords": [
     "CrossDomain",
     "Cross-Domain",
@@ -37,5 +40,10 @@
     "*.md",
     "*.json"
   ],
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "jquery": "~2.1.4",
+    "jasmine-jquery": "~2.1.0",
+    "karma": "~0.4.6"
+  }
 }
