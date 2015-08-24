@@ -119,16 +119,6 @@
 			syncResize(resize,messageData,'resetPage');
 		}
 
-		function closeIFrame(iframe){
-			var iframeId = iframe.id;
-
-			log(' Removing iFrame: '+iframeId);
-			iframe.parentNode.removeChild(iframe);
-			settings[iframeId].closedCallback(iframeId);
-			delete settings[iframeId];
-			log(' --');
-		}
-
 		function processMsg(){
 			var data = msg.substr(msgIdLen).split(':');
 
@@ -379,24 +369,6 @@
 
 		function firstRun() {
 			settings[iframeId].firstRun = false;
-
-			if(Function.prototype.bind){ //Ignore unpolyfilled IE8.
-				settings[iframeId].iframe.iFrameResizer = {
-
-					close        : closeIFrame.bind(null,settings[iframeId].iframe),
-
-					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
-
-					moveToAnchor : function(anchor){
-						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe,iframeId);
-					},
-
-					sendMessage  : function(message){
-						message = JSON.stringify(message);
-						trigger('Send Message','message:'+message, settings[iframeId].iframe,iframeId);
-					}
-				};
-			}
 		}
 
 		var
@@ -424,6 +396,16 @@
 
 	}
 
+
+	function closeIFrame(iframe){
+		var iframeId = iframe.id;
+
+		log(' Removing iFrame: '+iframeId);
+		iframe.parentNode.removeChild(iframe);
+		settings[iframeId].closedCallback(iframeId);
+		delete settings[iframeId];
+		log(' --');
+	}
 
 	function getPagePosition (){
 		if(null === pagePosition){
@@ -528,7 +510,6 @@
 			':' + settings[iframeId].widthCalculationMethod;
 	}
 
-
 	function setupIFrame(iframe,options){
 		function setLimits(){
 			function addStyle(style){
@@ -583,6 +564,25 @@
 			}
 		}
 
+		function setupIFrameObject(){
+			if(Function.prototype.bind){ //Ignore unpolyfilled IE8.
+				settings[iframeId].iframe.iFrameResizer = {
+
+					close        : closeIFrame.bind(null,settings[iframeId].iframe),
+
+					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
+
+					moveToAnchor : function(anchor){
+						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe,iframeId);
+					},
+
+					sendMessage  : function(message){
+						message = JSON.stringify(message);
+						trigger('Send Message','message:'+message, settings[iframeId].iframe,iframeId);
+					}
+				};
+			}
+		}
 
 		//We have to call trigger twice, as we can not be sure if all
 		//iframes have completed loading when this code runs. The
@@ -644,6 +644,7 @@
 			setLimits();
 			setupBodyMarginValues();
 			init(createOutgoingMsg(iframeId));
+			setupIFrameObject();
 		} else {
 			warn(' Ignored iFrame, already setup.');
 		}
@@ -761,8 +762,11 @@
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
 				setupIFrame(element, options);
+				iFrames.push(element);
 			}
 		}
+
+		var iFrames = [];
 
 		setupRequestAnimationFrame();
 		setupEventListeners();
@@ -782,6 +786,8 @@
 			default:
 				throw new TypeError('Unexpected data type ('+typeof(target)+').');
 			}
+
+			return iFrames;
 		};
 	}
 
