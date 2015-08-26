@@ -9,6 +9,7 @@
  * Contributor: Ian Caunce - ian@hallnet.co.uk
  */
 
+
 ;(function(window) {
 	'use strict';
 
@@ -37,7 +38,6 @@
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
 		targetOriginDefault   = '*',
-		target                = window.parent,
 		tolerance             = 0,
 		triggerLocked         = false,
 		triggerLockedTimer    = null,
@@ -45,7 +45,8 @@
 		width                 = 1,
 		widthCalcModeDefault  = 'scroll',
 		widthCalcMode         = widthCalcModeDefault,
-		messageCallback       = function(){warn('MessageCallback function not defined');};
+		messageCallback       = function(){warn('MessageCallback function not defined');},
+		readyCallback         = function(){};
 
 
 	function addEventListener(el,evt,func){
@@ -141,6 +142,7 @@
 		startEventListeners();
 		inPageLinks = setupInPageLinks();
 		sendSize('init','Init message from host page');
+		readyCallback();
 	}
 
 	function readDataFromParent(){
@@ -173,8 +175,9 @@
 
 			log('Reading data from page: ' + JSON.stringify(data));
 
-			messageCallback     = (undefined !== data.messageCallback ) ? data.messageCallback : messageCallback;
-			targetOriginDefault = (undefined !== data.targetOrigin ) ? data.targetOrigin : targetOriginDefault;
+			messageCallback     = (undefined !== data.messageCallback )         ? data.messageCallback         : messageCallback;
+			readyCallback       = (undefined !== data.readyCallback )           ? data.readyCallback           : readyCallback;
+			targetOriginDefault = (undefined !== data.targetOrigin )            ? data.targetOrigin            : targetOriginDefault;
 			heightCalcMode      = (undefined !== data.heightCalculationMethod ) ? data.heightCalculationMethod : heightCalcMode;
 			widthCalcMode       = (undefined !== data.widthCalculationMethod )  ? data.widthCalculationMethod  : widthCalcMode;
 		}
@@ -799,7 +802,7 @@
 				message = myID + ':' +  size + ':' + triggerEvent + (undefined !== msg ? ':' + msg : '');
 
 			log('Sending message to host page (' + message + ')');
-			target.postMessage( msgID + message, targetOrigin);
+			window.parent.postMessage( msgID + message, targetOrigin);
 		}
 
 		setTargetOrigin();
@@ -813,7 +816,6 @@
 
 		function initFromParent(){
 			initMsg = event.data;
-			target  = event.source;
 
 			init();
 			firstRun = false;

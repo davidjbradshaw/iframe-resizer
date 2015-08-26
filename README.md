@@ -277,6 +277,12 @@ This option allows you to restrict the domain of the parent page, to prevent oth
 
 Receive message posted from the parent page with the `iframe.iFrameResizer.sendMessage()` method (See below for details).
 
+### readyCallback
+
+    type: function()
+
+This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page. If you need to call any of the parentIFrame (See below) during page load, then they should be called from this callback.
+
 ### heightCalculationMethod / widthCalculationMethod
 
     default: null
@@ -448,17 +454,19 @@ iFrameResize({
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
 ### ParentIFrame not found errors
-The `parentIFrame` object is created once the iFrame has been initially resized. If you wish to use it during page load you will need to poll for it becoming available.
+The `parentIFrame` object is created once the iFrame has been initially resized. If you wish to use it during page load you will need call it from the readyCallback.
 
-```js
-if(top !== self) { // Check we are in an iFrame
-	var interval = setInterval(function(){
-		if ('parentIFrame' in window) {
-			clearInterval(interval);
-			...
+```html
+<script>
+	window.iFrameResizer = {
+		readyCallback: function(){
+			var myId = window.parentIFrame.getId();
+			console.log('The ID of the iFrame in the parent page is: '+myId);
 		}
-	},32);
-}
+	}
+</script>
+<script src="js/iframeresizer.contentwindow.js"></script>
+```
 ```
 
 ### PDF and OpenDocument files
@@ -494,7 +502,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.2.0 Host page log messages include ref to iFrame the are operating on. IFrameResizer object on iFrame is now created during setup, rather than waiting for init message to be returned from iFrame.
+* v3.2.0 Added readyCallback to iFrame. Host page log messages include ref to iFrame the are operating on. IFrameResizer object on iFrame is now created during setup, rather than waiting for init message to be returned from iFrame.
 * v3.1.0 [#101](https://github.com/davidjbradshaw/iframe-resizer/issues/101) Support async loading of iFrame script. [#239](https://github.com/davidjbradshaw/iframe-resizer/issues/239) Throttle size checking to once per screen refresh (16ms). Added support for hidden iFrames in FireFox. Improved handling of parent page events. [#236](https://github.com/davidjbradshaw/iframe-resizer/issues/236) Cope with iFrames that don't have a *src* value. [#242](https://github.com/davidjbradshaw/iframe-resizer/issues/242) Fix issue where iFrame is removed and then put back with same ID [[Alban Mouton](https://github.com/albanm)].
 * v3.0.0 Added *taggedElement* size calculation method. [#199](https://github.com/davidjbradshaw/iframe-resizer/issues/199) Added in page options to iFrame. [#70](https://github.com/davidjbradshaw/iframe-resizer/issues/70) Added width calculation method options. Added methods to bound iFrames to comunicate from parent to iFrame. Ignore calls to setup an already bound iFrame. Improved event handling. Refactored MutationObserver functions. Moved IE8 polyfil from docs to own JS file and added *Funtion.prototype.bind()*. Added detection for tab focus. Fixed bug with nested inPageLinks. Public methods in iFrame now always enabled and option removed. Renamed enableInPageLinks to inPageLinks. Added double iFrame example.
 * v2.8.10 Fixed bug with resizeFrom option not having default value in iFrame, if called from old version in parent page.
