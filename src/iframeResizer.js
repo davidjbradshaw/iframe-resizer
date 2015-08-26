@@ -85,7 +85,7 @@ window.__testHooks__.parent = {};
 		}
 
 		if (!(requestAnimationFrame)){
-			log(iframeId,'RequestAnimationFrame not supported');
+			log('setup','RequestAnimationFrame not supported');
 		}
 	}
 
@@ -124,7 +124,7 @@ window.__testHooks__.parent = {};
 		function resizeIFrame(){
 			function resize(){
 				setSize(messageData);
-				setPagePosition();
+				setPagePosition(iframeId);
 			}
 
 			ensureInRange('Height');
@@ -252,7 +252,7 @@ window.__testHooks__.parent = {};
 		function getElementPosition(target){
 			var iFramePosition = target.getBoundingClientRect();
 
-			getPagePosition();
+			getPagePosition(iframeId);
 
 			return {
 				x: parseInt(iFramePosition.left, 10) + parseInt(pagePosition.x, 10),
@@ -294,7 +294,7 @@ window.__testHooks__.parent = {};
 
 		function scrollTo(){
 			if (false !== settings[iframeId].scrollCallback(pagePosition)){
-				setPagePosition();
+				setPagePosition(iframeId);
 			}
 		}
 
@@ -426,7 +426,7 @@ window.__testHooks__.parent = {};
 		delete settings[iframeId];
 	}
 
-	function getPagePosition (){
+	function getPagePosition(iframeId){
 		if(null === pagePosition){
 			pagePosition = {
 				x: (window.pageXOffset !== undefined) ? window.pageXOffset : document.documentElement.scrollLeft,
@@ -436,7 +436,7 @@ window.__testHooks__.parent = {};
 		}
 	}
 
-	function setPagePosition(){
+	function setPagePosition(iframeId){
 		if(null !== pagePosition){
 			window.scrollTo(pagePosition.x,pagePosition.y);
 			log(iframeId,'Set page position: '+pagePosition.x+','+pagePosition.y);
@@ -450,8 +450,8 @@ window.__testHooks__.parent = {};
 			trigger('reset','reset',messageData.iframe,messageData.id);
 		}
 
-		log(iframeId,'Size reset requested by '+('init'===messageData.type?'host page':'iFrame'));
-		getPagePosition();
+		log(messageData.id,'Size reset requested by '+('init'===messageData.type?'host page':'iFrame'));
+		getPagePosition(messageData.id);
 		syncResize(reset,messageData,'init');
 	}
 
@@ -459,6 +459,7 @@ window.__testHooks__.parent = {};
 		function setDimension(dimension){
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
+				messageData.id,
 				' IFrame (' + iframeId +
 				') ' + dimension +
 				' set to ' + messageData[dimension] + 'px'
@@ -645,8 +646,7 @@ window.__testHooks__.parent = {};
 		}
 
 		function getTargetOrigin (remoteHost){
-			if ('' === remoteHost || 'file://' === remoteHost) remoteHost = '*';
-			return remoteHost;
+			return ('' === remoteHost || 'file://' === remoteHost) ? '*' : remoteHost;
 		}
 
 		function processOptions(options){
@@ -712,7 +712,7 @@ window.__testHooks__.parent = {};
 		}
 
 		function mutationObserved(mutations){
-			log(iframeId,'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type);
+			log('window','Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type);
 			debouce(checkIFrames,16);
 		}
 
@@ -745,7 +745,7 @@ window.__testHooks__.parent = {};
 				sendTriggerMsg('Window '+event,'resize');
 			}
 
-			log(iframeId,'Trigger event: '+event);
+			log('window','Trigger event: '+event);
 			debouce(resize,16);
 		}
 
@@ -755,7 +755,7 @@ window.__testHooks__.parent = {};
 			}
 
 			if('hidden' !== document.visibilityState) {
-				log(iframeId,'Trigger event: Visiblity change');
+				log('document','Trigger event: Visiblity change');
 				debouce(resize,16);
 			}
 		}
