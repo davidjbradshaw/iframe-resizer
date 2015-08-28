@@ -453,11 +453,10 @@
 	function setupMutationObserver(){
 		function addImageLoadListners(mutation) {
 			function addImageLoadListener(element){
-				var imageLoaded = sendSize.bind(null,'imageLoad','Image loaded',undefined,undefined);
-
-				if (isNotSet(element.height) || isNotSet(element.width)) {
-					log('Attach listerner to ' + element.src);
+				if (element.complete === false) {
+					log('Attach listener to ' + element.src);
 					element.addEventListener('load', imageLoaded, false);
+					element.addEventListener('error', imageLoaded, false);
 				}
 			}
 
@@ -471,11 +470,17 @@
 			}
 		}
 
+		function imageLoaded(event) {
+			event.target.removeEventListener('load', imageLoaded, false);
+			event.target.removeEventListener('error', imageLoaded, false);
+			sendSize('imageLoad','Image loaded: ' + event.target.src, undefined, undefined);
+		}
+
 		function mutationObserved(mutations) {
 			sendSize('mutationObserver','mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type);
 
 			//Deal with WebKit asyncing image loading when tags are injected into the page
-			addImageLoadListners(mutations[0]);
+			mutations.forEach(addImageLoadListners);
 		}
 
 		function createMutationObserver(){

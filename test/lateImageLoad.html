@@ -50,6 +50,30 @@
           }
         });
       });
+      
+      asyncTest( "iFrame late image load with other mutations", function() {
+
+        var callbackCounter = 0;
+
+        $('iframe').iFrameResize({
+          log:true,
+          sizeHeight:false,
+          sizeWidth:true,
+          interval:1,
+          resizedCallback:function(messageData){
+            switch  (''+(++callbackCounter)){
+              case '1':
+                sendMessage('imageAsSecondMutation');
+                break;
+              case '2':
+                break;
+              case '3':
+                ok( 'imageLoad' === messageData.type, 'type = imageLoad');
+                start();
+            }
+          }
+        });
+      });    
     }
 
     if (MutationObserver)
