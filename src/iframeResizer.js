@@ -331,9 +331,9 @@ window.__testHooks__.parent = {};
 		}
 
 		function callback(func,val){
-			//if( 'function' === typeof func){
+			if( 'function' === typeof func){
 				func(val);
-			//}
+			}
 		}
 
 		function actionMsg(){
@@ -410,7 +410,7 @@ window.__testHooks__.parent = {};
 				}
 			}
 		} else {
-			log(iframeId,'Ignored: '+msg);
+			//log(iframeId,'Ignored: '+msg);
 		}
 
 	}
@@ -421,7 +421,9 @@ window.__testHooks__.parent = {};
 
 		log(iframeId,'Removing iFrame: '+iframeId);
 		iframe.parentNode.removeChild(iframe);
-		settings[iframeId].closedCallback(iframeId);
+		if(settings[iframeId]) {
+			settings[iframeId].closedCallback(iframeId);
+		}
 		log(iframeId,'--');
 		delete settings[iframeId];
 	}
