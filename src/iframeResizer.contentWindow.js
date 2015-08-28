@@ -850,7 +850,7 @@
 		}
 
 		function getData(){
-			return event.data.split(':')[1];
+			return event.data.substr(event.data.indexOf(':')+1);
 		}
 
 		function isMiddleTier(){
@@ -887,7 +887,7 @@
 				break;
 			default:
 				if (!isMiddleTier() && !isInitMsg()){
-					warn('Unexpected message ('+event.data+')');
+					//warn('Unexpected message ('+event.data+')');
 				}
 			}
 		}
