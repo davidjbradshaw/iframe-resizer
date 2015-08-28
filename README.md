@@ -467,7 +467,6 @@ The `parentIFrame` object is created once the iFrame has been initially resized.
 </script>
 <script src="js/iframeresizer.contentwindow.js"></script>
 ```
-```
 
 ### PDF and OpenDocument files
 It is not possible to add the required JavaScript to PDF and ODF files. However, you can get around this limitation by using [ViewerJS](http://viewerjs.org/) to render these files inside a HTML page, that also contains the iFrame JavaScript file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)).
