@@ -124,7 +124,7 @@ window.__testHooks__.parent = {};
 		function resizeIFrame(){
 			function resize(){
 				setSize(messageData);
-				setPagePosition(iframeId);
+				if('resetPage' === messageData.type) setPagePosition(iframeId);
 			}
 
 			ensureInRange('Height');
@@ -289,7 +289,6 @@ window.__testHooks__.parent = {};
 			} else {
 				reposition();
 			}
-
 		}
 
 		function scrollTo(){
@@ -454,7 +453,7 @@ window.__testHooks__.parent = {};
 
 		log(messageData.id,'Size reset requested by '+('init'===messageData.type?'host page':'iFrame'));
 		getPagePosition(messageData.id);
-		syncResize(reset,messageData,'init');
+		syncResize(reset,messageData,'reset');
 	}
 
 	function setSize(messageData){
@@ -462,7 +461,7 @@ window.__testHooks__.parent = {};
 			messageData.iframe.style[dimension] = messageData[dimension] + 'px';
 			log(
 				messageData.id,
-				' IFrame (' + iframeId +
+				'IFrame (' + iframeId +
 				') ' + dimension +
 				' set to ' + messageData[dimension] + 'px'
 			);
