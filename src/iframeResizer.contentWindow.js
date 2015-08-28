@@ -454,7 +454,7 @@
 		function addImageLoadListners(mutation) {
 			function addImageLoadListener(element){
 				if (element.complete === false) {
-					log('Attach listener to ' + element.src);
+					log('Attach listeners to ' + element.src);
 					element.addEventListener('load', imageLoaded, false);
 					element.addEventListener('error', imageLoaded, false);
 				}
