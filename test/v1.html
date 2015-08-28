@@ -42,7 +42,6 @@
           enablePublicMethods:false,
           callback:function(){}
         };
-        
 
         function setupRAF(){
         var
@@ -146,12 +145,12 @@
             }
 
             function postMessageToIframe(){
-              var msg = iframe.id + ':' + settings.contentWindowBodyMargin + ':' + settings.doWidth + ':' + 
+              var msg = iframe.id + ':' + settings.contentWindowBodyMargin + ':' + settings.doWidth + ':' +
                   settings.log + ':' + settings.interval + ':' + settings.enablePublicMethods;
               log('[' + calleeMsg + '] Sending init msg to iframe ('+msg+')');
               iframe.contentWindow.postMessage( msgId + msg, '*' );
             }
-          
+
             ensureHasId();
             postMessageToIframe();
           }
@@ -184,7 +183,7 @@
         }
       });
     });
-   
+
  </script>
 </body>
 </html>

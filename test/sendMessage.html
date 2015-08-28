@@ -30,7 +30,6 @@
 
       iFrameResize({
         log:true,
-        enablePublicMethods:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive init message back from iFrame.' );
           sendMessage('chkSendMsg');
@@ -46,7 +45,6 @@
 
       iFrameResize({
         log:true,
-        enablePublicMethods:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive init message back from iFrame.' );
           sendMessage('chkSendObj');

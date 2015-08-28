@@ -10,7 +10,7 @@
   <div id="qunit-fixture">
 
     <div style="width:600px;">
-      <iframe id="parent" src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+      <iframe id="parentPage" src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
     </div>
 
   </div>
@@ -30,7 +30,6 @@
 
       $('iframe').iFrameResize({
         log:true,
-        enablePublicMethods:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive init message back from iFrame.' );
           sendMessage('nested');

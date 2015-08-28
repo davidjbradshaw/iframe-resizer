@@ -19,9 +19,9 @@
   <script src="../src/iframeResizer.js"></script>
   <script src="../js/ie8.polyfils.min.js"></script>
   <script>
-  
+
     'use strict';
-    var recievedIframeIds = [];
+    var receivedIframeIds = [];
     asyncTest( "postMessage Response", function() {
       iFrameResize({
         log:true,
@@ -29,17 +29,17 @@
         heightCalculationMethod:'max',
         initCallback:function(iframe){
           ok( true, 'Receive init message back from iFrame.' );
-          recievedIframeIds.push(iframe.id);
-          if (recievedIframeIds.length === 2) {
-            ok( recievedIframeIds.indexOf('iFrameResizer0') > -1, 'iFrame id = iFrameResizer0 is present.' )
-            ok( recievedIframeIds.indexOf('iFrameResizer1') > -1, 'iFrame id = iFrameResizer1 is present.' )
+          receivedIframeIds.push(iframe.id);
+          if (receivedIframeIds.length === 2) {
+            ok( receivedIframeIds.indexOf('iFrameResizer0') > -1, 'iFrame id = iFrameResizer0 is present.' )
+            ok( receivedIframeIds.indexOf('iFrameResizer1') > -1, 'iFrame id = iFrameResizer1 is present.' )
           } else {
             start();
           }
         }
       });
     });
-    
+
   </script>
 </body>
 </html>

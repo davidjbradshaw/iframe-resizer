@@ -41,14 +41,13 @@
 
     for (var i=0; i !== margins.length; i++){
       asyncTest( "Margin " + margins[i], function() {
-        var 
+        var
           height = 0,
           i      = counter(), //counteract async
           margin = margins[i];
 
         iFrameResize({
           log:true,
-          enablePublicMethods:true,
           bodyMargin:margin,
           resizedCallback:function(messageData){
             ok( true, 'Receive message back from iFrame.' );
@@ -56,7 +55,7 @@
             sendMessage('chkHeight');
           },
           messageCallback:function(messageData){
-            var 
+            var
               marginCheck = 2 *parseInt(margin,10),
               bodyHeight  = parseInt(messageData.message,10);
 
