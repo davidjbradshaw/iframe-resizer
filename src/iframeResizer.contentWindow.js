@@ -19,6 +19,7 @@
 		bodyBackground        = '',
 		bodyMargin            = 0,
 		bodyMarginStr         = '',
+		bodyObserver          = null,
 		bodyPadding           = '',
 		calculateWidth        = false,
 		doubleEventList       = {'resize':1,'click':1},
@@ -35,8 +36,10 @@
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
 		myID                  = '',
+		observer              = null,
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
+		sendPermit            = true,
 		targetOriginDefault   = '*',
 		tolerance             = 0,
 		triggerLocked         = false,
@@ -55,6 +58,18 @@
 		} else if ('attachEvent' in window){ //IE
 			el.attachEvent('on'+evt,func);
 		}
+	}
+
+	function removeEventListener(el,evt,func){
+		if ('removeEventListener' in window){
+			el.removeEventListener(evt,func, false);
+		} else if ('detachEvent' in window){ //IE
+			el.detachEvent('on'+evt,func);
+		}
+	}
+
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
 	//Based on underscore.js
@@ -219,37 +234,42 @@
 	}
 
 
-	function addTriggerEvent(options){
-		function addListener(eventName){
-			function handleEvent(){
-				sendSize(options.eventName,options.eventType);
-			}
-
-			addEventListener(window,eventName,handleEvent);
+	function manageTriggerEvent(options){
+		function handleEvent(){
+			sendSize(options.eventName,options.eventType);
 		}
+
+		var listener = {
+			add:    function(eventName){
+				addEventListener(window,eventName,handleEvent);
+			},
+			remove: function(eventName){
+				removeEventListener(window,eventName,handleEvent);
+			}
+		};
 
 		if(options.eventNames && Array.prototype.map){
 			options.eventName = options.eventNames[0];
-			options.eventNames.map(addListener);
+			options.eventNames.map(listener[options.method]);
 		} else {
-			addListener(options.eventName);
+			listener[options.method](options.eventName);
 		}
 
-		log('Added event listener: ' + options.eventType);
+		log(capitalizeFirstLetter(options.method) + ' event listener: ' + options.eventType);
 	}
 
-	function initEventListeners(){
-		addTriggerEvent({ eventType: 'Animation Start',           eventNames: ['animationstart','webkitAnimationStart'] });
-		addTriggerEvent({ eventType: 'Animation Iteration',       eventNames: ['animationiteration','webkitAnimationIteration'] });
-		addTriggerEvent({ eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
-		addTriggerEvent({ eventType: 'Orientation Change',        eventName:  'orientationchange' });
-		addTriggerEvent({ eventType: 'Input',                     eventName:  'input' });
-		addTriggerEvent({ eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
-		addTriggerEvent({ eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
-		addTriggerEvent({ eventType: 'Mouse Up',                  eventName:  'mouseup' });
-		addTriggerEvent({ eventType: 'Mouse Down',                eventName:  'mousedown' });
+	function manageEventListeners(method){
+		manageTriggerEvent({method:method, eventType: 'Animation Start',           eventNames: ['animationstart','webkitAnimationStart'] });
+		manageTriggerEvent({method:method, eventType: 'Animation Iteration',       eventNames: ['animationiteration','webkitAnimationIteration'] });
+		manageTriggerEvent({method:method, eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
+		manageTriggerEvent({method:method, eventType: 'Orientation Change',        eventName:  'orientationchange' });
+		manageTriggerEvent({method:method, eventType: 'Input',                     eventName:  'input' });
+		manageTriggerEvent({method:method, eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
+		manageTriggerEvent({method:method, eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
+		manageTriggerEvent({method:method, eventType: 'Mouse Up',                  eventName:  'mouseup' });
+		manageTriggerEvent({method:method, eventType: 'Mouse Down',                eventName:  'mousedown' });
 		if('child' === resizeFrom){
-			addTriggerEvent({ eventType: 'IFrame Resized',        eventName:  'resize' });
+			manageTriggerEvent({method:method, eventType: 'IFrame Resized',        eventName:  'resize' });
 		}
 	}
 
@@ -273,12 +293,35 @@
 
 	function startEventListeners(){
 		if ( true === autoResize ) {
-			initEventListeners();
+			manageEventListeners('add');
 			setupMutationObserver();
 		}
 		else {
 			log('Auto Resize disabled');
 		}
+	}
+
+	function stopMsgsToParent(){
+		log('Disable outgoing messages');
+		sendPermit = false;
+	}
+
+	function removeMsgListener(){
+		log('Remove event listener: Message');
+		removeEventListener(window, 'message', receiver);
+	}
+
+	function disconnectMutationObserver(){
+		if ('disconnect' in bodyObserver){
+			bodyObserver.disconnect();
+		}
+	}
+
+	function teardown(){
+		stopMsgsToParent();
+		removeMsgListener();
+		manageEventListeners('remove');
+		disconnectMutationObserver();
 	}
 
 	function injectClearFixIntoBodyElement(){
@@ -388,6 +431,7 @@
 		window.parentIFrame = {
 			close: function closeF(){
 				sendMsg(0,0,'close');
+				teardown();
 			},
 
 			getId: function getIdF(){
@@ -446,17 +490,14 @@
 		}
 	}
 
-	function isNotSet(item){
-		return undefined === item || 0 === item;
-	}
-
-	function setupMutationObserver(){
+	function setupBodyMutationObserver(){
 		function addImageLoadListners(mutation) {
 			function addImageLoadListener(element){
-				if (element.complete === false) {
+				if (false === element.complete) {
 					log('Attach listeners to ' + element.src);
 					element.addEventListener('load', imageLoaded, false);
-					element.addEventListener('error', imageLoaded, false);
+					element.addEventListener('error', imageError, false);
+					elements.push(element);
 				}
 			}
 
@@ -470,10 +511,28 @@
 			}
 		}
 
+		function removeFromArray(element){
+			elements.splice(elements.indexOf(element),1);
+		}
+
+		function removeImageLoadListener(element){
+			log('Remove listeners from ' + element.src);
+			element.removeEventListener('load', imageLoaded, false);
+			element.removeEventListener('error', imageError, false);
+			removeFromArray(element);
+		}
+
+		function imageEventTriggered(event,type,typeDesc){
+			removeImageLoadListener(event.target);
+			sendSize(type, typeDesc + ': ' + event.target.src, undefined, undefined);
+		}
+
 		function imageLoaded(event) {
-			event.target.removeEventListener('load', imageLoaded, false);
-			event.target.removeEventListener('error', imageLoaded, false);
-			sendSize('imageLoad','Image loaded: ' + event.target.src, undefined, undefined);
+			imageEventTriggered(event,'imageLoad','Image loaded');
+		}
+
+		function imageError(event) {
+			imageEventTriggered(event,'imageLoadFailed','Image load failed');
 		}
 
 		function mutationObserved(mutations) {
@@ -494,26 +553,42 @@
 					characterDataOldValue : false,
 					childList             : true,
 					subtree               : true
-				},
+				};
 
-				observer = new MutationObserver(mutationObserved);
+			observer = new MutationObserver(mutationObserved);
 
 			log('Enable MutationObserver');
 			observer.observe(target, config);
+
+			return observer;
 		}
 
 		var
-			forceIntervalTimer = 0 > interval,
-			MutationObserver   = window.MutationObserver || window.WebKitMutationObserver;
+			elements         = [],
+			MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+			observer         = createMutationObserver();
 
-		if (MutationObserver){
+		return {
+			disconnect: function (){
+				if ('disconnect' in observer){
+					log('Disconnect MutationObserver');
+					observer.disconnect();
+					elements.forEach(removeImageLoadListener);
+				}
+			}
+		};
+	}
+
+	function setupMutationObserver(){
+		var	forceIntervalTimer = 0 > interval;
+
+		if (window.MutationObserver || window.WebKitMutationObserver){
 			if (forceIntervalTimer) {
 				initInterval();
 			} else {
-				createMutationObserver();
+				bodyObserver = setupBodyMutationObserver();
 			}
-		}
-		else {
+		} else {
 			warn('MutationObserver not supported in this browser!');
 			initInterval();
 		}
@@ -810,8 +885,10 @@
 			window.parent.postMessage( msgID + message, targetOrigin);
 		}
 
-		setTargetOrigin();
-		sendToParent();
+		if(true === sendPermit){
+			setTargetOrigin();
+			sendToParent();
+		}
 	}
 
 	function receiver(event) {

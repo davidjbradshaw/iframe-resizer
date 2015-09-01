@@ -1,20 +1,20 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<meta charset="utf-8"> 
-		<title>iFrame message passing test</title> 
-		<meta name="description" content="iFrame message passing test"> 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
 		<script src="jquery.js"></script>
 		<style>
 			a { float:right; }
 		</style>
-	</head> 
-	<body> 
+	</head>
+	<body>
 
-		<b>iFrame</b> 
+		<b>iFrame</b>
 
 		<div>Some content to be replaced</div>
-		
+
 		<p>
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		</p>
@@ -89,7 +89,7 @@
 						}
 
 						function callMethod(methodName,val1,val2){
-							if ('parentIFrame' in window) 
+							if ('parentIFrame' in window)
 									window.parentIFrame[methodName](val1,val2);
 								else
 									warn('window.parentIFrame methods not enabled.')
@@ -103,7 +103,10 @@
 								setInterval(function(){changeContent();},2);
 								break;
 							case 'close':
-								callMethod('close');
+								init('imageAsSecondMutation');
+								setTimeout(function(){
+									callMethod('close');
+								},2000);
 								break;
 							case 'pageChange':
 								location.href = '../../example/frame.hover.html';
@@ -162,7 +165,8 @@
 							case 'imageAsSecondMutation':
 								$('div').html('How now brown cow');
 								$('p').html('<img src="djb.jpg">');
-								break;								
+								$('b').html('<img src="djb2.jpg">');
+								break;
 						}
 
 					}

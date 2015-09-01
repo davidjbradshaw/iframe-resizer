@@ -31,7 +31,7 @@
         log:true,
         doWidth:true,
         enablePublicMethods:true,
-        resizedCallback:function(messageData){
+        initCallback:function(){
             sendMessage('close');
         },
         closedCallback:function(){
