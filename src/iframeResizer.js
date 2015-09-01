@@ -234,7 +234,7 @@ window.__testHooks__.parent = {};
 
 		function forwardMsgFromIFrame(msgBody){
 			log(iframeId,'MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
-			settings[iframeId].messageCallback({
+			callback('messageCallback',{
 				iframe: messageData.iframe,
 				message: JSON.parse(msgBody)
 			});
@@ -292,7 +292,7 @@ window.__testHooks__.parent = {};
 		}
 
 		function scrollTo(){
-			if (false !== settings[iframeId].scrollCallback(pagePosition)){
+			if (false !== callback('scrollCallback',pagePosition)){
 				setPagePosition(iframeId);
 			} else {
 				unsetPagePosition();
@@ -331,10 +331,8 @@ window.__testHooks__.parent = {};
 			}
 		}
 
-		function callback(func,val){
-			if( 'function' === typeof func){
-				func(val);
-			}
+		function callback(funcName,val){
+			chkCallback(iframeId,funcName,val);
 		}
 
 		function actionMsg(){
@@ -362,12 +360,12 @@ window.__testHooks__.parent = {};
 				break;
 			case 'init':
 				resizeIFrame();
-				callback(settings[iframeId].initCallback,messageData.iframe);
-				callback(settings[iframeId].resizedCallback,messageData);
+				callback('initCallback',messageData.iframe);
+				callback('resizedCallback',messageData);
 				break;
 			default:
 				resizeIFrame();
-				callback(settings[iframeId].resizedCallback,messageData);
+				callback('resizedCallback',messageData);
 			}
 		}
 
@@ -417,14 +415,30 @@ window.__testHooks__.parent = {};
 	}
 
 
+	function chkCallback(iframeId,funcName,val){
+		var
+			func = null,
+			retVal = null;
+
+		if(settings[iframeId]){
+			func = settings[iframeId][funcName];
+
+			if( 'function' === typeof func){
+				retVal = func(val);
+			} else {
+				warn(funcName+' not a function');
+			}
+		}
+
+		return retVal;
+	}
+
 	function closeIFrame(iframe){
 		var iframeId = iframe.id;
 
 		log(iframeId,'Removing iFrame: '+iframeId);
 		iframe.parentNode.removeChild(iframe);
-		if(settings[iframeId]) {
-			settings[iframeId].closedCallback(iframeId);
-		}
+		chkCallback(iframeId,'closedCallback',iframeId);
 		log(iframeId,'--');
 		delete settings[iframeId];
 	}
