@@ -294,6 +294,8 @@ window.__testHooks__.parent = {};
 		function scrollTo(){
 			if (false !== settings[iframeId].scrollCallback(pagePosition)){
 				setPagePosition(iframeId);
+			} else {
+				unsetPagePosition();
 			}
 		}
 
@@ -441,8 +443,12 @@ window.__testHooks__.parent = {};
 		if(null !== pagePosition){
 			window.scrollTo(pagePosition.x,pagePosition.y);
 			log(iframeId,'Set page position: '+pagePosition.x+','+pagePosition.y);
-			pagePosition = null;
+			unsetPagePosition();
 		}
+	}
+
+	function unsetPagePosition(){
+		pagePosition = null;
 	}
 
 	function resetIFrame(messageData){
