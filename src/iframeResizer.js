@@ -124,7 +124,7 @@ window.__testHooks__.parent = {};
 		function resizeIFrame(){
 			function resize(){
 				setSize(messageData);
-				if('resetPage' === messageData.type) setPagePosition(iframeId);
+				setPagePosition(iframeId);
 			}
 
 			ensureInRange('Height');
