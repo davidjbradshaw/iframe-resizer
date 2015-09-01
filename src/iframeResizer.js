@@ -332,7 +332,7 @@ window.__testHooks__.parent = {};
 		}
 
 		function callback(funcName,val){
-			chkCallback(iframeId,funcName,val);
+			return chkCallback(iframeId,funcName,val);
 		}
 
 		function actionMsg(){
@@ -426,7 +426,7 @@ window.__testHooks__.parent = {};
 			if( 'function' === typeof func){
 				retVal = func(val);
 			} else {
-				warn(funcName+' not a function');
+				throw new TypeError(funcName+' on iFrame['+iframeId+'] is not a function');
 			}
 		}
 
