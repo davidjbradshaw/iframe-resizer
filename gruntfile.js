@@ -43,7 +43,7 @@ module.exports = function(grunt) {
       },
       travis:{
         singleRun: true,
-        browsers: ['Firefox']
+        browsers: ['PhantomJS']
       },
       single:{
         singleRun: true,
