@@ -9,14 +9,6 @@
  */
 
 
-// TEST-CODE-START //
-
-window.__testHooks__ = window.__testHooks__  || {};
-window.__testHooks__.parent = {};
-
-// TEST-CODE-END //
-
-
 ;(function(window) {
 	'use strict';
 

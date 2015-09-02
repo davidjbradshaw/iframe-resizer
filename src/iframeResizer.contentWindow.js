@@ -589,7 +589,7 @@
 				bodyObserver = setupBodyMutationObserver();
 			}
 		} else {
-			warn('MutationObserver not supported in this browser!');
+			log('MutationObserver not supported in this browser!');
 			initInterval();
 		}
 	}
