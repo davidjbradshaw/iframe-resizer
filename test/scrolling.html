@@ -24,7 +24,7 @@
 
     asyncTest( "scrolling not set", function() {
       $('iframe').iFrameResize({
-        log:true,
+        //log:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
           ok( 'hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.' );
@@ -36,7 +36,7 @@
 
     asyncTest( "scrolling = false", function() {
       $('iframe').iFrameResize({
-        log:true,
+        //log:true,
         scrolling:false,
         resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );
@@ -49,7 +49,7 @@
 
     asyncTest( "scrolling = true", function() {
       $('iframe').iFrameResize({
-        log:true,
+        //log:true,
         scrolling:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive message back from iFrame.' );

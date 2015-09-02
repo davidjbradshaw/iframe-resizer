@@ -32,7 +32,7 @@
         var callbackCounter = 0;
 
         $('iframe').iFrameResize({
-          log:true,
+          //log:true,
           sizeHeight:false,
           sizeWidth:true,
           interval:1,
@@ -50,13 +50,13 @@
           }
         });
       });
-      
+
       asyncTest( "iFrame late image load with other mutations", function() {
 
         var callbackCounter = 0;
 
         $('iframe').iFrameResize({
-          log:true,
+          //log:true,
           sizeHeight:false,
           sizeWidth:true,
           interval:1,
@@ -73,7 +73,7 @@
             }
           }
         });
-      });    
+      });
     }
 
     if (MutationObserver)

@@ -29,7 +29,7 @@
 		asyncTest( "Nested iFrame", function() {
 
       $('iframe').iFrameResize({
-        log:true,
+        //log:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive init message back from iFrame.' );
           sendMessage('nested');
