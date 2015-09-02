@@ -632,16 +632,26 @@
 		return parseInt(retVal,base);
 	}
 
+	function chkEventThottle(timer){
+		if(timer > throttledTimer/2){
+			throttledTimer = 2*timer;
+			log('Event throttle increased to ' + throttledTimer + 'ms');
+		}
+	}
+
 	//Idea from https://github.com/guardian/iframe-messenger
 	function getMaxElement(side,elements) {
 		var
 			elementsLength = elements.length,
+			elVal          = 0,
 			maxVal         = 0,
+			Side           = capitalizeFirstLetter(side),
 			timer          = getNow();
 
 		for (var i = 0; i < elementsLength; i++) {
-			if (elements[i].getBoundingClientRect()[side] > maxVal) {
-				maxVal = elements[i].getBoundingClientRect()[side];
+			elVal = elements[i].getBoundingClientRect()[side] + getComputedBodyStyle('margin'+Side);
+			if (elVal > maxVal) {
+				maxVal = elVal;
 			}
 		}
 
@@ -650,10 +660,7 @@
 		log('Parsed '+elementsLength+' HTML elements');
 		log('Element position calculated in ' + timer + 'ms');
 
-		if(timer > throttledTimer/2){
-			throttledTimer = 2*timer;
-			log('Event throttle increased to ' + throttledTimer + 'ms');
-		}
+		chkEventThottle(timer);
 
 		return maxVal;
 	}
