@@ -47,7 +47,7 @@ module.exports = function(grunt) {
       },
       single:{
         singleRun: true,
-        browsers: ['Chrome', 'Firefox', 'Safari' ]
+        browsers: ['Chrome', 'Firefox', 'Safari' , 'PhantomJS']
       }
     },
 
@@ -153,7 +153,7 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['notest','qunit']);
+  grunt.registerTask('default', ['notest','karma:single','qunit']);
   grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
   grunt.registerTask('test',    ['jshint','karma:single','qunit']);
   grunt.registerTask('travis',  ['jshint','karma:travis','qunit']);
