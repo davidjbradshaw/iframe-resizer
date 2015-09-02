@@ -100,15 +100,25 @@
 		return msgId + '[' + getMyID(iframeId) + ']';
 	}
 
+	function isLogEnabled(iframeId){
+		return settings[iframeId] ? settings[iframeId].log : logEnabled;
+	}
+
 	function log(iframeId,msg){
-		if ((settings[iframeId] ? settings[iframeId].log : logEnabled) && ('object' === typeof window.console)){
-			console.log(formatLogHeader(iframeId),msg);
-		}
+		output('log',iframeId,msg,isLogEnabled(iframeId));
+	}
+
+	function info(iframeId,msg){
+		output('info',iframeId,msg,isLogEnabled(iframeId));
 	}
 
 	function warn(iframeId,msg){
-		if ('object' === typeof window.console){
-			console.warn(formatLogHeader(iframeId),msg);
+		output('warn',iframeId,msg,true);
+	}
+
+	function output(type,iframeId,msg,enabled){
+		if (true === enabled && 'object' === typeof window.console){
+			console[type](formatLogHeader(iframeId),msg);
 		}
 	}
 
@@ -520,7 +530,7 @@
 		}
 
 		function iFrameNotFound(){
-			warn(id,'[' + calleeMsg + '] IFrame('+id+') not found');
+			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
 			if(settings[id]) {
 				delete settings[id];
 			}
