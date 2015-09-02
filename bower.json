@@ -41,9 +41,5 @@
     "*.json"
   ],
   "dependencies": {},
-  "devDependencies": {
-    "jquery": "~2.1.4",
-    "jasmine-jquery": "~2.1.0",
-    "karma": "~0.4.6"
-  }
+  "devDependencies": {}
 }

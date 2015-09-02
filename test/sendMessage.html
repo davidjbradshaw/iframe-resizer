@@ -29,7 +29,7 @@
     asyncTest( "sendMessage (string)", function() {
 
       iFrameResize({
-        log:true,
+        //log:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive init message back from iFrame.' );
           sendMessage('chkSendMsg');
@@ -44,7 +44,7 @@
     asyncTest( "sendMessage (object)", function() {
 
       iFrameResize({
-        log:true,
+        //log:true,
         resizedCallback:function(messageData){
           ok( true, 'Receive init message back from iFrame.' );
           sendMessage('chkSendObj');

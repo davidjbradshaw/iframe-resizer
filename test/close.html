@@ -28,10 +28,8 @@
       var callbackCounter = 0;
 
       $('iframe').iFrameResize({
-        log:true,
-        doWidth:true,
-        enablePublicMethods:true,
-        resizedCallback:function(messageData){
+        //log:true,
+        initCallback:function(){
             sendMessage('close');
         },
         closedCallback:function(){

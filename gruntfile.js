@@ -37,6 +37,20 @@ module.exports = function(grunt) {
       files: ['test/*.html']
     },
 
+    karma: {
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      travis:{
+        singleRun: true,
+        browsers: ['PhantomJS']
+      },
+      single:{
+        singleRun: true,
+        browsers: ['Chrome', 'Firefox', 'Safari' , 'PhantomJS']
+      }
+    },
+
     jshint: {
       options: {
           globals: {
@@ -139,9 +153,10 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['notest','qunit']);
+  grunt.registerTask('default', ['notest','karma:single','qunit']);
   grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
-  grunt.registerTask('test',    ['jshint','qunit']);
+  grunt.registerTask('test',    ['jshint','karma:single','qunit']);
+  grunt.registerTask('travis',  ['jshint','karma:travis','qunit']);
 
   grunt.registerTask('postBump',['uglify','bump-commit','shell']);
   grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);

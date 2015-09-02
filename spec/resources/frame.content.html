@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+		<meta charset="utf-8"> 
 		<title>iFrame message passing test</title>
 		<meta name="description" content="iFrame message passing test">
-		<script src="jquery.js"></script>
+		<script src="/base/bower_components/jquery/dist/jquery.js"></script>
 		<style>
 			a { float:right; }
 		</style>
@@ -12,8 +12,6 @@
 	<body>
 
 		<b>iFrame</b>
-
-		<div>Some content to be replaced</div>
 
 		<p>
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -89,27 +87,24 @@
 						}
 
 						function callMethod(methodName,val1,val2){
-							if ('parentIFrame' in window)
+							if ('parentIFrame' in window) 
 									window.parentIFrame[methodName](val1,val2);
 								else
 									warn('window.parentIFrame methods not enabled.')
 						}
 
 
-						//console.info(test);
+						console.info(test);
 
 						switch (test){
 							case 'changeContent':
 								setInterval(function(){changeContent();},2);
 								break;
 							case 'close':
-								init('imageAsSecondMutation');
-								setTimeout(function(){
-									callMethod('close');
-								},2000);
+								callMethod('close');
 								break;
 							case 'pageChange':
-								location.href = '../../example/frame.hover.html';
+								location.href = '/base/example/frame.hover.html';
 								break;
 							case 'nested':
 								location.href = 'frame.nested.html';
@@ -138,7 +133,7 @@
 								callMethod('sendMessage',document.body.offsetHeight);
 								break;
 							case 'chkBackground':
-								callMethod('sendMessage',document.body.style.background);
+								callMethod('sendMessage',document.body.style.backgroundColor);
 								break;
 							case 'chkSendMsg':
 								callMethod('sendMessage','message: test string');
@@ -162,11 +157,6 @@
 							case 'image':
 								$('p').html('<img src="djb.jpg">');
 								break;
-							case 'imageAsSecondMutation':
-								$('div').html('How now brown cow');
-								$('p').html('<img src="djb.jpg">');
-								$('b').html('<img src="djb2.jpg">');
-								break;
 						}
 
 					}
@@ -179,13 +169,9 @@
 					warn(e);
 				}
 
-
-
-
 			})();
 		</script>
 
-
-		<script type="text/javascript" src="../../js/iframeResizer.contentWindow.min.js"></script>
-	</body> 
+		<script type="text/javascript" src="/base/js/iframeResizer.contentWindow.min.js"></script>
+	</body>
 </html>

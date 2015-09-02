@@ -42,7 +42,7 @@
       $iframeFirst.after($injectedIframe);
       $.getScript(firstScriptSource, function(){
         iFrameResize({
-          log:true,
+          //log:true,
           bodyBackground:'wheat',
           heightCalculationMethod:'max',
           initCallback:function(iframe){
@@ -56,7 +56,7 @@
 
     asyncTest( "postMessage Response", function() {
       iFrameResize({
-        log:true,
+        //log:true,
         bodyBackground:'wheat',
         heightCalculationMethod:'max',
         initCallback:function(iframe){

@@ -9,14 +9,6 @@
  */
 
 
-// TEST-CODE-START //
-
-window.__testHooks__ = window.__testHooks__  || {};
-window.__testHooks__.parent = {};
-
-// TEST-CODE-END //
-
-
 ;(function(window) {
 	'use strict';
 
@@ -108,15 +100,25 @@ window.__testHooks__.parent = {};
 		return msgId + '[' + getMyID(iframeId) + ']';
 	}
 
+	function isLogEnabled(iframeId){
+		return settings[iframeId] ? settings[iframeId].log : logEnabled;
+	}
+
 	function log(iframeId,msg){
-		if ((settings[iframeId] ? settings[iframeId].log : logEnabled) && ('object' === typeof window.console)){
-			console.log(formatLogHeader(iframeId),msg);
-		}
+		output('log',iframeId,msg,isLogEnabled(iframeId));
+	}
+
+	function info(iframeId,msg){
+		output('info',iframeId,msg,isLogEnabled(iframeId));
 	}
 
 	function warn(iframeId,msg){
-		if ('object' === typeof window.console){
-			console.warn(formatLogHeader(iframeId),msg);
+		output('warn',iframeId,msg,true);
+	}
+
+	function output(type,iframeId,msg,enabled){
+		if (true === enabled && 'object' === typeof window.console){
+			console[type](formatLogHeader(iframeId),msg);
 		}
 	}
 
@@ -124,7 +126,7 @@ window.__testHooks__.parent = {};
 		function resizeIFrame(){
 			function resize(){
 				setSize(messageData);
-				if('resetPage' === messageData.type) setPagePosition(iframeId);
+				setPagePosition(iframeId);
 			}
 
 			ensureInRange('Height');
@@ -234,7 +236,7 @@ window.__testHooks__.parent = {};
 
 		function forwardMsgFromIFrame(msgBody){
 			log(iframeId,'MessageCallback passed: {iframe: '+ messageData.iframe.id + ', message: ' + msgBody + '}');
-			settings[iframeId].messageCallback({
+			callback('messageCallback',{
 				iframe: messageData.iframe,
 				message: JSON.parse(msgBody)
 			});
@@ -249,16 +251,16 @@ window.__testHooks__.parent = {};
 			return true;
 		}
 
-		function getElementPosition(target){
-			var iFramePosition = target.getBoundingClientRect();
+        function getElementPosition(target){
+            var iFramePosition = target.getBoundingClientRect();
 
-			getPagePosition(iframeId);
+            getPagePosition(iframeId);
 
-			return {
-				x: parseInt(iFramePosition.left, 10) + parseInt(pagePosition.x, 10),
-				y: parseInt(iFramePosition.top, 10)  + parseInt(pagePosition.y, 10)
-			};
-		}
+            return {
+                x: Math.floor( Number(iFramePosition.left) + Number(pagePosition.x) ),
+                y: Math.floor( Number(iFramePosition.top)  + Number(pagePosition.y) )
+            };
+        }
 
 		function scrollRequestFromChild(addOffset){
 			function reposition(){
@@ -292,8 +294,10 @@ window.__testHooks__.parent = {};
 		}
 
 		function scrollTo(){
-			if (false !== settings[iframeId].scrollCallback(pagePosition)){
+			if (false !== callback('scrollCallback',pagePosition)){
 				setPagePosition(iframeId);
+			} else {
+				unsetPagePosition();
 			}
 		}
 
@@ -329,10 +333,8 @@ window.__testHooks__.parent = {};
 			}
 		}
 
-		function callback(func,val){
-			if( 'function' === typeof func){
-				func(val);
-			}
+		function callback(funcName,val){
+			return chkCallback(iframeId,funcName,val);
 		}
 
 		function actionMsg(){
@@ -360,12 +362,12 @@ window.__testHooks__.parent = {};
 				break;
 			case 'init':
 				resizeIFrame();
-				callback(settings[iframeId].initCallback,messageData.iframe);
-				callback(settings[iframeId].resizedCallback,messageData);
+				callback('initCallback',messageData.iframe);
+				callback('resizedCallback',messageData);
 				break;
 			default:
 				resizeIFrame();
-				callback(settings[iframeId].resizedCallback,messageData);
+				callback('resizedCallback',messageData);
 			}
 		}
 
@@ -415,14 +417,30 @@ window.__testHooks__.parent = {};
 	}
 
 
+	function chkCallback(iframeId,funcName,val){
+		var
+			func = null,
+			retVal = null;
+
+		if(settings[iframeId]){
+			func = settings[iframeId][funcName];
+
+			if( 'function' === typeof func){
+				retVal = func(val);
+			} else {
+				throw new TypeError(funcName+' on iFrame['+iframeId+'] is not a function');
+			}
+		}
+
+		return retVal;
+	}
+
 	function closeIFrame(iframe){
 		var iframeId = iframe.id;
 
 		log(iframeId,'Removing iFrame: '+iframeId);
 		iframe.parentNode.removeChild(iframe);
-		if(settings[iframeId]) {
-			settings[iframeId].closedCallback(iframeId);
-		}
+		chkCallback(iframeId,'closedCallback',iframeId);
 		log(iframeId,'--');
 		delete settings[iframeId];
 	}
@@ -441,8 +459,12 @@ window.__testHooks__.parent = {};
 		if(null !== pagePosition){
 			window.scrollTo(pagePosition.x,pagePosition.y);
 			log(iframeId,'Set page position: '+pagePosition.x+','+pagePosition.y);
-			pagePosition = null;
+			unsetPagePosition();
 		}
+	}
+
+	function unsetPagePosition(){
+		pagePosition = null;
 	}
 
 	function resetIFrame(messageData){
@@ -508,7 +530,7 @@ window.__testHooks__.parent = {};
 		}
 
 		function iFrameNotFound(){
-			warn(id,'[' + calleeMsg + '] IFrame('+id+') not found');
+			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
 			if(settings[id]) {
 				delete settings[id];
 			}
