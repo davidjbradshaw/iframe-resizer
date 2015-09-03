@@ -59,6 +59,7 @@
 		};
 
 	function addEventListener(obj,evt,func){
+		/* istanbul ignore else */
 		if ('addEventListener' in window){
 			obj.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){//IE
@@ -154,6 +155,7 @@
 				dimension = Dimension.toLowerCase(),
 				size = Number(messageData[dimension]);
 
+			/* istanbul ignore if */
 			if (min>max){
 				throw new Error('Value for min'+Dimension+' can not be greater than max'+Dimension);
 			}
@@ -223,6 +225,7 @@
 			//the message format would break backwards compatibity.
 			var retCode = messageData.type in {'true':1,'false':1,'undefined':1};
 
+			/* istanbul ignore if */
 			if (retCode){
 				log(iframeId,'Ignoring init message from meta parent page');
 			}
@@ -425,6 +428,7 @@
 		if(settings[iframeId]){
 			func = settings[iframeId][funcName];
 
+			/* istanbul ignore else */
 			if( 'function' === typeof func){
 				retVal = func(val);
 			} else {
@@ -494,6 +498,7 @@
 			//So if we detect that set up an event to check for
 			//when iFrame becomes visible.
 
+			/* istanbul ignore if */
 			if (!hiddenCheckEnabled && '0' === messageData[dimension]){
 				hiddenCheckEnabled = true;
 				log(iframeId,'Hidden iFrame detected, creating visibility listener');
@@ -515,6 +520,7 @@
 	}
 
 	function syncResize(func,messageData,doNotSync){
+		/* istanbul ignore else */
 		if(doNotSync!==messageData.type && requestAnimationFrame){
 			log(messageData.id,'Requesting animation frame');
 			requestAnimationFrame(func);
@@ -529,6 +535,7 @@
 			iframe.contentWindow.postMessage( msgId + msg, target );
 		}
 
+		/* istanbul ignore next */
 		function iFrameNotFound(){
 			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
 			if(settings[id]) {
@@ -539,6 +546,7 @@
 		id = id || iframe.id;
 		var target = settings[id].targetOrigin;
 
+		/* istanbul ignore else */
 		if(iframe && 'contentWindow' in iframe){
 			postMessageToIFrame();
 		} else {
@@ -655,6 +663,7 @@
 		}
 
 		function checkOptions(options){
+			/* istanbul ignore if */
 			if ('object' !== typeof options){
 				throw new TypeError('Options is not an object.');
 			}
@@ -692,6 +701,7 @@
 
 		var iframeId = ensureHasId(iframe.id);
 
+		/* istanbul ignore else */
 		if (!beenHere()){
 			processOptions(options);
 			setScrolling();
@@ -717,6 +727,7 @@
 		return (null !== el.offsetParent);
 	}
 
+	/* istanbul ignore next */
 	function fixHiddenIFrames(){
 		function checkIFrames(){
 			function checkIFrame(settingId){
@@ -811,8 +822,10 @@
 	function factory(){
 		function init(options,element){
 			if(!element.tagName) {
+				/* istanbul ignore next */
 				throw new TypeError('Object is not a valid DOM element');
 			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
+				/* istanbul ignore next */
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
 			} else {
 				setupIFrame(element, options);
@@ -840,6 +853,7 @@
 				init(options,target);
 				break;
 			default:
+				/* istanbul ignore next */
 				throw new TypeError('Unexpected data type ('+typeof(target)+').');
 			}
 
@@ -857,6 +871,7 @@
 
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
+	/* istanbul ignore else */
 	if (typeof define === 'function' && define.amd) {
 		define([],factory);
 	} else if (typeof module === 'object' && typeof module.exports === 'object') { //Node for browserfy

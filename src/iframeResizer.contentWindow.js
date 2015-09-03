@@ -53,6 +53,7 @@
 
 
 	function addEventListener(el,evt,func){
+		/* istanbul ignore else */
 		if ('addEventListener' in window){
 			el.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){ //IE
@@ -61,6 +62,7 @@
 	}
 
 	function removeEventListener(el,evt,func){
+		/* istanbul ignore else */
 		if ('removeEventListener' in window){
 			el.removeEventListener(evt,func, false);
 		} else if ('detachEvent' in window){ //IE

@@ -26,7 +26,7 @@ function mockMsgFromIFrame(iframe,msg){
 }
 
 function mockInitFromParent(id,log){
-	mockPostMsg(id,'8:false:'+log+':32:true:true:null:max:wheat:null:0:false:parent:scroll');
+	mockPostMsg(id,'8:false:'+log+':32:true:true:null:max:wheat:null:0:true:child:scroll');
 }
 
 function spyOnPostMessage(target){

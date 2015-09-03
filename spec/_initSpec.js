@@ -11,6 +11,19 @@ define(['iframeResizer'], function(iFrameResize) {
 			iframe = iFrameResize({
 				log:LOG,
 				id:id+'-',
+				autoResize:false,
+				bodyMargin:1,
+				checkOrigin:false,
+				inPageLinks:true,
+				interval:0,
+				maxHeight:100,
+				minHeight:10,
+				maxWidth:100,
+				minWidth:10,
+				scrolling:true,
+				sizeHeight:false,
+				sizeWidth:true,
+				tolerance:1,
 				initCallback:function(){
 					setTimeout(done,1);
 				}
