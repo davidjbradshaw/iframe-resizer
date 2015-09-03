@@ -44,7 +44,11 @@ module.exports = function(grunt) {
       },
       travis:{
         singleRun: true,
-        browsers: ['PhantomJS']
+        browsers: ['PhantomJS'],
+        coverageReporter: {
+          type : 'lcov',
+          dir : 'coverageLcov/'
+        },
       },
       single:{
         singleRun: true,
@@ -55,7 +59,7 @@ module.exports = function(grunt) {
     coveralls: {
       options: {
           debug: true,
-          coverageDir: 'coverage',
+          coverageDir: 'coverageLcov',
           dryRun: false,
           force: true,
           recursive: true
