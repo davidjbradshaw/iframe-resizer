@@ -1,6 +1,6 @@
 define(['iframeResizer'], function(iFrameResize) {
 
-	describe('Send Message from Host Page', function() {
+	describe('Events', function() {
 		var iframe;
 		var log=LOG;
 		var testId = 'sendMessage';
@@ -16,7 +16,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('send message to iframe', function(done) {
 			var iframe1 = iFrameResize({
 				log:log,
-				id:testId,
+				id:testId
 			})[0];
 
 			spyOnIFramePostMessage(iframe1);
