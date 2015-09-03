@@ -25,7 +25,7 @@
 		resetRequiredMethods  = {max:1,scroll:1,bodyScroll:1,documentElementScroll:1},
 		settings              = {},
 		timer                 = null,
-		logId                = 'Host Page',
+		logId                 = 'Host Page',
 
 		defaults              = {
 			autoResize                : true,
@@ -544,7 +544,6 @@
 	}
 
 	function syncResize(func,messageData,doNotSync){
-		/* istanbul ignore else */
 		if(doNotSync!==messageData.type && requestAnimationFrame){
 			log(messageData.id,'Requesting animation frame');
 			requestAnimationFrame(func);
