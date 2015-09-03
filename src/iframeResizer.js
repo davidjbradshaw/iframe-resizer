@@ -27,7 +27,6 @@
 		timer                 = null,
 		logId                = 'Host Page',
 
-
 		defaults              = {
 			autoResize                : true,
 			bodyBackground            : null,
@@ -67,6 +66,7 @@
 		}
 	}
 
+	/* istanbul ignore next */
 	function setupRequestAnimationFrame(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
@@ -82,11 +82,12 @@
 		}
 	}
 
+	/* istanbul ignore next */
 	function getMyID(iframeId){
 		var retStr = 'Host page: '+iframeId;
 
 		if (window.top!==window.self){
-			if (window.parentIFrame){
+			if (window.parentIFrame && window.parentIFrame.getId){
 				retStr = window.parentIFrame.getId()+': '+iframeId;
 			} else {
 				retStr = 'Nested host page: '+iframeId;
@@ -96,27 +97,32 @@
 		return retStr;
 	}
 
-
+	/* istanbul ignore next */
 	function formatLogHeader(iframeId){
 		return msgId + '[' + getMyID(iframeId) + ']';
 	}
 
+	/* istanbul ignore next */
 	function isLogEnabled(iframeId){
 		return settings[iframeId] ? settings[iframeId].log : logEnabled;
 	}
 
+	/* istanbul ignore next */
 	function log(iframeId,msg){
 		output('log',iframeId,msg,isLogEnabled(iframeId));
 	}
 
+	/* istanbul ignore next */
 	function info(iframeId,msg){
 		output('info',iframeId,msg,isLogEnabled(iframeId));
 	}
 
+	/* istanbul ignore next */
 	function warn(iframeId,msg){
 		output('warn',iframeId,msg,true);
 	}
 
+	/* istanbul ignore next */
 	function output(type,iframeId,msg,enabled){
 		if (true === enabled && 'object' === typeof window.console){
 			console[type](formatLogHeader(iframeId),msg);
@@ -155,11 +161,6 @@
 				dimension = Dimension.toLowerCase(),
 				size = Number(messageData[dimension]);
 
-			/* istanbul ignore if */
-			if (min>max){
-				throw new Error('Value for min'+Dimension+' can not be greater than max'+Dimension);
-			}
-
 			log(iframeId,'Checking '+dimension+' is in range '+min+'-'+max);
 
 			if (size<min) {
@@ -179,14 +180,19 @@
 		function isMessageFromIFrame(){
 			function checkAllowedOrigin(){
 				function checkList(){
+					var
+						i = 0,
+						retCode = false;
+
 					log(iframeId,'Checking connection is from allowed list of origins: ' + checkOrigin);
-					var i;
-					for (i = 0; i < checkOrigin.length; i++) {
+
+					for (; i < checkOrigin.length; i++) {
 						if (checkOrigin[i] === origin) {
-							return true;
+							retCode = true;
+							break;
 						}
 					}
-					return false;
+					return retCode;
 				}
 
 				function checkSingle(){
@@ -202,15 +208,14 @@
 				origin      = event.origin,
 				checkOrigin = settings[iframeId].checkOrigin;
 
-			if (checkOrigin) {
-				if ((''+origin !== 'null') && !checkAllowedOrigin()) {
-					throw new Error(
-						'Unexpected message received from: ' + origin +
-						' for ' + messageData.iframe.id +
-						'. Message was: ' + event.data +
-						'. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.'
-					);
-				}
+			/* istanbul ignore if */
+			if (checkOrigin && (''+origin !== 'null') && !checkAllowedOrigin()) {
+				throw new Error(
+					'Unexpected message received from: ' + origin +
+					' for ' + messageData.iframe.id +
+					'. Message was: ' + event.data +
+					'. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.'
+				);
 			}
 
 			return true;
@@ -247,11 +252,14 @@
 		}
 
 		function checkIFrameExists(){
+			var retBool = true;
+
+			/* istanbul ignore if */
 			if (null === messageData.iframe) {
 				warn(iframeId,'IFrame ('+messageData.id+') not found');
-				return false;
+				retBool = false;
 			}
-			return true;
+			return retBool;
 		}
 
 		function getElementPosition(target){
@@ -266,6 +274,7 @@
 		}
 
 		function scrollRequestFromChild(addOffset){
+			/* istanbul ignore next */
 			function reposition(){
 				pagePosition = newPosition;
 				scrollTo();
@@ -279,24 +288,31 @@
 				};
 			}
 
+			function scrollParent(){
+				/* istanbul ignore else */
+				if (window.parentIFrame){
+					window.parentIFrame['scrollTo'+(addOffset?'Offset':'')](newPosition.x,newPosition.y);
+				} else {
+					warn(iframeId,'Unable to scroll to requested position, window.parentIFrame not found');
+				}
+			}
+
 			var
 				offset = addOffset ? getElementPosition(messageData.iframe) : {x:0,y:0},
 				newPosition = calcOffset();
 
 			log(iframeId,'Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 
+			/* istanbul ignore else */
 			if(window.top!==window.self){
-				if (window.parentIFrame){
-					window.parentIFrame['scrollTo'+(addOffset?'Offset':'')](newPosition.x,newPosition.y);
-				} else {
-					warn(iframeId,'Unable to scroll to requested position, window.parentIFrame not found');
-				}
+				scrollParent();
 			} else {
 				reposition();
 			}
 		}
 
 		function scrollTo(){
+			/* istanbul ignore else */
 			if (false !== callback('scrollCallback',pagePosition)){
 				setPagePosition(iframeId);
 			} else {
@@ -305,7 +321,7 @@
 		}
 
 		function findTarget(location){
-			function jumpToTarget(target){
+			function jumpToTarget(){
 				var jumpPosition = getElementPosition(target);
 
 				log(iframeId,'Moving to in page link (#'+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
@@ -318,21 +334,27 @@
 				log(iframeId,'--');
 			}
 
+			function jumpToParent(){
+				/* istanbul ignore else */
+				if (window.parentIFrame){
+					window.parentIFrame.moveToAnchor(hash);
+				} else {
+					console.log(iframeId,'In page link #'+hash+' not found and window.parentIFrame not found');
+				}
+			}
+
 			var
 				hash     = location.split('#')[1] || '',
 				hashData = decodeURIComponent(hash),
 				target   = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
-			if(window.top!==window.self){
-				if (window.parentIFrame){
-					window.parentIFrame.moveToAnchor(hash);
-				} else {
-					log(iframeId,'In page link #'+hash+' not found and window.parentIFrame not found');
-				}
-			} else if (target){
-				jumpToTarget(target);
+			/* istanbul ignore else */
+			if (target){
+				jumpToTarget();
+			} else if(window.top!==window.self){
+				jumpToParent();
 			} else {
-				log(iframeId,'In page link #'+hash+' not found');
+				consolelog(iframeId,'In page link #'+hash+' not found');
 			}
 		}
 
@@ -377,6 +399,7 @@
 		function hasSettings(iframeId){
 			var retBool = true;
 
+			/* istanbul ignore if */
 			if (!settings[iframeId]){
 				retBool = false;
 				warn(messageData.type + ' No settings for ' + iframeId + '. Message was: ' + msg);
@@ -414,7 +437,8 @@
 				}
 			}
 		} else {
-			//log(iframeId,'Ignored: '+msg);
+			/* istanbul ignore next */
+			info(iframeId,'Ignored: '+msg);
 		}
 
 	}
@@ -581,6 +605,15 @@
 				}
 			}
 
+			function chkMinMax(dimension){
+				if (settings[iframeId]['min'+dimension]>settings[iframeId]['max'+dimension]){
+					throw new Error('Value for min'+dimension+' can not be greater than max'+dimension);
+				}
+			}
+
+			chkMinMax('Height');
+			chkMinMax('Width');
+
 			addStyle('maxHeight');
 			addStyle('minHeight');
 			addStyle('maxWidth');
@@ -621,10 +654,10 @@
 			// context stack is borked and this value gets externally
 			// changed midway through running this function!!!
 			var
-				firstRun          = settings[iframeId].firstRun,
-				restRequertMethod = settings[iframeId].heightCalculationMethod in resetRequiredMethods;
+				firstRun           = settings[iframeId].firstRun,
+				resetRequertMethod = settings[iframeId].heightCalculationMethod in resetRequiredMethods;
 
-			if (!firstRun && restRequertMethod){
+			if (!firstRun && resetRequertMethod){
 				resetIFrame({iframe:iframe, height:0, width:0, type:'init'});
 			}
 		}
@@ -663,9 +696,8 @@
 		}
 
 		function checkOptions(options){
-			/* istanbul ignore if */
 			if ('object' !== typeof options){
-				throw new TypeError('Options is not an object.');
+				throw new TypeError('Options is not an object');
 			}
 		}
 
@@ -822,11 +854,9 @@
 	function factory(){
 		function init(options,element){
 			if(!element.tagName) {
-				/* istanbul ignore next */
 				throw new TypeError('Object is not a valid DOM element');
 			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
-				/* istanbul ignore next */
-				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>.');
+				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>');
 			} else {
 				setupIFrame(element, options);
 				iFrames.push(element);
@@ -853,8 +883,7 @@
 				init(options,target);
 				break;
 			default:
-				/* istanbul ignore next */
-				throw new TypeError('Unexpected data type ('+typeof(target)+').');
+				throw new TypeError('Unexpected data type ('+typeof(target)+')');
 			}
 
 			return iFrames;

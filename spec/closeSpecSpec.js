@@ -7,7 +7,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			loadIFrame('iframe600.html');
 		});
 
-		it('closes from iframe', function(done) {
+		it('closes from parent', function(done) {
 
 			var callbackCounter = 0;
 
@@ -22,7 +22,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			setTimeout(iframe.iFrameResizer.close,1);
 		});
 
-		it('closes from parent', function(done) {
+		it('closes from iframe', function(done) {
 
 			var callbackCounter = 0;
 
@@ -31,10 +31,13 @@ define(['iframeResizer'], function(iFrameResize) {
 				id:'close',
 				closedCallback:function(){
 					setTimeout(done,0);
+				},
+				initCallback:function(iframe){
+					iframe.iFrameResizer.sendMessage('close');
 				}
 			})[0];
 
-			mockMsgFromIFrame(iframe,'close');
+			//mockMsgFromIFrame(iframe,'close');
 		});
 	});
 

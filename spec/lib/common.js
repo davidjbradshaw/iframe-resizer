@@ -7,6 +7,7 @@ jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures';
 
 function tearDown(iframe){
 	if (iframe)	setTimeout(iframe.iFrameResizer.close,1);
+	window.parentIFrame = undefined;
 }
 
 function loadIFrame(filename){

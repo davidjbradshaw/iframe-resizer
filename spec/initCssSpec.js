@@ -2,7 +2,7 @@
 
 'use strict';
 
-define(['iframeResizerMin'], function(iFrameResize) {
+define(['iframeResizer'], function(iFrameResize) {
 	describe('iFrame init(CSS Selector)', function() {
 		var iframe;
 
@@ -11,7 +11,9 @@ define(['iframeResizerMin'], function(iFrameResize) {
 
 			iframe = iFrameResize({
 				log:LOG,
-				resizedCallback:done
+				minHeight:99999,
+				resizedCallback:done,
+				checkOrigin:['http://localhost','https://localhost',location.href.split('/').slice(0,3).join('/')]
 			},'iframe')[0];
 		});
 
