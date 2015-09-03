@@ -251,16 +251,16 @@
 			return true;
 		}
 
-        function getElementPosition(target){
-            var iFramePosition = target.getBoundingClientRect();
+		function getElementPosition(target){
+			var iFramePosition = target.getBoundingClientRect();
 
-            getPagePosition(iframeId);
+			getPagePosition(iframeId);
 
-            return {
-                x: Math.floor( Number(iFramePosition.left) + Number(pagePosition.x) ),
-                y: Math.floor( Number(iFramePosition.top)  + Number(pagePosition.y) )
-            };
-        }
+			return {
+				x: Math.floor( Number(iFramePosition.left) + Number(pagePosition.x) ),
+				y: Math.floor( Number(iFramePosition.top)  + Number(pagePosition.y) )
+			};
+		}
 
 		function scrollRequestFromChild(addOffset){
 			function reposition(){
