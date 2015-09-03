@@ -12,6 +12,15 @@ module.exports = function(config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine-jquery', 'jasmine', 'requirejs'],
 
+    // Karma will require() these plugins
+    /*
+    plugins: [
+      'logcapture',
+      'karma-verbose-summary-reporter',
+      'karma-jasmine',
+      'karma-chrome-launcher'
+    ],
+    */
 
     // list of files / patterns to load in the browser
     files: [
@@ -43,11 +52,15 @@ module.exports = function(config) {
       dir : 'coverage/'
     },
 
+    client: {
+      captureConsole: true
+    },
+
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress','coverage'],
+    reporters: ['logcapture', 'verbose-summary', 'coverage'],
 
 
     // web server port
