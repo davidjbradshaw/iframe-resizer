@@ -10,7 +10,8 @@ module.exports = function(grunt) {
   //require('load-grunt-tasks')(grunt);
   require('jit-grunt')(grunt,{
     'bump-only':'grunt-bump',
-    'bump-commit':'grunt-bump'
+    'bump-commit':'grunt-bump',
+    'coveralls':'grunt-karma-coveralls'
   });
 
   // Project configuration.
@@ -47,7 +48,17 @@ module.exports = function(grunt) {
       },
       single:{
         singleRun: true,
-        browsers: ['Chrome', 'Firefox', 'Safari' , 'PhantomJS']
+        browsers: ['Chrome', 'Firefox',  'PhantomJS'] // 'Safari' ,
+      }
+    },
+
+    coveralls: {
+      options: {
+          debug: true,
+          coverageDir: 'coverage',
+          dryRun: false,
+          force: true,
+          recursive: true
       }
     },
 
@@ -156,7 +167,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['notest','karma:single','qunit']);
   grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
   grunt.registerTask('test',    ['jshint','karma:single','qunit']);
-  grunt.registerTask('travis',  ['jshint','karma:travis','qunit']);
+  grunt.registerTask('travis',  ['jshint','karma:travis','coveralls','qunit']);
 
   grunt.registerTask('postBump',['uglify','bump-commit','shell']);
   grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);

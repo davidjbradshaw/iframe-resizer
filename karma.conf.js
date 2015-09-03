@@ -38,10 +38,11 @@ module.exports = function(config) {
       'src/*.js': ['coverage']
     },
 
-     coverageReporter: {
-      type : 'html',
+    coverageReporter: {
+      type : 'lcov',
       dir : 'coverage/'
     },
+
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
