@@ -406,6 +406,7 @@
 		}
 
 		function enableInPageLinks(){
+			/* istanbul ignore else */
 			if(Array.prototype.forEach && document.querySelectorAll){
 				log('Setting up location.hash handlers');
 				bindAnchors();
@@ -416,6 +417,7 @@
 			}
 		}
 
+		/* istanbul ignore else */
 		if(inPageLinks.enable){
 			enableInPageLinks();
 		} else {
