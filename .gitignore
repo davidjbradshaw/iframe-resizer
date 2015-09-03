@@ -1,4 +1,5 @@
 .DS_Store
+.coveralls.yml
 node_modules
 bin
 example/test.html
