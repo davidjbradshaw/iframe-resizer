@@ -40,6 +40,7 @@
 		resetRequiredMethods  = {max:1,min:1,bodyScroll:1,documentElementScroll:1},
 		resizeFrom            = 'child',
 		sendPermit            = true,
+		target                = window.parent,
 		targetOriginDefault   = '*',
 		tolerance             = 0,
 		triggerLocked         = false,
@@ -126,17 +127,19 @@
 		return new Date().getTime();
 	};
 
-
+	/* istanbul ignore next */
 	function formatLogMsg(msg){
 		return msgID + '[' + myID + ']' + ' ' + msg;
 	}
 
+	/* istanbul ignore next */
 	function log(msg){
 		if (logging && ('object' === typeof window.console)){
 			console.log(formatLogMsg(msg));
 		}
 	}
 
+	/* istanbul ignore next */
 	function warn(msg){
 		if ('object' === typeof window.console){
 			console.warn(formatLogMsg(msg));
@@ -314,7 +317,7 @@
 	}
 
 	function disconnectMutationObserver(){
-		if ('disconnect' in bodyObserver){
+		if (null !== bodyObserver){
 			bodyObserver.disconnect();
 		}
 	}
@@ -366,7 +369,7 @@
 				hashData = decodeURIComponent(hash),
 				target   = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
-			if (target){
+			if (undefined !== target){
 				jumpToTarget(target);
 			} else {
 				log('In page link (#' + hash + ') not found in iFrame, so sending to parent');
@@ -893,7 +896,7 @@
 				message = myID + ':' +  size + ':' + triggerEvent + (undefined !== msg ? ':' + msg : '');
 
 			log('Sending message to host page (' + message + ')');
-			window.parent.postMessage( msgID + message, targetOrigin);
+			target.postMessage( msgID + message, targetOrigin);
 		}
 
 		if(true === sendPermit){
@@ -909,6 +912,7 @@
 
 		function initFromParent(){
 			initMsg = event.data;
+			target  = event.source;
 
 			init();
 			firstRun = false;
@@ -1005,5 +1009,5 @@
 
 	addEventListener(window, 'message', receiver);
 	chkLateLoaded();
-
+	
 })(window || {});
