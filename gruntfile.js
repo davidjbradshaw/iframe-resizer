@@ -34,6 +34,8 @@ module.exports = function(grunt) {
         ' *  License: MIT\n */\n'
     },
 
+    clean: ["coverage", "coverageLcov"],
+
     qunit: {
       files: ['test/*.html']
     },
@@ -168,14 +170,14 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['notest','karma:single','qunit']);
+  grunt.registerTask('default', ['clean','notest','karma:single']);
   grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
-  grunt.registerTask('test',    ['jshint','karma:single','qunit']);
-  grunt.registerTask('travis',  ['jshint','karma:travis','coveralls','qunit']);
+  grunt.registerTask('test',    ['clean','jshint','karma:single','qunit']);
+  grunt.registerTask('travis',  ['clean','jshint','karma:travis','coveralls','qunit']);
 
   grunt.registerTask('postBump',['uglify','bump-commit','shell']);
-  grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);
-  grunt.registerTask('minor',   ['default','bump-only:minor','postBump']);
-  grunt.registerTask('major',   ['default','bump-only:major','postBump']);
+  grunt.registerTask('patch',   ['default','qunit','bump-only:patch','postBump']);
+  grunt.registerTask('minor',   ['default','qunit','bump-only:minor','postBump']);
+  grunt.registerTask('major',   ['default','qunit','bump-only:major','postBump']);
 
 };
