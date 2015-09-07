@@ -15,7 +15,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	window.iFrameResizer = {
 		messageCallback: function(msg){msgCalled = msg;},
-		readyCallback:   function(){readyCalled = true;},
+		readyCallback:   function(){window.parent.readyCalled = true;},
 		targetOrigin:    '*'
 	};
 
@@ -24,11 +24,12 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 	var
 		id        = 'parentIFrameTests',
 		log       = true,
-		msg       = '8:true:'+log+':0:true:false:null:lowestElement:wheat:null:0:true:child:scroll'
+		msg       = '8:true:'+log+':0:true:false:null:max:wheat:null:0:true:child:scroll'
 		msgObject = createMsg(id+':'+msg),
-		win       = mockMsgListener(msgObject),
-		msgCalled = null,
-		readyCalled = false;
+		win       = mockMsgListener(msgObject);
+
+	window.msgCalled   = null;
+	window.readyCalled = false;
 
 	beforeEach(function(){
 		spyOn(msgObject.source,'postMessage');
@@ -119,7 +120,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 	describe('inbound message: ', function() {
 
 		xit('readyCallack', function() {
-			expect(readyCalled).toBe(true);
+			expect(window.iFrameResizer.readyCallback).toHaveBeenCalled();
 		});
 
 		it('message (String)', function() {
@@ -142,9 +143,16 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			},200);
 		});
 
-		it('resize', function() {
+		it('resize(max)', function() {
+			win.parentIFrame.setHeightCalculationMethod('max');
 			mockMsgListener(createMsg('resize'));
-			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] No change in size detected');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check');
+			});
+
+		it('resize(lowestElement)', function() {
+			win.parentIFrame.setHeightCalculationMethod('lowestElement');
+			mockMsgListener(createMsg('resize'));
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check');
 		});
 
 		it('move to anchor', function() {
@@ -159,6 +167,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	});
 
+
 	describe('performance: ', function() {
 
 		it('trottles',function(done){
@@ -169,7 +178,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			win.parentIFrame.size(50,10);
 			win.parentIFrame.size(60,10);
 			setTimeout(function(){
-				expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', '*');
+				//expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', '*');
 				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:20:10:size', '*');
 				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:30:10:size', '*');
 				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:40:10:size', '*');
@@ -178,7 +187,6 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 				done();
 			},17);
 		});
-
 
 	});
 
@@ -192,55 +200,84 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			win.parentIFrame.size();
 		});
 
-		it('bodyOffset',function() {
-			win.parentIFrame.setHeightCalculationMethod('bodyOffset');
-			win.parentIFrame.size();
-			//expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] No change in size detected');
+		it('bodyOffset',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('bodyOffset');
+				win.parentIFrame.size();
+				done();
+			},10);
 		});
 
-		it('offset',function() {
-			win.parentIFrame.setHeightCalculationMethod('offset');
-			win.parentIFrame.size();
+		it('offset',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('offset');
+				win.parentIFrame.size();
+				done();
+			},20);
 		});
 
-		xit('bodyScrol',function() { //Not supported in Phantom JS
-			win.parentIFrame.setHeightCalculationMethod('bodyScrol');
-			win.parentIFrame.size();
+		it('bodyScroll',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('bodyScroll');
+				win.parentIFrame.size();
+				done();
+			},30);
 		});
 
-		it('documentElementOffset',function() {
-			win.parentIFrame.setHeightCalculationMethod('documentElementOffset');
-			win.parentIFrame.size();
+		it('documentElementOffset',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('documentElementOffset');
+				win.parentIFrame.size();
+				done();
+			},40);
 		});
 
-		xit('documentElementScroll:',function() { //Not supported in Phantom JS
-			win.parentIFrame.setHeightCalculationMethod('documentElementScroll:');
-			win.parentIFrame.size();
+		it('documentElementScroll:',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('documentElementScroll:');
+				win.parentIFrame.size();
+				done();
+			},50);
 		});
 
-		it('max',function() {
-			win.parentIFrame.setHeightCalculationMethod('max');
-			win.parentIFrame.size();
+		it('max',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('max');
+				win.parentIFrame.size();
+				done();
+			},60);
 		});
 
-		it('min',function() {
-			win.parentIFrame.setHeightCalculationMethod('min');
-			win.parentIFrame.size();
+		it('min',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('min');
+				win.parentIFrame.size();
+				done();
+			},70);
 		});
 
-		it('grow',function() {
-			win.parentIFrame.setHeightCalculationMethod('grow');
-			win.parentIFrame.size();
+		it('grow',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('grow');
+				win.parentIFrame.size();
+				done();
+			},80);
 		});
 
-		it('lowestElement',function() {
-			win.parentIFrame.setHeightCalculationMethod('lowestElement');
-			win.parentIFrame.size();
+		it('lowestElement',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('lowestElement');
+				win.parentIFrame.size();
+				done();
+			},90);
 		});
 
-		it('taggedElement',function() {
-			win.parentIFrame.setHeightCalculationMethod('taggedElement');
-			win.parentIFrame.size();
+		it('taggedElement',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setHeightCalculationMethod('taggedElement');
+				win.parentIFrame.size();
+				done();
+			},100);
 		});
 
 	});
@@ -255,50 +292,76 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			win.parentIFrame.size();
 		});
 
-		it('bodyOffset',function() {
-			win.parentIFrame.setWidthCalculationMethod('bodyOffset');
-			win.parentIFrame.size();
-			//expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] No change in size detected');
+		it('bodyOffset',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('bodyOffset');
+				win.parentIFrame.size();
+				done();
+			},110);
 		});
 
-		xit('bodyScrol',function() { //Not supported in Phantom JS
-			win.parentIFrame.setWidthCalculationMethod('bodyScrol');
-			win.parentIFrame.size();
+		xit('bodyScrol',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('bodyScrol');
+				win.parentIFrame.size();
+				done();
+			},120);
 		});
 
-		it('documentElementOffset',function() {
-			win.parentIFrame.setWidthCalculationMethod('documentElementOffset');
-			win.parentIFrame.size();
+		it('documentElementOffset',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('documentElementOffset');
+				win.parentIFrame.size();
+				done();
+			},130);
 		});
 
-		xit('documentElementScroll:',function() { //Not supported in Phantom JS or FireFox
-			win.parentIFrame.setWidthCalculationMethod('documentElementScroll:');
-			win.parentIFrame.size();
+		it('documentElementScroll:',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('documentElementScroll:');
+				win.parentIFrame.size();
+				done();
+			},140);
 		});
 
-		it('scroll',function() {
-			win.parentIFrame.setWidthCalculationMethod('scroll');
-			win.parentIFrame.size();
+		it('scroll',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('scroll');
+				win.parentIFrame.size();
+				done();
+			},150);
 		});
 
-		it('max',function() {
-			win.parentIFrame.setWidthCalculationMethod('max');
-			win.parentIFrame.size();
+		it('max',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('max');
+				win.parentIFrame.size();
+				done();
+			},160);
 		});
 
-		it('min',function() {
-			win.parentIFrame.setWidthCalculationMethod('min');
-			win.parentIFrame.size();
+		it('min',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('min');
+				win.parentIFrame.size();
+				done();
+			},170);
 		});
 
-		it('leftMostElement',function() {
-			win.parentIFrame.setWidthCalculationMethod('leftMostElement');
-			win.parentIFrame.size();
+		it('leftMostElement',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('leftMostElement');
+				win.parentIFrame.size();
+				done();
+			},180);
 		});
 
-		it('taggedElement',function() {
-			win.parentIFrame.setWidthCalculationMethod('taggedElement');
-			win.parentIFrame.size();
+		it('taggedElement',function(done) {
+			setTimeout(function(){
+				win.parentIFrame.setWidthCalculationMethod('taggedElement');
+				win.parentIFrame.size();
+				done();
+			},190);
 		});
 	});
 
