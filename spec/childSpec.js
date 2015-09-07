@@ -43,9 +43,33 @@ define(['iframeResizerContent'], function(mockMsgListener) {
 
 	describe('ParentIFrame methods: ', function() {
 
+		it('autoResize',function(){
+			win.parentIFrame.autoResize(true);
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Animation Start');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Animation Iteration');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Animation End');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Orientation Change');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Input');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Print');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Transition End');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Mouse Up');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: Mouse Down');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Add event listener: IFrame Resized');
+			win.parentIFrame.autoResize(false);
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Animation Start');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Animation Iteration');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Animation End');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Orientation Change');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Input');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Print');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Transition End');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Mouse Up');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: Mouse Down');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Remove event listener: IFrame Resized');
+		});
+
 		it('Get ID of iFrame is same as iFrame', function() {
 			expect(win.parentIFrame.getId()).toBe(id);
-			win.parentIFrame.close();
 		});
 
 		it('move to anchor', function() {

@@ -437,6 +437,18 @@
 		log('Enable public methods');
 
 		win.parentIFrame = {
+
+			autoResize: function autoResizeF(resize){
+				if (resize && !autoResize) {
+					autoResize=true;
+					startEventListeners();
+				} else if (!resize && autoResize) {
+					autoResize=false;
+					manageEventListeners('remove');
+					disconnectMutationObserver();
+				}
+			},
+
 			close: function closeF(){
 				sendMsg(0,0,'close');
 				teardown();
