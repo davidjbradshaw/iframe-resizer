@@ -37,7 +37,7 @@ define(['iframeResizer'], function(iFrameResize) {
 				}
 			})[0];
 
-			//mockMsgFromIFrame(iframe,'close');
+			mockMsgFromIFrame(iframe,'close');
 		});
 	});
 

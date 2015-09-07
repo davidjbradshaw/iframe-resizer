@@ -57,20 +57,6 @@ define(['iframeResizer'], function(iFrameResize) {
 
 			mockMsgFromIFrame(iframe3,'inPageLink:#anchorParentTest2');
 		});
-/*
-		it('send message and get response', function(done) {
-			iframe = iFrameResize({
-				log:log,
-				id:testId,
-				initCallback:function(iframe){
-					iframe.iFrameResizer.sendMessage('chkSendMsg');
-				},
-				messageCallback:function(messageData){
-					expect(messageData.message).toBe('message: test string');
-					done();
-				}
-			})[0];
-		});
-*/
+
 	});
 });

@@ -65,6 +65,7 @@
 		}
 	}
 
+	/* istanbul ignore next */  //Not testable in PhantomJS
 	function setupRequestAnimationFrame(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
@@ -130,7 +131,7 @@
 			ensureInRange('Height');
 			ensureInRange('Width');
 
-			syncResize(resize,messageData,'resetPage');
+			syncResize(resize,messageData,'init');
 		}
 
 		function processMsg(){
@@ -243,7 +244,6 @@
 		function checkIFrameExists(){
 			var retBool = true;
 
-			/* istanbul ignore if */
 			if (null === messageData.iframe) {
 				warn(iframeId,'IFrame ('+messageData.id+') not found');
 				retBool = false;
@@ -502,6 +502,7 @@
 			//So if we detect that set up an event to check for
 			//when iFrame becomes visible.
 
+			/* istanbul ignore next */  //Not testable in PhantomJS
 			if (!hiddenCheckEnabled && '0' === messageData[dimension]){
 				hiddenCheckEnabled = true;
 				log(iframeId,'Hidden iFrame detected, creating visibility listener');
@@ -730,15 +731,16 @@
 		}
 	}
 
-	function isVisible(el) {
-		return (null !== el.offsetParent);
-	}
-
+	/* istanbul ignore next */  //Not testable in PhantomJS
 	function fixHiddenIFrames(){
 		function checkIFrames(){
 			function checkIFrame(settingId){
 				function chkDimension(dimension){
 					return '0px' === settings[settingId].iframe.style[dimension];
+				}
+
+				function isVisible(el) {
+					return (null !== el.offsetParent);
 				}
 
 				if (isVisible(settings[settingId].iframe) && (chkDimension('height') || chkDimension('width'))){
@@ -779,41 +781,43 @@
 		if (MutationObserver) createMutationObserver();
 	}
 
-	function setupEventListeners(){
-		function resizeIFrames(event){
-			function resize(){
-				sendTriggerMsg('Window '+event,'resize');
-			}
 
-			log('window','Trigger event: '+event);
+	function resizeIFrames(event){
+		function resize(){
+			sendTriggerMsg('Window '+event,'resize');
+		}
+
+		log('window','Trigger event: '+event);
+		debouce(resize,16);
+	}
+
+	/* istanbul ignore next */  //Not testable in PhantomJS
+	function tabVisible() {
+		function resize(){
+			sendTriggerMsg('Tab Visable','resize');
+		}
+
+		if('hidden' !== document.visibilityState) {
+			log('document','Trigger event: Visiblity change');
 			debouce(resize,16);
 		}
+	}
 
-		function tabVisible() {
-			function resize(){
-				sendTriggerMsg('Tab Visable','resize');
-			}
-
-			if('hidden' !== document.visibilityState) {
-				log('document','Trigger event: Visiblity change');
-				debouce(resize,16);
-			}
+	function sendTriggerMsg(eventName,event){
+		function isIFrameResizeEnabled(iframeId) {
+			return	'parent' === settings[iframeId].resizeFrom &&
+					settings[iframeId].autoResize &&
+					!settings[iframeId].firstRun;
 		}
 
-		function sendTriggerMsg(eventName,event){
-			function isIFrameResizeEnabled(iframeId) {
-				return	'parent' === settings[iframeId].resizeFrom &&
-						settings[iframeId].autoResize &&
-						!settings[iframeId].firstRun;
-			}
-
-			for (var iframeId in settings){
-				if(isIFrameResizeEnabled(iframeId)){
-					trigger(eventName,event,document.getElementById(iframeId),iframeId);
-				}
+		for (var iframeId in settings){
+			if(isIFrameResizeEnabled(iframeId)){
+				trigger(eventName,event,document.getElementById(iframeId),iframeId);
 			}
 		}
+	}
 
+	function setupEventListeners(){
 		addEventListener(window,'message',iFrameListener);
 
 		addEventListener(window,'resize', function(){resizeIFrames('resize');});

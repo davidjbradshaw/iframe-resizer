@@ -195,12 +195,13 @@
 			var data = window.iFrameResizer;
 
 			log('Reading data from page: ' + JSON.stringify(data));
+			console.log(data);
 
-			messageCallback     = (undefined !== data.messageCallback )         ? data.messageCallback         : messageCallback;
-			readyCallback       = (undefined !== data.readyCallback )           ? data.readyCallback           : readyCallback;
-			targetOriginDefault = (undefined !== data.targetOrigin )            ? data.targetOrigin            : targetOriginDefault;
-			heightCalcMode      = (undefined !== data.heightCalculationMethod ) ? data.heightCalculationMethod : heightCalcMode;
-			widthCalcMode       = (undefined !== data.widthCalculationMethod )  ? data.widthCalculationMethod  : widthCalcMode;
+			messageCallback     = ('messageCallback'         in data) ? data.messageCallback         : messageCallback;
+			readyCallback       = ('readyCallback'           in data) ? data.readyCallback           : readyCallback;
+			targetOriginDefault = ('targetOrigin'            in data) ? data.targetOrigin            : targetOriginDefault;
+			heightCalcMode      = ('heightCalculationMethod' in data) ? data.heightCalculationMethod : heightCalcMode;
+			widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
 		}
 
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {

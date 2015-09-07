@@ -15,7 +15,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	window.iFrameResizer = {
 		messageCallback: function(msg){msgCalled = msg;},
-		readyCallback:   function(){window.parent.readyCalled = true;},
+		readyCallback:   function(){window.parent.readyCalled = true;alert('ready')},
 		targetOrigin:    '*'
 	};
 
@@ -232,9 +232,9 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			},40);
 		});
 
-		it('documentElementScroll:',function(done) {
+		it('documentElementScroll',function(done) {
 			setTimeout(function(){
-				win.parentIFrame.setHeightCalculationMethod('documentElementScroll:');
+				win.parentIFrame.setHeightCalculationMethod('documentElementScroll');
 				win.parentIFrame.size();
 				done();
 			},50);
@@ -300,9 +300,9 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			},110);
 		});
 
-		xit('bodyScrol',function(done) {
+		it('bodyScroll',function(done) {
 			setTimeout(function(){
-				win.parentIFrame.setWidthCalculationMethod('bodyScrol');
+				win.parentIFrame.setWidthCalculationMethod('bodyScroll');
 				win.parentIFrame.size();
 				done();
 			},120);
