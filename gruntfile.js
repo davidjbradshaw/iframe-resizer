@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         ' *  License: MIT\n */\n'
     },
 
-    clean: ["coverage", "coverageLcov"],
+    clean: ['coverage', 'coverageLcov','js/iframeResizer.contentWindow.js'],
 
     qunit: {
       files: ['test/*.html']
@@ -103,7 +103,7 @@ module.exports = function(grunt) {
           banner:'<%= meta.bannerRemote %>',
           sourceMapName: 'js/iframeResizer.contentWindow.map'
         },
-        src: ['src/iframeResizer.contentWindow.js'],
+        src: ['js/iframeResizer.contentWindow.js'],
         dest: 'js/iframeResizer.contentWindow.min.js',
       },
       polyfil: {
@@ -166,12 +166,19 @@ module.exports = function(grunt) {
       json: {
         src: [ '*.json' ]
       }
+    },
+
+   removeBlock: {
+      options : ["TEST CODE START", 'TEST CODE END'],
+      files : [
+        {src : 'src/iframeResizer.contentWindow.js', dest : 'js/iframeResizer.contentWindow.js'}
+      ]
     }
 
   });
 
-  grunt.registerTask('default', ['clean','notest','karma:single']);
-  grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
+  grunt.registerTask('default', ['notest','karma:single']);
+  grunt.registerTask('notest',  ['jsonlint','jshint','removeBlock','uglify','clean']);
   grunt.registerTask('test',    ['clean','jshint','karma:single','qunit']);
   grunt.registerTask('travis',  ['clean','jshint','karma:travis','coveralls','qunit']);
 
@@ -179,5 +186,20 @@ module.exports = function(grunt) {
   grunt.registerTask('patch',   ['default','qunit','bump-only:patch','postBump']);
   grunt.registerTask('minor',   ['default','qunit','bump-only:minor','postBump']);
   grunt.registerTask('major',   ['default','qunit','bump-only:major','postBump']);
+
+  grunt.registerMultiTask('removeBlock', function() {
+
+    // set up a removal regular expression
+    var removalRegEx = new RegExp('(\/\/ ' + this.options()[0] + ' \/\/)(?:[^])*?(\/\/ ' + this.options()[1] +  ' \/\/)', 'g');
+
+    this.data.forEach(function(fileObj){
+
+      var sourceFile = grunt.file.read( fileObj.src ),
+          removedFile = sourceFile.replace( removalRegEx, '' ),
+          targetFile = grunt.file.write( fileObj.dest, removedFile );
+
+    });// for each loop end
+
+  });
 
 };
