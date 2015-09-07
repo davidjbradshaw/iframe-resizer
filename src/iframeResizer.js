@@ -323,7 +323,7 @@
 				if (window.parentIFrame){
 					window.parentIFrame.moveToAnchor(hash);
 				} else {
-					console.log(iframeId,'In page link #'+hash+' not found and window.parentIFrame not found');
+					log(iframeId,'In page link #'+hash+' not found and window.parentIFrame not found');
 				}
 			}
 
@@ -337,7 +337,7 @@
 			} else if(window.top!==window.self){
 				jumpToParent();
 			} else {
-				consolelog(iframeId,'In page link #'+hash+' not found');
+				log(iframeId,'In page link #'+hash+' not found');
 			}
 		}
 

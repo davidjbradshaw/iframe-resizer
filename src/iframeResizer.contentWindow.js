@@ -45,7 +45,7 @@
 		tolerance             = 0,
 		triggerLocked         = false,
 		triggerLockedTimer    = null,
-		throttledTimer        = 0,
+		throttledTimer        = 16,
 		width                 = 1,
 		widthCalcModeDefault  = 'scroll',
 		widthCalcMode         = widthCalcModeDefault,
@@ -497,7 +497,7 @@
 
 			size: function sizeF(customHeight, customWidth){
 				var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
-				lockTrigger();
+				//lockTrigger();
 				sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
 			}
 		};
@@ -512,6 +512,7 @@
 		}
 	}
 
+	/* istanbul ignore next */  //Not testable in PhantomJS
 	function setupBodyMutationObserver(){
 		function addImageLoadListners(mutation) {
 			function addImageLoadListener(element){
@@ -620,6 +621,7 @@
 	// document.documentElement.offsetHeight is not reliable, so
 	// we have to jump through hoops to get a better value.
 	function getComputedBodyStyle(prop) {
+		/* istanbul ignore next */  //Not testable in PhantomJS
 		function convertUnitsToPxForIE8(value) {
 			var PIXEL = /^\d+(px)?$/i;
 
@@ -807,7 +809,7 @@
 				var retVal = Math.abs(a-b) <= tolerance;
 				return !retVal;
 			}
-console.log(heightCalcMode);
+
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth[widthCalcMode]();
 
