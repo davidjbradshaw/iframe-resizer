@@ -58,7 +58,6 @@
 		};
 
 	function addEventListener(obj,evt,func){
-		/* istanbul ignore else */
 		if ('addEventListener' in window){
 			obj.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){//IE
@@ -66,7 +65,6 @@
 		}
 	}
 
-	/* istanbul ignore next */
 	function setupRequestAnimationFrame(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
@@ -82,7 +80,6 @@
 		}
 	}
 
-	/* istanbul ignore next */
 	function getMyID(iframeId){
 		var retStr = 'Host page: '+iframeId;
 
@@ -97,32 +94,26 @@
 		return retStr;
 	}
 
-	/* istanbul ignore next */
 	function formatLogHeader(iframeId){
 		return msgId + '[' + getMyID(iframeId) + ']';
 	}
 
-	/* istanbul ignore next */
 	function isLogEnabled(iframeId){
 		return settings[iframeId] ? settings[iframeId].log : logEnabled;
 	}
 
-	/* istanbul ignore next */
 	function log(iframeId,msg){
 		output('log',iframeId,msg,isLogEnabled(iframeId));
 	}
 
-	/* istanbul ignore next */
 	function info(iframeId,msg){
 		output('info',iframeId,msg,isLogEnabled(iframeId));
 	}
 
-	/* istanbul ignore next */
 	function warn(iframeId,msg){
 		output('warn',iframeId,msg,true);
 	}
 
-	/* istanbul ignore next */
 	function output(type,iframeId,msg,enabled){
 		if (true === enabled && 'object' === typeof window.console){
 			console[type](formatLogHeader(iframeId),msg);
@@ -208,7 +199,6 @@
 				origin      = event.origin,
 				checkOrigin = settings[iframeId].checkOrigin;
 
-			/* istanbul ignore if */
 			if (checkOrigin && (''+origin !== 'null') && !checkAllowedOrigin()) {
 				throw new Error(
 					'Unexpected message received from: ' + origin +
@@ -230,7 +220,6 @@
 			//the message format would break backwards compatibity.
 			var retCode = messageData.type in {'true':1,'false':1,'undefined':1};
 
-			/* istanbul ignore if */
 			if (retCode){
 				log(iframeId,'Ignoring init message from meta parent page');
 			}
@@ -274,7 +263,6 @@
 		}
 
 		function scrollRequestFromChild(addOffset){
-			/* istanbul ignore next */
 			function reposition(){
 				pagePosition = newPosition;
 				scrollTo();
@@ -289,7 +277,6 @@
 			}
 
 			function scrollParent(){
-				/* istanbul ignore else */
 				if (window.parentIFrame){
 					window.parentIFrame['scrollTo'+(addOffset?'Offset':'')](newPosition.x,newPosition.y);
 				} else {
@@ -303,7 +290,6 @@
 
 			log(iframeId,'Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 
-			/* istanbul ignore else */
 			if(window.top!==window.self){
 				scrollParent();
 			} else {
@@ -312,7 +298,6 @@
 		}
 
 		function scrollTo(){
-			/* istanbul ignore else */
 			if (false !== callback('scrollCallback',pagePosition)){
 				setPagePosition(iframeId);
 			} else {
@@ -335,7 +320,6 @@
 			}
 
 			function jumpToParent(){
-				/* istanbul ignore else */
 				if (window.parentIFrame){
 					window.parentIFrame.moveToAnchor(hash);
 				} else {
@@ -348,7 +332,6 @@
 				hashData = decodeURIComponent(hash),
 				target   = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
-			/* istanbul ignore else */
 			if (target){
 				jumpToTarget();
 			} else if(window.top!==window.self){
@@ -399,7 +382,6 @@
 		function hasSettings(iframeId){
 			var retBool = true;
 
-			/* istanbul ignore if */
 			if (!settings[iframeId]){
 				retBool = false;
 				warn(messageData.type + ' No settings for ' + iframeId + '. Message was: ' + msg);
@@ -437,7 +419,6 @@
 				}
 			}
 		} else {
-			/* istanbul ignore next */
 			info(iframeId,'Ignored: '+msg);
 		}
 
@@ -452,7 +433,6 @@
 		if(settings[iframeId]){
 			func = settings[iframeId][funcName];
 
-			/* istanbul ignore else */
 			if( 'function' === typeof func){
 				retVal = func(val);
 			} else {
@@ -522,7 +502,6 @@
 			//So if we detect that set up an event to check for
 			//when iFrame becomes visible.
 
-			/* istanbul ignore if */
 			if (!hiddenCheckEnabled && '0' === messageData[dimension]){
 				hiddenCheckEnabled = true;
 				log(iframeId,'Hidden iFrame detected, creating visibility listener');
@@ -558,7 +537,6 @@
 			iframe.contentWindow.postMessage( msgId + msg, target );
 		}
 
-		/* istanbul ignore next */
 		function iFrameNotFound(){
 			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
 			if(settings[id]) {
@@ -569,7 +547,6 @@
 		id = id || iframe.id;
 		var target = settings[id].targetOrigin;
 
-		/* istanbul ignore else */
 		if(iframe && 'contentWindow' in iframe){
 			postMessageToIFrame();
 		} else {
@@ -732,7 +709,6 @@
 
 		var iframeId = ensureHasId(iframe.id);
 
-		/* istanbul ignore else */
 		if (!beenHere()){
 			processOptions(options);
 			setScrolling();
@@ -758,7 +734,6 @@
 		return (null !== el.offsetParent);
 	}
 
-	/* istanbul ignore next */
 	function fixHiddenIFrames(){
 		function checkIFrames(){
 			function checkIFrame(settingId){
@@ -899,7 +874,6 @@
 
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
 
-	/* istanbul ignore else */
 	if (typeof define === 'function' && define.amd) {
 		define([],factory);
 	} else if (typeof module === 'object' && typeof module.exports === 'object') { //Node for browserfy

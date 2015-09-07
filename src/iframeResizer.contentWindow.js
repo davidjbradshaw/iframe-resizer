@@ -49,6 +49,7 @@
 		width                 = 1,
 		widthCalcModeDefault  = 'scroll',
 		widthCalcMode         = widthCalcModeDefault,
+		win                   = window,
 		messageCallback       = function(){warn('MessageCallback function not defined');},
 		readyCallback         = function(){};
 
@@ -435,7 +436,7 @@
 	function setupPublicMethods(){
 		log('Enable public methods');
 
-		window.parentIFrame = {
+		win.parentIFrame = {
 			close: function closeF(){
 				sendMsg(0,0,'close');
 				teardown();
@@ -899,10 +900,10 @@
 			target.postMessage( msgID + message, targetOrigin);
 		}
 
-		if(true === sendPermit){
+		//if(true === sendPermit){
 			setTargetOrigin();
 			sendToParent();
-		}
+		//}
 	}
 
 	function receiver(event) {
@@ -979,7 +980,7 @@
 				break;
 			default:
 				if (!isMiddleTier() && !isInitMsg()){
-					//warn('Unexpected message ('+event.data+')');
+					warn('Unexpected message ('+event.data+')');
 				}
 			}
 		}
@@ -1009,5 +1010,22 @@
 
 	addEventListener(window, 'message', receiver);
 	chkLateLoaded();
-	
+
+	// TEST CODE START //
+
+	//Create test hooks
+
+	function mockMsgListener(msgObject){
+		receiver(msgObject);
+		return win;
+	}
+
+	win={};
+
+	removeEventListener(window, 'message', receiver);
+
+	define([], function() {return mockMsgListener;});
+
+	// TEST CODE END //
+
 })(window || {});
