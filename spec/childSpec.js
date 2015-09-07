@@ -159,9 +159,31 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	});
 
+	describe('performance: ', function() {
+
+		it('trottles',function(done){
+			win.parentIFrame.size(10,10);
+			win.parentIFrame.size(20,10);
+			win.parentIFrame.size(30,10);
+			win.parentIFrame.size(40,10);
+			win.parentIFrame.size(50,10);
+			win.parentIFrame.size(60,10);
+			setTimeout(function(){
+				expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', '*');
+				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:20:10:size', '*');
+				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:30:10:size', '*');
+				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:40:10:size', '*');
+				expect(msgObject.source.postMessage).not.toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:50:10:size', '*');
+				expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:60:10:size', '*');
+				done();
+			},17);
+		});
+
+
+	});
+
 
 	describe('height calculation methods: ', function() {
-
 
 		it('invalid',function() {
 			win.parentIFrame.setHeightCalculationMethod('foo');
