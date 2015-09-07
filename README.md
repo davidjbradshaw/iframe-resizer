@@ -224,7 +224,7 @@ Some CSS technics may require you to change this setting to one of the following
 
 	type: function (iframeID)
 
-Called when iFrame is closed via `parentIFrame.close()` method.
+Called when iFrame is closed via `parentIFrame.close()` or `iframe.iframeResizer.close()` methods. See below for details.
 
 ### initCallback
 
@@ -506,7 +506,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.3.0 [#97](https://github.com/davidjbradshaw/iframe-resizer/issues/97) Add autoResize method to parentIFrames.
+* v3.3.0 [#97](https://github.com/davidjbradshaw/iframe-resizer/issues/97) Add autoResize method to parentIFrames. Fix bug when setHeightCalculationMethod is called with invalid value.
 * v3.2.0 Added calculation of margin to LowestElement, LeftMostElement and TaggedElement calculation modes. Check callback function is a function before calling it. [#246](https://github.com/davidjbradshaw/iframe-resizer/issues/246) Fixed issue when scrollCallback changes the page position. [#247](https://github.com/davidjbradshaw/iframe-resizer/issues/247) Fix rounding issue when page is zoomed in Chrome [[thenewguy](https://github.com/thenewguy)].
 * v3.1.1 Added readyCallback to iFrame. Create iFrameResizer object on iFrame during setup, rather than waiting for init message to be returned from iFrame. Add ref to iFrame in host page log messages. [#245](https://github.com/davidjbradshaw/iframe-resizer/issues/245) Fix issue with iFrame not correctly resizing when multiple images are injected into the page [[mdgbayly](https://github.com/mdgbayly)]. [#246](https://github.com/davidjbradshaw/iframe-resizer/issues/246) Fix issue with including ':' in messages passed to iFrames.
 * v3.1.0 [#101](https://github.com/davidjbradshaw/iframe-resizer/issues/101) Support async loading of iFrame script. [#239](https://github.com/davidjbradshaw/iframe-resizer/issues/239) Throttle size checking to once per screen refresh (16ms). Fixed issue with hidden iFrames in FireFox. Improved handling of parent page events. [#236](https://github.com/davidjbradshaw/iframe-resizer/issues/236) Cope with iFrames that don't have a *src* value. [#242](https://github.com/davidjbradshaw/iframe-resizer/issues/242) Fix issue where iFrame is removed and then put back with same ID [[Alban Mouton](https://github.com/albanm)].

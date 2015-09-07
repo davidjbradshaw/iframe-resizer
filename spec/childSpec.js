@@ -1,4 +1,4 @@
-define(['iframeResizerContent'], function(mockMsgListener) {
+define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	function createMsg(msg){
 		return {
@@ -18,6 +18,8 @@ define(['iframeResizerContent'], function(mockMsgListener) {
 		readyCallback:   function(){readyCalled = true;},
 		targetOrigin:    '*'
 	};
+
+	$(window.document.body).append('<a href="#foo" id="bar"></a>');
 
 	var
 		id        = 'parentIFrameTests',
@@ -76,7 +78,7 @@ define(['iframeResizerContent'], function(mockMsgListener) {
 			win.parentIFrame.moveToAnchor('foo');
 			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo', '*');
 			win.parentIFrame.moveToAnchor('bar');
-			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:inPageLink:#bar', '*');
+			expect(msgObject.source.postMessage.calls.argsFor(1)[0]).toContain(':scrollToOffset');
 		});
 
 		it('reset', function() {
@@ -160,6 +162,14 @@ define(['iframeResizerContent'], function(mockMsgListener) {
 
 	describe('height calculation methods: ', function() {
 
+
+		it('invalid',function() {
+			win.parentIFrame.setHeightCalculationMethod('foo');
+			expect(console.warn).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] height calculation method set to "bodyOffset"');
+			win.parentIFrame.size();
+		});
+
 		it('bodyOffset',function() {
 			win.parentIFrame.setHeightCalculationMethod('bodyOffset');
 			win.parentIFrame.size();
@@ -215,6 +225,13 @@ define(['iframeResizerContent'], function(mockMsgListener) {
 
 
 	describe('width calculation methods: ', function() {
+
+		it('invalid',function() {
+			win.parentIFrame.setWidthCalculationMethod('foo');
+			expect(console.warn).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] foo is not a valid option for widthCalculationMethod.');
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] width calculation method set to "scroll"');
+			win.parentIFrame.size();
+		});
 
 		it('bodyOffset',function() {
 			win.parentIFrame.setWidthCalculationMethod('bodyOffset');

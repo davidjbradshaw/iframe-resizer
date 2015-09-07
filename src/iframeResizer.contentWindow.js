@@ -287,14 +287,16 @@
 			}
 			log(type+' calculation method set to "'+calcMode+'"');
 		}
+
+		return calcMode;
 	}
 
 	function checkHeightMode(){
-		checkCalcMode(heightCalcMode,heightCalcModeDefault,getHeight,'height');
+		heightCalcMode = checkCalcMode(heightCalcMode,heightCalcModeDefault,getHeight,'height');
 	}
 
 	function checkWidthMode(){
-		checkCalcMode(widthCalcMode,widthCalcModeDefault,getWidth,'width');
+		widthCalcMode = checkCalcMode(widthCalcMode,widthCalcModeDefault,getWidth,'width');
 	}
 
 	function startEventListeners(){
@@ -805,7 +807,7 @@
 				var retVal = Math.abs(a-b) <= tolerance;
 				return !retVal;
 			}
-
+console.log(heightCalcMode);
 			currentHeight = (undefined !== customHeight)  ? customHeight : getHeight[heightCalcMode]();
 			currentWidth  = (undefined !== customWidth )  ? customWidth  : getWidth[widthCalcMode]();
 
