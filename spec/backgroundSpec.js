@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizer'], function(iFrameResizeTest) {
 
 	describe('Send Message', function() {
 		var iframe;
@@ -13,7 +13,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		})
 
 		it('background colour to be '+background, function(done) {
-			iframe = iFrameResize({
+			iframe = iFrameResizeTest({
 				log:LOG,
 				id:'background',
 				bodyBackground:background,

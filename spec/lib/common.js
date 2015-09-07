@@ -1,6 +1,6 @@
 'use strict';
 
-var LOG = false;
+var LOG = true;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
 jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures';
@@ -18,8 +18,8 @@ function getTarget(iframe){
 	return iframe.src.split('/').slice(0,3).join('/')
 }
 
-function mockPostMsgViaHook(id,msg,callback){
-	window.__testHooks__.postMessage('[iFrameSizer]'+id+':'+msg,callback);
+function mockPostMsgViaHook(testIFrame,id,msg,callback){
+	return testIFrame('[iFrameSizer]'+id+':'+msg,callback);
 }
 
 function mockPostMsg(id,msg){
@@ -30,8 +30,8 @@ function mockMsgFromIFrame(iframe,msg){
 	mockPostMsg(iframe.id,'0:0:'+msg);
 }
 
-function mockInitFromParent(id,log,callback){
-	mockPostMsgViaHook(id,'8:false:'+log+':32:true:true:null:max:wheat:null:0:true:child:scroll',callback);
+function mockInitFromParent(testIFrame,id,log,callback){
+	return mockPostMsgViaHook(testIFrame,id,'8:false:'+log+':0:true:false:null:max:wheat:null:0:true:child:scroll',callback);
 }
 
 function spyOnPostMessage(target){
@@ -47,8 +47,9 @@ function spyOnIFramePostMessage(iframe){
 	spyOnPostMessage(iframe.contentWindow);
 }
 
-function closeChild(){
+function closeChild(window,done){
 	window.parentIFrame.close();
+	done();
 }
 
 function strEnd(str,num){
