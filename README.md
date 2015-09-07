@@ -303,6 +303,10 @@ if ('parentIFrame' in window) {
 }
 ```
 
+### autoResize(bool)
+
+Turn autoResizing of the iFrame on and off.
+
 ### close()
 
 Remove the iFrame from the parent page.
