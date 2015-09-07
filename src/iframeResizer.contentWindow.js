@@ -32,6 +32,7 @@
 		initMsg               = '',
 		inPageLinks           = {},
 		interval              = 32,
+		intervalTimer         = null,
 		logging               = false,
 		msgID                 = '[iFrameSizer]',  //Must match host page msg ID
 		msgIdLen              = msgID.length,
@@ -326,11 +327,16 @@
 		}
 	}
 
+	function stopEventListeners(){
+		manageEventListeners('remove');
+		disconnectMutationObserver();
+		clearInterval(intervalTimer);
+	}
+
 	function teardown(){
 		stopMsgsToParent();
 		removeMsgListener();
-		manageEventListeners('remove');
-		disconnectMutationObserver();
+		stopEventListeners();
 	}
 
 	function injectClearFixIntoBodyElement(){
@@ -447,8 +453,7 @@
 					startEventListeners();
 				} else if (!resize && autoResize) {
 					autoResize=false;
-					manageEventListeners('remove');
-					disconnectMutationObserver();
+					stopEventListeners();
 				}
 			},
 
@@ -507,7 +512,7 @@
 	function initInterval(){
 		if ( 0 !== interval ){
 			log('setInterval: '+interval+'ms');
-			setInterval(function(){
+			intervalTimer = setInterval(function(){
 				sendSize('interval','setInterval: '+interval);
 			},Math.abs(interval));
 		}
