@@ -196,7 +196,6 @@
 			var data = window.iFrameResizer;
 
 			log('Reading data from page: ' + JSON.stringify(data));
-			console.log(data);
 
 			messageCallback     = ('messageCallback'         in data) ? data.messageCallback         : messageCallback;
 			readyCallback       = ('readyCallback'           in data) ? data.readyCallback           : readyCallback;
