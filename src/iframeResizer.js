@@ -263,6 +263,7 @@
 		}
 
 		function scrollRequestFromChild(addOffset){
+			/* istanbul ignore next */  //Not testable in Karma
 			function reposition(){
 				pagePosition = newPosition;
 				scrollTo();
@@ -524,6 +525,7 @@
 	}
 
 	function syncResize(func,messageData,doNotSync){
+		/* istanbul ignore if */  //Not testable in PhantomJS
 		if(doNotSync!==messageData.type && requestAnimationFrame){
 			log(messageData.id,'Requesting animation frame');
 			requestAnimationFrame(func);
@@ -597,10 +599,18 @@
 			addStyle('minWidth');
 		}
 
+		function newId(){
+			var id = (options.id || defaults.id + count++);
+			if  (null!==document.getElementById(id)){
+				id = id + count++;
+			}
+			return id;
+		}
+
 		function ensureHasId(iframeId){
 			logId=iframeId;
 			if (''===iframeId){
-				iframe.id = iframeId = (options.id || defaults.id) + count++;
+				iframe.id = iframeId =  newId();
 				logEnabled = (options || {}).log;
 				logId=iframeId;
 				log(iframeId,'Added missing iframe ID: '+ iframeId +' (' + iframe.src + ')');
