@@ -282,7 +282,7 @@ Receive message posted from the parent page with the `iframe.iFrameResizer.sendM
 
     type: function()
 
-This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page. If you need to call any of the parentIFrame (See below) during page load, then they should be called from this callback.
+This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page. If you need to call any of the parentIFrame methods (See below) during page load, then they should be called from this callback.
 
 ### heightCalculationMethod / widthCalculationMethod
 
@@ -501,7 +501,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 
 The requirements for IE8 support in version 3 have changed from version 2. If you still require IE8 support than you will need to ensure you include the new ie8.polyfil.js file, as outlined above.
 
-The parentIFrame methods object in the iFrame is now always available and the `enablePublicMethods` option has been removed. The `enableInPageLinks` option has been rename to `inPageLinks`.Fi
+The parentIFrame methods object in the iFrame is now always available and the `enablePublicMethods` option has been removed. The `enableInPageLinks` option has been rename to `inPageLinks`.
 
 
 ## Version History
