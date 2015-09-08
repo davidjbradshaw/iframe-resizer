@@ -65,7 +65,6 @@
 		}
 	}
 
-	/* istanbul ignore next */  //Not testable in PhantomJS
 	function setupRequestAnimationFrame(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
