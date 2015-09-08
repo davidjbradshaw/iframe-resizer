@@ -23,7 +23,9 @@ function mockPostMsgViaHook(testIFrame,id,msg,callback){
 }
 
 function mockPostMsg(id,msg){
-	window.postMessage('[iFrameSizer]'+id+':'+msg,'*');
+	var message = '[iFrameSizer]'+id+':'+msg;
+	console.log('Mork postMessage: ',message);
+	window.postMessage(message,'*');
 }
 
 function mockMsgFromIFrame(iframe,msg){
