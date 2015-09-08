@@ -180,7 +180,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['notest','karma:single']);
   grunt.registerTask('notest',  ['jsonlint','jshint','removeBlock','uglify','clean']);
   grunt.registerTask('test',    ['clean','jshint','karma:single','qunit']);
-  grunt.registerTask('travis',  ['clean','jshint','karma:travis','coveralls','qunit']);
+  grunt.registerTask('travis',  ['clean','notest','karma:travis','coveralls','qunit']);
 
   grunt.registerTask('postBump',['uglify','bump-commit','shell']);
   grunt.registerTask('patch',   ['default','qunit','bump-only:patch','postBump']);
