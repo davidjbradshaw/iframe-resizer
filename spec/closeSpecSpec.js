@@ -13,7 +13,7 @@ define(['iframeResizer'], function(iFrameResize) {
 
 			iframe = iFrameResize({
 				log:LOG,
-				id:'close',
+				id:'close1',
 				closedCallback:function(){
 					setTimeout(done,0);
 				}
@@ -28,7 +28,7 @@ define(['iframeResizer'], function(iFrameResize) {
 
 			iframe = iFrameResize({
 				log:LOG,
-				id:'close',
+				id:'close2',
 				closedCallback:function(){
 					setTimeout(done,0);
 				},

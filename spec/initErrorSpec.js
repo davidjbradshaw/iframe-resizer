@@ -13,7 +13,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			expect( function(){
 				iFrameResize({
 					log:log,
-					id:'error',
+					id:'error1',
 					maxHeight:100,
 					minHeight:999
 				});
@@ -24,7 +24,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			expect( function(){
 				iFrameResize({
 					log:log,
-					id:'error'
+					id:'error2'
 				},1);
 			}).toThrow(new TypeError('Unexpected data type (number)'));
 		});
@@ -33,7 +33,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			expect( function(){
 				iFrameResize({
 					log:log,
-					id:'error'
+					id:'error3'
 				},'div');
 			}).toThrow(new TypeError('Expected <IFRAME> tag, found <DIV>'));
 		});
@@ -42,7 +42,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			expect( function(){
 				iFrameResize({
 					log:log,
-					id:'error'
+					id:'error4'
 				},{});
 			}).toThrow(new TypeError('Object is not a valid DOM element'));
 		});

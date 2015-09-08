@@ -3,14 +3,15 @@ define(['iframeResizer'], function(iFrameResize) {
 
 	describe('iFrame init', function() {
 		var iframe;
-		var id = 'initTest'
+		var id = 'initTest';
+		var count = 0;
 
 		beforeAll(function(done){
 			loadIFrame('iframe600.html');
 
 			iframe = iFrameResize({
 				log:LOG,
-				id:id+'-',
+				id:id+'-'+count++,
 				autoResize:false,
 				bodyMargin:1,
 				checkOrigin:false,

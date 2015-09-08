@@ -3,7 +3,6 @@ define(['iframeResizer'], function(iFrameResize) {
 	describe('Scroll Page', function() {
 		var iframe;
 		var log=LOG;
-		var testId = 'scroll';
 
 		beforeEach(function(){
 			loadIFrame('iframe600.html');
@@ -17,7 +16,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('mock incoming message', function(done) {
 			iframe = iFrameResize({
 				log:log,
-				id:testId
+				id:'scroll1'
 			})[0];
 
 			window.parentIFrame = {
@@ -35,7 +34,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('mock incoming message', function(done) {
 			iframe = iFrameResize({
 				log:log,
-				id:testId
+				id:'scroll2'
 			})[0];
 
 			window.parentIFrame = {

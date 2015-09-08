@@ -3,7 +3,6 @@ define(['iframeResizer'], function(iFrameResize) {
 	describe('Send Message from Host Page', function() {
 		var iframe;
 		var log=LOG;
-		var testId = 'sendMessage';
 
 		beforeEach(function(){
 			loadIFrame('iframe600.html');
@@ -16,7 +15,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('send message to iframe', function(done) {
 			var iframe1 = iFrameResize({
 				log:log,
-				id:testId,
+				id:'sendMessage1',
 			})[0];
 
 			spyOnIFramePostMessage(iframe1);
@@ -31,7 +30,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('mock incoming message', function(done) {
 			iframe = iFrameResize({
 				log:log,
-				id:testId,
+				id:'sendMessage2',
 				messageCallback:function(messageData){
 					expect(messageData.message).toBe('test:test');
 					done();
@@ -44,7 +43,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('send message and get response', function(done) {
 			iframe = iFrameResize({
 				log:log,
-				id:testId,
+				id:'sendMessage3',
 				initCallback:function(iframe){
 					iframe.iFrameResizer.sendMessage('chkSendMsg');
 				},

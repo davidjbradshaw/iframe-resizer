@@ -16,7 +16,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('requested from host page', function(done) {
 			var iframe1 = iFrameResize({
 				log:log,
-				id:testId,
+				id:'anchor1',
 			})[0];
 
 			spyOnIFramePostMessage(iframe1);
@@ -31,7 +31,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('mock incoming message', function(done) {
 			iframe2 = iFrameResize({
 				log:log,
-				id:testId,
+				id:'anchor2',
 				scrollCallback:function(position){
 					expect(position.x).toBe(8);
 					expect(position.y).toBeGreaterThan(8);
@@ -46,7 +46,7 @@ define(['iframeResizer'], function(iFrameResize) {
 		it('mock incoming message to parent', function(done) {
 			iframe3 = iFrameResize({
 				log:log,
-				id:testId,
+				id:'anchor3',
 			})[0];
 
 			window.parentIFrame = {
