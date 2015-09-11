@@ -338,7 +338,6 @@ Manually force iFrame to resize. This method optionally accepts two arguments: *
 ```js
 iFrameResize({
 	autoResize: false,
-	enablePublicMethods: true,
 	sizeWidth: true
 });
 ```
