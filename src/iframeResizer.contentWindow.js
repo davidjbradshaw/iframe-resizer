@@ -207,6 +207,8 @@
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
 			readData();
 		}
+		
+		log('TargetOrigin for parent set to: ' + targetOriginDefault);
 	}
 
 
@@ -450,6 +452,7 @@
 				if (resize && !autoResize) {
 					autoResize=true;
 					startEventListeners();
+					//sendSize('autoResize','Auto Resize enabled');
 				} else if (!resize && autoResize) {
 					autoResize=false;
 					stopEventListeners();

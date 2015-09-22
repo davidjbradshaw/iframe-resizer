@@ -535,7 +535,7 @@
 
 	function trigger(calleeMsg,msg,iframe,id){
 		function postMessageToIFrame(){
-			log(id,'[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+')');
+			log(id,'[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+') targetOrigin: '+target);
 			iframe.contentWindow.postMessage( msgId + msg, target );
 		}
 
@@ -840,7 +840,9 @@
 
 	function factory(){
 		function init(options,element){
-			if(!element.tagName) {
+			if(!element) {
+				return; //Stop mootools creating problems
+			} else if(!element.tagName) {
 				throw new TypeError('Object is not a valid DOM element');
 			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
 				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>');
