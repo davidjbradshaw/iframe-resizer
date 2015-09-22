@@ -4,14 +4,13 @@ define(['iframeResizer'], function(iFrameResize) {
 	describe('iFrame init', function() {
 		var iframe;
 		var id = 'initTest';
-		var count = 0;
 
-		beforeAll(function(done){
+		beforeEach(function(done){
 			loadIFrame('iframe600.html');
 
 			iframe = iFrameResize({
 				log:LOG,
-				id:id+'-'+count++,
+				id:id+'-',
 				autoResize:false,
 				bodyMargin:1,
 				checkOrigin:false,
@@ -31,7 +30,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			})[0];
 		});
 
-		afterAll(function(){
+		afterEach(function(){
 			//tearDown(iframe);
 		})
 

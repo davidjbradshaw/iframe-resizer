@@ -56,7 +56,7 @@
 
 
 	function addEventListener(el,evt,func){
-		/* istanbul ignore else */
+		/* istanbul ignore else */ // Not testable in phantonJS
 		if ('addEventListener' in window){
 			el.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){ //IE
@@ -65,7 +65,7 @@
 	}
 
 	function removeEventListener(el,evt,func){
-		/* istanbul ignore else */
+		/* istanbul ignore else */ // Not testable in phantonJS
 		if ('removeEventListener' in window){
 			el.removeEventListener(evt,func, false);
 		} else if ('detachEvent' in window){ //IE
@@ -126,22 +126,20 @@
 	}
 
 	var getNow = Date.now || function() {
+		/* istanbul ignore next */ // Not testable in PhantonJS
 		return new Date().getTime();
 	};
 
-	/* istanbul ignore next */
 	function formatLogMsg(msg){
 		return msgID + '[' + myID + ']' + ' ' + msg;
 	}
 
-	/* istanbul ignore next */
 	function log(msg){
 		if (logging && ('object' === typeof window.console)){
 			console.log(formatLogMsg(msg));
 		}
 	}
 
-	/* istanbul ignore next */
 	function warn(msg){
 		if ('object' === typeof window.console){
 			console.warn(formatLogMsg(msg));
@@ -232,8 +230,8 @@
 		if (undefined === bodyMarginStr){
 			bodyMarginStr = bodyMargin+'px';
 		}
-		chkCSS('margin',bodyMarginStr);
-		setBodyStyle('margin',bodyMarginStr);
+
+		setBodyStyle('margin',chkCSS('margin',bodyMarginStr));
 	}
 
 	function stopInfiniteResizingOfIFrame(){
@@ -324,6 +322,7 @@
 
 	function disconnectMutationObserver(){
 		if (null !== bodyObserver){
+			/* istanbul ignore next */ // Not testable in PhantonJS
 			bodyObserver.disconnect();
 		}
 	}
@@ -420,7 +419,7 @@
 		}
 
 		function enableInPageLinks(){
-			/* istanbul ignore else */
+			/* istanbul ignore else */ // Not testable in phantonJS
 			if(Array.prototype.forEach && document.querySelectorAll){
 				log('Setting up location.hash handlers');
 				bindAnchors();
@@ -431,7 +430,6 @@
 			}
 		}
 
-		/* istanbul ignore else */
 		if(inPageLinks.enable){
 			enableInPageLinks();
 		} else {
@@ -613,6 +611,7 @@
 	function setupMutationObserver(){
 		var	forceIntervalTimer = 0 > interval;
 
+		/* istanbul ignore if */ // Not testable in PhantomJS
 		if (window.MutationObserver || window.WebKitMutationObserver){
 			if (forceIntervalTimer) {
 				initInterval();
@@ -654,6 +653,7 @@
 			el = document.body,
 			retVal = 0;
 
+		/* istanbul ignore else */ // Not testable in phantonJS
 		if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
 			retVal = document.defaultView.getComputedStyle(el, null);
 			retVal = (null !== retVal) ? retVal[prop] : 0;

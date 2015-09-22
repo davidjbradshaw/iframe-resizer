@@ -21,12 +21,18 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	$(window.document.body).append('<a href="#foo" id="bar"></a>');
 
+	//test early message is ignored
+	mockMsgListener(createMsg('resize'));
+
 	var
 		id        = 'parentIFrameTests',
 		log       = true,
-		msg       = '8:true:'+log+':0:true:false:null:max:wheat:null:0:true:child:scroll'
-		msgObject = createMsg(id+':'+msg),
+		childMsg  = '8:true:'+log+':9999:true:false:-8px:max:wheat:null:0:true:child:scroll'
+		msgObject = createMsg(id+':'+childMsg),
 		win       = mockMsgListener(msgObject);
+
+    //test reset is ignored during init
+	mockMsgListener(createMsg('reset'));
 
 	window.msgCalled   = null;
 	window.readyCalled = false;
@@ -103,16 +109,16 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 		});
 
 		it('sendMessage (object)', function() {
-			win.parentIFrame.sendMessage({foo:'bar'});
-			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:message:{"foo":"bar"}', '*');
+			win.parentIFrame.sendMessage({foo:'bar'},'http://foo.bar:1337');
+			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:message:{"foo":"bar"}', 'http://foo.bar:1337');
 		});
 
 		it('setTargetOrigin', function() {
 			var targetOrigin = 'http://foo.bar:1337'
 			win.parentIFrame.setTargetOrigin(targetOrigin);
 			win.parentIFrame.size(10,10);
-			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', targetOrigin);
 			win.parentIFrame.setTargetOrigin('*');
+			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', targetOrigin);
 		});
 
 	});

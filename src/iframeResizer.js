@@ -58,6 +58,7 @@
 		};
 
 	function addEventListener(obj,evt,func){
+		/* istanbul ignore else */ // Not testable in PhantonJS
 		if ('addEventListener' in window){
 			obj.addEventListener(evt,func, false);
 		} else if ('attachEvent' in window){//IE
