@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         ' *  License: MIT\n */\n'
     },
 
-    clean: ['coverage', 'coverageLcov','js/iframeResizer.contentWindow.js'],
+    clean: ['coverage', 'coverageLcov'],
 
     qunit: {
       files: ['test/*.html']
@@ -95,7 +95,7 @@ module.exports = function(grunt) {
           banner:'<%= meta.bannerLocal %>',
           sourceMapName: 'js/iframeResizer.map'
         },
-        src: ['src/iframeResizer.js'],
+        src: ['js/iframeResizer.js'],
         dest: 'js/iframeResizer.min.js',
       },
       remote: {
@@ -173,12 +173,20 @@ module.exports = function(grunt) {
       files : [
         {src : 'src/iframeResizer.contentWindow.js', dest : 'js/iframeResizer.contentWindow.js'}
       ]
-    }
+    },
+
+    copy: {
+      main: {
+        nonull: true,
+        src: 'src/iframeResizer.js',
+        dest: 'js/iframeResizer.js',
+      },
+    },
 
   });
 
   grunt.registerTask('default', ['notest','karma:single']);
-  grunt.registerTask('build',   ['removeBlock','uglify','clean']);
+  grunt.registerTask('build',   ['removeBlock','copy','uglify']);
   grunt.registerTask('notest',  ['jsonlint','jshint','build']);
   grunt.registerTask('test',    ['clean','jshint','qunit','karma:single']);
   grunt.registerTask('travis',  ['clean','notest','qunit','karma:travis','coveralls']);
