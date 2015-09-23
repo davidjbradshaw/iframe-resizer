@@ -178,14 +178,15 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['notest','karma:single']);
-  grunt.registerTask('notest',  ['jsonlint','jshint','removeBlock','uglify','clean']);
-  grunt.registerTask('test',    ['clean','jshint','karma:single','qunit']);
+  grunt.registerTask('build',   ['removeBlock','uglify','clean']);
+  grunt.registerTask('notest',  ['jsonlint','jshint','build']);
+  grunt.registerTask('test',    ['clean','jshint','qunit','karma:single']);
   grunt.registerTask('travis',  ['clean','notest','karma:travis','coveralls','qunit']);
 
-  grunt.registerTask('postBump',['uglify','bump-commit','shell']);
-  grunt.registerTask('patch',   ['default','qunit','bump-only:patch','postBump']);
-  grunt.registerTask('minor',   ['default','qunit','bump-only:minor','postBump']);
-  grunt.registerTask('major',   ['default','qunit','bump-only:major','postBump']);
+  grunt.registerTask('postBump',['build','bump-commit','shell']);
+  grunt.registerTask('patch',   ['notest','test','bump-only:patch','postBump']);
+  grunt.registerTask('minor',   ['notest','test','bump-only:minor','postBump']);
+  grunt.registerTask('major',   ['notest','test','bump-only:major','postBump']);
 
   grunt.registerMultiTask('removeBlock', function() {
 
