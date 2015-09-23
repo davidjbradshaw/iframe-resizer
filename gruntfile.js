@@ -181,7 +181,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build',   ['removeBlock','uglify','clean']);
   grunt.registerTask('notest',  ['jsonlint','jshint','build']);
   grunt.registerTask('test',    ['clean','jshint','qunit','karma:single']);
-  grunt.registerTask('travis',  ['clean','notest','karma:travis','coveralls','qunit']);
+  grunt.registerTask('travis',  ['clean','notest','qunit','karma:travis','coveralls']);
 
   grunt.registerTask('postBump',['build','bump-commit','shell']);
   grunt.registerTask('patch',   ['notest','test','bump-only:patch','postBump']);
