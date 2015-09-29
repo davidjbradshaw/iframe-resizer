@@ -617,7 +617,7 @@
 				return Math.min.apply(null,getAllMeasurements(getWidth));
 			},
 
-			rightMostElement: function getLeftMostElement(){
+			rightMostElement: function rightMostElement(){
 				return getMaxElement('right', getAllElements());
 			},
 
