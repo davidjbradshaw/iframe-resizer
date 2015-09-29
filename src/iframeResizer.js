@@ -241,6 +241,20 @@
 			log(iframeId,'--');
 		}
 
+		function sendPageInfoToIframe(){
+			var bodyPosition   = document.body.getBoundingClientRect();
+			var iFramePosition = messageData.iframe.getBoundingClientRect();
+			var position = {
+				clientHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+				clientWidth:  Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+				offsetLeft:   parseInt(iFramePosition.left - bodyPosition.left),
+				offsetTop:    parseInt(iFramePosition.top - bodyPosition.top),
+				scrollLeft:   window.pageXOffset,
+				scrollTop:    window.pageYOffset
+			};
+			trigger('Send Page Info','pageInfo:'+JSON.stringify(position), settings[iframeId].iframe,iframeId);
+		}
+
 		function checkIFrameExists(){
 			var retBool = true;
 
@@ -362,6 +376,9 @@
 				break;
 			case 'scrollToOffset':
 				scrollRequestFromChild(true);
+				break;
+			case 'pageInfo':
+				sendPageInfoToIframe()
 				break;
 			case 'inPageLink':
 				findTarget(getMsgBody(9));
