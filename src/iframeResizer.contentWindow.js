@@ -474,6 +474,11 @@
 				return myID;
 			},
 
+			getPageInfo: function getPageInfoF(callback){
+				pageInfoCallback = callback;
+				sendMsg(0,0,'pageInfo');
+			},
+
 			moveToAnchor: function moveToAnchorF(hash){
 				inPageLinks.findTarget(hash);
 			},
@@ -492,11 +497,6 @@
 
 			sendMessage: function sendMessageF(msg,targetOrigin){
 				sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
-			},
-
-			getPageInfo: function getPageInfoF(callback){
-				pageInfoCallback = callback
-				sendMsg(0,0,'pageInfo');
 			},
 
 			setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
