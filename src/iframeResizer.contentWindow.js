@@ -800,12 +800,12 @@
 				return Math.min.apply(null,getAllMeasurements(getWidth));
 			},
 
-			leftMostElement: function getLeftMostElement(){
-				return getMaxElement('left', getAllElements());
+			rightMostElement: function rightMostElement(){
+				return getMaxElement('right', getAllElements());
 			},
 
 			taggedElement: function getTaggedElementsWidth(){
-				return getTaggedElements('left', 'data-iframe-width');
+				return getTaggedElements('right', 'data-iframe-width');
 			}
 		};
 
