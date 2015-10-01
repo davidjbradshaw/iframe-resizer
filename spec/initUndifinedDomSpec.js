@@ -2,17 +2,14 @@
 
 'use strict';
 
-
-define(['iframeResizer','jquery'], function(iFrameResize,$) {
-	describe('iFrame init(jQuery)', function() {
+define(['iframeResizer'], function(iFrameResize) {
+	describe('iFrame init(DOM Object)', function() {
 		var iframe;
 
 		beforeAll(function(){
 			loadIFrame('iframe600.html');
 
-			var $iframes = $('iframe').iFrameResize();
-
-			iframe = $iframes.get(0);
+			iframe = iFrameResize(undefined,document.getElementsByTagName('iframe')[0])[0];
 		});
 
 		afterAll(function(){
@@ -23,7 +20,6 @@ define(['iframeResizer','jquery'], function(iFrameResize,$) {
 			expect(iframe.iFrameResizer).toBeDefined();
 		});
 	});
-
-
 });
+
 

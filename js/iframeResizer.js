@@ -600,7 +600,7 @@
 		}
 
 		function newId(){
-			var id = (options.id || defaults.id + count++);
+			var id = ((options && options.id) || defaults.id + count++);
 			if  (null!==document.getElementById(id)){
 				id = id + count++;
 			}
