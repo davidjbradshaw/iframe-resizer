@@ -52,7 +52,8 @@
 		widthCalcMode         = widthCalcModeDefault,
 		win                   = window,
 		messageCallback       = function(){warn('MessageCallback function not defined');},
-		readyCallback         = function(){};
+		readyCallback         = function(){},
+		pageInfoCallback      = function(){};
 
 
 	function addEventListener(el,evt,func){
@@ -473,6 +474,11 @@
 				return myID;
 			},
 
+			getPageInfo: function getPageInfoF(callback){
+				pageInfoCallback = callback;
+				sendMsg(0,0,'pageInfo');
+			},
+
 			moveToAnchor: function moveToAnchorF(hash){
 				inPageLinks.findTarget(hash);
 			},
@@ -800,12 +806,12 @@
 				return Math.min.apply(null,getAllMeasurements(getWidth));
 			},
 
-			leftMostElement: function getLeftMostElement(){
-				return getMaxElement('left', getAllElements());
+			rightMostElement: function rightMostElement(){
+				return getMaxElement('right', getAllElements());
 			},
 
 			taggedElement: function getTaggedElementsWidth(){
-				return getTaggedElements('left', 'data-iframe-width');
+				return getTaggedElements('right', 'data-iframe-width');
 			}
 		};
 
@@ -989,6 +995,13 @@
 			log(' --');
 		}
 
+		function pageInfoFromParent(){
+			var msgBody = getData();
+			log('PageInfoFromParent called from parent: ' + msgBody );
+			pageInfoCallback(JSON.parse(msgBody));
+			log(' --');
+		}
+
 		function isInitMsg(){
 			//Test if this message is from a child below us. This is an ugly test, however, updating
 			//the message format would break backwards compatibity.
@@ -1008,6 +1021,9 @@
 				break;
 			case 'message':
 				messageFromParent();
+				break;
+			case 'pageInfo':
+				pageInfoFromParent();
 				break;
 			default:
 				if (!isMiddleTier() && !isInitMsg()){

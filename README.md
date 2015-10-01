@@ -196,7 +196,7 @@ Set the number of pixels the iFrame content size has to change by, before trigge
 
     default: 'scroll'
     values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
-             'max' | 'min' | 'scroll' | 'leftMostElement' | 'taggedElement'
+             'max' | 'min' | 'scroll' | 'rightMostElement' | 'taggedElement'
 
 By default the width of the page is worked out by taking the greater of the **documentElement** and **body** scrollWidth values.
 
@@ -209,10 +209,10 @@ Some CSS technics may require you to change this setting to one of the following
 * **scroll** takes the largest value of the two scroll options
 * **max** takes the largest value of the main four options <sup>*</sup>
 * **min** takes the smallest value of the main four options <sup>*</sup>
-* **leftMostElement** Loops though every element in the the DOM and finds the left most point <sup>†</sup>
+* **rightMostElement** Loops though every element in the the DOM and finds the left most point <sup>†</sup>
 * **taggedElement** Finds the left most element with a `data-iframe-width` attribute
 
-<sup> † </sup> <i>The **leftMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
+<sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
 <sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
@@ -315,6 +315,17 @@ Remove the iFrame from the parent page.
 
 Returns the ID of the iFrame that the page is contained in.
 
+### getPageInfo(callback)
+
+Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
+
+* **clientHeight** The height of the viewport in pixels
+* **clientWidth** The width of the viewport in pixels
+* **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe
+* **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
+* **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
+* **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
+
 ### scrollTo(x,y)
 
 Scroll the parent page to the coordinates x and y.
@@ -373,7 +384,6 @@ Tell the iFrame to resize itself.
 Send data to the containing page, `message` can be any data type that can be serialized into JSON. The `targetOrigin` option is used to restrict where the message is sent to, in case your iFrame navigates away to another domain.
 
 
-
 ## Troubleshooting
 
 The first steps to investigate a problem is to make sure you are using the latest version and then enable the [log](#log) option, which outputs everything that happens to the [JavaScript Console](https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console). This will enable you to see what both the iFrame and host page are up to and also see any JavaScript error messages.
@@ -397,15 +407,6 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 
 ### IFrame not resizing
 The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
-
-<!--
-### IFrame not responding to initialisation
-The initialisation call to the iFrame is triggered by the iFrame's onload event. If you use a script loader in your iFrame to load the `iframeResize.contentWindow.js` script, then it may be loaded after the init message has been sent. You can force the parent to resend the init message from the iFrame with the following line of code.
-
-```js
-window.parent.postMessage('[iFrameResizerChild]Ready','*');
-```
--->
 
 ### IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detected by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows
@@ -505,6 +506,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.4 [#262](https://github.com/davidjbradshaw/iframe-resizer/issues/262) Add getPageInfo method to parentIFrames [[Pierre Olivier](https://github.com/pomartel)]. [#263](https://github.com/davidjbradshaw/iframe-resizer/issues/263) Change leftMostElement to rightMostElement [[Luiz Panariello](https://github.com/LuizPanariello)]. [#265](https://github.com/davidjbradshaw/iframe-resizer/issues/265) Fix issue when no options being passed and added test for this.
 * v3.3.1 Point index.js to the JS folder, instead of the src folder. Added touch event listeners. AutoResize method now returns current state.
 * v3.3.0 [#97](https://github.com/davidjbradshaw/iframe-resizer/issues/97) Add autoResize method to parentIFrames. Fix bug when setHeightCalculationMethod is called with invalid value. Add interval timer to event teardown. Log targetOrigin. [#253](https://github.com/davidjbradshaw/iframe-resizer/issues/253) Work around bug with MooTools interfering with system objects.
 * v3.2.0 Added calculation of margin to LowestElement, LeftMostElement and TaggedElement calculation modes. Check callback function is a function before calling it. [#246](https://github.com/davidjbradshaw/iframe-resizer/issues/246) Fixed issue when scrollCallback changes the page position. [#247](https://github.com/davidjbradshaw/iframe-resizer/issues/247) Fix rounding issue when page is zoomed in Chrome [[thenewguy](https://github.com/thenewguy)].
@@ -574,4 +576,3 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 ## License
 Copyright &copy; 2013-15 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
-

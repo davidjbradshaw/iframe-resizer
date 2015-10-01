@@ -241,6 +241,22 @@
 			log(iframeId,'--');
 		}
 
+		function sendPageInfoToIframe(){
+			var
+				bodyPosition   = document.body.getBoundingClientRect(),
+				iFramePosition = messageData.iframe.getBoundingClientRect(),
+				position       = JSON.stringify({
+					clientHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+					clientWidth:  Math.max(document.documentElement.clientWidth,  window.innerWidth  || 0),
+					offsetTop:    parseInt(iFramePosition.top  - bodyPosition.top,  10),
+					offsetLeft:   parseInt(iFramePosition.left - bodyPosition.left, 10),
+					scrollTop:    window.pageYOffset,
+					scrollLeft:   window.pageXOffset
+				});
+
+			trigger('Send Page Info','pageInfo:' + position, settings[iframeId].iframe, iframeId);
+		}
+
 		function checkIFrameExists(){
 			var retBool = true;
 
@@ -362,6 +378,9 @@
 				break;
 			case 'scrollToOffset':
 				scrollRequestFromChild(true);
+				break;
+			case 'pageInfo':
+				sendPageInfoToIframe();
 				break;
 			case 'inPageLink':
 				findTarget(getMsgBody(9));
@@ -600,7 +619,7 @@
 		}
 
 		function newId(){
-			var id = (options.id || defaults.id + count++);
+			var id = ((options && options.id) || defaults.id + count++);
 			if  (null!==document.getElementById(id)){
 				id = id + count++;
 			}
