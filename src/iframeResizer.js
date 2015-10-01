@@ -248,10 +248,10 @@
 				position       = JSON.stringify({
 					clientHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
 					clientWidth:  Math.max(document.documentElement.clientWidth,  window.innerWidth  || 0),
-					offsetLeft:   parseInt(iFramePosition.left - bodyPosition.left, 10),
 					offsetTop:    parseInt(iFramePosition.top  - bodyPosition.top,  10),
-					scrollLeft:   window.pageXOffset,
-					scrollTop:    window.pageYOffset
+					offsetLeft:   parseInt(iFramePosition.left - bodyPosition.left, 10),
+					scrollTop:    window.pageYOffset,
+					scrollLeft:   window.pageXOffset
 				});
 
 			trigger('Send Page Info','pageInfo:' + position, settings[iframeId].iframe, iframeId);
