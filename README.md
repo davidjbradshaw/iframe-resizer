@@ -315,6 +315,17 @@ Remove the iFrame from the parent page.
 
 Returns the ID of the iFrame that the page is contained in.
 
+### getPageInfo(callback)
+
+Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
+
+* **clientHeight** The height of the viewport in pixels
+* **clientWidth** The width of the viewport in pixels
+* **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe
+* **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
+* **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
+* **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
+
 ### scrollTo(x,y)
 
 Scroll the parent page to the coordinates x and y.
@@ -372,17 +383,6 @@ Tell the iFrame to resize itself.
 
 Send data to the containing page, `message` can be any data type that can be serialized into JSON. The `targetOrigin` option is used to restrict where the message is sent to, in case your iFrame navigates away to another domain.
 
-### pageInfo(callback)
-
-Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
-
-* **clientHeight** The height of the viewport in pixels
-* **clientWidth** The width of the viewport in pixels
-* **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe
-* **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
-* **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
-* **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
-
 
 ## Troubleshooting
 
@@ -407,15 +407,6 @@ Not having a valid [HTML document type](http://en.wikipedia.org/wiki/Document_ty
 
 ### IFrame not resizing
 The most common cause of this is not placing the [iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js) script inside the iFramed page. If the other page is on a domain outside your control and you can not add JavaScript to that page, then now is the time to give up all hope of ever getting the iFrame to size to the content. As it is impossible to work out the size of the contained page, without using JavaScript on both the parent and child pages.
-
-<!--
-### IFrame not responding to initialisation
-The initialisation call to the iFrame is triggered by the iFrame's onload event. If you use a script loader in your iFrame to load the `iframeResize.contentWindow.js` script, then it may be loaded after the init message has been sent. You can force the parent to resend the init message from the iFrame with the following line of code.
-
-```js
-window.parent.postMessage('[iFrameResizerChild]Ready','*');
-```
--->
 
 ### IFrame not detecting CSS :hover events
 If your page resizes via CSS `:hover` events, these won't be detected by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows
