@@ -196,7 +196,7 @@ Set the number of pixels the iFrame content size has to change by, before trigge
 
     default: 'scroll'
     values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
-             'max' | 'min' | 'scroll' | 'leftMostElement' | 'taggedElement'
+             'max' | 'min' | 'scroll' | 'rightMostElement' | 'taggedElement'
 
 By default the width of the page is worked out by taking the greater of the **documentElement** and **body** scrollWidth values.
 
@@ -209,10 +209,10 @@ Some CSS technics may require you to change this setting to one of the following
 * **scroll** takes the largest value of the two scroll options
 * **max** takes the largest value of the main four options <sup>*</sup>
 * **min** takes the smallest value of the main four options <sup>*</sup>
-* **leftMostElement** Loops though every element in the the DOM and finds the left most point <sup>†</sup>
+* **rightMostElement** Loops though every element in the the DOM and finds the left most point <sup>†</sup>
 * **taggedElement** Finds the left most element with a `data-iframe-width` attribute
 
-<sup> † </sup> <i>The **leftMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
+<sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
 <sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
@@ -505,6 +505,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.4 [#263](https://github.com/davidjbradshaw/iframe-resizer/issues/263) Change leftMostElement to rightMostElement [[Luiz Panariello](https://github.com/LuizPanariello)]. [#265](https://github.com/davidjbradshaw/iframe-resizer/issues/265) Fix issue when no options being passed and added test for this.
 * v3.3.1 Point index.js to the JS folder, instead of the src folder. Added touch event listeners. AutoResize method now returns current state.
 * v3.3.0 [#97](https://github.com/davidjbradshaw/iframe-resizer/issues/97) Add autoResize method to parentIFrames. Fix bug when setHeightCalculationMethod is called with invalid value. Add interval timer to event teardown. Log targetOrigin. [#253](https://github.com/davidjbradshaw/iframe-resizer/issues/253) Work around bug with MooTools interfering with system objects.
 * v3.2.0 Added calculation of margin to LowestElement, LeftMostElement and TaggedElement calculation modes. Check callback function is a function before calling it. [#246](https://github.com/davidjbradshaw/iframe-resizer/issues/246) Fixed issue when scrollCallback changes the page position. [#247](https://github.com/davidjbradshaw/iframe-resizer/issues/247) Fix rounding issue when page is zoomed in Chrome [[thenewguy](https://github.com/thenewguy)].
