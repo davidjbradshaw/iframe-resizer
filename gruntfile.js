@@ -192,9 +192,10 @@ module.exports = function(grunt) {
   grunt.registerTask('travis',  ['clean','notest','qunit','karma:travis','coveralls']);
 
   grunt.registerTask('postBump',['build','bump-commit','shell']);
-  grunt.registerTask('patch',   ['notest','test','bump-only:patch','postBump']);
-  grunt.registerTask('minor',   ['notest','test','bump-only:minor','postBump']);
-  grunt.registerTask('major',   ['notest','test','bump-only:major','postBump']);
+  grunt.registerTask('preBump', ['clean','notest','qunit','karma:travis']);
+  grunt.registerTask('patch',   ['preBump','bump-only:patch','postBump']);
+  grunt.registerTask('minor',   ['preBump','bump-only:minor','postBump']);
+  grunt.registerTask('major',   ['preBump','bump-only:major','postBump']);
 
   grunt.registerMultiTask('removeBlock', function() {
 
