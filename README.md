@@ -372,6 +372,16 @@ Tell the iFrame to resize itself.
 
 Send data to the containing page, `message` can be any data type that can be serialized into JSON. The `targetOrigin` option is used to restrict where the message is sent to, in case your iFrame navigates away to another domain.
 
+### pageInfo(callback)
+
+Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
+
+* **clientHeight** The height of the viewport in pixels
+* **clientWidth** The width of the viewport in pixels
+* **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe
+* **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
+* **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
+* **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
 
 
 ## Troubleshooting
@@ -575,4 +585,3 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 ## License
 Copyright &copy; 2013-15 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
-
