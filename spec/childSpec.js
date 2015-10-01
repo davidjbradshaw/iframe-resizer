@@ -161,6 +161,12 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check');
 		});
 
+		it('resize(rightMostElement)', function() {
+			win.parentIFrame.setWidthCalculationMethod('rightMostElement');
+			mockMsgListener(createMsg('resize'));
+			expect(console.log).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check');
+		});
+
 		it('move to anchor', function() {
 			mockMsgListener(createMsg('moveToAnchor:foo'));
 			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo', '*');
