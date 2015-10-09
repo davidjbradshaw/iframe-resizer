@@ -3,6 +3,7 @@
 [![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.png?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 [![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
+[![Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://www.npmjs.com/package/iframe-resizer)
 [![license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content. It provides a range of features to address the most common issues with using iFrames, these include:
@@ -506,7 +507,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.4.1 [#271](https://github.com/davidjbradshaw/iframe-resizer/issues/271) Fix bower.json to point to *js* folder, rather then *src* [[Yachi](https://github.com/yachi)]. Only teardown events on close if currently enabled.
+* v3.4.2 Only teardown events on close if currently enabled.
+* v3.4.1 [#271](https://github.com/davidjbradshaw/iframe-resizer/issues/271) Fix bower.json to point to *js* folder, rather then *src* [[Yachi](https://github.com/yachi)].
 * v3.4.0 [#262](https://github.com/davidjbradshaw/iframe-resizer/issues/262) Add getPageInfo method to parentIFrame [[Pierre Olivier](https://github.com/pomartel)]. [#263](https://github.com/davidjbradshaw/iframe-resizer/issues/263) Change leftMostElement to rightMostElement [[Luiz Panariello](https://github.com/LuizPanariello)]. [#265](https://github.com/davidjbradshaw/iframe-resizer/issues/265) Fix issue when no options being passed and added test for this.
 * v3.3.1 Point index.js to the JS folder, instead of the src folder. Added touch event listeners. AutoResize method now returns current state.
 * v3.3.0 [#97](https://github.com/davidjbradshaw/iframe-resizer/issues/97) Add autoResize method to parentIFrame. Fix bug when setHeightCalculationMethod is called with invalid value. Add interval timer to event teardown. Log targetOrigin. [#253](https://github.com/davidjbradshaw/iframe-resizer/issues/253) Work around bug with MooTools interfering with system objects.
