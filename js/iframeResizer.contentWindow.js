@@ -206,7 +206,7 @@
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
 			readData();
 		}
-		
+
 		log('TargetOrigin for parent set to: ' + targetOriginDefault);
 	}
 
@@ -342,7 +342,7 @@
 	function teardown(){
 		stopMsgsToParent();
 		removeMsgListener();
-		stopEventListeners();
+		if (true === autoResize) stopEventListeners();
 	}
 
 	function injectClearFixIntoBodyElement(){
