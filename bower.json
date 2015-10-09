@@ -7,8 +7,8 @@
   ],
   "description": "Responsively keep same and cross domain iFrames sized to their content with support for window/content resizing, multiple and nested iFrames. (Dependacy free and works with IE8+)",
   "main": [
-    "src/iframeResizer.js",
-    "src/iframeResizer.contentWindow.js"
+    "js/iframeResizer.js",
+    "js/iframeResizer.contentWindow.js"
   ],
   "keywords": [
     "CrossDomain",
