@@ -581,3 +581,4 @@ Copyright &copy; 2013-15 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
+[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=1&height=3)](https://nodei.co/npm/iframe-resizer/)
