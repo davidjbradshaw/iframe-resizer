@@ -17,6 +17,7 @@ This library enables the automatic resizing of the height and width of both same
 * Simplified messaging between iFrame and host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
 * Fixes in page links in iFrame and supports links between the iFrame and parent page.
 * Provides custom sizing and scrolling methods.
+* Exposes parent position and viewport size to iFrame.
 * Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
 * Fallback support down to IE8.
 
@@ -329,7 +330,7 @@ Ask the containing page for its positioning coordinates. You need to provide a c
 
 Your callback function will be recalled when the parent page is scrolled or resized.
 
-Pass `false` to getPageInfo to disable the callback. 
+Pass `false` to disable the callback. 
 
 ### scrollTo(x,y)
 
@@ -511,6 +512,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.5.0 Recall getPageInfo callback when parent page position changes.
 * v3.4.2 Only teardown events on close if currently enabled.
 * v3.4.1 [#271](https://github.com/davidjbradshaw/iframe-resizer/issues/271) Fix bower.json to point to *js* folder, rather then *src* [[Yachi](https://github.com/yachi)].
 * v3.4.0 [#262](https://github.com/davidjbradshaw/iframe-resizer/issues/262) Add getPageInfo method to parentIFrame [[Pierre Olivier](https://github.com/pomartel)]. [#263](https://github.com/davidjbradshaw/iframe-resizer/issues/263) Change leftMostElement to rightMostElement [[Luiz Panariello](https://github.com/LuizPanariello)]. [#265](https://github.com/davidjbradshaw/iframe-resizer/issues/265) Fix issue when no options being passed and added test for this.
