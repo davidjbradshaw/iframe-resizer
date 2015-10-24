@@ -475,8 +475,13 @@
 			},
 
 			getPageInfo: function getPageInfoF(callback){
-				pageInfoCallback = callback;
-				sendMsg(0,0,'pageInfo');
+				if ('function' === typeof callback){
+					pageInfoCallback = callback;
+					sendMsg(0,0,'pageInfo');
+				} else {
+					pageInfoCallback = callback;
+					sendMsg(0,0,'pageInfoStop');
+				}
 			},
 
 			moveToAnchor: function moveToAnchorF(hash){

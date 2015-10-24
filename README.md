@@ -316,7 +316,7 @@ Remove the iFrame from the parent page.
 
 Returns the ID of the iFrame that the page is contained in.
 
-### getPageInfo(callback)
+### getPageInfo(callback || false)
 
 Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
 
@@ -326,6 +326,10 @@ Ask the containing page for its positioning coordinates. You need to provide a c
 * **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
 * **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
 * **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
+
+Your callback function will be recalled when the parent page is scrolled or resized.
+
+Pass `false` to getPageInfo to disable the callback. 
 
 ### scrollTo(x,y)
 

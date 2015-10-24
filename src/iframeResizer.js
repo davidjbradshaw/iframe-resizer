@@ -66,6 +66,15 @@
 		}
 	}
 
+	function removeEventListener(el,evt,func){
+		/* istanbul ignore else */ // Not testable in phantonJS
+		if ('removeEventListener' in window){
+			el.removeEventListener(evt,func, false);
+		} else if ('detachEvent' in window){ //IE
+			el.detachEvent('on'+evt,func);
+		}
+	}
+
 	function setupRequestAnimationFrame(){
 		var
 			vendors = ['moz', 'webkit', 'o', 'ms'],
@@ -148,24 +157,24 @@
 
 		function ensureInRange(Dimension){
 			var
-				max  = Number(settings[iframeId]['max'+Dimension]),
-				min  = Number(settings[iframeId]['min'+Dimension]),
+				max  = Number(settings[iframeId]['max' + Dimension]),
+				min  = Number(settings[iframeId]['min' + Dimension]),
 				dimension = Dimension.toLowerCase(),
 				size = Number(messageData[dimension]);
 
-			log(iframeId,'Checking '+dimension+' is in range '+min+'-'+max);
+			log(iframeId,'Checking ' + dimension + ' is in range ' + min + '-' + max);
 
 			if (size<min) {
 				size=min;
-				log(iframeId,'Set '+dimension+' to min value');
+				log(iframeId,'Set ' + dimension + ' to min value');
 			}
 
 			if (size>max) {
 				size=max;
-				log(iframeId,'Set '+dimension+' to max value');
+				log(iframeId,'Set ' + dimension + ' to max value');
 			}
 
-			messageData[dimension]=''+size;
+			messageData[dimension] = '' + size;
 		}
 
 
@@ -241,20 +250,72 @@
 			log(iframeId,'--');
 		}
 
-		function sendPageInfoToIframe(){
+		function getPageInfo(){
 			var
 				bodyPosition   = document.body.getBoundingClientRect(),
-				iFramePosition = messageData.iframe.getBoundingClientRect(),
-				position       = JSON.stringify({
-					clientHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
-					clientWidth:  Math.max(document.documentElement.clientWidth,  window.innerWidth  || 0),
-					offsetTop:    parseInt(iFramePosition.top  - bodyPosition.top,  10),
-					offsetLeft:   parseInt(iFramePosition.left - bodyPosition.left, 10),
-					scrollTop:    window.pageYOffset,
-					scrollLeft:   window.pageXOffset
-				});
+				iFramePosition = messageData.iframe.getBoundingClientRect();
 
-			trigger('Send Page Info','pageInfo:' + position, settings[iframeId].iframe, iframeId);
+			return JSON.stringify({
+				clientHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+				clientWidth:  Math.max(document.documentElement.clientWidth,  window.innerWidth  || 0),
+				offsetTop:    parseInt(iFramePosition.top  - bodyPosition.top,  10),
+				offsetLeft:   parseInt(iFramePosition.left - bodyPosition.left, 10),
+				scrollTop:    window.pageYOffset,
+				scrollLeft:   window.pageXOffset
+			});
+		}
+
+		function sendPageInfoToIframe(iframe,iframeId){
+			function debouncedTrigger(){
+				trigger(
+					'Send Page Info',
+					'pageInfo:' + getPageInfo(), 
+					iframe, 
+					iframeId
+				);
+			}
+
+			debouce(debouncedTrigger,32);
+		}
+
+
+		function startPageInfoMonitor(){	
+			function sendPageInfo(){
+				if (settings[id]){
+					sendPageInfoToIframe(settings[id].iframe,id);
+				} else {
+					stop();
+				}
+			}
+
+			function stop(){
+					removeEvent('scroll');
+					removeEvent('resize');
+			}
+
+			function addEvent(e){
+				log(id,'Add ' + e + ' listener for sendPageInfo');
+				addEventListener(window,e,sendPageInfo);
+			}
+
+			function removeEvent(e){
+				log(id,'Remove ' + e + ' listener for sendPageInfo');
+				removeEventListener(window,e,sendPageInfo);
+			}
+			
+			var id = iframeId;
+
+			addEvent('scroll');
+			addEvent('resize');
+
+			settings[id].stopPageInfo = stop;
+		}
+
+		function stopPageInfoMonitor(){
+			if (settings[iframeId] && settings[iframeId].stopPageInfo){
+				settings[iframeId].stopPageInfo();
+				delete settings[iframeId].stopPageInfo;
+			}
 		}
 
 		function checkIFrameExists(){
@@ -380,7 +441,11 @@
 				scrollRequestFromChild(true);
 				break;
 			case 'pageInfo':
-				sendPageInfoToIframe();
+				sendPageInfoToIframe(settings[iframeId].iframe,iframeId);
+				startPageInfoMonitor();
+				break;
+			case 'pageInfoStop':
+				stopPageInfoMonitor();
 				break;
 			case 'inPageLink':
 				findTarget(getMsgBody(9));
@@ -555,6 +620,7 @@
 
 	function trigger(calleeMsg,msg,iframe,id){
 		function postMessageToIFrame(){
+			var target = settings[id].targetOrigin;
 			log(id,'[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+') targetOrigin: '+target);
 			iframe.contentWindow.postMessage( msgId + msg, target );
 		}
@@ -566,14 +632,20 @@
 			}
 		}
 
-		id = id || iframe.id;
-		var target = settings[id].targetOrigin;
-
-		if(iframe && 'contentWindow' in iframe){
-			postMessageToIFrame();
-		} else {
-			iFrameNotFound();
+		function chkAndSend(){
+			if(iframe && 'contentWindow' in iframe && (null !== iframe.contentWindow)){ //Null test for PhantomJS
+				postMessageToIFrame();
+			} else {
+				iFrameNotFound();
+			}
 		}
+
+		id = id || iframe.id;
+
+		if(settings[id]) {
+			chkAndSend();
+		}
+
 	}
 
 	function createOutgoingMsg(iframeId){
