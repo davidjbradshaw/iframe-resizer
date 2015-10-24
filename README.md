@@ -10,14 +10,14 @@ This library enables the automatic resizing of the height and width of both same
 
 * Height and width resizing of the iFrame to content size.
 * Works with multiple and nested iFrames.
-* Automatic domain authentication for cross domain iFrames.
+* Domain authentication for cross domain iFrames.
 * Provides a range of page size calculation methods to support complex CSS layouts.
 * Detects changes to the DOM that can cause the page to resize using [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
 * Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Orientation Change and Mouse events).
 * Simplified messaging between iFrame and host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
 * Fixes in page links in iFrame and supports links between the iFrame and parent page.
 * Provides custom sizing and scrolling methods.
-* Exposes parent position and viewport size to iFrame.
+* Exposes parent position and viewport size to the iFrame.
 * Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
 * Fallback support down to IE8.
 
