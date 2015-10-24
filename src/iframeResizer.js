@@ -294,12 +294,12 @@
 			}
 
 			function addEvent(e){
-				log(id,'Add ' + e + ' listener for sendPageInfo');
+				log(id,'Added ' + e + ' listener for sendPageInfo');
 				addEventListener(window,e,sendPageInfo);
 			}
 
 			function removeEvent(e){
-				log(id,'Remove ' + e + ' listener for sendPageInfo');
+				log(id,'Removed ' + e + ' listener for sendPageInfo');
 				removeEventListener(window,e,sendPageInfo);
 			}
 			
