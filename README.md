@@ -512,7 +512,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.0 Recall getPageInfo callback when parent page position changes. Added Array.prototype.forEach to IE polyfils.
+* v3.5.0 Recall getPageInfo callback when parent page position changes. Added Array.prototype.forEach to IE8 polyfils.
 * v3.4.2 Only teardown events on close if currently enabled.
 * v3.4.1 [#271](https://github.com/davidjbradshaw/iframe-resizer/issues/271) Fix bower.json to point to *js* folder, rather then *src* [[Yachi](https://github.com/yachi)].
 * v3.4.0 [#262](https://github.com/davidjbradshaw/iframe-resizer/issues/262) Add getPageInfo method to parentIFrame [[Pierre Olivier](https://github.com/pomartel)]. [#263](https://github.com/davidjbradshaw/iframe-resizer/issues/263) Change leftMostElement to rightMostElement [[Luiz Panariello](https://github.com/LuizPanariello)]. [#265](https://github.com/davidjbradshaw/iframe-resizer/issues/265) Fix issue when no options being passed and added test for this.
@@ -579,7 +579,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 * v1.1.0 Added DOM [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) trigger to better detect content changes in iFrame, [#7](https://github.com/davidjbradshaw/iframe-resizer/issues/7) Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.
 * v1.0.3 [#6](https://github.com/davidjbradshaw/iframe-resizer/issues/6) Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.
 * v1.0.2 [#2](https://github.com/davidjbradshaw/iframe-resizer/issues/2) mime-type changed for IE8-10.
-* v1.0.0 Initial published release.
+* v1.0.0 Initial pubic release.
 
 
 ## License
