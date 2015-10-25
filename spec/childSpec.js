@@ -15,7 +15,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	window.iFrameResizer = {
 		messageCallback: function(msg){msgCalled = msg;},
-		readyCallback:   function(){window.parent.readyCalled = true;alert('ready')},
+		readyCallback:   function(){this.readyCalled = true;},
 		targetOrigin:    '*'
 	};
 
@@ -35,7 +35,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 	mockMsgListener(createMsg('reset'));
 
 	window.msgCalled   = null;
-	window.readyCalled = false;
+	//window.readyCalled = null;
 
 	beforeEach(function(){
 		spyOn(msgObject.source,'postMessage');
@@ -144,8 +144,8 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 	describe('inbound message: ', function() {
 
-		xit('readyCallack', function() {
-			expect(window.iFrameResizer.readyCallback).toHaveBeenCalled();
+		it('readyCallack', function() {
+			expect(window.readyCalled).toEqual(true);
 		});
 
 		it('message (String)', function() {
