@@ -17,12 +17,15 @@ define(['iframeResizer'], function(iFrameResize) {
 			spyOn(iframe1.contentWindow,'postMessage').and.callFake(function(msg) {
 				if(0!==msg.indexOf('pageInfo')){
 					expect(msg.indexOf('"offsetTop":0,"offsetLeft":0,"scrollTop":0,"scrollLeft":0')).not.toEqual(0);
+				}
+				if(0!==msg.indexOf('pageInfoStop')){
 					tearDown(iframe1);
 					done();
 				}
 			});
 
 			mockMsgFromIFrame(iframe1,'pageInfo');
+			mockMsgFromIFrame(iframe1,'pageInfoStop');
 		});
 
 	});

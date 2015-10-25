@@ -107,6 +107,11 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			mockMsgListener(createMsg('pageInfo:{"clientHeight":645,"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,"scrollTop":0}'));
 		});
 
+		it('getPageInfoStop', function() {
+			win.parentIFrame.getPageInfo();
+			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:pageInfoStop', '*');
+		});
+
 		it('scrollTo', function() {
 			win.parentIFrame.scrollTo(10,10);
 			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:scrollTo', '*');
