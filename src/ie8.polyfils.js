@@ -45,6 +45,23 @@ if (!Function.prototype.bind) {
   };
 }
 
+if (!Array.prototype.forEach) {
+  Array.prototype.forEach = function(callback, thisArg) {
+    if (this === null) throw new TypeError(' this is null or not defined');
+    if (typeof callback !== 'function') throw new TypeError(callback + ' is not a function');
+
+    var
+      O = Object(this),
+      len = O.length >>> 0;
+
+    for (var k=0 ; k < len ; k++) {
+      if (k in O)
+        callback.call(thisArg, O[k], k, O);
+    }
+  };
+}
+
+
 
 //addEventListener polyfill 1.0 / Eirik Backer / MIT Licence
 (function(win, doc){
@@ -75,7 +92,7 @@ if (!Function.prototype.bind) {
 
   addListen([doc, win]);
   if('Element' in win)win.Element.prototype.addEventListener = addEvent;      //IE8
-  else{                                     //IE < 8
+  else{     //IE < 8
     doc.attachEvent('onreadystatechange', function(){addListen(doc.all);});    //Make sure we also init at domReady
     docHijack('getElementsByTagName');
     docHijack('getElementById');
