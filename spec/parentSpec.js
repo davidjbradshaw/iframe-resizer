@@ -2,6 +2,37 @@ define(['iframeResizer'], function(iFrameResize) {
 
 	describe('Parent Page', function() {
 
+		describe('default resize', function() {
+			var iframe;
+			var log=LOG;
+			var testId = 'defaultResize3';
+			var ready;
+
+
+			beforeEach(function(done){
+				loadIFrame('iframe600.html');
+				iframe = iFrameResize({
+					log:log,
+					id:testId,
+					resizedCallback:function(){
+						ready=true;
+						done();
+					}
+				})[0];
+
+				mockMsgFromIFrame(iframe,'foo');
+			});
+
+			afterEach(function(){
+				tearDown(iframe);
+			})
+
+			it('receive message', function() {
+				expect(ready).toBe(true);
+			});
+		});
+
+
 		describe('reset Page', function() {
 			var iframe;
 			var log=LOG;
@@ -53,25 +84,5 @@ define(['iframeResizer'], function(iFrameResize) {
 			});
 		});
 
-
-		xdescribe('default resize', function() {
-			var iframe;
-			var log=LOG;
-			var testId = 'defaultResize3';
-
-			it('receive message', function(done) {
-				loadIFrame('iframe600.html');
-				iframe = iFrameResize({
-					log:log,
-					id:testId,
-					resizeCallback:function(){
-						setTimeout(tearDown.bind(null,iframe),1);
-						done();
-					}
-				})[0];
-
-				mockMsgFromIFrame(iframe,'foo');
-			});
-		});
 	});
 });
