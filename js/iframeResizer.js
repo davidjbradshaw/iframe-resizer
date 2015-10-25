@@ -279,34 +279,33 @@
 		}
 
 
-		function startPageInfoMonitor(){	
-			function sendPageInfo(){
-				if (settings[id]){
-					sendPageInfoToIframe(settings[id].iframe,id);
-				} else {
-					stop();
+		function startPageInfoMonitor(){
+			function setListener(type,func){
+				function sendPageInfo(){
+					if (settings[id]){
+						sendPageInfoToIframe(settings[id].iframe,id);
+					} else {
+						stop();
+					}
 				}
+
+				['scroll','resize'].forEach(function(evt){
+					log(id, type +  evt + ' listener for sendPageInfo');
+					func(window,evt,sendPageInfo);
+				});
 			}
 
 			function stop(){
-					removeEvent('scroll');
-					removeEvent('resize');
+				setListener('Remove ', removeEventListener);
 			}
 
-			function addEvent(e){
-				log(id,'Add ' + e + ' listener for sendPageInfo');
-				addEventListener(window,e,sendPageInfo);
-			}
-
-			function removeEvent(e){
-				log(id,'Remove ' + e + ' listener for sendPageInfo');
-				removeEventListener(window,e,sendPageInfo);
+			function start(){
+				setListener('Add ', addEventListener);
 			}
 			
-			var id = iframeId;
+			var id = iframeId; //Create locally scoped copy of iFrame ID
 
-			addEvent('scroll');
-			addEvent('resize');
+			start();
 
 			settings[id].stopPageInfo = stop;
 		}
@@ -932,13 +931,16 @@
 
 	function factory(){
 		function init(options,element){
-			if(!element) {
-				return; //Stop mootools creating problems
-			} else if(!element.tagName) {
-				throw new TypeError('Object is not a valid DOM element');
-			} else if ('IFRAME' !== element.tagName.toUpperCase()) {
-				throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>');
-			} else {
+			function chkType(){
+				if(!element.tagName) {
+					throw new TypeError('Object is not a valid DOM element');
+				} else if ('IFRAME' !== element.tagName.toUpperCase()) {
+					throw new TypeError('Expected <IFRAME> tag, found <'+element.tagName+'>');
+				}
+			}
+
+			if(element) {
+				chkType();
 				setupIFrame(element, options);
 				iFrames.push(element);
 			}
