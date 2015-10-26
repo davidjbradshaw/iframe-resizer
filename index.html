@@ -38,13 +38,14 @@
 <ul>
 <li>Height and width resizing of the iFrame to content size.</li>
 <li>Works with multiple and nested iFrames.</li>
-<li>Automatic domain authentication for cross domain iFrames.</li>
+<li>Domain authentication for cross domain iFrames.</li>
 <li>Provides a range of page size calculation methods to support complex CSS layouts.</li>
 <li>Detects changes to the DOM that can cause the page to resize using <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a>.</li>
 <li>Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Orientation Change and Mouse events).</li>
 <li>Simplified messaging between iFrame and host page via <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage">postMessage</a>.</li>
 <li>Fixes in page links in iFrame and supports links between the iFrame and parent page.</li>
 <li>Provides custom sizing and scrolling methods.</li>
+<li>Exposes parent position and viewport size to the iFrame.</li>
 <li>Works with <a href="http://viewerjs.org/">ViewerJS</a> to support PDF and ODF documents.</li>
 <li>Fallback support down to IE8.</li>
 </ul>
@@ -422,7 +423,7 @@ type: string
 <p>Returns the ID of the iFrame that the page is contained in.</p>
 
 <h3>
-<a id="getpageinfocallback" class="anchor" href="#getpageinfocallback" aria-hidden="true"><span class="octicon octicon-link"></span></a>getPageInfo(callback)</h3>
+<a id="getpageinfocallback--false" class="anchor" href="#getpageinfocallback--false" aria-hidden="true"><span class="octicon octicon-link"></span></a>getPageInfo(callback || false)</h3>
 
 <p>Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:</p>
 
@@ -440,6 +441,10 @@ type: string
 <li>
 <strong>scrollTop</strong> The number of pixels between the top edge of the iframe and the top edge of the iframe viewport</li>
 </ul>
+
+<p>Your callback function will be recalled when the parent page is scrolled or resized.</p>
+
+<p>Pass <code>false</code> to disable the callback. </p>
 
 <h3>
 <a id="scrolltoxy" class="anchor" href="#scrolltoxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>scrollTo(x,y)</h3>
@@ -633,7 +638,10 @@ iFrameResize({
 <a id="version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h2>
 
 <ul>
-<li>v3.4 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/262">#262</a> Add getPageInfo method to parentIFrame [<a href="https://github.com/pomartel">Pierre Olivier</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/263">#263</a> Change leftMostElement to rightMostElement [<a href="https://github.com/LuizPanariello">Luiz Panariello</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/265">#265</a> Fix issue when no options being passed and added test for this.</li>
+<li>v3.5.0 Recall getPageInfo callback when parent page position changes. Added Array.prototype.forEach to IE8 polyfils.</li>
+<li>v3.4.2 Only teardown events on close if currently enabled.</li>
+<li>v3.4.1 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/271">#271</a> Fix bower.json to point to <em>js</em> folder, rather then <em>src</em> [<a href="https://github.com/yachi">Yachi</a>].</li>
+<li>v3.4.0 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/262">#262</a> Add getPageInfo method to parentIFrame [<a href="https://github.com/pomartel">Pierre Olivier</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/263">#263</a> Change leftMostElement to rightMostElement [<a href="https://github.com/LuizPanariello">Luiz Panariello</a>]. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/265">#265</a> Fix issue when no options being passed and added test for this.</li>
 <li>v3.3.1 Point index.js to the JS folder, instead of the src folder. Added touch event listeners. AutoResize method now returns current state.</li>
 <li>v3.3.0 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/97">#97</a> Add autoResize method to parentIFrame. Fix bug when setHeightCalculationMethod is called with invalid value. Add interval timer to event teardown. Log targetOrigin. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/253">#253</a> Work around bug with MooTools interfering with system objects.</li>
 <li>v3.2.0 Added calculation of margin to LowestElement, LeftMostElement and TaggedElement calculation modes. Check callback function is a function before calling it. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/246">#246</a> Fixed issue when scrollCallback changes the page position. <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/247">#247</a> Fix rounding issue when page is zoomed in Chrome [<a href="https://github.com/thenewguy">thenewguy</a>].</li>
@@ -697,7 +705,7 @@ iFrameResize({
 <li>v1.1.0 Added DOM <a href="https://developer.mozilla.org/en/docs/Web/API/MutationObserver">MutationObserver</a> trigger to better detect content changes in iFrame, <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/7">#7</a> Set height of iFrame body element to auto to prevent resizing loop, if it's set to a percentage.</li>
 <li>v1.0.3 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/6">#6</a> Force incoming messages to string. Migrated to Grunt 4.x. Published to Bower.</li>
 <li>v1.0.2 <a href="https://github.com/davidjbradshaw/iframe-resizer/issues/2">#2</a> mime-type changed for IE8-10.</li>
-<li>v1.0.0 Initial published release.</li>
+<li>v1.0.0 Initial pubic release.</li>
 </ul>
 
 <h2>
@@ -705,6 +713,9 @@ iFrameResize({
 
 <p>Copyright © 2013-15 <a href="https://github.com/davidjbradshaw">David J. Bradshaw</a>.
 Licensed under the <a href="LICENSE">MIT License</a>.</p>
+
+<p><a href="https://nodei.co/npm/iframe-resizer/"><img src="https://nodei.co/npm/iframe-resizer.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a>
+<a href="https://nodei.co/npm/iframe-resizer/"><img src="https://nodei.co/npm-dl/iframe-resizer.png?months=1&amp;height=3" alt="NPM"></a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
