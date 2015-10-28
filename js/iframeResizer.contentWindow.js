@@ -162,7 +162,9 @@
 		setupPublicMethods();
 		startEventListeners();
 		inPageLinks = setupInPageLinks();
-		sendSize('init','Init message from host page');
+		setTimeout(function(){
+			sendSize('init','Init message from host page');
+		},0);
 		readyCallback();
 	}
 
