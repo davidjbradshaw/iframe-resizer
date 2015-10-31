@@ -481,7 +481,7 @@
 					pageInfoCallback = callback;
 					sendMsg(0,0,'pageInfo');
 				} else {
-					pageInfoCallback = callback;
+					pageInfoCallback = function(){};
 					sendMsg(0,0,'pageInfoStop');
 				}
 			},
