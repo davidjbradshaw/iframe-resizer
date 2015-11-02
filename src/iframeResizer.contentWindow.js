@@ -667,9 +667,8 @@
 			return value;
 		}
 
-		var
-			el = typeof el !== 'undefined' ? el : document.body,
-			retVal = 0;
+		var retVal = 0;
+		el = typeof el !== 'undefined' ? el : document.body;
 
 		/* istanbul ignore else */ // Not testable in phantonJS
 		if (('defaultView' in document) && ('getComputedStyle' in document.defaultView)) {
