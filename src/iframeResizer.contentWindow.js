@@ -645,7 +645,7 @@
 
 	// document.documentElement.offsetHeight is not reliable, so
 	// we have to jump through hoops to get a better value.
-	function getComputedBodyStyle(prop,el) {
+	function getComputedStyle(prop,el) {
 		/* istanbul ignore next */  //Not testable in PhantomJS
 		function convertUnitsToPxForIE8(value) {
 			var PIXEL = /^\d+(px)?$/i;
@@ -698,7 +698,7 @@
 			timer          = getNow();
 
 		for (var i = 0; i < elementsLength; i++) {
-			elVal = elements[i].getBoundingClientRect()[side] + getComputedBodyStyle('margin'+Side,elements[i]);
+			elVal = elements[i].getBoundingClientRect()[side] + getComputedStyle('margin'+Side,elements[i]);
 			if (elVal > maxVal) {
 				maxVal = elVal;
 			}
@@ -741,7 +741,7 @@
 	var
 		getHeight = {
 			bodyOffset: function getBodyOffsetHeight(){
-				return  document.body.offsetHeight + getComputedBodyStyle('marginTop') + getComputedBodyStyle('marginBottom');
+				return  document.body.offsetHeight + getComputedStyle('marginTop') + getComputedStyle('marginBottom');
 			},
 
 			offset: function(){
