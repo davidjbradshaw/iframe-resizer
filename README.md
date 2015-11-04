@@ -510,7 +510,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.1 [#286](https://github.com/davidjbradshaw/iframe-resizer/issues/286) Fix taggedElement / lowestElement / rightMostLelement to calculate correct margin [[Dan Ballance](danballance)].
+* v3.5.1 [#286](https://github.com/davidjbradshaw/iframe-resizer/issues/286) Fix taggedElement / lowestElement / rightMostElement to calculate correct margin [[Dan Ballance](danballance)].
 * v3.5.0 Recall getPageInfo callback when parent page position changes. Added Array.prototype.forEach to IE8 polyfils.
 * v3.4.2 Only teardown events on close if currently enabled.
 * v3.4.1 [#271](https://github.com/davidjbradshaw/iframe-resizer/issues/271) Fix bower.json to point to *js* folder, rather then *src* [[Yachi](https://github.com/yachi)].
