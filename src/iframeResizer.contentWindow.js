@@ -162,9 +162,7 @@
 		setupPublicMethods();
 		startEventListeners();
 		inPageLinks = setupInPageLinks();
-		setTimeout(function(){
-			sendSize('init','Init message from host page');
-		},0);
+		sendSize('init','Init message from host page');
 		readyCallback();
 	}
 
@@ -276,10 +274,11 @@
 		manageTriggerEvent({method:method, eventType: 'Mouse Up',                  eventName:  'mouseup' });
 		manageTriggerEvent({method:method, eventType: 'Mouse Down',                eventName:  'mousedown' });
 		manageTriggerEvent({method:method, eventType: 'Orientation Change',        eventName:  'orientationchange' });
+		manageTriggerEvent({method:method, eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
+		manageTriggerEvent({method:method, eventType: 'Ready State Change',        eventName:  'readystatechange' });
 		manageTriggerEvent({method:method, eventType: 'Touch Start',               eventName:  'touchstart' });
 		manageTriggerEvent({method:method, eventType: 'Touch End',                 eventName:  'touchend' });
 		manageTriggerEvent({method:method, eventType: 'Touch Cancel',              eventName:  'touchcancel' });
-		manageTriggerEvent({method:method, eventType: 'Print',                     eventName:  ['afterprint', 'beforeprint'] });
 		manageTriggerEvent({method:method, eventType: 'Transition Start',          eventNames: ['transitionstart','webkitTransitionStart','MSTransitionStart','oTransitionStart','otransitionstart'] });
 		manageTriggerEvent({method:method, eventType: 'Transition Iteration',      eventNames: ['transitioniteration','webkitTransitionIteration','MSTransitionIteration','oTransitionIteration','otransitioniteration'] });
 		manageTriggerEvent({method:method, eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
