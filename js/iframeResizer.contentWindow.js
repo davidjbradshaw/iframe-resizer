@@ -53,7 +53,10 @@
 		win                   = window,
 		messageCallback       = function(){warn('MessageCallback function not defined');},
 		readyCallback         = function(){},
-		pageInfoCallback      = function(){};
+		pageInfoCallback      = function(){},
+
+		skipXScrolling          = false,
+		linkSetupSelector     = 'a[href^="#"]';
 
 
 	function addEventListener(el,evt,func){
@@ -201,6 +204,8 @@
 			targetOriginDefault = ('targetOrigin'            in data) ? data.targetOrigin            : targetOriginDefault;
 			heightCalcMode      = ('heightCalculationMethod' in data) ? data.heightCalculationMethod : heightCalcMode;
 			widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
+			skipAnchorXOffset   = ('skipAnchorXOffset'       in data) ? data.skipAnchorXOffset       : skipAnchorXOffset;
+			linkSetupSelector   = ('linkSetupSelector'       in data) ? data.linkSetupSelector       : linkSetupSelector;
 		}
 
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
@@ -367,7 +372,7 @@
 				pagePosition = getPagePosition();
 
 			return {
-				x: parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
+				x: skipAnchorXOffset ? 0 : parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
 				y: parseInt(elPosition.top,10)  + parseInt(pagePosition.y,10)
 			};
 		}
@@ -413,7 +418,7 @@
 				}
 			}
 
-			Array.prototype.forEach.call( document.querySelectorAll( 'a[href^="#"]' ), setupLink );
+			Array.prototype.forEach.call( document.querySelectorAll( linkSetupSelector ), setupLink );
 		}
 
 		function bindLocationHash(){
@@ -1014,25 +1019,25 @@
 
 		function callFromParent(){
 			switch (getMessageType()){
-			case 'reset':
-				resetFromParent();
-				break;
-			case 'resize':
-				resizeFromParent();
-				break;
-			case 'moveToAnchor':
-				moveToAnchor();
-				break;
-			case 'message':
-				messageFromParent();
-				break;
-			case 'pageInfo':
-				pageInfoFromParent();
-				break;
-			default:
-				if (!isMiddleTier() && !isInitMsg()){
-					warn('Unexpected message ('+event.data+')');
-				}
+				case 'reset':
+					resetFromParent();
+					break;
+				case 'resize':
+					resizeFromParent();
+					break;
+				case 'moveToAnchor':
+					moveToAnchor();
+					break;
+				case 'message':
+					messageFromParent();
+					break;
+				case 'pageInfo':
+					pageInfoFromParent();
+					break;
+				default:
+					if (!isMiddleTier() && !isInitMsg()){
+						warn('Unexpected message ('+event.data+')');
+					}
 			}
 		}
 
@@ -1062,6 +1067,6 @@
 	addEventListener(window, 'message', receiver);
 	chkLateLoaded();
 
-	
+
 
 })(window || {});
