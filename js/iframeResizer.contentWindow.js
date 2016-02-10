@@ -54,8 +54,7 @@
 		messageCallback       = function(){warn('MessageCallback function not defined');},
 		readyCallback         = function(){},
 		pageInfoCallback      = function(){},
-
-		skipXScrolling          = false,
+		skipXScrolling        = false,
 		linkSetupSelector     = 'a[href^="#"]';
 
 
@@ -204,7 +203,7 @@
 			targetOriginDefault = ('targetOrigin'            in data) ? data.targetOrigin            : targetOriginDefault;
 			heightCalcMode      = ('heightCalculationMethod' in data) ? data.heightCalculationMethod : heightCalcMode;
 			widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
-			skipAnchorXOffset   = ('skipAnchorXOffset'       in data) ? data.skipAnchorXOffset       : skipAnchorXOffset;
+			skipXScrolling      = ('skipXScrolling'          in data) ? data.skipXScrolling          : skipXScrolling;
 			linkSetupSelector   = ('linkSetupSelector'       in data) ? data.linkSetupSelector       : linkSetupSelector;
 		}
 
@@ -372,7 +371,7 @@
 				pagePosition = getPagePosition();
 
 			return {
-				x: skipAnchorXOffset ? 0 : parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
+				x: skipXScrolling ? 0 : (parseInt(elPosition.left,10) + parseInt(pagePosition.x,10)),
 				y: parseInt(elPosition.top,10)  + parseInt(pagePosition.y,10)
 			};
 		}
@@ -1019,25 +1018,25 @@
 
 		function callFromParent(){
 			switch (getMessageType()){
-				case 'reset':
-					resetFromParent();
-					break;
-				case 'resize':
-					resizeFromParent();
-					break;
-				case 'moveToAnchor':
-					moveToAnchor();
-					break;
-				case 'message':
-					messageFromParent();
-					break;
-				case 'pageInfo':
-					pageInfoFromParent();
-					break;
-				default:
-					if (!isMiddleTier() && !isInitMsg()){
-						warn('Unexpected message ('+event.data+')');
-					}
+			case 'reset':
+				resetFromParent();
+				break;
+			case 'resize':
+				resizeFromParent();
+				break;
+			case 'moveToAnchor':
+				moveToAnchor();
+				break;
+			case 'message':
+				messageFromParent();
+				break;
+			case 'pageInfo':
+				pageInfoFromParent();
+				break;
+			default:
+				if (!isMiddleTier() && !isInitMsg()){
+					warn('Unexpected message ('+event.data+')');
+				}
 			}
 		}
 
@@ -1067,6 +1066,6 @@
 	addEventListener(window, 'message', receiver);
 	chkLateLoaded();
 
-
+	
 
 })(window || {});
