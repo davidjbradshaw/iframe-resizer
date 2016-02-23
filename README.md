@@ -319,6 +319,8 @@ Returns the ID of the iFrame that the page is contained in.
 
 Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
 
+* **iframeHeight** The height of the iframe in pixels
+* **iframeWidth** The width of the iframe in pixels
 * **clientHeight** The height of the viewport in pixels
 * **clientWidth** The width of the viewport in pixels
 * **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe

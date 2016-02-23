@@ -256,6 +256,8 @@
 				iFramePosition = messageData.iframe.getBoundingClientRect();
 
 			return JSON.stringify({
+				iframeHeight: iFramePosition.height,
+				iframeWidth:  iFramePosition.width,
 				clientHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
 				clientWidth:  Math.max(document.documentElement.clientWidth,  window.innerWidth  || 0),
 				offsetTop:    parseInt(iFramePosition.top  - bodyPosition.top,  10),
