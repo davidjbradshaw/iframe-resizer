@@ -319,6 +319,8 @@ Returns the ID of the iFrame that the page is contained in.
 
 Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
 
+* **iframeHeight** The height of the iframe in pixels
+* **iframeWidth** The width of the iframe in pixels
 * **clientHeight** The height of the viewport in pixels
 * **clientWidth** The width of the viewport in pixels
 * **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe
@@ -510,7 +512,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.2 [#283](https://github.com/davidjbradshaw/iframe-resizer/issues/286) Added *readystatechange* event listener.
+* v3.5.3 [#283](https://github.com/davidjbradshaw/iframe-resizer/issues/286) Added *readystatechange* event listener.
+* v3.5.2 [#314](https://github.com/davidjbradshaw/iframe-resizer/pull/314) Add iframeHeight and iframeWidth properties to pageInfo [[Pierre Olivier](https://github.com/pomartel)]. [#303](https://github.com/davidjbradshaw/iframe-resizer/issues/303) Fix issue with IE8 polyFils. 
 * v3.5.1 [#286](https://github.com/davidjbradshaw/iframe-resizer/issues/286) Fixed *taggedElement / lowestElement / rightMostElement* to calculate correct margin [[Dan Ballance](danballance)].
 * v3.5.0 Recall getPageInfo callback when parent page position changes. Added *Array.prototype.forEach* to IE8 polyfils.
 * v3.4.2 Only teardown events on close if currently enabled.
@@ -587,4 +590,4 @@ Copyright &copy; 2013-15 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
-[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=1&height=3)](https://nodei.co/npm/iframe-resizer/)
+[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=3&height=3)](https://nodei.co/npm/iframe-resizer/)

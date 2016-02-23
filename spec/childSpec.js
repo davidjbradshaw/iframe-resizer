@@ -95,6 +95,8 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 
 		it('getPageInfo', function(done) {
 			win.parentIFrame.getPageInfo(function(pageInfo){
+				expect(pageInfo.iframeHeight).toBe(500);
+				expect(pageInfo.iframeWidth).toBe(300);
 				expect(pageInfo.clientHeight).toBe(645);
 				expect(pageInfo.clientWidth).toBe(1295);
 				expect(pageInfo.offsetLeft).toBe(20);
@@ -104,7 +106,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 				done();
 			});
 			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:pageInfo', '*');
-			mockMsgListener(createMsg('pageInfo:{"clientHeight":645,"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,"scrollTop":0}'));
+			mockMsgListener(createMsg('pageInfo:{"iframeHeight":500,"iframeWidth":300,"clientHeight":645,"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,"scrollTop":0}'));
 		});
 
 		it('getPageInfoStop', function() {
