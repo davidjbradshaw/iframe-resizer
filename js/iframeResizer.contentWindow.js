@@ -736,7 +736,28 @@
 	}
 
 	function getAllElements(){
-		return document.querySelectorAll('body *');
+		var allElements = document.querySelectorAll('body *');
+
+		// Exclude all nodes that are children to a contenteditable element
+		// Unfortunately it seems to be impossible to express this in the query selector
+		var contentEditableChildren = document.querySelectorAll('[contenteditable] *');
+		if (contentEditableChildren.length) {
+			// Convert from NodeList to normal array
+			var contentEditableChildrenArray = [];
+			for (var i = 0; i < contentEditableChildren.length; ++i) {
+				contentEditableChildrenArray.push(contentEditableChildren[i]);
+			}
+
+			var allElementsArray = [];
+			for (i = 0; i < allElements.length; ++i) {
+				if (contentEditableChildrenArray.indexOf(allElements[i]) === -1) {
+					allElementsArray.push(allElements[i]);
+				}
+			}
+			return allElementsArray;
+		}
+
+		return allElements;
 	}
 
 	var
