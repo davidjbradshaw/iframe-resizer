@@ -80,7 +80,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			})
 
 			it('receive message', function() {
-				expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll', 'http://localhost:9876');
+				expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll:null', 'http://localhost:9876');
 			});
 		});
 

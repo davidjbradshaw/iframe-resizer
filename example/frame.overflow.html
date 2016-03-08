@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>iFrame message passing test</title>
+		<meta name="description" content="iFrame message passing test">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<style>
+			a { float:right; margin-left:10px;}
+		</style>
+	</head>
+	<body>
+
+		<b>iFrame overflow Example</b>
+		<a href="frame.content.html">Back to page 1</a>
+		</a>
+
+		<p>
+			Resize the iframe based on the height of the scrolled div below but ignore the HTML elements inside it.
+		</p>
+
+		<div class="ignore-resize" style="height:80px;overflow:scroll;">
+		  blah<br>
+      blah<br>
+      blah<br>
+      blah<br>
+      blah<br>
+      blah<br>
+      blah<br>
+      blah<br>
+      Ignore this HTML element when resizing: <span>BLAH</span>
+		</div>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="../js/iframeResizer.contentWindow.js"></script>
+
+	</body>
+</html>

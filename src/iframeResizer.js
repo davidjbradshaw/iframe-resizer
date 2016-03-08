@@ -38,6 +38,7 @@
 			enablePublicMethods       : true,
 			heightCalculationMethod   : 'bodyOffset',
 			id                        : 'iFrameResizer',
+			ignoreSelector						: null,
 			interval                  : 32,
 			log                       : false,
 			maxHeight                 : Infinity,
@@ -271,8 +272,8 @@
 			function debouncedTrigger(){
 				trigger(
 					'Send Page Info',
-					'pageInfo:' + getPageInfo(), 
-					iframe, 
+					'pageInfo:' + getPageInfo(),
+					iframe,
 					iframeId
 				);
 			}
@@ -304,7 +305,7 @@
 			function start(){
 				setListener('Add ', addEventListener);
 			}
-			
+
 			var id = iframeId; //Create locally scoped copy of iFrame ID
 
 			start();
@@ -650,6 +651,9 @@
 	}
 
 	function createOutgoingMsg(iframeId){
+		if (settings[iframeId].ignoreSelector && settings[iframeId].ignoreSelector.indexOf(':') !== -1) {
+			throw new Error('Setting ignoreSelector can not contain the ":" character');
+		}
 		return iframeId +
 			':' + settings[iframeId].bodyMarginV1 +
 			':' + settings[iframeId].sizeWidth +
@@ -664,7 +668,8 @@
 			':' + settings[iframeId].tolerance +
 			':' + settings[iframeId].inPageLinks +
 			':' + settings[iframeId].resizeFrom +
-			':' + settings[iframeId].widthCalculationMethod;
+			':' + settings[iframeId].widthCalculationMethod +
+			':' + settings[iframeId].ignoreSelector;
 	}
 
 	function setupIFrame(iframe,options){

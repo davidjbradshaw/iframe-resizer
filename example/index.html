@@ -41,6 +41,8 @@
 			iFrameResize({
 				log                     : true,                  // Enable console logging
 				inPageLinks             : true,
+				heightCalculationMethod : 'lowestElement',
+				ignoreSelector					: '.ignore-resize *',
 				resizedCallback         : function(messageData){ // Callback fn when resize is received
 					$('p#callback').html(
 						'<b>Frame ID:</b> '    + messageData.iframe.id +
