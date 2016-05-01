@@ -200,7 +200,7 @@ Set the number of pixels the iFrame content size has to change by, before trigge
 
 By default the width of the page is worked out by taking the greater of the **documentElement** and **body** scrollWidth values.
 
-Some CSS technics may require you to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
+Some CSS techniques may require you to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
 * **bodyOffset** uses `document.body.offsetWidth`
 * **bodyScroll** uses `document.body.scrollWidth` <sup>*</sup>
