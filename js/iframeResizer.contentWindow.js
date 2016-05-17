@@ -715,6 +715,30 @@
 		return maxVal;
 	}
 
+  function getMaxSize(dimension,elements) {
+    var
+      elementsLength = elements.length,
+      elVal = 0,
+      maxVal = 0,
+      timer = getNow();
+
+    for (var i = 0; i < elementsLength; i++) {
+      elVal = elements[i].getBoundingClientRect()[dimension];
+      if (elVal > maxVal) {
+        maxVal = elVal;
+      }
+    }
+
+    timer = getNow() - timer;
+
+    log('Parsed '+elementsLength+' HTML elements');
+    log('Element position calculated in ' + timer + 'ms');
+
+    chkEventThottle(timer);
+
+    return maxVal;
+  }
+
 	function getAllMeasurements(dimention){
 		return [
 			dimention.bodyOffset(),
@@ -724,7 +748,7 @@
 		];
 	}
 
-	function getTaggedElements(side,tag){
+	function getTaggedElementsPosition(side,tag){
 		function noTaggedElementsFound(){
 			warn('No tagged elements ('+tag+') found on page');
 			return height; //current height
@@ -732,8 +756,19 @@
 
 		var elements = document.querySelectorAll('['+tag+']');
 
-		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement(side,elements);
+		return 0 === elements.length ? noTaggedElementsFound() : getMaxElement(side,elements);
 	}
+
+  function getTaggedElementsSize(dimension,tag) {
+    function noTaggedElementsFound(){
+      warn('No tagged elements ('+tag+') found on page');
+      return height; //current height
+    }
+
+    var elements = document.querySelectorAll('['+tag+']');
+
+    return 0 === elements.length ? noTaggedElementsFound() : getMaxSize(dimension,elements);
+  }
 
 	function getAllElements(){
 		return document.querySelectorAll('body *');
@@ -777,9 +812,13 @@
 				return Math.max(getHeight.bodyOffset(), getMaxElement('bottom',getAllElements()));
 			},
 
-			taggedElement: function getTaggedElementsHeight(){
-				return getTaggedElements('bottom','data-iframe-height');
-			}
+			taggedElement: function getTaggedElementsBottom(){
+				return getTaggedElementsPosition('bottom','data-iframe-height');
+			},
+
+      taggedElementHeight: function getTaggedElementsHeight(){
+        return getTaggedElementsSize('height', 'data-iframe-height');
+      }
 		},
 
 		getWidth = {
@@ -815,9 +854,13 @@
 				return getMaxElement('right', getAllElements());
 			},
 
-			taggedElement: function getTaggedElementsWidth(){
-				return getTaggedElements('right', 'data-iframe-width');
-			}
+      taggedElement: function getTaggedElementsRight(){
+        return getTaggedElementsPosition('right','data-iframe-width');
+      },
+
+      taggedElementWidth: function getTaggedElementsWidth(){
+        return getTaggedElementsSize('width', 'data-iframe-width');
+      }
 		};
 
 
@@ -1063,6 +1106,6 @@
 	addEventListener(window, 'message', receiver);
 	chkLateLoaded();
 
-	
+
 
 })(window || {});
