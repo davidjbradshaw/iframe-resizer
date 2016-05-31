@@ -398,6 +398,8 @@ Solutions for the most common problems are outlined in this section. If you need
 
 Bug reports and pull requests are welcome on the [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues). Please read the [contributing guidelines](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CONTRIBUTING.md) before openning a ticket, as this will ensure a faster resolution.
 
+### Multiple IFrames on one page
+When the resizer does not work using multiple IFrames on one page, make sure that each frame has an unique id.
 
 ### IFrame not sizing correctly
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods.
