@@ -1030,6 +1030,7 @@
 			case 'resize':
 				resizeFromParent();
 				break;
+			case 'inPageLink':
 			case 'moveToAnchor':
 				moveToAnchor();
 				break;
