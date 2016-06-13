@@ -291,11 +291,11 @@ This function is called once iFrame-Resizer has been initialized after receiving
 ### heightCalculationMethod / widthCalculationMethod
 
     default: null
-    type: string
+    type: string | function() { return integer }
 
 These options can be used to override the option set in the parent page (See above for details on available values). This can be useful when moving between pages in the iFrame that require different values for these options.
 
-
+Altenatively you can pass a custom function that returns the size as an integer. This can be useful when none of the standard ways of working out the size are suitable. However, normally problems with sizing are due to CSS issues and this should be looked at first.
 
 ## IFrame Page Methods
 
@@ -518,7 +518,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.5 [#374](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Fix bug with in page links called from parent page.
+* v3.5.5 [#373](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Add option for custom size calculation methods in iFrame. [#373](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Fix bug with in page links called from parent page.
 * v3.5.4 [#362](https://github.com/davidjbradshaw/iframe-resizer/issues/362) Handle jQuery being loaded in odd ways. [#297](ttps://github.com/davidjbradshaw/iframe-resizer/issues/297) Ensure document ready before resizing
 * v3.5.3 [#283](https://github.com/davidjbradshaw/iframe-resizer/issues/283) Added *readystatechange* event listener.
 * v3.5.2 [#314](https://github.com/davidjbradshaw/iframe-resizer/pull/314) Add iframeHeight and iframeWidth properties to pageInfo [[Pierre Olivier](https://github.com/pomartel)]. [#303](https://github.com/davidjbradshaw/iframe-resizer/issues/303) Fix issue with IE8 polyFils. 

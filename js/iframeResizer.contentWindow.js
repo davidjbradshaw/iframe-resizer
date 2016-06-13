@@ -10,7 +10,7 @@
  */
 
 
-;(function(window) {
+;(function(window, undefined) {
 	'use strict';
 
 	var
@@ -51,9 +51,19 @@
 		widthCalcModeDefault  = 'scroll',
 		widthCalcMode         = widthCalcModeDefault,
 		win                   = window,
-		messageCallback       = function(){warn('MessageCallback function not defined');},
+		messageCallback       = function(){ warn('MessageCallback function not defined'); },
 		readyCallback         = function(){},
-		pageInfoCallback      = function(){};
+		pageInfoCallback      = function(){},
+		customCalcMethods     = {
+			height: function(){
+				warn('Custom height calculation function not defined');
+				return document.documentElement.offsetHeight;
+			}, 
+			width: function(){
+				warn('Custom width calculation function not defined');
+				return document.body.scrollWidth;
+			}
+		};
 
 
 	function addEventListener(el,evt,func){
@@ -203,8 +213,19 @@
 			widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
 		}
 
+		function setupCustomCalcMethods(calcMode, calcFunc){
+			if ('function' === typeof calcMode) {
+				customCalcMethods[calcFunc] = calcMode;
+				calcMode = 'custom';
+			}
+
+			return calcMode;
+		}
+
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
 			readData();
+			heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height');
+			widthCalcMode  = setupCustomCalcMethods(widthCalcMode,  'width');
 		}
 
 		log('TargetOrigin for parent set to: ' + targetOriginDefault);
@@ -753,6 +774,10 @@
 				return document.body.scrollHeight;
 			},
 
+			custom: function getCustomWidth(){
+				return customCalcMethods.height();
+			},
+
 			documentElementOffset: function getDEOffsetHeight(){
 				return document.documentElement.offsetHeight;
 			},
@@ -789,6 +814,10 @@
 
 			bodyOffset: function getBodyOffsetWidth(){
 				return document.body.offsetWidth;
+			},
+
+			custom: function getCustomWidth(){
+				return customCalcMethods.width();
 			},
 
 			documentElementScroll: function getDEScrollWidth(){
