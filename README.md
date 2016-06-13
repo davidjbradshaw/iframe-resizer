@@ -220,7 +220,19 @@ Some CSS techniques may require you to change this setting to one of the followi
 
 <sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
 
+### skipXScrolling
 
+	default: false
+	type:    boolen
+
+For ability to make only vertical scrolling, may be usefull if your frame wrapped in element with position recalculation.
+
+### linkSetupSelector
+
+	default: 'a[href^="#"]'
+	type:    string
+
+For ability to control selector for handling links, may be usefull if you are using another functionality anchoring on '#'  
 
 ## Callback Methods
 

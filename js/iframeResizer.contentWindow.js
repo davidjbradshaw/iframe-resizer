@@ -53,7 +53,9 @@
 		win                   = window,
 		messageCallback       = function(){warn('MessageCallback function not defined');},
 		readyCallback         = function(){},
-		pageInfoCallback      = function(){};
+		pageInfoCallback      = function(){},
+		skipXScrolling        = false,
+		linkSetupSelector     = 'a[href^="#"]';
 
 
 	function addEventListener(el,evt,func){
@@ -201,6 +203,8 @@
 			targetOriginDefault = ('targetOrigin'            in data) ? data.targetOrigin            : targetOriginDefault;
 			heightCalcMode      = ('heightCalculationMethod' in data) ? data.heightCalculationMethod : heightCalcMode;
 			widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
+			skipXScrolling      = ('skipXScrolling'          in data) ? data.skipXScrolling          : skipXScrolling;
+			linkSetupSelector   = ('linkSetupSelector'       in data) ? data.linkSetupSelector       : linkSetupSelector;
 		}
 
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
@@ -368,7 +372,7 @@
 				pagePosition = getPagePosition();
 
 			return {
-				x: parseInt(elPosition.left,10) + parseInt(pagePosition.x,10),
+				x: skipXScrolling ? 0 : (parseInt(elPosition.left,10) + parseInt(pagePosition.x,10)),
 				y: parseInt(elPosition.top,10)  + parseInt(pagePosition.y,10)
 			};
 		}
@@ -414,7 +418,7 @@
 				}
 			}
 
-			Array.prototype.forEach.call( document.querySelectorAll( 'a[href^="#"]' ), setupLink );
+			Array.prototype.forEach.call( document.querySelectorAll( linkSetupSelector ), setupLink );
 		}
 
 		function bindLocationHash(){
