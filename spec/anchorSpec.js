@@ -22,7 +22,7 @@ define(['iframeResizer'], function(iFrameResize) {
 			spyOnIFramePostMessage(iframe1);
 			setTimeout(function(){
 				iframe1.iFrameResizer.moveToAnchor('testAnchor');
-				expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith('[iFrameSizer]inPageLink:testAnchor', getTarget(iframe1));
+				expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith('[iFrameSizer]moveToAnchor:testAnchor', getTarget(iframe1));
 				tearDown(iframe1);
 				done();
 			},100);

@@ -750,7 +750,7 @@
 					resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
 
 					moveToAnchor : function(anchor){
-						trigger('Move to anchor','inPageLink:'+anchor, settings[iframeId].iframe,iframeId);
+						trigger('Move to anchor','moveToAnchor:'+anchor, settings[iframeId].iframe,iframeId);
 					},
 
 					sendMessage  : function(message){
