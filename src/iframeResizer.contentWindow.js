@@ -28,6 +28,7 @@
 		height                = 1,
 		heightCalcModeDefault = 'bodyOffset',
 		heightCalcMode        = heightCalcModeDefault,
+		ignoreSelector				= null,
 		initLock              = true,
 		initMsg               = '',
 		inPageLinks           = {},
@@ -188,6 +189,7 @@
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
 		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 		widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
+		ignoreSelector     = (undefined !== data[15]) ? data[15]           : ignoreSelector;
 	}
 
 	function readDataFromPage(){
@@ -201,6 +203,7 @@
 			targetOriginDefault = ('targetOrigin'            in data) ? data.targetOrigin            : targetOriginDefault;
 			heightCalcMode      = ('heightCalculationMethod' in data) ? data.heightCalculationMethod : heightCalcMode;
 			widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
+			ignoreSelector      = ('ignoreSelector' in data) ? data.ignoreSelector : ignoreSelector;
 		}
 
 		if(('iFrameResizer' in window) && (Object === window.iFrameResizer.constructor)) {
@@ -736,7 +739,30 @@
 	}
 
 	function getAllElements(){
-		return document.querySelectorAll('body *');
+		var allElements = document.querySelectorAll('body *');
+
+		// Exclude all nodes that are children to certain elements
+		// Unfortunately it seems to be impossible to express this in the positive query selector
+		if (ignoreSelector) {
+			var ignoreChildren = document.querySelectorAll(ignoreSelector);
+			if (ignoreChildren.length) {
+				// Convert from NodeList to normal array
+				var ignoreChildrenArray = [];
+				for (var i = 0; i < ignoreChildren.length; ++i) {
+					ignoreChildrenArray.push(ignoreChildren[i]);
+				}
+
+				var allElementsArray = [];
+				for (i = 0; i < allElements.length; ++i) {
+					if (ignoreChildrenArray.indexOf(allElements[i]) === -1) {
+						allElementsArray.push(allElements[i]);
+					}
+				}
+				return allElementsArray;
+			}
+		}
+
+		return allElements;
 	}
 
 	var
