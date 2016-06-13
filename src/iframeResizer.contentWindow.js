@@ -736,7 +736,9 @@
 	}
 
 	function getAllElements(){
-		return document.querySelectorAll('body *');
+		// Select all children nodes of body except for specific element types
+		// cf bug https://github.com/davidjbradshaw/iframe-resizer/issues/312
+		return document.querySelectorAll('body :not(option):not(optgroup)');
 	}
 
 	var
