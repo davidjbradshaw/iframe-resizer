@@ -954,12 +954,21 @@
 		}
 
 		function initFromParent(){
-			initMsg = event.data;
-			target  = event.source;
+			function fireInit(){
+				initMsg = event.data;
+				target  = event.source;
 
-			init();
-			firstRun = false;
-			setTimeout(function(){ initLock = false;},eventCancelTimer);
+				init();
+				firstRun = false;
+				setTimeout(function(){ initLock = false;},eventCancelTimer);
+			}
+
+			if (document.body){
+				fireInit();
+			} else {
+				log('Waiting for page ready');
+				addEventListener(window,'readystatechange',initFromParent);
+			}
 		}
 
 		function resetFromParent(){

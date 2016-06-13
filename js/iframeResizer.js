@@ -976,11 +976,17 @@
 	}
 
 	function createJQueryPublicMethod($){
-		$.fn.iFrameResize = function $iFrameResizeF(options) {
-			return this.filter('iframe').each(function (index, element) {
-				setupIFrame(element, options);
-			}).end();
-		};
+		if (!$.fn) {
+			info('','Unable to bind to jQuery, it is not fully loaded.');
+		} else {
+			$.fn.iFrameResize = function $iFrameResizeF(options) {
+				function init(index, element) {
+					setupIFrame(element, options);
+				}
+
+				return this.filter('iframe').each(init).end();
+			};
+		}
 	}
 
 	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
