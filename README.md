@@ -491,6 +491,9 @@ It is not possible to add the required JavaScript to PDF and ODF files. However,
 ### Unexpected message received error
 By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
 
+### Width not resizing
+By default only changes in height are detected, if you want to calculate the width you need to set the `sizeWidth` opion to true and the `sizeHeight` option to false.
+
 
 ## Browser compatibility
 ### jQuery version
