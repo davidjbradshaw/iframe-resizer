@@ -20,7 +20,8 @@ This library enables the automatic resizing of the height and width of both same
 * Fallback support down to IE8.
 
 ### Install
-```npm install iframe-resizer```
+
+This package can be installed via NPM (`npm install iframe-resizer -save`) or Bower (`bower install iframe-resizer`).
 
 ### Getting started
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
