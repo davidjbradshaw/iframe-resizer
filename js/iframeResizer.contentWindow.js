@@ -215,6 +215,7 @@
 
 		function setupCustomCalcMethods(calcMode, calcFunc){
 			if ('function' === typeof calcMode) {
+				log('Setup custom ' + calcFunc + 'CalcMethod');
 				customCalcMethods[calcFunc] = calcMode;
 				calcMode = 'custom';
 			}
