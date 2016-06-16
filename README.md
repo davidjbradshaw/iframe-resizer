@@ -141,6 +141,8 @@ iFrameResize( {
 });
 ```
 
+Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see [iFrame Page Options](https://github.com/davidjbradshaw/iframe-resizer#iframe-page-options) section below.
+
 <sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
 <sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
@@ -215,6 +217,8 @@ Some CSS techniques may require you to change this setting to one of the followi
 * **min** takes the smallest value of the main four options <sup>*</sup>
 * **rightMostElement** Loops though every element in the the DOM and finds the right most point <sup>†</sup>
 * **taggedElement** Finds the left most element with a `data-iframe-width` attribute
+
+Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see [iFrame Page Options](https://github.com/davidjbradshaw/iframe-resizer#iframe-page-options) section below.
 
 <sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
@@ -521,7 +525,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.5 [#373](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Add option for custom size calculation methods in iFrame. [#373](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Fix bug with in page links called from parent page.
+* v3.5.5 [#373](https://github.com/davidjbradshaw/iframe-resizer/issues/373) Add option for custom size calculation methods in iFrame. [#374](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Fix bug with in page links called from parent page.
 * v3.5.4 [#362](https://github.com/davidjbradshaw/iframe-resizer/issues/362) Handle jQuery being loaded in odd ways. [#297](ttps://github.com/davidjbradshaw/iframe-resizer/issues/297) Ensure document ready before resizing
 * v3.5.3 [#283](https://github.com/davidjbradshaw/iframe-resizer/issues/283) Added *readystatechange* event listener.
 * v3.5.2 [#314](https://github.com/davidjbradshaw/iframe-resizer/pull/314) Add iframeHeight and iframeWidth properties to pageInfo [[Pierre Olivier](https://github.com/pomartel)]. [#303](https://github.com/davidjbradshaw/iframe-resizer/issues/303) Fix issue with IE8 polyFils. 
