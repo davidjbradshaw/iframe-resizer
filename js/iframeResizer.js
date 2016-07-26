@@ -533,7 +533,7 @@
 		var iframeId = iframe.id;
 
 		log(iframeId,'Removing iFrame: '+iframeId);
-		iframe.parentNode.removeChild(iframe);
+		if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
 		chkCallback(iframeId,'closedCallback',iframeId);
 		log(iframeId,'--');
 		delete settings[iframeId];
