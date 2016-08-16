@@ -266,6 +266,24 @@
 				scrollLeft:   window.pageXOffset
 			});
 		}
+		
+		function getPageLocation(){
+			var location = window.location;
+			
+			return JSON.stringify({
+				location: {
+					hash: location.hash,
+					host : location.host,
+					hostname : location.hostname,
+					href : location.href,
+					origin : location.origin,
+					pathname : location.pathname,
+					port : location.port,
+					protocol : location.protocol,
+					search : location.search
+				}
+			});
+		}
 
 		function sendPageInfoToIframe(iframe,iframeId){
 			function debouncedTrigger(){
@@ -279,7 +297,19 @@
 
 			debouce(debouncedTrigger,32);
 		}
+		
+		function sendPageLocationToIframe(iframe,iframeId){
+			function debouncedTrigger(){
+				trigger(
+					'Send Page Location',
+					'pageLocation:' + getPageLocation(), 
+					iframe, 
+					iframeId
+				);
+			}
 
+			debouce(debouncedTrigger,32);
+		}
 
 		function startPageInfoMonitor(){
 			function setListener(type,func){
@@ -458,6 +488,9 @@
 				resizeIFrame();
 				callback('initCallback',messageData.iframe);
 				callback('resizedCallback',messageData);
+				break;
+			case 'pageLocation':
+				sendPageLocationToIframe(settings[iframeId].iframe,iframeId);
 				break;
 			default:
 				resizeIFrame();
