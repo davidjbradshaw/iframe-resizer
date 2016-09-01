@@ -34,6 +34,7 @@
 			bodyMarginV1              : 8,
 			bodyPadding               : null,
 			checkOrigin               : true,
+			customSelector            : '',
 			inPageLinks               : false,
 			enablePublicMethods       : true,
 			heightCalculationMethod   : 'bodyOffset',
@@ -664,7 +665,8 @@
 			':' + settings[iframeId].tolerance +
 			':' + settings[iframeId].inPageLinks +
 			':' + settings[iframeId].resizeFrom +
-			':' + settings[iframeId].widthCalculationMethod;
+			':' + settings[iframeId].widthCalculationMethod +
+			':' + settings[iframeId].customSelector;
 	}
 
 	function setupIFrame(iframe,options){
