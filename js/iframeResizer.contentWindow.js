@@ -263,12 +263,11 @@
 		log('HTML & body height set to "auto"');
 	}
 
+	function handleEvent(){
+		sendSize(options.eventName,options.eventType);
+	}
 
 	function manageTriggerEvent(options){
-		function handleEvent(){
-			sendSize(options.eventName,options.eventType);
-		}
-
 		var listener = {
 			add:    function(eventName){
 				addEventListener(window,eventName,handleEvent);
