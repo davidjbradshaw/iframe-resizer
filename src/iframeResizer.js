@@ -93,7 +93,7 @@
 	function getMyID(iframeId){
 		var retStr = 'Host page: '+iframeId;
 
-		if (window.top!==window.self){
+		if (window.top !== window.self){
 			if (window.parentIFrame && window.parentIFrame.getId){
 				retStr = window.parentIFrame.getId()+': '+iframeId;
 			} else {
@@ -369,7 +369,7 @@
 
 			log(iframeId,'Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 
-			if(window.top!==window.self){
+			if(window.top !== window.self){
 				scrollParent();
 			} else {
 				reposition();
@@ -693,7 +693,7 @@
 
 		function newId(){
 			var id = ((options && options.id) || defaults.id + count++);
-			if  (null!==document.getElementById(id)){
+			if  (null !== document.getElementById(id)){
 				id = id + count++;
 			}
 			return id;
