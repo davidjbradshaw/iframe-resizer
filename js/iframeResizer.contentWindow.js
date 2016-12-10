@@ -22,6 +22,7 @@
 		bodyObserver          = null,
 		bodyPadding           = '',
 		calculateWidth        = false,
+		customSelector        = '[data-iframe-height]',
 		doubleEventList       = {'resize':1,'click':1},
 		eventCancelTimer      = 128,
 		firstRun              = true,
@@ -198,6 +199,8 @@
 		inPageLinks.enable = (undefined !== data[12]) ? strBool(data[12]): false;
 		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 		widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
+		customSelector     = (undefined !== data[15]) ? data[15]         : customSelector;
+		console.log(data);
 	}
 
 	function readDataFromPage(){
@@ -746,13 +749,13 @@
 		];
 	}
 
-	function getTaggedElements(side,tag){
+	function getSelectorElements(side,selector){
 		function noTaggedElementsFound(){
-			warn('No tagged elements ('+tag+') found on page');
-			return height; //current height
+			warn('No elements matching the selector ('+selector+') found on page');
+			return null; //current height
 		}
 
-		var elements = document.querySelectorAll('['+tag+']');
+		var elements = document.querySelectorAll(selector);
 
 		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement(side,elements);
 	}
@@ -804,8 +807,15 @@
 			},
 
 			taggedElement: function getTaggedElementsHeight(){
-				return getTaggedElements('bottom','data-iframe-height');
+				var h = getSelectorElements('bottom', customSelector);
+				return (h == null) ? height : h;
+			},
+
+			taggedOrLowestElement: function getTaggedOrLowestElementsHeight(){
+				var h = getSelectorElements('bottom', customSelector);
+				return (h == null) ? this.lowestElement() : h;
 			}
+
 		},
 
 		getWidth = {
@@ -846,7 +856,7 @@
 			},
 
 			taggedElement: function getTaggedElementsWidth(){
-				return getTaggedElements('right', 'data-iframe-width');
+				return getSelectorElements('right', '[data-iframe-width]');
 			}
 		};
 
