@@ -54,6 +54,7 @@
 		messageCallback       = function(){ warn('MessageCallback function not defined'); },
 		readyCallback         = function(){},
 		pageInfoCallback      = function(){},
+        	pageLocationCallback  = function(){},
 		customCalcMethods     = {
 			height: function(){
 				warn('Custom height calculation function not defined');
@@ -546,7 +547,14 @@
 				var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
 				//lockTrigger();
 				sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
-			}
+			},
+            
+	            	getPageLocation: function getPageLocationF(callback){
+				if ('function' === typeof callback){
+					pageLocationCallback = callback;
+					sendMsg(0,0,'pageLocation');
+				}
+	            	}
 		};
 	}
 
@@ -1045,6 +1053,13 @@
 			pageInfoCallback(JSON.parse(msgBody));
 			log(' --');
 		}
+        
+        function pageLocationFromParent(){
+			var msgBody = getData();
+			log('PageLocationFromParent called from parent: ' + msgBody );
+			pageLocationCallback(JSON.parse(msgBody));
+			log(' --');
+        }
 
 		function isInitMsg(){
 			//Test if this message is from a child below us. This is an ugly test, however, updating
@@ -1069,6 +1084,9 @@
 				break;
 			case 'pageInfo':
 				pageInfoFromParent();
+				break;
+			case 'pageLocation':
+				pageLocationFromParent();
 				break;
 			default:
 				if (!isMiddleTier() && !isInitMsg()){
