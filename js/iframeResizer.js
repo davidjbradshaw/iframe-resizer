@@ -627,7 +627,7 @@
 		}
 
 		function iFrameNotFound(){
-			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
+			warn(id,'[' + calleeMsg + '] IFrame('+id+') not found');
 		}
 
 		function chkAndSend(){
@@ -945,6 +945,12 @@
 			}
 		}
 
+		function warnDeprecatedOptions(options) {
+			if (options && options.enablePublicMethods) {
+				warn('enablePublicMethods option has been removed, public methods are now always available in the iFrame');
+			}
+		}
+
 		var iFrames;
 
 		setupRequestAnimationFrame();
@@ -952,6 +958,8 @@
 
 		return function iFrameResizeF(options,target){
 			iFrames = []; //Only return iFrames past in on this call
+
+			warnDeprecatedOptions(options);
 
 			switch (typeof(target)){
 			case 'undefined':
