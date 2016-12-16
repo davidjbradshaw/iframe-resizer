@@ -63,7 +63,8 @@
 				warn('Custom width calculation function not defined');
 				return document.body.scrollWidth;
 			}
-		};
+		},
+		eventHandlersByName   = {};
 
 
 	function addEventListener(el,evt,func){
@@ -265,15 +266,21 @@
 
 
 	function manageTriggerEvent(options){
-		function handleEvent(){
-			sendSize(options.eventName,options.eventType);
-		}
 
 		var listener = {
 			add:    function(eventName){
+				function handleEvent(){
+					sendSize(options.eventName,options.eventType);
+				}
+
+				eventHandlersByName[eventName] = handleEvent;
+
 				addEventListener(window,eventName,handleEvent);
 			},
 			remove: function(eventName){
+				var handleEvent = eventHandlersByName[eventName];
+				delete eventHandlersByName[eventName];
+
 				removeEventListener(window,eventName,handleEvent);
 			}
 		};
