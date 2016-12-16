@@ -271,8 +271,8 @@
 			function debouncedTrigger(){
 				trigger(
 					'Send Page Info',
-					'pageInfo:' + getPageInfo(), 
-					iframe, 
+					'pageInfo:' + getPageInfo(),
+					iframe,
 					iframeId
 				);
 			}
@@ -304,7 +304,7 @@
 			function start(){
 				setListener('Add ', addEventListener);
 			}
-			
+
 			var id = iframeId; //Create locally scoped copy of iFrame ID
 
 			start();
@@ -533,7 +533,7 @@
 		var iframeId = iframe.id;
 
 		log(iframeId,'Removing iFrame: '+iframeId);
-		iframe.parentNode.removeChild(iframe);
+		if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
 		chkCallback(iframeId,'closedCallback',iframeId);
 		log(iframeId,'--');
 		delete settings[iframeId];
@@ -628,9 +628,6 @@
 
 		function iFrameNotFound(){
 			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
-			if(settings[id]) {
-				delete settings[id];
-			}
 		}
 
 		function chkAndSend(){
