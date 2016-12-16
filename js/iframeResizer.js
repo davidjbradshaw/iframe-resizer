@@ -93,7 +93,7 @@
 	function getMyID(iframeId){
 		var retStr = 'Host page: '+iframeId;
 
-		if (window.top!==window.self){
+		if (window.top !== window.self){
 			if (window.parentIFrame && window.parentIFrame.getId){
 				retStr = window.parentIFrame.getId()+': '+iframeId;
 			} else {
@@ -271,8 +271,8 @@
 			function debouncedTrigger(){
 				trigger(
 					'Send Page Info',
-					'pageInfo:' + getPageInfo(), 
-					iframe, 
+					'pageInfo:' + getPageInfo(),
+					iframe,
 					iframeId
 				);
 			}
@@ -304,7 +304,7 @@
 			function start(){
 				setListener('Add ', addEventListener);
 			}
-			
+
 			var id = iframeId; //Create locally scoped copy of iFrame ID
 
 			start();
@@ -369,7 +369,7 @@
 
 			log(iframeId,'Reposition requested from iFrame (offset x:'+offset.x+' y:'+offset.y+')');
 
-			if(window.top!==window.self){
+			if(window.top !== window.self){
 				scrollParent();
 			} else {
 				reposition();
@@ -533,7 +533,7 @@
 		var iframeId = iframe.id;
 
 		log(iframeId,'Removing iFrame: '+iframeId);
-		iframe.parentNode.removeChild(iframe);
+		if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
 		chkCallback(iframeId,'closedCallback',iframeId);
 		log(iframeId,'--');
 		delete settings[iframeId];
@@ -628,9 +628,6 @@
 
 		function iFrameNotFound(){
 			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
-			if(settings[id]) {
-				delete settings[id];
-			}
 		}
 
 		function chkAndSend(){
@@ -693,7 +690,7 @@
 
 		function newId(){
 			var id = ((options && options.id) || defaults.id + count++);
-			if  (null!==document.getElementById(id)){
+			if  (null !== document.getElementById(id)){
 				id = id + count++;
 			}
 			return id;
@@ -978,7 +975,7 @@
 	function createJQueryPublicMethod($){
 		if (!$.fn) {
 			info('','Unable to bind to jQuery, it is not fully loaded.');
-		} else {
+		} else if (!$.fn.iFrameResize){
 			$.fn.iFrameResize = function $iFrameResizeF(options) {
 				function init(index, element) {
 					setupIFrame(element, options);
