@@ -627,7 +627,7 @@
 		}
 
 		function iFrameNotFound(){
-			info(id,'[' + calleeMsg + '] IFrame('+id+') not found');
+			warn(id,'[' + calleeMsg + '] IFrame('+id+') not found');
 		}
 
 		function chkAndSend(){
