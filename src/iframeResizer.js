@@ -271,8 +271,8 @@
 			function debouncedTrigger(){
 				trigger(
 					'Send Page Info',
-					'pageInfo:' + getPageInfo(), 
-					iframe, 
+					'pageInfo:' + getPageInfo(),
+					iframe,
 					iframeId
 				);
 			}
@@ -304,7 +304,7 @@
 			function start(){
 				setListener('Add ', addEventListener);
 			}
-			
+
 			var id = iframeId; //Create locally scoped copy of iFrame ID
 
 			start();
@@ -978,7 +978,7 @@
 	function createJQueryPublicMethod($){
 		if (!$.fn) {
 			info('','Unable to bind to jQuery, it is not fully loaded.');
-		} else {
+		} else if (!$.fn.iFrameResize){
 			$.fn.iFrameResize = function $iFrameResizeF(options) {
 				function init(index, element) {
 					setupIFrame(element, options);
