@@ -756,12 +756,14 @@
 	function getTaggedElements(side,tag){
 		function noTaggedElementsFound(){
 			warn('No tagged elements ('+tag+') found on page');
-			return height; //current height
+			return document.querySelectorAll('body *');
 		}
 
 		var elements = document.querySelectorAll('['+tag+']');
 
-		return 0 === elements.length ?  noTaggedElementsFound() : getMaxElement(side,elements);
+		if (0 === elements.length) noTaggedElementsFound();
+
+		return getMaxElement(side,elements);
 	}
 
 	function getAllElements(){
