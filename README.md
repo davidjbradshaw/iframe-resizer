@@ -603,7 +603,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 
 ## License
-Copyright &copy; 2013-15 [David J. Bradshaw](https://github.com/davidjbradshaw).
+Copyright &copy; 2013-17 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
