@@ -3,6 +3,7 @@
 [![Bower version](https://badge.fury.io/bo/iframe-resizer.svg)](http://badge.fury.io/bo/iframe-resizer)
 [![NPM Downloads](https://img.shields.io/npm/dt/iframe-resizer.svg)](https://www.npmjs.com/package/iframe-resizer)
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
+[![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
 [![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content. It provides a range of features to address the most common issues with using iFrames, these include:
@@ -604,8 +605,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 
 ## License
-Copyright &copy; 2013-15 [David J. Bradshaw](https://github.com/davidjbradshaw).
+Copyright &copy; 2013-17 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
-[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=3&height=3)](https://nodei.co/npm/iframe-resizer/)
+[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=12&height=3)](https://nodei.co/npm/iframe-resizer/)
