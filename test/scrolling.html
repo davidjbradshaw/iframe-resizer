@@ -60,6 +60,19 @@
       });
     });
 
+    asyncTest( "scrolling = auto", function() {
+      $('iframe').iFrameResize({
+        //log:true,
+        scrolling:'auto',
+        resizedCallback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( 'auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.' );
+          ok( 'auto' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'auto\'.' );
+          start();
+        }
+      });
+    });
+
   </script>
 </body>
 </html>
