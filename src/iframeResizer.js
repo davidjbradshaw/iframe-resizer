@@ -622,7 +622,7 @@
 		}
 	}
 
-	function trigger(calleeMsg, msg, iframe, id, noWarn) {
+	function trigger(calleeMsg, msg, iframe, id, noResponseWarning) {
 		function postMessageToIFrame(){
 			var target = settings[id].targetOrigin;
 			log(id,'[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+') targetOrigin: '+target);
@@ -642,15 +642,14 @@
 		}
 
 		function warnOnNoResponse() {
-			function noResponseWarning() {
-				warn('No response from iFrame[' + iframeId +']. Check iFrameResizer.contentWindow.js has been loaded in iFrame' )
+
+			function warning() {
+				warn('No response from iFrame[' + id +']. Check iFrameResizer.contentWindow.js has been loaded in iFrame');
 			}
 
-			if (!noWarn) {
-				settings[iframeId].msgTimeout = setTimeout(
-					noResponseWarning,
-					settings[iframeId].warningTimeout
-				);
+			if (!!noResponseWarning) {
+				settings[id].msgTimeout = setTimeout(warning, settings[id].warningTimeout);
+
 			}
 		}
 
@@ -779,7 +778,7 @@
 
 					sendMessage  : function(message){
 						message = JSON.stringify(message);
-						trigger('Send Message','message:'+message, settings[iframeId].iframe,iframeId);
+						trigger('Send Message','message:'+message, settings[iframeId].iframe, iframeId);
 					}
 				};
 			}
@@ -790,12 +789,12 @@
 		//event listener also catches the page changing in the iFrame.
 		function init(msg){
 			function iFrameLoaded(){
-				trigger('iFrame.onload',msg,iframe);
+				trigger('iFrame.onload', msg, iframe, undefined , true);
 				checkReset();
 			}
 
 			addEventListener(iframe,'load',iFrameLoaded);
-			trigger('init',msg,iframe);
+			trigger('init', msg, iframe, undefined, true);
 		}
 
 		function checkOptions(options){
@@ -870,7 +869,7 @@
 				}
 
 				if (isVisible(settings[settingId].iframe) && (chkDimension('height') || chkDimension('width'))){
-					trigger('Visibility change', 'resize', settings[settingId].iframe,settingId);
+					trigger('Visibility change', 'resize', settings[settingId].iframe, settingId);
 				}
 			}
 
@@ -938,7 +937,7 @@
 
 		for (var iframeId in settings){
 			if(isIFrameResizeEnabled(iframeId)){
-				trigger(eventName,event,document.getElementById(iframeId),iframeId);
+				trigger(eventName, event, document.getElementById(iframeId), iframeId);
 			}
 		}
 	}
