@@ -48,6 +48,7 @@
 			scrolling                 : false,
 			sizeHeight                : true,
 			sizeWidth                 : false,
+			warningTimeout            : 5000,
 			tolerance                 : 0,
 			widthCalculationMethod    : 'scroll',
 			closedCallback            : function(){},
@@ -497,6 +498,8 @@
 			messageData = processMsg();
 			iframeId    = logId = messageData.id;
 
+			clearTimeout(settings[iframeId].msgTimeout);
+
 			if (!isMessageFromMetaParent() && hasSettings(iframeId)){
 				log(iframeId,'Received: '+msg);
 
@@ -619,7 +622,7 @@
 		}
 	}
 
-	function trigger(calleeMsg,msg,iframe,id){
+	function trigger(calleeMsg, msg, iframe, id, noWarn) {
 		function postMessageToIFrame(){
 			var target = settings[id].targetOrigin;
 			log(id,'[' + calleeMsg + '] Sending msg to iframe['+id+'] ('+msg+') targetOrigin: '+target);
@@ -638,10 +641,25 @@
 			}
 		}
 
+		function warnOnNoResponse() {
+			function noResponseWarning() {
+				warn('No response from iFrame[' + iframeId +']. Check iFrameResizer.contentWindow.js has been loaded in iFrame' )
+			}
+
+			if (!noWarn) {
+				settings[iframeId].msgTimeout = setTimeout(
+					noResponseWarning,
+					settings[iframeId].warningTimeout
+				);
+			}
+		}
+
+
 		id = id || iframe.id;
 
 		if(settings[id]) {
 			chkAndSend();
+			warnOnNoResponse();
 		}
 
 	}
