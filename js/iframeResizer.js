@@ -12,6 +12,8 @@
 ;(function(window) {
 	'use strict';
 
+	if(!window) return;
+	
 	var
 		count                 = 0,
 		logEnabled            = false,
@@ -1013,4 +1015,4 @@
 		window.iFrameResize = window.iFrameResize || factory();
 	}
 
-})(window || {});
+})(typeof window !== 'undefined' && window);
