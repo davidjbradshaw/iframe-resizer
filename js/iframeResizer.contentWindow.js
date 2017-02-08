@@ -12,6 +12,8 @@
 
 ;(function(window, undefined) {
 	'use strict';
+	
+	if(!window) return;
 
 	var
 		autoResize            = true,
@@ -1101,4 +1103,4 @@
 
 	
 
-})(window || {});
+})(typeof window !== 'undefined' && window);
