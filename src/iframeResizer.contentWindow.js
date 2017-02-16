@@ -13,6 +13,8 @@
 ;(function(window, undefined) {
 	'use strict';
 
+	if(typeof window === 'undefined') return;
+
 	var
 		autoResize            = true,
 		base                  = 10,
@@ -1116,4 +1118,4 @@
 
 	// TEST CODE END //
 
-})(window || {});
+})(window);

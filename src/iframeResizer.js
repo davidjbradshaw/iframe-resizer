@@ -12,6 +12,8 @@
 ;(function(window) {
 	'use strict';
 
+	if(typeof window === 'undefined') return; // don't run for server side render
+
 	var
 		count                 = 0,
 		logEnabled            = false,
@@ -1030,4 +1032,4 @@
 		window.iFrameResize = window.iFrameResize || factory();
 	}
 
-})(window || {});
+})(window);
