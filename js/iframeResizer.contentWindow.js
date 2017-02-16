@@ -13,6 +13,8 @@
 ;(function(window, undefined) {
 	'use strict';
 
+	if(typeof window === 'undefined') return;
+
 	var
 		autoResize            = true,
 		base                  = 10,
@@ -1054,7 +1056,7 @@
 		}
 
 		function isMiddleTier(){
-			return ('iFrameResize' in window);
+			return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window);
 		}
 
 		function isInitMsg(){
@@ -1101,4 +1103,4 @@
 
 	
 
-})(window || {});
+})(window);
