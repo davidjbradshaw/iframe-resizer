@@ -1054,7 +1054,7 @@
 		}
 
 		function isMiddleTier(){
-			return ('iFrameResize' in window);
+			return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window);
 		}
 
 		function isInitMsg(){
