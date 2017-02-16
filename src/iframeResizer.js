@@ -646,7 +646,7 @@
 		function warnOnNoResponse() {
 
 			function warning() {
-				warn('No response from iFrame[' + id +']. Check iFrameResizer.contentWindow.js has been loaded in iFrame');
+				warn(id, 'No response from iFrame. Check iFrameResizer.contentWindow.js has been loaded in iFrame');
 			}
 
 			if (!!noResponseWarning) {
