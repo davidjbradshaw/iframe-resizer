@@ -46,8 +46,8 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 ```html
 <style>iframe{width:100%}</style>
-<iframe src="http://anotherdomain.com/iframe.html" scrolling="no"></iframe>
-<script>iFrameResize({log:true})</script>
+<iframe id="myIframe" src="http://anotherdomain.com/iframe.html" scrolling="no"></iframe>
+<script>iFrameResize({log:true}, '#myIframe')</script>
 ```
 
 Note that scrolling is set to 'no' in the iFrame tag, as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the [troubleshooting](#troubleshooting) section below.
@@ -611,4 +611,4 @@ Copyright &copy; 2013-17 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
-[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=12&height=3)](https://nodei.co/npm/iframe-resizer/)
+[![NPM](https://nodei.co/npm-dl/iframe-resizer.png?months=3&height=3)](https://nodei.co/npm/iframe-resizer/)
