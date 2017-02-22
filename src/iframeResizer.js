@@ -9,7 +9,7 @@
  */
 
 
-;(function(window) {
+;(function(undefined) {
 	'use strict';
 
 	if(typeof window === 'undefined') return; // don't run for server side render
@@ -1032,4 +1032,4 @@
 		window.iFrameResize = window.iFrameResize || factory();
 	}
 
-})(window);
+})();

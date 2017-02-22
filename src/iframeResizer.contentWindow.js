@@ -10,10 +10,10 @@
  */
 
 
-;(function(window, undefined) {
+;(function(undefined) {
 	'use strict';
 
-	if(typeof window === 'undefined') return;
+	if(typeof window === 'undefined') return; // don't run for server side render
 
 	var
 		autoResize            = true,
@@ -1118,4 +1118,4 @@
 
 	// TEST CODE END //
 
-})(window);
+})();

@@ -527,7 +527,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.9 Show warning message if no response from iFrame. [#463](https://github.com/davidjbradshaw/iframe-resizer/issues/463) Suppress warning message when code loaded via module [[Sergey Pereskokov](SerjoPepper)]. [#461](https://github.com/davidjbradshaw/iframe-resizer/issues/461) Don't run for server-side render.
+* v3.5.10 [#461](https://github.com/davidjbradshaw/iframe-resizer/issues/461) Don't run for server-side render
+* v3.5.9 Show warning message if no response from iFrame. [#463](https://github.com/davidjbradshaw/iframe-resizer/issues/463) Suppress warning message when code loaded via module [[Sergey Pereskokov](SerjoPepper)]. [#461](https://github.com/davidjbradshaw/iframe-resizer/issues/461).
 * v3.5.8 [#315](https://github.com/davidjbradshaw/iframe-resizer/issues/315) Allow Scrolling to be set to 'auto'.
 * v3.5.7 [#438](https://github.com/davidjbradshaw/iframe-resizer/issues/438) Check jQuery pluging wrapper not already loaded. [#423](https://github.com/davidjbradshaw/iframe-resizer/issues/423) Properly remove event listeners [[Aaron Hardy](Aaronius)]. [#401](https://github.com/davidjbradshaw/iframe-resizer/issues/401) Make tagged element fall back to all elements if tag not found. [#381](https://github.com/davidjbradshaw/iframe-resizer/issues/381) Fixing disconnect when iframe is missing temporarly [[Jeff Hicken](jhicken)]. Added warnings for missing iFrame and deprecated options.
 * v3.5.5 [#373](https://github.com/davidjbradshaw/iframe-resizer/issues/373) Add option for custom size calculation methods in iFrame. [#374](https://github.com/davidjbradshaw/iframe-resizer/issues/374) Fix bug with in page links called from parent page.
