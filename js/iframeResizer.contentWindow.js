@@ -200,7 +200,6 @@
 		resizeFrom         = (undefined !== data[13]) ? data[13]         : resizeFrom;
 		widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
 		customSelector     = (undefined !== data[15]) ? data[15]         : customSelector;
-		console.log(data);
 	}
 
 	function readDataFromPage(){
