@@ -1022,7 +1022,7 @@
 		}
 	}
 
-	if (window.jQuery) { createJQueryPublicMethod(jQuery); }
+	if (window.jQuery) { createJQueryPublicMethod(window.jQuery); }
 
 	if (typeof define === 'function' && define.amd) {
 		define([],factory);
