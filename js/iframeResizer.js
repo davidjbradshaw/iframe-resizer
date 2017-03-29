@@ -138,6 +138,7 @@
 			function resize(){
 				setSize(messageData);
 				setPagePosition(iframeId);
+				callback('resizedCallback',messageData);
 			}
 
 			ensureInRange('Height');
@@ -460,11 +461,9 @@
 			case 'init':
 				resizeIFrame();
 				callback('initCallback',messageData.iframe);
-				callback('resizedCallback',messageData);
 				break;
 			default:
 				resizeIFrame();
-				callback('resizedCallback',messageData);
 			}
 		}
 
