@@ -527,6 +527,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.5.12 [#475](https://github.com/davidjbradshaw/iframe-resizer/issues/475) Delay resizeCallback until after the iFrame has resized [[Codener]](codener).
 * v3.5.11 [#470](https://github.com/davidjbradshaw/iframe-resizer/issues/470) Fix jQuery reference error [[Russell Schick]](rschick).
 * v3.5.10 [#461](https://github.com/davidjbradshaw/iframe-resizer/issues/461) Don't run for server-side render
 * v3.5.9 Show warning message if no response from iFrame. [#463](https://github.com/davidjbradshaw/iframe-resizer/issues/463) Suppress warning message when code loaded via module [[Sergey Pereskokov](SerjoPepper)]. [#461](https://github.com/davidjbradshaw/iframe-resizer/issues/461).
