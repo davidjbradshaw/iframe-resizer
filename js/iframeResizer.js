@@ -488,6 +488,11 @@
 			settings[iframeId].firstRun = false;
 		}
 
+		function clearWarningTimeout() {
+			clearTimeout(settings[iframeId].msgTimeout);
+			settings[iframeId].warningTimeout = 0;
+		}
+
 		var
 			msg = event.data,
 			messageData = {},
@@ -498,8 +503,7 @@
 		} else if (isMessageForUs()){
 			messageData = processMsg();
 			iframeId    = logId = messageData.id;
-
-			clearTimeout(settings[iframeId].msgTimeout);
+			settings[iframeId].loaded = true;
 
 			if (!isMessageFromMetaParent() && hasSettings(iframeId)){
 				log(iframeId,'Received: '+msg);
@@ -643,17 +647,19 @@
 		}
 
 		function warnOnNoResponse() {
-
 			function warning() {
-				warn(id, 'No response from iFrame. Check iFrameResizer.contentWindow.js has been loaded in iFrame');
+				if (!settings[id].loaded && !errorShown) {
+					errorShown = true;
+					warn(id, 'IFrame has not responded within '+ settings[id].warningTimeout/1000 +' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame. This message can be ingored if everything is working, or you can set the warningTimeout option to a higher value or zero to suppress this warning.');
+				}
 			}
 
-			if (!!noResponseWarning) {
+			if (!!noResponseWarning && !!settings[id].warningTimeout) {
 				settings[id].msgTimeout = setTimeout(warning, settings[id].warningTimeout);
-
 			}
 		}
 
+		var errorShown = false;
 
 		id = id || iframe.id;
 
