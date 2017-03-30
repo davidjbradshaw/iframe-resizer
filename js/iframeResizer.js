@@ -648,7 +648,7 @@
 
 		function warnOnNoResponse() {
 			function warning() {
-				if (!settings[id].loaded && !errorShown) {
+				if (settings[id] && !settings[id].loaded && !errorShown) {
 					errorShown = true;
 					warn(id, 'IFrame has not responded within '+ settings[id].warningTimeout/1000 +' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame. This message can be ingored if everything is working, or you can set the warningTimeout option to a higher value or zero to suppress this warning.');
 				}
