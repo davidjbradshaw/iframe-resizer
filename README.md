@@ -379,7 +379,7 @@ if ('parentIFrame' in window) {
 
 
 
-##IFrame Object Methods
+## IFrame Object Methods
 
 Once the iFrame has been initialized, an `iFrameResizer` object is bound to it. This has the following methods available.
 
