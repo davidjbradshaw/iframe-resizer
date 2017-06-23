@@ -434,7 +434,8 @@
 
 			switch(messageData.type){
 			case 'close':
-				closeIFrame(messageData.iframe);
+				if(settings[iframeId].closeRequestCallback) chkCallback(iframeId, 'closeRequestCallback', settings[iframeId].iframe);
+				else closeIFrame(messageData.iframe);
 				break;
 			case 'message':
 				forwardMsgFromIFrame(getMsgBody(6));
