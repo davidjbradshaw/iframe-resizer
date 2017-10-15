@@ -1001,7 +1001,7 @@
 					setTimeout(function(){ initLock = false;},eventCancelTimer);
 				}
 
-				if (document.body){
+				if (document.readyState === "interactive" || document.readyState === "complete"){
 					fireInit();
 				} else {
 					log('Waiting for page ready');
