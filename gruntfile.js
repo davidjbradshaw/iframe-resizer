@@ -54,7 +54,7 @@ module.exports = function(grunt) {
       },
       single:{
         singleRun: true,
-        browsers: ['Chrome', 'Firefox',  'PhantomJS'] // 'Safari' ,
+        browsers: ['Chrome', 'Firefox'] // 'Safari', 'PhantomJS'
       }
     },
 
@@ -188,7 +188,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['notest','karma:single']);
   grunt.registerTask('build',   ['removeBlock','copy','uglify']);
   grunt.registerTask('notest',  ['jsonlint','jshint','build']);
-  grunt.registerTask('test',    ['clean','jshint','karma:single','qunit']);
+  grunt.registerTask('test',    ['clean','jshint','karma:single']); // ,'qunit'
   grunt.registerTask('travis',  ['clean','notest','qunit','karma:travis','coveralls']);
 
   grunt.registerTask('postBump',['build','bump-commit','shell']);
