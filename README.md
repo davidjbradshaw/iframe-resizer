@@ -1,5 +1,5 @@
 # iFrame Resizer
-[![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)g
+[![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
 [![NPM Downloads](https://img.shields.io/npm/dt/iframe-resizer.svg)](https://www.npmjs.com/package/iframe-resizer)
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 [![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
@@ -25,7 +25,7 @@ This library enables the automatic resizing of the height and width of both same
 This package can be installed via NPM (`npm install iframe-resizer -save`) or Yarn (`yarn add iframe-resizer`).
 
 ### CDNs
-This package is available on [cdnjs](https://cdnjs.com/libraries/iframe-resizer) and [jsDelivr](https://www.jsdelivr.com/package/npm/iframe-resizer).
+This package is also available on [cdnjs](https://cdnjs.com/libraries/iframe-resizer) and [jsDelivr](https://www.jsdelivr.com/package/npm/iframe-resizer).
 
 ### Getting started
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
@@ -529,7 +529,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.15 [#477](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[shaunjohansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
+* v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[shaunjohansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
 * v3.5.14 [#477](https://github.com/davidjbradshaw/iframe-resizer/issues/477) Fix bug when iFrame closed before first resize.
 * v3.5.13 [#473](https://github.com/davidjbradshaw/iframe-resizer/issues/473) Improve no response from iFrame warning message.
 * v3.5.12 [#475](https://github.com/davidjbradshaw/iframe-resizer/issues/475) Delay resizeCallback until after the iFrame has resized [[Codener](codener)].
