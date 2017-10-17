@@ -50,6 +50,7 @@
 			scrolling                 : false,
 			sizeHeight                : true,
 			sizeWidth                 : false,
+			warningEnabled            : true,
 			warningTimeout            : 5000,
 			tolerance                 : 0,
 			widthCalculationMethod    : 'scroll',
@@ -115,6 +116,10 @@
 		return settings[iframeId] ? settings[iframeId].log : logEnabled;
 	}
 
+	function isWarningEnabled(iframeId){
+		return settings[iframeId] ? settings[iframeId].warningEnabled : defaults.warningEnabled;
+	}
+
 	function log(iframeId,msg){
 		output('log',iframeId,msg,isLogEnabled(iframeId));
 	}
@@ -124,7 +129,7 @@
 	}
 
 	function warn(iframeId,msg){
-		output('warn',iframeId,msg,true);
+		output('warn',iframeId,msg,isWarningEnabled(iframeId));
 	}
 
 	function output(type,iframeId,msg,enabled){

@@ -196,13 +196,19 @@ Resize iFrame to content height.
 
 Resize iFrame to content width.
 
-
 ### tolerance
 
 	default: 0
 	type:    integer
 
 Set the number of pixels the iFrame content size has to change by, before triggering a resize of the iFrame.
+
+### warningEnabled
+
+	default: true
+	type:    boolean
+
+Setting the option to true will make the scripts in both the host page and the iFrame output warnings to the JavaScript console.
 
 ### widthCalculationMethod
 
@@ -531,6 +537,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.5.16 Adding 'warningEnabled' option's to enable warning or not.
 * v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[shaunjohansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
 * v3.5.14 [#477](https://github.com/davidjbradshaw/iframe-resizer/issues/477) Fix bug when iFrame closed before first resize.
 * v3.5.13 [#473](https://github.com/davidjbradshaw/iframe-resizer/issues/473) Improve no response from iFrame warning message.
