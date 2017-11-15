@@ -272,9 +272,9 @@ The following options can be set from within the iFrame page by creating a `wind
 
 ```html
 <script>
-	window.iFrameResizer = {
-		targetOrigin: 'http://mydomain.com'
-	}
+  window.iFrameResizer = {
+    targetOrigin: 'http://mydomain.com'
+  }
 </script>
 <script src="js/iframeresizer.contentwindow.js"></script>
 ```
@@ -313,7 +313,7 @@ These methods are available in the iFrame via the `window.parentIFrame` object. 
 
 ```js
 if ('parentIFrame' in window) {
-	parentIFrame.close();
+  parentIFrame.close();
 }
 ```
 
@@ -368,8 +368,8 @@ Manually force iFrame to resize. This method optionally accepts two arguments: *
 
 ```js
 iFrameResize({
-	autoResize: false,
-	sizeWidth: true
+  autoResize: false,
+  sizeWidth: true
 });
 ```
 
@@ -377,7 +377,7 @@ Then you can call the `size` method with dimensions:
 
 ```js
 if ('parentIFrame' in window) {
-	parentIFrame.size(100); // Set height to 100px
+  parentIFrame.size(100); // Set height to 100px
 }
 ```
 
@@ -435,10 +435,10 @@ If your page resizes via CSS `:hover` events, these won't be detected by default
 
 ```js
 function resize(){
-	if ('parentIFrame' in window) {
-		// Fix race condition in FireFox with setTimeout
-		setTimeout(parentIFrame.size.bind(parentIFrame),0);
-	}
+  if ('parentIFrame' in window) {
+    // Fix race condition in FireFox with setTimeout
+    setTimeout(parentIFrame.size.bind(parentIFrame),0);
+  }
 }
 
 $(*Element with hover style*).hover(resize);
@@ -450,17 +450,17 @@ Both FireFox and the WebKit based browsers allow the user to resize `textarea` i
 
 ```js
 function store(){
-	this.x = this.offsetWidth;
-	this.y = this.offsetHeight;
+  this.x = this.offsetWidth;
+  this.y = this.offsetHeight;
 }
 
 $('textarea').each(store).on('mouseover mouseout',function(){
-	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
-		store.call(this);
-		if ('parentIFrame' in window){
-			parentIFrame.size();
-		}
-	}
+  if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+    store.call(this);
+    if ('parentIFrame' in window){
+      parentIFrame.size();
+    }
+  }
 });
 ```
 
@@ -474,8 +474,8 @@ In modern browsers, if the default [height calculation method](#heightcalculatio
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
 
 iFrameResize({
-	heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
-	minSize:100
+  heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
+  minSize:100
 });
 ```
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
@@ -485,12 +485,12 @@ The `parentIFrame` object is created once the iFrame has been initially resized.
 
 ```html
 <script>
-	window.iFrameResizer = {
-		readyCallback: function(){
-			var myId = window.parentIFrame.getId();
-			console.log('The ID of the iFrame in the parent page is: '+myId);
-		}
-	}
+  window.iFrameResizer = {
+    readyCallback: function(){
+      var myId = window.parentIFrame.getId();
+      console.log('The ID of the iFrame in the parent page is: '+myId);
+    }
+  }
 </script>
 <script src="js/iframeresizer.contentwindow.js"></script>
 ```
@@ -517,7 +517,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--[if lte IE 8]>
-	<script type="text/javascript" src="js/ie8.polyfils.min.js"></script>
+  <script type="text/javascript" src="js/ie8.polyfils.min.js"></script>
 <![endif]-->
 ```
 
