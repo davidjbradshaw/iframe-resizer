@@ -903,12 +903,6 @@
 			}
 		}
 
-		function isFrameValid() {
-			return parseInt !== undefined;	
-		}
-
-		if(!isFrameValid()) return;
-
 		var	currentHeight,currentWidth;
 
 		if (isSizeChangeDetected() || 'init' === triggerEvent){
@@ -1007,7 +1001,7 @@
 					setTimeout(function(){ initLock = false;},eventCancelTimer);
 				}
 
-				if (document.readyState === "interactive" || document.readyState === "complete"){
+				if (document.body){
 					fireInit();
 				} else {
 					log('Waiting for page ready');
