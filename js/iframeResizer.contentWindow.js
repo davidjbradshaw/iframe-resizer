@@ -903,7 +903,11 @@
 			}
 		}
 
-		if(window.innerWidth === 0 || window.innerHeight === 0) return;
+		function isFrameValid() {
+			return parseInt;	
+		}
+
+		if(!isFrameValid()) return;
 
 		var	currentHeight,currentWidth;
 
