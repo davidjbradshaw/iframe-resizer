@@ -903,6 +903,8 @@
 			}
 		}
 
+		if(window.innerWidth === 0 || window.innerHeight === 0) return;
+
 		var	currentHeight,currentWidth;
 
 		if (isSizeChangeDetected() || 'init' === triggerEvent){
