@@ -904,7 +904,7 @@
 		}
 
 		function isFrameValid() {
-			return parseInt;	
+			return parseInt !== undefined;	
 		}
 
 		if(!isFrameValid()) return;
