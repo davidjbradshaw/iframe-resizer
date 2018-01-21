@@ -53,15 +53,15 @@
     widthCalcModeDefault  = 'scroll',
     widthCalcMode         = widthCalcModeDefault,
     win                   = window,
-    messageCallback       = function(){ warn('MessageCallback function not defined'); },
-    readyCallback         = function(){},
-    pageInfoCallback      = function(){},
+    messageCallback       = function() { warn('MessageCallback function not defined'); },
+    readyCallback         = function() {},
+    pageInfoCallback      = function() {},
     customCalcMethods     = {
-      height: function(){
+      height: function() {
         warn('Custom height calculation function not defined');
         return document.documentElement.offsetHeight;
       },
-      width: function(){
+      width: function() {
         warn('Custom width calculation function not defined');
         return document.body.scrollWidth;
       }
@@ -69,20 +69,20 @@
     eventHandlersByName   = {};
 
 
-  function addEventListener(el,evt,func){
+  function addEventListener(el,evt,func) {
     /* istanbul ignore else */ // Not testable in phantonJS
-    if ('addEventListener' in window){
+    if ('addEventListener' in window) {
       el.addEventListener(evt,func, false);
-    } else if ('attachEvent' in window){ //IE
+    } else if ('attachEvent' in window) { //IE
       el.attachEvent('on'+evt,func);
     }
   }
 
-  function removeEventListener(el,evt,func){
+  function removeEventListener(el,evt,func) {
     /* istanbul ignore else */ // Not testable in phantonJS
-    if ('removeEventListener' in window){
+    if ('removeEventListener' in window) {
       el.removeEventListener(evt,func, false);
-    } else if ('detachEvent' in window){ //IE
+    } else if ('detachEvent' in window) { //IE
       el.detachEvent('on'+evt,func);
     }
   }
@@ -144,24 +144,24 @@
     return new Date().getTime();
   };
 
-  function formatLogMsg(msg){
+  function formatLogMsg(msg) {
     return msgID + '[' + myID + ']' + ' ' + msg;
   }
 
-  function log(msg){
-    if (logging && ('object' === typeof window.console)){
+  function log(msg) {
+    if (logging && ('object' === typeof window.console)) {
       console.log(formatLogMsg(msg));
     }
   }
 
-  function warn(msg){
-    if ('object' === typeof window.console){
+  function warn(msg) {
+    if ('object' === typeof window.console) {
       console.warn(formatLogMsg(msg));
     }
   }
 
 
-  function init(){
+  function init() {
     readDataFromParent();
     log('Initialising iFrame ('+location.href+')');
     readDataFromPage();
@@ -179,9 +179,9 @@
     readyCallback();
   }
 
-  function readDataFromParent(){
+  function readDataFromParent() {
 
-    function strBool(str){
+    function strBool(str) {
       return 'true' === str ? true : false;
     }
 
@@ -203,8 +203,8 @@
     widthCalcMode      = (undefined !== data[14]) ? data[14]         : widthCalcMode;
   }
 
-  function readDataFromPage(){
-    function readData(){
+  function readDataFromPage() {
+    function readData() {
       var data = window.iFrameResizer;
 
       log('Reading data from page: ' + JSON.stringify(data));
@@ -216,7 +216,7 @@
       widthCalcMode       = ('widthCalculationMethod'  in data) ? data.widthCalculationMethod  : widthCalcMode;
     }
 
-    function setupCustomCalcMethods(calcMode, calcFunc){
+    function setupCustomCalcMethods(calcMode, calcFunc) {
       if ('function' === typeof calcMode) {
         log('Setup custom ' + calcFunc + 'CalcMethod');
         customCalcMethods[calcFunc] = calcMode;
@@ -236,42 +236,42 @@
   }
 
 
-  function chkCSS(attr,value){
-    if (-1 !== value.indexOf('-')){
+  function chkCSS(attr,value) {
+    if (-1 !== value.indexOf('-')) {
       warn('Negative CSS value ignored for '+attr);
       value='';
     }
     return value;
   }
 
-  function setBodyStyle(attr,value){
-    if ((undefined !== value) && ('' !== value) && ('null' !== value)){
+  function setBodyStyle(attr,value) {
+    if ((undefined !== value) && ('' !== value) && ('null' !== value)) {
       document.body.style[attr] = value;
       log('Body '+attr+' set to "'+value+'"');
     }
   }
 
-  function setMargin(){
+  function setMargin() {
     //If called via V1 script, convert bodyMargin from int to str
-    if (undefined === bodyMarginStr){
+    if (undefined === bodyMarginStr) {
       bodyMarginStr = bodyMargin+'px';
     }
 
     setBodyStyle('margin',chkCSS('margin',bodyMarginStr));
   }
 
-  function stopInfiniteResizingOfIFrame(){
+  function stopInfiniteResizingOfIFrame() {
     document.documentElement.style.height = '';
     document.body.style.height = '';
     log('HTML & body height set to "auto"');
   }
 
 
-  function manageTriggerEvent(options){
+  function manageTriggerEvent(options) {
 
     var listener = {
-      add:    function(eventName){
-        function handleEvent(){
+      add:    function(eventName) {
+        function handleEvent() {
           sendSize(options.eventName,options.eventType);
         }
 
@@ -279,7 +279,7 @@
 
         addEventListener(window,eventName,handleEvent);
       },
-      remove: function(eventName){
+      remove: function(eventName) {
         var handleEvent = eventHandlersByName[eventName];
         delete eventHandlersByName[eventName];
 
@@ -287,7 +287,7 @@
       }
     };
 
-    if(options.eventNames && Array.prototype.map){
+    if(options.eventNames && Array.prototype.map) {
       options.eventName = options.eventNames[0];
       options.eventNames.map(listener[options.method]);
     } else {
@@ -297,7 +297,7 @@
     log(capitalizeFirstLetter(options.method) + ' event listener: ' + options.eventType);
   }
 
-  function manageEventListeners(method){
+  function manageEventListeners(method) {
     manageTriggerEvent({method:method, eventType: 'Animation Start',           eventNames: ['animationstart','webkitAnimationStart'] });
     manageTriggerEvent({method:method, eventType: 'Animation Iteration',       eventNames: ['animationiteration','webkitAnimationIteration'] });
     manageTriggerEvent({method:method, eventType: 'Animation End',             eventNames: ['animationend','webkitAnimationEnd'] });
@@ -313,14 +313,14 @@
     manageTriggerEvent({method:method, eventType: 'Transition Start',          eventNames: ['transitionstart','webkitTransitionStart','MSTransitionStart','oTransitionStart','otransitionstart'] });
     manageTriggerEvent({method:method, eventType: 'Transition Iteration',      eventNames: ['transitioniteration','webkitTransitionIteration','MSTransitionIteration','oTransitionIteration','otransitioniteration'] });
     manageTriggerEvent({method:method, eventType: 'Transition End',            eventNames: ['transitionend','webkitTransitionEnd','MSTransitionEnd','oTransitionEnd','otransitionend'] });
-    if('child' === resizeFrom){
+    if('child' === resizeFrom) {
       manageTriggerEvent({method:method, eventType: 'IFrame Resized',        eventName:  'resize' });
     }
   }
 
-  function checkCalcMode(calcMode,calcModeDefault,modes,type){
-    if (calcModeDefault !== calcMode){
-      if (!(calcMode in modes)){
+  function checkCalcMode(calcMode,calcModeDefault,modes,type) {
+    if (calcModeDefault !== calcMode) {
+      if (!(calcMode in modes)) {
         warn(calcMode + ' is not a valid option for '+type+'CalculationMethod.');
         calcMode=calcModeDefault;
       }
@@ -330,15 +330,15 @@
     return calcMode;
   }
 
-  function checkHeightMode(){
+  function checkHeightMode() {
     heightCalcMode = checkCalcMode(heightCalcMode,heightCalcModeDefault,getHeight,'height');
   }
 
-  function checkWidthMode(){
+  function checkWidthMode() {
     widthCalcMode = checkCalcMode(widthCalcMode,widthCalcModeDefault,getWidth,'width');
   }
 
-  function startEventListeners(){
+  function startEventListeners() {
     if ( true === autoResize ) {
       manageEventListeners('add');
       setupMutationObserver();
@@ -348,52 +348,52 @@
     }
   }
 
-  function stopMsgsToParent(){
+  function stopMsgsToParent() {
     log('Disable outgoing messages');
     sendPermit = false;
   }
 
-  function removeMsgListener(){
+  function removeMsgListener() {
     log('Remove event listener: Message');
     removeEventListener(window, 'message', receiver);
   }
 
-  function disconnectMutationObserver(){
-    if (null !== bodyObserver){
+  function disconnectMutationObserver() {
+    if (null !== bodyObserver) {
       /* istanbul ignore next */ // Not testable in PhantonJS
       bodyObserver.disconnect();
     }
   }
 
-  function stopEventListeners(){
+  function stopEventListeners() {
     manageEventListeners('remove');
     disconnectMutationObserver();
     clearInterval(intervalTimer);
   }
 
-  function teardown(){
+  function teardown() {
     stopMsgsToParent();
     removeMsgListener();
     if (true === autoResize) stopEventListeners();
   }
 
-  function injectClearFixIntoBodyElement(){
+  function injectClearFixIntoBodyElement() {
     var clearFix = document.createElement('div');
     clearFix.style.clear   = 'both';
     clearFix.style.display = 'block'; //Guard against this having been globally redefined in CSS.
     document.body.appendChild(clearFix);
   }
 
-  function setupInPageLinks(){
+  function setupInPageLinks() {
 
-    function getPagePosition (){
+    function getPagePosition () {
       return {
         x: (window.pageXOffset !== undefined) ? window.pageXOffset : document.documentElement.scrollLeft,
         y: (window.pageYOffset !== undefined) ? window.pageYOffset : document.documentElement.scrollTop
       };
     }
 
-    function getElementPosition(el){
+    function getElementPosition(el) {
       var
         elPosition   = el.getBoundingClientRect(),
         pagePosition = getPagePosition();
@@ -404,8 +404,8 @@
       };
     }
 
-    function findTarget(location){
-      function jumpToTarget(target){
+    function findTarget(location) {
+      function jumpToTarget(target) {
         var jumpPosition = getElementPosition(target);
 
         log('Moving to in page link (#'+hash+') at x: '+jumpPosition.x+' y: '+jumpPosition.y);
@@ -417,7 +417,7 @@
         hashData = decodeURIComponent(hash),
         target   = document.getElementById(hashData) || document.getElementsByName(hashData)[0];
 
-      if (undefined !== target){
+      if (undefined !== target) {
         jumpToTarget(target);
       } else {
         log('In page link (#' + hash + ') not found in iFrame, so sending to parent');
@@ -425,22 +425,22 @@
       }
     }
 
-    function checkLocationHash(){
-      if ('' !== location.hash && '#' !== location.hash){
+    function checkLocationHash() {
+      if ('' !== location.hash && '#' !== location.hash) {
         findTarget(location.href);
       }
     }
 
-    function bindAnchors(){
-      function setupLink(el){
-        function linkClicked(e){
+    function bindAnchors() {
+      function setupLink(el) {
+        function linkClicked(e) {
           e.preventDefault();
 
           /*jshint validthis:true */
           findTarget(this.getAttribute('href'));
         }
 
-        if ('#' !== el.getAttribute('href')){
+        if ('#' !== el.getAttribute('href')) {
           addEventListener(el,'click',linkClicked);
         }
       }
@@ -448,17 +448,17 @@
       Array.prototype.forEach.call( document.querySelectorAll( 'a[href^="#"]' ), setupLink );
     }
 
-    function bindLocationHash(){
+    function bindLocationHash() {
       addEventListener(window,'hashchange',checkLocationHash);
     }
 
-    function initCheck(){ //check if page loaded with location hash after init resize
+    function initCheck() { //check if page loaded with location hash after init resize
       setTimeout(checkLocationHash,eventCancelTimer);
     }
 
-    function enableInPageLinks(){
+    function enableInPageLinks() {
       /* istanbul ignore else */ // Not testable in phantonJS
-      if(Array.prototype.forEach && document.querySelectorAll){
+      if(Array.prototype.forEach && document.querySelectorAll) {
         log('Setting up location.hash handlers');
         bindAnchors();
         bindLocationHash();
@@ -468,7 +468,7 @@
       }
     }
 
-    if(inPageLinks.enable){
+    if(inPageLinks.enable) {
       enableInPageLinks();
     } else {
       log('In page linking not enabled');
@@ -479,12 +479,12 @@
     };
   }
 
-  function setupPublicMethods(){
+  function setupPublicMethods() {
     log('Enable public methods');
 
     win.parentIFrame = {
 
-      autoResize: function autoResizeF(resize){
+      autoResize: function autoResizeF(resize) {
         if (true === resize && false === autoResize) {
           autoResize=true;
           startEventListeners();
@@ -497,61 +497,61 @@
         return autoResize;
       },
 
-      close: function closeF(){
+      close: function closeF() {
         sendMsg(0,0,'close');
         teardown();
       },
 
-      getId: function getIdF(){
+      getId: function getIdF() {
         return myID;
       },
 
-      getPageInfo: function getPageInfoF(callback){
-        if ('function' === typeof callback){
+      getPageInfo: function getPageInfoF(callback) {
+        if ('function' === typeof callback) {
           pageInfoCallback = callback;
           sendMsg(0,0,'pageInfo');
         } else {
-          pageInfoCallback = function(){};
+          pageInfoCallback = function() {};
           sendMsg(0,0,'pageInfoStop');
         }
       },
 
-      moveToAnchor: function moveToAnchorF(hash){
+      moveToAnchor: function moveToAnchorF(hash) {
         inPageLinks.findTarget(hash);
       },
 
-      reset: function resetF(){
+      reset: function resetF() {
         resetIFrame('parentIFrame.reset');
       },
 
-      scrollTo: function scrollToF(x,y){
+      scrollTo: function scrollToF(x,y) {
         sendMsg(y,x,'scrollTo'); // X&Y reversed at sendMsg uses height/width
       },
 
-      scrollToOffset: function scrollToF(x,y){
+      scrollToOffset: function scrollToF(x,y) {
         sendMsg(y,x,'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
       },
 
-      sendMessage: function sendMessageF(msg,targetOrigin){
+      sendMessage: function sendMessageF(msg,targetOrigin) {
         sendMsg(0,0,'message',JSON.stringify(msg),targetOrigin);
       },
 
-      setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod){
+      setHeightCalculationMethod: function setHeightCalculationMethodF(heightCalculationMethod) {
         heightCalcMode = heightCalculationMethod;
         checkHeightMode();
       },
 
-      setWidthCalculationMethod: function setWidthCalculationMethodF(widthCalculationMethod){
+      setWidthCalculationMethod: function setWidthCalculationMethodF(widthCalculationMethod) {
         widthCalcMode = widthCalculationMethod;
         checkWidthMode();
       },
 
-      setTargetOrigin: function setTargetOriginF(targetOrigin){
+      setTargetOrigin: function setTargetOriginF(targetOrigin) {
         log('Set targetOrigin: '+targetOrigin);
         targetOriginDefault = targetOrigin;
       },
 
-      size: function sizeF(customHeight, customWidth){
+      size: function sizeF(customHeight, customWidth) {
         var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
         //lockTrigger();
         sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
@@ -559,19 +559,19 @@
     };
   }
 
-  function initInterval(){
-    if ( 0 !== interval ){
+  function initInterval() {
+    if ( 0 !== interval ) {
       log('setInterval: '+interval+'ms');
-      intervalTimer = setInterval(function(){
+      intervalTimer = setInterval(function() {
         sendSize('interval','setInterval: '+interval);
       },Math.abs(interval));
     }
   }
 
   /* istanbul ignore next */  //Not testable in PhantomJS
-  function setupBodyMutationObserver(){
+  function setupBodyMutationObserver() {
     function addImageLoadListners(mutation) {
-      function addImageLoadListener(element){
+      function addImageLoadListener(element) {
         if (false === element.complete) {
           log('Attach listeners to ' + element.src);
           element.addEventListener('load', imageLoaded, false);
@@ -580,9 +580,9 @@
         }
       }
 
-      if (mutation.type === 'attributes' && mutation.attributeName === 'src'){
+      if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
         addImageLoadListener(mutation.target);
-      } else if (mutation.type === 'childList'){
+      } else if (mutation.type === 'childList') {
         Array.prototype.forEach.call(
           mutation.target.querySelectorAll('img'),
           addImageLoadListener
@@ -590,18 +590,18 @@
       }
     }
 
-    function removeFromArray(element){
+    function removeFromArray(element) {
       elements.splice(elements.indexOf(element),1);
     }
 
-    function removeImageLoadListener(element){
+    function removeImageLoadListener(element) {
       log('Remove listeners from ' + element.src);
       element.removeEventListener('load', imageLoaded, false);
       element.removeEventListener('error', imageError, false);
       removeFromArray(element);
     }
 
-    function imageEventTriggered(event,type,typeDesc){
+    function imageEventTriggered(event,type,typeDesc) {
       removeImageLoadListener(event.target);
       sendSize(type, typeDesc + ': ' + event.target.src, undefined, undefined);
     }
@@ -621,7 +621,7 @@
       mutations.forEach(addImageLoadListners);
     }
 
-    function createMutationObserver(){
+    function createMutationObserver() {
       var
         target = document.querySelector('body'),
 
@@ -648,8 +648,8 @@
       observer         = createMutationObserver();
 
     return {
-      disconnect: function (){
-        if ('disconnect' in observer){
+      disconnect: function () {
+        if ('disconnect' in observer) {
           log('Disconnect body MutationObserver');
           observer.disconnect();
           elements.forEach(removeImageLoadListener);
@@ -658,11 +658,11 @@
     };
   }
 
-  function setupMutationObserver(){
+  function setupMutationObserver() {
     var	forceIntervalTimer = 0 > interval;
 
     /* istanbul ignore if */ // Not testable in PhantomJS
-    if (window.MutationObserver || window.WebKitMutationObserver){
+    if (window.MutationObserver || window.WebKitMutationObserver) {
       if (forceIntervalTimer) {
         initInterval();
       } else {
@@ -713,8 +713,8 @@
     return parseInt(retVal,base);
   }
 
-  function chkEventThottle(timer){
-    if(timer > throttledTimer/2){
+  function chkEventThottle(timer) {
+    if(timer > throttledTimer/2) {
       throttledTimer = 2*timer;
       log('Event throttle increased to ' + throttledTimer + 'ms');
     }
@@ -746,7 +746,7 @@
     return maxVal;
   }
 
-  function getAllMeasurements(dimention){
+  function getAllMeasurements(dimention) {
     return [
       dimention.bodyOffset(),
       dimention.bodyScroll(),
@@ -755,8 +755,8 @@
     ];
   }
 
-  function getTaggedElements(side,tag){
-    function noTaggedElementsFound(){
+  function getTaggedElements(side,tag) {
+    function noTaggedElementsFound() {
       warn('No tagged elements ('+tag+') found on page');
       return document.querySelectorAll('body *');
     }
@@ -768,111 +768,111 @@
     return getMaxElement(side,elements);
   }
 
-  function getAllElements(){
+  function getAllElements() {
     return document.querySelectorAll('body *');
   }
 
   var
     getHeight = {
-      bodyOffset: function getBodyOffsetHeight(){
+      bodyOffset: function getBodyOffsetHeight() {
         return  document.body.offsetHeight + getComputedStyle('marginTop') + getComputedStyle('marginBottom');
       },
 
-      offset: function(){
+      offset: function() {
         return getHeight.bodyOffset(); //Backwards compatability
       },
 
-      bodyScroll: function getBodyScrollHeight(){
+      bodyScroll: function getBodyScrollHeight() {
         return document.body.scrollHeight;
       },
 
-      custom: function getCustomWidth(){
+      custom: function getCustomWidth() {
         return customCalcMethods.height();
       },
 
-      documentElementOffset: function getDEOffsetHeight(){
+      documentElementOffset: function getDEOffsetHeight() {
         return document.documentElement.offsetHeight;
       },
 
-      documentElementScroll: function getDEScrollHeight(){
+      documentElementScroll: function getDEScrollHeight() {
         return document.documentElement.scrollHeight;
       },
 
-      max: function getMaxHeight(){
+      max: function getMaxHeight() {
         return Math.max.apply(null,getAllMeasurements(getHeight));
       },
 
-      min: function getMinHeight(){
+      min: function getMinHeight() {
         return Math.min.apply(null,getAllMeasurements(getHeight));
       },
 
-      grow: function growHeight(){
+      grow: function growHeight() {
         return getHeight.max(); //Run max without the forced downsizing
       },
 
-      lowestElement: function getBestHeight(){
+      lowestElement: function getBestHeight() {
         return Math.max(getHeight.bodyOffset(), getMaxElement('bottom',getAllElements()));
       },
 
-      taggedElement: function getTaggedElementsHeight(){
+      taggedElement: function getTaggedElementsHeight() {
         return getTaggedElements('bottom','data-iframe-height');
       }
     },
 
     getWidth = {
-      bodyScroll: function getBodyScrollWidth(){
+      bodyScroll: function getBodyScrollWidth() {
         return document.body.scrollWidth;
       },
 
-      bodyOffset: function getBodyOffsetWidth(){
+      bodyOffset: function getBodyOffsetWidth() {
         return document.body.offsetWidth;
       },
 
-      custom: function getCustomWidth(){
+      custom: function getCustomWidth() {
         return customCalcMethods.width();
       },
 
-      documentElementScroll: function getDEScrollWidth(){
+      documentElementScroll: function getDEScrollWidth() {
         return document.documentElement.scrollWidth;
       },
 
-      documentElementOffset: function getDEOffsetWidth(){
+      documentElementOffset: function getDEOffsetWidth() {
         return document.documentElement.offsetWidth;
       },
 
-      scroll: function getMaxWidth(){
+      scroll: function getMaxWidth() {
         return Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll());
       },
 
-      max: function getMaxWidth(){
+      max: function getMaxWidth() {
         return Math.max.apply(null,getAllMeasurements(getWidth));
       },
 
-      min: function getMinWidth(){
+      min: function getMinWidth() {
         return Math.min.apply(null,getAllMeasurements(getWidth));
       },
 
-      rightMostElement: function rightMostElement(){
+      rightMostElement: function rightMostElement() {
         return getMaxElement('right', getAllElements());
       },
 
-      taggedElement: function getTaggedElementsWidth(){
+      taggedElement: function getTaggedElementsWidth() {
         return getTaggedElements('right', 'data-iframe-width');
       }
     };
 
 
-  function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth){
+  function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
 
-    function resizeIFrame(){
+    function resizeIFrame() {
       height = currentHeight;
       width  = currentWidth;
 
       sendMsg(height,width,triggerEvent);
     }
 
-    function isSizeChangeDetected(){
-      function checkTolarance(a,b){
+    function isSizeChangeDetected() {
+      function checkTolarance(a,b) {
         var retVal = Math.abs(a-b) <= tolerance;
         return !retVal;
       }
@@ -883,29 +883,29 @@
       return	checkTolarance(height,currentHeight) || (calculateWidth && checkTolarance(width,currentWidth));
     }
 
-    function isForceResizableEvent(){
+    function isForceResizableEvent() {
       return !(triggerEvent in {'init':1,'interval':1,'size':1});
     }
 
-    function isForceResizableCalcMode(){
+    function isForceResizableCalcMode() {
       return (heightCalcMode in resetRequiredMethods) || (calculateWidth && widthCalcMode in resetRequiredMethods);
     }
 
-    function logIgnored(){
+    function logIgnored() {
       log('No change in size detected');
     }
 
-    function checkDownSizing(){
-      if (isForceResizableEvent() && isForceResizableCalcMode()){
+    function checkDownSizing() {
+      if (isForceResizableEvent() && isForceResizableCalcMode()) {
         resetIFrame(triggerEventDesc);
-      } else if (!(triggerEvent in {'interval':1})){
+      } else if (!(triggerEvent in {'interval':1})) {
         logIgnored();
       }
     }
 
     var	currentHeight,currentWidth;
 
-    if (isSizeChangeDetected() || 'init' === triggerEvent){
+    if (isSizeChangeDetected() || 'init' === triggerEvent) {
       lockTrigger();
       resizeIFrame();
     } else {
@@ -915,20 +915,20 @@
 
   var sizeIFrameThrottled = throttle(sizeIFrame);
 
-  function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth){
-    function recordTrigger(){
-      if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})){
+  function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
+    function recordTrigger() {
+      if (!(triggerEvent in {'reset':1,'resetPage':1,'init':1})) {
         log( 'Trigger event: ' + triggerEventDesc );
       }
     }
 
-    function isDoubleFiredEvent(){
+    function isDoubleFiredEvent() {
       return  triggerLocked && (triggerEvent in doubleEventList);
     }
 
-    if (!isDoubleFiredEvent()){
+    if (!isDoubleFiredEvent()) {
       recordTrigger();
-      if (triggerEvent in {'init':1}){
+      if (triggerEvent === 'init') {
         sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth);
       } else {
         sizeIFrameThrottled(triggerEvent, triggerEventDesc, customHeight, customWidth);
@@ -938,27 +938,27 @@
     }
   }
 
-  function lockTrigger(){
-    if (!triggerLocked){
+  function lockTrigger() {
+    if (!triggerLocked) {
       triggerLocked = true;
       log('Trigger event lock on');
     }
     clearTimeout(triggerLockedTimer);
-    triggerLockedTimer = setTimeout(function(){
+    triggerLockedTimer = setTimeout(function() {
       triggerLocked = false;
       log('Trigger event lock off');
       log('--');
     },eventCancelTimer);
   }
 
-  function triggerReset(triggerEvent){
+  function triggerReset(triggerEvent) {
     height = getHeight[heightCalcMode]();
     width  = getWidth[widthCalcMode]();
 
     sendMsg(height,width,triggerEvent);
   }
 
-  function resetIFrame(triggerEventDesc){
+  function resetIFrame(triggerEventDesc) {
     var hcm = heightCalcMode;
     heightCalcMode = heightCalcModeDefault;
 
@@ -969,16 +969,16 @@
     heightCalcMode = hcm;
   }
 
-  function sendMsg(height,width,triggerEvent,msg,targetOrigin){
-    function setTargetOrigin(){
-      if (undefined === targetOrigin){
+  function sendMsg(height,width,triggerEvent,msg,targetOrigin) {
+    function setTargetOrigin() {
+      if (undefined === targetOrigin) {
         targetOrigin = targetOriginDefault;
       } else {
         log('Message targetOrigin: '+targetOrigin);
       }
     }
 
-    function sendToParent(){
+    function sendToParent() {
       var
         size  = height + ':' + width,
         message = myID + ':' +  size + ':' + triggerEvent + (undefined !== msg ? ':' + msg : '');
@@ -987,7 +987,7 @@
       target.postMessage( msgID + message, targetOrigin);
     }
 
-    if(true === sendPermit){
+    if(true === sendPermit) {
       setTargetOrigin();
       sendToParent();
     }
@@ -995,17 +995,17 @@
 
   function receiver(event) {
     var processRequestFromParent = {
-      init: function initFromParent(){
-        function fireInit(){
+      init: function initFromParent() {
+        function fireInit() {
           initMsg = event.data;
           target  = event.source;
 
           init();
           firstRun = false;
-          setTimeout(function(){ initLock = false;},eventCancelTimer);
+          setTimeout(function() { initLock = false;},eventCancelTimer);
         }
 
-        if (document.readyState === "interactive" || document.readyState === "complete"){
+        if (document.readyState === "interactive" || document.readyState === "complete") {
           fireInit();
         } else {
           log('Waiting for page ready');
@@ -1013,8 +1013,8 @@
         }
       },
 
-      reset: function resetFromParent(){
-        if (!initLock){
+      reset: function resetFromParent() {
+        if (!initLock) {
           log('Page size reset by host page');
           triggerReset('resetPage');
         } else {
@@ -1022,23 +1022,23 @@
         }
       },
 
-      resize: function resizeFromParent(){
+      resize: function resizeFromParent() {
         sendSize('resizeParent','Parent window requested size check');
       },
 
-      moveToAnchor: function moveToAnchorF(){
+      moveToAnchor: function moveToAnchorF() {
         inPageLinks.findTarget(getData());
       },
       inPageLink: function inPageLinkF() {this.moveToAnchor();}, //Backward compatability
 
-      pageInfo: function pageInfoFromParent(){
+      pageInfo: function pageInfoFromParent() {
         var msgBody = getData();
         log('PageInfoFromParent called from parent: ' + msgBody );
         pageInfoCallback(JSON.parse(msgBody));
         log(' --');
       },
 
-      message: function messageFromParent(){
+      message: function messageFromParent() {
         var msgBody = getData();
 
         log('MessageCallback called from parent: ' + msgBody );
@@ -1047,39 +1047,39 @@
       }
     };
 
-    function isMessageForUs(){
+    function isMessageForUs() {
       return msgID === (''+event.data).substr(0,msgIdLen); //''+ Protects against non-string messages
     }
 
-    function getMessageType(){
+    function getMessageType() {
       return event.data.split(']')[1].split(':')[0];
     }
 
-    function getData(){
+    function getData() {
       return event.data.substr(event.data.indexOf(':')+1);
     }
 
-    function isMiddleTier(){
+    function isMiddleTier() {
       return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window);
     }
 
-    function isInitMsg(){
+    function isInitMsg() {
       //Test if this message is from a child below us. This is an ugly test, however, updating
       //the message format would break backwards compatibity.
       return event.data.split(':')[2] in {'true':1,'false':1};
     }
 
-    function callFromParent(){
+    function callFromParent() {
       var messageType = getMessageType();
 
-      if (messageType in processRequestFromParent){
+      if (messageType in processRequestFromParent) {
         processRequestFromParent[messageType]();
-      } else if (!isMiddleTier() && !isInitMsg()){
+      } else if (!isMiddleTier() && !isInitMsg()) {
         warn('Unexpected message ('+event.data+')');
       }
     }
 
-    function processMessage(){
+    function processMessage() {
       if (false === firstRun) {
         callFromParent();
       } else if (isInitMsg()) {
@@ -1089,15 +1089,15 @@
       }
     }
 
-    if (isMessageForUs()){
+    if (isMessageForUs()) {
       processMessage();
     }
   }
 
   //Normally the parent kicks things off when it detects the iFrame has loaded.
   //If this script is async-loaded, then tell parent page to retry init.
-  function chkLateLoaded(){
-    if('loading' !== document.readyState){
+  function chkLateLoaded() {
+    if('loading' !== document.readyState) {
       window.parent.postMessage('[iFrameResizerChild]Ready','*');
     }
   }
@@ -1109,7 +1109,7 @@
 
   //Create test hooks
 
-  function mockMsgListener(msgObject){
+  function mockMsgListener(msgObject) {
     receiver(msgObject);
     return win;
   }
