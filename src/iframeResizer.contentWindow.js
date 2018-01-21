@@ -928,7 +928,11 @@
 
 		if (!isDoubleFiredEvent()){
 			recordTrigger();
-			sizeIFrameThrottled(triggerEvent, triggerEventDesc, customHeight, customWidth);
+			if (triggerEvent in {'init':1}){
+				sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth);
+			} else {
+				sizeIFrameThrottled(triggerEvent, triggerEventDesc, customHeight, customWidth);
+			}
 		} else {
 			log('Trigger event cancelled: '+triggerEvent);
 		}
