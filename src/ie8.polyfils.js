@@ -44,21 +44,3 @@ if (!Function.prototype.bind) {
     return fBound;
   };
 }
-
-if (!Array.prototype.forEach) {
-  Array.prototype.forEach = function(callback, thisArg) {
-    if (this === null) throw new TypeError(' this is null or not defined');
-    if (typeof callback !== 'function') throw new TypeError(callback + ' is not a function');
-
-    var
-      O = Object(this),
-      len = O.length >>> 0;
-
-    for (var k=0 ; k < len ; k++) {
-      if (k in O)
-        callback.call(thisArg, O[k], k, O);
-    }
-  };
-}
-
-
