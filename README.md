@@ -531,7 +531,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[shaunjohansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
+* v3.5.16 [#554](https://github.com/davidjbradshaw/iframe-resizer/issues/554) Fix throttling of init event [[SHOTA]](senta). [#553](https://github.com/davidjbradshaw/iframe-resizer/issues/553) Prevents unhandled exception in IE11 [[vitoss]](vitoss). [#555](https://github.com/davidjbradshaw/iframe-resizer/issues/555) Fix IE PolyFil and make grunt-cli local [[Jan Schmidle]](bitcloud).
+* v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[Shaun Johansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
 * v3.5.14 [#477](https://github.com/davidjbradshaw/iframe-resizer/issues/477) Fix bug when iFrame closed before first resize.
 * v3.5.13 [#473](https://github.com/davidjbradshaw/iframe-resizer/issues/473) Improve no response from iFrame warning message.
 * v3.5.12 [#475](https://github.com/davidjbradshaw/iframe-resizer/issues/475) Delay resizeCallback until after the iFrame has resized [[Codener](codener)].
