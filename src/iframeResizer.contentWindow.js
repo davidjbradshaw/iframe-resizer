@@ -903,6 +903,12 @@
 			}
 		}
 
+		function isFrameValid() {
+			return parseInt !== undefined;	
+		}
+
+		if(!isFrameValid()) return;
+
 		var	currentHeight,currentWidth;
 
 		if (isSizeChangeDetected() || 'init' === triggerEvent){
