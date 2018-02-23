@@ -272,12 +272,15 @@
     }
 
     function sendPageInfoToIframe(iframe,iframeId) {
-      trigger(
-        'Send Page Info',
-        'pageInfo:' + getPageInfo(),
-        iframe,
-        iframeId
-      );
+      function debouncedTrigger() {
+        trigger(
+          'Send Page Info',
+          'pageInfo:' + getPageInfo(),
+          iframe,
+          iframeId
+        );
+      }
+      debounceFrameEvents(debouncedTrigger,32,iframeId);
     }
 
 
@@ -291,14 +294,10 @@
           }
         }
 
-        function debouncedMessageSender() {
-          ['scroll','resize'].forEach(function(evt) {
-            log(id, type +  evt + ' listener for sendPageInfo');
-            func(window,evt,sendPageInfo);
-          });
-        }
-
-        debouce(debouncedMessageSender,32);
+        ['scroll','resize'].forEach(function(evt) {
+          log(id, type +  evt + ' listener for sendPageInfo');
+          func(window,evt,sendPageInfo);
+        });
       }
 
       function stop() {
@@ -869,6 +868,16 @@
     if (null === timer) {
       timer = setTimeout(function() {
         timer = null;
+        fn();
+      }, time);
+    }
+  }
+  
+  var frameTimer = {};
+  function debounceFrameEvents(fn,time,frameId) {
+    if (!frameTimer[frameId]) {
+      frameTimer[frameId] = setTimeout(function() {
+        frameTimer[frameId] = null;
         fn();
       }, time);
     }
