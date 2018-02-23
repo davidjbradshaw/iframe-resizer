@@ -272,16 +272,12 @@
     }
 
     function sendPageInfoToIframe(iframe,iframeId) {
-      function debouncedTrigger() {
-        trigger(
-          'Send Page Info',
-          'pageInfo:' + getPageInfo(),
-          iframe,
-          iframeId
-        );
-      }
-
-      debouce(debouncedTrigger,32);
+      trigger(
+        'Send Page Info',
+        'pageInfo:' + getPageInfo(),
+        iframe,
+        iframeId
+      );
     }
 
 
@@ -295,10 +291,14 @@
           }
         }
 
-        ['scroll','resize'].forEach(function(evt) {
-          log(id, type +  evt + ' listener for sendPageInfo');
-          func(window,evt,sendPageInfo);
-        });
+        function debouncedMessageSender() {
+          ['scroll','resize'].forEach(function(evt) {
+            log(id, type +  evt + ' listener for sendPageInfo');
+            func(window,evt,sendPageInfo);
+          });
+        }
+
+        debouce(debouncedMessageSender,32);
       }
 
       function stop() {
