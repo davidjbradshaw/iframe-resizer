@@ -78,7 +78,7 @@ define(['iframeResizer'], function(iFrameResize) {
 					}
 				};
 
-				window.scroll(0, 2);
+				window.dispatchEvent(new Event('resize'));
 			},200);
 		});
 	});
