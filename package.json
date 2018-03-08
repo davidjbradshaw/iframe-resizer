@@ -54,7 +54,7 @@
     "karma-safari-launcher": "^0.1.1",
     "karma-verbose-summary-reporter": "0.0.1",
     "load-grunt-tasks": "~0.1.0",
-    "phantomjs": "^1.9.18",
+    "phantomjs": "^2.1.7",
     "requirejs": "^2.1.20",
     "time-grunt": "0.x.x"
   },
