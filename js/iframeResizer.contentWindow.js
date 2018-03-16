@@ -811,7 +811,7 @@
       },
 
       lowestElement: function getBestHeight() {
-        return Math.max(getHeight.bodyOffset(), getMaxElement('bottom',getAllElements()));
+        return Math.max(getHeight.bodyOffset() || getHeight.documentElementOffset(), getMaxElement('bottom',getAllElements()));
       },
 
       taggedElement: function getTaggedElementsHeight() {
