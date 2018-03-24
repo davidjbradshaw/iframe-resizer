@@ -280,8 +280,7 @@
           iframeId
         );
       }
-
-      debouce(debouncedTrigger,32);
+      debounceFrameEvents(debouncedTrigger,32,iframeId);
     }
 
 
@@ -869,6 +868,16 @@
     if (null === timer) {
       timer = setTimeout(function() {
         timer = null;
+        fn();
+      }, time);
+    }
+  }
+  
+  var frameTimer = {};
+  function debounceFrameEvents(fn,time,frameId) {
+    if (!frameTimer[frameId]) {
+      frameTimer[frameId] = setTimeout(function() {
+        frameTimer[frameId] = null;
         fn();
       }, time);
     }

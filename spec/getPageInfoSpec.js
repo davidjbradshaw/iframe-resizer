@@ -29,4 +29,57 @@ define(['iframeResizer'], function(iFrameResize) {
 		});
 
 	});
+
+	describe('Get Page info with multiple frames', function() {
+		var log=LOG;
+
+		beforeEach(function(){
+			loadIFrame('twoIFrame600WithId.html');
+		});
+
+		it('must send pageInfo to second frame', function(done) {
+
+			var iframes = iFrameResize({
+				log: log,
+				id: '#frame1,#frame2',
+				initCallback:function(iframe){
+					iframe.iFrameResizer.sendMessage('getPageInfo');
+				}
+				});
+
+			var iframe1 = iframes[0],
+				iframe2 = iframes[1];
+
+			setTimeout(function(){
+				var counter = 0,
+					frame1Called = false,
+					frame2Called = false;
+
+				function checkCounter() {
+					if (counter === 2) {
+						expect(frame1Called && frame2Called).toBeTruthy();
+						tearDown(iframe1);
+						tearDown(iframe2);
+						done();
+					}
+				}
+				iframe1.contentWindow.postMessage = function(msg) {
+					if(0 < msg.indexOf('pageInfo')) {
+						frame1Called = true;
+						counter++;
+						checkCounter();
+					}
+				};
+				iframe2.contentWindow.postMessage = function(msg) {
+					if(0 < msg.indexOf('pageInfo')) {
+						frame2Called = true;
+						counter++;
+						checkCounter();
+					}
+				};
+
+				window.dispatchEvent(new Event('resize'));
+			},200);
+		});
+	});
 });

@@ -156,6 +156,9 @@
 							case 'image':
 								$('p').html('<img src="djb.jpg">');
 								break;
+							case 'getPageInfo':
+								callMethod('getPageInfo', function(pageInfo) {
+								});
 						}
 
 					}
