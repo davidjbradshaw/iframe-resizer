@@ -1,5 +1,5 @@
 # iFrame Resizer
-[![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)g
+[![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
 [![NPM Downloads](https://img.shields.io/npm/dt/iframe-resizer.svg)](https://www.npmjs.com/package/iframe-resizer)
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 [![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
@@ -24,6 +24,9 @@ This library enables the automatic resizing of the height and width of both same
 
 This package can be installed via NPM (`npm install iframe-resizer -save`) or Yarn (`yarn add iframe-resizer`).
 
+### CDNs
+This package is also available on [cdnjs](https://cdnjs.com/libraries/iframe-resizer) and [jsDelivr](https://www.jsdelivr.com/package/npm/iframe-resizer).
+
 ### Getting started
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
@@ -44,12 +47,14 @@ The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/dav
 The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library to only update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 ```html
-<style>iframe{width:100%}</style>
+<style>iframe{width: 1px;min-width: 100%;}</style>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html" scrolling="no"></iframe>
 <script>iFrameResize({log:true}, '#myIframe')</script>
 ```
 
-Note that scrolling is set to 'no' in the iFrame tag, as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height. If you have problems, check the [troubleshooting](#troubleshooting) section below.
+**Notes:** Using <i>min-width</i> to set the width of the iFrame, works around an issue in iOS that can prevent the iFrame from sizing correctly.  Also the scrolling attribute is set to 'no' in the iFrame tag, as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
+
+If you have problems, check the [troubleshooting](#troubleshooting) section below.
 
 ### Example
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
@@ -267,9 +272,9 @@ The following options can be set from within the iFrame page by creating a `wind
 
 ```html
 <script>
-	window.iFrameResizer = {
-		targetOrigin: 'http://mydomain.com'
-	}
+  window.iFrameResizer = {
+    targetOrigin: 'http://mydomain.com'
+  }
 </script>
 <script src="js/iframeresizer.contentwindow.js"></script>
 ```
@@ -308,7 +313,7 @@ These methods are available in the iFrame via the `window.parentIFrame` object. 
 
 ```js
 if ('parentIFrame' in window) {
-	parentIFrame.close();
+  parentIFrame.close();
 }
 ```
 
@@ -363,8 +368,8 @@ Manually force iFrame to resize. This method optionally accepts two arguments: *
 
 ```js
 iFrameResize({
-	autoResize: false,
-	sizeWidth: true
+  autoResize: false,
+  sizeWidth: true
 });
 ```
 
@@ -372,7 +377,7 @@ Then you can call the `size` method with dimensions:
 
 ```js
 if ('parentIFrame' in window) {
-	parentIFrame.size(100); // Set height to 100px
+  parentIFrame.size(100); // Set height to 100px
 }
 ```
 
@@ -408,7 +413,7 @@ Solutions for the most common problems are outlined in this section. If you need
 Bug reports and pull requests are welcome on the [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues). Please read the [contributing guidelines](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CONTRIBUTING.md) before openning a ticket, as this will ensure a faster resolution.
 
 ### Multiple IFrames on one page
-When the resizer does not work using multiple IFrames on one page, make sure that each frame has an unique id.
+When the resizer does not work using multiple IFrames on one page, make sure that each frame has an unique id or no ids at all.
 
 ### IFrame not sizing correctly
 If a larger element of content is removed from the normal document flow, through the use of absolute positioning, it can prevent the browser working out the correct size of the page. In such cases you can change the [heightCalculationMethod](#heightcalculationmethod) to uses one of the other sizing methods.
@@ -430,10 +435,10 @@ If your page resizes via CSS `:hover` events, these won't be detected by default
 
 ```js
 function resize(){
-	if ('parentIFrame' in window) {
-		// Fix race condition in FireFox with setTimeout
-		setTimeout(parentIFrame.size.bind(parentIFrame),0);
-	}
+  if ('parentIFrame' in window) {
+    // Fix race condition in FireFox with setTimeout
+    setTimeout(parentIFrame.size.bind(parentIFrame),0);
+  }
 }
 
 $(*Element with hover style*).hover(resize);
@@ -445,17 +450,17 @@ Both FireFox and the WebKit based browsers allow the user to resize `textarea` i
 
 ```js
 function store(){
-	this.x = this.offsetWidth;
-	this.y = this.offsetHeight;
+  this.x = this.offsetWidth;
+  this.y = this.offsetHeight;
 }
 
 $('textarea').each(store).on('mouseover mouseout',function(){
-	if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
-		store.call(this);
-		if ('parentIFrame' in window){
-			parentIFrame.size();
-		}
-	}
+  if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
+    store.call(this);
+    if ('parentIFrame' in window){
+      parentIFrame.size();
+    }
+  }
 });
 ```
 
@@ -469,8 +474,8 @@ In modern browsers, if the default [height calculation method](#heightcalculatio
 var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
 
 iFrameResize({
-	heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
-	minSize:100
+  heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
+  minSize:100
 });
 ```
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
@@ -480,12 +485,12 @@ The `parentIFrame` object is created once the iFrame has been initially resized.
 
 ```html
 <script>
-	window.iFrameResizer = {
-		readyCallback: function(){
-			var myId = window.parentIFrame.getId();
-			console.log('The ID of the iFrame in the parent page is: '+myId);
-		}
-	}
+  window.iFrameResizer = {
+    readyCallback: function(){
+      var myId = window.parentIFrame.getId();
+      console.log('The ID of the iFrame in the parent page is: '+myId);
+    }
+  }
 </script>
 <script src="js/iframeresizer.contentwindow.js"></script>
 ```
@@ -512,7 +517,7 @@ Additionally requires support for [Array.prototype.forEach](https://developer.mo
 ```html
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--[if lte IE 8]>
-	<script type="text/javascript" src="js/ie8.polyfils.min.js"></script>
+  <script type="text/javascript" src="js/ie8.polyfils.min.js"></script>
 <![endif]-->
 ```
 
@@ -526,7 +531,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
-* v3.5.15 [#477](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[shaunjohansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
+* v3.5.16 [#554](https://github.com/davidjbradshaw/iframe-resizer/issues/554) Fix throttling of init event [[SHOTA](senta)]. [#553](https://github.com/davidjbradshaw/iframe-resizer/issues/553) Prevents unhandled exception in IE11 [[vitoss](vitoss)]. [#555](https://github.com/davidjbradshaw/iframe-resizer/issues/555) Fix IE PolyFil and make grunt-cli local [[Jan Schmidle](bitcloud)].
+* v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[Shaun Johansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
 * v3.5.14 [#477](https://github.com/davidjbradshaw/iframe-resizer/issues/477) Fix bug when iFrame closed before first resize.
 * v3.5.13 [#473](https://github.com/davidjbradshaw/iframe-resizer/issues/473) Improve no response from iFrame warning message.
 * v3.5.12 [#475](https://github.com/davidjbradshaw/iframe-resizer/issues/475) Delay resizeCallback until after the iFrame has resized [[Codener](codener)].

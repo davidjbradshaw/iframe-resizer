@@ -192,7 +192,7 @@ module.exports = function(grunt) {
   grunt.registerTask('travis',  ['clean','notest','qunit','karma:travis','coveralls']);
 
   grunt.registerTask('postBump',['build','bump-commit','shell']);
-  grunt.registerTask('preBump', ['clean','notest','qunit']);
+  grunt.registerTask('preBump', ['clean','notest']);
   grunt.registerTask('patch',   ['preBump','bump-only:patch','postBump']);
   grunt.registerTask('minor',   ['preBump','bump-only:minor','postBump']);
   grunt.registerTask('major',   ['preBump','bump-only:major','postBump']);
