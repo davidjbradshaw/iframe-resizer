@@ -531,6 +531,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.6.1 [#576](https://github.com/davidjbradshaw/iframe-resizer/pull/576) Fix race condition caused by react-iframe-resizer removing the domNode and calling `close()`.
 * v3.6.0 [#562](https://github.com/davidjbradshaw/iframe-resizer/pull/562) Fix issue with debounce getPageInfo when their is more than one iFrame on the page [[Thomas Pringle](thomaspringle)]. [#568](https://github.com/davidjbradshaw/iframe-resizer/pull/568) Fix bug in Chrome 65 when iframe parent element has `display:none` set [[Steve Hong](aniude)].
 * v3.5.16 [#554](https://github.com/davidjbradshaw/iframe-resizer/issues/554) Fix throttling of init event [[SHOTA](senta)]. [#553](https://github.com/davidjbradshaw/iframe-resizer/issues/553) Prevents unhandled exception in IE11 [[vitoss](vitoss)]. [#555](https://github.com/davidjbradshaw/iframe-resizer/issues/555) Fix IE PolyFil and make grunt-cli local [[Jan Schmidle](bitcloud)].
 * v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[Shaun Johansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
