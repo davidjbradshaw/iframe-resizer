@@ -555,6 +555,11 @@
         var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
         //lockTrigger();
         sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
+      },
+      style: function(attribute, attributeValue) {
+        var description = (attribute || "") + ":" + (attributeValue || "");
+
+        sendStyle("style", description, attribute, attributeValue);
       }
     };
   }
@@ -936,6 +941,10 @@
     } else {
       log('Trigger event cancelled: '+triggerEvent);
     }
+  }
+
+  function sendStyle(triggerEvent, triggerEventDesc, attribute, attributeValue) {
+    sendMsg(attribute, attributeValue, triggerEvent);
   }
 
   function lockTrigger() {

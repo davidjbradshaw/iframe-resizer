@@ -147,6 +147,13 @@
       syncResize(resize,messageData,'init');
     }
 
+    function styleIFrame() {
+      var attribute = messageData.height;
+      var attributeValue = messageData.width;
+
+      messageData.iframe.style[attribute] = attributeValue;
+    }
+
     function processMsg() {
       var data = msg.substr(msgIdLen).split(':');
 
@@ -463,6 +470,9 @@
       case 'init':
         resizeIFrame();
         callback('initCallback',messageData.iframe);
+        break;
+      case "style":
+        styleIFrame();
         break;
       default:
         resizeIFrame();

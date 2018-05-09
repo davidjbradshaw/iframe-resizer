@@ -398,6 +398,12 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 		});
 	});
 
-
+	describe("style", function() {
+		it("send style", function() {
+			win.parentIFrame.style("position", "absolute");
+			
+            expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:position:absolute:style', '*');
+		});
+	});
 });
 
