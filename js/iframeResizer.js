@@ -147,6 +147,13 @@
       syncResize(resize,messageData,'init');
     }
 
+    function styleIFrame() {
+      var attribute = messageData.height;
+      var attributeValue = messageData.width;
+
+      messageData.iframe.style[attribute] = attributeValue;
+    }
+
     function processMsg() {
       var data = msg.substr(msgIdLen).split(':');
 
@@ -464,6 +471,9 @@
         resizeIFrame();
         callback('initCallback',messageData.iframe);
         break;
+      case "style":
+        styleIFrame();
+        break;
       default:
         resizeIFrame();
       }
@@ -549,7 +559,12 @@
     var iframeId = iframe.id;
 
     log(iframeId,'Removing iFrame: '+iframeId);
-    if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
+
+    try {
+      // Catch race condition error with React
+      if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
+    } catch (e) {}
+    
     chkCallback(iframeId,'closedCallback',iframeId);
     log(iframeId,'--');
     delete settings[iframeId];
