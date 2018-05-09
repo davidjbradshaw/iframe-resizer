@@ -398,6 +398,11 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 		});
 	});
 
-
+	describe('position: ', function() {
+		it("position", function() {
+            win.parentIFrame.position(10, 20, 30, 40);
+            expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10,30:40,20:position', '*');
+		});
+	});
 });
 

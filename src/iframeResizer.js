@@ -147,6 +147,17 @@
       syncResize(resize,messageData,'init');
     }
 
+    function positionIFrame() {
+      var topBottom = messageData.height.split(",");
+      var leftRight = messageData.width.split(",");
+
+      messageData.iframe.style.position = "absolute";
+      messageData.iframe.style.top = topBottom[0] + "px";
+      messageData.iframe.style.bottom = topBottom[1] + "px";
+      messageData.iframe.style.left = leftRight[0] + "px";
+      messageData.iframe.style.right = leftRight[1] + "px";
+    }
+
     function processMsg() {
       var data = msg.substr(msgIdLen).split(':');
 
@@ -463,6 +474,9 @@
       case 'init':
         resizeIFrame();
         callback('initCallback',messageData.iframe);
+        break;
+      case "position":
+        positionIFrame();
         break;
       default:
         resizeIFrame();

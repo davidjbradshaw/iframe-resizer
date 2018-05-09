@@ -555,6 +555,11 @@
         var valString = ''+(customHeight?customHeight:'')+(customWidth?','+customWidth:'');
         //lockTrigger();
         sendSize('size','parentIFrame.size('+valString+')', customHeight, customWidth);
+      },
+      position: function(top, right, bottom, left) {
+        var description = '' + (top || '') + (right || '') + (bottom || '') + (left || '');
+
+        sendPosition("position", description, top, right, bottom, left);
       }
     };
   }
@@ -936,6 +941,10 @@
     } else {
       log('Trigger event cancelled: '+triggerEvent);
     }
+  }
+
+  function sendPosition(triggerEvent, triggerEventDesc, top, right, bottom, left) {
+    sendMsg(top + "," + bottom, left + "," + right, triggerEvent);
   }
 
   function lockTrigger() {
