@@ -151,7 +151,6 @@
       var topBottom = messageData.height.split(",");
       var leftRight = messageData.width.split(",");
 
-      messageData.iframe.style.position = "absolute";
       messageData.iframe.style.top = topBottom[0] + "px";
       messageData.iframe.style.bottom = topBottom[1] + "px";
       messageData.iframe.style.left = leftRight[0] + "px";
