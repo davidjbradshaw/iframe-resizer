@@ -48,7 +48,6 @@
       minWidth                  : 0,
       resizeFrom                : 'parent',
       scrolling                 : false,
-      useScrollingAttr          : true,
       sizeHeight                : true,
       sizeWidth                 : false,
       warningTimeout            : 5000,
@@ -745,17 +744,17 @@
     function setScrolling() {
       log(iframeId,'IFrame scrolling ' + (settings[iframeId] && settings[iframeId].scrolling ? 'enabled' : 'disabled') + ' for ' + iframeId);
       iframe.style.overflow = false === (settings[iframeId] && settings[iframeId].scrolling) ? 'hidden' : 'auto';
-      if(settings[iframeId].useScrollingAttr) {
-        switch(settings[iframeId] && settings[iframeId].scrolling) {
-          case true:
-            iframe.scrolling = 'yes';
-            break;
-          case false:
-            iframe.scrolling = 'no';
-            break;
-          default:
-            iframe.scrolling = settings[iframeId] ? settings[iframeId].scrolling : 'no';
-        }
+      switch(settings[iframeId] && settings[iframeId].scrolling) {
+        case 'omit':
+          break;
+        case true:
+          iframe.scrolling = 'yes';
+          break;
+        case false:
+          iframe.scrolling = 'no';
+          break;
+        default:
+          iframe.scrolling = settings[iframeId] ? settings[iframeId].scrolling : 'no';
       }
     }
 
