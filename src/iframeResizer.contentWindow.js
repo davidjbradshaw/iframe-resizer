@@ -74,11 +74,11 @@
 
   try {
     var options = Object.create({}, {
-      passive: {get: function() { passiveSupported = true }},
-      once: {get: function() { onceSupported = true }},
-    })
-    window.addEventListener('test', noop, options)
-    window.removeEventListener('test', noop, options)
+      passive: {get: function() { passiveSupported = true; }},
+      once: {get: function() { onceSupported = true; }},
+    });
+    window.addEventListener('test', noop, options);
+    window.removeEventListener('test', noop, options);
   } catch (e) { /* */ }
 
   function addEventListener(el,evt,func,options) {
