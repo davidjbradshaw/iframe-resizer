@@ -91,6 +91,13 @@ Override the body background style in the iFrame.
 
 Override the default body margin style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
 
+### bodyPadding
+
+	default: null
+	type:    string || number
+
+Override the default body padding style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
+
 ### checkOrigin
 
 	default: true
