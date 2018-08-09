@@ -245,7 +245,7 @@ Alternatively it is possible to add your own custom sizing method directly insid
 
 	type: function (iframeID)
 
-Called when iFrame is closed via `parentIFrame.close()` or `iframe.iframeResizer.close()` methods. See below for details.
+Called when iFrame is closed via `parentIFrame.close()` or `iframe.iFrameResizer.close()` methods. See below for details.
 
 ### initCallback
 
