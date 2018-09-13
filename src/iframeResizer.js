@@ -545,14 +545,18 @@
     return retVal;
   }
 
+  function removeIframeListeners(iframe) {
+    var iframeId = iframe.id;
+    delete settings[iframeId];
+  }
+
   function closeIFrame(iframe) {
     var iframeId = iframe.id;
-
     log(iframeId,'Removing iFrame: '+iframeId);
     if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
     chkCallback(iframeId,'closedCallback',iframeId);
     log(iframeId,'--');
-    delete settings[iframeId];
+    removeIframeListeners(iframe);
   }
 
   function getPagePosition(iframeId) {
@@ -784,6 +788,8 @@
         settings[iframeId].iframe.iFrameResizer = {
 
           close        : closeIFrame.bind(null,settings[iframeId].iframe),
+
+          removeListeners: removeIframeListeners.bind(null,settings[iframeId].iframe),
 
           resize       : trigger.bind(null,'Window resize', 'resize', settings[iframeId].iframe),
 
