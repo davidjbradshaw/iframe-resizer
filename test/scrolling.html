@@ -73,6 +73,20 @@
       });
     });
 
+    asyncTest( "scrolling = omit", function() {
+      $('iframe').removeAttr('scrolling');
+      $('iframe').iFrameResize({
+        //log:true,
+        scrolling:'omit',
+        resizedCallback:function(messageData){
+          ok( true, 'Receive message back from iFrame.' );
+          ok( 'auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.' );
+          ok( false === ('scrolling' in messageData.iframe), 'iFrame scrolling attribute exists. Expected to be omitted.' );
+          start();
+        }
+      });
+    });
+
   </script>
 </body>
 </html>

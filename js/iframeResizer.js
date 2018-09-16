@@ -745,6 +745,8 @@
       log(iframeId,'IFrame scrolling ' + (settings[iframeId] && settings[iframeId].scrolling ? 'enabled' : 'disabled') + ' for ' + iframeId);
       iframe.style.overflow = false === (settings[iframeId] && settings[iframeId].scrolling) ? 'hidden' : 'auto';
       switch(settings[iframeId] && settings[iframeId].scrolling) {
+        case 'omit':
+          break;
         case true:
           iframe.scrolling = 'yes';
           break;

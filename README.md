@@ -186,9 +186,13 @@ Listen for resize events from the parent page, or the iFrame. Select the 'child'
 ### scrolling
 
     default: false
-    type:    boolean | 'auto'
+    type:    true | false | 'omit' | 'auto'
 
 Enable scroll bars in iFrame.
+
+* **true** or **'auto'** applies `scrolling="yes"`
+* **false** applies `scrolling="no"`
+* **'omit'** applies no `scrolling` attribute to the iFrame
 
 ### sizeHeight
 
