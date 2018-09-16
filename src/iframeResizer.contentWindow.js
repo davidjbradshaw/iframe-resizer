@@ -1008,21 +1008,12 @@
   function receiver(event) {
     var processRequestFromParent = {
       init: function initFromParent() {
-        function fireInit() {
-          initMsg = event.data;
-          target  = event.source;
+        initMsg = event.data;
+        target  = event.source;
 
-          init();
-          firstRun = false;
-          setTimeout(function() { initLock = false;},eventCancelTimer);
-        }
-
-        if (document.readyState === "interactive" || document.readyState === "complete") {
-          fireInit();
-        } else {
-          log('Waiting for page ready');
-          addEventListener(window,'readystatechange',processRequestFromParent.initFromParent);
-        }
+        init();
+        firstRun = false;
+        setTimeout(function() { initLock = false;},eventCancelTimer);
       },
 
       reset: function resetFromParent() {
@@ -1116,6 +1107,7 @@
   }
 
   addEventListener(window, 'message', receiver);
+  addEventListener(window, 'readystatechange', chkLateLoaded);
   chkLateLoaded();
 
   // TEST CODE START //
