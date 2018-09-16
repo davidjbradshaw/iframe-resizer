@@ -1072,7 +1072,8 @@
     }
 
     function isMiddleTier() {
-      return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window);
+      return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window)
+        || ('jQuery' in window) && ('iFrameResize' in window.jQuery.prototype);
     }
 
     function isInitMsg() {
