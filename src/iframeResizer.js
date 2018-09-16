@@ -553,7 +553,12 @@
   function closeIFrame(iframe) {
     var iframeId = iframe.id;
     log(iframeId,'Removing iFrame: '+iframeId);
-    if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
+
+    try {
+      // Catch race condition error with React
+      if (iframe.parentNode) { iframe.parentNode.removeChild(iframe); }
+    } catch (e) {}
+    
     chkCallback(iframeId,'closedCallback',iframeId);
     log(iframeId,'--');
     removeIframeListeners(iframe);
