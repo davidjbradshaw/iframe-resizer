@@ -193,7 +193,7 @@ define(['iframeResizerContent','jquery'], function(mockMsgListener,$) {
 			expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo', '*');
 		});
 
-		it('unexpected message', function() {
+		xit('unexpected message', function() {
 			mockMsgListener(createMsg('foo'));
 			expect(console.warn).toHaveBeenCalledWith('[iFrameSizer][parentIFrameTests] Unexpected message ([iFrameSizer]foo)');
 		});
