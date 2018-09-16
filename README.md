@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 [![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
 [![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/davidjbradshaw)
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content. It provides a range of features to address the most common issues with using iFrames, these include:
 
@@ -90,6 +91,13 @@ Override the body background style in the iFrame.
 	type:    string || number
 
 Override the default body margin style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
+
+### bodyPadding
+
+	default: null
+	type:    string || number
+
+Override the default body padding style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
 
 ### checkOrigin
 
@@ -238,7 +246,7 @@ Alternatively it is possible to add your own custom sizing method directly insid
 
 	type: function (iframeID)
 
-Called when iFrame is closed via `parentIFrame.close()` or `iframe.iframeResizer.close()` methods. See below for details.
+Called when iFrame is closed via `parentIFrame.close()` or `iframe.iFrameResizer.close()` methods. See below for details.
 
 ### initCallback
 
@@ -531,6 +539,8 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.6.1 [#576](https://github.com/davidjbradshaw/iframe-resizer/pull/576) Fix race condition caused by react-iframe-resizer removing the domNode and calling `close()`.
+* v3.6.0 [#562](https://github.com/davidjbradshaw/iframe-resizer/pull/562) Fix issue with debounce getPageInfo when their is more than one iFrame on the page [[Thomas Pringle](thomaspringle)]. [#568](https://github.com/davidjbradshaw/iframe-resizer/pull/568) Fix bug in Chrome 65 when iframe parent element has `display:none` set [[Steve Hong](aniude)].
 * v3.5.17 [#562](https://github.com/davidjbradshaw/iframe-resizer/pull/562) Fix issue with debounce getPageInfo when their is more than one iFrame on the page [[Thomas Pringle](thomaspringle)]. [#568](https://github.com/davidjbradshaw/iframe-resizer/pull/568) Fix bug in Chrome 65 when iframe parent element has `display:none` set [[Steve Hong](aniude)].
 * v3.5.16 [#554](https://github.com/davidjbradshaw/iframe-resizer/issues/554) Fix throttling of init event [[SHOTA](senta)]. [#553](https://github.com/davidjbradshaw/iframe-resizer/issues/553) Prevents unhandled exception in IE11 [[vitoss](vitoss)]. [#555](https://github.com/davidjbradshaw/iframe-resizer/issues/555) Fix IE PolyFil and make grunt-cli local [[Jan Schmidle](bitcloud)].
 * v3.5.15 [#498](https://github.com/davidjbradshaw/iframe-resizer/issues/498) Fix bug "Cannot read property 'firstRun' of undefined" [[Shaun Johansen](shaunjohansen)]. [#517] Fix readyState issue in iFrame [[lostincomputer](lostincomputer)].
