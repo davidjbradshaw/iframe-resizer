@@ -405,7 +405,7 @@ Move to anchor in iFrame.
 
 ### removeListeners()
 
-Detatch event listerns. This is option allows Virtual Doms to remove an iFrame.
+Detach event listeners. This is option allows Virtual Doms to remove an iFrame.
 
 ### resize()
 
