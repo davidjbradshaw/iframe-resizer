@@ -1,4 +1,3 @@
+'use strict'
 
-'use strict';
-
-module.exports = require('./js');
+module.exports = require('./js')

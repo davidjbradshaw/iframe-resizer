@@ -66,20 +66,32 @@
         return document.body.scrollWidth;
       }
     },
-    eventHandlersByName   = {};
+    eventHandlersByName   = {},
+    passiveSupported = false,
+    onceSupported = false;
 
+  function noop() {}
 
-  function addEventListener(el,evt,func) {
-    /* istanbul ignore else */ // Not testable in phantonJS
+  try {
+    var options = Object.create({}, {
+      passive: {get: function() { passiveSupported = true; }},
+      once: {get: function() { onceSupported = true; }},
+    });
+    window.addEventListener('test', noop, options);
+    window.removeEventListener('test', noop, options);
+  } catch (e) { /* */ }
+
+  function addEventListener(el,evt,func,options) {
+    /* istanbul ignore else */ // Not testable in phantomJS
     if ('addEventListener' in window) {
-      el.addEventListener(evt,func, false);
+      el.addEventListener(evt,func, passiveSupported ? (options||{}) : false);
     } else if ('attachEvent' in window) { //IE
       el.attachEvent('on'+evt,func);
     }
   }
 
   function removeEventListener(el,evt,func) {
-    /* istanbul ignore else */ // Not testable in phantonJS
+    /* istanbul ignore else */ // Not testable in phantomJS
     if ('removeEventListener' in window) {
       el.removeEventListener(evt,func, false);
     } else if ('detachEvent' in window) { //IE
@@ -277,7 +289,7 @@
 
         eventHandlersByName[eventName] = handleEvent;
 
-        addEventListener(window,eventName,handleEvent);
+        addEventListener(window,eventName,handleEvent,{passive:true});
       },
       remove: function(eventName) {
         var handleEvent = eventHandlersByName[eventName];
@@ -996,21 +1008,12 @@
   function receiver(event) {
     var processRequestFromParent = {
       init: function initFromParent() {
-        function fireInit() {
-          initMsg = event.data;
-          target  = event.source;
+        initMsg = event.data;
+        target  = event.source;
 
-          init();
-          firstRun = false;
-          setTimeout(function() { initLock = false;},eventCancelTimer);
-        }
-
-        if (document.readyState === "interactive" || document.readyState === "complete") {
-          fireInit();
-        } else {
-          log('Waiting for page ready');
-          addEventListener(window,'readystatechange',processRequestFromParent.initFromParent);
-        }
+        init();
+        firstRun = false;
+        setTimeout(function() { initLock = false;},eventCancelTimer);
       },
 
       reset: function resetFromParent() {
@@ -1060,7 +1063,8 @@
     }
 
     function isMiddleTier() {
-      return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window);
+      return !(typeof module !== 'undefined' && module.exports) && ('iFrameResize' in window) ||
+        ('jQuery' in window) && ('iFrameResize' in window.jQuery.prototype);
     }
 
     function isInitMsg() {
@@ -1103,6 +1107,7 @@
   }
 
   addEventListener(window, 'message', receiver);
+  addEventListener(window, 'readystatechange', chkLateLoaded);
   chkLateLoaded();
 
   

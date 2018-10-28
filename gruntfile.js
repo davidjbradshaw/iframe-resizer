@@ -1,6 +1,5 @@
 /*global module:false*/
 module.exports = function(grunt) {
-
   'Use strict';
 
   // show elapsed time at the end
@@ -8,10 +7,10 @@ module.exports = function(grunt) {
 
   // load all grunt tasks
   //require('load-grunt-tasks')(grunt);
-  require('jit-grunt')(grunt,{
-    'bump-only':'grunt-bump',
-    'bump-commit':'grunt-bump',
-    'coveralls':'grunt-karma-coveralls'
+  require('jit-grunt')(grunt, {
+    'bump-only': 'grunt-bump',
+    'bump-commit': 'grunt-bump',
+    coveralls: 'grunt-karma-coveralls'
   });
 
   // Project configuration.
@@ -19,13 +18,15 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     meta: {
-      bannerLocal: '/*! iFrame Resizer (iframeSizer.min.js ) - v<%= pkg.version %> - ' +
+      bannerLocal:
+        '/*! iFrame Resizer (iframeSizer.min.js ) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Force cross domain iframes to size to content.\n' +
         ' *  Requires: iframeResizer.contentWindow.min.js to be loaded into the target frame.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
         ' *  License: MIT\n */\n',
-      bannerRemote: '/*! iFrame Resizer (iframeSizer.contentWindow.min.js) - v<%= pkg.version %> - ' +
+      bannerRemote:
+        '/*! iFrame Resizer (iframeSizer.contentWindow.min.js) - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' *  Desc: Include this file in any page being loaded into an iframe\n' +
         ' *        to force the iframe to resize to the content size.\n' +
@@ -44,15 +45,15 @@ module.exports = function(grunt) {
       options: {
         configFile: 'karma.conf.js'
       },
-      travis:{
+      travis: {
         singleRun: true,
         browsers: ['PhantomJS'],
         coverageReporter: {
-          type : 'lcov',
-          dir : 'coverageLcov/'
-        },
+          type: 'lcov',
+          dir: 'coverageLcov/'
+        }
       },
-      single:{
+      single: {
         singleRun: true,
         browsers: ['Chrome', 'Firefox'] // 'Safari', 'PhantomJS'
       }
@@ -60,59 +61,62 @@ module.exports = function(grunt) {
 
     coveralls: {
       options: {
-          debug: true,
-          coverageDir: 'coverageLcov',
-          dryRun: false,
-          force: true,
-          recursive: true
+        debug: true,
+        coverageDir: 'coverageLcov',
+        dryRun: false,
+        force: true,
+        recursive: true
       }
     },
 
     jshint: {
       options: {
-          globals: {
-          jQuery:false,
-          require:true,
-          process:true
-        },
+        asi: true,
+        eqeqeq: true,
+        laxbreak: true,
+        globals: {
+          jQuery: false,
+          require: true,
+          process: true
+        }
       },
       gruntfile: {
         src: 'gruntfile.js'
       },
       code: {
         src: 'src/**/*.js'
-      },
+      }
     },
 
     uglify: {
       options: {
-        sourceMap:true,
-        sourceMapIncludeSources:true,
-        report:'gzip',
+        sourceMap: true,
+        sourceMapIncludeSources: true,
+        report: 'gzip'
       },
       local: {
-        options:{
-          banner:'<%= meta.bannerLocal %>',
+        options: {
+          banner: '<%= meta.bannerLocal %>',
           sourceMapName: 'js/iframeResizer.map'
         },
         src: ['js/iframeResizer.js'],
-        dest: 'js/iframeResizer.min.js',
+        dest: 'js/iframeResizer.min.js'
       },
       remote: {
         options: {
-          banner:'<%= meta.bannerRemote %>',
+          banner: '<%= meta.bannerRemote %>',
           sourceMapName: 'js/iframeResizer.contentWindow.map'
         },
         src: ['js/iframeResizer.contentWindow.js'],
-        dest: 'js/iframeResizer.contentWindow.min.js',
+        dest: 'js/iframeResizer.contentWindow.min.js'
       },
       polyfil: {
         options: {
-          banner:'// IE8 polyfils for iframeResizer.js\n',
+          banner: '// IE8 polyfils for iframeResizer.js\n',
           sourceMapName: 'js/ie8.polyfils.map'
         },
         src: ['src/ie8.polyfils.js'],
-        dest: 'js/ie8.polyfils.min.js',
+        dest: 'js/ie8.polyfils.min.js'
       }
     },
 
@@ -123,7 +127,7 @@ module.exports = function(grunt) {
 
     bump: {
       options: {
-        files: ['package.json','bower.json','iframeResizer.jquery.json'],
+        files: ['package.json', 'bower.json', 'iframeResizer.jquery.json'],
         updateConfigs: ['pkg'],
         commit: true,
         commitMessage: 'Release v%VERSION%',
@@ -138,23 +142,21 @@ module.exports = function(grunt) {
     },
 
     shell: {
-      options:{
+      options: {
         stdout: true,
         stderr: true,
         failOnError: true
       },
-      npm:{
+      npm: {
         command: 'npm publish'
       },
       deployExample: {
-        command: function(){
-
-          var
-            retStr = '',
+        command: function() {
+          var retStr = '',
             fs = require('fs');
 
           if (fs.existsSync('bin')) {
-              retStr = 'bin/deploy.sh';
+            retStr = 'bin/deploy.sh';
           }
 
           return retStr;
@@ -164,14 +166,17 @@ module.exports = function(grunt) {
 
     jsonlint: {
       json: {
-        src: [ '*.json' ]
+        src: ['*.json']
       }
     },
 
-   removeBlock: {
-      options : ["TEST CODE START", 'TEST CODE END'],
-      files : [
-        {src : 'src/iframeResizer.contentWindow.js', dest : 'js/iframeResizer.contentWindow.js'}
+    removeBlock: {
+      options: ['TEST CODE START', 'TEST CODE END'],
+      files: [
+        {
+          src: 'src/iframeResizer.contentWindow.js',
+          dest: 'js/iframeResizer.contentWindow.js'
+        }
       ]
     },
 
@@ -179,37 +184,44 @@ module.exports = function(grunt) {
       main: {
         nonull: true,
         src: 'src/iframeResizer.js',
-        dest: 'js/iframeResizer.js',
-      },
-    },
-
+        dest: 'js/iframeResizer.js'
+      }
+    }
   });
 
-  grunt.registerTask('default', ['notest','karma:single']);
-  grunt.registerTask('build',   ['removeBlock','copy','uglify']);
-  grunt.registerTask('notest',  ['jsonlint','jshint','build']);
-  grunt.registerTask('test',    ['clean','jshint','karma:single','qunit']);
-  grunt.registerTask('travis',  ['clean','notest','qunit','karma:travis','coveralls']);
+  grunt.registerTask('default', ['notest', 'karma:single']);
+  grunt.registerTask('build', ['removeBlock', 'copy', 'uglify']);
+  grunt.registerTask('notest', ['jsonlint', 'jshint', 'build']);
+  grunt.registerTask('test', ['clean', 'jshint', 'karma:single', 'qunit']);
+  grunt.registerTask('travis', [
+    'clean',
+    'notest',
+    'qunit',
+    'karma:travis',
+    'coveralls'
+  ]);
 
-  grunt.registerTask('postBump',['build','bump-commit','shell']);
-  grunt.registerTask('preBump', ['clean','notest']);
-  grunt.registerTask('patch',   ['preBump','bump-only:patch','postBump']);
-  grunt.registerTask('minor',   ['preBump','bump-only:minor','postBump']);
-  grunt.registerTask('major',   ['preBump','bump-only:major','postBump']);
+  grunt.registerTask('postBump', ['build', 'bump-commit', 'shell']);
+  grunt.registerTask('preBump', ['clean', 'notest']);
+  grunt.registerTask('patch', ['preBump', 'bump-only:patch', 'postBump']);
+  grunt.registerTask('minor', ['preBump', 'bump-only:minor', 'postBump']);
+  grunt.registerTask('major', ['preBump', 'bump-only:major', 'postBump']);
 
   grunt.registerMultiTask('removeBlock', function() {
-
     // set up a removal regular expression
-    var removalRegEx = new RegExp('(\/\/ ' + this.options()[0] + ' \/\/)(?:[^])*?(\/\/ ' + this.options()[1] +  ' \/\/)', 'g');
+    var removalRegEx = new RegExp(
+      '(// ' +
+        this.options()[0] +
+        ' //)(?:[^])*?(// ' +
+        this.options()[1] +
+        ' //)',
+      'g'
+    );
 
-    this.data.forEach(function(fileObj){
-
-      var sourceFile = grunt.file.read( fileObj.src ),
-          removedFile = sourceFile.replace( removalRegEx, '' ),
-          targetFile = grunt.file.write( fileObj.dest, removedFile );
-
-    });// for each loop end
-
+    this.data.forEach(function(fileObj) {
+      var sourceFile = grunt.file.read(fileObj.src),
+        removedFile = sourceFile.replace(removalRegEx, ''),
+        targetFile = grunt.file.write(fileObj.dest, removedFile);
+    }); // for each loop end
   });
-
 };
