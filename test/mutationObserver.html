@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>QUnit LoadHide</title>
   <link rel="stylesheet" href="resources/qunit.css">
 </head>
+
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture">
@@ -22,22 +24,22 @@
 
     'use strict';
 
-     function mutationObserverTest(){ 
-      asyncTest( "iFrame MutationObserver", function() {
+    function mutationObserverTest() {
+      asyncTest("iFrame MutationObserver", function () {
 
         var callbackCounter = 0;
 
         $('iframe').iFrameResize({
           //log:true,
-          resizedCallback:function(messageData){
+          resizedCallback: function (messageData) {
 
-            switch  (''+(++callbackCounter)){
+            switch ('' + (++callbackCounter)) {
               case '1':
                 sendMessage('changeContent');
                 break;
               case '2':
-                ok( true, 'iFrame detected content change');
-                ok( 'mutationObserver' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected mutationObserver' );
+                ok(true, 'iFrame detected content change');
+                ok('mutationObserver' === messageData.type, 'Received ' + messageData.type + ' message back from iFrame. Expected mutationObserver');
                 start();
             }
           }
@@ -51,13 +53,14 @@
 
     if (MutationObserver)
       mutationObserverTest()
-    else{
+    else {
       console.warn('(MutationObserver not supported in this browser! Unable to run test)');
-      test('iFrame MutationObserver',function(){
-        ok(true,'MutationObserver not supported in this browser! Unable to run test.');
+      test('iFrame MutationObserver', function () {
+        ok(true, 'MutationObserver not supported in this browser! Unable to run test.');
       });
     }
 
   </script>
 </body>
+
 </html>

@@ -3,23 +3,24 @@
 'use strict';
 
 define(['iframeResizer'], function(iFrameResize) {
-	describe('iFrame init(DOM Object)', function() {
-		var iframe;
+  describe('iFrame init(DOM Object)', function() {
+    var iframe;
 
-		beforeAll(function(){
-			loadIFrame('iframe600.html');
+    beforeAll(function() {
+      loadIFrame('iframe600.html');
 
-			iframe = iFrameResize(undefined,document.getElementsByTagName('iframe')[0])[0];
-		});
+      iframe = iFrameResize(
+        undefined,
+        document.getElementsByTagName('iframe')[0]
+      )[0];
+    });
 
-		afterAll(function(){
-			tearDown(iframe);
-		})
+    afterAll(function() {
+      tearDown(iframe);
+    });
 
-		it('should create iFrameResizer object', function() {
-			expect(iframe.iFrameResizer).toBeDefined();
-		});
-	});
+    it('should create iFrameResizer object', function() {
+      expect(iframe.iFrameResizer).toBeDefined();
+    });
+  });
 });
-
-

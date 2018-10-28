@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>QUnit LoadHide</title>
   <link rel="stylesheet" href="resources/qunit.css">
 </head>
+
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture">
@@ -23,22 +25,23 @@
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-		asyncTest( "postMessage Response", function() {
+    asyncTest("postMessage Response", function () {
       iFrameResize({
         //log:true,
-        bodyBackground:'wheat',
-        heightCalculationMethod:'max',
-        initCallback:function(iframe){
-          ok( true, 'Receive init message back from iFrame.' );
-          ok( 'iFrameResizer0' === iframe.id, 'iFrame id = iFrameResizer0.' );
-          setTimeout(function(){
+        bodyBackground: 'wheat',
+        heightCalculationMethod: 'max',
+        initCallback: function (iframe) {
+          ok(true, 'Receive init message back from iFrame.');
+          ok('iFrameResizer0' === iframe.id, 'iFrame id = iFrameResizer0.');
+          setTimeout(function () {
             iframe.iFrameResizer.close();
             start();
-          },10);
+          }, 10);
         }
       });
     });
 
   </script>
 </body>
+
 </html>

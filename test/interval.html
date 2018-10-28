@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>QUnit LoadHide</title>
   <link rel="stylesheet" href="resources/qunit.css">
 </head>
+
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture">
@@ -24,26 +26,26 @@
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-    asyncTest( "iFrame negative inteval timer ", function() {
+    asyncTest("iFrame negative inteval timer ", function () {
 
       var
-          callbackCounter = 0,
-          started         = false;
+        callbackCounter = 0,
+        started = false;
 
       $('iframe').iFrameResize({
         //log:true,
-        interval:-1,
-        resizedCallback:function(messageData){
+        interval: -1,
+        resizedCallback: function (messageData) {
 
-          switch  (''+(++callbackCounter)){
+          switch ('' + (++callbackCounter)) {
             case '1':
               sendMessage('changeContent');
               break;
             default:
               //ok( true, 'iFrame detected content change');
-              if ('resize' !== messageData.type && (false === started)){
+              if ('resize' !== messageData.type && (false === started)) {
                 started = true;
-                ok( 'interval' === messageData.type, 'Received '+messageData.type+' message back from iFrame. Expected interval.' );
+                ok('interval' === messageData.type, 'Received ' + messageData.type + ' message back from iFrame. Expected interval.');
                 start();
               }
           }
@@ -53,4 +55,5 @@
 
   </script>
 </body>
+
 </html>

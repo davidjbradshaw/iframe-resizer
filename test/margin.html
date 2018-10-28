@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>QUnit LoadHide</title>
   <link rel="stylesheet" href="resources/qunit.css">
 </head>
+
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture">
@@ -32,32 +34,32 @@
       '75px'
     ];
 
-    function Counter(){
-        var i=0;
-        return function(){return i++};
+    function Counter() {
+      var i = 0;
+      return function () { return i++ };
     }
 
     var counter = Counter();
 
-    for (var i=0; i !== margins.length; i++){
-      asyncTest( "Margin " + margins[i], function() {
+    for (var i = 0; i !== margins.length; i++) {
+      asyncTest("Margin " + margins[i], function () {
         var
           height = 0,
-          i      = counter(), //counteract async
+          i = counter(), //counteract async
           margin = margins[i];
 
         iFrameResize({
           //log:true,
-          bodyMargin:margin,
-          resizedCallback:function(messageData){
-            ok( true, 'Receive message back from iFrame.' );
-            height=parseInt(messageData.height,10);
+          bodyMargin: margin,
+          resizedCallback: function (messageData) {
+            ok(true, 'Receive message back from iFrame.');
+            height = parseInt(messageData.height, 10);
             sendMessage('chkHeight');
           },
-          messageCallback:function(messageData){
+          messageCallback: function (messageData) {
             var
-              marginCheck = 2 *parseInt(margin,10),
-              bodyHeight  = parseInt(messageData.message,10);
+              marginCheck = 2 * parseInt(margin, 10),
+              bodyHeight = parseInt(messageData.message, 10);
 
             ok(height === (marginCheck + bodyHeight), 'Margin = ' + margin);
             console.log('.');
@@ -70,4 +72,5 @@
 
   </script>
 </body>
+
 </html>

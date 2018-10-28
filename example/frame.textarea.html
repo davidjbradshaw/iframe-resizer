@@ -1,46 +1,52 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>iFrame message passing test</title>
-		<meta name="description" content="iFrame message passing test">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<style>
-			a { float:right; margin-left:10px;}
-		</style>
-	</head>
-	<body>
 
-		<b>iFrame TextArea Example</b>
-		<a href="frame.content.html">Back to page 1</a>
-		</a>
+<head>
+	<meta charset="utf-8">
+	<title>iFrame message passing test</title>
+	<meta name="description" content="iFrame message passing test">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style>
+		a {
+			float: right;
+			margin-left: 10px;
+		}
+	</style>
+</head>
 
-		<p>
-			Resize the textarea below.
-		</p>
+<body>
 
-		<textarea id="textArea">Resize me</textarea>
+	<b>iFrame TextArea Example</b>
+	<a href="frame.content.html">Back to page 1</a>
+	</a>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script src="../js/iframeResizer.contentWindow.min.js"></script>
+	<p>
+		Resize the textarea below.
+	</p>
 
-		<script>
+	<textarea id="textArea">Resize me</textarea>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../js/iframeResizer.contentWindow.min.js"></script>
+
+	<script>
 
 
-			function store(){
-				this.x = this.offsetWidth;
-				this.y = this.offsetHeight;
+		function store() {
+			this.x = this.offsetWidth;
+			this.y = this.offsetHeight;
+		}
+
+		$('textarea').each(store).on('mouseover mouseout', function () {
+			if (this.offsetWidth !== this.x || this.offsetHeight !== this.y) {
+				if ('parentIFrame' in window) parentIFrame.size();
+				store.call(this);
 			}
-
-			$('textarea').each(store).on('mouseover mouseout',function(){
-				if (this.offsetWidth !== this.x || this.offsetHeight !== this.y){
-					if ('parentIFrame' in window) parentIFrame.size();
-					store.call(this);
-				}
-			});
+		});
 
 
-		</script>
+	</script>
 
-	</body>
+</body>
+
 </html>

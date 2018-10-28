@@ -1,72 +1,76 @@
+
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>iFrame message passing test</title>
-		<meta name="description" content="iFrame message passing test">
-		<meta name="viewport" content="width=device-width">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<style>
-			*, *:before, *:after {box-model: border-box;}
+
+<head>
+	<meta charset="utf-8">
+	<title>iFrame message passing test</title>
+	<meta name="description" content="iFrame message passing test">
+	<meta name="viewport" content="width=device-width">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style>
+		*, *:before, *:after {box-model: border-box;}
 			a { float:right; margin-left:10px;}
 
 			h2 {margin-top: 0;}
 			body{margin:8px !important}
 		</style>
-	</head> 
-	<body>
-		<a href="frame.content.html">Back to page 1</a>
-		<h2>Nested iFrame</h2>
-		<p>Resize window or click one of the links in the nested iFrame to watch it resize.</p>
-		<div style="margin:20px;">
-			<iframe id="nestedIFrame" src="frame.content.html" width="100%" scrolling="no"></iframe>
-		</div>
-		<p id="callback">
-		</p>
+</head>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/ie8.polyfils.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.min.js"></script>
-		<script type="text/javascript">
+<body>
+	<a href="frame.content.html">Back to page 1</a>
+	<h2>Nested iFrame</h2>
+	<p>Resize window or click one of the links in the nested iFrame to watch it resize.</p>
+	<div style="margin:20px;">
+		<iframe id="nestedIFrame" src="frame.content.html" width="100%" scrolling="no"></iframe>
+	</div>
+	<p id="callback">
+	</p>
 
-			var level = document.location.search.replace(/\?/,'') || 0;
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/ie8.polyfils.min.js"></script>
+	<script type="text/javascript" src="../js/iframeResizer.min.js"></script>
+	<script type="text/javascript">
 
-			$('iframe').attr('id','nestedIFrame'+level).attr('src','frame.content.html?'+level);
+		var level = document.location.search.replace(/\?/, '') || 0;
 
-			/*
-			 * If you do not understand what the code below does, then please just use the
-			 * following call in your own code.
-			 *
-			 *   iFrameResize({log:true});
-			 *
-			 * Once you have it working, set the log option to false.
-			 */
+		$('iframe').attr('id', 'nestedIFrame' + level).attr('src', 'frame.content.html?' + level);
 
-			iFrameResize({
-				log                     : true,                  // Enable console logging
-				inPageLinks             : true,
-				resizedCallback         : function(messageData){ // Callback fn when message is received
-					$('p#callback').html(
-						'<b>Frame ID:</b> '    + messageData.iframe.id +
-						' <b>Height:</b> '     + messageData.height +
-						' <b>Width:</b> '      + messageData.width +
-						' <b>Event type:</b> ' + messageData.type
-					);
-				},
-				messageCallback         : function(messageData){ // Callback fn when message is received
-					parentIFrame.sendMessage(messageData.message + ' (via ' + $('iframe').attr('id') + ')');
-				},
-				closedCallback         : function(id){ /// Callback fn when iFrame is closed
-					$('p#callback').html(
-						'<b>IFrame (</b>'    + id +
-						'<b>) removed from page.</b>'
-					);
-				}
-			});
+		/*
+		 * If you do not understand what the code below does, then please just use the
+		 * following call in your own code.
+		 *
+		 *   iFrameResize({log:true});
+		 *
+		 * Once you have it working, set the log option to false.
+		 */
+
+		iFrameResize({
+			log: true,                  // Enable console logging
+			inPageLinks: true,
+			resizedCallback: function (messageData) { // Callback fn when message is received
+				$('p#callback').html(
+					'<b>Frame ID:</b> ' + messageData.iframe.id +
+					' <b>Height:</b> ' + messageData.height +
+					' <b>Width:</b> ' + messageData.width +
+					' <b>Event type:</b> ' + messageData.type
+				);
+			},
+			messageCallback: function (messageData) { // Callback fn when message is received
+				parentIFrame.sendMessage(messageData.message + ' (via ' + $('iframe').attr('id') + ')');
+			},
+			closedCallback: function (id) { /// Callback fn when iFrame is closed
+				$('p#callback').html(
+					'<b>IFrame (</b>' + id +
+					'<b>) removed from page.</b>'
+				);
+			}
+		});
 
 
-		</script>
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+	</script>
+	<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
 
-	</body> 
+</body>
+
 </html>

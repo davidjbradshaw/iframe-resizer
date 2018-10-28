@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>QUnit LoadHide</title>
   <link rel="stylesheet" href="resources/qunit.css">
 </head>
+
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture">
@@ -24,19 +26,19 @@
     'use strict';
     var msgId = '[iFrameSizerTest]:';
 
-    var background='rgb(245, 222, 179)';
+    var background = 'rgb(245, 222, 179)';
 
-    asyncTest( "getId", function() {
+    asyncTest("getId", function () {
 
       iFrameResize({
         //log:true,
-        bodyBackground:background,
-        resizedCallback:function(messageData){
-          ok( true, 'Receive init message back from iFrame.' );
+        bodyBackground: background,
+        resizedCallback: function (messageData) {
+          ok(true, 'Receive init message back from iFrame.');
           sendMessage('chkBackground');
         },
-        messageCallback:function(messageData){
-          ok(background === messageData.message, 'Background = '+background );
+        messageCallback: function (messageData) {
+          ok(background === messageData.message, 'Background = ' + background);
           start();
         }
       });
@@ -44,4 +46,5 @@
 
   </script>
 </body>
+
 </html>

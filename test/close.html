@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>QUnit LoadHide</title>
   <link rel="stylesheet" href="resources/qunit.css">
 </head>
+
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture">
@@ -23,17 +25,17 @@
 
     'use strict';
 
-    asyncTest( "iFrame close Event", function() {
+    asyncTest("iFrame close Event", function () {
 
       var callbackCounter = 0;
 
       $('iframe').iFrameResize({
         //log:true,
-        initCallback:function(){
-            sendMessage('close');
+        initCallback: function () {
+          sendMessage('close');
         },
-        closedCallback:function(){
-          ok( 0 === $('iframe').length , 'IFrame removed from page');
+        closedCallback: function () {
+          ok(0 === $('iframe').length, 'IFrame removed from page');
           start();
         }
       });
@@ -41,4 +43,5 @@
 
   </script>
 </body>
+
 </html>

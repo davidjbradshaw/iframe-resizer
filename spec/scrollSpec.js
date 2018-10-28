@@ -1,53 +1,48 @@
 define(['iframeResizer'], function(iFrameResize) {
+  describe('Scroll Page', function() {
+    var iframe;
+    var log = LOG;
 
-	describe('Scroll Page', function() {
-		var iframe;
-		var log=LOG;
+    beforeEach(function() {
+      loadIFrame('iframe600.html');
+    });
 
-		beforeEach(function(){
-			loadIFrame('iframe600.html');
-		});
+    afterEach(function() {
+      tearDown(iframe);
+    });
 
-		afterEach(function(){
-			tearDown(iframe);
-		})
+    it('mock incoming message', function(done) {
+      iframe = iFrameResize({
+        log: log,
+        id: 'scroll1'
+      })[0];
 
+      window.parentIFrame = {
+        scrollTo: function(x, y) {
+          expect(x).toBe(0);
+          expect(y).toBe(0);
+          done();
+        }
+      };
 
-		it('mock incoming message', function(done) {
-			iframe = iFrameResize({
-				log:log,
-				id:'scroll1'
-			})[0];
+      mockMsgFromIFrame(iframe, 'scrollTo');
+    });
 
-			window.parentIFrame = {
-				scrollTo: function(x,y){
-					expect(x).toBe(0);
-					expect(y).toBe(0);
-					done();
-				}
-			};
+    it('mock incoming message', function(done) {
+      iframe = iFrameResize({
+        log: log,
+        id: 'scroll2'
+      })[0];
 
-			mockMsgFromIFrame(iframe,'scrollTo');
+      window.parentIFrame = {
+        scrollToOffset: function(x, y) {
+          expect(x).toBe(8);
+          expect(y).toBe(8);
+          done();
+        }
+      };
 
-		});
-
-		it('mock incoming message', function(done) {
-			iframe = iFrameResize({
-				log:log,
-				id:'scroll2'
-			})[0];
-
-			window.parentIFrame = {
-				scrollToOffset: function(x,y){
-					expect(x).toBe(8);
-					expect(y).toBe(8);
-					done();
-				}
-			};
-
-			mockMsgFromIFrame(iframe,'scrollToOffset');
-
-		});
-
-	});
+      mockMsgFromIFrame(iframe, 'scrollToOffset');
+    });
+  });
 });

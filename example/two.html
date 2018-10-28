@@ -1,71 +1,75 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>iFrame message passing test</title>
-		<meta name="description" content="iFrame message passing test">
-		<meta name="viewport" content="width=device-width">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	</head>
-	<body>
-		<h2>Automagically resizing iFrame</h2>
-		<p>Resize window or click one of the links in the iFrame to watch it resize. Or go back to a <a name="anchorParentTest" href="index.html">single iFrame</a>.</p>
-		<div style="margin:20px;">
-			<iframe src="frame.content.html" width="48%" scrolling="no" style="float:left;margin-right:2%"></iframe>
-			<iframe src="frame.content.html" width="48%" scrolling="no"></iframe>
-		</div>
-		<p id="callback">
-		</p>
-		<div style="margin: 8px 0;font-size:13px;">
-			For details on how this works, see
-			<a href="http://davidjbradshaw.github.io/iframe-resizer/">http://davidjbradshaw.github.io/iframe-resizer/</a>.
-		</div>
 
-		<!-- MDN PolyFils for IE8 -->
-		<!--[if lte IE 8]>
+<head>
+	<meta charset="utf-8">
+	<title>iFrame message passing test</title>
+	<meta name="description" content="iFrame message passing test">
+	<meta name="viewport" content="width=device-width">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+
+<body>
+	<h2>Automagically resizing iFrame</h2>
+	<p>Resize window or click one of the links in the iFrame to watch it resize. Or go back to a <a name="anchorParentTest"
+		 href="index.html">single iFrame</a>.</p>
+	<div style="margin:20px;">
+		<iframe src="frame.content.html" width="48%" scrolling="no" style="float:left;margin-right:2%"></iframe>
+		<iframe src="frame.content.html" width="48%" scrolling="no"></iframe>
+	</div>
+	<p id="callback">
+	</p>
+	<div style="margin: 8px 0;font-size:13px;">
+		For details on how this works, see
+		<a href="http://davidjbradshaw.github.io/iframe-resizer/">http://davidjbradshaw.github.io/iframe-resizer/</a>.
+	</div>
+
+	<!-- MDN PolyFils for IE8 -->
+	<!--[if lte IE 8]>
 			<script type="text/javascript" src="../js/ie8.polyfils.min.js"></script>
 		<![endif]-->
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../src/iframeResizer.js"></script>
-		<script type="text/javascript">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="../src/iframeResizer.js"></script>
+	<script type="text/javascript">
 
-			/*
-			 * If you do not understand what the code below does, then please just use the
-			 * following call in your own code.
-			 *
-			 *   iFrameResize({log:true});
-			 *
-			 * Once you have it working, set the log option to false.
-			 */
+		/*
+		 * If you do not understand what the code below does, then please just use the
+		 * following call in your own code.
+		 *
+		 *   iFrameResize({log:true});
+		 *
+		 * Once you have it working, set the log option to false.
+		 */
 
-			iFrameResize({
-				log                     : true,                  // Enable console logging
-				enablePublicMethods     : true,                  // Enable methods within iframe hosted page
-				enableInPageLinks       : true,
-				resizedCallback         : function(messageData){ // Callback fn when resize is received
-					$('p#callback').html(
-						'<b>Frame ID:</b> '    + messageData.iframe.id +
-						' <b>Height:</b> '     + messageData.height +
-						' <b>Width:</b> '      + messageData.width +
-						' <b>Event type:</b> ' + messageData.type
-					);
-				},
-				messageCallback         : function(messageData){ // Callback fn when message is received
-					$('p#callback').html(
-						'<b>Frame ID:</b> '    + messageData.iframe.id +
-						' <b>Message:</b> '    + messageData.message
-					);
-					alert(messageData.message + ' (' + messageData.iframe.id + ')' );
-				},
-				closedCallback         : function(id){ // Callback fn when iFrame is closed
-					$('p#callback').html(
-						'<b>IFrame (</b>'    + id +
-						'<b>) removed from page.</b>'
-					);
-				}
-			});
+		iFrameResize({
+			log: true,                  // Enable console logging
+			enablePublicMethods: true,                  // Enable methods within iframe hosted page
+			enableInPageLinks: true,
+			resizedCallback: function (messageData) { // Callback fn when resize is received
+				$('p#callback').html(
+					'<b>Frame ID:</b> ' + messageData.iframe.id +
+					' <b>Height:</b> ' + messageData.height +
+					' <b>Width:</b> ' + messageData.width +
+					' <b>Event type:</b> ' + messageData.type
+				);
+			},
+			messageCallback: function (messageData) { // Callback fn when message is received
+				$('p#callback').html(
+					'<b>Frame ID:</b> ' + messageData.iframe.id +
+					' <b>Message:</b> ' + messageData.message
+				);
+				alert(messageData.message + ' (' + messageData.iframe.id + ')');
+			},
+			closedCallback: function (id) { // Callback fn when iFrame is closed
+				$('p#callback').html(
+					'<b>IFrame (</b>' + id +
+					'<b>) removed from page.</b>'
+				);
+			}
+		});
 
-		</script>
-	</body>
+	</script>
+</body>
+
 </html>

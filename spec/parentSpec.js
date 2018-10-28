@@ -1,88 +1,88 @@
 define(['iframeResizer'], function(iFrameResize) {
+  describe('Parent Page', function() {
+    describe('default resize', function() {
+      var iframe;
+      var log = LOG;
+      var testId = 'defaultResize3';
+      var ready;
 
-	describe('Parent Page', function() {
+      beforeEach(function(done) {
+        loadIFrame('iframe600.html');
+        iframe = iFrameResize({
+          log: log,
+          id: testId,
+          resizedCallback: function() {
+            ready = true;
+            done();
+          }
+        })[0];
 
-		describe('default resize', function() {
-			var iframe;
-			var log=LOG;
-			var testId = 'defaultResize3';
-			var ready;
+        mockMsgFromIFrame(iframe, 'foo');
+      });
 
+      afterEach(function() {
+        tearDown(iframe);
+      });
 
-			beforeEach(function(done){
-				loadIFrame('iframe600.html');
-				iframe = iFrameResize({
-					log:log,
-					id:testId,
-					resizedCallback:function(){
-						ready=true;
-						done();
-					}
-				})[0];
+      it('receive message', function() {
+        expect(ready).toBe(true);
+      });
+    });
 
-				mockMsgFromIFrame(iframe,'foo');
-			});
+    describe('reset Page', function() {
+      var iframe;
+      var log = LOG;
+      var testId = 'parentPage1';
 
-			afterEach(function(){
-				tearDown(iframe);
-			})
+      beforeEach(function(done) {
+        loadIFrame('iframe600.html');
+        iframe = iFrameResize({
+          log: log,
+          id: testId
+        })[0];
 
-			it('receive message', function() {
-				expect(ready).toBe(true);
-			});
-		});
+        spyOn(iframe.contentWindow, 'postMessage').and.callFake(done);
+        mockMsgFromIFrame(iframe, 'reset');
+      });
 
+      afterEach(function() {
+        tearDown(iframe);
+      });
 
-		describe('reset Page', function() {
-			var iframe;
-			var log=LOG;
-			var testId = 'parentPage1';
+      it('receive message', function() {
+        expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]reset',
+          'http://localhost:9876'
+        );
+      });
+    });
 
-			beforeEach(function(done){
-				loadIFrame('iframe600.html');
-				iframe = iFrameResize({
-					log:log,
-					id:testId
-				})[0];
+    describe('late load msg received', function() {
+      var iframe;
+      var log = LOG;
+      var testId = 'parentPage2';
 
-				spyOn(iframe.contentWindow,'postMessage').and.callFake(done);
-				mockMsgFromIFrame(iframe,'reset');
-			});
+      beforeEach(function(done) {
+        loadIFrame('iframe600.html');
+        iframe = iFrameResize({
+          log: log,
+          id: testId
+        })[0];
 
-			afterEach(function(){
-				tearDown(iframe);
-			})
+        spyOn(iframe.contentWindow, 'postMessage').and.callFake(done);
+        window.postMessage('[iFrameResizerChild]Ready', '*');
+      });
 
-			it('receive message', function() {
-				expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith('[iFrameSizer]reset', 'http://localhost:9876');
-			});
-		});
+      afterEach(function() {
+        tearDown(iframe);
+      });
 
-
-		describe('late load msg received', function() {
-			var iframe;
-			var log=LOG;
-			var testId = 'parentPage2';
-
-			beforeEach(function(done){
-				loadIFrame('iframe600.html');
-				iframe = iFrameResize({
-					log:log,
-					id:testId
-				})[0];
-
-				spyOn(iframe.contentWindow,'postMessage').and.callFake(done);
-				window.postMessage('[iFrameResizerChild]Ready','*');
-			});
-
-			afterEach(function(){
-				tearDown(iframe);
-			})
-
-			it('receive message', function() {
-				expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll', 'http://localhost:9876');
-			});
-		});
-
-	});
+      it('receive message', function() {
+        expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll',
+          'http://localhost:9876'
+        );
+      });
+    });
+  });
 });

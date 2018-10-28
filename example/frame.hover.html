@@ -1,51 +1,63 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>iFrame message passing test</title>
-		<meta name="description" content="iFrame message passing test">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<style>
-			a { float:right; margin-left:10px;}
+
+<head>
+	<meta charset="utf-8">
+	<title>iFrame message passing test</title>
+	<meta name="description" content="iFrame message passing test">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style>
+		a { float:right; margin-left:10px;}
 		</style>
-	</head>
-	<body>
+</head>
 
-		<b>iFrame :Hover Example</b>
-		<a href="frame.content.html">Back to page 1</a>
+<body>
 
-		<p>
-			Mouse over the code example below.
-		</p>
+	<b>iFrame :Hover Example</b>
+	<a href="frame.content.html">Back to page 1</a>
 
-		<xmp><!--  #code  --></xmp>
+	<p>
+		Mouse over the code example below.
+	</p>
 
+	<xmp>
+		<!--  #code  -->
+	</xmp>
+
+	<script>
+		var iFrameResizer = {
+			heightCalculationMethod: 'lowestElement'
+		}
+	</script>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+
+	<div id="code">
+		<style>
+			xmp {
+				background-color: #eee;
+				padding: 20px;
+				display: block;
+			}
+
+			xmp:hover {
+				border: #c33 solid 40px;
+			}
+		</style>
 		<script>
-			var iFrameResizer = {
-					heightCalculationMethod:'lowestElement'
-				}
+				(function () {
+					$('xmp').hover(function () {
+						if ('parentIFrame' in window) {
+							// Fix race condition in FireFox with setTimeout
+							setTimeout(parentIFrame.size.bind(parentIFrame), 0);
+						}
+					});
+				})();
 		</script>
+	</div>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+	<script>$('xmp').text('<xmp>' + $('#code').html() + '<xmp>');</script>
+</body>
 
-<div id="code">
-    <style>
-        xmp{background-color: #eee;padding: 20px;display:block;}
-        xmp:hover{border:#c33 solid 40px;}
-    </style>
-    <script>
-        (function(){
-            $('xmp').hover(function(){
-                if ('parentIFrame' in window) {
-                    // Fix race condition in FireFox with setTimeout
-                    setTimeout(parentIFrame.size.bind(parentIFrame),0);
-                }
-            });
-        })();
-    </script>
-</div>
-
-		<script>$('xmp').text('<xmp>'+$('#code').html()+'<xmp>');</script>
-	</body>
 </html>

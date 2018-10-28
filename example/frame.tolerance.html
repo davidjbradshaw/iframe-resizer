@@ -1,11 +1,13 @@
+
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>iFrame message passing test</title>
-		<meta name="description" content="iFrame message passing test">
-		<style>
-			a.back { float:right; margin-left:8px;}
+
+<head>
+	<meta charset="utf-8">
+	<title>iFrame message passing test</title>
+	<meta name="description" content="iFrame message passing test">
+	<style>
+		a.back { float:right; margin-left:8px;}
 			body {border:solid 1px red;}
 			p{padding:5px 212px 5px 5px;margin:0 0 5px;}
 			#abs{
@@ -24,56 +26,66 @@
 				margin:5px;
 			}
 		</style>
-	</head>
-	<body>
+</head>
 
-		<p>
-			<b>iFrame</b>
+<body>
 
-			<a href="frame.content.html" class="back">Back to page 1</a>
-			&nbsp;
-			<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999999);return false;">Bottom</a>
-		</p>
-		<p>
-			This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red border on this page. This prevents the normal height calculation, which is based on the body tag from returning the correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other page height propeties.
-		</p>
-		<p>
-			Use the dropdown to change the sizing method of the page, select the different sizing options to see how the effect the page. Note that they can have different effects in different browsers, so you are normally best off selecting <b>max</b> if you need to change away from the default <b>bodyOffset</b> option.
-		</p>
-		<p>
-			<b>Height Calculation Method</b>
-			<select name="heightCalculationMethod">
-				<option>bodyOffset</option> 
-				<option>bodyScroll</option>
-				<option>documentElementOffset</option>
-				<option>documentElementScroll</option> 
-				<option>max</option>
-				<option>min</option>
-				<option>grow</option>
-				<option>lowestElement</option>
-			</select>
-		</p>
-		<p>
-			<i>This option should be used sparingly, as the alternate methods can be less acurate at working out the correct page size, can cause screen flicker and can sometimes fail to reduce in size when the frame content changes in browsers that do not support mutationObservers (See <a href="http://caniuse.com/mutationobserver">caniuse.com</a> for details).</i>
-		</p>
+	<p>
+		<b>iFrame</b>
 
-		<div id="abs">
-			Absolute positioned element
-			<a href='#' class="top" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,0);return false;">Top</a>
-		</div>
+		<a href="frame.content.html" class="back">Back to page 1</a>
+		&nbsp;
+		<a href='#' class="back" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999999);return false;">Bottom</a>
+	</p>
+	<p>
+		This page has an absolute position elemnt that take it out side the normal document body, which is marked with a red
+		border on this page. This prevents the normal height calculation, which is based on the body tag from returning the
+		correct height. To work around this you can set the <b>heightCalculationMethod</b> option to use one of the other
+		page height propeties.
+	</p>
+	<p>
+		Use the dropdown to change the sizing method of the page, select the different sizing options to see how the effect
+		the page. Note that they can have different effects in different browsers, so you are normally best off selecting <b>max</b>
+		if you need to change away from the default <b>bodyOffset</b> option.
+	</p>
+	<p>
+		<b>Height Calculation Method</b>
+		<select name="heightCalculationMethod">
+			<option>bodyOffset</option>
+			<option>bodyScroll</option>
+			<option>documentElementOffset</option>
+			<option>documentElementScroll</option>
+			<option>max</option>
+			<option>min</option>
+			<option>grow</option>
+			<option>lowestElement</option>
+		</select>
+	</p>
+	<p>
+		<i>This option should be used sparingly, as the alternate methods can be less acurate at working out the correct page
+			size, can cause screen flicker and can sometimes fail to reduce in size when the frame content changes in browsers
+			that do not support mutationObservers (See <a href="http://caniuse.com/mutationobserver">caniuse.com</a> for
+			details).</i>
+	</p>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
-		<script>
+	<div id="abs">
+		Absolute positioned element
+		<a href='#' class="top" onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,0);return false;">Top</a>
+	</div>
 
-			$('select').on('change',function(){
-				if ('parentIFrame' in window){
-					parentIFrame.setHeightCalculationMethod($(this).val());
-					parentIFrame.size();
-				}
-			});
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script>
+	<script>
 
-		</script>
+		$('select').on('change', function () {
+			if ('parentIFrame' in window) {
+				parentIFrame.setHeightCalculationMethod($(this).val());
+				parentIFrame.size();
+			}
+		});
 
-	</body>
+	</script>
+
+</body>
+
 </html>
