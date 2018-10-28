@@ -599,6 +599,13 @@
 
   function setSize(messageData) {
     function setDimension(dimension) {
+      if (!messageData.id) {
+        log(
+            'undefined',
+            'messageData id not set'
+        );
+        return;
+      }
       messageData.iframe.style[dimension] = messageData[dimension] + 'px';
       log(
         messageData.id,
