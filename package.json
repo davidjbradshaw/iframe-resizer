@@ -19,6 +19,7 @@
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "dependencies": {},
   "devDependencies": {
+    "cryptiles": "^4.1.2",
     "deep-extend": "^0.5.1",
     "grunt": "0.4.x",
     "grunt-bump": "^0.8.0",
@@ -34,6 +35,7 @@
     "grunt-karma": "^0.12.0",
     "grunt-karma-coveralls": "^2.5.4",
     "grunt-shell": "0.6.x",
+    "hoek": "^5.0.4",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
     "jasmine-jquery": "^2.1.0",
@@ -51,6 +53,7 @@
     "karma-safari-launcher": "^0.1.1",
     "karma-verbose-summary-reporter": "0.0.1",
     "load-grunt-tasks": "~0.1.0",
+    "lodash": "^4.17.11",
     "minimatch": "^3.0.4",
     "phantomjs": "^2.1.7",
     "requirejs": "^2.3.6",
