@@ -66,6 +66,10 @@
       }
     };
 
+  function getMutationObserver() {
+    return window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+  }
+
   function addEventListener(obj, evt, func) {
     /* istanbul ignore else */ // Not testable in PhantonJS
     if ('addEventListener' in window) {
@@ -1017,6 +1021,31 @@
         checkReset();
       }
 
+      function createDestroyObserver(MutationObserver) {
+        if (!iframe.parentNode) {
+          return;
+        }
+
+        var destroyObserver = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            var removedNodes = Array.prototype.slice.call(mutation.removedNodes); // Transform NodeList into an Array
+            removedNodes.forEach(function (removedNode) {
+              if (removedNode === iframe) {
+                closeIFrame(iframe);
+              }
+            });
+          });
+        });
+        destroyObserver.observe(iframe.parentNode, {
+          childList: true
+        });
+      }
+
+      var MutationObserver = getMutationObserver();
+      if (MutationObserver) {
+        createDestroyObserver(MutationObserver);
+      }
+
       addEventListener(iframe, 'load', iFrameLoaded);
       trigger('init', msg, iframe, undefined, true);
     }
@@ -1156,10 +1185,10 @@
       observer.observe(target, config);
     }
 
-    var MutationObserver =
-      window.MutationObserver || window.WebKitMutationObserver;
-
-    if (MutationObserver) createMutationObserver();
+    var MutationObserver = getMutationObserver();
+    if (MutationObserver) {
+      createMutationObserver();
+    }
   }
 
   function resizeIFrames(event) {
