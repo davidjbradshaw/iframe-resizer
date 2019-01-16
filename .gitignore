@@ -7,3 +7,4 @@ test/*.off
 npm-debug.log
 bower_components
 coverage*
+.idea
