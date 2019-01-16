@@ -548,6 +548,7 @@ The parentIFrame methods object in the iFrame is now always available and the `e
 
 ## Version History
 
+* v3.6.4 [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Fix issue resource leak when iframe removed from the page [[Steffen Eckardt](seckardt)]. [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Make Require.js optional when it is included on the page before iframe-resizer [[Dahmian Owen](dahmian)].
 * v3.6.3 [#635](https://github.com/davidjbradshaw/iframe-resizer/pull/635) Fix issue with undefined ID [[Henry Schein](ddxdental)]. [#582](https://github.com/davidjbradshaw/iframe-resizer/pull/582) Add `omit` option to `scrolling` config [[Matt Ryan](mryand)].
 * v3.6.2 [#596](https://github.com/davidjbradshaw/iframe-resizer/pull/596) Add Passive Event Listener for Performance [[Henrik Vendelbo](thepian)]. [#613](https://github.com/davidjbradshaw/iframe-resizer/pull/613) Check if the iFrameResize function is attached to the prototype of jQuery [[Paul Antal](paul-antal)]. [#620](https://github.com/davidjbradshaw/iframe-resizer/pull/620) Fixed an issue where host page fires init before iframe receiver setup [[Mark Zhou](mrmarktyy)]. [#620](https://github.com/davidjbradshaw/iframe-resizer/pull/620) Add `removeListeners` method to better support React [[Khang Nguyen](khangiskhan)].
 * v3.6.1 [#576](https://github.com/davidjbradshaw/iframe-resizer/pull/576) Fix race condition caused by react-iframe-resizer removing the domNode and calling `close()`.

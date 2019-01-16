@@ -1326,7 +1326,6 @@
   } else if (typeof module === 'object' && typeof module.exports === 'object') {
     //Node for browserfy
     module.exports = factory();
-  } else {
-    window.iFrameResize = window.iFrameResize || factory();
   }
+  window.iFrameResize = window.iFrameResize || factory();
 })();
