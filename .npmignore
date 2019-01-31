@@ -1,0 +1,12 @@
+.DS_Store
+.coveralls.yml
+.idea
+node_modules
+bin
+example
+test
+spec
+src
+npm-debug.log
+bower_components
+coverage*
