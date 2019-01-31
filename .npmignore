@@ -6,6 +6,7 @@ bin
 example
 test
 spec
+src
 npm-debug.log
 bower_components
 coverage*
