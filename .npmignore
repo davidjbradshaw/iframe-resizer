@@ -9,4 +9,8 @@ spec
 src
 npm-debug.log
 bower_components
+bower.json
+gruntfile.js
+karma.conf.js
+test-main.js
 coverage*
