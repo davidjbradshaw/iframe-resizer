@@ -10,8 +10,6 @@
  */
 
 ;(function(undefined) {
-  'use strict'
-
   if (typeof window === 'undefined') return // don't run for server side render
 
   var autoResize = true,
@@ -34,7 +32,7 @@
     interval = 32,
     intervalTimer = null,
     logging = false,
-    msgID = '[iFrameSizer]', //Must match host page msg ID
+    msgID = '[iFrameSizer]', // Must match host page msg ID
     msgIdLen = msgID.length,
     myID = '',
     observer = null,
@@ -100,30 +98,18 @@
   }
 
   function addEventListener(el, evt, func, options) {
-    /* istanbul ignore else */ // Not testable in phantomJS
-    if ('addEventListener' in window) {
-      el.addEventListener(evt, func, passiveSupported ? options || {} : false)
-    } else if ('attachEvent' in window) {
-      //IE
-      el.attachEvent('on' + evt, func)
-    }
+    el.addEventListener(evt, func, passiveSupported ? options || {} : false)
   }
 
   function removeEventListener(el, evt, func) {
-    /* istanbul ignore else */ // Not testable in phantomJS
-    if ('removeEventListener' in window) {
-      el.removeEventListener(evt, func, false)
-    } else if ('detachEvent' in window) {
-      //IE
-      el.detachEvent('on' + evt, func)
-    }
+    el.removeEventListener(evt, func, false)
   }
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
-  //Based on underscore.js
+  // Based on underscore.js
   function throttle(func) {
     var context,
       args,
@@ -220,7 +206,7 @@
     var data = initMsg.substr(msgIdLen).split(':')
 
     myID = data[0]
-    bodyMargin = undefined !== data[1] ? Number(data[1]) : bodyMargin //For V1 compatibility
+    bodyMargin = undefined !== data[1] ? Number(data[1]) : bodyMargin // For V1 compatibility
     calculateWidth = undefined !== data[2] ? strBool(data[2]) : calculateWidth
     logging = undefined !== data[3] ? strBool(data[3]) : logging
     interval = undefined !== data[4] ? Number(data[4]) : interval
@@ -293,7 +279,7 @@
   }
 
   function setMargin() {
-    //If called via V1 script, convert bodyMargin from int to str
+    // If called via V1 script, convert bodyMargin from int to str
     if (undefined === bodyMarginStr) {
       bodyMarginStr = bodyMargin + 'px'
     }
@@ -516,7 +502,7 @@
   function injectClearFixIntoBodyElement() {
     var clearFix = document.createElement('div')
     clearFix.style.clear = 'both'
-    clearFix.style.display = 'block' //Guard against this having been globally redefined in CSS.
+    clearFix.style.display = 'block' // Guard against this having been globally redefined in CSS.
     document.body.appendChild(clearFix)
   }
 
@@ -559,7 +545,7 @@
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       }
 
-      var hash = location.split('#')[1] || location, //Remove # if present
+      var hash = location.split('#')[1] || location, // Remove # if present
         hashData = decodeURIComponent(hash),
         target =
           document.getElementById(hashData) ||
@@ -608,7 +594,7 @@
     }
 
     function initCheck() {
-      //check if page loaded with location hash after init resize
+      // Check if page loaded with location hash after init resize
       setTimeout(checkLocationHash, eventCancelTimer)
     }
 
@@ -645,7 +631,6 @@
         if (true === resize && false === autoResize) {
           autoResize = true
           startEventListeners()
-          //sendSize('autoResize','Auto Resize enabled');
         } else if (false === resize && true === autoResize) {
           autoResize = false
           stopEventListeners()
@@ -717,7 +702,6 @@
           '' +
           (customHeight ? customHeight : '') +
           (customWidth ? ',' + customWidth : '')
-        //lockTrigger();
         sendSize(
           'size',
           'parentIFrame.size(' + valString + ')',
@@ -735,9 +719,11 @@
         sendSize('interval', 'setInterval: ' + interval)
       }, Math.abs(interval))
     }
-  } //Not testable in PhantomJS
+  }
 
-  /* istanbul ignore next */ function setupBodyMutationObserver() {
+  // Not testable in PhantomJS
+  /* istanbul ignore next */
+  function setupBodyMutationObserver() {
     function addImageLoadListners(mutation) {
       function addImageLoadListener(element) {
         if (false === element.complete) {
@@ -788,7 +774,7 @@
         'mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type
       )
 
-      //Deal with WebKit asyncing image loading when tags are injected into the page
+      // Deal with WebKit / Blink asyncing image loading when tags are injected into the page
       mutations.forEach(addImageLoadListners)
     }
 
@@ -828,8 +814,9 @@
   }
 
   function setupMutationObserver() {
-    var forceIntervalTimer = 0 > interval // Not testable in PhantomJS
+    var forceIntervalTimer = 0 > interval
 
+    // Not testable in PhantomJS
     /* istanbul ignore if */ if (
       window.MutationObserver ||
       window.WebKitMutationObserver
@@ -848,39 +835,11 @@
   // document.documentElement.offsetHeight is not reliable, so
   // we have to jump through hoops to get a better value.
   function getComputedStyle(prop, el) {
-    /* istanbul ignore next */ //Not testable in PhantomJS
-    function convertUnitsToPxForIE8(value) {
-      var PIXEL = /^\d+(px)?$/i
-
-      if (PIXEL.test(value)) {
-        return parseInt(value, base)
-      }
-
-      var style = el.style.left,
-        runtimeStyle = el.runtimeStyle.left
-
-      el.runtimeStyle.left = el.currentStyle.left
-      el.style.left = value || 0
-      value = el.style.pixelLeft
-      el.style.left = style
-      el.runtimeStyle.left = runtimeStyle
-
-      return value
-    }
-
     var retVal = 0
     el = el || document.body // Not testable in phantonJS
 
-    /* istanbul ignore else */ if (
-      'defaultView' in document &&
-      'getComputedStyle' in document.defaultView
-    ) {
-      retVal = document.defaultView.getComputedStyle(el, null)
-      retVal = null !== retVal ? retVal[prop] : 0
-    } else {
-      //IE8
-      retVal = convertUnitsToPxForIE8(el.currentStyle[prop])
-    }
+    retVal = document.defaultView.getComputedStyle(el, null)
+    retVal = null !== retVal ? retVal[prop] : 0
 
     return parseInt(retVal, base)
   }
@@ -892,7 +851,7 @@
     }
   }
 
-  //Idea from https://github.com/guardian/iframe-messenger
+  // Idea from https://github.com/guardian/iframe-messenger
   function getMaxElement(side, elements) {
     var elementsLength = elements.length,
       elVal = 0,
@@ -955,7 +914,7 @@
       },
 
       offset: function() {
-        return getHeight.bodyOffset() //Backwards compatability
+        return getHeight.bodyOffset() // Backwards compatability
       },
 
       bodyScroll: function getBodyScrollHeight() {
@@ -983,7 +942,7 @@
       },
 
       grow: function growHeight() {
-        return getHeight.max() //Run max without the forced downsizing
+        return getHeight.max() // Run max without the forced downsizing
       },
 
       lowestElement: function getBestHeight() {
@@ -1223,7 +1182,7 @@
       },
       inPageLink: function inPageLinkF() {
         this.moveToAnchor()
-      }, //Backward compatability
+      }, // Backward compatability
 
       pageInfo: function pageInfoFromParent() {
         var msgBody = getData()
@@ -1242,7 +1201,7 @@
     }
 
     function isMessageForUs() {
-      return msgID === ('' + event.data).substr(0, msgIdLen) //''+ Protects against non-string messages
+      return msgID === ('' + event.data).substr(0, msgIdLen) // ''+ Protects against non-string messages
     }
 
     function getMessageType() {
@@ -1262,8 +1221,8 @@
     }
 
     function isInitMsg() {
-      //Test if this message is from a child below us. This is an ugly test, however, updating
-      //the message format would break backwards compatibity.
+      // Test if this message is from a child below us. This is an ugly test, however, updating
+      // the message format would break backwards compatibity.
       return event.data.split(':')[2] in { true: 1, false: 1 }
     }
 
@@ -1296,8 +1255,8 @@
     }
   }
 
-  //Normally the parent kicks things off when it detects the iFrame has loaded.
-  //If this script is async-loaded, then tell parent page to retry init.
+  // Normally the parent kicks things off when it detects the iFrame has loaded.
+  // If this script is async-loaded, then tell parent page to retry init.
   function chkLateLoaded() {
     if ('loading' !== document.readyState) {
       window.parent.postMessage('[iFrameResizerChild]Ready', '*')
@@ -1310,7 +1269,7 @@
 
   // TEST CODE START //
 
-  //Create test hooks
+  // Create test hooks
 
   function mockMsgListener(msgObject) {
     receiver(msgObject)

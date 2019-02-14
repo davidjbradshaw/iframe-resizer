@@ -16,7 +16,7 @@
     hiddenCheckEnabled = false,
     msgHeader = 'message',
     msgHeaderLen = msgHeader.length,
-    msgId = '[iFrameSizer]', //Must match iframe msg ID
+    msgId = '[iFrameSizer]', // Must match iframe msg ID
     msgIdLen = msgId.length,
     pagePosition = null,
     requestAnimationFrame = window.requestAnimationFrame,
@@ -237,8 +237,8 @@
     }
 
     function isMessageFromMetaParent() {
-      //Test if this message is from a parent above us. This is an ugly test, however, updating
-      //the message format would break backwards compatibity.
+      // Test if this message is from a parent above us. This is an ugly test, however, updating
+      // the message format would break backwards compatibity.
       var retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
 
       if (retCode) {
@@ -321,7 +321,7 @@
         setListener('Add ', addEventListener)
       }
 
-      var id = iframeId //Create locally scoped copy of iFrame ID
+      var id = iframeId // Create locally scoped copy of iFrame ID
 
       start()
 
@@ -359,7 +359,7 @@
     }
 
     function scrollRequestFromChild(addOffset) {
-      /* istanbul ignore next */ //Not testable in Karma
+      /* istanbul ignore next */ // Not testable in Karma
       function reposition() {
         pagePosition = newPosition
         scrollTo()
@@ -688,11 +688,11 @@
     }
 
     function chkZero(dimension) {
-      //FireFox sets dimension of hidden iFrames to zero.
-      //So if we detect that set up an event to check for
-      //when iFrame becomes visible.
+      // FireFox sets dimension of hidden iFrames to zero.
+      // So if we detect that set up an event to check for
+      // when iFrame becomes visible.
 
-      /* istanbul ignore next */ //Not testable in PhantomJS
+      /* istanbul ignore next */ // Not testable in PhantomJS
       if (!hiddenCheckEnabled && '0' === messageData[dimension]) {
         hiddenCheckEnabled = true
         log(iframeId, 'Hidden iFrame detected, creating visibility listener')
@@ -718,7 +718,7 @@
   }
 
   function syncResize(func, messageData, doNotSync) {
-    /* istanbul ignore if */ //Not testable in PhantomJS
+    /* istanbul ignore if */ // Not testable in PhantomJS
     if (doNotSync !== messageData.type && requestAnimationFrame) {
       log(messageData.id, 'Requesting animation frame')
       requestAnimationFrame(func)
@@ -754,7 +754,7 @@
         'contentWindow' in iframe &&
         null !== iframe.contentWindow
       ) {
-        //Null test for PhantomJS
+        // Null test for PhantomJS
         postMessageToIFrame()
       } else {
         iFrameNotFound()
@@ -921,9 +921,9 @@
       }
     }
 
-    //The V1 iFrame script expects an int, where as in V2 expects a CSS
-    //string value such as '1px 3em', so if we have an int for V2, set V1=V2
-    //and then convert V2 to a string PX value.
+    // The V1 iFrame script expects an int, where as in V2 expects a CSS
+    // string value such as '1px 3em', so if we have an int for V2, set V1=V2
+    // and then convert V2 to a string PX value.
     function setupBodyMarginValues() {
       if (
         'number' ===
@@ -951,8 +951,7 @@
     }
 
     function setupIFrameObject() {
-      if (Function.prototype.bind && settings[iframeId]) {
-        //Ignore unpolyfilled IE8.
+      if (settings[iframeId]) {
         settings[iframeId].iframe.iFrameResizer = {
           close: closeIFrame.bind(null, settings[iframeId].iframe),
 
@@ -990,9 +989,9 @@
       }
     }
 
-    //We have to call trigger twice, as we can not be sure if all
-    //iframes have completed loading when this code runs. The
-    //event listener also catches the page changing in the iFrame.
+    // We have to call trigger twice, as we can not be sure if all
+    // iframes have completed loading when this code runs. The
+    // event listener also catches the page changing in the iFrame.
     function init(msg) {
       function iFrameLoaded() {
         trigger('iFrame.onload', msg, iframe, undefined, true)
@@ -1105,9 +1104,12 @@
         fn()
       }, time)
     }
-  } //Not testable in PhantomJS
+  }
 
-  /* istanbul ignore next */ function fixHiddenIFrames() {
+  // Not testable in PhantomJS
+  /* istanbul ignore next */
+
+  function fixHiddenIFrames() {
     function checkIFrames() {
       function checkIFrame(settingId) {
         function chkDimension(dimension) {
@@ -1176,9 +1178,11 @@
 
     log('window', 'Trigger event: ' + event)
     debouce(resize, 16)
-  } //Not testable in PhantomJS
+  }
 
-  /* istanbul ignore next */ function tabVisible() {
+  //Not testable in PhantomJS
+  /* istanbul ignore next */
+  function tabVisible() {
     function resize() {
       sendTriggerMsg('Tab Visable', 'resize')
     }
@@ -1214,10 +1218,15 @@
     })
 
     addEventListener(document, 'visibilitychange', tabVisible)
-    addEventListener(document, '-webkit-visibilitychange', tabVisible) //Andriod 4.4
+
+    addEventListener(document, '-webkit-visibilitychange', tabVisible)
+
+    // Andriod 4.4
     addEventListener(window, 'focusin', function() {
       resizeIFrames('focus')
-    }) //IE8-9
+    })
+
+    // IE 9
     addEventListener(window, 'focus', function() {
       resizeIFrames('focus')
     })
@@ -1256,7 +1265,7 @@
     setupEventListeners()
 
     return function iFrameResizeF(options, target) {
-      iFrames = [] //Only return iFrames past in on this call
+      iFrames = [] // Only return iFrames past in on this call
 
       warnDeprecatedOptions(options)
 
@@ -1302,7 +1311,7 @@
   if (typeof define === 'function' && define.amd) {
     define([], factory)
   } else if (typeof module === 'object' && typeof module.exports === 'object') {
-    //Node for browserfy
+    // Node for browserfy
     module.exports = factory()
   }
   window.iFrameResize = window.iFrameResize || factory()
