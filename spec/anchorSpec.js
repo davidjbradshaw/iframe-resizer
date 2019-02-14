@@ -34,7 +34,7 @@ define(['iframeResizer'], function(iFrameResize) {
       iframe2 = iFrameResize({
         log: log,
         id: 'anchor2',
-        scrollCallback: function(position) {
+        onScroll: function(position) {
           expect(position.x).toBe(8);
           expect(position.y).toBeGreaterThan(8);
           done();

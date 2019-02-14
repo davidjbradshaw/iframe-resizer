@@ -29,15 +29,15 @@
     asyncTest("iFrame negative inteval timer ", function () {
 
       var
-        callbackCounter = 0,
+        evtCounter = 0,
         started = false;
 
       $('iframe').iFrameResize({
         //log:true,
         interval: -1,
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
 
-          switch ('' + (++callbackCounter)) {
+          switch ('' + (++evtCounter)) {
             case '1':
               sendMessage('changeContent');
               break;

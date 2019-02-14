@@ -28,15 +28,15 @@
 
     asyncTest("iFrame Resize height", function () {
 
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       $('iframe').iFrameResize({
         //log:true,
         sizeHeight: false,
         sizeWidth: true,
         interval: 1,
-        resizedCallback: function (messageData) {
-          switch ('' + (++callbackCounter)) {
+        onResized: function (messageData) {
+          switch ('' + (++evtCounter)) {
             case '1':
               sendMessage('width');
               break;

@@ -11,7 +11,7 @@ define(['iframeResizer'], function(iFrameResize) {
         iframe = iFrameResize({
           log: log,
           id: testId,
-          resizedCallback: function() {
+          onResized: function() {
             ready = true;
             done();
           }

@@ -1,9 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
-  'Use strict';
-
   // show elapsed time at the end
-  require('time-grunt')(grunt);
+  require('time-grunt')(grunt)
 
   // load all grunt tasks
   //require('load-grunt-tasks')(grunt);
@@ -11,7 +9,7 @@ module.exports = function(grunt) {
     'bump-only': 'grunt-bump',
     'bump-commit': 'grunt-bump',
     coveralls: 'grunt-karma-coveralls'
-  });
+  })
 
   // Project configuration.
   grunt.initConfig({
@@ -109,14 +107,6 @@ module.exports = function(grunt) {
         },
         src: ['js/iframeResizer.contentWindow.js'],
         dest: 'js/iframeResizer.contentWindow.min.js'
-      },
-      polyfil: {
-        options: {
-          banner: '// IE8 polyfils for iframeResizer.js\n',
-          sourceMapName: 'js/ie8.polyfils.map'
-        },
-        src: ['src/ie8.polyfils.js'],
-        dest: 'js/ie8.polyfils.min.js'
       }
     },
 
@@ -127,7 +117,12 @@ module.exports = function(grunt) {
 
     bump: {
       options: {
-        files: ['package.json', 'package-lock.json', 'bower.json', 'iframeResizer.jquery.json'],
+        files: [
+          'package.json',
+          'package-lock.json',
+          'bower.json',
+          'iframeResizer.jquery.json'
+        ],
         updateConfigs: ['pkg'],
         commit: true,
         commitMessage: 'Release v%VERSION%',
@@ -153,13 +148,13 @@ module.exports = function(grunt) {
       deployExample: {
         command: function() {
           var retStr = '',
-            fs = require('fs');
+            fs = require('fs')
 
           if (fs.existsSync('bin')) {
-            retStr = 'bin/deploy.sh';
+            retStr = 'bin/deploy.sh'
           }
 
-          return retStr;
+          return retStr
         }
       }
     },
@@ -187,25 +182,25 @@ module.exports = function(grunt) {
         dest: 'js/iframeResizer.js'
       }
     }
-  });
+  })
 
-  grunt.registerTask('default', ['notest', 'karma:single']);
-  grunt.registerTask('build', ['removeBlock', 'copy', 'uglify']);
-  grunt.registerTask('notest', ['jsonlint', 'jshint', 'build']);
-  grunt.registerTask('test', ['clean', 'jshint', 'karma:single', 'qunit']);
+  grunt.registerTask('default', ['notest', 'karma:single'])
+  grunt.registerTask('build', ['removeBlock', 'copy', 'uglify'])
+  grunt.registerTask('notest', ['jsonlint', 'jshint', 'build'])
+  grunt.registerTask('test', ['clean', 'jshint', 'karma:single', 'qunit'])
   grunt.registerTask('travis', [
     'clean',
     'notest',
     'qunit',
     'karma:travis',
     'coveralls'
-  ]);
+  ])
 
-  grunt.registerTask('postBump', ['build', 'bump-commit', 'shell']);
-  grunt.registerTask('preBump', ['clean', 'notest']);
-  grunt.registerTask('patch', ['preBump', 'bump-only:patch', 'postBump']);
-  grunt.registerTask('minor', ['preBump', 'bump-only:minor', 'postBump']);
-  grunt.registerTask('major', ['preBump', 'bump-only:major', 'postBump']);
+  grunt.registerTask('postBump', ['build', 'bump-commit', 'shell'])
+  grunt.registerTask('preBump', ['clean', 'notest'])
+  grunt.registerTask('patch', ['preBump', 'bump-only:patch', 'postBump'])
+  grunt.registerTask('minor', ['preBump', 'bump-only:minor', 'postBump'])
+  grunt.registerTask('major', ['preBump', 'bump-only:major', 'postBump'])
 
   grunt.registerMultiTask('removeBlock', function() {
     // set up a removal regular expression
@@ -216,12 +211,12 @@ module.exports = function(grunt) {
         this.options()[1] +
         ' //)',
       'g'
-    );
+    )
 
     this.data.forEach(function(fileObj) {
       var sourceFile = grunt.file.read(fileObj.src),
         removedFile = sourceFile.replace(removalRegEx, ''),
-        targetFile = grunt.file.write(fileObj.dest, removedFile);
-    }); // for each loop end
-  });
-};
+        targetFile = grunt.file.write(fileObj.dest, removedFile)
+    }) // for each loop end
+  })
+}

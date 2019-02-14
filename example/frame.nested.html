@@ -48,7 +48,7 @@
 		iFrameResize({
 			log: true,                  // Enable console logging
 			inPageLinks: true,
-			resizedCallback: function (messageData) { // Callback fn when message is received
+			onResized: function (messageData) { // Callback fn when message is received
 				$('p#callback').html(
 					'<b>Frame ID:</b> ' + messageData.iframe.id +
 					' <b>Height:</b> ' + messageData.height +
@@ -56,10 +56,10 @@
 					' <b>Event type:</b> ' + messageData.type
 				);
 			},
-			messageCallback: function (messageData) { // Callback fn when message is received
+			onMessage: function (messageData) { // Callback fn when message is received
 				parentIFrame.sendMessage(messageData.message + ' (via ' + $('iframe').attr('id') + ')');
 			},
-			closedCallback: function (id) { /// Callback fn when iFrame is closed
+			onClosed: function (id) { /// Callback fn when iFrame is closed
 				$('p#callback').html(
 					'<b>IFrame (</b>' + id +
 					'<b>) removed from page.</b>'

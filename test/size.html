@@ -26,15 +26,15 @@
 
     asyncTest( "iFrame size Event", function() {
 
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       $('iframe').iFrameResize({
         //log:true,
         interval:0,
-        resizedCallback:function(messageData){
+        onResized:function(messageData){
           var msgType = 'size';
 
-          switch  (''+(++callbackCounter)){
+          switch  (''+(++evtCounter)){
             case '1':
               sendMessage( msgType);
               break;
@@ -58,7 +58,7 @@
       });
     });
 
-		
+
   </script>
 </body>
 </html>

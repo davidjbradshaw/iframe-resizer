@@ -13,7 +13,7 @@ define(['iframeResizer'], function(iFrameResize) {
         {
           log: LOG,
           minHeight: 99999,
-          resizedCallback: done,
+          onResized: done,
           checkOrigin: [
             'http://localhost',
             'https://localhost',

@@ -33,7 +33,7 @@ define(['iframeResizer'], function(iFrameResize) {
       iframe = iFrameResize({
         log: log,
         id: 'sendMessage2',
-        messageCallback: function(messageData) {
+        onMessage: function(messageData) {
           expect(messageData.message).toBe('test:test');
           done();
         }
@@ -46,10 +46,10 @@ define(['iframeResizer'], function(iFrameResize) {
       iframe = iFrameResize({
         log: log,
         id: 'sendMessage3',
-        initCallback: function(iframe) {
+        onInit: function(iframe) {
           iframe.iFrameResizer.sendMessage('chkSendMsg');
         },
-        messageCallback: function(messageData) {
+        onMessage: function(messageData) {
           expect(messageData.message).toBe('message: test string');
           done();
         }

@@ -31,16 +31,16 @@
 
     asyncTest("iFrame Resize Event", function () {
 
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       $('iframe').iFrameResize({
         //log:true,
         interval: 1000,
         heightCalculationMethod: 'max',
         resizeFrom: 'child',
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
 
-          switch ('' + (++callbackCounter)) {
+          switch ('' + (++evtCounter)) {
             case '1':
               setTimeout(function () { resize(300); }, 150);
               break;

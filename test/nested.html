@@ -32,11 +32,11 @@
 
       $('iframe').iFrameResize({
         //log:true,
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
           ok(true, 'Receive init message back from iFrame.');
           sendMessage('nested');
         },
-        messageCallback: function (messageData) {
+        onMessage: function (messageData) {
           ok('nested' === messageData.message, 'Nested iFrame sized.');
           start();
         }

@@ -7,12 +7,12 @@ define(['iframeResizer'], function(iFrameResize) {
     });
 
     it('closes from parent', function(done) {
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       iframe = iFrameResize({
         log: LOG,
         id: 'close1',
-        closedCallback: function() {
+        onClosed: function() {
           setTimeout(done, 0);
         }
       })[0];
@@ -21,15 +21,15 @@ define(['iframeResizer'], function(iFrameResize) {
     });
 
     it('closes from iframe', function(done) {
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       iframe = iFrameResize({
         log: LOG,
         id: 'close2',
-        closedCallback: function() {
+        onClosed: function() {
           setTimeout(done, 0);
         },
-        initCallback: function(iframe) {
+        onInit: function(iframe) {
           iframe.iFrameResizer.sendMessage('close');
         }
       })[0];

@@ -56,11 +56,11 @@
     widthCalcModeDefault = 'scroll',
     widthCalcMode = widthCalcModeDefault,
     win = window,
-    messageCallback = function() {
-      warn('MessageCallback function not defined');
+    onMessage = function() {
+      warn('onMessage function not defined');
     },
-    readyCallback = function() {},
-    pageInfoCallback = function() {},
+    onReady = function() {},
+    onPageInfo = function() {},
     customCalcMethods = {
       height: function() {
         warn('Custom height calculation function not defined');
@@ -209,7 +209,7 @@
     startEventListeners();
     inPageLinks = setupInPageLinks();
     sendSize('init', 'Init message from host page');
-    readyCallback();
+    onReady();
   }
 
   function readDataFromParent() {
@@ -241,10 +241,8 @@
 
       log('Reading data from page: ' + JSON.stringify(data));
 
-      messageCallback =
-        'messageCallback' in data ? data.messageCallback : messageCallback;
-      readyCallback =
-        'readyCallback' in data ? data.readyCallback : readyCallback;
+      onMessage = 'onMessage' in data ? data.onMessage : onMessage;
+      onReady = 'onReady' in data ? data.onReady : onReady;
       targetOriginDefault =
         'targetOrigin' in data ? data.targetOrigin : targetOriginDefault;
       heightCalcMode =
@@ -667,10 +665,10 @@
 
       getPageInfo: function getPageInfoF(callback) {
         if ('function' === typeof callback) {
-          pageInfoCallback = callback;
+          onPageInfo = callback;
           sendMsg(0, 0, 'pageInfo');
         } else {
-          pageInfoCallback = function() {};
+          onPageInfo = function() {};
           sendMsg(0, 0, 'pageInfoStop');
         }
       },
@@ -1233,15 +1231,15 @@
       pageInfo: function pageInfoFromParent() {
         var msgBody = getData();
         log('PageInfoFromParent called from parent: ' + msgBody);
-        pageInfoCallback(JSON.parse(msgBody));
+        onPageInfo(JSON.parse(msgBody));
         log(' --');
       },
 
       message: function messageFromParent() {
         var msgBody = getData();
 
-        log('MessageCallback called from parent: ' + msgBody);
-        messageCallback(JSON.parse(msgBody));
+        log('onMessage called from parent: ' + msgBody);
+        onMessage(JSON.parse(msgBody));
         log(' --');
       }
     };

@@ -27,7 +27,7 @@
     asyncTest("scrolling not set", function () {
       $('iframe').iFrameResize({
         //log:true,
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
           ok(true, 'Receive message back from iFrame.');
           ok('hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.');
           ok('no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'.');
@@ -40,7 +40,7 @@
       $('iframe').iFrameResize({
         //log:true,
         scrolling: false,
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
           ok(true, 'Receive message back from iFrame.');
           ok('hidden' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'hidden\'.');
           ok('no' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'no\'.');
@@ -53,7 +53,7 @@
       $('iframe').iFrameResize({
         //log:true,
         scrolling: true,
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
           ok(true, 'Receive message back from iFrame.');
           ok('auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.');
           ok('yes' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'yes\'.');
@@ -66,7 +66,7 @@
       $('iframe').iFrameResize({
         //log:true,
         scrolling: 'auto',
-        resizedCallback: function (messageData) {
+        onResized: function (messageData) {
           ok(true, 'Receive message back from iFrame.');
           ok('auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.');
           ok('auto' === messageData.iframe.scrolling, 'iFrame scrolling = ' + messageData.iframe.scrolling + '. Expected \'auto\'.');
@@ -80,7 +80,7 @@
     //   $('iframe').iFrameResize({
     //     //log:true,
     //     scrolling:'omit',
-    //     resizedCallback:function(messageData){
+    //     onResized:function(messageData){
     //       ok( true, 'Receive message back from iFrame.' );
     //       ok( 'auto' === messageData.iframe.style.overflow, 'iFrame overflow = ' + messageData.iframe.style.overflow + '. Expected \'auto\'.' );
     //       ok( false === ('scrolling' in messageData.iframe), 'iFrame scrolling attribute exists. Expected to be omitted.' );

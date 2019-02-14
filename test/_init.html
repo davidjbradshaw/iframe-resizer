@@ -30,7 +30,7 @@
         //log:true,
         bodyBackground: 'wheat',
         heightCalculationMethod: 'max',
-        initCallback: function (iframe) {
+        onInit: function (iframe) {
           ok(true, 'Receive init message back from iFrame.');
           ok('iFrameResizer0' === iframe.id, 'iFrame id = iFrameResizer0.');
           setTimeout(function () {

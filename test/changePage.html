@@ -30,12 +30,12 @@
 
     asyncTest("iFrame change page", function () {
 
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       jQuery('iframe').iFrameResize({
         //log:true,
-        resizedCallback: function (messageData) {
-          switch ('' + (++callbackCounter)) {
+        onResized: function (messageData) {
+          switch ('' + (++evtCounter)) {
             case '1':
               sendMessage('pageChange');
               break;

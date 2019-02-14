@@ -45,7 +45,7 @@
 		iFrameResize({
 			log: true,                  // Enable console logging
 			inPageLinks: true,
-			resizedCallback: function (messageData) { // Callback fn when resize is received
+			onResized: function (messageData) { // Callback fn when resize is received
 				$('p#callback').html(
 					'<b>Frame ID:</b> ' + messageData.iframe.id +
 					' <b>Height:</b> ' + messageData.height +
@@ -53,7 +53,7 @@
 					' <b>Event type:</b> ' + messageData.type
 				);
 			},
-			messageCallback: function (messageData) { // Callback fn when message is received
+			onMessage: function (messageData) { // Callback fn when message is received
 				$('p#callback').html(
 					'<b>Frame ID:</b> ' + messageData.iframe.id +
 					' <b>Message:</b> ' + messageData.message
@@ -61,7 +61,7 @@
 				alert(messageData.message);
 				document.getElementsByTagName('iframe')[0].iFrameResizer.sendMessage('Hello back from parent page');
 			},
-			closedCallback: function (id) { // Callback fn when iFrame is closed
+			onClosed: function (id) { // Callback fn when iFrame is closed
 				$('p#callback').html(
 					'<b>IFrame (</b>' + id +
 					'<b>) removed from page.</b>'

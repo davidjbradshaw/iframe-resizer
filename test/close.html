@@ -27,14 +27,14 @@
 
     asyncTest("iFrame close Event", function () {
 
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       $('iframe').iFrameResize({
         //log:true,
-        initCallback: function () {
+        onInit: function () {
           sendMessage('close');
         },
-        closedCallback: function () {
+        onClosed: function () {
           ok(0 === $('iframe').length, 'IFrame removed from page');
           start();
         }

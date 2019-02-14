@@ -51,12 +51,12 @@
         iFrameResize({
           //log:true,
           bodyMargin: margin,
-          resizedCallback: function (messageData) {
+          onResized: function (messageData) {
             ok(true, 'Receive message back from iFrame.');
             height = parseInt(messageData.height, 10);
             sendMessage('chkHeight');
           },
-          messageCallback: function (messageData) {
+          onMessage: function (messageData) {
             var
               marginCheck = 2 * parseInt(margin, 10),
               bodyHeight = parseInt(messageData.message, 10);

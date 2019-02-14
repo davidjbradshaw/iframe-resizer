@@ -26,14 +26,14 @@
 
 		asyncTest( "setHeightCalculationMethod", function() {
 
-      var callbackCounter = 0;
+      var evtCounter = 0;
 
       iFrameResize({
         //log:true,
         interval:0,
-        resizedCallback:function(messageData){
+        onResized:function(messageData){
 
-          switch  (''+(++callbackCounter)){
+          switch  (''+(++evtCounter)){
             case '1':
               sendMessage('setHeightCalculationMethod');
               break;
