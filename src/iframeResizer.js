@@ -1220,16 +1220,6 @@
     addEventListener(document, 'visibilitychange', tabVisible)
 
     addEventListener(document, '-webkit-visibilitychange', tabVisible)
-
-    // Andriod 4.4
-    addEventListener(window, 'focusin', function() {
-      resizeIFrames('focus')
-    })
-
-    // IE 9
-    addEventListener(window, 'focus', function() {
-      resizeIFrames('focus')
-    })
   }
 
   function factory() {

@@ -20,7 +20,7 @@ This library enables the automatic resizing of the height and width of both same
 * Provides custom sizing and scrolling methods.
 * Exposes parent position and viewport size to the iFrame.
 * Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
-* Fallback support down to IE8.
+* Supports IE 11 (V3 supports back to IE8)
 
 ### Install
 
@@ -135,33 +135,22 @@ By default the height of the iFrame is calculated by converting the margin of th
 
 In cases where CSS styles causes the content to flow outside the `body` you may need to change this setting to one of the following options. Each can give different values depending on how CSS is used in the page and each has varying side-effects. You will need to experiment to see which is best for any particular circumstance.
 
+* **bodyOffset** uses `document.body.offsetHeight`
 * **bodyScroll** uses `document.body.scrollHeight` <sup>*</sup>
 * **documentElementOffset** uses `document.documentElement.offsetHeight`
 * **documentElementScroll** uses `document.documentElement.scrollHeight` <sup>*</sup>
 * **max** takes the largest value of the main four options <sup>*</sup>
 * **min** takes the smallest value of the main four options <sup>*</sup>
-* **grow** same as **max** but disables the double resize that is used to workout if the iFrame needs to shrink. This provides much better performance if your iFrame will only ever increase in size
 * **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point <sup>†</sup>
 * **taggedElement** Finds the bottom of the lowest element with a `data-iframe-height` attribute
 
 <i>Notes:</i>
 
-<i>**If the default option doesn't work then the best solutions is to either to use** taggedElement, **or to use** lowestElement **in modern browsers and** max **in IE10 downwards.**</i>
-
-```js
-var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
-
-iFrameResize( {
-	heightCalculationMethod: isOldIE ? 'max' : 'lowestElement'
-});
-```
+<i>**If the default option doesn't work then the best solutions is to use either** taggedElement, **or** lowestElement **.**</i>
 
 Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see [iFrame Page Options](https://github.com/davidjbradshaw/iframe-resizer#iframe-page-options) section below.
 
-<sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
-
-<sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
-
+<sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact, as it requires checking the position of every element on the page. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
 ### maxHeight / maxWidth
 
@@ -239,11 +228,7 @@ Some CSS techniques may require you to change this setting to one of the followi
 
 Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see [iFrame Page Options](https://github.com/davidjbradshaw/iframe-resizer#iframe-page-options) section below.
 
-<sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact in older versions of IE. In one screen refresh (16ms) Chrome can calculate the position of around 10,000 html nodes, whereas IE 8 can calculate approximately 50. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
-
-<sup> * </sup><i>The **bodyScroll**, **documentElementScroll**, **max** and **min** options can cause screen flicker and will prevent the [interval](#interval) trigger downsizing the iFrame when the content shrinks. This is mainly an issue in IE 10 and below, where the [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver) event is not supported. To overcome this you need to manually trigger a page resize by calling the [parentIFrame.size()](#size-customheight-customwidth) method when you remove content from the page.</i>
-
-
+<sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact as it requires calculating the position of every element on the page. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
 ## Events
 
@@ -485,16 +470,8 @@ $('textarea').each(store).on('mouseover mouseout',function(){
 
 Some of the alternate [height calculation methods](#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new height can be worked out. This effect can be reduced by setting a [minSize](#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
 
-In modern browsers, if the default [height calculation method](#heightcalculationmethod) does not work, then it is normally best to use **lowestElement**, which is flicker free, and then provide a fallback to **max** in IE10 downwards.
+In modern browsers, if the default [height calculation method](#heightcalculationmethod) does not work, then it is normally best to use **taggedElement** or **lowestElement**, which are both flicker free.
 
-```js
-var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
-
-iFrameResize({
-  heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
-  minSize:100
-});
-```
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
 ### ParentIFrame not found errors
@@ -505,7 +482,7 @@ The `parentIFrame` object is created once the iFrame has been initially resized.
   window.iFrameResizer = {
     onReady: function(){
       var myId = window.parentIFrame.getId();
-      console.log('The ID of the iFrame in the parent page is: '+myId);
+      console.log('The ID of the iFrame in the parent page is: ' + myId);
     }
   }
 </script>
@@ -521,33 +498,15 @@ By default the origin of incoming messages is checked against the `src` attribut
 ### Width not resizing
 By default only changes in height are detected, if you want to calculate the width you need to set the `sizeWidth` opion to true and the `sizeHeight` option to false.
 
-
-## Browser compatibility
-### jQuery version
-
-Basic support works with all browsers which support [window.postMessage](http://caniuse.com/#feat=x-doc-messaging) (IE8+). Some advanced features require the native version polyfil to work in IE8.
-
-### Native version
-
-Additionally requires support for [Array.prototype.forEach](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) and [Function.prototype.bind](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind) (IE9+), plus [document.querySelectorAll](https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll) (IE8 Standards Mode). For **IE8** force [Standards Mode](http://en.wikipedia.org/wiki/Internet_Explorer_8#Standards_mode) and include the [IE8 PolyFils](https://github.com/davidjbradshaw/iframe-resizer/blob/master/src/ie8.polyfils.js) on the host page.
-
-```html
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<!--[if lte IE 8]>
-  <script type="text/javascript" src="js/ie8.polyfils.min.js"></script>
-<![endif]-->
-```
-
-
 ## Upgrading to version 4
 
-In version 4 support for IE 8 has finally been dropped, iframe-resizer should continure to work in IE9 and above.
+In version 4 support for IE 8-10 and Andriod 4.4 has been removed, if you still need this then please use version 3.
 
-The callback methods have been renamed to onEvents, so for example `scrollCallback` is now called `onScroll`. This to enable better integration with modern libraries such as React.
+The callback methods have been renamed to onEvents, so for example `scrollCallback` is now called `onScroll`. This is to enable better integration with modern libraries such as React.
 
 ## Version History
 
-* v4.0.0 Drop support for IE8, rename event handlers, replace 
+* v4.0.0 Drop support for IE8-10 and Andriod 4, renamed event handlers from `fooCallback` to `onFoo`.
 * v3.6.5 [#658](https://github.com/davidjbradshaw/iframe-resizer/pull/658) Add `.npmignore` to project [[Sebastian Lamelas]](smulesoft).
 * v3.6.4 [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Fix issue resource leak when iframe removed from the page [[Steffen Eckardt](seckardt)]. [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Make Require.js optional when it is included on the page before iframe-resizer [[Dahmian Owen](dahmian)].
 * v3.6.3 [#635](https://github.com/davidjbradshaw/iframe-resizer/pull/635) Fix issue with undefined ID [[Henry Schein](ddxdental)]. [#582](https://github.com/davidjbradshaw/iframe-resizer/pull/582) Add `omit` option to `scrolling` config [[Matt Ryan](mryand)].
