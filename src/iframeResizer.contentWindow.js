@@ -221,11 +221,30 @@
     widthCalcMode = undefined !== data[14] ? data[14] : widthCalcMode
   }
 
+  function depricate(key) {
+    var splitName = key.split('Callback')
+
+    if (splitName.length === 2) {
+      var name =
+        'on' + splitName[0].charAt(0).toUpperCase() + splitName[0].slice(1)
+      this[name] = this[key]
+      delete this[key]
+      warn(
+        "Deprecated: '" +
+          key +
+          "' has been renamed '" +
+          name +
+          "'. The old method will be removed in the next major version."
+      )
+    }
+  }
+
   function readDataFromPage() {
     function readData() {
       var data = window.iFrameResizer
 
       log('Reading data from page: ' + JSON.stringify(data))
+      Object.keys(data).forEach(depricate, data)
 
       onMessage = 'onMessage' in data ? data.onMessage : onMessage
       onReady = 'onReady' in data ? data.onReady : onReady

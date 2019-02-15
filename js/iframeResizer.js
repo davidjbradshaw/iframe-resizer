@@ -1047,6 +1047,25 @@
       return '' === remoteHost || 'file://' === remoteHost ? '*' : remoteHost
     }
 
+    function depricate(key) {
+      var splitName = key.split('Callback')
+
+      if (splitName.length === 2) {
+        var name =
+          'on' + splitName[0].charAt(0).toUpperCase() + splitName[0].slice(1)
+        this[name] = this[key]
+        delete this[key]
+        warn(
+          iframeId,
+          "Deprecated: '" +
+            key +
+            "' has been renamed '" +
+            name +
+            "'. The old method will be removed in the next major version."
+        )
+      }
+    }
+
     function processOptions(options) {
       options = options || {}
       settings[iframeId] = {
@@ -1059,6 +1078,7 @@
       }
 
       checkOptions(options)
+      Object.keys(options).forEach(depricate, options)
       copyOptions(options)
 
       if (settings[iframeId]) {
@@ -1220,16 +1240,6 @@
     addEventListener(document, 'visibilitychange', tabVisible)
 
     addEventListener(document, '-webkit-visibilitychange', tabVisible)
-
-    // Andriod 4.4
-    addEventListener(window, 'focusin', function() {
-      resizeIFrames('focus')
-    })
-
-    // IE 9
-    addEventListener(window, 'focus', function() {
-      resizeIFrames('focus')
-    })
   }
 
   function factory() {
