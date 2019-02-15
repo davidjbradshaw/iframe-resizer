@@ -1,10 +1,8 @@
 # iFrame Resizer
 [![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
 [![NPM Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://npm-stat.com/charts.html?package=iframe-resizer&from=2015-09-01)
-[![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer) <!--
-[![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
-[![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
--->[![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
+[![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer)
+[![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.me/davidjbradshaw)
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content. It provides a range of features to address the most common issues with using iFrames, these include:
@@ -29,6 +27,7 @@ This library enables the automatic resizing of the height and width of both same
 This package can be installed via NPM (`npm install iframe-resizer --save`).
 
 ### Usage
+
 The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
@@ -58,6 +57,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 If you have problems, check the [troubleshooting](#troubleshooting) section below.
 
 ### Example
+
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
 
 ## Documentation
@@ -65,7 +65,11 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
 
 
 ## License
-Copyright &copy; 2013-19 [David J. Bradshaw](https://github.com/davidjbradshaw).
+
+Copyright &copy; 2013-19 [David J. Bradshaw](https://github.com/davidjbradshaw).\
 Licensed under the [MIT License](LICENSE).
 
-[![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/) [![Greenkeeper badge](https://badges.greenkeeper.io/davidjbradshaw/iframe-resizer.svg)](https://greenkeeper.io/)
+[![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)  
+[![Greenkeeper badge](https://badges.greenkeeper.io/davidjbradshaw/iframe-resizer.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
+[![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
