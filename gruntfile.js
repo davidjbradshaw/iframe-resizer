@@ -36,7 +36,14 @@ module.exports = function(grunt) {
     clean: ['coverage', 'coverageLcov'],
 
     qunit: {
-      files: ['test/*.html']
+      files: ['test/*.html'],
+      puppeteer: {
+        args: [
+          '--disable-web-security',
+          '--allow-file-access-from-files',
+          '--user-data-dir=/tmp'
+        ]
+      }
     },
 
     karma: {

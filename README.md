@@ -602,4 +602,4 @@ The callback methods have been renamed to onEvents, so for example `scrollCallba
 Copyright &copy; 2013-18 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
-[![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
+[![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/) [![Greenkeeper badge](https://badges.greenkeeper.io/davidjbradshaw/iframe-resizer.svg)](https://greenkeeper.io/)
