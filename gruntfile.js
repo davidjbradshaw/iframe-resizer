@@ -38,7 +38,14 @@ module.exports = function(grunt) {
     clean: ['coverage', 'coverageLcov'],
 
     qunit: {
-      files: ['test/*.html']
+      files: ['test/*.html'],
+      puppeteer: {
+        args: [
+          '--disable-web-security',
+          '--allow-file-access-from-files',
+          '--user-data-dir=/tmp'
+        ]
+      }
     },
 
     karma: {
@@ -127,7 +134,12 @@ module.exports = function(grunt) {
 
     bump: {
       options: {
-        files: ['package.json', 'package-lock.json', 'bower.json', 'iframeResizer.jquery.json'],
+        files: [
+          'package.json',
+          'package-lock.json',
+          'bower.json',
+          'iframeResizer.jquery.json'
+        ],
         updateConfigs: ['pkg'],
         commit: true,
         commitMessage: 'Release v%VERSION%',
