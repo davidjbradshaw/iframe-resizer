@@ -66,7 +66,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
   * [Options](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/options.md)
   * [Events](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/events.md)
   * [Methods](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/methods.md)
-* [Use with jQuery](jquery.md)
+* [Use with jQuery](https://github.com/davidjbradshaw/iframe-resizer/docs/jquery.md)
 * [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/docs/troubleshooting.md)
 * [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/docs/upgrade.md)
 * [Version history](https://github.com/davidjbradshaw/iframe-resizer/CHANGELOG.md)
