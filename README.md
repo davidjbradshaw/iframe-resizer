@@ -28,7 +28,7 @@ This package can be installed via NPM (`npm install iframe-resizer --save`).
 
 ### Usage
 
-The package contains two minified JavaScript files in the [js](js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
+The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
 var iframes = iFrameResize( [{options}], [css selector] || [iframe] );
@@ -54,7 +54,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 **Note:** Using _min-width_ to set the width of the iFrame, works around an issue in iOS that can prevent the iFrame from sizing correctly.
 
-If you have problems, check the [troubleshooting](docs/troubleshooting.md) section.
+If you have problems, check the [troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/docs/troubleshooting.md) section.
 
 ### Example
 
@@ -65,23 +65,24 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
 IFrame-Resizer provides an extensive range of options and APIs for both the parent page and the iframed page.
 
 * **Parent Page API**
-  * [Options](docs/parent_page/options.md)
-  * [Events](docs/parent_page/events.md)
-  * [Methods](docs/parent_page/methods.md)
+  * [Options](https://github.com/davidjbradshaw/iframe-resizer/docs/parent_page/options.md)
+  * [Events](https://github.com/davidjbradshaw/iframe-resizer/docs/parent_page/events.md)
+  * [Methods](https://github.com/davidjbradshaw/iframe-resizer/docs/parent_page/methods.md)
 * **IFramed Page API**
-  * [Options](docs/iframed_page/options.md)
-  * [Events](docs/iframed_page/events.md)
-  * [Methods](docs/iframed_page/methods.md)
-* [Troubleshooting](docs/troubleshooting.md)
-* [Upgrade from version 3](docs/upgrade.md)
-* [Version history](CHANGELOG.md)
+  * [Options](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/options.md)
+  * [Events](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/events.md)
+  * [Methods](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/methods.md)
+* [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/docs/troubleshooting.md)
+* [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/docs/upgrade.md)
+* [Version history](https://github.com/davidjbradshaw/iframe-resizer/CHANGELOG.md)
 
 ## License
 
 Copyright &copy; 2013-19 [David J. Bradshaw](https://github.com/davidjbradshaw).\
 Licensed under the [MIT License](LICENSE).
-
+<!--
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)  
 [![Greenkeeper badge](https://badges.greenkeeper.io/davidjbradshaw/iframe-resizer.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
 [![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
+-->
