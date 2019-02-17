@@ -31,13 +31,7 @@ This package can be installed via NPM (`npm install iframe-resizer --save`).
 The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
 
 ```js
-var iframes = iFrameResize( [{options}], [css selector] || [iframe] );
-```
-
-or via **jQuery**.
-
-```js
-$('iframe').iFrameResize( [{options}] );
+const iframes = iFrameResize( [{options}], [css selector] || [iframe] );
 ```
 
 The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) needs placing in the page(s) contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependencies and won't do anything until it's activated by a message from the containing page</i>.
@@ -47,7 +41,7 @@ The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/dav
 The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library to only update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 ```html
-<style>iframe{width: 1px;min-width: 100%;}</style>
+<style>iframe{ width: 1px; min-width: 100% }</style>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
 <script>iFrameResize({log:true}, '#myIframe')</script>
 ```
@@ -72,6 +66,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
   * [Options](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/options.md)
   * [Events](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/events.md)
   * [Methods](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/methods.md)
+* [Use with jQuery](jquery.md)
 * [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/docs/troubleshooting.md)
 * [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/docs/upgrade.md)
 * [Version history](https://github.com/davidjbradshaw/iframe-resizer/CHANGELOG.md)
