@@ -34,13 +34,13 @@ The package contains two minified JavaScript files in the [js](js) folder. The f
 var iframes = iFrameResize( [{options}], [css selector] || [iframe] );
 ```
 
-or via **jQuery**. (See [notes](#browser-compatibility) below for using native version with IE8).
+or via **jQuery**.
 
 ```js
 $('iframe').iFrameResize( [{options}] );
 ```
 
-The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) is a **native** JavaScript file that needs placing in the page contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependencies and won't do anything until it's activated by a message from the containing page</i>.
+The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) needs placing in the page(s) contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependencies and won't do anything until it's activated by a message from the containing page</i>.
 
 ### Typical setup
 
@@ -48,13 +48,13 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 ```html
 <style>iframe{width: 1px;min-width: 100%;}</style>
-<iframe id="myIframe" src="http://anotherdomain.com/iframe.html" scrolling="no"></iframe>
+<iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
 <script>iFrameResize({log:true}, '#myIframe')</script>
 ```
 
-**Notes:** Using <i>min-width</i> to set the width of the iFrame, works around an issue in iOS that can prevent the iFrame from sizing correctly.  Also the scrolling attribute is set to 'no' in the iFrame tag, as older versions of IE don't allow this to be turned off in code and can just slightly add a bit of extra space to the bottom of the content that it doesn't report when it returns the height.
+**Note:** Using _min-width_ to set the width of the iFrame, works around an issue in iOS that can prevent the iFrame from sizing correctly.
 
-If you have problems, check the [troubleshooting](#troubleshooting) section below.
+If you have problems, check the [troubleshooting](docs/troubleshooting.md) section.
 
 ### Example
 
@@ -62,7 +62,16 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
 
 ## Documentation
 
-
+* **Parent Page API**
+  * [Options](docs/parent_page/options.md)
+  * [Events](docs/parent_page/events.md)
+  * [Methods](docs/parent_page/methods.md)
+* **IFramed Page API**
+  * [Options](docs/iframed_page/options.md)
+  * [Events](docs/iframed_page/events.md)
+  * [Methods](docs/iframed_page/methods.md)
+* [Troubleshooting](docs/troubleshooting.md)
+* [Upgrade from version 3](docs/upgrade.md)
 
 ## License
 

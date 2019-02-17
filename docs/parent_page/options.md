@@ -1,6 +1,8 @@
 
 ## Options
 
+The following options can be passed to iframe-resizer on the parent page.
+
 ### log
 
 	default: false
@@ -52,17 +54,6 @@ When set to true, only allow incoming messages from the domain listed in the `sr
 
 When enabled in page linking inside the iFrame and from the iFrame to the parent page will be enabled.
 
-### interval
-
-	default: 32  (in ms)
-	type:    number
-
-In browsers that don't support [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver), such as IE10, the library falls back to using setInterval, to check for changes to the page size. The default value is equal to two frame refreshes at 60Hz, setting this to a higher value will make screen redraws noticeable to the user.
-
-Setting this property to a negative number will force the interval check to run instead of [mutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
-
-Set to zero to disable.
-
 ### heightCalculationMethod
 
     default: 'bodyOffset'
@@ -84,11 +75,11 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 <i>Notes:</i>
 
-<i>**If the default option doesn't work then the best solutions is to use either** taggedElement, **or** lowestElement **.**</i>
+<i>**If the default option doesn't work then the best solutions is to use either** taggedElement, **or** lowestElement</i>**.** Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see the [iFrame Page Options](../iframed_page/options.md) section for more details.
 
-Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see [iFrame Page Options](https://github.com/davidjbradshaw/iframe-resizer#iframe-page-options) section below.
+<sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact, as it requires checking the position of every element on the page. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked</i>.
 
-<sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it does have a performance impact, as it requires checking the position of every element on the page. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
+<sup>*</sup> These methods can cause screen flicker in some browsers.
 
 ### maxHeight / maxWidth
 

@@ -18,6 +18,6 @@ Detach event listeners from iFrame. This is option allows Virtual DOMs to remove
 
 Tell the iFrame to resize itself.
 
-### sendMessage(message,[targetOrigin])
+### sendMessage(message, [targetOrigin])
 
 Send data to the containing page, `message` can be any data type that can be serialized into JSON. The `targetOrigin` option is used to restrict where the message is sent to, in case your iFrame navigates away to another domain.

@@ -18,18 +18,6 @@ The following options can be set from within the iFrame page by creating a `wind
 
 This option allows you to restrict the domain of the parent page, to prevent other sites mimicing your parent page.
 
-### onMessage
-
-	type: function (message)
-
-Receive message posted from the parent page with the `iframe.iFrameResizer.sendMessage()` method (See below for details).
-
-### onReady
-
-    type: function()
-
-This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page. If you need to call any of the parentIFrame methods (See below) during page load, then they should be called from this event handler.
-
 ### heightCalculationMethod / widthCalculationMethod
 
     default: null
