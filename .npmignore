@@ -3,6 +3,7 @@
 .idea
 node_modules
 bin
+docs
 example
 test
 spec
