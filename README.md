@@ -60,7 +60,9 @@ If you have problems, check the [troubleshooting](docs/troubleshooting.md) secti
 
 To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
 
-## Documentation
+## API Documentation
+
+IFrame-Resizer provides an extensive range of options and APIs for both the parent page and the iframed page.
 
 * **Parent Page API**
   * [Options](docs/parent_page/options.md)
