@@ -149,12 +149,14 @@ Some CSS techniques may require you to change this setting to one of the followi
 * **bodyScroll** uses `document.body.scrollWidth` <sup>*</sup>
 * **documentElementOffset** uses `document.documentElement.offsetWidth`
 * **documentElementScroll** uses `document.documentElement.scrollWidth` <sup>*</sup>
-* **scroll** takes the largest value of the two scroll options
+* **scroll** takes the largest value of the two scroll options <sup>*</sup>
 * **max** takes the largest value of the main four options <sup>*</sup>
 * **min** takes the smallest value of the main four options <sup>*</sup>
 * **rightMostElement** Loops though every element in the the DOM and finds the right most point <sup>†</sup>
 * **taggedElement** Finds the left most element with a `data-iframe-width` attribute
 
-Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see [iFrame Page Options](https://github.com/davidjbradshaw/iframe-resizer#iframe-page-options) section below.
+Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see the [iFrame Page Options](../iframed_page/options.md) section for more details
 
 <sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact as it requires calculating the position of every element on the page. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
+
+<sup>*</sup> These methods can cause screen flicker in some browsers.

@@ -72,6 +72,7 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
   * [Methods](docs/iframed_page/methods.md)
 * [Troubleshooting](docs/troubleshooting.md)
 * [Upgrade from version 3](docs/upgrade.md)
+* [Version history](CHANGELOG.md)
 
 ## License
 
