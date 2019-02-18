@@ -18,7 +18,7 @@ This library enables the automatic resizing of the height and width of both same
 * Provides custom sizing and scrolling methods.
 * Exposes parent position and viewport size to the iFrame.
 * Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
-* Supports IE 11 (V3 supports back to IE8)
+* Supports IE 11 ([V3 supports back to IE8](https://github.com/davidjbradshaw/iframe-resizer/tree/V3))
 
 ## Getting Started
 
