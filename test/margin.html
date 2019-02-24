@@ -1,76 +1,67 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>QUnit LoadHide</title>
+    <link rel="stylesheet" href="resources/qunit.css" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>QUnit LoadHide</title>
-  <link rel="stylesheet" href="resources/qunit.css">
-</head>
-
-<body>
-  <div id="qunit"></div>
-  <div id="qunit-fixture">
-
-    <div style="width:1600px;">
-      <iframe src="resources/frame.content.html" width="100%" scrolling="no"></iframe>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+      <div style="width:1600px;">
+        <iframe
+          src="resources/frame.content.html"
+          width="100%"
+          scrolling="no"
+        ></iframe>
+      </div>
     </div>
+    <script src="resources/qunit.js"></script>
+    <script src="resources/jquery.js"></script>
+    <script src="resources/testLib.js"></script>
+    <script src="../js/ie8.polyfils.min.js"></script>
+    <script src="../js/iframeResizer.min.js"></script>
+    <script>
+      'use strict'
+      var msgId = '[iFrameSizerTest]:'
 
-  </div>
-  <script src="resources/qunit.js"></script>
-  <script src="resources/jquery.js"></script>
-  <script src="resources/testLib.js"></script>
-  <script src="../js/ie8.polyfils.min.js"></script>
-  <script src="../js/iframeResizer.min.js"></script>
-  <script>
+      var margins = ['10px 5em', '15px 5ex', '20px', '25px', '75px']
 
-    'use strict';
-    var msgId = '[iFrameSizerTest]:';
+      function Counter() {
+        var i = 0
+        return function() {
+          return i++
+        }
+      }
 
-    var margins = [
-      '10px 5em',
-      '15px 5ex',
-      '20px',
-      '25px',
-      '75px'
-    ];
+      var counter = Counter()
 
-    function Counter() {
-      var i = 0;
-      return function () { return i++ };
-    }
+      for (var i = 0; i !== margins.length; i++) {
+        asyncTest('Margin ' + margins[i], function() {
+          var height = 0,
+            i = counter(), //counteract async
+            margin = margins[i]
 
-    var counter = Counter();
+          iFrameResize({
+            //log:true,
+            bodyMargin: margin,
+            onResized: function(messageData) {
+              ok(true, 'Receive message back from iFrame.')
+              height = parseInt(messageData.height, 10)
+              sendMessage('chkHeight')
+            },
+            onMessage: function(messageData) {
+              var marginCheck = 2 * parseInt(margin, 10),
+                bodyHeight = parseInt(messageData.message, 10)
 
-    for (var i = 0; i !== margins.length; i++) {
-      asyncTest("Margin " + margins[i], function () {
-        var
-          height = 0,
-          i = counter(), //counteract async
-          margin = margins[i];
-
-        iFrameResize({
-          //log:true,
-          bodyMargin: margin,
-          resizedCallback: function (messageData) {
-            ok(true, 'Receive message back from iFrame.');
-            height = parseInt(messageData.height, 10);
-            sendMessage('chkHeight');
-          },
-          messageCallback: function (messageData) {
-            var
-              marginCheck = 2 * parseInt(margin, 10),
-              bodyHeight = parseInt(messageData.message, 10);
-
-            ok(height === (marginCheck + bodyHeight), 'Margin = ' + margin);
-            console.log('.');
-            start();
-          }
-        });
-      });
-
-    }
-
-  </script>
-</body>
-
+              ok(height === marginCheck + bodyHeight, 'Margin = ' + margin)
+              console.log('.')
+              start()
+            }
+          })
+        })
+      }
+    </script>
+  </body>
 </html>

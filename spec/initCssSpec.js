@@ -1,19 +1,19 @@
 /* jshint undef: false, unused: true */
 
-'use strict';
+'use strict'
 
 define(['iframeResizer'], function(iFrameResize) {
   describe('iFrame init(CSS Selector)', function() {
-    var iframe;
+    var iframe
 
     beforeAll(function(done) {
-      loadIFrame('iframe600.html');
+      loadIFrame('iframe600.html')
 
       iframe = iFrameResize(
         {
           log: LOG,
           minHeight: 99999,
-          resizedCallback: done,
+          onResized: done,
           checkOrigin: [
             'http://localhost',
             'https://localhost',
@@ -24,15 +24,15 @@ define(['iframeResizer'], function(iFrameResize) {
           ]
         },
         'iframe'
-      )[0];
-    });
+      )[0]
+    })
 
     afterAll(function() {
-      tearDown(iframe);
-    });
+      tearDown(iframe)
+    })
 
     it('should create iFrameResizer object', function() {
-      expect(iframe.iFrameResizer).toBeDefined();
-    });
-  });
-});
+      expect(iframe.iFrameResizer).toBeDefined()
+    })
+  })
+})
