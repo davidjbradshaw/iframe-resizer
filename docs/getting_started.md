@@ -19,9 +19,16 @@ The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/dav
 The normal configuration is to have the iFrame resize when the browser window changes size or the content of the iFrame changes. To set this up you need to configure one of the dimensions of the iFrame to a percentage and tell the library to only update the other dimension. Normally you would set the width to 100% and have the height scale to fit the content.
 
 ```html
-<style>iframe{ width: 1px; min-width: 100% }</style>
+<style>
+  iframe {
+    width: 1px;
+    min-width: 100%;
+  }
+</style>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
-<script>iFrameResize({log:true}, '#myIframe')</script>
+<script>
+  iFrameResize({ log: true }, '#myIframe')
+</script>
 ```
 
 **Note:** Using _min-width_ to set the width of the iFrame, works around an issue in iOS that can prevent the iFrame from sizing correctly.
