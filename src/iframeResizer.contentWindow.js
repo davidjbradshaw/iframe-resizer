@@ -5,10 +5,10 @@
  * Requires: iframeResizer.js on host page.
  * Doc: https://github.com/davidjbradshaw/iframe-resizer
  * Author: David J. Bradshaw - dave@bradshaw.net
- * Contributor: Jure Mav - jure.mav@gmail.com
- * Contributor: Ian Caunce - ian@hallnet.co.uk
+ *
  */
 
+// eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
 ;(function(undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
@@ -35,7 +35,6 @@
     msgID = '[iFrameSizer]', // Must match host page msg ID
     msgIdLen = msgID.length,
     myID = '',
-    observer = null,
     resetRequiredMethods = {
       max: 1,
       min: 1,
@@ -70,8 +69,7 @@
       }
     },
     eventHandlersByName = {},
-    passiveSupported = false,
-    onceSupported = false
+    passiveSupported = false
 
   function noop() {}
 
@@ -83,17 +81,12 @@
           get: function() {
             passiveSupported = true
           }
-        },
-        once: {
-          get: function() {
-            onceSupported = true
-          }
         }
       }
     )
     window.addEventListener('test', noop, options)
     window.removeEventListener('test', noop, options)
-  } catch (e) {
+  } catch (error) {
     /* */
   }
 
@@ -121,6 +114,7 @@
         timeout = null
         result = func.apply(context, args)
         if (!timeout) {
+          // eslint-disable-next-line no-multi-assign
           context = args = null
         }
       }
@@ -147,6 +141,7 @@
         result = func.apply(context, args)
 
         if (!timeout) {
+          // eslint-disable-next-line no-multi-assign
           context = args = null
         }
       } else if (!timeout) {
@@ -165,17 +160,19 @@
     }
 
   function formatLogMsg(msg) {
-    return msgID + '[' + myID + ']' + ' ' + msg
+    return msgID + '[' + myID + '] ' + msg
   }
 
   function log(msg) {
     if (logging && 'object' === typeof window.console) {
+      // eslint-disable-next-line no-console
       console.log(formatLogMsg(msg))
     }
   }
 
   function warn(msg) {
     if ('object' === typeof window.console) {
+      // eslint-disable-next-line no-console
       console.warn(formatLogMsg(msg))
     }
   }
@@ -200,7 +197,7 @@
 
   function readDataFromParent() {
     function strBool(str) {
-      return 'true' === str ? true : false
+      return 'true' === str
     }
 
     var data = initMsg.substr(msgIdLen).split(':')
@@ -593,7 +590,7 @@
         function linkClicked(e) {
           e.preventDefault()
 
-          /*jshint validthis:true */
+          /* jshint validthis:true */
           findTarget(this.getAttribute('href'))
         }
 
@@ -718,9 +715,7 @@
 
       size: function sizeF(customHeight, customWidth) {
         var valString =
-          '' +
-          (customHeight ? customHeight : '') +
-          (customWidth ? ',' + customWidth : '')
+          '' + (customHeight || '') + (customWidth ? ',' + customWidth : '')
         sendSize(
           'size',
           'parentIFrame.size(' + valString + ')',
@@ -1214,6 +1209,7 @@
         var msgBody = getData()
 
         log('onMessage called from parent: ' + msgBody)
+        // eslint-disable-next-line sonarjs/no-extra-arguments
         onMessage(JSON.parse(msgBody))
         log(' --')
       }

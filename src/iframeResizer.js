@@ -8,6 +8,7 @@
  * Contributor: Reed Dadoune - reed@dadoune.com
  */
 
+// eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
 ;(function(undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
@@ -28,7 +29,6 @@
     },
     settings = {},
     timer = null,
-    logId = 'Host Page',
     defaults = {
       autoResize: true,
       bodyBackground: null,
@@ -130,6 +130,7 @@
 
   function output(type, iframeId, msg, enabled) {
     if (true === enabled && 'object' === typeof window.console) {
+      // eslint-disable-next-line no-console
       console[type](formatLogHeader(iframeId), msg)
     }
   }
@@ -233,7 +234,7 @@
       return (
         msgId === ('' + msg).substr(0, msgIdLen) &&
         msg.substr(msgIdLen).split(':')[0] in settings
-      ) //''+Protects against non-string msg
+      ) // ''+Protects against non-string msg
     }
 
     function isMessageFromMetaParent() {
@@ -479,15 +480,19 @@
             chkEvent(iframeId, 'onCloseRequest', settings[iframeId].iframe)
           else closeIFrame(messageData.iframe)
           break
+
         case 'message':
           forwardMsgFromIFrame(getMsgBody(6))
           break
+
         case 'scrollTo':
           scrollRequestFromChild(false)
           break
+
         case 'scrollToOffset':
           scrollRequestFromChild(true)
           break
+
         case 'pageInfo':
           sendPageInfoToIframe(
             settings[iframeId] && settings[iframeId].iframe,
@@ -495,19 +500,24 @@
           )
           startPageInfoMonitor()
           break
+
         case 'pageInfoStop':
           stopPageInfoMonitor()
           break
+
         case 'inPageLink':
           findTarget(getMsgBody(9))
           break
+
         case 'reset':
           resetIFrame(messageData)
           break
+
         case 'init':
           resizeIFrame()
           on('onInit', messageData.iframe)
           break
+
         default:
           resizeIFrame()
       }
@@ -531,6 +541,7 @@
     }
 
     function iFrameReadyMsgReceived() {
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
       for (var iframeId in settings) {
         trigger(
           'iFrame requested init',
@@ -547,13 +558,6 @@
       }
     }
 
-    function clearWarningTimeout() {
-      if (settings[iframeId]) {
-        clearTimeout(settings[iframeId].msgTimeout)
-        settings[iframeId].warningTimeout = 0
-      }
-    }
-
     var msg = event.data,
       messageData = {},
       iframeId = null
@@ -562,7 +566,7 @@
       iFrameReadyMsgReceived()
     } else if (isMessageForUs()) {
       messageData = processMsg()
-      iframeId = logId = messageData.id
+      iframeId = messageData.id
       if (settings[iframeId]) {
         settings[iframeId].loaded = true
       }
@@ -612,7 +616,9 @@
       if (iframe.parentNode) {
         iframe.parentNode.removeChild(iframe)
       }
-    } catch (e) {}
+    } catch (error) {
+      warn(error)
+    }
 
     chkEvent(iframeId, 'onClosed', iframeId)
     log(iframeId, '--')
@@ -871,17 +877,16 @@
     function newId() {
       var id = (options && options.id) || defaults.id + count++
       if (null !== document.getElementById(id)) {
-        id = id + count++
+        id += count++
       }
       return id
     }
 
     function ensureHasId(iframeId) {
-      logId = iframeId
       if ('' === iframeId) {
+        // eslint-disable-next-line no-multi-assign
         iframe.id = iframeId = newId()
         logEnabled = (options || {}).log
-        logId = iframeId
         log(
           iframeId,
           'Added missing iframe ID: ' + iframeId + ' (' + iframe.src + ')'
@@ -908,12 +913,15 @@
       switch (settings[iframeId] && settings[iframeId].scrolling) {
         case 'omit':
           break
+
         case true:
           iframe.scrolling = 'yes'
           break
+
         case false:
           iframe.scrolling = 'no'
           break
+
         default:
           iframe.scrolling = settings[iframeId]
             ? settings[iframeId].scrolling
@@ -1034,8 +1042,11 @@
     }
 
     function copyOptions(options) {
+      // eslint-disable-next-line no-restricted-syntax
       for (var option in defaults) {
+        // eslint-disable-next-line no-prototype-builtins
         if (defaults.hasOwnProperty(option)) {
+          // eslint-disable-next-line no-prototype-builtins
           settings[iframeId][option] = options.hasOwnProperty(option)
             ? options[option]
             : defaults[option]
@@ -1157,9 +1168,7 @@
         }
       }
 
-      for (var settingId in settings) {
-        checkIFrame(settingId)
-      }
+      Object.values(settings).forEach(checkIFrame)
     }
 
     function mutationObserved(mutations) {
@@ -1200,7 +1209,7 @@
     debouce(resize, 16)
   }
 
-  //Not testable in PhantomJS
+  // Not testable in PhantomJS
   /* istanbul ignore next */
   function tabVisible() {
     function resize() {
@@ -1223,11 +1232,11 @@
       )
     }
 
-    for (var iframeId in settings) {
+    Object.values(settings).forEach(function(iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
         trigger(eventName, event, document.getElementById(iframeId), iframeId)
       }
-    }
+    })
   }
 
   function setupEventListeners() {
@@ -1287,9 +1296,11 @@
             init.bind(undefined, options)
           )
           break
+
         case 'object':
           init(options, target)
           break
+
         default:
           throw new TypeError('Unexpected data type (' + typeof target + ')')
       }
