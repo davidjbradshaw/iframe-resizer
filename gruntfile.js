@@ -188,13 +188,17 @@ module.exports = function(grunt) {
         src: 'src/iframeResizer.js',
         dest: 'js/iframeResizer.js'
       }
+    },
+
+    eslint: {
+      target: ['src/**']
     }
   })
 
   grunt.registerTask('default', ['notest', 'karma:single'])
   grunt.registerTask('build', ['removeBlock', 'copy', 'uglify'])
-  grunt.registerTask('notest', ['jsonlint', 'jshint', 'build'])
-  grunt.registerTask('test', ['clean', 'jshint', 'karma:single', 'qunit'])
+  grunt.registerTask('notest', ['eslint', 'jsonlint', 'jshint', 'build'])
+  grunt.registerTask('test', ['clean', 'eslint', 'karma:single', 'qunit'])
   grunt.registerTask('travis', [
     'clean',
     'notest',
