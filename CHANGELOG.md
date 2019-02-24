@@ -1,5 +1,6 @@
-## Version History
+# Version History
 
+- v4.0.1 Fix documentation links in README.md
 - v4.0.0 Drop support for IE8-10 and Andriod 4, renamed event handlers from `fooCallback` to `onFoo` and restructure documentation. Reformat code with Prettier and add eslint to build.
 - v3.6.5 [#658](https://github.com/davidjbradshaw/iframe-resizer/pull/658) Add `.npmignore` to project [[Sebastian Lamelas]](smulesoft).
 - v3.6.4 [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Fix issue resource leak when iframe removed from the page [[Steffen Eckardt](seckardt)]. [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Make Require.js optional when it is included on the page before iframe-resizer [[Dahmian Owen](dahmian)].
