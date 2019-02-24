@@ -11,9 +11,8 @@ The [issue tracker](https://github.com/davidjbradshaw/iframe-resizer/issues) is
 the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests)
 and [submitting pull requests](#pull-requests).
 
-**Please do not use the issue tracker for personal support requests.  These should be raised on 
+**Please do not use the issue tracker for personal support requests. These should be raised on
 Stack Overflow ([`iframe-resizer`](http://stackoverflow.com/questions/tagged/iframe-resizer) tag).**
-
 
 ## Bug reports
 
@@ -28,12 +27,11 @@ Guidelines for bug reports:
 1. **Use the GitHub issue search** &mdash; check if the issue has already been
    reported.
 
-2. **Check if the issue has been fixed** &mdash; try to reproduce it using the
+1. **Check if the issue has been fixed** &mdash; try to reproduce it using the
    latest `master` or development branch in the repository.
 
-3. **Isolate the problem** &mdash; ideally create a [reduced test
+1. **Isolate the problem** &mdash; ideally create a [reduced test
    case](https://css-tricks.com/reduced-test-cases/) and a live example.
-
 
 A good bug report shouldn't leave others needing to chase you up for more
 information. Please try to be as detailed as possible in your report. What is
@@ -63,8 +61,7 @@ Example:
 ## Feature requests
 
 Feature requests are welcome. But take a moment to find out whether your idea
-fits with the scope and aims of the project. 
-
+fits with the scope and aims of the project.
 
 ## Pull requests
 
@@ -77,8 +74,8 @@ implementing features or refactoring code),
 otherwise you risk spending a lot of time working on something that the
 project's developers might not want to merge into the project.
 
-In lieu of a formal style-guide, take care to maintain the existing coding 
-style. Add unit tests for any new or changed functionality. Lint and test 
+In lieu of a formal style-guide, take care to maintain the existing coding
+style. Add unit tests for any new or changed functionality. Lint and test
 your code using [Grunt](http://gruntjs.com/).
 
 ## License
