@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       },
       travis: {
         singleRun: true,
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome'], // 'PhantomJS'
         coverageReporter: {
           type: 'lcov',
           dir: 'coverageLcov/'
