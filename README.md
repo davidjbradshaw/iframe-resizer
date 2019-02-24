@@ -56,7 +56,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 
 **Note:** Using _min-width_ to set the width of the iFrame, works around an issue in iOS that can prevent the iFrame from sizing correctly.
 
-If you have problems, check the [troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/docs/troubleshooting.md) section.
+If you have problems, check the [troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md) section.
 
 ### Example
 
@@ -67,17 +67,17 @@ To see this working take a look at this [example](http://davidjbradshaw.com/ifra
 IFrame-Resizer provides an extensive range of options and APIs for both the parent page and the iframed page.
 
 - **Parent Page API**
-  - [Options](https://github.com/davidjbradshaw/iframe-resizer/docs/parent_page/options.md)
-  - [Events](https://github.com/davidjbradshaw/iframe-resizer/docs/parent_page/events.md)
-  - [Methods](https://github.com/davidjbradshaw/iframe-resizer/docs/parent_page/methods.md)
+  - [Options](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/parent_page/options.md)
+  - [Events](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/parent_page/events.md)
+  - [Methods](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/parent_page/methods.md)
 - **IFramed Page API**
-  - [Options](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/options.md)
-  - [Events](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/events.md)
-  - [Methods](https://github.com/davidjbradshaw/iframe-resizer/docs/iframed_page/methods.md)
-- [Use with jQuery](https://github.com/davidjbradshaw/iframe-resizer/docs/jquery.md)
-- [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/docs/troubleshooting.md)
-- [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/docs/upgrade.md)
-- [Version history](https://github.com/davidjbradshaw/iframe-resizer/CHANGELOG.md)
+  - [Options](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/options.md)
+  - [Events](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/events.md)
+  - [Methods](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/methods.md)
+- [Use with jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/jquery.md)
+- [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md)
+- [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
+- [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
 
 ## License
 
