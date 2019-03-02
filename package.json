@@ -83,6 +83,7 @@
     "lodash": "^4.17.11",
     "minimatch": "^3.0.4",
     "phantomjs": "^2.1.7",
+    "prettier": "^1.16.4",
     "requirejs": "^2.3.6",
     "time-grunt": "^2.0.0"
   },
