@@ -1,5 +1,6 @@
 # Version History
 
+- v4.0.2 [#671](https://github.com/davidjbradshaw/iframe-resizer/pull/671) Fix issue with window resize. [#669](https://github.com/davidjbradshaw/iframe-resizer/pull/669) Fix default export.
 - v4.0.1 Fix documentation links in README.md
 - v4.0.0 Drop support for IE8-10 and Andriod 4, renamed event handlers from `fooCallback` to `onFoo` and restructure documentation. Reformat code with Prettier and add eslint to build.
 - v3.6.5 [#658](https://github.com/davidjbradshaw/iframe-resizer/pull/658) Add `.npmignore` to project [[Sebastian Lamelas]](smulesoft).

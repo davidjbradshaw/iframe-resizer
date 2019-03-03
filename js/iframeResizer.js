@@ -1044,10 +1044,11 @@
     function copyOptions(options) {
       // eslint-disable-next-line no-restricted-syntax
       for (var option in defaults) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (defaults.hasOwnProperty(option)) {
-          // eslint-disable-next-line no-prototype-builtins
-          settings[iframeId][option] = options.hasOwnProperty(option)
+        if (Object.prototype.hasOwnProperty.call(defaults, option)) {
+          settings[iframeId][option] = Object.prototype.hasOwnProperty.call(
+            options,
+            option
+          )
             ? options[option]
             : defaults[option]
         }
@@ -1232,7 +1233,7 @@
       )
     }
 
-    Object.values(settings).forEach(function(iframeId) {
+    Object.keys(settings).forEach(function(iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
         trigger(eventName, event, document.getElementById(iframeId), iframeId)
       }
