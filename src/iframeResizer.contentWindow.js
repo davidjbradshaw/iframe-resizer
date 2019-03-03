@@ -518,7 +518,9 @@
   function injectClearFixIntoBodyElement() {
     var clearFix = document.createElement('div')
     clearFix.style.clear = 'both'
-    clearFix.style.display = 'block' // Guard against this having been globally redefined in CSS.
+    // Guard against the following having been globally redefined in CSS.
+    clearFix.style.display = 'block'
+    clearFix.style.height = '0'
     document.body.appendChild(clearFix)
   }
 
