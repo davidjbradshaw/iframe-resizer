@@ -29,7 +29,7 @@ This package can be installed via NPM (`npm install iframe-resizer --save`).
 
 ### Usage
 
-The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with **native** JavaScript;
+The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with via JavaScript:
 
 ```js
 const iframes = iFrameResize( [{options}], [css selector] || [iframe] );
