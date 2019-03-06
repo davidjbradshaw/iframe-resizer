@@ -79,6 +79,12 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 - [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
 - [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
 
+## Donate
+
+
+
+<a href="https://www.buymeacoffee.com/davidjbradshaw " target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+
 ## License
 
 Copyright &copy; 2013-19 [David J. Bradshaw](https://github.com/davidjbradshaw).
