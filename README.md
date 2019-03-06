@@ -81,7 +81,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 
 ## Donate
 
-
+If you would like to show your support for this then please feel free to buy me a coffee.
 
 <a href="https://www.buymeacoffee.com/davidjbradshaw " target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
