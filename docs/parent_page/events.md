@@ -40,4 +40,4 @@ Function called after iFrame resized. Passes in messageData object containing th
 onScroll: ({x,y}) => [true|false]
 ```
 
-Called before the page is repositioned after a request from the iFrame, due to either an in page link, or a direct request from either [parentIFrame.scrollTo()](#scrolltoxy) or [parentIFrame.scrollToOffset()](#scrolltooffsetxy). If this function returns **false**, it will stop the library from repositioning the page, so that you can implement your own animated page scrolling instead.
+Called before the page is repositioned after a request from the iFrame, due to either an in page link, or a direct request from either [parentIFrame.scrollTo()](../iframed_page/methods.md#scrolltoxy) or [parentIFrame.scrollToOffset()](../iframed_page/methods.md#scrolltooffsetxy). If this function returns **false**, it will stop the library from repositioning the page, so that you can implement your own animated page scrolling instead.
