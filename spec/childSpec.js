@@ -153,6 +153,8 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
         expect(pageInfo.offsetTop).toBe(85)
         expect(pageInfo.scrollTop).toBe(0)
         expect(pageInfo.scrollLeft).toBe(0)
+        expect(pageInfo.windowInnerHeight).toBe(645)
+        expect(pageInfo.windowInnerWidth).toBe(1295)
         done()
       })
       expect(msgObject.source.postMessage).toHaveBeenCalledWith(

@@ -32,6 +32,9 @@ Ask the containing page for its positioning coordinates. You need to provide a c
 * **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
 * **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
 * **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
+* **windowInnerHeight** The containing window's height in pixels
+* **windowInnerWidth** The containing window's width in pixels
+
 
 Your callback function will be recalled when the parent page is scrolled or resized.
 
