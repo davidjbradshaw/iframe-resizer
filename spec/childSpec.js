@@ -165,7 +165,10 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
       )
       mockMsgListener(
         createMsg(
-          'pageInfo:{"iframeHeight":500,"iframeWidth":300,"clientHeight":645,"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,"scrollTop":0}'
+          'pageInfo:{"iframeHeight":500,"iframeWidth":300,"clientHeight":645,' +
+          '"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,' +
+          '"scrollTop":0,"documentHeight":645,"documentWidth":1295,' +
+          '"windowHeight":645,"windowWidth":1295}'
         )
       )
     })
