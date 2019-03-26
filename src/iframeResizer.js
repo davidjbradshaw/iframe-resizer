@@ -288,8 +288,10 @@
         offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
         scrollTop: window.pageYOffset,
         scrollLeft: window.pageXOffset,
-        windowInnerHeight: window.innerHeight,
-        windowInnerWidth: window.innerWidth
+        documentHeight: document.documentElement.clientHeight,
+        documentWidth: document.documentElement.clientWidth,
+        windowHeight: window.innerHeight,
+        windowWidth: window.innerWidth
       })
     }
 
