@@ -29,6 +29,8 @@
       "import/no-amd": 0,
       "unicorn/filename-case": 0,
       "unicorn/prefer-node-append": 0,
-      "unicorn/prefer-query-selector": 0
+      "unicorn/prefer-node-remove": 0,
+      "unicorn/prefer-query-selector": 0,
+      "unicorn/prevent-abbreviations": 0
   }
 }
