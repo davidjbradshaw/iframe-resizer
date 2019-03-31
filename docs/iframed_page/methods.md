@@ -26,12 +26,17 @@ Ask the containing page for its positioning coordinates. You need to provide a c
 
 * **iframeHeight** The height of the iframe in pixels
 * **iframeWidth** The width of the iframe in pixels
-* **clientHeight** The height of the viewport in pixels
-* **clientWidth** The width of the viewport in pixels
 * **offsetLeft** The number of pixels between the left edge of the containing page and the left edge of the iframe
 * **offsetTop** The number of pixels between the top edge of the containing page and the top edge of the iframe
 * **scrollLeft** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport
 * **scrollTop** The number of pixels between the top edge of the iframe and the top edge of the iframe viewport
+* **documentHeight** The containing document's height in pixels (the equivalent of  `document.documentElement.clientHeight` in the container)
+* **documentWidth** The containing document's width in pixels (the equivalent of `document.documentElement.clientWidth` in the container)
+* **windowHeight** The containing window's height in pixels (the equivalent of `window.innerHeight` in the container)
+* **windowWidth** The containing window's width in pixels (the equivalent of `window.innerWidth` in the container)
+* **clientHeight** (deprecated) The height of the containing document, considering the viewport, in pixels (`max(documentHeight, windowHeight)`).
+* **clientWidth** (deprecated) The width of the containing document, considering the viewport, in pixels (`max(documentWidth, windowWidth)`).
+
 
 Your callback function will be recalled when the parent page is scrolled or resized.
 
