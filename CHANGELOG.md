@@ -1,5 +1,6 @@
 # Version History
 
+- v4.1.0 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/686) Split client(Height/Width) into document and window values [[Bernhard Mäder]](nuschk)
 - v4.0.4 [#674](https://github.com/davidjbradshaw/iframe-resizer/pull/674) Fix default export.
 - v4.0.3 [#606](https://github.com/davidjbradshaw/iframe-resizer/pull/606) Force height of clearFix div in iframe to 0.
 - v4.0.2 [#671](https://github.com/davidjbradshaw/iframe-resizer/pull/671) Fix issue with window resize.
