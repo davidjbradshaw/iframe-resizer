@@ -1173,7 +1173,9 @@
         }
       }
 
-      Object.values(settings).forEach(checkIFrame)
+      Object.keys(settings).forEach(function(key) {
+        checkIFrame(settings[key])
+      })
     }
 
     function mutationObserved(mutations) {
