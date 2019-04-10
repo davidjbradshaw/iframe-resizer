@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
@@ -54,7 +54,7 @@
     "grunt-contrib-compress": "~1.4.3",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "~2.1.0",
-    "grunt-contrib-qunit": "^2.0.0",
+    "grunt-contrib-qunit": "^3.1.0",
     "grunt-contrib-uglify": "~4.0.0",
     "grunt-contrib-watch": "~1.1.0",
     "grunt-eslint": "^21.0.0",
