@@ -79,7 +79,7 @@
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
     "karma-verbose-summary-reporter": "0.0.1",
-    "load-grunt-tasks": "~4.0.0",
+    "load-grunt-tasks": "~5.0.0",
     "lodash": "^4.17.11",
     "minimatch": "^3.0.4",
     "phantomjs": "^2.1.7",
