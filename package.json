@@ -44,7 +44,7 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-simple-import-sort": "^3.1.0",
-    "eslint-plugin-sonarjs": "^0.3.0",
+    "eslint-plugin-sonarjs": "^0.4.0",
     "eslint-plugin-switch-case": "^1.1.2",
     "eslint-plugin-unicorn": "^8.0.2",
     "grunt": "^1.0.4",
