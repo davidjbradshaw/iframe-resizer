@@ -489,6 +489,10 @@
           forwardMsgFromIFrame(getMsgBody(6))
           break
 
+        case 'autoResize':
+          settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+          break
+
         case 'scrollTo':
           scrollRequestFromChild(false)
           break
