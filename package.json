@@ -69,7 +69,7 @@
     "jit-grunt": "~0.10.0",
     "jquery": "^3.4.0",
     "karma": "^4.1.0",
-    "karma-chrome-launcher": "^2.2.0",
+    "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^1.1.2",
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^2.0.1",
