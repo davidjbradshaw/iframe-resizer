@@ -73,6 +73,15 @@ In modern browsers, if the default [height calculation method](#heightcalculatio
 
 <i>Please see the notes section under [heightCalculationMethod](#heightcalculationmethod) to understand the limitations of the different options.</i>
 
+### Failed to execute 'postMessage' on 'DOMWindow'
+
+This error occurs when the parent window tries to send a message to the iframe before it has loaded. IFrameResize makes multiple attempts to talk to the iFrame, so if everything is working then you can safely ignore this error message.
+
+If you're still having problems, or you really want to not ignore the error, then you can try delaying the call to `iframeResize()` until after the `onLoad` event of the iframe has fired.
+
+If this does not fix the problem then check `x-Frame-Options` http header on the server that is sending the iframe content, as this can also block calls to `postMessage` if set incorrectly.
+
+
 ### ParentIFrame not found errors
 
 The `parentIFrame` object is created once the iFrame has been initially resized. If you wish to use it during page load you will need call it from the onReady.
