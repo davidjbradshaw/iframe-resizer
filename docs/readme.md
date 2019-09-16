@@ -9,7 +9,7 @@
   - [Options](iframed_page/options.md)
   - [Events](iframed_page/events.md)
   - [Methods](iframed_page/methods.md)
-- **Use with Libraries and Framworks**
+- **Use with Libraries and Frameworks**
   - [React](https://github.com/zeroasterisk/react-iframe-resizer-super)
   - [Vue](https://github.com/davidjbradshaw/iframe-resizer/issues/513#issuecomment-411353398)
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
