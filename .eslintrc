@@ -6,7 +6,7 @@
     "browser": true,
     "jasmine": true
   },
-  "parserOptions": { "ecmaVersion": 5 },
+  "parserOptions": { "ecmaVersion": 2015 },
   "rules": {
       "func-names": 0,
       "no-param-reassign": 0,
@@ -27,6 +27,7 @@
       "ie11/no-loop-func": [ "warn" ],
       "ie11/no-weak-collections": [ "error" ],
       "import/no-amd": 0,
+      "unicorn/consistent-function-scoping": 0,
       "unicorn/filename-case": 0,
       "unicorn/prefer-node-append": 0,
       "unicorn/prefer-node-remove": 0,
