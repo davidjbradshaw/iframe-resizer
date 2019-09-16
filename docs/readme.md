@@ -9,7 +9,11 @@
   - [Options](iframed_page/options.md)
   - [Events](iframed_page/events.md)
   - [Methods](iframed_page/methods.md)
-- [Use with jQuery](jquery.md)
+- **Use with Libraries and Framworks**
+  - [React](https://github.com/zeroasterisk/react-iframe-resizer-super)
+  - [Vue](https://github.com/davidjbradshaw/iframe-resizer/issues/513#issuecomment-411353398)
+  - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
+  - [jQuery](use_with/jquery.md)
 - [Troubleshooting](troubleshooting.md)
 - [Upgrade from version 3](upgrade.md)
 - [Version history](../CHANGELOG.md)

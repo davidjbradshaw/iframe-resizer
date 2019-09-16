@@ -74,7 +74,11 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
   - [Options](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/options.md)
   - [Events](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/events.md)
   - [Methods](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/methods.md)
-- [Use with jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/jquery.md)
+- **Use with Libraries and Framworks**
+  - [React](https://github.com/zeroasterisk/react-iframe-resizer-super)
+  - [Vue](https://github.com/davidjbradshaw/iframe-resizer/issues/513#issuecomment-411353398)
+  - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
+  - [jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/jquery.md)
 - [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md)
 - [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
 - [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
