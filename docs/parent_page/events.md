@@ -2,13 +2,21 @@
 
 The following callback events can be passed to iframe-resizer on the parent page, as part of the [options](options.md) object.
 
+### onClose
+
+```js
+onClosed: (iframeID) => boolean
+```
+
+Called before iFrame is closed via `parentIFrame.close()` or `iframe.iFrameResizer.close()` methods. Returning `false` will prevent the iFrame from closing.
+
 ### onClosed
 
 ```js
 onClosed: (iframeID) => undefined
 ```
 
-Called when iFrame is closed via `parentIFrame.close()` or `iframe.iFrameResizer.close()` methods. See below for details.
+Called after iFrame is closed via `parentIFrame.close()` or `iframe.iFrameResizer.close()` methods.
 
 ### onInit
 

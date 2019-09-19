@@ -1,5 +1,6 @@
 # Version History
 
+- v4.2.0 Add `onClose()` event to parent.
 - v4.1.1 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/694) Fix IE11 regression with Object.values [[Jonathan Lehman]](jdlehman)
 - v4.1.0 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/686) Split client(Height/Width) into document and window values [[Bernhard Mäder]](nuschk)
 - v4.0.4 [#674](https://github.com/davidjbradshaw/iframe-resizer/pull/674) Fix default export.

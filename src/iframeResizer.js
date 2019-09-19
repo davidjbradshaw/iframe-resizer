@@ -53,6 +53,9 @@
       warningTimeout: 5000,
       tolerance: 0,
       widthCalculationMethod: 'scroll',
+      onClose: function() {
+        return true
+      },
       onClosed: function() {},
       onInit: function() {},
       onMessage: function() {
@@ -480,9 +483,7 @@
 
       switch (messageData.type) {
         case 'close':
-          if (settings[iframeId].closeRequeston)
-            chkEvent(iframeId, 'onCloseRequest', settings[iframeId].iframe)
-          else closeIFrame(messageData.iframe)
+          closeIFrame(messageData.iframe)
           break
 
         case 'message':
@@ -613,6 +614,10 @@
 
   function closeIFrame(iframe) {
     var iframeId = iframe.id
+    if (chkEvent(iframeId, 'onClose', iframeId) === false) {
+      log(iframeId, 'Close iframe cancelled by onClose event')
+      return
+    }
     log(iframeId, 'Removing iFrame: ' + iframeId)
 
     try {
