@@ -132,25 +132,9 @@
 	<script type="text/javascript">
 
 		(function () {
-
 			var logging = true;
 
 			try {
-
-				function addEventListener(e, func) {
-					if (window.addEventListener) {
-						window.addEventListener(e, func, false);
-					} else if (window.attachEvent) {
-						window.attachEvent('on' + e, func);
-					}
-				}
-
-				function log(msg) {
-					if (logging && window.console) {
-						console.info('[Test] ' + msg);
-					}
-				}
-
 				function warn(msg) {
 					if (window.console) {
 						console.warn('[Test] ' + msg);
