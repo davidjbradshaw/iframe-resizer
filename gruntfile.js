@@ -225,9 +225,10 @@ module.exports = function(grunt) {
     )
 
     this.data.forEach(function(fileObj) {
-      var sourceFile = grunt.file.read(fileObj.src),
-        removedFile = sourceFile.replace(removalRegEx, ''),
-        targetFile = grunt.file.write(fileObj.dest, removedFile)
+      var sourceFile = grunt.file.read(fileObj.src)
+      var removedFile = sourceFile.replace(removalRegEx, '')
+
+      grunt.file.write(fileObj.dest, removedFile)
     }) // for each loop end
   })
 }
