@@ -653,7 +653,7 @@
           autoResize = false
           stopEventListeners()
         }
-
+        sendMsg(0, 0, 'autoResize', JSON.stringify(autoResize))
         return autoResize
       },
 
