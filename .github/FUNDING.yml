@@ -13,7 +13,7 @@ custom: # Replace with up to 4 custom sponsorship URLs e.g., ['link1', 'link2']
 
 github: davidjbradshaw
 custom: https://www.paypal.me/davidjbradshaw
-IssueHunt: davidjbradshaw
-Liberapay: davidjbradshaw
+issuehunt: davidjbradshaw
+liberapay: davidjbradshaw
 ko_fi: davidjbradshaw
-Tidelift: npm/iframe-resizer
+tidelift: npm/iframe-resizer
