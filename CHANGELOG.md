@@ -1,5 +1,6 @@
 # Version History
 
+- v4.2.2 [#761](https://github.com/davidjbradshaw/iframe-resizer/pull/761) Check for iframe.src when parsing it for remoteHost [[Filip Stollar]](SuNaden)
 - v4.2.1 [#723](https://github.com/davidjbradshaw/iframe-resizer/pull/723) Fix option to turn off `autoResize` from iframe, when `resizeFrom` is set to `parent` [[Dennis Kronbügel]](deBFM)
 - v4.2.0 Add `onClose()` event to parent.
 - v4.1.1 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/694) Fix IE11 regression with Object.values [[Jonathan Lehman]](jdlehman)
