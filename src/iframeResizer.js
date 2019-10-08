@@ -1096,10 +1096,12 @@
       settings[iframeId] = {
         firstRun: true,
         iframe: iframe,
-        remoteHost: iframe.src
-          .split('/')
-          .slice(0, 3)
-          .join('/')
+        remoteHost:
+          iframe.src &&
+          iframe.src
+            .split('/')
+            .slice(0, 3)
+            .join('/')
       }
 
       checkOptions(options)
