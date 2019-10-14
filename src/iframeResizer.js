@@ -181,8 +181,8 @@
       if (compStyle.boxSizing !== 'border-box') {
         return 0;
       }
-      var top = compStyle.borderTop ? parseInt(compStyle.borderTop, 10) : 0
-      var bot = compStyle.borderBottom ? parseInt(compStyle.borderBottom, 10) : 0
+      var top = compStyle.borderTopWidth && compStyle.borderTopWidth.indexOf('px') !== -1 ? parseInt(compStyle.borderTopWidth.replace('px', ''), 10) : 0
+      var bot = compStyle.borderBottomWidth && compStyle.borderBottomWidth.indexOf('px') !== -1 ? parseInt(compStyle.borderBottomWidth.replace('px', ''), 10) : 0
       return top + bot
     }
 

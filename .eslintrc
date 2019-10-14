@@ -32,6 +32,7 @@
       "unicorn/prefer-node-append": 0,
       "unicorn/prefer-node-remove": 0,
       "unicorn/prefer-query-selector": 0,
-      "unicorn/prevent-abbreviations": 0
+      "unicorn/prevent-abbreviations": 0,
+      "unicorn/prefer-includes": 0
   }
 }
