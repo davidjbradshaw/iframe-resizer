@@ -15,6 +15,7 @@
     "build": "npm install && grunt",
     "eslint": "eslint src/* --color",
     "eslint:fix": "eslint src/* --color --fix",
+    "test-watch": "grunt test-watch",
     "test": "grunt travis"
   },
   "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
