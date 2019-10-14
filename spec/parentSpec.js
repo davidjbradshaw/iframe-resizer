@@ -28,6 +28,7 @@ define(['iframeResizer'], function(iFrameResize) {
         expect(ready).toBe(true)
       })
     })
+    
 
     describe('reset Page', function() {
       var iframe
@@ -83,6 +84,63 @@ define(['iframeResizer'], function(iFrameResize) {
           'http://localhost:9876'
         )
       })
+    })
+
+    describe('resize height', function() {
+      var iframe
+      var log = LOG
+      var testId = 'parentPage3'
+      var HEIGHT = 90
+      var extraHeights = [1,2,3,4]
+
+      var setUp = (boxSizing) => {
+        loadIFrame('iframe.html')
+
+        iframe = iFrameResize({
+          log: log,
+          id: testId
+        })[0]
+
+        iframe.style.boxSizing = boxSizing
+        iframe.style.paddingTop = `${extraHeights[0]}px`
+        iframe.style.paddingBottom = `${extraHeights[1]}px`
+        iframe.style.borderTop = `${extraHeights[2]}px solid`
+        iframe.style.borderBottom = `${extraHeights[3]}px solid`
+
+        spyPostMsg = spyOn(iframe.contentWindow, 'postMessage')
+
+        // needs timeout so postMessage always comes after 'ready' postMessage
+        setTimeout(() => {
+          window.postMessage(`[iFrameSizer]${testId}:${HEIGHT}:600:mutationObserver`, '*')
+        }, 0)
+      }
+
+      afterEach(function() {
+        tearDown(iframe)
+      })
+
+      it('includes padding and borders in height when CSS "box-sizing" is set to "border-box"', done => {
+
+        setUp('border-box')
+        
+        // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
+        setTimeout(() => {
+          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b))
+          done()
+        }, 100)
+      })
+
+      it('includes padding and borders in height when CSS "box-sizing" is set to "content-box"', done => {
+
+        setUp('content-box')
+
+        // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
+        setTimeout(() => {
+          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b))
+          done()
+        }, 100)
+      })
+
     })
   })
 })
