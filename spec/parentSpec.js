@@ -93,7 +93,7 @@ define(['iframeResizer'], function(iFrameResize) {
       var HEIGHT = 90
       var extraHeights = [1,2,3,4]
 
-      var setUp = (boxSizing) => {
+      var setUp = (boxSizing, units) => {
         loadIFrame('iframe.html')
 
         iframe = iFrameResize({
@@ -102,10 +102,10 @@ define(['iframeResizer'], function(iFrameResize) {
         })[0]
 
         iframe.style.boxSizing = boxSizing
-        iframe.style.paddingTop = `${extraHeights[0]}px`
-        iframe.style.paddingBottom = `${extraHeights[1]}px`
-        iframe.style.borderTop = `${extraHeights[2]}px solid`
-        iframe.style.borderBottom = `${extraHeights[3]}px solid`
+        iframe.style.paddingTop = extraHeights[0] + units
+        iframe.style.paddingBottom = extraHeights[1] + units
+        iframe.style.borderTop = `${extraHeights[2]}${units} solid`
+        iframe.style.borderBottom = `${extraHeights[3]}${units} solid`
 
         spyPostMsg = spyOn(iframe.contentWindow, 'postMessage')
 
@@ -119,24 +119,39 @@ define(['iframeResizer'], function(iFrameResize) {
         tearDown(iframe)
       })
 
-      it('includes padding and borders in height when CSS "box-sizing" is set to "border-box"', done => {
+      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "border-box"', done => {
 
-        setUp('border-box')
+        setUp('border-box', 'px')
         
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
         setTimeout(() => {
-          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b))
+          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b, 0))
           done()
         }, 100)
       })
 
-      it('includes padding and borders in height when CSS "box-sizing" is set to "content-box"', done => {
+      it('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', done => {
+        const REM = 14
 
-        setUp('content-box')
+        // changes the rem units of the doc so we can test accurately
+        document.querySelector('html').style.fontSize = `${REM}px`
+
+        setUp('border-box', 'rem')
+        
+        // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
+        setTimeout(() => {
+          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+(b*REM), 0))
+          done()
+        }, 100)
+      })
+
+      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "content-box"', done => {
+
+        setUp('content-box', 'px')
 
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
         setTimeout(() => {
-          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b))
+          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b, 0))
           done()
         }, 100)
       })
