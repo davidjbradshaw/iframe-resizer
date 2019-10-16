@@ -168,7 +168,6 @@
     }
 
     function getPaddingEnds(compStyle) {
-      
       if (compStyle.boxSizing !== 'border-box') {
         return 0;
       }
@@ -181,8 +180,8 @@
       if (compStyle.boxSizing !== 'border-box') {
         return 0;
       }
-      var top = compStyle.borderTopWidth && compStyle.borderTopWidth.indexOf('px') !== -1 ? parseInt(compStyle.borderTopWidth.replace('px', ''), 10) : 0
-      var bot = compStyle.borderBottomWidth && compStyle.borderBottomWidth.indexOf('px') !== -1 ? parseInt(compStyle.borderBottomWidth.replace('px', ''), 10) : 0
+      var top = compStyle.borderTopWidth ? parseInt(compStyle.borderTopWidth, 10) : 0
+      var bot = compStyle.borderBottomWidth ? parseInt(compStyle.borderBottomWidth, 10) : 0
       return top + bot
     }
 

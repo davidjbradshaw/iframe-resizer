@@ -171,8 +171,8 @@
       if (compStyle.boxSizing !== 'border-box') {
         return 0;
       }
-      var top = compStyle.paddingTop ? parseInt(compStyle.paddingTop.replace('px', ''), 10) : 0
-      var bot = compStyle.paddingBottom ? parseInt(compStyle.paddingBottom.replace('px', ''), 10) : 0
+      var top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
+      var bot = compStyle.paddingBottom ? parseInt(compStyle.paddingBottom, 10) : 0
       return top + bot
     }
     
@@ -180,8 +180,8 @@
       if (compStyle.boxSizing !== 'border-box') {
         return 0;
       }
-      var top = compStyle.borderTopWidth ? parseInt(compStyle.borderTopWidth.replace('px', ''), 10) : 0
-      var bot = compStyle.borderBottomWidth ? parseInt(compStyle.borderBottomWidth.replace('px', ''), 10) : 0
+      var top = compStyle.borderTopWidth ? parseInt(compStyle.borderTopWidth, 10) : 0
+      var bot = compStyle.borderBottomWidth ? parseInt(compStyle.borderBottomWidth, 10) : 0
       return top + bot
     }
 
