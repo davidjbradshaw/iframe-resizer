@@ -36,7 +36,7 @@
     "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-ie11": "^1.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-json": "^1.4.0",
+    "eslint-plugin-json": "^2.0.0",
     "eslint-plugin-markdown": "^1.0.0",
     "eslint-plugin-no-constructor-bind": "^1.2.6",
     "eslint-plugin-no-use-extend-native": "^0.4.1",
