@@ -1185,7 +1185,7 @@
       }
 
       Object.keys(settings).forEach(function(key) {
-        checkIFrame(settings[key])
+        checkIFrame(key)
       })
     }
 
