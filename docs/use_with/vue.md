@@ -24,4 +24,4 @@ and then include it on you page as follows.
 ></iframe>
 ```
 
-- Thanks to [[Aldebaran Desombergh]](https://github.com/davidjbradshaw/iframe-resizer/issues/513#issuecomment-538333854) for this example
+- Thanks to [Aldebaran Desombergh](https://github.com/davidjbradshaw/iframe-resizer/issues/513#issuecomment-538333854) for this example
