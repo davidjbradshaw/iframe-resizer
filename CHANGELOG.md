@@ -1,5 +1,6 @@
 # Version History
 
+- v4.2.3 [#683](https://github.com/davidjbradshaw/iframe-resizer/issues/683) Include border top/bottom, plus padding top/bottom, when calculating heights on iframe with `box-sizing: border-box;` [[Jim Doyle]](superelement)
 - v4.2.2 [#761](https://github.com/davidjbradshaw/iframe-resizer/pull/761) Check for iframe.src when parsing it for remoteHost [[Filip Stollar]](SuNaden)
 - v4.2.1 [#723](https://github.com/davidjbradshaw/iframe-resizer/pull/723) Fix option to turn off `autoResize` from iframe, when `resizeFrom` is set to `parent` [[Dennis Kronbügel]](deBFM)
 - v4.2.0 Add `onClose()` event to parent.

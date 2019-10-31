@@ -154,14 +154,35 @@
 
     function processMsg() {
       var data = msg.substr(msgIdLen).split(':')
+      var height = data[1] ? parseInt(data[1], 10) : 0;
+      var iframe = settings[data[0]] && settings[data[0]].iframe;
+      var compStyle = getComputedStyle(iframe)
 
       return {
-        iframe: settings[data[0]] && settings[data[0]].iframe,
+        iframe: iframe,
         id: data[0],
-        height: data[1],
+        height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
         width: data[2],
         type: data[3]
       }
+    }
+
+    function getPaddingEnds(compStyle) {
+      if (compStyle.boxSizing !== 'border-box') {
+        return 0;
+      }
+      var top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
+      var bot = compStyle.paddingBottom ? parseInt(compStyle.paddingBottom, 10) : 0
+      return top + bot
+    }
+    
+    function getBorderEnds(compStyle) {
+      if (compStyle.boxSizing !== 'border-box') {
+        return 0;
+      }
+      var top = compStyle.borderTopWidth ? parseInt(compStyle.borderTopWidth, 10) : 0
+      var bot = compStyle.borderBottomWidth ? parseInt(compStyle.borderBottomWidth, 10) : 0
+      return top + bot
     }
 
     function ensureInRange(Dimension) {
@@ -738,7 +759,9 @@
 
   function syncResize(func, messageData, doNotSync) {
     /* istanbul ignore if */ // Not testable in PhantomJS
-    if (doNotSync !== messageData.type && requestAnimationFrame) {
+    if (doNotSync !== messageData.type && requestAnimationFrame &&
+        // including check for jasmine because had trouble getting spy to work in unit test using requestAnimationFrame
+        !window.jasmine) {
       log(messageData.id, 'Requesting animation frame')
       requestAnimationFrame(func)
     } else {

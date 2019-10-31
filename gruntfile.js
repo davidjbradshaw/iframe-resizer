@@ -61,6 +61,11 @@ module.exports = function(grunt) {
       single: {
         singleRun: true,
         browsers: ['Chrome', 'Firefox'] // 'Safari', 'PhantomJS'
+      },
+      watch: {
+        singleRun: false,
+        browsers: ['Chrome'], // 'Firefox', 'Safari', 'PhantomJS'
+        reporters: ['logcapture', 'progress']
       }
     },
 
@@ -199,6 +204,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['removeBlock', 'copy', 'uglify'])
   grunt.registerTask('notest', ['eslint', 'jsonlint', 'jshint', 'build'])
   grunt.registerTask('test', ['clean', 'eslint', 'karma:single', 'qunit'])
+  grunt.registerTask('test-watch', ['clean', 'karma:watch'])
   grunt.registerTask('travis', [
     'clean',
     'notest',
