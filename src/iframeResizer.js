@@ -576,7 +576,7 @@
         trigger(
           'iFrame requested init',
           createOutgoingMsg(iframeId),
-          document.getElementById(iframeId),
+          settings[iframeId].iframe,
           iframeId
         )
       }
@@ -1275,7 +1275,7 @@
 
     Object.keys(settings).forEach(function(iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
-        trigger(eventName, event, document.getElementById(iframeId), iframeId)
+        trigger(eventName, event, settings[iframeId].iframe, iframeId)
       }
     })
   }
