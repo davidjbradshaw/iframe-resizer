@@ -1,17 +1,18 @@
 # Version History
 
-- v4.2.3 [#683](https://github.com/davidjbradshaw/iframe-resizer/issues/683) Include border top/bottom, plus padding top/bottom, when calculating heights on iframe with `box-sizing: border-box;` [[Jim Doyle]](superelement). [#768](https://github.com/davidjbradshaw/iframe-resizer/issues/768) Fix checkIFrame argument error [[Tony Living]](tonyliving)
-- v4.2.2 [#761](https://github.com/davidjbradshaw/iframe-resizer/pull/761) Check for iframe.src when parsing it for remoteHost [[Filip Stollar]](SuNaden)
+- v4.2.4 [#772](https://github.com/davidjbradshaw/iframe-resizer/issues/772) Fix issue with iframes inside ShaddowDOM elements [[Martin Belanger](martinbelanger)]
+- v4.2.3 [#683](https://github.com/davidjbradshaw/iframe-resizer/issues/683) Include border top/bottom, plus padding top/bottom, when calculating heights on iframe with `box-sizing: border-box;` [[Jim Doyle]](superelement). [#768](https://github.com/davidjbradshaw/iframe-resizer/issues/768) Fix issue with hidden iframes [[Tony Living]](tonyliving)
+- v4.2.2 [#761](https://github.com/davidjbradshaw/iframe-resizer/pull/761) Check for iframe.src when parsing it for remoteHost [[Filip Stollar](SuNaden)]
 - v4.2.1 [#723](https://github.com/davidjbradshaw/iframe-resizer/pull/723) Fix option to turn off `autoResize` from iframe, when `resizeFrom` is set to `parent` [[Dennis Kronbügel]](deBFM)
 - v4.2.0 Add `onClose()` event to parent.
-- v4.1.1 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/694) Fix IE11 regression with Object.values [[Jonathan Lehman]](jdlehman)
-- v4.1.0 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/686) Split client(Height/Width) into document and window values [[Bernhard Mäder]](nuschk)
+- v4.1.1 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/694) Fix IE11 regression with Object.values [[Jonathan Lehman](jdlehman)]
+- v4.1.0 [#686](https://github.com/davidjbradshaw/iframe-resizer/pull/686) Split client(Height/Width) into document and window values [[Bernhard Mäder](nuschk)]
 - v4.0.4 [#674](https://github.com/davidjbradshaw/iframe-resizer/pull/674) Fix default export.
 - v4.0.3 [#606](https://github.com/davidjbradshaw/iframe-resizer/pull/606) Force height of clearFix div in iframe to 0.
 - v4.0.2 [#671](https://github.com/davidjbradshaw/iframe-resizer/pull/671) Fix issue with window resize.
 - v4.0.1 Fix documentation links in `README.md`.
 - v4.0.0 Drop support for IE8-10 and Andriod 4, renamed event handlers from `fooCallback` to `onFoo` and restructure documentation. Reformat code with Prettier and add eslint to build.
-- v3.6.5 [#658](https://github.com/davidjbradshaw/iframe-resizer/pull/658) Add `.npmignore` to project [[Sebastian Lamelas]](smulesoft).
+- v3.6.5 [#658](https://github.com/davidjbradshaw/iframe-resizer/pull/658) Add `.npmignore` to project [[Sebastian Lamelas](smulesoft)].
 - v3.6.4 [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Fix issue resource leak when iframe removed from the page [[Steffen Eckardt](seckardt)]. [#651](https://github.com/davidjbradshaw/iframe-resizer/pull/651) Make Require.js optional when it is included on the page before iframe-resizer [[Dahmian Owen](dahmian)].
 - v3.6.3 [#635](https://github.com/davidjbradshaw/iframe-resizer/pull/635) Fix issue with undefined ID [[Henry Schein](ddxdental)]. [#582](https://github.com/davidjbradshaw/iframe-resizer/pull/582) Add `omit` option to `scrolling` config [[Matt Ryan](mryand)].
 - v3.6.2 [#596](https://github.com/davidjbradshaw/iframe-resizer/pull/596) Add Passive Event Listener for Performance [[Henrik Vendelbo](thepian)]. [#613](https://github.com/davidjbradshaw/iframe-resizer/pull/613) Check if the iFrameResize function is attached to the prototype of jQuery [[Paul Antal](paul-antal)]. [#620](https://github.com/davidjbradshaw/iframe-resizer/pull/620) Fixed an issue where host page fires init before iframe receiver setup [[Mark Zhou](mrmarktyy)]. [#620](https://github.com/davidjbradshaw/iframe-resizer/pull/620) Add `removeListeners` method to better support React [[Khang Nguyen](khangiskhan)].
