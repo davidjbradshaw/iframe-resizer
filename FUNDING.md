@@ -1,4 +1,4 @@
-## Donate
+# Donate to Iframe-Resizer
 
 Iframe-resizer is the result of many 100s of hours of work, if you would like to join others in showing support for the development of this project, then please feel free to buy me a coffee.
 
