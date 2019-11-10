@@ -21,6 +21,12 @@ This library enables the automatic resizing of the height and width of both same
 - Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
 - Supports IE 11 ([V3 supports back to IE8](https://github.com/davidjbradshaw/iframe-resizer/tree/V3))
 
+## Donate
+
+Iframe-resizer is the result of many 100s of hours of work, if you would like to join others in showing support for the development of this project, then please feel free to buy me a coffee.
+
+<a href="https://www.buymeacoffee.com/davidjbradshaw " target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+
 ## Getting Started
 
 ### Install
@@ -82,12 +88,6 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 - [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md)
 - [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
 - [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
-
-## Donate
-
-Iframe-resizer is the result of many 100s of hours of work, if you would like to join others in showing support for the development of this project, then please feel free to buy me a coffee.
-
-<a href="https://www.buymeacoffee.com/davidjbradshaw " target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 ## License
 
