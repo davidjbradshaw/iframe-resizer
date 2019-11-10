@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "4.2.5",
+  "version": "4.2.6",
   "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
@@ -26,7 +26,7 @@
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
     "type": "individual",
-    "url": "https://github.com/davidjbradshaw/iframe-resizer/FUNDING.md"
+    "url": "https://github.com/davidjbradshaw/iframe-resizer/blob/master/FUNDING.md"
   },
   "dependencies": {},
   "devDependencies": {
