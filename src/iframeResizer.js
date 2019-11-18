@@ -1092,7 +1092,7 @@
     }
 
     function getTargetOrigin(remoteHost) {
-      return '' === remoteHost || 'file://' === remoteHost ? '*' : remoteHost
+      return '' === remoteHost || null !== remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) ? '*' : remoteHost
     }
 
     function depricate(key) {
