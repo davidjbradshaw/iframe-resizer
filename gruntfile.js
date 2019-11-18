@@ -1,11 +1,10 @@
-/*global module:false*/
 module.exports = function(grunt) {
   // show elapsed time at the end
-  require('time-grunt')(grunt)
+  require('time-grunt')(grunt) // eslint-disable-line import/no-extraneous-dependencies
 
   // load all grunt tasks
-  //require('load-grunt-tasks')(grunt);
-  require('jit-grunt')(grunt, {
+  // require('load-grunt-tasks')(grunt);
+  require('jit-grunt')(grunt, { // eslint-disable-line import/no-extraneous-dependencies
     'bump-only': 'grunt-bump',
     'bump-commit': 'grunt-bump',
     coveralls: 'grunt-karma-coveralls'
@@ -76,25 +75,6 @@ module.exports = function(grunt) {
         dryRun: false,
         force: true,
         recursive: true
-      }
-    },
-
-    jshint: {
-      options: {
-        asi: true,
-        eqeqeq: true,
-        laxbreak: true,
-        globals: {
-          jQuery: false,
-          require: true,
-          process: true
-        }
-      },
-      gruntfile: {
-        src: 'gruntfile.js'
-      },
-      code: {
-        src: 'src/**/*.js'
       }
     },
 
@@ -196,13 +176,13 @@ module.exports = function(grunt) {
     },
 
     eslint: {
-      target: ['src/**']
+      target: ['src/**', '*.js']
     }
   })
 
   grunt.registerTask('default', ['notest', 'karma:single'])
   grunt.registerTask('build', ['removeBlock', 'copy', 'uglify'])
-  grunt.registerTask('notest', ['eslint', 'jsonlint', 'jshint', 'build'])
+  grunt.registerTask('notest', ['eslint', 'jsonlint', 'build'])
   grunt.registerTask('test', ['clean', 'eslint', 'karma:single', 'qunit'])
   grunt.registerTask('test-watch', ['clean', 'karma:watch'])
   grunt.registerTask('travis', [
