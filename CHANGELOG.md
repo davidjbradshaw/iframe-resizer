@@ -1,5 +1,7 @@
 # Version History
 
+- v4.2.8 [#779](https://github.com/davidjbradshaw/iframe-resizer/issues/779) Fix issue with `javascript:void(0)` and `about:blank` URLs [[https://github.com/ceckoslab]](ceckoslab) 
+- v4.2.7 npm fund
 - v4.2.6 Add support for NPM funding
 - v4.2.4 [#772](https://github.com/davidjbradshaw/iframe-resizer/issues/772) Fix issue with iframes inside ShaddowDOM elements [[Martin Belanger](https://github.com/martinbelanger)]
 - v4.2.3 [#683](https://github.com/davidjbradshaw/iframe-resizer/issues/683) Include border top/bottom, plus padding top/bottom, when calculating heights on iframe with `box-sizing: border-box;` [[Jim Doyle](https://github.com//superelement)]. [#768](https://github.com/davidjbradshaw/iframe-resizer/issues/768) Fix issue with hidden iframes [[Tony Living]](https://github.com//tonyliving)
