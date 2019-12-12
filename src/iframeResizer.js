@@ -94,6 +94,11 @@
 
     if (!requestAnimationFrame) {
       log('setup', 'RequestAnimationFrame not supported')
+    } else {
+      // Firefox extension content-scripts have a globalThis object that is not the same as window.
+      // Binding `requestAnimationFrame` to window allows the function to work and prevents errors
+      // being thrown when run in that context, and should be a no-op in every other context.
+      requestAnimationFrame = requestAnimationFrame.bind(window);
     }
   }
 
@@ -175,7 +180,7 @@
       var bot = compStyle.paddingBottom ? parseInt(compStyle.paddingBottom, 10) : 0
       return top + bot
     }
-    
+
     function getBorderEnds(compStyle) {
       if (compStyle.boxSizing !== 'border-box') {
         return 0;
