@@ -91,7 +91,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 
 ## License
 
-Copyright &copy; 2013-19 [David J. Bradshaw](https://github.com/davidjbradshaw).
+Copyright &copy; 2013-20 [David J. Bradshaw](https://github.com/davidjbradshaw).
 Licensed under the [MIT License](LICENSE).
 
 <!--
