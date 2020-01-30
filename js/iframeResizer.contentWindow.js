@@ -923,7 +923,7 @@
   var getHeight = {
       bodyOffset: function getBodyOffsetHeight() {
         return (
-          document.body.offsetHeight +
+          Math.max(document.body.scrollHeight, document.body.offsetHeight) +
           getComputedStyle('marginTop') +
           getComputedStyle('marginBottom')
         )
