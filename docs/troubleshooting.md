@@ -67,7 +67,7 @@ $('textarea')
 
 ### IFrame flickers
 
-Some of the alternate [height calculation methods](./parent_page/options.md#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new height can be worked out. This effect can be reduced by setting a [minSize](#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
+Some of the alternate [height calculation methods](./parent_page/options.md#heightcalculationmethod), such as **max** can cause the iFrame to flicker. This is due to the fact that to check for downsizing, the iFrame first has to be downsized before the new height can be worked out. This effect can be reduced by setting a [minSize](./docs/parent_page/options.md#minheight--minwidth) value, so that the iFrame is not reset to zero height before regrowing.
 
 In modern browsers, if the default [height calculation method](./parent_page/options.md#heightcalculationmethod) does not work, then it is normally best to use **taggedElement** or **lowestElement**, which are both flicker free.
 
@@ -104,7 +104,7 @@ It is not possible to add the required JavaScript to PDF and ODF files. However,
 
 ### Unexpected message received error
 
-By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](#checkorigin) option to **false**.
+By default the origin of incoming messages is checked against the `src` attribute of the iFrame. If they don't match an error is thrown. This behaviour can be disabled by setting the [checkOrigin](./docs/parent_page/options.md#checkorigin) option to **false**.
 
 ### Width not resizing
 
