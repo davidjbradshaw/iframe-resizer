@@ -80,7 +80,7 @@
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.1",
     "karma-firefox-launcher": "^1.2.0",
-    "karma-jasmine": "^2.0.1",
+    "karma-jasmine": "^3.1.1",
     "karma-jasmine-jquery": "^0.1.1",
     "karma-logcapture-reporter": "0.0.1",
     "karma-phantomjs-launcher": "^1.0.4",
