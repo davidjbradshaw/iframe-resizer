@@ -45,7 +45,7 @@
     "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-markdown": "^1.0.1",
     "eslint-plugin-no-constructor-bind": "^1.2.7",
-    "eslint-plugin-no-secrets": "^0.5.4",
+    "eslint-plugin-no-secrets": "^0.6.5",
     "eslint-plugin-no-use-extend-native": "^0.4.1",
     "eslint-plugin-only-error": "^1.0.2",
     "eslint-plugin-optimize-regex": "^1.1.7",
