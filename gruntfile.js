@@ -1,10 +1,12 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   // show elapsed time at the end
   require('time-grunt')(grunt) // eslint-disable-line import/no-extraneous-dependencies
 
   // load all grunt tasks
   // require('load-grunt-tasks')(grunt);
-  require('jit-grunt')(grunt, { // eslint-disable-line import/no-extraneous-dependencies
+
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  require('jit-grunt')(grunt, {
     'bump-only': 'grunt-bump',
     'bump-commit': 'grunt-bump',
     coveralls: 'grunt-karma-coveralls'
@@ -138,7 +140,7 @@ module.exports = function(grunt) {
         command: 'npm publish'
       },
       deployExample: {
-        command: function() {
+        command: function () {
           var retStr = '',
             fs = require('fs')
 
@@ -199,7 +201,7 @@ module.exports = function(grunt) {
   grunt.registerTask('minor', ['preBump', 'bump-only:minor', 'postBump'])
   grunt.registerTask('major', ['preBump', 'bump-only:major', 'postBump'])
 
-  grunt.registerMultiTask('removeBlock', function() {
+  grunt.registerMultiTask('removeBlock', function () {
     // set up a removal regular expression
     var removalRegEx = new RegExp(
       '(// ' +
@@ -210,7 +212,7 @@ module.exports = function(grunt) {
       'g'
     )
 
-    this.data.forEach(function(fileObj) {
+    this.data.forEach(function (fileObj) {
       var sourceFile = grunt.file.read(fileObj.src)
       var removedFile = sourceFile.replace(removalRegEx, '')
 
