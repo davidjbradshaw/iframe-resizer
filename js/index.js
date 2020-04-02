@@ -1,4 +1,4 @@
-const iframeResize = require('./iframeResizer')
+var iframeResize = require('./iframeResizer')
 
 exports.iframeResize = iframeResize
 exports.iframeResizer = iframeResize // Backwards compatability

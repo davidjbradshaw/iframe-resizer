@@ -1,5 +1,6 @@
 # Version History
 
+- v4.2.10 [#787](https://github.com/davidjbradshaw/iframe-resizer/issues/787) Replace `const` with `var` in index.js for IE10 [[Thomas Jaggi](https://github.com/backflip)]
 - v4.2.9 [#783](https://github.com/davidjbradshaw/iframe-resizer/issues/783) Bind `requestAnimationFrame` to `window` to fix issue with FireFox Content-Scripts [[Greg Soltis](https://github.com/gsoltis)]
 - v4.2.8 [#779](https://github.com/davidjbradshaw/iframe-resizer/issues/779) Fix issue with `javascript:void(0)` and `about:blank` URLs [[ceckoslab](https://github.com/ceckoslab)]
 - v4.2.7 Add support for NPM funding
