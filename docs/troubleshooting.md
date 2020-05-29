@@ -113,3 +113,7 @@ By default the origin of incoming messages is checked against the `src` attribut
 ### Width not resizing
 
 By default only changes in height are detected, if you want to calculate the width you need to set the `sizeWidth` opion to true and the `sizeHeight` option to false.
+
+### Frame has not responded within 5 seconds
+
+This can happen when postMessage is being blocked in browser. There could be multiple reasons to that but in some cases we found that RocketLoader extension within Cloudflare is was the reason. Try disabling it if you are using cloudflare.
