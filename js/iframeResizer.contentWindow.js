@@ -9,7 +9,7 @@
  */
 
 // eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
-;(function(undefined) {
+;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
   var autoResize = true,
@@ -53,17 +53,17 @@
     widthCalcModeDefault = 'scroll',
     widthCalcMode = widthCalcModeDefault,
     win = window,
-    onMessage = function() {
+    onMessage = function () {
       warn('onMessage function not defined')
     },
-    onReady = function() {},
-    onPageInfo = function() {},
+    onReady = function () {},
+    onPageInfo = function () {},
     customCalcMethods = {
-      height: function() {
+      height: function () {
         warn('Custom height calculation function not defined')
         return document.documentElement.offsetHeight
       },
-      width: function() {
+      width: function () {
         warn('Custom width calculation function not defined')
         return document.body.scrollWidth
       }
@@ -78,7 +78,7 @@
       {},
       {
         passive: {
-          get: function() {
+          get: function () {
             passiveSupported = true
           }
         }
@@ -109,7 +109,7 @@
       result,
       timeout = null,
       previous = 0,
-      later = function() {
+      later = function () {
         previous = getNow()
         timeout = null
         result = func.apply(context, args)
@@ -119,7 +119,7 @@
         }
       }
 
-    return function() {
+    return function () {
       var now = getNow()
 
       if (!previous) {
@@ -154,7 +154,7 @@
 
   var getNow =
     Date.now ||
-    function() {
+    function () {
       /* istanbul ignore next */ // Not testable in PhantonJS
       return new Date().getTime()
     }
@@ -311,7 +311,7 @@
 
   function manageTriggerEvent(options) {
     var listener = {
-      add: function(eventName) {
+      add: function (eventName) {
         function handleEvent() {
           sendSize(options.eventName, options.eventType)
         }
@@ -320,7 +320,7 @@
 
         addEventListener(window, eventName, handleEvent, { passive: true })
       },
-      remove: function(eventName) {
+      remove: function (eventName) {
         var handleEvent = eventHandlersByName[eventName]
         delete eventHandlersByName[eventName]
 
@@ -671,7 +671,7 @@
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
         } else {
-          onPageInfo = function() {}
+          onPageInfo = function () {}
           sendMsg(0, 0, 'pageInfoStop')
         }
       },
@@ -731,7 +731,7 @@
   function initInterval() {
     if (0 !== interval) {
       log('setInterval: ' + interval + 'ms')
-      intervalTimer = setInterval(function() {
+      intervalTimer = setInterval(function () {
         sendSize('interval', 'setInterval: ' + interval)
       }, Math.abs(interval))
     }
@@ -819,7 +819,7 @@
       observer = createMutationObserver()
 
     return {
-      disconnect: function() {
+      disconnect: function () {
         if ('disconnect' in observer) {
           log('Disconnect body MutationObserver')
           observer.disconnect()
@@ -929,7 +929,7 @@
         )
       },
 
-      offset: function() {
+      offset: function () {
         return getHeight.bodyOffset() // Backwards compatability
       },
 
@@ -1113,7 +1113,7 @@
       log('Trigger event lock on')
     }
     clearTimeout(triggerLockedTimer)
-    triggerLockedTimer = setTimeout(function() {
+    triggerLockedTimer = setTimeout(function () {
       triggerLocked = false
       log('Trigger event lock off')
       log('--')
@@ -1175,7 +1175,7 @@
 
         init()
         firstRun = false
-        setTimeout(function() {
+        setTimeout(function () {
           initLock = false
         }, eventCancelTimer)
       },
