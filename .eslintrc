@@ -36,6 +36,7 @@
     "unicorn/prefer-node-remove": 0,
     "unicorn/prefer-query-selector": 0,
     "unicorn/prevent-abbreviations": 0,
-    "unicorn/prefer-string-slice": 0
+    "unicorn/prefer-string-slice": 0,
+    "unicorn/prefer-number-properties": 0,
   }
 }
