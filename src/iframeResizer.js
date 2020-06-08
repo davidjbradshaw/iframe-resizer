@@ -159,7 +159,7 @@
 
     function processMsg() {
       var data = msg.substr(msgIdLen).split(':')
-      var height = data[1] ? Number.parseInt(data[1], 10) : 0
+      var height = data[1] ? parseInt(data[1], 10) : 0
       var iframe = settings[data[0]] && settings[data[0]].iframe
       var compStyle = getComputedStyle(iframe)
 
@@ -176,11 +176,9 @@
       if (compStyle.boxSizing !== 'border-box') {
         return 0
       }
-      var top = compStyle.paddingTop
-        ? Number.parseInt(compStyle.paddingTop, 10)
-        : 0
+      var top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
       var bot = compStyle.paddingBottom
-        ? Number.parseInt(compStyle.paddingBottom, 10)
+        ? parseInt(compStyle.paddingBottom, 10)
         : 0
       return top + bot
     }
@@ -190,10 +188,10 @@
         return 0
       }
       var top = compStyle.borderTopWidth
-        ? Number.parseInt(compStyle.borderTopWidth, 10)
+        ? parseInt(compStyle.borderTopWidth, 10)
         : 0
       var bot = compStyle.borderBottomWidth
-        ? Number.parseInt(compStyle.borderBottomWidth, 10)
+        ? parseInt(compStyle.borderBottomWidth, 10)
         : 0
       return top + bot
     }
@@ -321,11 +319,8 @@
           document.documentElement.clientWidth,
           window.innerWidth || 0
         ),
-        offsetTop: Number.parseInt(iFramePosition.top - bodyPosition.top, 10),
-        offsetLeft: Number.parseInt(
-          iFramePosition.left - bodyPosition.left,
-          10
-        ),
+        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
+        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
         scrollTop: window.pageYOffset,
         scrollLeft: window.pageXOffset,
         documentHeight: document.documentElement.clientHeight,

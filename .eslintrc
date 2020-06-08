@@ -1,6 +1,6 @@
 {
-  "extends": ["airbnb-base", "adjunct", "prettier"],
-  "plugins": ["prettier", "ie11"],
+  "extends": ["airbnb-base", "adjunct"],
+  "plugins": ["ie11"],
   "env": {
     "amd": true,
     "browser": true,
@@ -28,12 +28,15 @@
     "ie11/no-loop-func": ["warn"],
     "ie11/no-weak-collections": ["error"],
     "import/no-amd": 0,
+    "lodash/prefer-noop": 0,
+    "lodash-fp/prefer-constant": 0,
     "unicorn/consistent-function-scoping": 0,
     "unicorn/filename-case": 0,
     "unicorn/prefer-node-append": 0,
     "unicorn/prefer-node-remove": 0,
     "unicorn/prefer-query-selector": 0,
     "unicorn/prevent-abbreviations": 0,
-    "unicorn/prefer-string-slice": 0
+    "unicorn/prefer-string-slice": 0,
+    "unicorn/prefer-number-properties": 0,
   }
 }

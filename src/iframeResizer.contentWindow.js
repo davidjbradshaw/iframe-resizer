@@ -543,12 +543,8 @@
         pagePosition = getPagePosition()
 
       return {
-        x:
-          Number.parseInt(elPosition.left, 10) +
-          Number.parseInt(pagePosition.x, 10),
-        y:
-          Number.parseInt(elPosition.top, 10) +
-          Number.parseInt(pagePosition.y, 10)
+        x: parseInt(elPosition.left, 10) + parseInt(pagePosition.x, 10),
+        y: parseInt(elPosition.top, 10) + parseInt(pagePosition.y, 10)
       }
     }
 
@@ -861,7 +857,7 @@
     retVal = document.defaultView.getComputedStyle(el, null)
     retVal = null !== retVal ? retVal[prop] : 0
 
-    return Number.parseInt(retVal, base)
+    return parseInt(retVal, base)
   }
 
   function chkEventThottle(timer) {
