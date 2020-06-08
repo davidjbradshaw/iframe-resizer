@@ -773,7 +773,7 @@
 
     function imageEventTriggered(event, type, typeDesc) {
       removeImageLoadListener(event.target)
-      sendSize(type, typeDesc + ': ' + event.target.src, undefined, undefined)
+      sendSize(type, typeDesc + ': ' + event.target.src)
     }
 
     function imageLoaded(event) {
