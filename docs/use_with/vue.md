@@ -12,7 +12,16 @@ Vue.directive('resize', {
   }
 })
 ```
+```typescript
+import Vue from 'vue'
+import {iframeResizer} from 'iframe-resizer';
 
+Vue.directive('resize', {
+  bind: function(el, { value = {} }) {
+    el.addEventListener('load', () => iFrameResize(value, el))
+  }
+})
+```
 and then include it on you page as follows.
 
 ```html
