@@ -2,17 +2,7 @@
 
 Create the following Vue directive
 
-```js
-import Vue from 'vue'
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
-
-Vue.directive('resize', {
-  bind: function(el, { value = {} }) {
-    el.addEventListener('load', () => iFrameResize(value, el))
-  }
-})
 ```
-```typescript
 import Vue from 'vue'
 import {iframeResizer} from 'iframe-resizer';
 
