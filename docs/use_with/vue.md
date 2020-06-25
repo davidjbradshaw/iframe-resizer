@@ -2,9 +2,9 @@
 
 Create the following Vue directive
 
-```js
+```
 import Vue from 'vue'
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
+import {iframeResizer} from 'iframe-resizer';
 
 Vue.directive('resize', {
   bind: function(el, { value = {} }) {
@@ -12,7 +12,6 @@ Vue.directive('resize', {
   }
 })
 ```
-
 and then include it on you page as follows.
 
 ```html
