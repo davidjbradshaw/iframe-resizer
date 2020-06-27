@@ -1,6 +1,6 @@
 # Version History
 
-- v4.2.11 Remove unicorn/prefer-number-properties from eslint rules and revert `Number.parseInt` to `parseInt`
+- v4.2.11 Remove `unicorn/prefer-number-properties` from eslint rules and revert `Number.parseInt` to `parseInt`
 
 - v4.2.10 [#787](https://github.com/davidjbradshaw/iframe-resizer/issues/787) Replace `const` with `var` in index.js for IE10 [[Thomas Jaggi](https://github.com/backflip)]
 
