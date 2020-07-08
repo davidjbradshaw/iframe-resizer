@@ -894,12 +894,12 @@
     return maxVal
   }
 
-  function getAllMeasurements(dimention) {
+  function getAllMeasurements(dimensions) {
     return [
-      dimention.bodyOffset(),
-      dimention.bodyScroll(),
-      dimention.documentElementOffset(),
-      dimention.documentElementScroll()
+      dimensions.bodyOffset(),
+      dimensions.bodyScroll(),
+      dimensions.documentElementOffset(),
+      dimensions.documentElementScroll()
     ]
   }
 
