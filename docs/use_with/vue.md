@@ -4,7 +4,7 @@ Create the following Vue directive
 
 ```
 import Vue from 'vue'
-import {iframeResizer} from 'iframe-resizer';
+import {iframeResize} from 'iframe-resizer';
 
 Vue.directive('resize', {
   bind: function(el, { value = {} }) {
