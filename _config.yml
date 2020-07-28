@@ -1,8 +1,23 @@
 title: Iframe-resizer
+lang: en-US
 description: Size cross domain iFrames to content with support for window/content resizing, and multiple iFrames.
-google_analytics: UA-47552253-1
-show_downloads: true
-theme: jekyll-theme-tactile
 
-gems:
-  - jekyll-mentions
+# theme: jekyll-rtd-theme
+remote_theme: rundocs/jekyll-rtd-theme
+
+google:
+  gtag: UA-47552253-1
+
+edit: true
+
+copyright:
+  revision: true
+
+addons:
+  - github
+
+addons_commit: true
+
+# sort
+readme_index:
+  with_frontmatter: true
