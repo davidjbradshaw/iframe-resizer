@@ -179,7 +179,7 @@
 
   function init() {
     readDataFromParent()
-    log('Initialising iFrame (' + location.href + ')')
+    log('Initialising iFrame (' + window.location.href + ')')
     readDataFromPage()
     setMargin()
     setBodyStyle('background', bodyBackground)
@@ -582,8 +582,11 @@
     }
 
     function checkLocationHash() {
-      if ('' !== location.hash && '#' !== location.hash) {
-        findTarget(location.href)
+      var hash = window.location.hash
+      var href = window.location.href
+
+      if ('' !== hash && '#' !== hash) {
+        findTarget(href)
       }
     }
 

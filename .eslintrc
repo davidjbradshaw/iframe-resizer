@@ -6,6 +6,9 @@
     "browser": true,
     "jasmine": true
   },
+  "globals": {
+    "location": true
+  },
   "parserOptions": { "ecmaVersion": 2015 },
   "rules": {
     "func-names": 0,

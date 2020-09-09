@@ -179,7 +179,7 @@
 
   function init() {
     readDataFromParent()
-    log('Initialising iFrame (' + location.href + ')')
+    log('Initialising iFrame (' + window.location.href + ')')
     readDataFromPage()
     setMargin()
     setBodyStyle('background', bodyBackground)
@@ -582,8 +582,11 @@
     }
 
     function checkLocationHash() {
-      if ('' !== location.hash && '#' !== location.hash) {
-        findTarget(location.href)
+      var hash = window.location.hash
+      var href = window.location.href
+
+      if ('' !== hash && '#' !== hash) {
+        findTarget(href)
       }
     }
 
@@ -773,7 +776,7 @@
 
     function imageEventTriggered(event, type, typeDesc) {
       removeImageLoadListener(event.target)
-      sendSize(type, typeDesc + ': ' + event.target.src, undefined, undefined)
+      sendSize(type, typeDesc + ': ' + event.target.src)
     }
 
     function imageLoaded(event) {
@@ -894,12 +897,12 @@
     return maxVal
   }
 
-  function getAllMeasurements(dimention) {
+  function getAllMeasurements(dimensions) {
     return [
-      dimention.bodyOffset(),
-      dimention.bodyScroll(),
-      dimention.documentElementOffset(),
-      dimention.documentElementScroll()
+      dimensions.bodyOffset(),
+      dimensions.bodyScroll(),
+      dimensions.documentElementOffset(),
+      dimensions.documentElementScroll()
     ]
   }
 
