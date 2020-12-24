@@ -106,6 +106,7 @@
     var retStr = 'Host page: ' + iframeId
 
     if (window.top !== window.self) {
+      // eslint-disable-next-line unicorn/prefer-ternary
       if (window.parentIFrame && window.parentIFrame.getId) {
         retStr = window.parentIFrame.getId() + ': ' + iframeId
       } else {
