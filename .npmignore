@@ -1,6 +1,9 @@
 .DS_Store
 .coveralls.yml
 .idea
+.prettierrc
+.travis.yml
+.github
 node_modules
 bin
 docs
@@ -14,4 +17,5 @@ bower.json
 gruntfile.js
 karma.conf.js
 test-main.js
+package-lock.json
 coverage*
