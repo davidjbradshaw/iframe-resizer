@@ -914,7 +914,7 @@
 
     var elements = document.querySelectorAll('[' + tag + ']')
 
-    if (0 === elements.length) noTaggedElementsFound()
+    if (elements.length === 0) noTaggedElementsFound()
 
     return getMaxElement(side, elements)
   }
