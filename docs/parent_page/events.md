@@ -34,13 +34,29 @@ onMessage: ({iframe,message}) => undefined
 
 Receive message posted from iFrame with the `parentIFrame.sendMessage()` method.
 
+### onMouseEnter
+
+```js
+onMouseEnter: ({iframe,height,width,type}) => undefined
+```
+
+Function called after the mouse enters the iframe. Passes `messageData` object containing the **iFrame**, **screenX**, **screenY** and the **type** of event that triggered the callback.
+
+### onMouseLeave
+
+```js
+onMouseLeave: ({iframe,height,width,type}) => undefined
+```
+
+Function called after the mouse leaves the iframe. Passes `messageData` object containing the **iFrame**, **screenX**, **screenY** and the **type** of event that triggered the callback.
+
 ### onResized
 
 ```js
 onResized: ({iframe,height,width,type}) => undefined
 ```
 
-Function called after iFrame resized. Passes in messageData object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
+Function called after iFrame resized. Passes `messageData` object containing the **iFrame**, **height**, **width** and the **type** of event that triggered the iFrame to resize.
 
 ### onScroll
 

@@ -914,7 +914,7 @@
 
     var elements = document.querySelectorAll('[' + tag + ']')
 
-    if (0 === elements.length) noTaggedElementsFound()
+    if (elements.length === 0) noTaggedElementsFound()
 
     return getMaxElement(side, elements)
   }
@@ -1283,8 +1283,16 @@
     }
   }
 
+  function mouse(e) {
+    sendMsg(e.screenY, e.screenX, e.type)
+  }
+
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
+  addEventListener(window.document, 'mouseenter', mouse)
+  addEventListener(window.document, 'mouseleave', mouse)
+  // addEventListener(window.document, 'mouseover', mouse)
+  // addEventListener(window.document, 'mouseout', mouse)
   chkLateLoaded()
 
   

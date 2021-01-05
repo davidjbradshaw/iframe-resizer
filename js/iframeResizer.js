@@ -61,6 +61,8 @@
       onMessage: function () {
         warn('onMessage function not defined')
       },
+      onMouseEnter: function () {},
+      onMouseLeave: function () {},
       onResized: function () {},
       onScroll: function () {
         return true
@@ -106,6 +108,7 @@
     var retStr = 'Host page: ' + iframeId
 
     if (window.top !== window.self) {
+      // eslint-disable-next-line unicorn/prefer-ternary
       if (window.parentIFrame && window.parentIFrame.getId) {
         retStr = window.parentIFrame.getId() + ': ' + iframeId
       } else {
@@ -297,10 +300,12 @@
           msgBody +
           '}'
       )
+
       on('onMessage', {
         iframe: messageData.iframe,
         message: JSON.parse(msgBody)
       })
+
       log(iframeId, '--')
     }
 
@@ -506,6 +511,15 @@
       }
     }
 
+    function onMouse(event) {
+      on(event, {
+        iframe: messageData.iframe,
+        screenX: messageData.width,
+        screenY: messageData.height,
+        type: messageData.type
+      })
+    }
+
     function on(funcName, val) {
       return chkEvent(iframeId, funcName, val)
     }
@@ -520,6 +534,14 @@
 
         case 'message':
           forwardMsgFromIFrame(getMsgBody(6))
+          break
+
+        case 'mouseenter':
+          onMouse('onMouseEnter')
+          break
+
+        case 'mouseleave':
+          onMouse('onMouseLeave')
           break
 
         case 'autoResize':

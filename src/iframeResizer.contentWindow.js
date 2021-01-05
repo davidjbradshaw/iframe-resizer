@@ -1283,8 +1283,14 @@
     }
   }
 
+  function mouse(e) {
+    sendMsg(e.screenY, e.screenX, e.type)
+  }
+
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
+  addEventListener(window.document, 'mouseenter', mouse)
+  addEventListener(window.document, 'mouseleave', mouse)
   chkLateLoaded()
 
   // TEST CODE START //

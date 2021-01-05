@@ -42,12 +42,14 @@
        * Once you have it working, set the log option to false.
        */
 
+      var callbackDisplay = 'p#callback'
+
       iFrameResize({
         log: true, // Enable console logging
         inPageLinks: true,
-        onResized: function(messageData) {
+        onResized: function (messageData) {
           // Callback fn when resize is received
-          $('p#callback').html(
+          $(callbackDisplay).html(
             '<b>Frame ID:</b> ' +
               messageData.iframe.id +
               ' <b>Height:</b> ' +
@@ -58,9 +60,35 @@
               messageData.type
           )
         },
-        onMessage: function(messageData) {
+        onMouseEnter: function (messageData) {
+          // Callback fn when mouse enters iframe
+          $(callbackDisplay).html(
+            '<b>Frame ID:</b> ' +
+              messageData.iframe.id +
+              ' <b>ScreenX:</b> ' +
+              messageData.screenX +
+              ' <b>ScreenY:</b> ' +
+              messageData.screenY +
+              ' <b>Event type:</b> ' +
+              messageData.type
+            )
+        },
+        onMouseLeave: function (messageData) {
+          // Callback fn when mouse enters iframe
+          $(callbackDisplay).html(
+            '<b>Frame ID:</b> ' +
+              messageData.iframe.id +
+              ' <b>ScreenX:</b> ' +
+              messageData.screenX +
+              ' <b>ScreenY:</b> ' +
+              messageData.screenY +
+              ' <b>Event type:</b> ' +
+              messageData.type
+          )
+        },
+        onMessage: function (messageData) {
           // Callback fn when message is received
-          $('p#callback').html(
+          $(callbackDisplay).html(
             '<b>Frame ID:</b> ' +
               messageData.iframe.id +
               ' <b>Message:</b> ' +
@@ -71,12 +99,11 @@
             .getElementsByTagName('iframe')[0]
             .iFrameResizer.sendMessage('Hello back from parent page')
         },
-        onClosed: function(id) {
+        onClosed: function (id) {
           // Callback fn when iFrame is closed
-          $('p#callback').html(
-            '<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
-          )
-        }
+          $(callbackDisplay).html('<b>IFrame (</b>' + id + '<b>) removed from page.</b>')
+        },
+
       })
     </script>
   </body>

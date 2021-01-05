@@ -18,6 +18,7 @@ This library enables the automatic resizing of the height and width of both same
 - Fixes in page links in iFrame and supports links between the iFrame and parent page.
 - Provides custom sizing and scrolling methods.
 - Exposes parent position and viewport size to the iFrame.
+- Provides `onMouseEnter` and `onMouseLeave` events for the iFrame.
 - Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
 - Supports IE 11 ([V3 supports back to IE8](https://github.com/davidjbradshaw/iframe-resizer/tree/V3))
 
