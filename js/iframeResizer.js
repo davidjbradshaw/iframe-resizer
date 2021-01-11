@@ -46,6 +46,7 @@
       maxWidth: Infinity,
       minHeight: 0,
       minWidth: 0,
+      mouseEvents: true,
       resizeFrom: 'parent',
       scrolling: false,
       sizeHeight: true,
@@ -512,10 +513,25 @@
     }
 
     function onMouse(event) {
+      var mousePos = {}
+
+      if (Number(messageData.width) === 0 && Number(messageData.height) === 0) {
+        var data = getMsgBody(9).split(':')
+        mousePos = {
+          x: data[1],
+          y: data[0]
+        }
+      } else {
+        mousePos = {
+          x: messageData.width,
+          y: messageData.height
+        }
+      }
+
       on(event, {
         iframe: messageData.iframe,
-        screenX: messageData.width,
-        screenY: messageData.height,
+        screenX: Number(mousePos.x),
+        screenY: Number(mousePos.y),
         type: messageData.type
       })
     }
@@ -582,7 +598,19 @@
           break
 
         default:
-          resizeIFrame()
+          if (
+            Number(messageData.width) === 0 &&
+            Number(messageData.height) === 0
+          ) {
+            warn(
+              'Unsupported message received (' +
+                messageData.type +
+                '), this is likely due to the iframe containing a later ' +
+                'version of iframe-resizer than the parent page'
+            )
+          } else {
+            resizeIFrame()
+          }
       }
     }
 
@@ -904,7 +932,9 @@
       ':' +
       settings[iframeId].resizeFrom +
       ':' +
-      settings[iframeId].widthCalculationMethod
+      settings[iframeId].widthCalculationMethod +
+      ':' +
+      settings[iframeId].mouseEvents
     )
   }
 

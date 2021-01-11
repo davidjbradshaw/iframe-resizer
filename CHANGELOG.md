@@ -1,6 +1,8 @@
 # Version History
 
-- v4.3.0 Add `onMouseEnter` and `onMouseLeave` event callbacks
+- v4.3.1 [#901](https://github.com/davidjbradshaw/iframe-resizer/issues/901) Fix backwards compatability issue with mouse events
+
+- v4.3.0 Add `onMouseEnter` and `onMouseLeave` event callbacks [DEPRECATED]
 
 - v4.2.11 Remove `unicorn/prefer-number-properties` from eslint rules and revert `Number.parseInt` to `parseInt`
 

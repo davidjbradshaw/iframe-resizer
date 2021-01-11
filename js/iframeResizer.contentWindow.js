@@ -32,6 +32,7 @@
     interval = 32,
     intervalTimer = null,
     logging = false,
+    mouseEvents = false,
     msgID = '[iFrameSizer]', // Must match host page msg ID
     msgIdLen = msgID.length,
     myID = '',
@@ -189,6 +190,7 @@
     checkWidthMode()
     stopInfiniteResizingOfIFrame()
     setupPublicMethods()
+    setupMouseEvents()
     startEventListeners()
     inPageLinks = setupInPageLinks()
     sendSize('init', 'Init message from host page')
@@ -216,6 +218,7 @@
     inPageLinks.enable = undefined !== data[12] ? strBool(data[12]) : false
     resizeFrom = undefined !== data[13] ? data[13] : resizeFrom
     widthCalcMode = undefined !== data[14] ? data[14] : widthCalcMode
+    mouseEvents = undefined !== data[15] ? Boolean(data[15]) : mouseEvents
   }
 
   function depricate(key) {
@@ -642,6 +645,22 @@
     return {
       findTarget: findTarget
     }
+  }
+
+  function setupMouseEvents() {
+    if (mouseEvents !== true) return
+
+    function sendMouse(e) {
+      sendMsg(0, 0, e.type, e.screenY + ':' + e.screenX)
+    }
+
+    function addMouseListener(evt, name) {
+      log('Add event listener: ' + name)
+      addEventListener(window.document, evt, sendMouse)
+    }
+
+    addMouseListener('mouseenter', 'Mouse Enter')
+    addMouseListener('mouseleave', 'Mouse Leave')
   }
 
   function setupPublicMethods() {
@@ -1283,16 +1302,8 @@
     }
   }
 
-  function mouse(e) {
-    sendMsg(e.screenY, e.screenX, e.type)
-  }
-
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
-  addEventListener(window.document, 'mouseenter', mouse)
-  addEventListener(window.document, 'mouseleave', mouse)
-  // addEventListener(window.document, 'mouseover', mouse)
-  // addEventListener(window.document, 'mouseout', mouse)
   chkLateLoaded()
 
   
