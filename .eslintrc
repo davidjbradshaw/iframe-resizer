@@ -36,6 +36,7 @@
     "unicorn/consistent-function-scoping": 0,
     "unicorn/filename-case": 0,
     "unicorn/no-array-callback-reference": 0,
+    "unicorn/no-this-assignment": 0,
     "unicorn/prefer-date-now": 0,
     "unicorn/prefer-dom-node-append": 0,
     "unicorn/prefer-dom-node-remove": 0,
