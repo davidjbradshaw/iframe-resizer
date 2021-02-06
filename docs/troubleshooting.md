@@ -116,4 +116,4 @@ By default only changes in height are detected, if you want to calculate the wid
 
 ### Frame has not responded within 5 seconds
 
-This can happen when postMessage is being blocked in browser. There could be multiple reasons to that but in some cases we found that RocketLoader extension within Cloudflare is was the reason. Try disabling it if you are using cloudflare.
+This can happen when postMessage is being blocked in browser. There could be multiple reasons to that but in some cases we found that RocketLoader extension within Cloudflare was the reason. Try disabling it if you are using cloudflare.
