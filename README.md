@@ -94,8 +94,8 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 
 ## License
 
-Copyright &copy; 2013-21 [David J. Bradshaw](https://github.com/davidjbradshaw).
-Licensed under the [MIT License](LICENSE).
+Copyright &copy; 2013-21 [David J. Bradshaw](https://github.com/davidjbradshaw) -
+Licensed under the [MIT License](LICENSE)
 
 <!--
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
