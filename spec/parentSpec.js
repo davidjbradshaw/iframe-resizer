@@ -1,17 +1,17 @@
-define(['iframeResizer'], function(iFrameResize) {
-  describe('Parent Page', function() {
-    describe('default resize', function() {
+define(['iframeResizer'], function (iFrameResize) {
+  describe('Parent Page', function () {
+    describe('default resize', function () {
       var iframe
       var log = LOG
       var testId = 'defaultResize3'
       var ready
 
-      beforeEach(function(done) {
+      beforeEach(function (done) {
         loadIFrame('iframe600.html')
         iframe = iFrameResize({
           log: log,
           id: testId,
-          onResized: function() {
+          onResized: function () {
             ready = true
             done()
           }
@@ -20,22 +20,21 @@ define(['iframeResizer'], function(iFrameResize) {
         mockMsgFromIFrame(iframe, 'foo')
       })
 
-      afterEach(function() {
+      afterEach(function () {
         tearDown(iframe)
       })
 
-      it('receive message', function() {
+      it('receive message', function () {
         expect(ready).toBe(true)
       })
     })
-    
 
-    describe('reset Page', function() {
+    describe('reset Page', function () {
       var iframe
       var log = LOG
       var testId = 'parentPage1'
 
-      beforeEach(function(done) {
+      beforeEach(function (done) {
         loadIFrame('iframe600.html')
         iframe = iFrameResize({
           log: log,
@@ -46,11 +45,11 @@ define(['iframeResizer'], function(iFrameResize) {
         mockMsgFromIFrame(iframe, 'reset')
       })
 
-      afterEach(function() {
+      afterEach(function () {
         tearDown(iframe)
       })
 
-      it('receive message', function() {
+      it('receive message', function () {
         expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
           '[iFrameSizer]reset',
           'http://localhost:9876'
@@ -58,12 +57,12 @@ define(['iframeResizer'], function(iFrameResize) {
       })
     })
 
-    describe('late load msg received', function() {
+    describe('late load msg received', function () {
       var iframe
       var log = LOG
       var testId = 'parentPage2'
 
-      beforeEach(function(done) {
+      beforeEach(function (done) {
         loadIFrame('iframe600.html')
         iframe = iFrameResize({
           log: log,
@@ -74,24 +73,24 @@ define(['iframeResizer'], function(iFrameResize) {
         window.postMessage('[iFrameResizerChild]Ready', '*')
       })
 
-      afterEach(function() {
+      afterEach(function () {
         tearDown(iframe)
       })
 
-      it('receive message', function() {
+      it('receive message', function () {
         expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll',
+          '[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll:true',
           'http://localhost:9876'
         )
       })
     })
 
-    describe('resize height', function() {
+    describe('resize height', function () {
       var iframe
       var log = LOG
       var testId = 'parentPage3'
       var HEIGHT = 90
-      var extraHeights = [1,2,3,4]
+      var extraHeights = [1, 2, 3, 4]
 
       var setUp = (boxSizing, units) => {
         loadIFrame('iframe.html')
@@ -111,51 +110,57 @@ define(['iframeResizer'], function(iFrameResize) {
 
         // needs timeout so postMessage always comes after 'ready' postMessage
         setTimeout(() => {
-          window.postMessage(`[iFrameSizer]${testId}:${HEIGHT}:600:mutationObserver`, '*')
+          window.postMessage(
+            `[iFrameSizer]${testId}:${HEIGHT}:600:mutationObserver`,
+            '*'
+          )
         }, 0)
       }
 
-      afterEach(function() {
+      afterEach(function () {
         tearDown(iframe)
       })
 
-      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "border-box"', done => {
-
+      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
         setUp('border-box', 'px')
-        
+
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
         setTimeout(() => {
-          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b, 0))
+          expect(iframe.offsetHeight).toBe(
+            HEIGHT + extraHeights.reduce((a, b) => a + b, 0)
+          )
           done()
         }, 100)
       })
 
-      it('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', done => {
+      it('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
         const REM = 14
 
         // changes the rem units of the doc so we can test accurately
         document.querySelector('html').style.fontSize = `${REM}px`
 
         setUp('border-box', 'rem')
-        
+
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
         setTimeout(() => {
-          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+(b*REM), 0))
+          expect(iframe.offsetHeight).toBe(
+            HEIGHT + extraHeights.reduce((a, b) => a + b * REM, 0)
+          )
           done()
         }, 100)
       })
 
-      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "content-box"', done => {
-
+      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "content-box"', (done) => {
         setUp('content-box', 'px')
 
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
         setTimeout(() => {
-          expect(iframe.offsetHeight).toBe(HEIGHT + extraHeights.reduce((a, b) => a+b, 0))
+          expect(iframe.offsetHeight).toBe(
+            HEIGHT + extraHeights.reduce((a, b) => a + b, 0)
+          )
           done()
         }, 100)
       })
-
     })
   })
 })
