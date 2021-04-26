@@ -1,5 +1,7 @@
 # Version History
 
+- v4.3.2 [#936](https://github.com/davidjbradshaw/iframe-resizer/issues/936) Allow max/min values for iFrame size to be set using units other than `px` [[Luke Murray](https://github.com/lukesmurray)]
+
 - v4.3.1 [#901](https://github.com/davidjbradshaw/iframe-resizer/issues/901) Fix backwards compatability issue with mouse events
 
 - v4.3.0 Add `onMouseEnter` and `onMouseLeave` event callbacks [DEPRECATED]

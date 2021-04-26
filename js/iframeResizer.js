@@ -109,12 +109,10 @@
     var retStr = 'Host page: ' + iframeId
 
     if (window.top !== window.self) {
-      // eslint-disable-next-line unicorn/prefer-ternary
-      if (window.parentIFrame && window.parentIFrame.getId) {
-        retStr = window.parentIFrame.getId() + ': ' + iframeId
-      } else {
-        retStr = 'Nested host page: ' + iframeId
-      }
+      retStr =
+        window.parentIFrame && window.parentIFrame.getId
+          ? window.parentIFrame.getId() + ': ' + iframeId
+          : 'Nested host page: ' + iframeId
     }
 
     return retStr
@@ -938,18 +936,19 @@
     )
   }
 
+  function isNumber(value) {
+    return typeof value === 'number'
+  }
+
   function setupIFrame(iframe, options) {
     function setLimits() {
       function addStyle(style) {
-        if (
-          Infinity !== settings[iframeId][style] &&
-          0 !== settings[iframeId][style]
-        ) {
-          iframe.style[style] = settings[iframeId][style] + 'px'
-          log(
-            iframeId,
-            'Set ' + style + ' = ' + settings[iframeId][style] + 'px'
-          )
+        var styleValue = settings[iframeId][style]
+        if (Infinity !== styleValue && 0 !== styleValue) {
+          iframe.style[style] = isNumber(styleValue)
+            ? styleValue + 'px'
+            : styleValue
+          log(iframeId, 'Set ' + style + ' = ' + iframe.style[style])
         }
       }
 
