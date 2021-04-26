@@ -32,6 +32,7 @@
     interval = 32,
     intervalTimer = null,
     logging = false,
+    mouseEvents = false,
     msgID = '[iFrameSizer]', // Must match host page msg ID
     msgIdLen = msgID.length,
     myID = '',
@@ -172,7 +173,7 @@
 
   function init() {
     readDataFromParent()
-    log('Initialising iFrame (' + location.href + ')')
+    log('Initialising iFrame (' + window.location.href + ')')
     readDataFromPage()
     setMargin()
     setBodyStyle('background', bodyBackground)
@@ -182,6 +183,7 @@
     checkWidthMode()
     stopInfiniteResizingOfIFrame()
     setupPublicMethods()
+    setupMouseEvents()
     startEventListeners()
     inPageLinks = setupInPageLinks()
     sendSize('init', 'Init message from host page')
@@ -209,6 +211,7 @@
     inPageLinks.enable = undefined !== data[12] ? strBool(data[12]) : false
     resizeFrom = undefined !== data[13] ? data[13] : resizeFrom
     widthCalcMode = undefined !== data[14] ? data[14] : widthCalcMode
+    mouseEvents = undefined !== data[15] ? Boolean(data[15]) : mouseEvents
   }
 
   function depricate(key) {
@@ -536,12 +539,8 @@
         pagePosition = getPagePosition()
 
       return {
-        x:
-          Number.parseInt(elPosition.left, 10) +
-          Number.parseInt(pagePosition.x, 10),
-        y:
-          Number.parseInt(elPosition.top, 10) +
-          Number.parseInt(pagePosition.y, 10)
+        x: parseInt(elPosition.left, 10) + parseInt(pagePosition.x, 10),
+        y: parseInt(elPosition.top, 10) + parseInt(pagePosition.y, 10)
       }
     }
 
@@ -579,8 +578,11 @@
     }
 
     function checkLocationHash() {
-      if ('' !== location.hash && '#' !== location.hash) {
-        findTarget(location.href)
+      var hash = window.location.hash
+      var href = window.location.href
+
+      if ('' !== hash && '#' !== hash) {
+        findTarget(href)
       }
     }
 
@@ -636,6 +638,22 @@
     return {
       findTarget: findTarget
     }
+  }
+
+  function setupMouseEvents() {
+    if (mouseEvents !== true) return
+
+    function sendMouse(e) {
+      sendMsg(0, 0, e.type, e.screenY + ':' + e.screenX)
+    }
+
+    function addMouseListener(evt, name) {
+      log('Add event listener: ' + name)
+      addEventListener(window.document, evt, sendMouse)
+    }
+
+    addMouseListener('mouseenter', 'Mouse Enter')
+    addMouseListener('mouseleave', 'Mouse Leave')
   }
 
   function setupPublicMethods() {
@@ -854,7 +872,7 @@
     retVal = document.defaultView.getComputedStyle(el, null)
     retVal = null !== retVal ? retVal[prop] : 0
 
-    return Number.parseInt(retVal, base)
+    return parseInt(retVal, base)
   }
 
   function chkEventThottle(timer) {
@@ -891,12 +909,12 @@
     return maxVal
   }
 
-  function getAllMeasurements(dimention) {
+  function getAllMeasurements(dimensions) {
     return [
-      dimention.bodyOffset(),
-      dimention.bodyScroll(),
-      dimention.documentElementOffset(),
-      dimention.documentElementScroll()
+      dimensions.bodyOffset(),
+      dimensions.bodyScroll(),
+      dimensions.documentElementOffset(),
+      dimensions.documentElementScroll()
     ]
   }
 

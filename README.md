@@ -18,12 +18,13 @@ This library enables the automatic resizing of the height and width of both same
 - Fixes in page links in iFrame and supports links between the iFrame and parent page.
 - Provides custom sizing and scrolling methods.
 - Exposes parent position and viewport size to the iFrame.
+- Provides `onMouseEnter` and `onMouseLeave` events for the iFrame.
 - Works with [ViewerJS](http://viewerjs.org/) to support PDF and ODF documents.
 - Supports IE 11 ([V3 supports back to IE8](https://github.com/davidjbradshaw/iframe-resizer/tree/V3))
 
 ## Donate
 
-Iframe-resizer is the result of many 100s of hours of work, if you would like to join others in showing support for the development of this project, then please feel free to buy me a coffee.
+Iframe-resizer is the result of many 100s of hours of work, if you would like to join others in showing support for the continued development of this project, then please feel free to buy me a coffee.
 
 <a href="https://www.buymeacoffee.com/davidjbradshaw " target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
@@ -35,7 +36,7 @@ This package can be installed via NPM (`npm install iframe-resizer --save`).
 
 ### Usage
 
-The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with via JavaScript:
+The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/tree/master/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with via JavaScript:
 
 ```js
 const iframes = iFrameResize( [{options}], [css selector] || [iframe] );
@@ -84,15 +85,17 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
   - [React](https://github.com/davidjbradshaw/iframe-resizer-react)
   - [Vue](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/vue.md)
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
+  - [Ember](https://github.com/alexlafroscia/ember-iframe-resizer-modifier)
   - [jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/jquery.md)
+  - [Google Apps Script](https://stackoverflow.com/a/65724113/2087070)
 - [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md)
 - [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
 - [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
 
 ## License
 
-Copyright &copy; 2013-20 [David J. Bradshaw](https://github.com/davidjbradshaw).
-Licensed under the [MIT License](LICENSE).
+Copyright &copy; 2013-21 [David J. Bradshaw](https://github.com/davidjbradshaw) -
+Licensed under the [MIT License](LICENSE)
 
 <!--
 [![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)

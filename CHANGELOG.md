@@ -1,5 +1,11 @@
 # Version History
 
+- v4.3.1 [#901](https://github.com/davidjbradshaw/iframe-resizer/issues/901) Fix backwards compatability issue with mouse events
+
+- v4.3.0 Add `onMouseEnter` and `onMouseLeave` event callbacks [DEPRECATED]
+
+- v4.2.11 Remove `unicorn/prefer-number-properties` from eslint rules and revert `Number.parseInt` to `parseInt`
+
 - v4.2.10 [#787](https://github.com/davidjbradshaw/iframe-resizer/issues/787) Replace `const` with `var` in index.js for IE10 [[Thomas Jaggi](https://github.com/backflip)]
 
 - v4.2.9 [#783](https://github.com/davidjbradshaw/iframe-resizer/issues/783) Bind `requestAnimationFrame` to `window` to fix issue with FireFox Content-Scripts [[Greg Soltis](https://github.com/gsoltis)]

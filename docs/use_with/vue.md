@@ -4,16 +4,19 @@ Create the following Vue directive
 
 ```js
 import Vue from 'vue'
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
+import iframeResize from 'iframe-resizer/js/iframeResizer';
 
 Vue.directive('resize', {
   bind: function(el, { value = {} }) {
-    el.addEventListener('load', () => iFrameResize(value, el))
+    el.addEventListener('load', () => iframeResize(value, el))
+  },
+  unbind: function (el) {
+    el.iFrameResizer.removeListeners();
   }
 })
 ```
 
-and then include it on you page as follows.
+and then include it on your page as follows.
 
 ```html
 <iframe

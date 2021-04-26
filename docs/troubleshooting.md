@@ -73,6 +73,10 @@ In modern browsers, if the default [height calculation method](./parent_page/opt
 
 <i>Please see the notes section under [heightCalculationMethod](./parent_page/options.md#heightcalculationmethod) to understand the limitations of the different options.</i>
 
+### Localhost 127.0.0.1 and file:///
+
+When an iframe is located on your local machine the browser adds extra security restrictions to cross-domain iframes. These will stop iframe-resizer from functioning. If you need to test something locally, then it is best to use the external IP Address of the machine.
+
 ### Failed to execute 'postMessage' on 'DOMWindow'
 
 This error occurs when the parent window tries to send a message to the iframe before it has loaded. IFrameResize makes multiple attempts to talk to the iFrame, so if everything is working then you can safely ignore this error message.
@@ -109,3 +113,7 @@ By default the origin of incoming messages is checked against the `src` attribut
 ### Width not resizing
 
 By default only changes in height are detected, if you want to calculate the width you need to set the `sizeWidth` opion to true and the `sizeHeight` option to false.
+
+### Frame has not responded within 5 seconds
+
+This can happen when postMessage is being blocked in browser. There could be multiple reasons to that but in some cases we found that RocketLoader extension within Cloudflare was the reason. Try disabling it if you are using cloudflare.
