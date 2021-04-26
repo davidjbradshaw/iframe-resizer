@@ -110,7 +110,7 @@
       timeout = null,
       previous = 0,
       later = function () {
-        previous = getNow()
+        previous = Date.now()
         timeout = null
         result = func.apply(context, args)
         if (!timeout) {
@@ -120,7 +120,7 @@
       }
 
     return function () {
-      var now = getNow()
+      var now = Date.now()
 
       if (!previous) {
         previous = now
@@ -151,13 +151,6 @@
       return result
     }
   }
-
-  var getNow =
-    Date.now ||
-    function () {
-      /* istanbul ignore next */ // Not testable in PhantonJS
-      return new Date().getTime()
-    }
 
   function formatLogMsg(msg) {
     return msgID + '[' + myID + '] ' + msg
@@ -777,7 +770,7 @@
 
     function imageEventTriggered(event, type, typeDesc) {
       removeImageLoadListener(event.target)
-      sendSize(type, typeDesc + ': ' + event.target.src, undefined, undefined)
+      sendSize(type, typeDesc + ': ' + event.target.src)
     }
 
     function imageLoaded(event) {
@@ -877,7 +870,7 @@
       elVal = 0,
       maxVal = 0,
       Side = capitalizeFirstLetter(side),
-      timer = getNow()
+      timer = Date.now()
 
     for (var i = 0; i < elementsLength; i++) {
       elVal =
@@ -888,7 +881,7 @@
       }
     }
 
-    timer = getNow() - timer
+    timer = Date.now() - timer
 
     log('Parsed ' + elementsLength + ' HTML elements')
     log('Element position calculated in ' + timer + 'ms')
@@ -915,7 +908,7 @@
 
     var elements = document.querySelectorAll('[' + tag + ']')
 
-    if (0 === elements.length) noTaggedElementsFound()
+    if (elements.length === 0) noTaggedElementsFound()
 
     return getMaxElement(side, elements)
   }

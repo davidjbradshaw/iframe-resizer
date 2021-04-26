@@ -106,11 +106,10 @@
     var retStr = 'Host page: ' + iframeId
 
     if (window.top !== window.self) {
-      if (window.parentIFrame && window.parentIFrame.getId) {
-        retStr = window.parentIFrame.getId() + ': ' + iframeId
-      } else {
-        retStr = 'Nested host page: ' + iframeId
-      }
+      retStr =
+        window.parentIFrame && window.parentIFrame.getId
+          ? window.parentIFrame.getId() + ': ' + iframeId
+          : 'Nested host page: ' + iframeId
     }
 
     return retStr

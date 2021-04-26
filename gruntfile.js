@@ -203,6 +203,7 @@ module.exports = function (grunt) {
 
   grunt.registerMultiTask('removeBlock', function () {
     // set up a removal regular expression
+    // eslint-disable-next-line security/detect-non-literal-regexp
     var removalRegEx = new RegExp(
       '(// ' +
         this.options()[0] +
