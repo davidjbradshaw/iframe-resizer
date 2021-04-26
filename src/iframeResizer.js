@@ -936,18 +936,19 @@
     )
   }
 
+  function isNumber(value) {
+    return typeof value === 'number'
+  }
+
   function setupIFrame(iframe, options) {
     function setLimits() {
       function addStyle(style) {
-        if (
-          Infinity !== settings[iframeId][style] &&
-          0 !== settings[iframeId][style]
-        ) {
-          iframe.style[style] = settings[iframeId][style] + 'px'
-          log(
-            iframeId,
-            'Set ' + style + ' = ' + settings[iframeId][style] + 'px'
-          )
+        var styleValue = settings[iframeId][style]
+        if (Infinity !== styleValue && 0 !== styleValue) {
+          iframe.style[style] = isNumber(styleValue)
+            ? styleValue + 'px'
+            : styleValue
+          log(iframeId, 'Set ' + style + ' = ' + iframe.style[style])
         }
       }
 
