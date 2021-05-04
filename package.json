@@ -45,7 +45,7 @@
     "eslint-plugin-ie11": "^1.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jasmine": "^4.1.2",
-    "eslint-plugin-json": "^2.1.2",
+    "eslint-plugin-json": "^3.0.0",
     "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-lodash": "^7.2.0",
     "eslint-plugin-lodash-fp": "^2.2.0-a1",
