@@ -169,7 +169,7 @@
         iframe: iframe,
         id: data[0],
         height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
-        width: data[2],
+        width: data[2] ? Number(data[2]) : 0,
         type: data[3]
       }
     }
@@ -216,7 +216,7 @@
         log(iframeId, 'Set ' + dimension + ' to max value')
       }
 
-      messageData[dimension] = '' + size
+      messageData[dimension] = Number(size)
     }
 
     function isMessageFromIFrame() {

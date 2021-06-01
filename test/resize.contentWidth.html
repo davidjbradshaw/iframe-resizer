@@ -40,7 +40,8 @@
                 sendMessage('width')
                 break
               case '2':
-                ok(3000 < parseInt(messageData.width, 10), 'iFrame width<3000')
+                ok(3000 < messageData.width, 'iFrame width<3000')
+                ok(messageData.width.toString() !== messageData.width, 'width is number')
                 start()
             }
           }
