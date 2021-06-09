@@ -50,7 +50,7 @@
                     ' message back from iFrame. Expected ' +
                     msgType
                 )
-                ok('100' === messageData.height, 'Height received = 100')
+                ok(100 === messageData.height, 'Height received = 100')
                 //ok( 100 === $('iframe').height(), 'IFrame height = 100'); Works in phaatomJS, but not chrome!
                 sendMessage('size200300')
                 break
@@ -62,8 +62,8 @@
                     ' message back from iFrame. Expected ' +
                     msgType
                 )
-                ok('200' === messageData.height, 'Height received = 200')
-                ok('300' === messageData.width, 'Width received = 300')
+                ok(200 === messageData.height, 'Height received = 200')
+                ok(300 === messageData.width, 'Width received = 300')
                 start()
             }
           }
