@@ -1317,11 +1317,11 @@
   /* istanbul ignore next */
   function tabVisible() {
     function resize() {
-      sendTriggerMsg('Tab Visable', 'resize')
+      sendTriggerMsg('Tab Visible', 'resize')
     }
 
     if ('hidden' !== document.visibilityState) {
-      log('document', 'Trigger event: Visiblity change')
+      log('document', 'Trigger event: Visibility change')
       debouce(resize, 16)
     }
   }
