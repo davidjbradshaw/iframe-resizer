@@ -16,7 +16,7 @@ The following options can be set from within the iFrame page by creating a `wind
 	default: '*'
 	type: string
 
-This option allows you to restrict the domain of the parent page, to prevent other sites mimicing your parent page.
+This option allows you to restrict the domain of the parent page, to prevent other sites mimicking your parent page.
 
 ### heightCalculationMethod / widthCalculationMethod
 
