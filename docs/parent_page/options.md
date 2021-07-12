@@ -70,7 +70,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 * **documentElementScroll** uses `document.documentElement.scrollHeight` <sup>*</sup>
 * **max** takes the largest value of the main four options <sup>*</sup>
 * **min** takes the smallest value of the main four options <sup>*</sup>
-* **lowestElement** Loops though every element in the the DOM and finds the lowest bottom point <sup>†</sup>
+* **lowestElement** Loops though every element in the DOM and finds the lowest bottom point <sup>†</sup>
 * **taggedElement** Finds the bottom of the lowest element with a `data-iframe-height` attribute
 
 <i>Notes:</i>
@@ -152,7 +152,7 @@ Some CSS techniques may require you to change this setting to one of the followi
 * **scroll** takes the largest value of the two scroll options <sup>*</sup>
 * **max** takes the largest value of the main four options <sup>*</sup>
 * **min** takes the smallest value of the main four options <sup>*</sup>
-* **rightMostElement** Loops though every element in the the DOM and finds the right most point <sup>†</sup>
+* **rightMostElement** Loops though every element in the DOM and finds the right most point <sup>†</sup>
 * **taggedElement** Finds the left most element with a `data-iframe-width` attribute
 
 Alternatively it is possible to add your own custom sizing method directly inside the iFrame, see the [iFrame Page Options](../iframed_page/options.md) section for more details
