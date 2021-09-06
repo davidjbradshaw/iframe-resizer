@@ -4,7 +4,7 @@ These methods are available in the iFrame via the `window.parentIFrame` object. 
 
 ```js
 if ('parentIFrame' in window) {
-  parentIFrame.close();
+  parentIFrame.close()
 }
 ```
 
@@ -66,7 +66,7 @@ Manually force iFrame to resize. This method optionally accepts two arguments: *
 iFrameResize({
   autoResize: false,
   sizeWidth: true
-});
+})
 ```
 
 Then you can call the `size` method with dimensions:
