@@ -377,7 +377,7 @@
     manageTriggerEvent({
       method: method,
       eventType: 'Print',
-      eventName: ['afterprint', 'beforeprint']
+      eventNames: ['afterprint', 'beforeprint']
     })
     manageTriggerEvent({
       method: method,
