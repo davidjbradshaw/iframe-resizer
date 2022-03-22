@@ -63,5 +63,5 @@ function closeChild(window, done) {
 }
 
 function strEnd(str, num) {
-  return str.substr(str.length - num);
+  return str.slice(-num);
 }

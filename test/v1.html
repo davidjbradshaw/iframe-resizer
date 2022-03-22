@@ -102,7 +102,7 @@
             }
 
             function processMsg() {
-              var data = msg.substr(msgIdLen).split(':')
+              var data = msg.slice(msgIdLen).split(':')
 
               messageData = {
                 iframe: document.getElementById(data[0]),
@@ -114,7 +114,7 @@
             var messageData = {}
 
             //check message is for us.
-            if (msgId === msg.substr(0, msgIdLen)) {
+            if (msgId === msg.slice(0, msgIdLen)) {
               processMsg()
               resize()
               settings.callback(messageData, settings)
