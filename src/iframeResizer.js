@@ -160,7 +160,7 @@
     }
 
     function processMsg() {
-      var data = msg.substr(msgIdLen).split(':')
+      var data = msg.slice(msgIdLen).split(':')
       var height = data[1] ? parseInt(data[1], 10) : 0
       var iframe = settings[data[0]] && settings[data[0]].iframe
       var compStyle = getComputedStyle(iframe)
@@ -269,8 +269,8 @@
 
     function isMessageForUs() {
       return (
-        msgId === ('' + msg).substr(0, msgIdLen) &&
-        msg.substr(msgIdLen).split(':')[0] in settings
+        msgId === ('' + msg).slice(0, msgIdLen) &&
+        msg.slice(msgIdLen).split(':')[0] in settings
       ) // ''+Protects against non-string msg
     }
 
@@ -287,7 +287,7 @@
     }
 
     function getMsgBody(offset) {
-      return msg.substr(msg.indexOf(':') + msgHeaderLen + offset)
+      return msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
     }
 
     function forwardMsgFromIFrame(msgBody) {
