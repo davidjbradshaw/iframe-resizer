@@ -55,6 +55,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
     min-width: 100%;
   }
 </style>
+<script src="/js/iframeResizer.min.js"></script>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
 <script>
   iFrameResize({ log: true }, '#myIframe')
