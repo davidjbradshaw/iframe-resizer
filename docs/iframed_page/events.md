@@ -12,4 +12,4 @@ Receive message posted from the parent page with the `iframe.iFrameResizer.sendM
 
     type: function()
 
-This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page. If you need to call any of the parentIFrame methods (See below) during page load, then they should be called from this event handler.
+This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page. If you need to call any of the parentIFrame [methods](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/iframed_page/methods.md] during page load, then they should be called from this event handler.
