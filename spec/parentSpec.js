@@ -29,7 +29,7 @@ define(['iframeResizer'], function (iFrameResize) {
       })
     })
 
-    describe('reset Page', function () {
+    xdescribe('reset Page', function () {
       var iframe
       var log = LOG
       var testId = 'parentPage1'
@@ -57,7 +57,7 @@ define(['iframeResizer'], function (iFrameResize) {
       })
     })
 
-    describe('late load msg received', function () {
+    xdescribe('late load msg received', function () {
       var iframe
       var log = LOG
       var testId = 'parentPage2'
