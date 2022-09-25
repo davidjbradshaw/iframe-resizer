@@ -85,6 +85,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 - **Use with Libraries and Frameworks**
   - [React](https://github.com/davidjbradshaw/iframe-resizer-react)
   - [Vue](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/vue.md)
+  - [Nuxt](https://github.com/davidjbradshaw/iframe-resizer/issues/831#issuecomment-665760332)
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
   - [Ember](https://github.com/alexlafroscia/ember-iframe-resizer-modifier)
   - [jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/jquery.md)
