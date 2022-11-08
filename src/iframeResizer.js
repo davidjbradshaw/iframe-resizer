@@ -1427,7 +1427,7 @@
     }
   }
 
-  if (window.jQuery) {
+  if (typeof window.jQuery !== "undefined") {
     createJQueryPublicMethod(window.jQuery)
   }
 
