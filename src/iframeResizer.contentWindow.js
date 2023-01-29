@@ -1248,7 +1248,7 @@
       return (
         (!(typeof module !== 'undefined' && module.exports) &&
           'iFrameResize' in window) ||
-        ('jQuery' in window && 'iFrameResize' in window.jQuery.prototype)
+        (typeof window.jQuery !== "undefined" && 'iFrameResize' in window.jQuery.prototype)
       )
     }
 
