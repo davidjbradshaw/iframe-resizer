@@ -95,13 +95,13 @@
       requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
     }
 
-    if (!requestAnimationFrame) {
-      log('setup', 'RequestAnimationFrame not supported')
-    } else {
+    if (requestAnimationFrame) {
       // Firefox extension content-scripts have a globalThis object that is not the same as window.
       // Binding `requestAnimationFrame` to window allows the function to work and prevents errors
       // being thrown when run in that context, and should be a no-op in every other context.
       requestAnimationFrame = requestAnimationFrame.bind(window)
+    } else {
+      log('setup', 'RequestAnimationFrame not supported')
     }
   }
 
@@ -445,18 +445,18 @@
           ')'
       )
 
-      if (window.top !== window.self) {
-        scrollParent()
-      } else {
+      if (window.top === window.self) {
         reposition()
+      } else {
+        scrollParent()
       }
     }
 
     function scrollTo() {
-      if (false !== on('onScroll', pagePosition)) {
-        setPagePosition(iframeId)
-      } else {
+      if (false === on('onScroll', pagePosition)) {
         unsetPagePosition()
+      } else {
+        setPagePosition(iframeId)
       }
     }
 
@@ -503,10 +503,10 @@
 
       if (target) {
         jumpToTarget()
-      } else if (window.top !== window.self) {
-        jumpToParent()
-      } else {
+      } else if (window.top === window.self) {
         log(iframeId, 'In page link #' + hash + ' not found')
+      } else {
+        jumpToParent()
       }
     }
 
@@ -542,60 +542,72 @@
       if (settings[iframeId] && settings[iframeId].firstRun) firstRun()
 
       switch (messageData.type) {
-        case 'close':
+        case 'close': {
           closeIFrame(messageData.iframe)
           break
+        }
 
-        case 'message':
+        case 'message': {
           forwardMsgFromIFrame(getMsgBody(6))
           break
+        }
 
-        case 'mouseenter':
+        case 'mouseenter': {
           onMouse('onMouseEnter')
           break
+        }
 
-        case 'mouseleave':
+        case 'mouseleave': {
           onMouse('onMouseLeave')
           break
+        }
 
-        case 'autoResize':
+        case 'autoResize': {
           settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
           break
+        }
 
-        case 'scrollTo':
+        case 'scrollTo': {
           scrollRequestFromChild(false)
           break
+        }
 
-        case 'scrollToOffset':
+        case 'scrollToOffset': {
           scrollRequestFromChild(true)
           break
+        }
 
-        case 'pageInfo':
+        case 'pageInfo': {
           sendPageInfoToIframe(
             settings[iframeId] && settings[iframeId].iframe,
             iframeId
           )
           startPageInfoMonitor()
           break
+        }
 
-        case 'pageInfoStop':
+        case 'pageInfoStop': {
           stopPageInfoMonitor()
           break
+        }
 
-        case 'inPageLink':
+        case 'inPageLink': {
           findTarget(getMsgBody(9))
           break
+        }
 
-        case 'reset':
+        case 'reset': {
           resetIFrame(messageData)
           break
+        }
 
-        case 'init':
+        case 'init': {
           resizeIFrame()
           on('onInit', messageData.iframe)
           break
+        }
 
-        default:
+        default: {
           if (
             Number(messageData.width) === 0 &&
             Number(messageData.height) === 0
@@ -609,6 +621,7 @@
           } else {
             resizeIFrame()
           }
+        }
       }
     }
 
@@ -722,13 +735,13 @@
     if (null === pagePosition) {
       pagePosition = {
         x:
-          window.pageXOffset !== undefined
-            ? window.pageXOffset
-            : document.documentElement.scrollLeft,
+          window.pageXOffset === undefined
+            ? document.documentElement.scrollLeft
+            : window.pageXOffset,
         y:
-          window.pageYOffset !== undefined
-            ? window.pageYOffset
-            : document.documentElement.scrollTop
+          window.pageYOffset === undefined
+            ? document.documentElement.scrollTop
+            : window.pageYOffset
       }
       log(
         iframeId,
@@ -1012,21 +1025,25 @@
           ? 'hidden'
           : 'auto'
       switch (settings[iframeId] && settings[iframeId].scrolling) {
-        case 'omit':
+        case 'omit': {
           break
+        }
 
-        case true:
+        case true: {
           iframe.scrolling = 'yes'
           break
+        }
 
-        case false:
+        case false: {
           iframe.scrolling = 'no'
           break
+        }
 
-        default:
+        default: {
           iframe.scrolling = settings[iframeId]
             ? settings[iframeId].scrolling
             : 'no'
+        }
       }
     }
 
@@ -1208,15 +1225,15 @@
 
     var iframeId = ensureHasId(iframe.id)
 
-    if (!beenHere()) {
+    if (beenHere()) {
+      warn(iframeId, 'Ignored iFrame, already setup.')
+    } else {
       processOptions(options)
       setScrolling()
       setLimits()
       setupBodyMarginValues()
       init(createOutgoingMsg(iframeId))
       setupIFrameObject()
-    } else {
-      warn(iframeId, 'Ignored iFrame, already setup.')
     }
   }
 
@@ -1394,19 +1411,22 @@
 
       switch (typeof target) {
         case 'undefined':
-        case 'string':
+        case 'string': {
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
             init.bind(undefined, options)
           )
           break
+        }
 
-        case 'object':
+        case 'object': {
           init(options, target)
           break
+        }
 
-        default:
+        default: {
           throw new TypeError('Unexpected data type (' + typeof target + ')')
+        }
       }
 
       return iFrames
@@ -1427,7 +1447,7 @@
     }
   }
 
-  if (typeof window.jQuery !== "undefined") {
+  if (window.jQuery !== undefined) {
     createJQueryPublicMethod(window.jQuery)
   }
 
