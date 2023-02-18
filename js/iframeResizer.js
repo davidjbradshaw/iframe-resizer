@@ -1206,9 +1206,9 @@
     function processOptions(options) {
       options = options || {}
 
-      settings[iframeId] = Object.create(null)
-      settings[iframeId].firstRun = true
+      settings[iframeId] = Object.create(null) // Protect against prototype attacks
       settings[iframeId].iframe = iframe
+      settings[iframeId].firstRun = true
       settings[iframeId].remoteHost = iframe.src && iframe.src.split('/').slice(0, 3).join('/')
 
       checkOptions(options)

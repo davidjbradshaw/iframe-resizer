@@ -9,7 +9,7 @@
  */
 
 // eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
-;(function (undefined) {
+; (function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
   var autoResize = true,
@@ -57,8 +57,8 @@
     onMessage = function () {
       warn('onMessage function not defined')
     },
-    onReady = function () {},
-    onPageInfo = function () {},
+    onReady = function () { },
+    onPageInfo = function () { },
     customCalcMethods = {
       height: function () {
         warn('Custom height calculation function not defined')
@@ -72,7 +72,7 @@
     eventHandlersByName = {},
     passiveSupported = false
 
-  function noop() {}
+  function noop() { }
 
   try {
     var options = Object.create(
@@ -211,7 +211,7 @@
     inPageLinks.enable = undefined === data[12] ? false : strBool(data[12])
     resizeFrom = undefined === data[13] ? resizeFrom : data[13]
     widthCalcMode = undefined === data[14] ? widthCalcMode : data[14]
-    mouseEvents = undefined === data[15] ? mouseEvents : Boolean(data[15])
+    mouseEvents = undefined === data[15] ? mouseEvents : strBool(data[15])
   }
 
   function depricate(key) {
@@ -224,10 +224,10 @@
       delete this[key]
       warn(
         "Deprecated: '" +
-          key +
-          "' has been renamed '" +
-          name +
-          "'. The old method will be removed in the next major version."
+        key +
+        "' has been renamed '" +
+        name +
+        "'. The old method will be removed in the next major version."
       )
     }
   }
@@ -333,8 +333,8 @@
 
     log(
       capitalizeFirstLetter(options.method) +
-        ' event listener: ' +
-        options.eventType
+      ' event listener: ' +
+      options.eventType
     )
   }
 
@@ -550,11 +550,11 @@
 
         log(
           'Moving to in page link (#' +
-            hash +
-            ') at x: ' +
-            jumpPosition.x +
-            ' y: ' +
-            jumpPosition.y
+          hash +
+          ') at x: ' +
+          jumpPosition.x +
+          ' y: ' +
+          jumpPosition.y
         )
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       }
@@ -568,8 +568,8 @@
       if (undefined === target) {
         log(
           'In page link (#' +
-            hash +
-            ') not found in iFrame, so sending to parent'
+          hash +
+          ') not found in iFrame, so sending to parent'
         )
         sendMsg(0, 0, 'inPageLink', '#' + hash)
       } else {
@@ -686,7 +686,7 @@
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
         } else {
-          onPageInfo = function () {}
+          onPageInfo = function () { }
           sendMsg(0, 0, 'pageInfoStop')
         }
       },
@@ -936,57 +936,57 @@
   }
 
   var getHeight = {
-      bodyOffset: function getBodyOffsetHeight() {
-        return (
-          document.body.offsetHeight +
-          getComputedStyle('marginTop') +
-          getComputedStyle('marginBottom')
-        )
-      },
-
-      offset: function () {
-        return getHeight.bodyOffset() // Backwards compatibility
-      },
-
-      bodyScroll: function getBodyScrollHeight() {
-        return document.body.scrollHeight
-      },
-
-      custom: function getCustomWidth() {
-        return customCalcMethods.height()
-      },
-
-      documentElementOffset: function getDEOffsetHeight() {
-        return document.documentElement.offsetHeight
-      },
-
-      documentElementScroll: function getDEScrollHeight() {
-        return document.documentElement.scrollHeight
-      },
-
-      max: function getMaxHeight() {
-        return Math.max.apply(null, getAllMeasurements(getHeight))
-      },
-
-      min: function getMinHeight() {
-        return Math.min.apply(null, getAllMeasurements(getHeight))
-      },
-
-      grow: function growHeight() {
-        return getHeight.max() // Run max without the forced downsizing
-      },
-
-      lowestElement: function getBestHeight() {
-        return Math.max(
-          getHeight.bodyOffset() || getHeight.documentElementOffset(),
-          getMaxElement('bottom', getAllElements())
-        )
-      },
-
-      taggedElement: function getTaggedElementsHeight() {
-        return getTaggedElements('bottom', 'data-iframe-height')
-      }
+    bodyOffset: function getBodyOffsetHeight() {
+      return (
+        document.body.offsetHeight +
+        getComputedStyle('marginTop') +
+        getComputedStyle('marginBottom')
+      )
     },
+
+    offset: function () {
+      return getHeight.bodyOffset() // Backwards compatibility
+    },
+
+    bodyScroll: function getBodyScrollHeight() {
+      return document.body.scrollHeight
+    },
+
+    custom: function getCustomWidth() {
+      return customCalcMethods.height()
+    },
+
+    documentElementOffset: function getDEOffsetHeight() {
+      return document.documentElement.offsetHeight
+    },
+
+    documentElementScroll: function getDEScrollHeight() {
+      return document.documentElement.scrollHeight
+    },
+
+    max: function getMaxHeight() {
+      return Math.max.apply(null, getAllMeasurements(getHeight))
+    },
+
+    min: function getMinHeight() {
+      return Math.min.apply(null, getAllMeasurements(getHeight))
+    },
+
+    grow: function growHeight() {
+      return getHeight.max() // Run max without the forced downsizing
+    },
+
+    lowestElement: function getBestHeight() {
+      return Math.max(
+        getHeight.bodyOffset() || getHeight.documentElementOffset(),
+        getMaxElement('bottom', getAllElements())
+      )
+    },
+
+    taggedElement: function getTaggedElementsHeight() {
+      return getTaggedElements('bottom', 'data-iframe-height')
+    }
+  },
     getWidth = {
       bodyScroll: function getBodyScrollWidth() {
         return document.body.scrollWidth
@@ -1276,8 +1276,8 @@
       } else {
         log(
           'Ignored message of type "' +
-            getMessageType() +
-            '". Received before initialization.'
+          getMessageType() +
+          '". Received before initialization.'
         )
       }
     }
