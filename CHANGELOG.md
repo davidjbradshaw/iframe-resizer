@@ -1,6 +1,6 @@
 # Version History
 
-- v4.3..3 [#1100](https://github.com/davidjbradshaw/iframe-resizer/issues/1100) Fix jQuery check [[Gabriel Grant](https://github.com/gabrielgrant)] 
+- v4.3.3 [#1100](https://github.com/davidjbradshaw/iframe-resizer/issues/1100) Fix jQuery check [[Gabriel Grant](https://github.com/gabrielgrant)] 
 
 - v4.3.2 [#936](https://github.com/davidjbradshaw/iframe-resizer/issues/936) Allow max/min values for iFrame size to be set using units other than `px` [[Luke Murray](https://github.com/lukesmurray)]
 
