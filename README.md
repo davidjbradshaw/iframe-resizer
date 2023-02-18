@@ -55,6 +55,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
     min-width: 100%;
   }
 </style>
+<script src="/js/iframeResizer.min.js"></script>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
 <script>
   iFrameResize({ log: true }, '#myIframe')
@@ -84,6 +85,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 - **Use with Libraries and Frameworks**
   - [React](https://github.com/davidjbradshaw/iframe-resizer-react)
   - [Vue](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/vue.md)
+  - [Nuxt](https://github.com/davidjbradshaw/iframe-resizer/issues/831#issuecomment-665760332)
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
   - [Ember](https://github.com/alexlafroscia/ember-iframe-resizer-modifier)
   - [jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/jquery.md)
@@ -94,7 +96,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
 
 ## License
 
-Copyright &copy; 2013-21 [David J. Bradshaw](https://github.com/davidjbradshaw) -
+Copyright &copy; 2013-23 [David J. Bradshaw](https://github.com/davidjbradshaw) -
 Licensed under the [MIT License](LICENSE)
 
 <!--

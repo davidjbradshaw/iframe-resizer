@@ -21,15 +21,15 @@
     msgIdLen = msgId.length,
     pagePosition = null,
     requestAnimationFrame = window.requestAnimationFrame,
-    resetRequiredMethods = {
+    resetRequiredMethods = Object.freeze({
       max: 1,
       scroll: 1,
       bodyScroll: 1,
       documentElementScroll: 1
-    },
+    }),
     settings = {},
     timer = null,
-    defaults = {
+    defaults = Object.freeze({
       autoResize: true,
       bodyBackground: null,
       bodyMargin: null,
@@ -68,7 +68,7 @@
       onScroll: function () {
         return true
       }
-    }
+    })
 
   function getMutationObserver() {
     return (
@@ -95,13 +95,13 @@
       requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
     }
 
-    if (!requestAnimationFrame) {
-      log('setup', 'RequestAnimationFrame not supported')
-    } else {
+    if (requestAnimationFrame) {
       // Firefox extension content-scripts have a globalThis object that is not the same as window.
       // Binding `requestAnimationFrame` to window allows the function to work and prevents errors
       // being thrown when run in that context, and should be a no-op in every other context.
       requestAnimationFrame = requestAnimationFrame.bind(window)
+    } else {
+      log('setup', 'RequestAnimationFrame not supported')
     }
   }
 
@@ -160,7 +160,7 @@
     }
 
     function processMsg() {
-      var data = msg.substr(msgIdLen).split(':')
+      var data = msg.slice(msgIdLen).split(':')
       var height = data[1] ? parseInt(data[1], 10) : 0
       var iframe = settings[data[0]] && settings[data[0]].iframe
       var compStyle = getComputedStyle(iframe)
@@ -269,8 +269,8 @@
 
     function isMessageForUs() {
       return (
-        msgId === ('' + msg).substr(0, msgIdLen) &&
-        msg.substr(msgIdLen).split(':')[0] in settings
+        msgId === ('' + msg).slice(0, msgIdLen) &&
+        msg.slice(msgIdLen).split(':')[0] in settings
       ) // ''+Protects against non-string msg
     }
 
@@ -287,7 +287,7 @@
     }
 
     function getMsgBody(offset) {
-      return msg.substr(msg.indexOf(':') + msgHeaderLen + offset)
+      return msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
     }
 
     function forwardMsgFromIFrame(msgBody) {
@@ -445,18 +445,18 @@
           ')'
       )
 
-      if (window.top !== window.self) {
-        scrollParent()
-      } else {
+      if (window.top === window.self) {
         reposition()
+      } else {
+        scrollParent()
       }
     }
 
     function scrollTo() {
-      if (false !== on('onScroll', pagePosition)) {
-        setPagePosition(iframeId)
-      } else {
+      if (false === on('onScroll', pagePosition)) {
         unsetPagePosition()
+      } else {
+        setPagePosition(iframeId)
       }
     }
 
@@ -503,10 +503,10 @@
 
       if (target) {
         jumpToTarget()
-      } else if (window.top !== window.self) {
-        jumpToParent()
-      } else {
+      } else if (window.top === window.self) {
         log(iframeId, 'In page link #' + hash + ' not found')
+      } else {
+        jumpToParent()
       }
     }
 
@@ -542,60 +542,72 @@
       if (settings[iframeId] && settings[iframeId].firstRun) firstRun()
 
       switch (messageData.type) {
-        case 'close':
+        case 'close': {
           closeIFrame(messageData.iframe)
           break
+        }
 
-        case 'message':
+        case 'message': {
           forwardMsgFromIFrame(getMsgBody(6))
           break
+        }
 
-        case 'mouseenter':
+        case 'mouseenter': {
           onMouse('onMouseEnter')
           break
+        }
 
-        case 'mouseleave':
+        case 'mouseleave': {
           onMouse('onMouseLeave')
           break
+        }
 
-        case 'autoResize':
+        case 'autoResize': {
           settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
           break
+        }
 
-        case 'scrollTo':
+        case 'scrollTo': {
           scrollRequestFromChild(false)
           break
+        }
 
-        case 'scrollToOffset':
+        case 'scrollToOffset': {
           scrollRequestFromChild(true)
           break
+        }
 
-        case 'pageInfo':
+        case 'pageInfo': {
           sendPageInfoToIframe(
             settings[iframeId] && settings[iframeId].iframe,
             iframeId
           )
           startPageInfoMonitor()
           break
+        }
 
-        case 'pageInfoStop':
+        case 'pageInfoStop': {
           stopPageInfoMonitor()
           break
+        }
 
-        case 'inPageLink':
+        case 'inPageLink': {
           findTarget(getMsgBody(9))
           break
+        }
 
-        case 'reset':
+        case 'reset': {
           resetIFrame(messageData)
           break
+        }
 
-        case 'init':
+        case 'init': {
           resizeIFrame()
           on('onInit', messageData.iframe)
           break
+        }
 
-        default:
+        default: {
           if (
             Number(messageData.width) === 0 &&
             Number(messageData.height) === 0
@@ -609,6 +621,7 @@
           } else {
             resizeIFrame()
           }
+        }
       }
     }
 
@@ -722,13 +735,13 @@
     if (null === pagePosition) {
       pagePosition = {
         x:
-          window.pageXOffset !== undefined
-            ? window.pageXOffset
-            : document.documentElement.scrollLeft,
+          window.pageXOffset === undefined
+            ? document.documentElement.scrollLeft
+            : window.pageXOffset,
         y:
-          window.pageYOffset !== undefined
-            ? window.pageYOffset
-            : document.documentElement.scrollTop
+          window.pageYOffset === undefined
+            ? document.documentElement.scrollTop
+            : window.pageYOffset
       }
       log(
         iframeId,
@@ -984,6 +997,10 @@
     }
 
     function ensureHasId(iframeId) {
+      if (typeof iframeId !== 'string') {
+        throw new TypeError('Invaild id for iFrame. Expected String')
+      }
+
       if ('' === iframeId) {
         // eslint-disable-next-line no-multi-assign
         iframe.id = iframeId = newId()
@@ -1012,21 +1029,25 @@
           ? 'hidden'
           : 'auto'
       switch (settings[iframeId] && settings[iframeId].scrolling) {
-        case 'omit':
+        case 'omit': {
           break
+        }
 
-        case true:
+        case true: {
           iframe.scrolling = 'yes'
           break
+        }
 
-        case false:
+        case false: {
           iframe.scrolling = 'no'
           break
+        }
 
-        default:
+        default: {
           iframe.scrolling = settings[iframeId]
             ? settings[iframeId].scrolling
             : 'no'
+        }
       }
     }
 
@@ -1184,11 +1205,11 @@
 
     function processOptions(options) {
       options = options || {}
-      settings[iframeId] = {
-        firstRun: true,
-        iframe: iframe,
-        remoteHost: iframe.src && iframe.src.split('/').slice(0, 3).join('/')
-      }
+
+      settings[iframeId] = Object.create(null) // Protect against prototype attacks
+      settings[iframeId].iframe = iframe
+      settings[iframeId].firstRun = true
+      settings[iframeId].remoteHost = iframe.src && iframe.src.split('/').slice(0, 3).join('/')
 
       checkOptions(options)
       Object.keys(options).forEach(depricate, options)
@@ -1208,15 +1229,15 @@
 
     var iframeId = ensureHasId(iframe.id)
 
-    if (!beenHere()) {
+    if (beenHere()) {
+      warn(iframeId, 'Ignored iFrame, already setup.')
+    } else {
       processOptions(options)
       setScrolling()
       setLimits()
       setupBodyMarginValues()
       init(createOutgoingMsg(iframeId))
       setupIFrameObject()
-    } else {
-      warn(iframeId, 'Ignored iFrame, already setup.')
     }
   }
 
@@ -1394,19 +1415,22 @@
 
       switch (typeof target) {
         case 'undefined':
-        case 'string':
+        case 'string': {
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
             init.bind(undefined, options)
           )
           break
+        }
 
-        case 'object':
+        case 'object': {
           init(options, target)
           break
+        }
 
-        default:
+        default: {
           throw new TypeError('Unexpected data type (' + typeof target + ')')
+        }
       }
 
       return iFrames
@@ -1427,7 +1451,7 @@
     }
   }
 
-  if (window.jQuery) {
+  if (window.jQuery !== undefined) {
     createJQueryPublicMethod(window.jQuery)
   }
 
