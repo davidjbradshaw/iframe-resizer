@@ -21,15 +21,15 @@
     msgIdLen = msgId.length,
     pagePosition = null,
     requestAnimationFrame = window.requestAnimationFrame,
-    resetRequiredMethods = {
+    resetRequiredMethods = Object.freeze({
       max: 1,
       scroll: 1,
       bodyScroll: 1,
       documentElementScroll: 1
-    },
+    }),
     settings = {},
     timer = null,
-    defaults = {
+    defaults = Object.freeze({
       autoResize: true,
       bodyBackground: null,
       bodyMargin: null,
@@ -68,7 +68,7 @@
       onScroll: function () {
         return true
       }
-    }
+    })
 
   function getMutationObserver() {
     return (
@@ -997,6 +997,10 @@
     }
 
     function ensureHasId(iframeId) {
+      if (typeof iframeId !== 'string') {
+        throw new TypeError('Invaild id for iFrame. Expected String')
+      }
+
       if ('' === iframeId) {
         // eslint-disable-next-line no-multi-assign
         iframe.id = iframeId = newId()
@@ -1201,11 +1205,11 @@
 
     function processOptions(options) {
       options = options || {}
-      settings[iframeId] = {
-        firstRun: true,
-        iframe: iframe,
-        remoteHost: iframe.src && iframe.src.split('/').slice(0, 3).join('/')
-      }
+
+      settings[iframeId] = Object.create(null) // Protect against prototype attacks
+      settings[iframeId].iframe = iframe
+      settings[iframeId].firstRun = true
+      settings[iframeId].remoteHost = iframe.src && iframe.src.split('/').slice(0, 3).join('/')
 
       checkOptions(options)
       Object.keys(options).forEach(depricate, options)
