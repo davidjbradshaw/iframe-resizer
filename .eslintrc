@@ -22,6 +22,7 @@
     "one-var": 0,
     "prefer-arrow-callback": 0,
     "prefer-destructuring": 0,
+    "prefer-object-spread": 0,
     "prefer-rest-params": 0,
     "prefer-template": 0,
     "vars-on-top": 0,
