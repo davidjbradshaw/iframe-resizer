@@ -99,7 +99,7 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "load-grunt-tasks": "~5.1.0",
     "lodash": "^4.17.21",
-    "minimatch": "^6.2.0",
+    "minimatch": "^7.1.0",
     "phantomjs": "^2.1.7",
     "prettier": "^2.8.4",
     "requirejs": "^2.3.6",
