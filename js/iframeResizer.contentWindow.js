@@ -79,7 +79,8 @@
       {},
       {
         passive: {
-          get: function () { // eslint-disable-line getter-return
+          // eslint-disable-next-line getter-return
+          get: function () {
             passiveSupported = true
           }
         }
@@ -1248,7 +1249,8 @@
       return (
         (!(typeof module !== 'undefined' && module.exports) &&
           'iFrameResize' in window) ||
-        (window.jQuery !== undefined && 'iFrameResize' in window.jQuery.prototype)
+        (window.jQuery !== undefined &&
+          'iFrameResize' in window.jQuery.prototype)
       )
     }
 
