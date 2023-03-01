@@ -1,5 +1,7 @@
 # Version History
 
+- v4.3.5 Fix path on `module.exports`
+
 - v4.3.4 [#990](https://github.com/davidjbradshaw/iframe-resizer/pull/990) Fix readDataFromParent mouseEvents Boolean to strBool [[Tony Living](https://github.com/tonyliving)]
 
 - v4.3.3 [#1100](https://github.com/davidjbradshaw/iframe-resizer/issues/1100) Fix jQuery check [[Gabriel Grant](https://github.com/gabrielgrant)] 
