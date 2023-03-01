@@ -1209,7 +1209,8 @@
       settings[iframeId] = Object.create(null) // Protect against prototype attacks
       settings[iframeId].iframe = iframe
       settings[iframeId].firstRun = true
-      settings[iframeId].remoteHost = iframe.src && iframe.src.split('/').slice(0, 3).join('/')
+      settings[iframeId].remoteHost =
+        iframe.src && iframe.src.split('/').slice(0, 3).join('/')
 
       checkOptions(options)
       Object.keys(options).forEach(depricate, options)
