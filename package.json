@@ -65,7 +65,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-sonarjs": "^0.18.0",
     "eslint-plugin-switch-case": "^1.1.2",
-    "eslint-plugin-unicorn": "^45.0.2",
+    "eslint-plugin-unicorn": "^46.0.0",
     "grunt": "^1.6.1",
     "grunt-bump": "^0.8.0",
     "grunt-cli": "^1.4.3",
