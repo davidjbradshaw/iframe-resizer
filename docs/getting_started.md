@@ -37,4 +37,4 @@ If you have problems, check the [troubleshooting](troubleshooting.md) section.
 
 ### Example
 
-To see this working take a look at this [example](http://davidjbradshaw.com/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
+To see this working take a look at this [example](https://davidjbradshaw.github.io/iframe-resizer/example/) and watch the [console](https://developer.mozilla.org/en-US/docs/Tools/Web_Console).
