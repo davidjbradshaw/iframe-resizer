@@ -889,14 +889,23 @@
       elVal = 0,
       maxVal = 0,
       Side = capitalizeFirstLetter(side),
-      timer = Date.now()
+      timer = Date.now(),
+      otherSide = 'left'
+
+    if (side === 'bottom') {
+      otherSide = 'top'
+    }
 
     for (var i = 0; i < elementsLength; i++) {
-      elVal =
-        elements[i].getBoundingClientRect()[side] +
-        getComputedStyle('margin' + Side, elements[i])
-      if (elVal > maxVal) {
-        maxVal = elVal
+      var elSide = elements[i].getBoundingClientRect()[side]
+      var elOtherSide = elements[i].getBoundingClientRect()[otherSide]
+      if (elSide - elOtherSide > 0) { // zero width / height, should not be calculated
+        elVal =
+            elements[i].getBoundingClientRect()[side] +
+            getComputedStyle('margin' + Side, elements[i])
+        if (elVal > maxVal) {
+          maxVal = elVal
+        }
       }
     }
 
