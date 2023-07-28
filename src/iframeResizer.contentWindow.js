@@ -898,14 +898,12 @@
 
     for (var i = 0; i < elementsLength; i++) {
       var elSide = elements[i].getBoundingClientRect()[side]
-      var elOtherSide = elements[i].getBoundingClientRect()[otherSide]
-      if (elSide - elOtherSide > 0) { // zero width / height, should not be calculated
-        elVal =
-            elements[i].getBoundingClientRect()[side] +
-            getComputedStyle('margin' + Side, elements[i])
-        if (elVal > maxVal) {
-          maxVal = elVal
-        }
+      var elOtherSide= elements[i].getBoundingClientRect()[otherSide];
+      elVal = elSide + getComputedStyle('margin'+Side,elements[i]);
+      var OtherSide = capitalizeFirstLetter(otherSide)
+      var elOtherVal = elOtherSide + getComputedStyle('margin'+OtherSide,elements[i])
+      if (elVal - elOtherVal > 0 && elVal > maxVal) { // zero width / height, should not be calculated
+        maxVal = elVal;
       }
     }
 
