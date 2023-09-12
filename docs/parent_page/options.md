@@ -135,6 +135,15 @@ Resize iFrame to content width.
 
 Set the number of pixels the iFrame content size has to change by, before triggering a resize of the iFrame.
 
+
+### warningTimeout
+
+	default: 5000
+	type:    integer
+
+Set the number of milliseconds after which a warning is logged if the iFrame has not responded. Set to `0` to supress warning messages of this type.
+
+
 ### widthCalculationMethod
 
     default: 'scroll'
