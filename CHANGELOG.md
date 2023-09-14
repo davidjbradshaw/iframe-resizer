@@ -1,5 +1,7 @@
 # Version History
 
+- v4.3.7 Minor documentation updates and remove Bower package manager support
+
 - v4.3.6 Fix backwards compatablity of `module.exports`
 
 - v4.3.5 Fix path on `module.exports`
