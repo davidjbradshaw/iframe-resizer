@@ -4,10 +4,12 @@
 .prettierrc
 .travis.yml
 .github
+*.md
 node_modules
 bin
 docs
 example
+img
 test
 spec
 src
