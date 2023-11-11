@@ -1,6 +1,8 @@
 .DS_Store
 .coveralls.yml
-.idea
+.eslintrc
+.gitignore
+.ncurc.json
 .prettierrc
 .travis.yml
 .github
