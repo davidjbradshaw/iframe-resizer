@@ -1096,8 +1096,8 @@
     customWidth
   ) {
     function resizeIFrame() {
-      height = currentHeight
-      width = currentWidth
+      height = Math.ceil(currentHeight)
+      width = Math.ceil(currentWidth)
 
       sendMsg(height, width, triggerEvent)
     }
