@@ -43,6 +43,8 @@
       documentElementScroll: 1
     },
     resizeFrom = 'child',
+    resizeObserver = null,
+    resizeObserveTargets = ['body', 'textarea'],
     sendPermit = true,
     target = window.parent,
     targetOriginDefault = '*',
@@ -151,6 +153,23 @@
       }
 
       return result
+    }
+  }
+
+  function isDef(value) {
+    return value !== undefined && value !== ''
+  }
+
+  function getElementName(el) {
+    switch (true) {
+      case isDef(el.id):
+        return el.id
+
+      case isDef(el.name):
+        return el.name
+
+      default:
+        return el.nodeName
     }
   }
 
@@ -478,6 +497,7 @@
     if (true === autoResize) {
       manageEventListeners('add')
       setupMutationObserver()
+      setupResizeObserver()
     } else {
       log('Auto Resize disabled')
     }
@@ -493,6 +513,13 @@
   //     removeEventListener(window, 'message', receiver)
   //   }
 
+  function disconnectResizeObservers() {
+    if (null !== bodyObserver) {
+      /* istanbul ignore next */ // Not testable in PhantonJS
+      resizeObserver.disconnect()
+    }
+  }
+
   function disconnectMutationObserver() {
     if (null !== bodyObserver) {
       /* istanbul ignore next */ // Not testable in PhantonJS
@@ -502,6 +529,7 @@
 
   function stopEventListeners() {
     manageEventListeners('remove')
+    disconnectResizeObservers()
     disconnectMutationObserver()
     clearInterval(intervalTimer)
   }
@@ -753,13 +781,58 @@
     }
   }
 
+  function resizeObserved(entries) {
+    var el = entries[0].target
+    sendSize('resizeObserver', 'resizeObserver: ' + getElementName(el))
+  }
+
+  function logResizeObserver(el) {
+    log('Attached resizeObserver: ' + getElementName(el))
+  }
+
+  function setupResizeObservers(el) {
+    if (!el) return
+    logResizeObserver(el)
+    resizeObserver.observe(el)
+  }
+
+  function createResizeObservers(el) {
+    resizeObserveTargets
+      .flatMap(function (target) {
+        return el.querySelector(target)
+      })
+      .forEach(setupResizeObservers)
+  }
+
+  function addResizeObservers(mutation) {
+    console.log('>>>', mutation)
+    if (mutation.type === 'childList') {
+      createResizeObservers(mutation.target)
+    }
+  }
+
+  function setupResizeObserver() {
+    if (!window.ResizeObserver) {
+      warn('ResizeObserver not supported in this browser!')
+      return
+    }
+
+    if (!Array.prototype.flatMap) {
+      warn('Array/flatMap() not supported, disabled ResizeObserver')
+      return
+    }
+
+    resizeObserver = new ResizeObserver(resizeObserved)
+    createResizeObservers(window.document)
+  }
+
   // Not testable in PhantomJS
   /* istanbul ignore next */
   function setupBodyMutationObserver() {
     function addImageLoadListners(mutation) {
       function addImageLoadListener(element) {
         if (false === element.complete) {
-          log('Attach listeners to ' + element.src)
+          log('Attached Mutation Observer:' + element.src)
           element.addEventListener('load', imageLoaded, false)
           element.addEventListener('error', imageError, false)
           elements.push(element)
@@ -808,6 +881,9 @@
 
       // Deal with WebKit / Blink asyncing image loading when tags are injected into the page
       mutations.forEach(addImageLoadListners)
+
+      // Look for injected elements that need ResizeObservers
+      mutations.forEach(addResizeObservers)
     }
 
     function createMutationObserver() {
@@ -823,7 +899,7 @@
 
       observer = new MutationObserver(mutationObserved)
 
-      log('Create body MutationObserver')
+      log('Create <body/> MutationObserver')
       observer.observe(target, config)
 
       return observer
@@ -922,7 +998,7 @@
   function getTaggedElements(side, tag) {
     function noTaggedElementsFound() {
       warn('No tagged elements (' + tag + ') found on page')
-      return document.querySelectorAll('body *')
+      return document.querySelectorAll('body * :not(option):not(optgroup)')
     }
 
     var elements = document.querySelectorAll('[' + tag + ']')
@@ -933,7 +1009,7 @@
   }
 
   function getAllElements() {
-    return document.querySelectorAll('body *')
+    return document.querySelectorAll('body * :not(option):not(optgroup)')
   }
 
   var getHeight = {
