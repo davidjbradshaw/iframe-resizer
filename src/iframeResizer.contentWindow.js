@@ -157,19 +157,19 @@
   }
 
   function isDef(value) {
-    return value !== undefined && value !== ''
+    return  ''+value !== '' && value !== undefined
   }
 
   function getElementName(el) {
     switch (true) {
       case isDef(el.id):
-        return el.id
+        return '#' + el.id
 
       case isDef(el.name):
-        return el.name
+        return el.nodeName.toLowerCase() +' ('+ el.name + ')'
 
       default:
-        return el.nodeName
+        return el.nodeName.toLowerCase() + (isDef(el.className) ? '.' + el.className : '') 
     }
   }
 
@@ -962,6 +962,7 @@
   // Idea from https://github.com/guardian/iframe-messenger
   function getMaxElement(side, elements) {
     var elementsLength = elements.length,
+      el,
       elVal = 0,
       maxVal = 0,
       Side = capitalizeFirstLetter(side),
@@ -973,12 +974,14 @@
         getComputedStyle('margin' + Side, elements[i])
       if (elVal > maxVal) {
         maxVal = elVal
+        el = elements[i]
       }
     }
 
     timer = Date.now() - timer
 
     log('Parsed ' + elementsLength + ' HTML elements')
+    log('Position calculated from HTML element: ' + getElementName(el))
     log('Element position calculated in ' + timer + 'ms')
 
     chkEventThottle(timer)
