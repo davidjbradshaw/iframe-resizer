@@ -162,9 +162,9 @@
 
   function getElementName(el) {
     switch (true) {
-      case (!isDef(el)):
+      case !isDef(el):
         return ''
-        
+
       case isDef(el.id):
         return '#' + el.id
 
@@ -240,30 +240,11 @@
     mouseEvents = undefined === data[15] ? mouseEvents : strBool(data[15])
   }
 
-  function depricate(key) {
-    var splitName = key.split('Callback')
-
-    if (splitName.length === 2) {
-      var name =
-        'on' + splitName[0].charAt(0).toUpperCase() + splitName[0].slice(1)
-      this[name] = this[key]
-      delete this[key]
-      warn(
-        "Deprecated: '" +
-          key +
-          "' has been renamed '" +
-          name +
-          "'. The old method will be removed in the next major version."
-      )
-    }
-  }
-
   function readDataFromPage() {
     function readData() {
       var data = window.iFrameResizer
 
       log('Reading data from page: ' + JSON.stringify(data))
-      Object.keys(data).forEach(depricate, data)
 
       onMessage = 'onMessage' in data ? data.onMessage : onMessage
       onReady = 'onReady' in data ? data.onReady : onReady
@@ -350,7 +331,7 @@
       }
     }
 
-    if (options.eventNames && Array.prototype.map) {
+    if (options.eventNames) {
       options.eventName = options.eventNames[0]
       options.eventNames.map(listener[options.method])
     } else {
@@ -652,16 +633,10 @@
 
     function enableInPageLinks() {
       /* istanbul ignore else */ // Not testable in phantonJS
-      if (Array.prototype.forEach && document.querySelectorAll) {
-        log('Setting up location.hash handlers')
-        bindAnchors()
-        bindLocationHash()
-        initCheck()
-      } else {
-        warn(
-          'In page linking not fully supported in this browser! (See README.md for IE8 workaround)'
-        )
-      }
+      log('Setting up location.hash handlers')
+      bindAnchors()
+      bindLocationHash()
+      initCheck()
     }
 
     if (inPageLinks.enable) {
@@ -811,7 +786,6 @@
   }
 
   function addResizeObservers(mutation) {
-    console.log('>>>', mutation)
     if (mutation.type === 'childList') {
       createResizeObservers(mutation.target)
     }
@@ -824,7 +798,7 @@
     }
 
     if (!Array.prototype.flatMap) {
-      warn('Array/flatMap() not supported, disabled ResizeObserver')
+      warn('Array.flatMap() not supported, disabled ResizeObserver')
       return
     }
 
