@@ -162,6 +162,9 @@
 
   function getElementName(el) {
     switch (true) {
+      case (!isDef(el)):
+        return ''
+        
       case isDef(el.id):
         return '#' + el.id
 
