@@ -979,6 +979,24 @@
         }
       }
 
+      function chkIsNumber(key) {
+        function isNumber(key) {
+          return (
+            !Number.isNaN(settings[iframeId][key]) &&
+            '' !== settings[iframeId][key]
+          )
+        }
+
+        if (!isNumber(key)) {
+          throw new TypeError(key + ' is not a number')
+        }
+      }
+
+      chkIsNumber('maxHeight')
+      chkIsNumber('minHeight')
+      chkIsNumber('maxWidth')
+      chkIsNumber('minWidth')
+
       chkMinMax('Height')
       chkMinMax('Width')
 
@@ -1067,13 +1085,10 @@
     }
 
     function checkReset() {
-      // Reduce scope of firstRun to function, because IE8's JS execution
-      // context stack is borked and this value gets externally
-      // changed midway through running this function!!!
-      var firstRun = settings[iframeId] && settings[iframeId].firstRun,
-        resetRequertMethod =
-          settings[iframeId] &&
-          settings[iframeId].heightCalculationMethod in resetRequiredMethods
+      var firstRun = settings[iframeId] && settings[iframeId].firstRun
+      var resetRequertMethod =
+        settings[iframeId] &&
+        settings[iframeId].heightCalculationMethod in resetRequiredMethods
 
       if (!firstRun && resetRequertMethod) {
         resetIFrame({ iframe: iframe, height: 0, width: 0, type: 'init' })
@@ -1184,25 +1199,6 @@
         : remoteHost
     }
 
-    function depricate(key) {
-      var splitName = key.split('Callback')
-
-      if (splitName.length === 2) {
-        var name =
-          'on' + splitName[0].charAt(0).toUpperCase() + splitName[0].slice(1)
-        this[name] = this[key]
-        delete this[key]
-        warn(
-          iframeId,
-          "Deprecated: '" +
-            key +
-            "' has been renamed '" +
-            name +
-            "'. The old method will be removed in the next major version."
-        )
-      }
-    }
-
     function processOptions(options) {
       options = options || {}
 
@@ -1213,7 +1209,6 @@
         iframe.src && iframe.src.split('/').slice(0, 3).join('/')
 
       checkOptions(options)
-      Object.keys(options).forEach(depricate, options)
       copyOptions(options)
 
       if (settings[iframeId]) {
@@ -1367,14 +1362,11 @@
 
   function setupEventListeners() {
     addEventListener(window, 'message', iFrameListener)
-
+    addEventListener(document, 'visibilitychange', tabVisible)
+    addEventListener(document, '-webkit-visibilitychange', tabVisible)
     addEventListener(window, 'resize', function () {
       resizeIFrames('resize')
     })
-
-    addEventListener(document, 'visibilitychange', tabVisible)
-
-    addEventListener(document, '-webkit-visibilitychange', tabVisible)
   }
 
   var setupComplete = false
