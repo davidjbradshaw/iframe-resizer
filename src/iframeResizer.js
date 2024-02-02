@@ -1377,6 +1377,8 @@
     addEventListener(document, '-webkit-visibilitychange', tabVisible)
   }
 
+  var setupComplete = false
+
   function factory() {
     function init(options, element) {
       function chkType() {
@@ -1396,23 +1398,16 @@
       }
     }
 
-    function warnDeprecatedOptions(options) {
-      if (options && options.enablePublicMethods) {
-        warn(
-          'enablePublicMethods option has been removed, public methods are now always available in the iFrame'
-        )
-      }
-    }
-
     var iFrames
 
-    setupRequestAnimationFrame()
-    setupEventListeners()
+    if (!setupComplete) {
+      setupRequestAnimationFrame()
+      setupEventListeners()
+      setupComplete = true
+    }
 
     return function iFrameResizeF(options, target) {
       iFrames = [] // Only return iFrames past in on this call
-
-      warnDeprecatedOptions(options)
 
       switch (typeof target) {
         case 'undefined':
@@ -1458,9 +1453,11 @@
 
   if (typeof define === 'function' && define.amd) {
     define([], factory)
-  } else if (typeof module === 'object' && typeof module.exports === 'object') {
-    // Node for browserfy
+  }
+
+  if (typeof module === 'object' && typeof module.exports === 'object') {
     module.exports = factory()
   }
+
   window.iFrameResize = window.iFrameResize || factory()
 })()
