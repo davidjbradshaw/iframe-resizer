@@ -30,7 +30,7 @@ The most common cause of this is not placing the [iframeResizer.contentWindow.mi
 
 ### IFrame not detecting CSS :hover events
 
-If your page resizes via CSS `:hover` events, these won't be detected by default. It is however possible to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows
+CSS `:hover` events that cause the page to resize outside of the standard document flow can sometimes be difficult to detect. If this is an issue, then a workaround is to create `mouseover` and `mouseout` event listeners on the elements that are resized via CSS and have these events call the [parentIFrame.size()](##parentiframesize-customheight-customwidth) method. With jQuery this can be done as follows.
 
 ```js
 function resize(){
