@@ -43,6 +43,7 @@ function resize(){
 $(*Element with hover style*).hover(resize);
 ```
 
+<!--
 ### IFrame not detecting textarea resizes
 
 Both FireFox and the WebKit based browsers allow the user to resize `textarea` input boxes. Unfortunately the WebKit browsers don't trigger the mutation event when this happens. This can be worked around to some extent with the following code.
@@ -64,6 +65,7 @@ $('textarea')
     }
   })
 ```
+-->
 
 ### IFrame flickers
 
