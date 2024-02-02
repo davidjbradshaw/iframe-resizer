@@ -998,7 +998,7 @@
   function getTaggedElements(side, tag) {
     function noTaggedElementsFound() {
       warn('No tagged elements (' + tag + ') found on page')
-      return document.querySelectorAll('body *')
+      return document.querySelectorAll('body * :not(option):not(optgroup)')
     }
 
     var elements = document.querySelectorAll('[' + tag + ']')
@@ -1009,7 +1009,7 @@
   }
 
   function getAllElements() {
-    return document.querySelectorAll('body *')
+    return document.querySelectorAll('body * :not(option):not(optgroup)')
   }
 
   var getHeight = {
