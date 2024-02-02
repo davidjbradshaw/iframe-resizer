@@ -950,7 +950,7 @@
   }
 
   function isNumber(value) {
-    return typeof value === 'number'
+    return !Number.isNaN(value)
   }
 
   function setupIFrame(iframe, options) {
@@ -966,6 +966,8 @@
       }
 
       function chkMinMax(dimension) {
+        if (!isNumber('min' + dimension) || !isNumber('max' + dimension)) return
+
         if (
           settings[iframeId]['min' + dimension] >
           settings[iframeId]['max' + dimension]
@@ -978,24 +980,6 @@
           )
         }
       }
-
-      function chkIsNumber(key) {
-        function isNumber(key) {
-          return (
-            !Number.isNaN(settings[iframeId][key]) &&
-            '' !== settings[iframeId][key]
-          )
-        }
-
-        if (!isNumber(key)) {
-          throw new TypeError(key + ' is not a number')
-        }
-      }
-
-      chkIsNumber('maxHeight')
-      chkIsNumber('minHeight')
-      chkIsNumber('maxWidth')
-      chkIsNumber('minWidth')
 
       chkMinMax('Height')
       chkMinMax('Width')
