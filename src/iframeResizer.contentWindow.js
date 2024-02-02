@@ -157,7 +157,7 @@
   }
 
   function isDef(value) {
-    return  ''+value !== '' && value !== undefined
+    return '' + value !== '' && value !== undefined
   }
 
   function getElementName(el) {
@@ -166,10 +166,13 @@
         return '#' + el.id
 
       case isDef(el.name):
-        return el.nodeName.toLowerCase() +' ('+ el.name + ')'
+        return el.nodeName.toUpperCase() + ' (' + el.name + ')'
 
       default:
-        return el.nodeName.toLowerCase() + (isDef(el.className) ? '.' + el.className : '') 
+        return (
+          el.nodeName.toUpperCase() +
+          (isDef(el.className) ? '.' + el.className : '')
+        )
     }
   }
 
