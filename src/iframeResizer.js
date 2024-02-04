@@ -57,15 +57,13 @@
     onClose: () => true,
     onClosed: function () {},
     onInit: false,
-    onMessage: function () {
-      warn('onMessage function not defined')
-    },
+    onMessage: null,
     onMouseEnter: function () {},
     onMouseLeave: function () {},
-    onReady: function () {
-      if (typeof settings[iframeId].onInit === 'function') {
-        warn('onInit function is deprecated and has been replaced with onReady')
-        settings[iframeId].onInit()
+    onReady: function (messageData) {
+      if (typeof settings[messageData.id].onInit === 'function') {
+        warn('onInit() function is deprecated and has been replaced with onReady()')
+        settings[messageData.id].onInit(messageData)
       }
     },
     onResized: function () {},

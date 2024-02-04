@@ -54,20 +54,20 @@
     warningTimeout: 5000,
     tolerance: 0,
     widthCalculationMethod: 'scroll',
-    onClose: function () {
-      return true
-    },
+    onClose: () => true,
     onClosed: function () {},
-    onReady: function () {},
-    onMessage: function () {
-      warn('onMessage function not defined')
-    },
+    onInit: false,
+    onMessage: null,
     onMouseEnter: function () {},
     onMouseLeave: function () {},
+    onReady: function (messageData) {
+      if (typeof settings[messageData.id].onInit === 'function') {
+        warn('onInit function is deprecated and has been replaced with onReady')
+        settings[messageData.id].onInit(messageData)
+      }
+    },
     onResized: function () {},
-    onScroll: function () {
-      return true
-    }
+    onScroll: () => true
   })
 
   function getMutationObserver() {
