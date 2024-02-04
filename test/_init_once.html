@@ -29,7 +29,7 @@
           //log:true,
           bodyBackground: 'wheat',
           heightCalculationMethod: 'max',
-          onInit: function(iframe) {
+          onReady: function(iframe) {
             ok(true, 'Receive init message back from iFrame.')
             receivedIframeIds.push(iframe.id)
             if (receivedIframeIds.length === 2) {

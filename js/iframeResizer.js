@@ -58,7 +58,7 @@
       return true
     },
     onClosed: function () {},
-    onInit: function () {},
+    onReady: function () {},
     onMessage: function () {
       warn('onMessage function not defined')
     },
@@ -591,7 +591,7 @@
 
         case 'init': {
           resizeIFrame()
-          on('onInit', messageData.iframe)
+          on('onReady', messageData.iframe)
           break
         }
 
