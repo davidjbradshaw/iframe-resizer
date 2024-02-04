@@ -73,14 +73,6 @@
   let pagePosition = null
   let timer = null
 
-  // function getMutationObserver() {
-  //   return (
-  //     window.MutationObserver ||
-  //     window.WebKitMutationObserver ||
-  //     window.MozMutationObserver
-  //   )
-  // }
-
   function addEventListener(el, evt, func) {
     el.addEventListener(evt, func, false)
   }
@@ -486,19 +478,24 @@
         }
       }
 
-      let hash = location.split('#')[1] || ''
+      const hash = location.split('#')[1] || ''
       const hashData = decodeURIComponent(hash)
+
       let target =
         document.getElementById(hashData) ||
         document.getElementsByName(hashData)[0]
 
       if (target) {
         jumpToTarget()
-      } else if (window.top === window.self) {
-        log(iframeId, 'In page link #' + hash + ' not found')
-      } else {
-        jumpToParent()
+        return
       }
+
+      if (window.top === window.self) {
+        log(iframeId, 'In page link #' + hash + ' not found')
+        return
+      }
+
+      jumpToParent()
     }
 
     function onMouse(event) {
@@ -1132,8 +1129,6 @@
         })
       }
 
-      // const MutationObserver = getMutationObserver()
-
       createDestroyObserver(MutationObserver)
 
       addEventListener(iframe, 'load', iFrameLoaded)
@@ -1283,8 +1278,6 @@
 
       observer.observe(target, config)
     }
-
-    // let MutationObserver = getMutationObserver()
 
     createMutationObserver()
   }
