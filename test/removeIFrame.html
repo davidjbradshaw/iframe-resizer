@@ -54,7 +54,7 @@
           var iframeEl = $('iframe')
           iframeEl.iFrameResize({
             // log: true,
-            onInit: function() {
+            onReady: function() {
               var warn = spyOn(console, 'warn')
               $('.focusable').focus()
               iframeEl[0].parentElement.removeChild(iframeEl[0])

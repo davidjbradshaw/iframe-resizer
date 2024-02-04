@@ -43,7 +43,7 @@ define(['iframeResizer'], function(iFrameResize) {
       var iframes = iFrameResize({
         log: log,
         id: '#frame1,#frame2',
-        onInit: function(iframe) {
+        onReady: function(iframe) {
           iframe.iFrameResizer.sendMessage('getPageInfo')
         }
       })

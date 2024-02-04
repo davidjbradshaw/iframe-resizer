@@ -30,7 +30,7 @@
 
         $('iframe').iFrameResize({
           //log:true,
-          onInit: function() {
+          onReady: function() {
             sendMessage('close')
           },
           onClosed: function() {

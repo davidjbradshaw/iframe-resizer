@@ -18,14 +18,6 @@ onClosed: (iframeID) => undefined
 
 Called after iFrame is closed via `parentIFrame.close()` or `iframe.iFrameResizer.close()` methods.
 
-### onInit
-
-```js
-onInit: (iframe) => undefined
-```
-
-Called after initial setup.
-
 ### onMessage
 
 ```js
@@ -49,6 +41,14 @@ onMouseLeave: ({iframe,height,width,type}) => undefined
 ```
 
 Function called after the mouse leaves the iframe. Passes `messageData` object containing the **iFrame**, **screenX**, **screenY** and the **type** of event that triggered the callback.
+
+### onReady
+
+```js
+onReady: (iframe) => undefined
+```
+
+Called after initial setup.
 
 ### onResized
 

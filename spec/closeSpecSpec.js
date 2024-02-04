@@ -29,7 +29,7 @@ define(['iframeResizer'], function(iFrameResize) {
         onClosed: function() {
           setTimeout(done, 0)
         },
-        onInit: function(iframe) {
+        onReady: function(iframe) {
           iframe.iFrameResizer.sendMessage('close')
         }
       })[0]

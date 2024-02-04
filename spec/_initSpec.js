@@ -22,7 +22,7 @@ define(['iframeResizer'], function(iFrameResize) {
         sizeHeight: false,
         sizeWidth: true,
         tolerance: 1,
-        onInit: function() {
+        onReady: function() {
           setTimeout(done, 1)
         }
       })[0]
