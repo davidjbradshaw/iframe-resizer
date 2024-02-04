@@ -136,8 +136,8 @@ module.exports = function (grunt) {
       },
       deployExample: {
         command: function () {
-          var retStr = '',
-            fs = require('fs')
+          let retStr = ''
+          const fs = require('fs')
 
           if (fs.existsSync('bin')) {
             retStr = 'bin/deploy.sh'
@@ -199,7 +199,7 @@ module.exports = function (grunt) {
   grunt.registerMultiTask('removeBlock', function () {
     // set up a removal regular expression
     // eslint-disable-next-line security/detect-non-literal-regexp
-    var removalRegEx = new RegExp(
+    const removalRegEx = new RegExp(
       '(// ' +
         this.options()[0] +
         ' //)(?:[^])*?(// ' +
@@ -209,8 +209,8 @@ module.exports = function (grunt) {
     )
 
     this.data.forEach(function (fileObj) {
-      var sourceFile = grunt.file.read(fileObj.src)
-      var removedFile = sourceFile.replace(removalRegEx, '')
+      const sourceFile = grunt.file.read(fileObj.src)
+      const removedFile = sourceFile.replace(removalRegEx, '')
 
       grunt.file.write(fileObj.dest, removedFile)
     }) // for each loop end

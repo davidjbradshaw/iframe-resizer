@@ -12,72 +12,73 @@
 ;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
-  var autoResize = true,
-    base = 10,
-    bodyBackground = '',
-    bodyMargin = 0,
-    bodyMarginStr = '',
-    bodyObserver = null,
-    bodyPadding = '',
-    calculateWidth = false,
-    doubleEventList = { resize: 1, click: 1 },
-    eventCancelTimer = 128,
-    firstRun = true,
-    height = 1,
-    heightCalcModeDefault = 'bodyOffset',
-    heightCalcMode = heightCalcModeDefault,
-    initLock = true,
-    initMsg = '',
-    inPageLinks = {},
-    interval = 32,
-    intervalTimer = null,
-    logging = false,
-    mouseEvents = false,
-    msgID = '[iFrameSizer]', // Must match host page msg ID
-    msgIdLen = msgID.length,
-    myID = '',
-    resetRequiredMethods = {
-      max: 1,
-      min: 1,
-      bodyScroll: 1,
-      documentElementScroll: 1
+  const base = 10
+  const doubleEventList = { resize: 1, click: 1 }
+  const eventCancelTimer = 128
+  const heightCalcModeDefault = 'bodyOffset'
+  const msgID = '[iFrameSizer]' // Must match host page msg ID
+  const msgIdLen = msgID.length
+  const resetRequiredMethods = {
+    max: 1,
+    min: 1,
+    bodyScroll: 1,
+    documentElementScroll: 1
+  }
+  const resizeObserveTargets = ['body', 'textarea']
+  const sendPermit = true
+  const widthCalcModeDefault = 'scroll'
+  const customCalcMethods = {
+    height: function () {
+      warn('Custom height calculation function not defined')
+      return document.documentElement.offsetHeight
     },
-    resizeFrom = 'child',
-    resizeObserver = null,
-    resizeObserveTargets = ['body', 'textarea'],
-    sendPermit = true,
-    target = window.parent,
-    targetOriginDefault = '*',
-    tolerance = 0,
-    triggerLocked = false,
-    triggerLockedTimer = null,
-    throttledTimer = 16,
-    width = 1,
-    widthCalcModeDefault = 'scroll',
-    widthCalcMode = widthCalcModeDefault,
-    win = window,
-    onMessage = function () {
-      warn('onMessage function not defined')
-    },
-    onReady = function () {},
-    onPageInfo = function () {},
-    customCalcMethods = {
-      height: function () {
-        warn('Custom height calculation function not defined')
-        return document.documentElement.offsetHeight
-      },
-      width: function () {
-        warn('Custom width calculation function not defined')
-        return document.body.scrollWidth
-      }
-    },
-    eventHandlersByName = {},
-    passiveSupported = false
+    width: function () {
+      warn('Custom width calculation function not defined')
+      return document.body.scrollWidth
+    }
+  }
+  const eventHandlersByName = {}
+
+  let autoResize = true
+  let bodyBackground = ''
+  let bodyMargin = 0
+  let bodyMarginStr = ''
+  let bodyObserver = null
+  let bodyPadding = ''
+  let calculateWidth = false
+  let firstRun = true
+  let height = 1
+  let heightCalcMode = heightCalcModeDefault
+  let initLock = true
+  let initMsg = ''
+  let inPageLinks = {}
+  let interval = 32
+  let intervalTimer = null
+  let logging = false
+  let mouseEvents = false
+  let myID = ''
+  let resizeFrom = 'child'
+  let resizeObserver = null
+  let target = window.parent
+  let targetOriginDefault = '*'
+  let tolerance = 0
+  let triggerLocked = false
+  let triggerLockedTimer = null
+  let throttledTimer = 16
+  let width = 1
+  let widthCalcMode = widthCalcModeDefault
+  let win = window
+  let onMessage = function () {
+    warn('onMessage function not defined')
+  }
+  let onReady = function () {}
+  let onPageInfo = function () {}
+  let passiveSupported = false
 
   function noop() {}
 
   try {
-    var options = Object.create(
+    const options = Object.create(
       {},
       {
         passive: {
@@ -108,29 +109,30 @@
 
   // Based on underscore.js
   function throttle(func) {
-    var context,
-      args,
-      result,
-      timeout = null,
-      previous = 0,
-      later = function () {
-        previous = Date.now()
-        timeout = null
-        result = func.apply(context, args)
-        if (!timeout) {
-          // eslint-disable-next-line no-multi-assign
-          context = args = null
-        }
+    let context
+    let args
+    let result
+    let timeout = null
+    let previous = 0
+
+    const later = function () {
+      previous = Date.now()
+      timeout = null
+      result = func.apply(context, args)
+      if (!timeout) {
+        // eslint-disable-next-line no-multi-assign
+        context = args = null
       }
+    }
 
     return function () {
-      var now = Date.now()
+      const now = Date.now()
 
       if (!previous) {
         previous = now
       }
 
-      var remaining = throttledTimer - (now - previous)
+      const remaining = throttledTimer - (now - previous)
 
       context = this
       args = arguments
@@ -221,7 +223,7 @@
       return 'true' === str
     }
 
-    var data = initMsg.slice(msgIdLen).split(':')
+    const data = initMsg.slice(msgIdLen).split(':')
 
     myID = data[0]
     bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]) // For V1 compatibility
@@ -242,7 +244,7 @@
 
   function readDataFromPage() {
     function readData() {
-      var data = window.iFrameResizer
+      const data = window.iFrameResizer
 
       log('Reading data from page: ' + JSON.stringify(data))
 
@@ -313,7 +315,7 @@
   }
 
   function manageTriggerEvent(options) {
-    var listener = {
+    const listener = {
       add: function (eventName) {
         function handleEvent() {
           sendSize(options.eventName, options.eventType)
@@ -324,7 +326,7 @@
         addEventListener(window, eventName, handleEvent, { passive: true })
       },
       remove: function (eventName) {
-        var handleEvent = eventHandlersByName[eventName]
+        const handleEvent = eventHandlersByName[eventName]
         delete eventHandlersByName[eventName]
 
         removeEventListener(window, eventName, handleEvent)
@@ -528,7 +530,8 @@
   //   }
 
   function injectClearFixIntoBodyElement() {
-    var clearFix = document.createElement('div')
+    const clearFix = document.createElement('div')
+
     clearFix.style.clear = 'both'
     // Guard against the following having been globally redefined in CSS.
     clearFix.style.display = 'block'
@@ -551,8 +554,8 @@
     }
 
     function getElementPosition(el) {
-      var elPosition = el.getBoundingClientRect(),
-        pagePosition = getPagePosition()
+      const elPosition = el.getBoundingClientRect()
+      const pagePosition = getPagePosition()
 
       return {
         x: parseInt(elPosition.left, 10) + parseInt(pagePosition.x, 10),
@@ -562,7 +565,7 @@
 
     function findTarget(location) {
       function jumpToTarget(target) {
-        var jumpPosition = getElementPosition(target)
+        const jumpPosition = getElementPosition(target)
 
         log(
           'Moving to in page link (#' +
@@ -575,11 +578,11 @@
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       }
 
-      var hash = location.split('#')[1] || location, // Remove # if present
-        hashData = decodeURIComponent(hash),
-        target =
-          document.getElementById(hashData) ||
-          document.getElementsByName(hashData)[0]
+      const hash = location.split('#')[1] || location // Remove # if present
+      const hashData = decodeURIComponent(hash)
+      const target =
+        document.getElementById(hashData) ||
+        document.getElementsByName(hashData)[0]
 
       if (undefined === target) {
         log(
@@ -594,8 +597,8 @@
     }
 
     function checkLocationHash() {
-      var hash = window.location.hash
-      var href = window.location.href
+      const hash = window.location.hash
+      const href = window.location.href
 
       if ('' !== hash && '#' !== hash) {
         findTarget(href)
@@ -741,8 +744,9 @@
       },
 
       size: function sizeF(customHeight, customWidth) {
-        var valString =
+        const valString =
           '' + (customHeight || '') + (customWidth ? ',' + customWidth : '')
+
         sendSize(
           'size',
           'parentIFrame.size(' + valString + ')',
@@ -763,7 +767,7 @@
   }
 
   function resizeObserved(entries) {
-    var el = entries[0].target
+    const el = entries[0].target
     sendSize('resizeObserver', 'resizeObserver: ' + getElementName(el))
   }
 
@@ -867,17 +871,16 @@
     }
 
     function createMutationObserver() {
-      var target = document.querySelector('body'),
-        config = {
-          attributes: true,
-          attributeOldValue: false,
-          characterData: true,
-          characterDataOldValue: false,
-          childList: true,
-          subtree: true
-        }
-
-      observer = new MutationObserver(mutationObserved)
+      const observer = new window.MutationObserver(mutationObserved)
+      const target = document.querySelector('body')
+      const config = {
+        attributes: true,
+        attributeOldValue: false,
+        characterData: true,
+        characterDataOldValue: false,
+        childList: true,
+        subtree: true
+      }
 
       log('Create <body/> MutationObserver')
       observer.observe(target, config)
@@ -885,30 +888,24 @@
       return observer
     }
 
-    var elements = [],
-      MutationObserver =
-        window.MutationObserver || window.WebKitMutationObserver,
-      observer = createMutationObserver()
+    const observer = createMutationObserver()
+
+    let elements = []
 
     return {
       disconnect: function () {
-        if ('disconnect' in observer) {
-          log('Disconnect body MutationObserver')
-          observer.disconnect()
-          elements.forEach(removeImageLoadListener)
-        }
+        log('Disconnect body MutationObserver')
+        observer.disconnect()
+        elements.forEach(removeImageLoadListener)
       }
     }
   }
 
   function setupMutationObserver() {
-    var forceIntervalTimer = 0 > interval
+    const forceIntervalTimer = 0 > interval
 
     // Not testable in PhantomJS
-    /* istanbul ignore if */ if (
-      window.MutationObserver ||
-      window.WebKitMutationObserver
-    ) {
+    /* istanbul ignore if */ if (window.MutationObserver) {
       if (forceIntervalTimer) {
         initInterval()
       } else {
@@ -923,7 +920,7 @@
   // document.documentElement.offsetHeight is not reliable, so
   // we have to jump through hoops to get a better value.
   function getComputedStyle(prop, el) {
-    var retVal = 0
+    let retVal = 0
     el = el || document.body // Not testable in phantonJS
 
     retVal = document.defaultView.getComputedStyle(el, null)
@@ -941,14 +938,15 @@
 
   // Idea from https://github.com/guardian/iframe-messenger
   function getMaxElement(side, elements) {
-    var elementsLength = elements.length,
-      el,
-      elVal = 0,
-      maxVal = 0,
-      Side = capitalizeFirstLetter(side),
-      timer = Date.now()
+    const elementsLength = elements.length
+    const Side = capitalizeFirstLetter(side)
 
-    for (var i = 0; i < elementsLength; i++) {
+    let el
+    let elVal = 0
+    let maxVal = 0
+    let timer = Date.now()
+
+    for (let i = 0; i < elementsLength; i++) {
       elVal =
         elements[i].getBoundingClientRect()[side] +
         getComputedStyle('margin' + Side, elements[i])
@@ -984,7 +982,7 @@
       return document.querySelectorAll('body * :not(option):not(optgroup)')
     }
 
-    var elements = document.querySelectorAll('[' + tag + ']')
+    const elements = document.querySelectorAll('[' + tag + ']')
 
     if (elements.length === 0) noTaggedElementsFound()
 
@@ -995,7 +993,7 @@
     return document.querySelectorAll('body * :not(option):not(optgroup)')
   }
 
-  var getHeight = {
+  let getHeight = {
       bodyOffset: function getBodyOffsetHeight() {
         return (
           document.body.offsetHeight +
@@ -1104,7 +1102,7 @@
 
     function isSizeChangeDetected() {
       function checkTolarance(a, b) {
-        var retVal = Math.abs(a - b) <= tolerance
+        const retVal = Math.abs(a - b) <= tolerance
         return !retVal
       }
 
@@ -1142,7 +1140,8 @@
       }
     }
 
-    var currentHeight, currentWidth
+    let currentHeight
+    let currentWidth
 
     if (isSizeChangeDetected() || 'init' === triggerEvent) {
       lockTrigger()
@@ -1152,7 +1151,7 @@
     }
   }
 
-  var sizeIFrameThrottled = throttle(sizeIFrame)
+  const sizeIFrameThrottled = throttle(sizeIFrame)
 
   function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
     function recordTrigger() {
@@ -1203,7 +1202,7 @@
   }
 
   function resetIFrame(triggerEventDesc) {
-    var hcm = heightCalcMode
+    const hcm = heightCalcMode
     heightCalcMode = heightCalcModeDefault
 
     log('Reset trigger event: ' + triggerEventDesc)
@@ -1223,14 +1222,14 @@
     }
 
     function sendToParent() {
-      var size = height + ':' + width,
-        message =
-          myID +
-          ':' +
-          size +
-          ':' +
-          triggerEvent +
-          (undefined === msg ? '' : ':' + msg)
+      const size = height + ':' + width
+      const message =
+        myID +
+        ':' +
+        size +
+        ':' +
+        triggerEvent +
+        (undefined === msg ? '' : ':' + msg)
 
       log('Sending message to host page (' + message + ')')
       target.postMessage(msgID + message, targetOrigin)
@@ -1243,7 +1242,7 @@
   }
 
   function receiver(event) {
-    var processRequestFromParent = {
+    const processRequestFromParent = {
       init: function initFromParent() {
         initMsg = event.data
         target = event.source
@@ -1276,14 +1275,15 @@
       }, // Backward compatibility
 
       pageInfo: function pageInfoFromParent() {
-        var msgBody = getData()
+        const msgBody = getData()
+
         log('PageInfoFromParent called from parent: ' + msgBody)
         onPageInfo(JSON.parse(msgBody))
         log(' --')
       },
 
       message: function messageFromParent() {
-        var msgBody = getData()
+        const msgBody = getData()
 
         log('onMessage called from parent: ' + msgBody)
         // eslint-disable-next-line sonarjs/no-extra-arguments
@@ -1320,7 +1320,7 @@
     }
 
     function callFromParent() {
-      var messageType = getMessageType()
+      const messageType = getMessageType()
 
       if (messageType in processRequestFromParent) {
         processRequestFromParent[messageType]()
