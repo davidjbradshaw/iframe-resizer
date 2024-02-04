@@ -86,24 +86,24 @@
     el.removeEventListener(evt, func, false)
   }
 
-  function setupRequestAnimationFrame() {
-    var vendors = ['moz', 'webkit', 'o', 'ms']
-    var x
+  // function setupRequestAnimationFrame() {
+  //   var vendors = ['moz', 'webkit', 'o', 'ms']
+  //   var x
 
-    // Remove vendor prefixing if prefixed and break early if not
-    for (x = 0; x < vendors.length && !requestAnimationFrame; x += 1) {
-      requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
-    }
+  //   // Remove vendor prefixing if prefixed and break early if not
+  //   for (x = 0; x < vendors.length && !requestAnimationFrame; x += 1) {
+  //     requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
+  //   }
 
-    if (requestAnimationFrame) {
-      // Firefox extension content-scripts have a globalThis object that is not the same as window.
-      // Binding `requestAnimationFrame` to window allows the function to work and prevents errors
-      // being thrown when run in that context, and should be a no-op in every other context.
-      requestAnimationFrame = requestAnimationFrame.bind(window)
-    } else {
-      log('setup', 'RequestAnimationFrame not supported')
-    }
-  }
+  //   if (requestAnimationFrame) {
+  //     // Firefox extension content-scripts have a globalThis object that is not the same as window.
+  //     // Binding `requestAnimationFrame` to window allows the function to work and prevents errors
+  //     // being thrown when run in that context, and should be a no-op in every other context.
+  //     requestAnimationFrame = requestAnimationFrame.bind(window)
+  //   } else {
+  //     log('setup', 'RequestAnimationFrame not supported')
+  //   }
+  // }
 
   function getMyID(iframeId) {
     var retStr = 'Host page: ' + iframeId
@@ -126,6 +126,13 @@
     return settings[iframeId] ? settings[iframeId].log : logEnabled
   }
 
+  function output(type, iframeId, msg, enabled) {
+    if (true === enabled) {
+      // eslint-disable-next-line no-console
+      console[type](formatLogHeader(iframeId), msg)
+    }
+  }
+
   function log(iframeId, msg) {
     output('log', iframeId, msg, isLogEnabled(iframeId))
   }
@@ -136,13 +143,6 @@
 
   function warn(iframeId, msg) {
     output('warn', iframeId, msg, true)
-  }
-
-  function output(type, iframeId, msg, enabled) {
-    if (true === enabled && 'object' === typeof window.console) {
-      // eslint-disable-next-line no-console
-      console[type](formatLogHeader(iframeId), msg)
-    }
   }
 
   function iFrameListener(event) {
@@ -914,39 +914,25 @@
   }
 
   function createOutgoingMsg(iframeId) {
-    return (
-      iframeId +
-      ':' +
-      settings[iframeId].bodyMarginV1 +
-      ':' +
-      settings[iframeId].sizeWidth +
-      ':' +
-      settings[iframeId].log +
-      ':' +
-      settings[iframeId].interval +
-      ':' +
-      settings[iframeId].enablePublicMethods +
-      ':' +
-      settings[iframeId].autoResize +
-      ':' +
-      settings[iframeId].bodyMargin +
-      ':' +
-      settings[iframeId].heightCalculationMethod +
-      ':' +
-      settings[iframeId].bodyBackground +
-      ':' +
-      settings[iframeId].bodyPadding +
-      ':' +
-      settings[iframeId].tolerance +
-      ':' +
-      settings[iframeId].inPageLinks +
-      ':' +
-      settings[iframeId].resizeFrom +
-      ':' +
-      settings[iframeId].widthCalculationMethod +
-      ':' +
-      settings[iframeId].mouseEvents
-    )
+    var iframeSettings = settings[iframeId]
+    return [
+      iframeId,
+      iframeSettings.bodyMarginV1,
+      iframeSettings.sizeWidth,
+      iframeSettings.log,
+      iframeSettings.interval,
+      iframeSettings.enablePublicMethods,
+      iframeSettings.autoResize,
+      iframeSettings.bodyMargin,
+      iframeSettings.heightCalculationMethod,
+      iframeSettings.bodyBackground,
+      iframeSettings.bodyPadding,
+      iframeSettings.tolerance,
+      iframeSettings.inPageLinks,
+      iframeSettings.resizeFrom,
+      iframeSettings.widthCalculationMethod,
+      iframeSettings.mouseEvents
+    ].join(':')
   }
 
   function isNumber(value) {
@@ -1377,7 +1363,7 @@
     var iFrames
 
     if (!setupComplete) {
-      setupRequestAnimationFrame()
+      // setupRequestAnimationFrame()
       setupEventListeners()
       setupComplete = true
     }
