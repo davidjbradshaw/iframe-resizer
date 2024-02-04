@@ -73,30 +73,9 @@
   }
   let onReady = function () {}
   let onPageInfo = function () {}
-  let passiveSupported = false
-
-  function noop() {}
-
-  try {
-    const options = Object.create(
-      {},
-      {
-        passive: {
-          // eslint-disable-next-line getter-return
-          get: function () {
-            passiveSupported = true
-          }
-        }
-      }
-    )
-    window.addEventListener('test', noop, options)
-    window.removeEventListener('test', noop, options)
-  } catch (error) {
-    /* */
-  }
 
   function addEventListener(el, evt, func, options) {
-    el.addEventListener(evt, func, passiveSupported ? options || {} : false)
+    el.addEventListener(evt, func, options || {})
   }
 
   function removeEventListener(el, evt, func) {
@@ -673,7 +652,7 @@
     log('Enable public methods')
 
     win.parentIFrame = {
-      autoResize: function autoResizeF(resize) {
+      autoResize: (resize) => {
         if (true === resize && false === autoResize) {
           autoResize = true
           startEventListeners()
@@ -685,16 +664,14 @@
         return autoResize
       },
 
-      close: function closeF() {
+      close: function () {
         sendMsg(0, 0, 'close')
         // teardown()
       },
 
-      getId: function getIdF() {
-        return myID
-      },
+      getId: () => myID,
 
-      getPageInfo: function getPageInfoF(callback) {
+      getPageInfo: function (callback) {
         if ('function' === typeof callback) {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
@@ -704,46 +681,42 @@
         }
       },
 
-      moveToAnchor: function moveToAnchorF(hash) {
+      moveToAnchor: function (hash) {
         inPageLinks.findTarget(hash)
       },
 
-      reset: function resetF() {
+      reset: function () {
         resetIFrame('parentIFrame.reset')
       },
 
-      scrollTo: function scrollToF(x, y) {
+      scrollTo: function (x, y) {
         sendMsg(y, x, 'scrollTo') // X&Y reversed at sendMsg uses height/width
       },
 
-      scrollToOffset: function scrollToF(x, y) {
+      scrollToOffset: function (x, y) {
         sendMsg(y, x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       },
 
-      sendMessage: function sendMessageF(msg, targetOrigin) {
+      sendMessage: function (msg, targetOrigin) {
         sendMsg(0, 0, 'message', JSON.stringify(msg), targetOrigin)
       },
 
-      setHeightCalculationMethod: function setHeightCalculationMethodF(
-        heightCalculationMethod
-      ) {
+      setHeightCalculationMethod: function (heightCalculationMethod) {
         heightCalcMode = heightCalculationMethod
         checkHeightMode()
       },
 
-      setWidthCalculationMethod: function setWidthCalculationMethodF(
-        widthCalculationMethod
-      ) {
+      setWidthCalculationMethod: function (widthCalculationMethod) {
         widthCalcMode = widthCalculationMethod
         checkWidthMode()
       },
 
-      setTargetOrigin: function setTargetOriginF(targetOrigin) {
+      setTargetOrigin: function (targetOrigin) {
         log('Set targetOrigin: ' + targetOrigin)
         targetOriginDefault = targetOrigin
       },
 
-      size: function sizeF(customHeight, customWidth) {
+      size: function (customHeight, customWidth) {
         const valString =
           '' + (customHeight || '') + (customWidth ? ',' + customWidth : '')
 
@@ -994,97 +967,44 @@
   }
 
   let getHeight = {
-      bodyOffset: function getBodyOffsetHeight() {
-        return (
-          document.body.offsetHeight +
-          getComputedStyle('marginTop') +
-          getComputedStyle('marginBottom')
-        )
-      },
-
-      offset: function () {
-        return getHeight.bodyOffset() // Backwards compatibility
-      },
-
-      bodyScroll: function getBodyScrollHeight() {
-        return document.body.scrollHeight
-      },
-
-      custom: function getCustomWidth() {
-        return customCalcMethods.height()
-      },
-
-      documentElementOffset: function getDEOffsetHeight() {
-        return document.documentElement.offsetHeight
-      },
-
-      documentElementScroll: function getDEScrollHeight() {
-        return document.documentElement.scrollHeight
-      },
-
-      max: function getMaxHeight() {
-        return Math.max.apply(null, getAllMeasurements(getHeight))
-      },
-
-      min: function getMinHeight() {
-        return Math.min.apply(null, getAllMeasurements(getHeight))
-      },
-
-      grow: function growHeight() {
-        return getHeight.max() // Run max without the forced downsizing
-      },
-
-      lowestElement: function getBestHeight() {
-        return Math.max(
+      bodyOffset: () =>
+        document.body.offsetHeight +
+        getComputedStyle('marginTop') +
+        getComputedStyle('marginBottom'),
+      offset: () => getHeight.bodyOffset(), // Backwards compatibility
+      bodyScroll: () => document.body.scrollHeight,
+      custom: () => customCalcMethods.height(),
+      documentElementOffset: () => document.documentElement.offsetHeight,
+      documentElementScroll: () => document.documentElement.scrollHeight,
+      bodyBoundingClientRect: () =>
+        document.body.getBoundingClientRect().height,
+      documentElementBoundingClientRect: () =>
+        document.documentElement.getBoundingClientRect().height,
+      max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
+      min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
+      grow: () => getHeight.max(), // Run max without the forced downsizing
+      lowestElement: () =>
+        Math.max(
           getHeight.bodyOffset() || getHeight.documentElementOffset(),
           getMaxElement('bottom', getAllElements())
-        )
-      },
-
-      taggedElement: function getTaggedElementsHeight() {
-        return getTaggedElements('bottom', 'data-iframe-height')
-      }
+        ),
+      taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
     },
     getWidth = {
-      bodyScroll: function getBodyScrollWidth() {
-        return document.body.scrollWidth
-      },
-
-      bodyOffset: function getBodyOffsetWidth() {
-        return document.body.offsetWidth
-      },
-
-      custom: function getCustomWidth() {
-        return customCalcMethods.width()
-      },
-
-      documentElementScroll: function getDEScrollWidth() {
-        return document.documentElement.scrollWidth
-      },
-
-      documentElementOffset: function getDEOffsetWidth() {
-        return document.documentElement.offsetWidth
-      },
-
-      scroll: function getMaxWidth() {
-        return Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll())
-      },
-
-      max: function getMaxWidth() {
-        return Math.max.apply(null, getAllMeasurements(getWidth))
-      },
-
-      min: function getMinWidth() {
-        return Math.min.apply(null, getAllMeasurements(getWidth))
-      },
-
-      rightMostElement: function rightMostElement() {
-        return getMaxElement('right', getAllElements())
-      },
-
-      taggedElement: function getTaggedElementsWidth() {
-        return getTaggedElements('right', 'data-iframe-width')
-      }
+      bodyScroll: () => document.body.scrollWidth,
+      bodyOffset: () => document.body.offsetWidth,
+      custom: () => customCalcMethods.width(),
+      documentElementScroll: () => document.documentElement.scrollWidth,
+      documentElementOffset: () => document.documentElement.offsetWidth,
+      scroll: () =>
+        Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
+      bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
+      documentElementBoundingClientRect: () =>
+        document.documentElement.getBoundingClientRect().width,
+      max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
+      min: () => Math.min.apply(null, getAllMeasurements(getWidth)),
+      rightMostElement: () => getMaxElement('right', getAllElements()),
+      taggedElement: () => getTaggedElements('right', 'data-iframe-width')
     }
 
   function sizeIFrame(
@@ -1254,7 +1174,7 @@
         }, eventCancelTimer)
       },
 
-      reset: function resetFromParent() {
+      reset: function () {
         if (initLock) {
           log('Page reset ignored by init')
         } else {
@@ -1263,18 +1183,18 @@
         }
       },
 
-      resize: function resizeFromParent() {
+      resize: function () {
         sendSize('resizeParent', 'Parent window requested size check')
       },
 
-      moveToAnchor: function moveToAnchorF() {
+      moveToAnchor: function () {
         inPageLinks.findTarget(getData())
       },
-      inPageLink: function inPageLinkF() {
+      inPageLink: function () {
         this.moveToAnchor()
       }, // Backward compatibility
 
-      pageInfo: function pageInfoFromParent() {
+      pageInfo: function () {
         const msgBody = getData()
 
         log('PageInfoFromParent called from parent: ' + msgBody)
@@ -1282,7 +1202,7 @@
         log(' --')
       },
 
-      message: function messageFromParent() {
+      message: function () {
         const msgBody = getData()
 
         log('onMessage called from parent: ' + msgBody)
