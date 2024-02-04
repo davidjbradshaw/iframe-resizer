@@ -12,15 +12,10 @@
 ;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
-  let count = 0
-  let logEnabled = false
-  let hiddenCheckEnabled = false
   const msgHeader = 'message'
   const msgHeaderLen = msgHeader.length
   const msgId = '[iFrameSizer]' // Must match iframe msg ID
   const msgIdLen = msgId.length
-  let pagePosition = null
-  const requestAnimationFrame = window.requestAnimationFrame
   const resetRequiredMethods = Object.freeze({
     max: 1,
     scroll: 1,
@@ -28,7 +23,7 @@
     documentElementScroll: 1
   })
   const settings = {}
-  let timer = null
+
   const defaults = Object.freeze({
     autoResize: true,
     bodyBackground: null,
@@ -62,7 +57,9 @@
     onMouseLeave: function () {},
     onReady: function (messageData) {
       if (typeof settings[messageData.id].onInit === 'function') {
-        warn('onInit function is deprecated and has been replaced with onReady')
+        warn(
+          'onInit() function is deprecated and has been replaced with onReady()'
+        )
         settings[messageData.id].onInit(messageData)
       }
     },
@@ -70,13 +67,19 @@
     onScroll: () => true
   })
 
-  function getMutationObserver() {
-    return (
-      window.MutationObserver ||
-      window.WebKitMutationObserver ||
-      window.MozMutationObserver
-    )
-  }
+  let count = 0
+  let logEnabled = false
+  let hiddenCheckEnabled = false
+  let pagePosition = null
+  let timer = null
+
+  // function getMutationObserver() {
+  //   return (
+  //     window.MutationObserver ||
+  //     window.WebKitMutationObserver ||
+  //     window.MozMutationObserver
+  //   )
+  // }
 
   function addEventListener(el, evt, func) {
     el.addEventListener(evt, func, false)
@@ -1129,7 +1132,7 @@
         })
       }
 
-      const MutationObserver = getMutationObserver()
+      // const MutationObserver = getMutationObserver()
 
       createDestroyObserver(MutationObserver)
 
@@ -1281,7 +1284,7 @@
       observer.observe(target, config)
     }
 
-    let MutationObserver = getMutationObserver()
+    // let MutationObserver = getMutationObserver()
 
     createMutationObserver()
   }
