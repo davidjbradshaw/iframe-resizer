@@ -54,20 +54,22 @@
     warningTimeout: 5000,
     tolerance: 0,
     widthCalculationMethod: 'scroll',
-    onClose: function () {
-      return true
-    },
+    onClose: () => true,
     onClosed: function () {},
-    onInit: function () {},
+    onInit: false,
     onMessage: function () {
       warn('onMessage function not defined')
     },
     onMouseEnter: function () {},
     onMouseLeave: function () {},
+    onReady: function () {
+      if (typeof settings[iframeId].onInit === 'function') {
+        warn('onInit function is deprecated and has been replaced with onReady')
+        settings[iframeId].onInit()
+      }
+    },
     onResized: function () {},
-    onScroll: function () {
-      return true
-    }
+    onScroll: () => true
   })
 
   function getMutationObserver() {
@@ -591,7 +593,7 @@
 
         case 'init': {
           resizeIFrame()
-          on('onInit', messageData.iframe)
+          on('onReady', messageData.iframe)
           break
         }
 

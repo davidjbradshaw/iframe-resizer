@@ -47,7 +47,7 @@
             //log:true,
             bodyBackground: 'wheat',
             heightCalculationMethod: 'max',
-            onInit: function(iframe) {
+            onReady: function(iframe) {
               ok(true, 'Receive init message back from iFrame1.')
               ok('iFrameResizer1' === iframe.id, 'iFrame id = iFrameResizer1.')
               start()
@@ -61,7 +61,7 @@
           //log:true,
           bodyBackground: 'wheat',
           heightCalculationMethod: 'max',
-          onInit: function(iframe) {
+          onReady: function(iframe) {
             ok(true, 'Receive init message back from iFrame0.')
             ok('iFrameResizer0' === iframe.id, 'iFrame id = iFrameResizer0.')
             addSecondIframeAndScript()

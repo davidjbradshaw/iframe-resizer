@@ -28,11 +28,11 @@
   const sendPermit = true
   const widthCalcModeDefault = 'scroll'
   const customCalcMethods = {
-    height: function () {
+    height: () => {
       warn('Custom height calculation function not defined')
       return document.documentElement.offsetHeight
     },
-    width: function () {
+    width: () => {
       warn('Custom width calculation function not defined')
       return document.body.scrollWidth
     }
@@ -68,11 +68,11 @@
   let width = 1
   let widthCalcMode = widthCalcModeDefault
   let win = window
-  let onMessage = function () {
+  let onMessage = () => {
     warn('onMessage function not defined')
   }
-  let onReady = function () {}
-  let onPageInfo = function () {}
+  let onReady = () => {}
+  let onPageInfo = () => {}
 
   function addEventListener(el, evt, func, options) {
     el.addEventListener(evt, func, options || {})
