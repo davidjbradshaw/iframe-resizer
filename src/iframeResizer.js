@@ -478,19 +478,24 @@
         }
       }
 
-      let hash = location.split('#')[1] || ''
+      const hash = location.split('#')[1] || ''
       const hashData = decodeURIComponent(hash)
+
       let target =
         document.getElementById(hashData) ||
         document.getElementsByName(hashData)[0]
 
       if (target) {
         jumpToTarget()
-      } else if (window.top === window.self) {
-        log(iframeId, 'In page link #' + hash + ' not found')
-      } else {
-        jumpToParent()
+        return
       }
+
+      if (window.top === window.self) {
+        log(iframeId, 'In page link #' + hash + ' not found')
+        return
+      }
+
+      jumpToParent()
     }
 
     function onMouse(event) {
