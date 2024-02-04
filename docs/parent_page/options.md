@@ -19,6 +19,7 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 
 <i>Note: When set to false the iFrame will still inititally size to the contained content, only additional resizing events are disabled.</i>
 
+<!--
 ### bodyBackground
 
 	default: null
@@ -39,6 +40,7 @@ Override the default body margin style in the iFrame. A string can be any valid 
 	type:    string || number
 
 Override the default body padding style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
+-->
 
 ### checkOrigin
 
@@ -58,7 +60,7 @@ When enabled in page linking inside the iFrame and from the iFrame to the parent
 
     default: 'bodyOffset'
     values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
-             'max' | 'min' | 'grow' | 'lowestElement' | 'taggedElement'
+             'max' | 'min' | 'lowestElement' | 'taggedElement'
 
 By default the height of the iFrame is calculated by converting the margin of the `body` to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the `body` tag.
 
