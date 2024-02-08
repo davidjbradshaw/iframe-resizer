@@ -64,7 +64,7 @@
     "eslint-plugin-qunit": "^8.0.0",
     "eslint-plugin-scanjs-rules": "^0.2.1",
     "eslint-plugin-security": "^1.7.1",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-simple-import-sort": "^11.0.0",
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-switch-case": "^1.1.2",
     "eslint-plugin-unicorn": "^51.0.1",
