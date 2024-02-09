@@ -68,10 +68,12 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 
 * **bodyOffset** uses `document.body.offsetHeight`
 * **bodyScroll** uses `document.body.scrollHeight` <sup>*</sup>
+* **bodyBoundingClientRect** uses `document.body.getBoundingClientRect().height`
 * **documentElementOffset** uses `document.documentElement.offsetHeight`
 * **documentElementScroll** uses `document.documentElement.scrollHeight` <sup>*</sup>
-* **max** takes the largest value of the main four options <sup>*</sup>
-* **min** takes the smallest value of the main four options <sup>*</sup>
+* **documentElementBoundingClientRect** uses `document.documentElement.getBoundingClientRect().height`
+* **max** takes the largest value of the main six options <sup>*</sup>
+* **min** takes the smallest value of the main six options <sup>*</sup>
 * **lowestElement** Loops though every element in the DOM and finds the lowest bottom point <sup>†</sup>
 * **taggedElement** Finds the bottom of the lowest element with a `data-iframe-height` attribute
 
@@ -158,11 +160,13 @@ Some CSS techniques may require you to change this setting to one of the followi
 
 * **bodyOffset** uses `document.body.offsetWidth`
 * **bodyScroll** uses `document.body.scrollWidth` <sup>*</sup>
+* **bodyBoundingClientRect** uses `document.body.getBoundingClientRect().width`
 * **documentElementOffset** uses `document.documentElement.offsetWidth`
 * **documentElementScroll** uses `document.documentElement.scrollWidth` <sup>*</sup>
+* **documentElementBoundingClientRect** uses `document.documentElement.getBoundingClientRect().width`
 * **scroll** takes the largest value of the two scroll options <sup>*</sup>
-* **max** takes the largest value of the main four options <sup>*</sup>
-* **min** takes the smallest value of the main four options <sup>*</sup>
+* **max** takes the largest value of the main six options <sup>*</sup>
+* **min** takes the smallest value of the main six options <sup>*</sup>
 * **rightMostElement** Loops though every element in the DOM and finds the right most point <sup>†</sup>
 * **taggedElement** Finds the left most element with a `data-iframe-width` attribute
 

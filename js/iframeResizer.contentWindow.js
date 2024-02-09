@@ -466,16 +466,6 @@
     }
   }
 
-  //   function stopMsgsToParent() {
-  //     log('Disable outgoing messages')
-  //     sendPermit = false
-  //   }
-
-  //   function removeMsgListener() {
-  //     log('Remove event listener: Message')
-  //     removeEventListener(window, 'message', receiver)
-  //   }
-
   function disconnectResizeObservers() {
     if (null !== bodyObserver) {
       /* istanbul ignore next */ // Not testable in PhantonJS
@@ -496,12 +486,6 @@
     disconnectMutationObserver()
     clearInterval(intervalTimer)
   }
-
-  //   function teardown() {
-  //     stopMsgsToParent()
-  //     removeMsgListener()
-  //     if (true === autoResize) stopEventListeners()
-  //   }
 
   function injectClearFixIntoBodyElement() {
     const clearFix = document.createElement('div')
@@ -623,7 +607,7 @@
     }
 
     return {
-      findTarget: findTarget
+      findTarget
     }
   }
 
@@ -661,7 +645,6 @@
 
       close: function () {
         sendMsg(0, 0, 'close')
-        // teardown()
       },
 
       getId: () => myID,
@@ -764,16 +747,6 @@
   }
 
   function setupResizeObserver() {
-    if (!window.ResizeObserver) {
-      warn('ResizeObserver not supported in this browser!')
-      return
-    }
-
-    if (!Array.prototype.flatMap) {
-      warn('Array.flatMap() not supported, disabled ResizeObserver')
-      return
-    }
-
     resizeObserver = new ResizeObserver(resizeObserved)
     createResizeObservers(window.document)
   }
@@ -915,7 +888,7 @@
 
     elements.forEach((element) => {
       if (!tagged && !element.checkVisibility(checkVisibilityOptions)) {
-        log('Skipping non-visable element:' + getElementName(element))
+        log('Skipping non-visable element: ' + getElementName(element))
         return
       }
 
@@ -944,9 +917,9 @@
     return [
       dimensions.bodyOffset(),
       dimensions.bodyScroll(),
+      dimensions.bodyBoundingClientRect(),
       dimensions.documentElementOffset(),
       dimensions.documentElementScroll(),
-      dimensions.bodyBoundingClientRect(),
       dimensions.documentElementBoundingClientRect()
     ]
   }
@@ -975,12 +948,12 @@
       document.body.offsetHeight +
       getComputedStyle('marginTop') +
       getComputedStyle('marginBottom'),
-    offset: () => getHeight.bodyOffset(), // Backwards compatibility
     bodyScroll: () => document.body.scrollHeight,
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().height,
+    offset: () => getHeight.bodyOffset(), // Backwards compatibility
     custom: () => customCalcMethods.height(),
     documentElementOffset: () => document.documentElement.offsetHeight,
     documentElementScroll: () => document.documentElement.scrollHeight,
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().height,
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().height,
     max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
@@ -997,12 +970,12 @@
   const getWidth = {
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
     custom: () => customCalcMethods.width(),
     documentElementScroll: () => document.documentElement.scrollWidth,
     documentElementOffset: () => document.documentElement.offsetWidth,
     scroll: () =>
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().width,
     max: () => Math.max.apply(null, getAllMeasurements(getWidth)),

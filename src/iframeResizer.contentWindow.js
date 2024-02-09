@@ -466,8 +466,6 @@
     }
   }
 
-
-
   function disconnectResizeObservers() {
     if (null !== bodyObserver) {
       /* istanbul ignore next */ // Not testable in PhantonJS
@@ -488,7 +486,6 @@
     disconnectMutationObserver()
     clearInterval(intervalTimer)
   }
-
 
   function injectClearFixIntoBodyElement() {
     const clearFix = document.createElement('div')
@@ -920,9 +917,9 @@
     return [
       dimensions.bodyOffset(),
       dimensions.bodyScroll(),
+      dimensions.bodyBoundingClientRect(),
       dimensions.documentElementOffset(),
       dimensions.documentElementScroll(),
-      dimensions.bodyBoundingClientRect(),
       dimensions.documentElementBoundingClientRect()
     ]
   }
@@ -951,12 +948,12 @@
       document.body.offsetHeight +
       getComputedStyle('marginTop') +
       getComputedStyle('marginBottom'),
-    offset: () => getHeight.bodyOffset(), // Backwards compatibility
     bodyScroll: () => document.body.scrollHeight,
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().height,
+    offset: () => getHeight.bodyOffset(), // Backwards compatibility
     custom: () => customCalcMethods.height(),
     documentElementOffset: () => document.documentElement.offsetHeight,
     documentElementScroll: () => document.documentElement.scrollHeight,
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().height,
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().height,
     max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
@@ -973,12 +970,12 @@
   const getWidth = {
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
     custom: () => customCalcMethods.width(),
     documentElementScroll: () => document.documentElement.scrollWidth,
     documentElementOffset: () => document.documentElement.offsetWidth,
     scroll: () =>
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().width,
     max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
