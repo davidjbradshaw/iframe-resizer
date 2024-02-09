@@ -915,7 +915,7 @@
 
     elements.forEach((element) => {
       if (!tagged && !element.checkVisibility(checkVisibilityOptions)) {
-        log('Skipping non-visable element:' + getElementName(element))
+        log('Skipping non-visable element: ' + getElementName(element))
         return
       }
 
