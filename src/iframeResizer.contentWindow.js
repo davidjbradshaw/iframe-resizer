@@ -905,7 +905,7 @@
   }
 
   // Idea from https://github.com/guardian/iframe-messenger
-  function getMaxElement(side, elements) {
+  function getMaxElement(side, elements, tagged) {
     const Side = capitalizeFirstLetter(side)
 
     let elVal = 0
@@ -914,8 +914,8 @@
     let timer = Date.now()
 
     elements.forEach((element) => {
-      if (!element.checkVisibility(checkVisibilityOptions)) {
-        log('Skipping non-visable element:' + getElementName(element) )
+      if (!tagged && !element.checkVisibility(checkVisibilityOptions)) {
+        log('Skipping non-visable element:' + getElementName(element))
         return
       }
 
@@ -961,7 +961,7 @@
 
     if (elements.length === 0) noTaggedElementsFound()
 
-    return getMaxElement(side, elements)
+    return getMaxElement(side, elements, true)
   }
 
   function getAllElements() {
@@ -989,7 +989,7 @@
     lowestElement: () =>
       Math.max(
         getHeight.bodyOffset() || getHeight.documentElementOffset(),
-        getMaxElement('bottom', getAllElements())
+        getMaxElement('bottom', getAllElements(), false)
       ),
     taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
   }
