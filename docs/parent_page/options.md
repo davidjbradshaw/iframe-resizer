@@ -59,7 +59,8 @@ When enabled in page linking inside the iFrame and from the iFrame to the parent
 ### heightCalculationMethod
 
     default: 'bodyOffset'
-    values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
+    values:  'bodyOffset' | 'bodyScroll' | 'bodyBoundingClientRect' |
+			 'documentElementOffset' | 'documentElementScroll' | 'documentElementBoundingClientRect' |
              'max' | 'min' | 'lowestElement' | 'taggedElement'
 
 By default the height of the iFrame is calculated by converting the margin of the `body` to <i>px</i> and then adding the top and bottom figures to the offsetHeight of the `body` tag.
@@ -151,7 +152,8 @@ Set the number of milliseconds after which a warning is logged if the iFrame has
 ### widthCalculationMethod
 
     default: 'scroll'
-    values:  'bodyOffset' | 'bodyScroll' | 'documentElementOffset' | 'documentElementScroll' |
+    values:  'bodyOffset' | 'bodyScroll' | 'bodyBoundingClientRect' |
+			 'documentElementOffset' | 'documentElementScroll' | 'documentElementBoundingClientRect' |
              'max' | 'min' | 'scroll' | 'rightMostElement' | 'taggedElement'
 
 By default the width of the page is worked out by taking the greater of the **documentElement** and **body** scrollWidth values.
