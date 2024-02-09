@@ -13,8 +13,24 @@
   if (typeof window === 'undefined') return // don't run for server side render
 
   const base = 10
+  const checkVisibilityOptions = {
+    contentVisibilityAuto: true,
+    opacityProperty: true,
+    visibilityProperty: true
+  }
+  const customCalcMethods = {
+    height: () => {
+      warn('Custom height calculation function not defined')
+      return document.documentElement.offsetHeight
+    },
+    width: () => {
+      warn('Custom width calculation function not defined')
+      return document.body.scrollWidth
+    }
+  }
   const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
+  const eventHandlersByName = {}
   const heightCalcModeDefault = 'bodyOffset'
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
@@ -27,17 +43,6 @@
   const resizeObserveTargets = ['body', 'textarea']
   const sendPermit = true
   const widthCalcModeDefault = 'scroll'
-  const customCalcMethods = {
-    height: () => {
-      warn('Custom height calculation function not defined')
-      return document.documentElement.offsetHeight
-    },
-    width: () => {
-      warn('Custom width calculation function not defined')
-      return document.body.scrollWidth
-    }
-  }
-  const eventHandlersByName = {}
 
   let autoResize = true
   let bodyBackground = ''
@@ -327,6 +332,26 @@
   }
 
   function manageEventListeners(method) {
+    if ('child' === resizeFrom) {
+      manageTriggerEvent({
+        method: method,
+        eventType: 'IFrame Resized',
+        eventName: 'resize'
+      })
+    }
+
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Print',
+      eventNames: ['afterprint', 'beforeprint']
+    })
+
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Ready State Change',
+      eventName: 'readystatechange'
+    })
+
     manageTriggerEvent({
       method: method,
       eventType: 'Animation Start',
@@ -342,11 +367,35 @@
       eventType: 'Animation End',
       eventNames: ['animationend', 'webkitAnimationEnd']
     })
+
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Orientation Change',
+      eventName: 'orientationchange'
+    })
+
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Transition Start',
+      eventName: 'transitionstart'
+    })
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Transition Iteration',
+      eventName: 'transitioniteration'
+    })
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Transition End',
+      eventName: 'transitionend'
+    })
+
     manageTriggerEvent({
       method: method,
       eventType: 'Input',
       eventName: 'input'
     })
+
     manageTriggerEvent({
       method: method,
       eventType: 'Mouse Up',
@@ -357,21 +406,7 @@
       eventType: 'Mouse Down',
       eventName: 'mousedown'
     })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Orientation Change',
-      eventName: 'orientationchange'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Print',
-      eventNames: ['afterprint', 'beforeprint']
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Ready State Change',
-      eventName: 'readystatechange'
-    })
+
     manageTriggerEvent({
       method: method,
       eventType: 'Touch Start',
@@ -387,46 +422,6 @@
       eventType: 'Touch Cancel',
       eventName: 'touchcancel'
     })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Transition Start',
-      eventNames: [
-        'transitionstart',
-        'webkitTransitionStart',
-        'MSTransitionStart',
-        'oTransitionStart',
-        'otransitionstart'
-      ]
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Transition Iteration',
-      eventNames: [
-        'transitioniteration',
-        'webkitTransitionIteration',
-        'MSTransitionIteration',
-        'oTransitionIteration',
-        'otransitioniteration'
-      ]
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Transition End',
-      eventNames: [
-        'transitionend',
-        'webkitTransitionEnd',
-        'MSTransitionEnd',
-        'oTransitionEnd',
-        'otransitionend'
-      ]
-    })
-    if ('child' === resizeFrom) {
-      manageTriggerEvent({
-        method: method,
-        eventType: 'IFrame Resized',
-        eventName: 'resize'
-      })
-    }
   }
 
   function checkCalcMode(calcMode, calcModeDefault, modes, type) {
@@ -910,29 +905,34 @@
   }
 
   // Idea from https://github.com/guardian/iframe-messenger
-  function getMaxElement(side, elements) {
-    const elementsLength = elements.length
+  function getMaxElement(side, elements, tagged) {
     const Side = capitalizeFirstLetter(side)
 
-    let el
     let elVal = 0
+    let maxEl
     let maxVal = 0
     let timer = Date.now()
 
-    for (let i = 0; i < elementsLength; i++) {
+    elements.forEach((element) => {
+      if (!tagged && !element.checkVisibility(checkVisibilityOptions)) {
+        log('Skipping non-visable element:' + getElementName(element))
+        return
+      }
+
       elVal =
-        elements[i].getBoundingClientRect()[side] +
-        getComputedStyle('margin' + Side, elements[i])
+        element.getBoundingClientRect()[side] +
+        getComputedStyle('margin' + Side, element)
+
       if (elVal > maxVal) {
         maxVal = elVal
-        el = elements[i]
+        maxEl = element
       }
-    }
+    })
 
     timer = Date.now() - timer
 
-    log('Parsed ' + elementsLength + ' HTML elements')
-    log('Position calculated from HTML element: ' + getElementName(el))
+    log('Parsed ' + elements.length + ' HTML elements')
+    log('Position calculated from HTML element: ' + getElementName(maxEl))
     log('Element position calculated in ' + timer + 'ms')
 
     chkEventThottle(timer)
@@ -945,67 +945,71 @@
       dimensions.bodyOffset(),
       dimensions.bodyScroll(),
       dimensions.documentElementOffset(),
-      dimensions.documentElementScroll()
+      dimensions.documentElementScroll(),
+      dimensions.bodyBoundingClientRect(),
+      dimensions.documentElementBoundingClientRect()
     ]
   }
 
   function getTaggedElements(side, tag) {
     function noTaggedElementsFound() {
       warn('No tagged elements (' + tag + ') found on page')
-      return document.querySelectorAll('body * :not(option):not(optgroup)')
+      return getAllElements()
     }
 
     const elements = document.querySelectorAll('[' + tag + ']')
 
     if (elements.length === 0) noTaggedElementsFound()
 
-    return getMaxElement(side, elements)
+    return getMaxElement(side, elements, true)
   }
 
   function getAllElements() {
-    return document.querySelectorAll('body * :not(option):not(optgroup)')
+    return document.querySelectorAll(
+      '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
+    )
   }
 
-  let getHeight = {
-      bodyOffset: () =>
-        document.body.offsetHeight +
-        getComputedStyle('marginTop') +
-        getComputedStyle('marginBottom'),
-      offset: () => getHeight.bodyOffset(), // Backwards compatibility
-      bodyScroll: () => document.body.scrollHeight,
-      custom: () => customCalcMethods.height(),
-      documentElementOffset: () => document.documentElement.offsetHeight,
-      documentElementScroll: () => document.documentElement.scrollHeight,
-      bodyBoundingClientRect: () =>
-        document.body.getBoundingClientRect().height,
-      documentElementBoundingClientRect: () =>
-        document.documentElement.getBoundingClientRect().height,
-      max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
-      min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
-      grow: () => getHeight.max(), // Run max without the forced downsizing
-      lowestElement: () =>
-        Math.max(
-          getHeight.bodyOffset() || getHeight.documentElementOffset(),
-          getMaxElement('bottom', getAllElements())
-        ),
-      taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
-    },
-    getWidth = {
-      bodyScroll: () => document.body.scrollWidth,
-      bodyOffset: () => document.body.offsetWidth,
-      custom: () => customCalcMethods.width(),
-      documentElementScroll: () => document.documentElement.scrollWidth,
-      documentElementOffset: () => document.documentElement.offsetWidth,
-      scroll: () =>
-        Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-      bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
-      documentElementBoundingClientRect: () =>
-        document.documentElement.getBoundingClientRect().width,
-      max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
-      min: () => Math.min.apply(null, getAllMeasurements(getWidth)),
-      rightMostElement: () => getMaxElement('right', getAllElements()),
-      taggedElement: () => getTaggedElements('right', 'data-iframe-width')
-    }
+  const getHeight = {
+    bodyOffset: () =>
+      document.body.offsetHeight +
+      getComputedStyle('marginTop') +
+      getComputedStyle('marginBottom'),
+    offset: () => getHeight.bodyOffset(), // Backwards compatibility
+    bodyScroll: () => document.body.scrollHeight,
+    custom: () => customCalcMethods.height(),
+    documentElementOffset: () => document.documentElement.offsetHeight,
+    documentElementScroll: () => document.documentElement.scrollHeight,
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().height,
+    documentElementBoundingClientRect: () =>
+      document.documentElement.getBoundingClientRect().height,
+    max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
+    min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
+    grow: () => getHeight.max(), // Run max without the forced downsizing
+    lowestElement: () =>
+      Math.max(
+        getHeight.bodyOffset() || getHeight.documentElementOffset(),
+        getMaxElement('bottom', getAllElements(), false)
+      ),
+    taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
+  }
+
+  const getWidth = {
+    bodyScroll: () => document.body.scrollWidth,
+    bodyOffset: () => document.body.offsetWidth,
+    custom: () => customCalcMethods.width(),
+    documentElementScroll: () => document.documentElement.scrollWidth,
+    documentElementOffset: () => document.documentElement.offsetWidth,
+    scroll: () =>
+      Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
+    documentElementBoundingClientRect: () =>
+      document.documentElement.getBoundingClientRect().width,
+    max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
+    min: () => Math.min.apply(null, getAllMeasurements(getWidth)),
+    rightMostElement: () => getMaxElement('right', getAllElements()),
+    taggedElement: () => getTaggedElements('right', 'data-iframe-width')
+  }
 
   function sizeIFrame(
     triggerEvent,
