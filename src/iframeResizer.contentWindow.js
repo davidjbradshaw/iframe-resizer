@@ -466,15 +466,7 @@
     }
   }
 
-  //   function stopMsgsToParent() {
-  //     log('Disable outgoing messages')
-  //     sendPermit = false
-  //   }
 
-  //   function removeMsgListener() {
-  //     log('Remove event listener: Message')
-  //     removeEventListener(window, 'message', receiver)
-  //   }
 
   function disconnectResizeObservers() {
     if (null !== bodyObserver) {
@@ -497,11 +489,6 @@
     clearInterval(intervalTimer)
   }
 
-  //   function teardown() {
-  //     stopMsgsToParent()
-  //     removeMsgListener()
-  //     if (true === autoResize) stopEventListeners()
-  //   }
 
   function injectClearFixIntoBodyElement() {
     const clearFix = document.createElement('div')
@@ -623,7 +610,7 @@
     }
 
     return {
-      findTarget: findTarget
+      findTarget
     }
   }
 
@@ -661,7 +648,6 @@
 
       close: function () {
         sendMsg(0, 0, 'close')
-        // teardown()
       },
 
       getId: () => myID,
