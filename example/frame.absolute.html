@@ -78,8 +78,10 @@
       <select name="heightCalculationMethod">
         <option>bodyOffset</option>
         <option>bodyScroll</option>
+        <option>bodyBoundingClientRect</option>
         <option>documentElementOffset</option>
         <option>documentElementScroll</option>
+        <option>documentElementBoundingClientRect</option>
         <option>max</option>
         <option>min</option>
         <option>grow</option>
@@ -87,11 +89,9 @@
         <option>taggedElement</option>
       </select>
     </p>
-    <div style="visibility: collapse;">a</div>
-    <div style="visibility: hidden;">a</div>
-    <div style="display: none;">a</div>
-    <div style="height: 0;">a</div>
-    <div style="height: 1px;">a</div>
+    <span style="visibility: collapse;">a</span>
+    <span style="visibility: hidden;">a</span>
+    <span style="display: none;">a</span>
     <p>
       <i
         >This option should be used sparingly, as the alternate methods can be
