@@ -764,16 +764,6 @@
   }
 
   function setupResizeObserver() {
-    if (!window.ResizeObserver) {
-      warn('ResizeObserver not supported in this browser!')
-      return
-    }
-
-    if (!Array.prototype.flatMap) {
-      warn('Array.flatMap() not supported, disabled ResizeObserver')
-      return
-    }
-
     resizeObserver = new ResizeObserver(resizeObserved)
     createResizeObservers(window.document)
   }
