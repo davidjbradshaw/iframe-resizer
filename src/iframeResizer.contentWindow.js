@@ -31,7 +31,7 @@
   const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
-  const heightCalcModeDefault = 'bodyOffset'
+  const heightCalcModeDefault = 'documentElementBoundingClientRect'
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
   const resetRequiredMethods = {
@@ -53,7 +53,7 @@
   let calculateWidth = false
   let firstRun = true
   let height = 1
-  let heightCalcMode = heightCalcModeDefault
+  let heightCalcMode = heightCalcModeDefault // only applys if not provided by host page (V1 compatibility)
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
@@ -317,12 +317,7 @@
       }
     }
 
-    if (options.eventNames) {
-      options.eventName = options.eventNames[0]
-      options.eventNames.map(listener[options.method])
-    } else {
-      listener[options.method](options.eventName)
-    }
+    listener[options.method](options.eventName)
 
     log(
       capitalizeFirstLetter(options.method) +
@@ -342,8 +337,14 @@
 
     manageTriggerEvent({
       method: method,
-      eventType: 'Print',
-      eventNames: ['afterprint', 'beforeprint']
+      eventType: 'After Print',
+      eventName: 'afterprint'
+    })
+
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Before Print',
+      eventName: 'beforeprint'
     })
 
     manageTriggerEvent({
@@ -355,23 +356,17 @@
     manageTriggerEvent({
       method: method,
       eventType: 'Animation Start',
-      eventNames: ['animationstart', 'webkitAnimationStart']
+      eventName: 'animationstart'
     })
     manageTriggerEvent({
       method: method,
       eventType: 'Animation Iteration',
-      eventNames: ['animationiteration', 'webkitAnimationIteration']
+      eventName: 'animationiteration'
     })
     manageTriggerEvent({
       method: method,
       eventType: 'Animation End',
-      eventNames: ['animationend', 'webkitAnimationEnd']
-    })
-
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Orientation Change',
-      eventName: 'orientationchange'
+      eventName: 'animationend'
     })
 
     manageTriggerEvent({
@@ -388,6 +383,12 @@
       method: method,
       eventType: 'Transition End',
       eventName: 'transitionend'
+    })
+
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Orientation Change',
+      eventName: 'orientationchange'
     })
 
     manageTriggerEvent({
@@ -913,14 +914,15 @@
     return maxVal
   }
 
-  function getAllMeasurements(dimensions) {
+  function getAllMeasurements(dimension) {
     return [
-      dimensions.bodyOffset(),
-      dimensions.bodyScroll(),
-      dimensions.bodyBoundingClientRect(),
-      dimensions.documentElementOffset(),
-      dimensions.documentElementScroll(),
-      dimensions.documentElementBoundingClientRect()
+      dimension.bodyOffset(),
+      dimension.bodyOffsetMargin(),
+      dimension.bodyScroll(),
+      dimension.bodyBoundingClientRect(),
+      dimension.documentElementOffset(),
+      dimension.documentElementScroll(),
+      dimension.documentElementBoundingClientRect()
     ]
   }
 
@@ -943,44 +945,53 @@
     )
   }
 
+  const getAllElementsByType = (type) => () =>
+    document.querySelectorAll(`${type} :not([hidden])`)
+
+  function getLowestElement(func) {
+    return Math.max(
+      getHeight.bodyOffset() || getHeight.documentElementOffset(),
+      getMaxElement('bottom', func(), false)
+    )
+  }
+
   const getHeight = {
-    bodyOffset: () =>
+    bodyOffset: () => document.body.offsetHeight,
+    bodyOffsetMargin: () =>
       document.body.offsetHeight +
       getComputedStyle('marginTop') +
       getComputedStyle('marginBottom'),
     bodyScroll: () => document.body.scrollHeight,
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().height,
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().bottom,
     offset: () => getHeight.bodyOffset(), // Backwards compatibility
     custom: () => customCalcMethods.height(),
     documentElementOffset: () => document.documentElement.offsetHeight,
     documentElementScroll: () => document.documentElement.scrollHeight,
     documentElementBoundingClientRect: () =>
-      document.documentElement.getBoundingClientRect().height,
+      document.documentElement.getBoundingClientRect().bottom,
     max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
     min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
     grow: () => getHeight.max(), // Run max without the forced downsizing
-    lowestElement: () =>
-      Math.max(
-        getHeight.bodyOffset() || getHeight.documentElementOffset(),
-        getMaxElement('bottom', getAllElements(), false)
-      ),
+    lowestElement: () => getLowestElement(getAllElements),
+    lowestDivElement: () => getLowestElement(getAllElementsByType('div')),
     taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
   }
 
   const getWidth = {
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().width,
+    bodyOffsetMargin: () => document.body.offsetWidth, // return value for min/max function
+    bodyBoundingClientRect: () => document.body.getBoundingClientRect().right,
     custom: () => customCalcMethods.width(),
     documentElementScroll: () => document.documentElement.scrollWidth,
     documentElementOffset: () => document.documentElement.offsetWidth,
     scroll: () =>
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
     documentElementBoundingClientRect: () =>
-      document.documentElement.getBoundingClientRect().width,
+      document.documentElement.getBoundingClientRect().right,
     max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
     min: () => Math.min.apply(null, getAllMeasurements(getWidth)),
-    rightMostElement: () => getMaxElement('right', getAllElements()),
+    rightMostElement: () => getMaxElement('right', getAllElements(), false),
     taggedElement: () => getTaggedElements('right', 'data-iframe-width')
   }
 
