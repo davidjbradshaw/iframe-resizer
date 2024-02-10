@@ -73,7 +73,10 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
         '[iFrameSizer][parentIFrameTests] Add event listener: Input'
       )
       expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Print'
+        '[iFrameSizer][parentIFrameTests] Add event listener: After Print'
+      )
+      expect(console.log).toHaveBeenCalledWith(
+        '[iFrameSizer][parentIFrameTests] Add event listener: Before Print'
       )
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Add event listener: Transition End'
@@ -104,7 +107,10 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
         '[iFrameSizer][parentIFrameTests] Remove event listener: Input'
       )
       expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Print'
+        '[iFrameSizer][parentIFrameTests] Remove event listener: After Print'
+      )
+      expect(console.log).toHaveBeenCalledWith(
+        '[iFrameSizer][parentIFrameTests] Remove event listener: Before Print'
       )
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Remove event listener: Transition End'
@@ -337,7 +343,7 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
         '[iFrameSizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.'
       )
       expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] height calculation method set to "bodyOffset"'
+        '[iFrameSizer][parentIFrameTests] height calculation method set to "documentElementBoundingClientRect"'
       )
       win.parentIFrame.size()
     })

@@ -58,21 +58,6 @@ Send data to the containing page, `message` can be any data type that can be ser
 
 Change the method use to workout the height of the iFrame.
 
-### size ([customHeight],[ customWidth])
+### size()
 
-Manually force iFrame to resize. This method optionally accepts two arguments: **customHeight** & **customWidth**. To use them you need first to disable the `autoResize` option to prevent auto resizing and enable the `sizeWidth` option if you wish to set the width.
-
-```js
-iFrameResize({
-  autoResize: false,
-  sizeWidth: true
-})
-```
-
-Then you can call the `size` method with dimensions:
-
-```js
-if ('parentIFrame' in window) {
-  parentIFrame.size(100); // Set height to 100px
-}
-```
+Manually force iFrame to resize. If for some reason a change in content size is not detected, this method allows you to nudge iframe-resizer to recalculate the page size.
