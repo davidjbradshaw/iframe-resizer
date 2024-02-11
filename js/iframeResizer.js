@@ -42,10 +42,13 @@
     minHeight: 0,
     minWidth: 0,
     mouseEvents: true,
+    offsetHeight: 0,
+    offsetWidth: 0,
     resizeFrom: 'parent',
     scrolling: false,
     sizeHeight: true,
     sizeWidth: false,
+    target: null,
     warningTimeout: 5000,
     tolerance: 0,
     widthCalculationMethod: 'scroll',
@@ -102,23 +105,23 @@
     return settings[iframeId] ? settings[iframeId].log : logEnabled
   }
 
-  function output(type, iframeId, msg, enabled) {
+  function output(type, iframeId, enabled, ...msg) {
     if (true === enabled) {
       // eslint-disable-next-line no-console
-      console[type](formatLogHeader(iframeId), msg)
+      console[type](formatLogHeader(iframeId), ...msg)
     }
   }
 
-  function log(iframeId, msg) {
-    output('log', iframeId, msg, isLogEnabled(iframeId))
+  function log(iframeId, ...msg) {
+    output('log', iframeId, isLogEnabled(iframeId), ...msg)
   }
 
-  function info(iframeId, msg) {
-    output('info', iframeId, msg, isLogEnabled(iframeId))
+  function info(iframeId, ...msg) {
+    output('info', iframeId, isLogEnabled(iframeId), ...msg)
   }
 
-  function warn(iframeId, msg) {
-    output('warn', iframeId, msg, true)
+  function warn(iframeId, ...msg) {
+    output('warn', iframeId, true, ...msg)
   }
 
   function iFrameListener(event) {
@@ -295,22 +298,16 @@
       const iFramePosition = messageData.iframe.getBoundingClientRect()
 
       return JSON.stringify({
-        iframeHeight: iFramePosition.height,
-        iframeWidth: iFramePosition.width,
-        clientHeight: Math.max(
-          document.documentElement.clientHeight,
-          window.innerHeight || 0
-        ),
-        clientWidth: Math.max(
-          document.documentElement.clientWidth,
-          window.innerWidth || 0
-        ),
-        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
-        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
-        scrollTop: window.pageYOffset,
-        scrollLeft: window.pageXOffset,
         documentHeight: document.documentElement.clientHeight,
         documentWidth: document.documentElement.clientWidth,
+        iframeHeight: iFramePosition.height,
+        iframeWidth: iFramePosition.width,
+        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
+        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
+        scrollX: window.scrollY,
+        scrollY: window.scrollX,
+        scrollTop: window.scrollY, // Deprecated
+        scrollLeft: window.scrollX, // Deprecated
         windowHeight: window.innerHeight,
         windowWidth: window.innerWidth
       })
@@ -657,12 +654,15 @@
     } else if (isMessageForUs()) {
       messageData = processMsg()
       iframeId = messageData.id
-      if (settings[iframeId]) {
-        settings[iframeId].loaded = true
+
+      if (!iframeId) {
+        warn('iframeResizer received messageData without id')
+        return
       }
 
       if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
         log(iframeId, 'Received: ' + msg)
+        settings[iframeId].loaded = true
 
         if (checkIFrameExists() && isMessageFromIFrame()) {
           actionMsg()
@@ -722,14 +722,8 @@
   function getPagePosition(iframeId) {
     if (null === pagePosition) {
       pagePosition = {
-        x:
-          window.pageXOffset === undefined
-            ? document.documentElement.scrollLeft
-            : window.pageXOffset,
-        y:
-          window.pageYOffset === undefined
-            ? document.documentElement.scrollTop
-            : window.pageYOffset
+        x: window.scrollX,
+        y: window.scrollY
       }
       log(
         iframeId,
@@ -769,21 +763,19 @@
   }
 
   function setSize(messageData) {
+    const iframeId = messageData.id
+
+    const newSize = (dimension, offset) =>
+      Number(messageData[dimension]) + offset
+
     function setDimension(dimension) {
-      if (!messageData.id) {
-        log('undefined', 'messageData id not set')
-        return
-      }
-      messageData.iframe.style[dimension] = messageData[dimension] + 'px'
+      const offset = settings[iframeId].offset[dimension]
+      const size = `${newSize(dimension, offset)}px`
+      const offsetMsg = offset ? `(offset: ${offset}px)` : ''
+      messageData.iframe.style[dimension] = size
       log(
-        messageData.id,
-        'IFrame (' +
-          iframeId +
-          ') ' +
-          dimension +
-          ' set to ' +
-          messageData[dimension] +
-          'px'
+        iframeId,
+        `IFrame (${iframeId}) ${dimension} set to ${size} ${offsetMsg}`
       )
     }
 
@@ -805,15 +797,11 @@
       chkZero(dimension)
     }
 
-    let iframeId = messageData.iframe.id
-
-    if (settings[iframeId]) {
-      if (settings[iframeId].sizeHeight) {
-        processDimension('height')
-      }
-      if (settings[iframeId].sizeWidth) {
-        processDimension('width')
-      }
+    if (settings[iframeId].sizeHeight) {
+      processDimension('height')
+    }
+    if (settings[iframeId].sizeWidth) {
+      processDimension('width')
     }
   }
 
@@ -1174,6 +1162,11 @@
       checkOptions(options)
       copyOptions(options)
 
+      settings[iframeId].offset = {
+        height: settings[iframeId].offsetHeight,
+        width: settings[iframeId].offsetWidth
+      }
+
       if (settings[iframeId]) {
         settings[iframeId].targetOrigin =
           true === settings[iframeId].checkOrigin
@@ -1324,7 +1317,6 @@
   function setupEventListeners() {
     addEventListener(window, 'message', iFrameListener)
     addEventListener(document, 'visibilitychange', tabVisible)
-    addEventListener(document, '-webkit-visibilitychange', tabVisible)
     addEventListener(window, 'resize', function () {
       resizeIFrames('resize')
     })
