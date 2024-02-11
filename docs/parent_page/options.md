@@ -105,6 +105,13 @@ Set maximum height/width of iFrame.
 
 Set minimum height/width of iFrame.
 
+### offsetHeigt / offsetWidth
+
+    default: 0
+    type:    integer
+
+Modify the computed size of the iframe. This is useful if the page in the iframe returns a size value that is consitantly slightly different to how you want the iframe to be sized.
+
 ### resizeFrom
 
     default: 'parent'
