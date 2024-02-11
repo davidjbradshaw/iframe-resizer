@@ -211,8 +211,7 @@
 
           log(
             iframeId,
-            'Checking connection is from allowed list of origins: ' +
-              checkOrigin
+            `Checking connection is from allowed list of origins: ${checkOrigin}`
           )
 
           for (; i < checkOrigin.length; i++) {
@@ -227,7 +226,7 @@
 
         function checkSingle() {
           const remoteHost = settings[iframeId] && settings[iframeId].remoteHost
-          log(iframeId, 'Checking connection is from: ' + remoteHost)
+          log(iframeId, `Checking connection is from: ${remoteHost}`)
           return origin === remoteHost
         }
 
@@ -239,13 +238,7 @@
 
       if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {
         throw new Error(
-          'Unexpected message received from: ' +
-            origin +
-            ' for ' +
-            messageData.iframe.id +
-            '. Message was: ' +
-            event.data +
-            '. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.'
+          `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`
         )
       }
 
@@ -278,11 +271,7 @@
     function forwardMsgFromIFrame(msgBody) {
       log(
         iframeId,
-        'onMessage passed: {iframe: ' +
-          messageData.iframe.id +
-          ', message: ' +
-          msgBody +
-          '}'
+        `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`
       )
 
       on('onMessage', {
@@ -417,11 +406,7 @@
 
       log(
         iframeId,
-        'Reposition requested from iFrame (offset x:' +
-          offset.x +
-          ' y:' +
-          offset.y +
-          ')'
+        `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`
       )
 
       if (window.top === window.self) {
@@ -445,12 +430,7 @@
 
         log(
           iframeId,
-          'Moving to in page link (#' +
-            hash +
-            ') at x: ' +
-            jumpPosition.x +
-            ' y: ' +
-            jumpPosition.y
+          `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`
         )
 
         pagePosition = {
@@ -468,9 +448,7 @@
         } else {
           log(
             iframeId,
-            'In page link #' +
-              hash +
-              ' not found and window.parentIFrame not found'
+            `In page link #${hash} not found and window.parentIFrame not found`
           )
         }
       }
@@ -488,7 +466,7 @@
       }
 
       if (window.top === window.self) {
-        log(iframeId, 'In page link #' + hash + ' not found')
+        log(iframeId, `In page link #${hash} not found`)
         return
       }
 
@@ -755,8 +733,7 @@
 
     log(
       messageData.id,
-      'Size reset requested by ' +
-        ('init' === messageData.type ? 'host page' : 'iFrame')
+      `Size reset requested by ${'init' === messageData.type ? 'host page' : 'iFrame'}`
     )
     getPagePosition(messageData.id)
     syncResize(reset, messageData, 'reset')
@@ -826,14 +803,7 @@
 
       log(
         id,
-        '[' +
-          calleeMsg +
-          '] Sending msg to iframe[' +
-          id +
-          '] (' +
-          msg +
-          ') targetOrigin: ' +
-          target
+        `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${target}`
       )
 
       iframe.contentWindow.postMessage(msgId + msg, target)
@@ -990,13 +960,14 @@
           (settings[iframeId] && settings[iframeId].scrolling
             ? 'enabled'
             : 'disabled') +
-          ' for ' +
-          iframeId
+          ` for ${iframeId}`
       )
+
       iframe.style.overflow =
         false === (settings[iframeId] && settings[iframeId].scrolling)
           ? 'hidden'
           : 'auto'
+
       switch (settings[iframeId] && settings[iframeId].scrolling) {
         case 'omit': {
           break
@@ -1030,8 +1001,7 @@
         '0' === (settings[iframeId] && settings[iframeId].bodyMargin)
       ) {
         settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin
-        settings[iframeId].bodyMargin =
-          '' + settings[iframeId].bodyMargin + 'px'
+        settings[iframeId].bodyMargin = `${settings[iframeId].bodyMargin}px`
       }
     }
 
@@ -1166,6 +1136,9 @@
         height: settings[iframeId].offsetHeight,
         width: settings[iframeId].offsetWidth
       }
+
+      if (!settings[iframeId].target)
+        settings[iframeId].target = iframe.contentWindow
 
       if (settings[iframeId]) {
         settings[iframeId].targetOrigin =
