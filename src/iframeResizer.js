@@ -302,9 +302,9 @@
       })
     }
 
-    function sendPageInfoToIframe(iframe, iframeId) {
+    function sendPageInfoToIframe(iframeId) {
       function debouncedTrigger() {
-        trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframe, iframeId)
+        trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframeId)
       }
       debounceFrameEvents(debouncedTrigger, 32, iframeId)
     }
@@ -313,7 +313,7 @@
       function setListener(type, func) {
         function sendPageInfo() {
           if (settings[id]) {
-            sendPageInfoToIframe(settings[id].iframe, id)
+            sendPageInfoToIframe(id)
           } else {
             stop()
           }
@@ -541,10 +541,7 @@
         }
 
         case 'pageInfo': {
-          sendPageInfoToIframe(
-            settings[iframeId] && settings[iframeId].iframe,
-            iframeId
-          )
+          sendPageInfoToIframe(iframeId)
           startPageInfoMonitor()
           break
         }
@@ -608,12 +605,7 @@
     function iFrameReadyMsgReceived() {
       // eslint-disable-next-line no-restricted-syntax, guard-for-in
       for (const iframeId in settings) {
-        trigger(
-          'iFrame requested init',
-          createOutgoingMsg(iframeId),
-          settings[iframeId].iframe,
-          iframeId
-        )
+        trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
       }
     }
 
@@ -728,7 +720,7 @@
   function resetIFrame(messageData) {
     function reset() {
       setSize(messageData)
-      trigger('reset', 'reset', messageData.iframe, messageData.id)
+      trigger('reset', 'reset', messageData.id)
     }
 
     log(
@@ -797,7 +789,7 @@
     }
   }
 
-  function trigger(calleeMsg, msg, iframe, id, noResponseWarning) {
+  function trigger(calleeMsg, msg, id, noResponseWarning) {
     function postMessageToIFrame() {
       const { targetIframe, targetOrigin } = settings[id]
 
@@ -814,12 +806,7 @@
     }
 
     function chkAndSend() {
-      if (
-        iframe &&
-        'contentWindow' in iframe &&
-        null !== iframe.contentWindow
-      ) {
-        // Null test for PhantomJS
+      if (settings[id].targetIframe) {
         postMessageToIFrame()
       } else {
         iFrameNotFound()
@@ -852,8 +839,6 @@
     }
 
     let errorShown = false
-
-    id = id || iframe.id
 
     if (settings[id]) {
       chkAndSend()
@@ -1026,30 +1011,15 @@
             settings[iframeId].iframe
           ),
 
-          resize: trigger.bind(
-            null,
-            'Window resize',
-            'resize',
-            settings[iframeId].iframe
-          ),
+          resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
           moveToAnchor: function (anchor) {
-            trigger(
-              'Move to anchor',
-              'moveToAnchor:' + anchor,
-              settings[iframeId].iframe,
-              iframeId
-            )
+            trigger('Move to anchor', 'moveToAnchor:' + anchor, iframeId)
           },
 
           sendMessage: function (message) {
             message = JSON.stringify(message)
-            trigger(
-              'Send Message',
-              'message:' + message,
-              settings[iframeId].iframe,
-              iframeId
-            )
+            trigger('Send Message', 'message:' + message, iframeId)
           }
         }
       }
@@ -1060,7 +1030,7 @@
     // event listener also catches the page changing in the iFrame.
     function init(msg) {
       function iFrameLoaded() {
-        trigger('iFrame.onload', msg, iframe, iframe.id, true)
+        trigger('iFrame.onload', msg, iframe.id, true)
         checkReset()
       }
 
@@ -1090,7 +1060,7 @@
       createDestroyObserver(MutationObserver)
 
       addEventListener(iframe, 'load', iFrameLoaded)
-      trigger('init', msg, iframe, iframe.id, true)
+      trigger('init', msg, iframe.id, true)
     }
 
     function checkOptions(options) {
@@ -1208,12 +1178,7 @@
           isVisible(settings[iframeId].iframe) &&
           (chkDimension('height') || chkDimension('width'))
         ) {
-          trigger(
-            'Visibility change',
-            'resize',
-            settings[iframeId].iframe,
-            iframeId
-          )
+          trigger('Visibility change', 'resize', iframeId)
         }
       }
 
@@ -1282,7 +1247,7 @@
 
     Object.keys(settings).forEach(function (iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
-        trigger(eventName, event, settings[iframeId].iframe, iframeId)
+        trigger(eventName, event, iframeId)
       }
     })
   }
