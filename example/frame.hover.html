@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>iFrame message passing test</title>
-    <meta name="description" content="iFrame message passing test" />
+    <title>iFrame :hover example</title>
+    <meta name="description" content="iFrame :hover example" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <style>
       a {
@@ -20,18 +20,10 @@
     <p>
       Mouse over the code example below. 
     </p>
-    <p>  
-      In modern browsers size changes caused by CSS are detected via the ResizeObserver API, 
-      however, if you have an element outside the standard document flow, or in really old browses you may need to detect this
-      yourself and ask iFrameResizer to update the page size.
-    </p>
-    <p>  
-      Uncomment the code below to see this working.
-    </p>
 
     <xmp>
-		<!--  #code  -->
-	</xmp>
+	  	<!--  #code  -->
+	  </xmp>
 
     <script>
       var iFrameResizer = {
@@ -57,20 +49,11 @@
           border: #c33 solid 40px;
         }
       </style>
-      <script>
-        // ;(function() {
-        //   $('xmp').hover(function() {
-        //     if ('parentIFrame' in window) {
-        //       // Fix race condition in FireFox with setTimeout
-        //       setTimeout(parentIFrame.size.bind(parentIFrame), 0)
-        //     }
-        //   })
-        // })()
-      </script>
     </div>
 
     <script>
-      $('xmp').text('<xmp>' + $('#code').html() + '<xmp>')
+      document.getElementsByTagName('xmp')[0].textContent =
+        document.getElementById('code').innerHTML
     </script>
   </body>
 </html>
