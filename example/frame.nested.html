@@ -43,15 +43,13 @@
     </div>
     <p id="callback"></p>
 
-    <script src="jquery-3.7.1.min.js"></script>
-
     <script type="text/javascript" src="../js/iframeResizer.min.js"></script>
     <script type="text/javascript">
-      var level = document.location.search.replace(/\?/, '') || 0
+      const level = document.location.search.replace(/\?/, '') || 0
+      const callbackDisplay = document.querySelector('p#callback')
 
-      $('iframe')
-        .attr('id', 'nestedIFrame' + level)
-        .attr('src', 'frame.content.html?' + level)
+      callbackDisplay.setAttribute('id', 'nestedIFrame' + level)
+      callbackDisplay.setAttribute('src', 'frame.content.html?' + level)
 
       /*
        * If you do not understand what the code below does, then please just use the
@@ -67,7 +65,7 @@
         inPageLinks: true,
         onResized: function(messageData) {
           // Callback fn when message is received
-          $('p#callback').html(
+         callbackDisplay.innerHTML =
             '<b>Frame ID:</b> ' +
               messageData.iframe.id +
               ' <b>Height:</b> ' +
@@ -76,19 +74,22 @@
               messageData.width +
               ' <b>Event type:</b> ' +
               messageData.type
-          )
         },
         onMessage: function(messageData) {
           // Callback fn when message is received
           parentIFrame.sendMessage(
-            messageData.message + ' (via ' + $('iframe').attr('id') + ')'
+            messageData.message +
+              ' (via ' + 
+              document
+                .getElementsByTagName('iframe')[0]
+                .getAttribute('id') + 
+              ')'
           )
         },
         onClosed: function(id) {
           /// Callback fn when iFrame is closed
-          $('p#callback').html(
+         callbackDisplay.innerHTML
             '<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
-          )
         }
       })
     </script>
