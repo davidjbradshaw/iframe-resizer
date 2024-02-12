@@ -806,7 +806,6 @@
         `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`
       )
 
-      console.log('>>', msgId + msg, targetOrigin)
       targetIframe.postMessage(msgId + msg, targetOrigin)
     }
 
