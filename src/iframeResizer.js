@@ -48,7 +48,7 @@
     scrolling: false,
     sizeHeight: true,
     sizeWidth: false,
-    target: null,
+    targetIframe: null,
     warningTimeout: 5000,
     tolerance: 0,
     widthCalculationMethod: 'scroll',
@@ -799,14 +799,15 @@
 
   function trigger(calleeMsg, msg, iframe, id, noResponseWarning) {
     function postMessageToIFrame() {
-      const target = settings[id] && settings[id].targetOrigin
+      const { targetIframe, targetOrigin } = settings[id]
 
       log(
         id,
-        `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${target}`
+        `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`
       )
 
-      iframe.contentWindow.postMessage(msgId + msg, target)
+      console.log('>>', msgId + msg, targetOrigin)
+      targetIframe.postMessage(msgId + msg, targetOrigin)
     }
 
     function iFrameNotFound() {
@@ -1060,7 +1061,7 @@
     // event listener also catches the page changing in the iFrame.
     function init(msg) {
       function iFrameLoaded() {
-        trigger('iFrame.onload', msg, iframe, undefined, true)
+        trigger('iFrame.onload', msg, iframe, iframe.id, true)
         checkReset()
       }
 
@@ -1090,7 +1091,7 @@
       createDestroyObserver(MutationObserver)
 
       addEventListener(iframe, 'load', iFrameLoaded)
-      trigger('init', msg, iframe, undefined, true)
+      trigger('init', msg, iframe, iframe.id, true)
     }
 
     function checkOptions(options) {
@@ -1137,8 +1138,8 @@
         width: settings[iframeId].offsetWidth
       }
 
-      if (!settings[iframeId].target)
-        settings[iframeId].target = iframe.contentWindow
+      if (settings[iframeId].targetIframe === null)
+        settings[iframeId].targetIframe = iframe.contentWindow
 
       if (settings[iframeId]) {
         settings[iframeId].targetOrigin =
@@ -1152,7 +1153,7 @@
       return iframeId in settings && 'iFrameResizer' in iframe
     }
 
-    let iframeId = ensureHasId(iframe.id)
+    const iframeId = ensureHasId(iframe.id)
 
     if (beenHere()) {
       warn(iframeId, 'Ignored iFrame, already setup.')
@@ -1191,11 +1192,11 @@
 
   function fixHiddenIFrames() {
     function checkIFrames() {
-      function checkIFrame(settingId) {
+      function checkIFrame(iframeId) {
         function chkDimension(dimension) {
           return (
             '0px' ===
-            (settings[settingId] && settings[settingId].iframe.style[dimension])
+            (settings[iframeId] && settings[iframeId].iframe.style[dimension])
           )
         }
 
@@ -1204,15 +1205,15 @@
         }
 
         if (
-          settings[settingId] &&
-          isVisible(settings[settingId].iframe) &&
+          settings[iframeId] &&
+          isVisible(settings[iframeId].iframe) &&
           (chkDimension('height') || chkDimension('width'))
         ) {
           trigger(
             'Visibility change',
             'resize',
-            settings[settingId].iframe,
-            settingId
+            settings[iframeId].iframe,
+            iframeId
           )
         }
       }
@@ -1298,7 +1299,7 @@
   let setupComplete = false
 
   function factory() {
-    function init(options, element) {
+    function setup(options, element) {
       function chkType() {
         if (!element.tagName) {
           throw new TypeError('Object is not a valid DOM element')
@@ -1324,7 +1325,7 @@
       setupComplete = true
     }
 
-    return function iFrameResizeF(options, target) {
+    return function (options, target) {
       iFrames = [] // Only return iFrames past in on this call
 
       switch (typeof target) {
@@ -1332,13 +1333,13 @@
         case 'string': {
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
-            init.bind(undefined, options)
+            setup.bind(undefined, options)
           )
           break
         }
 
         case 'object': {
-          init(options, target)
+          setup(options, target)
           break
         }
 
