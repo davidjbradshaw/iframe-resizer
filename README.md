@@ -88,7 +88,7 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
   - [Ember](https://github.com/alexlafroscia/ember-iframe-resizer-modifier)
   - [jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/jquery.md)
-  - [Google Apps Script](https://stackoverflow.com/a/65724113/2087070)
+  - [Google Apps Script](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/google_apps_script.md)
 - [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md)
 - [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
 - [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
