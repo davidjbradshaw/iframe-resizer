@@ -971,7 +971,6 @@
       document.documentElement.getBoundingClientRect().bottom,
     max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
     min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
-    grow: () => getHeight.max(), // Run max without the forced downsizing
     lowestElement: () => getLowestElement(getAllElements),
     lowestDivElement: () => getLowestElement(getAllElementsByType('div')),
     taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')

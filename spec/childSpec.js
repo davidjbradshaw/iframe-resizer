@@ -404,14 +404,6 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
       }, 70)
     })
 
-    it('grow', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('grow')
-        win.parentIFrame.size()
-        done()
-      }, 80)
-    })
-
     it('lowestElement', function(done) {
       setTimeout(function() {
         win.parentIFrame.setHeightCalculationMethod('lowestElement')
