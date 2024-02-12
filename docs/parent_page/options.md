@@ -60,7 +60,7 @@ When enabled in page linking inside the iFrame and from the iFrame to the parent
 
     default: 'documentElementBoundingClientRect'
     values:  'documentElementBoundingClientRect' | 'documentElementOffset' | 'documentElementScroll' |
-			 'bodyBoundingClientRect' | 'bodyOffset' | 'bodyScroll' |
+              'bodyBoundingClientRect' | 'bodyOffset' | 'bodyScroll' |
              'max' | 'min' | 'lowestElement' | 'lowestDivElement' | 'taggedElement'
 
 In most cases the default option will work the best and you won't need to adjust this setting.
