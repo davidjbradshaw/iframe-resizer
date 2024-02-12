@@ -39,6 +39,7 @@
     log: false,
     maxHeight: Infinity,
     maxWidth: Infinity,
+    messageTarget: null,
     minHeight: 0,
     minWidth: 0,
     mouseEvents: true,
@@ -48,7 +49,6 @@
     scrolling: false,
     sizeHeight: true,
     sizeWidth: false,
-    targetIframe: null,
     warningTimeout: 5000,
     tolerance: 0,
     widthCalculationMethod: 'scroll',
@@ -791,14 +791,14 @@
 
   function trigger(calleeMsg, msg, id, noResponseWarning) {
     function postMessageToIFrame() {
-      const { targetIframe, targetOrigin } = settings[id]
+      const { messageTarget, targetOrigin } = settings[id]
 
       log(
         id,
         `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`
       )
 
-      targetIframe.postMessage(msgId + msg, targetOrigin)
+      messageTarget.postMessage(msgId + msg, targetOrigin)
     }
 
     function iFrameNotFound() {
@@ -806,7 +806,7 @@
     }
 
     function chkAndSend() {
-      if (settings[id].targetIframe) {
+      if (settings[id].messageTarget) {
         postMessageToIFrame()
       } else {
         iFrameNotFound()
@@ -1107,8 +1107,8 @@
         width: settings[iframeId].offsetWidth
       }
 
-      if (settings[iframeId].targetIframe === null)
-        settings[iframeId].targetIframe = iframe.contentWindow
+      if (settings[iframeId].messageTarget === null)
+        settings[iframeId].messageTarget = iframe.contentWindow
 
       if (settings[iframeId]) {
         settings[iframeId].targetOrigin =
