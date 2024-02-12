@@ -117,7 +117,8 @@
       </p>
     </div>
     <script>
-      const level = document.location.search.replace(/\?/, '') || 0
+      let level = document.location.search.replace(/\?/, '') || 0
+      
       document
         .getElementById('nested')
         .setAttribute('href', 'frame.nested.html?' + ++level)
