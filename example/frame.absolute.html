@@ -75,7 +75,7 @@
     </p>
     <p data-iframe-height>
       <b>Height Calculation Method</b>
-      <select name="heightCalculationMethod">
+      <select id="heightCalculationMethod">
         <option>bodyOffset</option>
         <option>bodyOffsetMargin</option>
         <option>bodyScroll</option>
@@ -115,16 +115,15 @@
       >
     </div>
 
-    <script src="jquery-3.7.1.min.js"></script>
-
     <script
       type="text/javascript"
       src="../js/iframeResizer.contentWindow.min.js"
     ></script>
+    
     <script>
-      $('select').on('change', function() {
+      document.getElementById('heightCalculationMethod').addEventListener('change', function() {
         if ('parentIFrame' in window) {
-          parentIFrame.setHeightCalculationMethod($(this).val())
+          parentIFrame.setHeightCalculationMethod(this.value)
           parentIFrame.size()
         }
       })

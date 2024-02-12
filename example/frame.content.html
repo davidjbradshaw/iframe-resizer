@@ -5,7 +5,13 @@
     <title>iFrame message passing test</title>
     <meta name="description" content="iFrame message passing test" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script src="jquery-3.7.1.min.js"></script>
+    <script>
+      function toggle() {
+        const { style } = document.getElementsByTagName('p')[1]
+        style.display = style.display === 'none' ? '': 'none'
+        return false
+      }
+    </script>
     <style>
       *,
       *:before,
@@ -24,7 +30,7 @@
 
   <body>
     <b>iFrame</b>
-    <a href="#" onclick="$('p:eq(0)').toggle();return false;">Toggle content</a>
+    <a href="#" onclick="toggle()">Toggle content</a>
     &nbsp;
     <a
       href="#"
@@ -61,8 +67,12 @@
     <a
       href="#"
       onclick="if ('parentIFrame' in window) window.parentIFrame.close();return false;"
+
       >Close</a
     >
+
+    <div style="overflow: auto; width: 100vw; height: 1px;"></div>
+
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -107,12 +117,14 @@
       </p>
     </div>
     <script>
-      var level = document.location.search.replace(/\?/, '') || 0
-      $('#nested').attr('href', 'frame.nested.html?' + ++level)
+      const level = document.location.search.replace(/\?/, '') || 0
+      document
+        .getElementById('nested')
+        .setAttribute('href', 'frame.nested.html?' + ++level)
     </script>
 
     <script>
-      var iFrameResizer = {
+      window.iFrameResizer = {
         onMessage: function(message) {
           alert(message, parentIFrame.getId())
         }
@@ -121,7 +133,7 @@
 
     <script
       type="text/javascript"
-      src="../js/iframeResizer.contentWindow.min.js"
+      src="../js/iframeResizer.contentWindow.js"
       defer
     ></script>
   </body>
