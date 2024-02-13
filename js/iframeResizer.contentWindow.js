@@ -724,8 +724,9 @@
   function setupBodyMutationObserver() {
     function addImageLoadListners(mutation) {
       function addImageLoadListener(element) {
-        if (false === element.complete) {
+        if (false === element.complete && !element.dataset.loading) {
           log('Attached Mutation Observer:' + element.src)
+          element.dataset.loading = true
           element.addEventListener('load', imageLoaded, false)
           element.addEventListener('error', imageError, false)
           elements.push(element)
@@ -748,6 +749,7 @@
 
     function removeImageLoadListener(element) {
       log('Remove listeners from ' + element.src)
+      element.dataset.loading = false
       element.removeEventListener('load', imageLoaded, false)
       element.removeEventListener('error', imageError, false)
       removeFromArray(element)
