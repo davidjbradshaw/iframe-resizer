@@ -523,7 +523,6 @@
         function linkClicked(e) {
           e.preventDefault()
 
-          /* jshint validthis:true */
           findTarget(this.getAttribute('href'))
         }
 
