@@ -355,38 +355,6 @@
 
     manageTriggerEvent({
       method: method,
-      eventType: 'Animation Start',
-      eventName: 'animationstart'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Animation Iteration',
-      eventName: 'animationiteration'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Animation End',
-      eventName: 'animationend'
-    })
-
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Transition Start',
-      eventName: 'transitionstart'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Transition Iteration',
-      eventName: 'transitioniteration'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Transition End',
-      eventName: 'transitionend'
-    })
-
-    manageTriggerEvent({
-      method: method,
       eventType: 'Orientation Change',
       eventName: 'orientationchange'
     })
