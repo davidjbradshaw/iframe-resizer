@@ -461,14 +461,8 @@
   function setupInPageLinks() {
     function getPagePosition() {
       return {
-        x:
-          window.pageXOffset === undefined
-            ? document.documentElement.scrollLeft
-            : window.pageXOffset,
-        y:
-          window.pageYOffset === undefined
-            ? document.documentElement.scrollTop
-            : window.pageYOffset
+        x: document.documentElement.scrollLeft,
+        y: document.documentElement.scrollTop
       }
     }
 
