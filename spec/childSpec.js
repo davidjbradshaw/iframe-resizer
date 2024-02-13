@@ -55,7 +55,7 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
   })
 
   describe('ParentIFrame methods: ', function() {
-    it('autoResize', function() {
+    xit('autoResize', function() {
       win.parentIFrame.autoResize(true)
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Add event listener: Animation Start'

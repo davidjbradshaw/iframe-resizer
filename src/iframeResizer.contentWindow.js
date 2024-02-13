@@ -327,14 +327,6 @@
   }
 
   function manageEventListeners(method) {
-    if ('child' === resizeFrom) {
-      manageTriggerEvent({
-        method: method,
-        eventType: 'IFrame Resized',
-        eventName: 'resize'
-      })
-    }
-
     manageTriggerEvent({
       method: method,
       eventType: 'After Print',
@@ -347,50 +339,50 @@
       eventName: 'beforeprint'
     })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Ready State Change',
-      eventName: 'readystatechange'
-    })
+      manageTriggerEvent({
+        method: method,
+        eventType: 'Ready State Change',
+        eventName: 'readystatechange'
+      })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Orientation Change',
-      eventName: 'orientationchange'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Orientation Change',
+    //     eventName: 'orientationchange'
+    //   })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Input',
-      eventName: 'input'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Input',
+    //     eventName: 'input'
+    //   })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Mouse Up',
-      eventName: 'mouseup'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Mouse Down',
-      eventName: 'mousedown'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Mouse Up',
+    //     eventName: 'mouseup'
+    //   })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Mouse Down',
+    //     eventName: 'mousedown'
+    //   })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Touch Start',
-      eventName: 'touchstart'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Touch End',
-      eventName: 'touchend'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Touch Cancel',
-      eventName: 'touchcancel'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Touch Start',
+    //     eventName: 'touchstart'
+    //   })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Touch End',
+    //     eventName: 'touchend'
+    //   })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Touch Cancel',
+    //     eventName: 'touchcancel'
+    //   })
   }
 
   function checkCalcMode(calcMode, calcModeDefault, modes, type) {
