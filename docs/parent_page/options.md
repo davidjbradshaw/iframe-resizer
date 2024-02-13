@@ -112,12 +112,14 @@ Set minimum height/width of iFrame.
 
 Modify the computed size of the iframe. This is useful if the page in the iframe returns a size value that is consitantly slightly different to how you want the iframe to be sized.
 
+<!-- 
 ### resizeFrom
 
     default: 'parent'
     values: 'parent', 'child'
 
 Listen for resize events from the parent page, or the iFrame. Select the 'child' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
+-->
 
 ### scrolling
 
