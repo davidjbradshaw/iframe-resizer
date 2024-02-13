@@ -45,7 +45,6 @@
     offsetHeight: 0,
     offsetWidth: 0,
     postMessageTarget: null,
-    resizeFrom: 'parent',
     scrolling: false,
     sizeHeight: true,
     sizeWidth: false,
@@ -863,7 +862,7 @@
       iframeSettings.bodyPadding,
       iframeSettings.tolerance,
       iframeSettings.inPageLinks,
-      iframeSettings.resizeFrom,
+      'child', // Backwards compatability
       iframeSettings.widthCalculationMethod,
       iframeSettings.mouseEvents
     ].join(':')
@@ -1213,15 +1212,6 @@
     createMutationObserver()
   }
 
-  function resizeIFrames(event) {
-    function resize() {
-      sendTriggerMsg('Window ' + event, 'resize')
-    }
-
-    log('window', 'Trigger event: ' + event)
-    debouce(resize, 16)
-  }
-
   // Not testable in PhantomJS
   /* istanbul ignore next */
   function tabVisible() {
@@ -1239,7 +1229,6 @@
     function isIFrameResizeEnabled(iframeId) {
       return (
         settings[iframeId] &&
-        'parent' === settings[iframeId].resizeFrom &&
         settings[iframeId].autoResize &&
         !settings[iframeId].firstRun
       )
@@ -1255,9 +1244,6 @@
   function setupEventListeners() {
     addEventListener(window, 'message', iFrameListener)
     addEventListener(document, 'visibilitychange', tabVisible)
-    addEventListener(window, 'resize', function () {
-      resizeIFrames('resize')
-    })
   }
 
   let setupComplete = false
@@ -1320,12 +1306,12 @@
     if (!$.fn) {
       info('', 'Unable to bind to jQuery, it is not fully loaded.')
     } else if (!$.fn.iFrameResize) {
-      $.fn.iFrameResize = function $iFrameResizeF(options) {
-        function init(index, element) {
+      $.fn.iFrameResize = function (options) {
+        function initJQuery(index, element) {
           setupIFrame(element, options)
         }
 
-        return this.filter('iframe').each(init).end()
+        return this.filter('iframe').each(initJQuery).end()
       }
     }
   }
