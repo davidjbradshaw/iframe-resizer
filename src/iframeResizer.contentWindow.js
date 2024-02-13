@@ -21,7 +21,7 @@
   const customCalcMethods = {
     height: () => {
       warn('Custom height calculation function not defined')
-      return document.documentElement.offsetHeight
+      return document.documentElement.getBoundingClientRect().height
     },
     width: () => {
       warn('Custom width calculation function not defined')
@@ -40,7 +40,7 @@
     bodyScroll: 1,
     documentElementScroll: 1
   }
-  const resizeObserveTargets = ['body', 'textarea']
+  const resizeObserveTargets = ['body']
   const sendPermit = true
   const widthCalcModeDefault = 'scroll'
 
@@ -727,6 +727,20 @@
     log('Attached resizeObserver: ' + getElementName(el))
   }
 
+  function getAllNonStaticElements() {
+    const checkPositionType = (element) => {
+      const style = window.getComputedStyle(element)
+      return (
+        style.position && style.position !== '' && style.position !== 'static'
+      )
+    }
+
+    return Array.prototype.filter.call(
+      getAllElements(document)(),
+      checkPositionType
+    )
+  }
+
   function setupResizeObservers(el) {
     if (!el) return
     logResizeObserver(el)
@@ -734,11 +748,10 @@
   }
 
   function createResizeObservers(el) {
-    resizeObserveTargets
-      .flatMap(function (target) {
-        return el.querySelector(target)
-      })
-      .forEach(setupResizeObservers)
+    ;[
+      ...getAllNonStaticElements(),
+      ...resizeObserveTargets.flatMap((target) => el.querySelector(target))
+    ].forEach(setupResizeObservers)
   }
 
   function addResizeObservers(mutation) {
@@ -888,7 +901,11 @@
     let timer = Date.now()
 
     elements.forEach((element) => {
-      if (!tagged && !element.checkVisibility(checkVisibilityOptions)) {
+      if (
+        !tagged &&
+        element.checkVisibility &&
+        !element.checkVisibility(checkVisibilityOptions)
+      ) {
         log('Skipping non-visable element: ' + getElementName(element))
         return
       }
@@ -929,7 +946,7 @@
   function getTaggedElements(side, tag) {
     function noTaggedElementsFound() {
       warn('No tagged elements (' + tag + ') found on page')
-      return getAllElements()
+      return getAllElements(document)()
     }
 
     const elements = document.querySelectorAll('[' + tag + ']')
@@ -939,11 +956,10 @@
     return getMaxElement(side, elements, true)
   }
 
-  function getAllElements() {
-    return document.querySelectorAll(
+  const getAllElements = (element) => () =>
+    element.querySelectorAll(
       '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
     )
-  }
 
   const getAllElementsByType = (type) => () =>
     document.querySelectorAll(`${type} :not([hidden])`)
@@ -971,7 +987,7 @@
       document.documentElement.getBoundingClientRect().bottom,
     max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
     min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
-    lowestElement: () => getLowestElement(getAllElements),
+    lowestElement: () => getLowestElement(getAllElements(document)),
     lowestDivElement: () => getLowestElement(getAllElementsByType('div')),
     taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
   }
@@ -990,7 +1006,8 @@
       document.documentElement.getBoundingClientRect().right,
     max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
     min: () => Math.min.apply(null, getAllMeasurements(getWidth)),
-    rightMostElement: () => getMaxElement('right', getAllElements(), false),
+    rightMostElement: () =>
+      getMaxElement('right', getAllElements(document)(), false),
     taggedElement: () => getTaggedElements('right', 'data-iframe-width')
   }
 
