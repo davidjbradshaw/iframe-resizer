@@ -52,6 +52,8 @@
 
     <a id="nested" href="frame.nested.html">Nested</a>
     &nbsp;
+    <a href="frame.animate.html">Animate</a>
+    &nbsp;
     <a href="frame.hover.html">:Hover</a>
     &nbsp;
     <a href="frame.textarea.html">TextArea</a>
@@ -118,7 +120,7 @@
     </div>
     <script>
       let level = document.location.search.replace(/\?/, '') || 0
-      
+
       document
         .getElementById('nested')
         .setAttribute('href', 'frame.nested.html?' + ++level)

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      a.back {
+        float: right;
+        margin-left: 8px;
+      }
+      html {
+        border: solid 1px red;
+      }
+      p {
+        padding: 5px 212px 5px 5px;
+        margin: 0 0 5px;
+      }
+      #abs {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        background-color: wheat;
+        animation-direction: alternate;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-name: animate;
+      }
+
+      @keyframes animate {
+        from {
+         height: 100px;
+          
+        }
+
+        to {
+          height: 600px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <b>iFrame</b>
+
+    <a href="frame.content.html" class="back">Back to page 1</a>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+      est laborum.
+    </p>
+
+    <div id="abs">
+      <p>
+        This is an absolute positioned element that will animate to a height of
+        600px
+      </p>
+    </div>
+    <script>
+      window.iFrameResizer = {
+        heightCalculationMethod: 'lowestElement'
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="../js/iframeResizer.contentWindow.js"
+    ></script>
+    
+  </body>
+</html>
