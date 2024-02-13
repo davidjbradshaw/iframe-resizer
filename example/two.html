@@ -32,12 +32,6 @@
       >.
     </div>
 
-    <!-- MDN PolyFils for IE8 -->
-    <!--[if lte IE 8]>
-
-    <![endif]-->
-
-    <script src="jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../src/iframeResizer.js"></script>
     <script type="text/javascript">
       /*
@@ -49,13 +43,14 @@
        * Once you have it working, set the log option to false.
        */
 
+      const callbackDisplay = document.querySelector('p#callback')
+
       iFrameResize({
         log: true, // Enable console logging
-        enablePublicMethods: true, // Enable methods within iframe hosted page
         enableInPageLinks: true,
         onResized: function(messageData) {
           // Callback fn when resize is received
-          $('p#callback').html(
+          callbackDisplay.innerHTML =
             '<b>Frame ID:</b> ' +
               messageData.iframe.id +
               ' <b>Height:</b> ' +
@@ -64,23 +59,20 @@
               messageData.width +
               ' <b>Event type:</b> ' +
               messageData.type
-          )
         },
         onMessage: function(messageData) {
           // Callback fn when message is received
-          $('p#callback').html(
+          callbackDisplay.innerHTML =
             '<b>Frame ID:</b> ' +
               messageData.iframe.id +
               ' <b>Message:</b> ' +
               messageData.message
-          )
           alert(messageData.message + ' (' + messageData.iframe.id + ')')
         },
         onClosed: function(id) {
           // Callback fn when iFrame is closed
-          $('p#callback').html(
+          callbackDisplay.innerHTML =
             '<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
-          )
         }
       })
     </script>
