@@ -152,7 +152,7 @@
         return ''
 
       case isDef(el.id):
-        return '#' + el.id
+        return el.nodeName.toUpperCase() + '#' + el.id
 
       case isDef(el.name):
         return el.nodeName.toUpperCase() + ' (' + el.name + ')'
@@ -339,11 +339,11 @@
       eventName: 'beforeprint'
     })
 
-      manageTriggerEvent({
-        method: method,
-        eventType: 'Ready State Change',
-        eventName: 'readystatechange'
-      })
+    manageTriggerEvent({
+      method: method,
+      eventType: 'Ready State Change',
+      eventName: 'readystatechange'
+    })
 
     //   manageTriggerEvent({
     //     method: method,
@@ -858,7 +858,7 @@
     let elVal = 0
     let maxEl
     let maxVal = 0
-    let timer = Date.now()
+    let timer = performance.now()
 
     elements.forEach((element) => {
       if (
@@ -880,11 +880,11 @@
       }
     })
 
-    timer = Date.now() - timer
+    timer = performance.now() - timer
 
-    log('Parsed ' + elements.length + ' HTML elements')
-    log('Position calculated from HTML element: ' + getElementName(maxEl))
-    log('Element position calculated in ' + timer + 'ms')
+    log(
+      `Parsed ${elements.length} HTML elements in ${timer.toPrecision(3)}ms \nPosition calculated from HTML element: ${getElementName(maxEl)}`
+    )
 
     chkEventThottle(timer)
 

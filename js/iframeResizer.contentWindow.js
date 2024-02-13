@@ -152,7 +152,7 @@
         return ''
 
       case isDef(el.id):
-        return '#' + el.id
+        return el.nodeName.toUpperCase() + '#' + el.id
 
       case isDef(el.name):
         return el.nodeName.toUpperCase() + ' (' + el.name + ')'
@@ -327,14 +327,6 @@
   }
 
   function manageEventListeners(method) {
-    if ('child' === resizeFrom) {
-      manageTriggerEvent({
-        method: method,
-        eventType: 'IFrame Resized',
-        eventName: 'resize'
-      })
-    }
-
     manageTriggerEvent({
       method: method,
       eventType: 'After Print',
@@ -353,44 +345,44 @@
       eventName: 'readystatechange'
     })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Orientation Change',
-      eventName: 'orientationchange'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Orientation Change',
+    //     eventName: 'orientationchange'
+    //   })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Input',
-      eventName: 'input'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Input',
+    //     eventName: 'input'
+    //   })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Mouse Up',
-      eventName: 'mouseup'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Mouse Down',
-      eventName: 'mousedown'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Mouse Up',
+    //     eventName: 'mouseup'
+    //   })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Mouse Down',
+    //     eventName: 'mousedown'
+    //   })
 
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Touch Start',
-      eventName: 'touchstart'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Touch End',
-      eventName: 'touchend'
-    })
-    manageTriggerEvent({
-      method: method,
-      eventType: 'Touch Cancel',
-      eventName: 'touchcancel'
-    })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Touch Start',
+    //     eventName: 'touchstart'
+    //   })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Touch End',
+    //     eventName: 'touchend'
+    //   })
+    //   manageTriggerEvent({
+    //     method: method,
+    //     eventType: 'Touch Cancel',
+    //     eventName: 'touchcancel'
+    //   })
   }
 
   function checkCalcMode(calcMode, calcModeDefault, modes, type) {
@@ -866,7 +858,7 @@
     let elVal = 0
     let maxEl
     let maxVal = 0
-    let timer = Date.now()
+    let timer = performance.now()
 
     elements.forEach((element) => {
       if (
@@ -888,11 +880,11 @@
       }
     })
 
-    timer = Date.now() - timer
+    timer = performance.now() - timer
 
-    log('Parsed ' + elements.length + ' HTML elements')
-    log('Position calculated from HTML element: ' + getElementName(maxEl))
-    log('Element position calculated in ' + timer + 'ms')
+    log(
+      `Parsed ${elements.length} HTML elements in ${timer.toPrecision(3)}ms \nPosition calculated from HTML element: ${getElementName(maxEl)}`
+    )
 
     chkEventThottle(timer)
 
