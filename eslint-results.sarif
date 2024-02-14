@@ -1,0 +1,439 @@
+{
+  "version": "2.1.0",
+  "$schema": "http://json.schemastore.org/sarif-2.1.0-rtm.5",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "ESLint",
+          "informationUri": "https://eslint.org",
+          "rules": [
+            {
+              "id": "no-shadow-restricted-names",
+              "helpUri": "https://eslint.org/docs/latest/rules/no-shadow-restricted-names",
+              "properties": {},
+              "shortDescription": {
+                "text": "Disallow identifiers from shadowing restricted names"
+              }
+            },
+            {
+              "id": "no-multi-assign",
+              "helpUri": "https://eslint.org/docs/latest/rules/no-multi-assign",
+              "properties": {},
+              "shortDescription": {
+                "text": "Disallow use of chained assignment expressions"
+              }
+            },
+            {
+              "id": "no-console",
+              "helpUri": "https://eslint.org/docs/latest/rules/no-console",
+              "properties": {},
+              "shortDescription": {
+                "text": "Disallow the use of `console`"
+              }
+            },
+            {
+              "id": "sonarjs/no-extra-arguments",
+              "helpUri": "https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-extra-arguments.md",
+              "properties": {},
+              "shortDescription": {
+                "text": "Function calls should not pass extra arguments"
+              }
+            },
+            {
+              "id": "no-restricted-syntax",
+              "helpUri": "https://eslint.org/docs/latest/rules/no-restricted-syntax",
+              "properties": {},
+              "shortDescription": {
+                "text": "Disallow specified syntax"
+              }
+            },
+            {
+              "id": "guard-for-in",
+              "helpUri": "https://eslint.org/docs/latest/rules/guard-for-in",
+              "properties": {},
+              "shortDescription": {
+                "text": "Require `for-in` loops to include an `if` statement"
+              }
+            }
+          ],
+          "version": "8.56.0"
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js"
+          }
+        }
+      ],
+      "results": [
+        {
+          "level": "error",
+          "message": {
+            "text": "Shadowing of global property 'undefined'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 13,
+                  "endLine": 12,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "ruleId": "no-shadow-restricted-names",
+          "ruleIndex": 0,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "Unexpected chained assignment."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 19,
+                  "endLine": 108,
+                  "endColumn": 30
+                }
+              }
+            }
+          ],
+          "ruleId": "no-multi-assign",
+          "ruleIndex": 1,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "Unexpected chained assignment."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 135,
+                  "startColumn": 21,
+                  "endLine": 135,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "ruleId": "no-multi-assign",
+          "ruleIndex": 1,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "warning",
+          "message": {
+            "text": "Unexpected console statement."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 175,
+                  "startColumn": 7,
+                  "endLine": 175,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "ruleId": "no-console",
+          "ruleIndex": 2,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "warning",
+          "message": {
+            "text": "Unexpected console statement."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 182,
+                  "startColumn": 7,
+                  "endLine": 182,
+                  "endColumn": 19
+                }
+              }
+            }
+          ],
+          "ruleId": "no-console",
+          "ruleIndex": 2,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "This function expects no arguments, but 1 was provided."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.contentWindow.js",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 1169,
+                  "startColumn": 9,
+                  "endLine": 1169,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "ruleId": "sonarjs/no-extra-arguments",
+          "ruleIndex": 3,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "Shadowing of global property 'undefined'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 13,
+                  "endLine": 12,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "ruleId": "no-shadow-restricted-names",
+          "ruleIndex": 0,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "warning",
+          "message": {
+            "text": "Unexpected console statement."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 110,
+                  "startColumn": 7,
+                  "endLine": 110,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "ruleId": "no-console",
+          "ruleIndex": 2,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 606,
+                  "startColumn": 7,
+                  "endLine": 608,
+                  "endColumn": 8
+                }
+              }
+            }
+          ],
+          "ruleId": "no-restricted-syntax",
+          "ruleIndex": 4,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "The body of a for-in should be wrapped in an if statement to filter unwanted properties from the prototype."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 606,
+                  "startColumn": 7,
+                  "endLine": 608,
+                  "endColumn": 8
+                }
+              }
+            }
+          ],
+          "ruleId": "guard-for-in",
+          "ruleIndex": 5,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "Unexpected chained assignment."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 929,
+                  "startColumn": 21,
+                  "endLine": 929,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "ruleId": "no-multi-assign",
+          "ruleIndex": 1,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "error",
+          "message": {
+            "text": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///Users/davidbradshaw/dev/iframe-resizer/src/iframeResizer.js",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 1073,
+                  "startColumn": 7,
+                  "endLine": 1082,
+                  "endColumn": 8
+                }
+              }
+            }
+          ],
+          "ruleId": "no-restricted-syntax",
+          "ruleIndex": 4,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
