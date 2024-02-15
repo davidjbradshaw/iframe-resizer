@@ -602,10 +602,9 @@
     }
 
     function iFrameReadyMsgReceived() {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-      for (const iframeId in settings) {
+      Object.keys(settings).forEach((iframeId) =>
         trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
-      }
+      )
     }
 
     function firstRun() {
@@ -1069,17 +1068,16 @@
     }
 
     function copyOptions(options) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const option in defaults) {
-        if (Object.prototype.hasOwnProperty.call(defaults, option)) {
-          settings[iframeId][option] = Object.prototype.hasOwnProperty.call(
-            options,
-            option
-          )
-            ? options[option]
-            : defaults[option]
-        }
+      function copyOption(option) {
+        settings[iframeId][option] = Object.prototype.hasOwnProperty.call(
+          options,
+          option
+        )
+          ? options[option]
+          : defaults[option]
       }
+
+      Object.keys(defaults).forEach(copyOption)
     }
 
     function getTargetOrigin(remoteHost) {
