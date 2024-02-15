@@ -1069,12 +1069,8 @@
 
     function copyOptions(options) {
       function copyOption(option) {
-        settings[iframeId][option] = Object.prototype.hasOwnProperty.call(
-          options,
-          option
-        )
-          ? options[option]
-          : defaults[option]
+        settings[iframeId][option] =
+          option in options ? options[option] : defaults[option]
       }
 
       Object.keys(defaults).forEach(copyOption)
