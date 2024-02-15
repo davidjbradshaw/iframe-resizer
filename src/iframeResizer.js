@@ -105,7 +105,7 @@
   }
 
   function output(type, iframeId, enabled, ...msg) {
-    if (true === enabled) {
+    if (enabled === true) {
       // eslint-disable-next-line no-console
       console[type](formatLogHeader(iframeId), ...msg)
     }
@@ -351,7 +351,7 @@
     function checkIFrameExists() {
       let retBool = true
 
-      if (null === messageData.iframe) {
+      if (messageData.iframe === null) {
         warn(iframeId, 'IFrame (' + messageData.id + ') not found')
         retBool = false
       }
@@ -416,7 +416,7 @@
     }
 
     function scrollTo() {
-      if (false === on('onScroll', pagePosition)) {
+      if (on('onScroll', pagePosition) === false) {
         unsetPagePosition()
       } else {
         setPagePosition(iframeId)
@@ -618,7 +618,7 @@
     let messageData = {}
     let iframeId = null
 
-    if ('[iFrameResizerChild]Ready' === msg) {
+    if (msg === '[iFrameResizerChild]Ready') {
       iFrameReadyMsgReceived()
     } else if (isMessageForUs()) {
       messageData = processMsg()
@@ -649,7 +649,7 @@
     if (settings[iframeId]) {
       func = settings[iframeId][funcName]
 
-      if ('function' === typeof func) {
+      if (typeof func === 'function') {
         retVal = func(val)
       } else {
         throw new TypeError(
@@ -689,7 +689,7 @@
   }
 
   function getPagePosition(iframeId) {
-    if (null === pagePosition) {
+    if (pagePosition === null) {
       pagePosition = {
         x: window.scrollX,
         y: window.scrollY
@@ -702,7 +702,7 @@
   }
 
   function setPagePosition(iframeId) {
-    if (null !== pagePosition) {
+    if (pagePosition !== null) {
       window.scrollTo(pagePosition.x, pagePosition.y)
       log(
         iframeId,
@@ -724,7 +724,7 @@
 
     log(
       messageData.id,
-      `Size reset requested by ${'init' === messageData.type ? 'host page' : 'iFrame'}`
+      `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`
     )
     getPagePosition(messageData.id)
     syncResize(reset, messageData, 'reset')
@@ -753,7 +753,7 @@
       // when iFrame becomes visible.
 
       /* istanbul ignore next */ // Not testable in PhantomJS
-      if (!hiddenCheckEnabled && '0' === messageData[dimension]) {
+      if (!hiddenCheckEnabled && messageData[dimension] === '0') {
         hiddenCheckEnabled = true
         log(iframeId, 'Hidden iFrame detected, creating visibility listener')
         fixHiddenIFrames()
@@ -877,7 +877,7 @@
       function addStyle(style) {
         const styleValue = settings[iframeId][style]
 
-        if (Infinity !== styleValue && 0 !== styleValue) {
+        if (Infinity !== styleValue && styleValue !== 0) {
           iframe.style[style] = isNumber(styleValue)
             ? styleValue + 'px'
             : styleValue
@@ -913,7 +913,7 @@
     function newId() {
       let id = (options && options.id) || defaults.id + count++
 
-      if (null !== document.getElementById(id)) {
+      if (document.getElementById(id) !== null) {
         id += count++
       }
       return id
@@ -924,7 +924,7 @@
         throw new TypeError('Invaild id for iFrame. Expected String')
       }
 
-      if ('' === iframeId) {
+      if (iframeId === '') {
         // eslint-disable-next-line no-multi-assign
         iframe.id = iframeId = newId()
         logEnabled = (options || {}).log
@@ -948,7 +948,7 @@
       )
 
       iframe.style.overflow =
-        false === (settings[iframeId] && settings[iframeId].scrolling)
+        (settings[iframeId] && settings[iframeId].scrolling) === false
           ? 'hidden'
           : 'auto'
 
@@ -980,9 +980,9 @@
     // and then convert V2 to a string PX value.
     function setupBodyMarginValues() {
       if (
-        'number' ===
-          typeof (settings[iframeId] && settings[iframeId].bodyMargin) ||
-        '0' === (settings[iframeId] && settings[iframeId].bodyMargin)
+        typeof (settings[iframeId] && settings[iframeId].bodyMargin) ===
+          'number' ||
+        (settings[iframeId] && settings[iframeId].bodyMargin) === '0'
       ) {
         settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin
         settings[iframeId].bodyMargin = `${settings[iframeId].bodyMargin}px`
@@ -1063,7 +1063,7 @@
     }
 
     function checkOptions(options) {
-      if ('object' !== typeof options) {
+      if (typeof options !== 'object') {
         throw new TypeError('Options is not an object')
       }
     }
@@ -1083,8 +1083,8 @@
     }
 
     function getTargetOrigin(remoteHost) {
-      return '' === remoteHost ||
-        null !== remoteHost.match(/^(about:blank|javascript:|file:\/\/)/)
+      return remoteHost === '' ||
+        remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
         ? '*'
         : remoteHost
     }
@@ -1111,7 +1111,7 @@
 
       if (settings[iframeId]) {
         settings[iframeId].targetOrigin =
-          true === settings[iframeId].checkOrigin
+          settings[iframeId].checkOrigin === true
             ? getTargetOrigin(settings[iframeId].remoteHost)
             : '*'
       }
@@ -1136,7 +1136,7 @@
   }
 
   function debouce(fn, time) {
-    if (null === timer) {
+    if (timer === null) {
       timer = setTimeout(function () {
         timer = null
         fn()
@@ -1163,13 +1163,13 @@
       function checkIFrame(iframeId) {
         function chkDimension(dimension) {
           return (
-            '0px' ===
-            (settings[iframeId] && settings[iframeId].iframe.style[dimension])
+            (settings[iframeId] &&
+              settings[iframeId].iframe.style[dimension]) === '0px'
           )
         }
 
         function isVisible(el) {
-          return null !== el.offsetParent
+          return el.offsetParent !== null
         }
 
         if (
@@ -1219,7 +1219,7 @@
       sendTriggerMsg('Tab Visible', 'resize')
     }
 
-    if ('hidden' !== document.visibilityState) {
+    if (document.visibilityState !== 'hidden') {
       log('document', 'Trigger event: Visibility change')
       debouce(resize, 16)
     }
@@ -1253,7 +1253,7 @@
       function chkType() {
         if (!element.tagName) {
           throw new TypeError('Object is not a valid DOM element')
-        } else if ('IFRAME' !== element.tagName.toUpperCase()) {
+        } else if (element.tagName.toUpperCase() !== 'IFRAME') {
           throw new TypeError(
             'Expected <IFRAME> tag, found <' + element.tagName + '>'
           )
