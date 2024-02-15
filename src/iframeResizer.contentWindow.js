@@ -170,14 +170,14 @@
   }
 
   function log(msg) {
-    if (logging && 'object' === typeof window.console) {
+    if (logging && typeof window.console === 'object') {
       // eslint-disable-next-line no-console
       console.log(formatLogMsg(msg))
     }
   }
 
   function warn(msg) {
-    if ('object' === typeof window.console) {
+    if (typeof window.console === 'object') {
       // eslint-disable-next-line no-console
       console.warn(formatLogMsg(msg))
     }
@@ -204,7 +204,7 @@
 
   function readDataFromParent() {
     function strBool(str) {
-      return 'true' === str
+      return str === 'true'
     }
 
     const data = initMsg.slice(msgIdLen).split(':')
@@ -247,7 +247,7 @@
     }
 
     function setupCustomCalcMethods(calcMode, calcFunc) {
-      if ('function' === typeof calcMode) {
+      if (typeof calcMode === 'function') {
         log('Setup custom ' + calcFunc + 'CalcMethod')
         customCalcMethods[calcFunc] = calcMode
         calcMode = 'custom'
@@ -269,7 +269,7 @@
   }
 
   function chkCSS(attr, value) {
-    if (-1 !== value.indexOf('-')) {
+    if (value.includes('-')) {
       warn('Negative CSS value ignored for ' + attr)
       value = ''
     }
@@ -277,7 +277,7 @@
   }
 
   function setBodyStyle(attr, value) {
-    if (undefined !== value && '' !== value && 'null' !== value) {
+    if (undefined !== value && value !== '' && value !== 'null') {
       document.body.style[attr] = value
       log('Body ' + attr + ' set to "' + value + '"')
     }
@@ -418,7 +418,7 @@
   }
 
   function startEventListeners() {
-    if (true === autoResize) {
+    if (autoResize === true) {
       manageEventListeners('add')
       setupMutationObserver()
       setupResizeObserver()
@@ -428,14 +428,14 @@
   }
 
   function disconnectResizeObservers() {
-    if (null !== bodyObserver) {
+    if (bodyObserver !== null) {
       /* istanbul ignore next */ // Not testable in PhantonJS
       resizeObserver.disconnect()
     }
   }
 
   function disconnectMutationObserver() {
-    if (null !== bodyObserver) {
+    if (bodyObserver !== null) {
       /* istanbul ignore next */ // Not testable in PhantonJS
       bodyObserver.disconnect()
     }
@@ -513,7 +513,7 @@
       const hash = window.location.hash
       const href = window.location.href
 
-      if ('' !== hash && '#' !== hash) {
+      if (hash !== '' && hash !== '#') {
         findTarget(href)
       }
     }
@@ -526,7 +526,7 @@
           findTarget(this.getAttribute('href'))
         }
 
-        if ('#' !== el.getAttribute('href')) {
+        if (el.getAttribute('href') !== '#') {
           addEventListener(el, 'click', linkClicked)
         }
       }
@@ -586,10 +586,10 @@
 
     win.parentIFrame = {
       autoResize: (resize) => {
-        if (true === resize && false === autoResize) {
+        if (resize === true && autoResize === false) {
           autoResize = true
           startEventListeners()
-        } else if (false === resize && true === autoResize) {
+        } else if (resize === false && autoResize === true) {
           autoResize = false
           stopEventListeners()
         }
@@ -604,7 +604,7 @@
       getId: () => myID,
 
       getPageInfo: function (callback) {
-        if ('function' === typeof callback) {
+        if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
         } else {
@@ -663,7 +663,7 @@
   }
 
   function initInterval() {
-    if (0 !== interval) {
+    if (interval !== 0) {
       log('setInterval: ' + interval + 'ms')
       intervalTimer = setInterval(function () {
         sendSize('interval', 'setInterval: ' + interval)
@@ -723,7 +723,7 @@
   function setupBodyMutationObserver() {
     function addImageLoadListners(mutation) {
       function addImageLoadListener(element) {
-        if (false === element.complete && !element.dataset.loading) {
+        if (element.complete === false && !element.dataset.loading) {
           log('Attached Mutation Observer:' + element.src)
           element.dataset.loading = true
           element.addEventListener('load', imageLoaded, false)
@@ -812,7 +812,7 @@
   }
 
   function setupMutationObserver() {
-    const forceIntervalTimer = 0 > interval
+    const forceIntervalTimer = interval < 0
 
     // Not testable in PhantomJS
     /* istanbul ignore if */ if (window.MutationObserver) {
@@ -834,7 +834,7 @@
     el = el || document.body // Not testable in phantonJS
 
     retVal = document.defaultView.getComputedStyle(el, null)
-    retVal = null === retVal ? 0 : retVal[prop]
+    retVal = retVal === null ? 0 : retVal[prop]
 
     return parseInt(retVal, base)
   }
@@ -1022,7 +1022,7 @@
     let currentHeight
     let currentWidth
 
-    if (isSizeChangeDetected() || 'init' === triggerEvent) {
+    if (isSizeChangeDetected() || triggerEvent === 'init') {
       lockTrigger()
       resizeIFrame()
     } else {
@@ -1114,7 +1114,7 @@
       target.postMessage(msgID + message, targetOrigin)
     }
 
-    if (true === sendPermit) {
+    if (sendPermit === true) {
       setTargetOrigin()
       sendToParent()
     }
@@ -1209,7 +1209,7 @@
     }
 
     function processMessage() {
-      if (false === firstRun) {
+      if (firstRun === false) {
         callFromParent()
       } else if (isInitMsg()) {
         processRequestFromParent.init()
@@ -1230,7 +1230,7 @@
   // Normally the parent kicks things off when it detects the iFrame has loaded.
   // If this script is async-loaded, then tell parent page to retry init.
   function chkLateLoaded() {
-    if ('loading' !== document.readyState) {
+    if (document.readyState !== 'loading') {
       window.parent.postMessage('[iFrameResizerChild]Ready', '*')
     }
   }

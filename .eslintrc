@@ -26,7 +26,6 @@
     "prefer-rest-params": 0,
     "prefer-template": 0,
     "vars-on-top": 0,
-    "yoda": 0,
     "ie11/no-collection-args": ["error"],
     "ie11/no-loop-func": ["warn"],
     "ie11/no-weak-collections": ["error"],
