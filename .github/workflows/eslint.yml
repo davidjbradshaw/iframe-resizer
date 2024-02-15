@@ -27,12 +27,10 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install ESLint
-        run: |
-          npm install eslint@8
-          npm install @microsoft/eslint-formatter-sarif@3
+        run: npm install @microsoft/eslint-formatter-sarif@3
 
       - name: Run ESLint
         run: npm run eslint:sarif
