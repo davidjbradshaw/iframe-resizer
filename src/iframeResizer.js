@@ -732,18 +732,10 @@
   function setSize(messageData) {
     const iframeId = messageData.id
 
-    const newSize = (dimension, offset) =>
-      Number(messageData[dimension]) + offset
-
     function setDimension(dimension) {
-      const offset = settings[iframeId].offset[dimension]
-      const size = `${newSize(dimension, offset)}px`
-      const offsetMsg = offset ? `(offset: ${offset}px)` : ''
+      const size = `${messageData[dimension]}px`
       messageData.iframe.style[dimension] = size
-      log(
-        iframeId,
-        `IFrame (${iframeId}) ${dimension} set to ${size} ${offsetMsg}`
-      )
+      log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`)
     }
 
     function chkZero(dimension) {
@@ -849,7 +841,7 @@
 
     return [
       iframeId,
-      iframeSettings.bodyMarginV1,
+      '8', // Backwards compatability
       iframeSettings.sizeWidth,
       iframeSettings.log,
       iframeSettings.interval,
@@ -863,7 +855,9 @@
       iframeSettings.inPageLinks,
       'child', // Backwards compatability
       iframeSettings.widthCalculationMethod,
-      iframeSettings.mouseEvents
+      iframeSettings.mouseEvents,
+      iframeSettings.offsetHeight,
+      iframeSettings.offsetWidth
     ].join(':')
   }
 
@@ -927,10 +921,7 @@
         // eslint-disable-next-line no-multi-assign
         iframe.id = iframeId = newId()
         logEnabled = (options || {}).log
-        log(
-          iframeId,
-          'Added missing iframe ID: ' + iframeId + ' (' + iframe.src + ')'
-        )
+        log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
       }
 
       return iframeId
@@ -974,17 +965,11 @@
       }
     }
 
-    // The V1 iFrame script expects an int, where as in V2 expects a CSS
-    // string value such as '1px 3em', so if we have an int for V2, set V1=V2
-    // and then convert V2 to a string PX value.
     function setupBodyMarginValues() {
-      if (
-        typeof (settings[iframeId] && settings[iframeId].bodyMargin) ===
-          'number' ||
-        (settings[iframeId] && settings[iframeId].bodyMargin) === '0'
-      ) {
-        settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin
-        settings[iframeId].bodyMargin = `${settings[iframeId].bodyMargin}px`
+      const { bodyMargin } = settings[iframeId]
+
+      if (typeof bodyMargin === 'number' || bodyMargin === '0') {
+        settings[iframeId].bodyMargin = `${bodyMargin}px`
       }
     }
 
@@ -1062,18 +1047,11 @@
     }
 
     function checkOptions(options) {
-      if (typeof options !== 'object') {
+      if (options && typeof options !== 'object') {
         throw new TypeError('Options is not an object')
       }
-    }
 
-    function copyOptions(options) {
-      function copyOption(option) {
-        settings[iframeId][option] =
-          option in options ? options[option] : defaults[option]
-      }
-
-      Object.keys(defaults).forEach(copyOption)
+      return options || {}
     }
 
     function getTargetOrigin(remoteHost) {
@@ -1084,20 +1062,12 @@
     }
 
     function processOptions(options) {
-      options = options || {}
-
-      settings[iframeId] = Object.create(null) // Protect against prototype attacks
-      settings[iframeId].iframe = iframe
-      settings[iframeId].firstRun = true
-      settings[iframeId].remoteHost =
-        iframe.src && iframe.src.split('/').slice(0, 3).join('/')
-
-      checkOptions(options)
-      copyOptions(options)
-
-      settings[iframeId].offset = {
-        height: settings[iframeId].offsetHeight,
-        width: settings[iframeId].offsetWidth
+      settings[iframeId] = {
+        iframe,
+        firstRun: true,
+        remoteHost: iframe.src && iframe.src.split('/').slice(0, 3).join('/'),
+        ...defaults,
+        ...checkOptions(options)
       }
 
       if (settings[iframeId].postMessageTarget === null)
