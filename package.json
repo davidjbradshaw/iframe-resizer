@@ -37,7 +37,7 @@
     "eslint-config-adjunct": "^4.12.2",
     "eslint-config-airbnb-babel": "^0.2.2",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-auto": "^0.7.3",
+    "eslint-config-auto": "^0.9.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-array-func": "^4.0.0",
     "eslint-plugin-compat": "^4.2.0",
