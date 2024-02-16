@@ -19,7 +19,6 @@ When enabled changes to the Window size or the DOM will cause the iFrame to resi
 
 <i>Note: When set to false the iFrame will still inititally size to the contained content, only additional resizing events are disabled.</i>
 
-<!--
 ### bodyBackground
 
 	default: null
@@ -40,7 +39,6 @@ Override the default body margin style in the iFrame. A string can be any valid 
 	type:    string || number
 
 Override the default body padding style in the iFrame. A string can be any valid value for the CSS margin attribute, for example '8px 3em'. A number value is converted into px.
--->
 
 ### checkOrigin
 
@@ -112,14 +110,7 @@ Set minimum height/width of iFrame.
 
 Modify the computed size of the iframe. This is useful if the page in the iframe returns a size value that is consitantly slightly different to how you want the iframe to be sized.
 
-<!-- 
-### resizeFrom
-
-    default: 'parent'
-    values: 'parent', 'child'
-
-Listen for resize events from the parent page, or the iFrame. Select the 'child' value if the iFrame can be resized independently of the browser window. <i>Selecting this value can cause issues with some height calculation methods on mobile devices</i>.
--->
+<sup>*</sup> This value can also be set on a per page basis in the iframe.
 
 ### scrolling
 

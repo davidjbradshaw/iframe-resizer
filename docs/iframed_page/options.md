@@ -11,13 +11,6 @@ The following options can be set from within the iFrame page by creating a `wind
 <script src="js/iframeresizer.contentwindow.js"></script>
 ```
 
-### targetOrigin
-
-	default: '*'
-	type: string
-
-This option allows you to restrict the domain of the parent page, to prevent other sites mimicking your parent page.
-
 ### heightCalculationMethod / widthCalculationMethod
 
     default: null
@@ -26,3 +19,17 @@ This option allows you to restrict the domain of the parent page, to prevent oth
 These options can be used to override the option set in the parent page (See above for details on available values). This can be useful when moving between pages in the iFrame that require different values for these options.
 
 Altenatively you can pass a custom function that returns the size as an integer. This can be useful when none of the standard ways of working out the size are suitable. However, normally problems with sizing are due to CSS issues and this should be looked at first.
+
+### offsetHeigt / offsetWidth
+
+    default: 0
+    type:    integer
+
+Modify the computed size of the iframe. This is useful if the page in the iframe returns a size value that is consitantly slightly different to how you want the iframe to be sized.
+
+### targetOrigin
+
+	default: '*'
+	type: string
+
+This option allows you to restrict the domain of the parent page, to prevent other sites mimicking your parent page.
