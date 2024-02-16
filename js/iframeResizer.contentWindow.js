@@ -57,11 +57,11 @@
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
-  let interval = 32
-  let intervalTimer = null
   let logging = false
   let mouseEvents = false
   let myID = ''
+  let offsetHeight = 0
+  let offsetWidth = 0
   let resizeFrom = 'child'
   let resizeObserver = null
   let target = window.parent
@@ -165,21 +165,20 @@
     }
   }
 
-  function formatLogMsg(msg) {
-    return msgID + '[' + myID + '] ' + msg
-  }
+  // TODO: remove .join(' '), requires major test updates
+  const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
 
-  function log(msg) {
+  function log(...msg) {
     if (logging && typeof window.console === 'object') {
       // eslint-disable-next-line no-console
-      console.log(formatLogMsg(msg))
+      console.log(formatLogMsg(...msg))
     }
   }
 
-  function warn(msg) {
+  function warn(...msg) {
     if (typeof window.console === 'object') {
       // eslint-disable-next-line no-console
-      console.warn(formatLogMsg(msg))
+      console.warn(formatLogMsg(...msg))
     }
   }
 
@@ -203,17 +202,14 @@
   }
 
   function readDataFromParent() {
-    function strBool(str) {
-      return str === 'true'
-    }
-
+    const strBool = (str) => str === 'true'
     const data = initMsg.slice(msgIdLen).split(':')
 
     myID = data[0]
     bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]) // For V1 compatibility
     calculateWidth = undefined === data[2] ? calculateWidth : strBool(data[2])
     logging = undefined === data[3] ? logging : strBool(data[3])
-    interval = undefined === data[4] ? interval : Number(data[4])
+    // data[4] no longer used (was intervalTimer)
     autoResize = undefined === data[6] ? autoResize : strBool(data[6])
     bodyMarginStr = data[7]
     heightCalcMode = undefined === data[8] ? heightCalcMode : data[8]
@@ -224,6 +220,8 @@
     resizeFrom = undefined === data[13] ? resizeFrom : data[13]
     widthCalcMode = undefined === data[14] ? widthCalcMode : data[14]
     mouseEvents = undefined === data[15] ? mouseEvents : strBool(data[15])
+    offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16])
+    offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
   }
 
   function readDataFromPage() {
@@ -234,6 +232,8 @@
 
       onMessage = 'onMessage' in data ? data.onMessage : onMessage
       onReady = 'onReady' in data ? data.onReady : onReady
+      offsetHeight = 'heightOffset' in data ? data.heightOffset : offsetHeight
+      offsetWidth = 'widthOffset' in data ? data.widthOffset : offsetWidth
       targetOriginDefault =
         'targetOrigin' in data ? data.targetOrigin : targetOriginDefault
       heightCalcMode =
@@ -422,13 +422,13 @@
       manageEventListeners('add')
       setupMutationObserver()
       setupResizeObserver()
-    } else {
-      log('Auto Resize disabled')
+      return
     }
+    log('Auto Resize disabled')
   }
 
   function disconnectResizeObservers() {
-    if (bodyObserver !== null) {
+    if (resizeObserver !== null) {
       /* istanbul ignore next */ // Not testable in PhantonJS
       resizeObserver.disconnect()
     }
@@ -445,7 +445,6 @@
     manageEventListeners('remove')
     disconnectResizeObservers()
     disconnectMutationObserver()
-    clearInterval(intervalTimer)
   }
 
   function injectClearFixIntoBodyElement() {
@@ -662,15 +661,6 @@
     }
   }
 
-  function initInterval() {
-    if (interval !== 0) {
-      log('setInterval: ' + interval + 'ms')
-      intervalTimer = setInterval(function () {
-        sendSize('interval', 'setInterval: ' + interval)
-      }, Math.abs(interval))
-    }
-  }
-
   function resizeObserved(entries) {
     const el = entries[0].target
     sendSize('resizeObserver', 'resizeObserver: ' + getElementName(el))
@@ -812,19 +802,7 @@
   }
 
   function setupMutationObserver() {
-    const forceIntervalTimer = interval < 0
-
-    // Not testable in PhantomJS
-    /* istanbul ignore if */ if (window.MutationObserver) {
-      if (forceIntervalTimer) {
-        initInterval()
-      } else {
-        bodyObserver = setupBodyMutationObserver()
-      }
-    } else {
-      log('MutationObserver not supported in this browser!')
-      initInterval()
-    }
+    bodyObserver = setupBodyMutationObserver()
   }
 
   // document.documentElement.offsetHeight is not reliable, so
@@ -1030,8 +1008,6 @@
     }
   }
 
-  const sizeIFrameThrottled = throttle(sizeIFrame)
-
   function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
     function recordTrigger() {
       if (!(triggerEvent in { reset: 1, resetPage: 1, init: 1 })) {
@@ -1043,21 +1019,15 @@
       return triggerLocked && triggerEvent in doubleEventList
     }
 
+    const size = triggerEvent === 'init' ? sizeIFrame : throttle(sizeIFrame)
+
     if (isDoubleFiredEvent()) {
       log('Trigger event cancelled: ' + triggerEvent)
-    } else {
-      recordTrigger()
-      if (triggerEvent === 'init') {
-        sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth)
-      } else {
-        sizeIFrameThrottled(
-          triggerEvent,
-          triggerEventDesc,
-          customHeight,
-          customWidth
-        )
-      }
+      return
     }
+
+    recordTrigger()
+    size(triggerEvent, triggerEventDesc, customHeight, customWidth)
   }
 
   function lockTrigger() {
@@ -1101,14 +1071,8 @@
     }
 
     function sendToParent() {
-      const size = height + ':' + width
-      const message =
-        myID +
-        ':' +
-        size +
-        ':' +
-        triggerEvent +
-        (undefined === msg ? '' : ':' + msg)
+      const size = `${height + offsetHeight}:${width + offsetWidth}`
+      const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : ':' + msg}`
 
       log('Sending message to host page (' + message + ')')
       target.postMessage(msgID + message, targetOrigin)
