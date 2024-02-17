@@ -139,7 +139,7 @@
     }
   }
 
-  const isDef = (value) => '' + value !== '' && value !== undefined
+  const isDef = (value) => `${value}` !== '' && value !== undefined
 
   function getElementName(el) {
     switch (true) {
@@ -147,15 +147,15 @@
         return ''
 
       case isDef(el.id):
-        return el.nodeName.toUpperCase() + '#' + el.id
+        return `${el.nodeName.toUpperCase()}#${el.id}`
 
       case isDef(el.name):
-        return el.nodeName.toUpperCase() + ' (' + el.name + ')'
+        return `${el.nodeName.toUpperCase()} (${el.name})`
 
       default:
         return (
           el.nodeName.toUpperCase() +
-          (isDef(el.className) ? '.' + el.className : '')
+          (isDef(el.className) ? `.${el.className}` : '')
         )
     }
   }
@@ -179,7 +179,7 @@
 
   function init() {
     readDataFromParent()
-    log('Initialising iFrame (' + window.location.href + ')')
+    log(`Initialising iFrame (${window.location.href})`)
     readDataFromPage()
     setMargin()
     setBodyStyle('background', bodyBackground)
@@ -200,16 +200,16 @@
     const strBool = (str) => str === 'true'
     const data = initMsg.slice(msgIdLen).split(':')
 
-    myID = data[0]
+    myID = data[0] // eslint-disable-line prefer-destructuring
     bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]) // For V1 compatibility
     calculateWidth = undefined === data[2] ? calculateWidth : strBool(data[2])
     logging = undefined === data[3] ? logging : strBool(data[3])
     // data[4] no longer used (was intervalTimer)
     autoResize = undefined === data[6] ? autoResize : strBool(data[6])
-    bodyMarginStr = data[7]
+    bodyMarginStr = data[7] // eslint-disable-line prefer-destructuring
     heightCalcMode = undefined === data[8] ? heightCalcMode : data[8]
-    bodyBackground = data[9]
-    bodyPadding = data[10]
+    bodyBackground = data[9] // eslint-disable-line prefer-destructuring
+    bodyPadding = data[10] // eslint-disable-line prefer-destructuring
     tolerance = undefined === data[11] ? tolerance : Number(data[11])
     inPageLinks.enable = undefined === data[12] ? false : strBool(data[12])
     resizeFrom = undefined === data[13] ? resizeFrom : data[13]
@@ -223,7 +223,7 @@
     function readData() {
       const data = window.iFrameResizer
 
-      log('Reading data from page: ' + JSON.stringify(data))
+      log(`Reading data from page: ${JSON.stringify(data)}`)
 
       onMessage = data?.onMessage || onMessage
       onReady = data?.onReady || onReady
@@ -236,7 +236,7 @@
 
     function setupCustomCalcMethods(calcMode, calcFunc) {
       if (typeof calcMode === 'function') {
-        log('Setup custom ' + calcFunc + 'CalcMethod')
+        log(`Setup custom ${calcFunc}CalcMethod`)
         customCalcMethods[calcFunc] = calcMode
         calcMode = 'custom'
       }
@@ -253,12 +253,12 @@
       widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
     }
 
-    log('TargetOrigin for parent set to: ' + targetOriginDefault)
+    log(`TargetOrigin for parent set to: ${targetOriginDefault}`)
   }
 
   function chkCSS(attr, value) {
     if (value.includes('-')) {
-      warn('Negative CSS value ignored for ' + attr)
+      warn(`Negative CSS value ignored for ${attr}`)
       value = ''
     }
 
@@ -268,14 +268,14 @@
   function setBodyStyle(attr, value) {
     if (undefined !== value && value !== '' && value !== 'null') {
       document.body.style[attr] = value
-      log('Body ' + attr + ' set to "' + value + '"')
+      log(`Body ${attr} set to "${value}"`)
     }
   }
 
   function setMargin() {
     // If called via V1 script, convert bodyMargin from int to str
     if (undefined === bodyMarginStr) {
-      bodyMarginStr = bodyMargin + 'px'
+      bodyMarginStr = `${bodyMargin}px`
     }
 
     setBodyStyle('margin', chkCSS('margin', bodyMarginStr))
@@ -289,7 +289,7 @@
 
   function manageTriggerEvent(options) {
     const listener = {
-      add: function (eventName) {
+      add(eventName) {
         function handleEvent() {
           sendSize(options.eventName, options.eventType)
         }
@@ -298,7 +298,7 @@
 
         addEventListener(window, eventName, handleEvent, { passive: true })
       },
-      remove: function (eventName) {
+      remove(eventName) {
         const handleEvent = eventHandlersByName[eventName]
         delete eventHandlersByName[eventName]
 
@@ -309,27 +309,27 @@
     listener[options.method](options.eventName)
 
     log(
-      capitalizeFirstLetter(options.method) +
-        ' event listener: ' +
+      `${capitalizeFirstLetter(options.method)} event listener: ${
         options.eventType
+      }`
     )
   }
 
   function manageEventListeners(method) {
     manageTriggerEvent({
-      method: method,
+      method,
       eventType: 'After Print',
       eventName: 'afterprint'
     })
 
     manageTriggerEvent({
-      method: method,
+      method,
       eventType: 'Before Print',
       eventName: 'beforeprint'
     })
 
     manageTriggerEvent({
-      method: method,
+      method,
       eventType: 'Ready State Change',
       eventName: 'readystatechange'
     })
@@ -377,12 +377,10 @@
   function checkCalcMode(calcMode, calcModeDefault, modes, type) {
     if (calcModeDefault !== calcMode) {
       if (!(calcMode in modes)) {
-        warn(
-          calcMode + ' is not a valid option for ' + type + 'CalculationMethod.'
-        )
+        warn(`${calcMode} is not a valid option for ${type}CalculationMethod.`)
         calcMode = calcModeDefault
       }
-      log(type + ' calculation method set to "' + calcMode + '"')
+      log(`${type} calculation method set to "${calcMode}"`)
     }
 
     return calcMode
@@ -430,7 +428,7 @@
     // Guard against the following having been globally redefined in CSS.
     clearFix.style.display = 'block'
     clearFix.style.height = '0'
-    document.body.appendChild(clearFix)
+    document.body.append(clearFix)
   }
 
   function setupInPageLinks() {
@@ -472,12 +470,12 @@
       }
 
       log(`In page link (#${hash}) not found in iFrame, so sending to parent`)
-      sendMsg(0, 0, 'inPageLink', '#' + hash)
+      sendMsg(0, 0, 'inPageLink', `#${hash}`)
     }
 
     function checkLocationHash() {
-      const hash = window.location.hash
-      const href = window.location.href
+      const { hash } = window.location
+      const { href } = window.location
 
       if (hash !== '' && hash !== '#') {
         findTarget(href)
@@ -535,11 +533,11 @@
     if (mouseEvents !== true) return
 
     function sendMouse(e) {
-      sendMsg(0, 0, e.type, e.screenY + ':' + e.screenX)
+      sendMsg(0, 0, e.type, `${e.screenY}:${e.screenX}`)
     }
 
     function addMouseListener(evt, name) {
-      log('Add event listener: ' + name)
+      log(`Add event listener: ${name}`)
       addEventListener(window.document, evt, sendMouse)
     }
 
@@ -561,13 +559,13 @@
         return autoResize
       },
 
-      close: function () {
+      close() {
         sendMsg(0, 0, 'close')
       },
 
       getId: () => myID,
 
-      getPageInfo: function (callback) {
+      getPageInfo(callback) {
         if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
@@ -577,48 +575,47 @@
         }
       },
 
-      moveToAnchor: function (hash) {
+      moveToAnchor(hash) {
         inPageLinks.findTarget(hash)
       },
 
-      reset: function () {
+      reset() {
         resetIFrame('parentIFrame.reset')
       },
 
-      scrollTo: function (x, y) {
+      scrollTo(x, y) {
         sendMsg(y, x, 'scrollTo') // X&Y reversed at sendMsg uses height/width
       },
 
-      scrollToOffset: function (x, y) {
+      scrollToOffset(x, y) {
         sendMsg(y, x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       },
 
-      sendMessage: function (msg, targetOrigin) {
+      sendMessage(msg, targetOrigin) {
         sendMsg(0, 0, 'message', JSON.stringify(msg), targetOrigin)
       },
 
-      setHeightCalculationMethod: function (heightCalculationMethod) {
+      setHeightCalculationMethod(heightCalculationMethod) {
         heightCalcMode = heightCalculationMethod
         checkHeightMode()
       },
 
-      setWidthCalculationMethod: function (widthCalculationMethod) {
+      setWidthCalculationMethod(widthCalculationMethod) {
         widthCalcMode = widthCalculationMethod
         checkWidthMode()
       },
 
-      setTargetOrigin: function (targetOrigin) {
-        log('Set targetOrigin: ' + targetOrigin)
+      setTargetOrigin(targetOrigin) {
+        log(`Set targetOrigin: ${targetOrigin}`)
         targetOriginDefault = targetOrigin
       },
 
-      size: function (customHeight, customWidth) {
-        const valString =
-          '' + (customHeight || '') + (customWidth ? ',' + customWidth : '')
+      size(customHeight, customWidth) {
+        const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
 
         sendSize(
           'size',
-          'parentIFrame.size(' + valString + ')',
+          `parentIFrame.size(${valString})`,
           customHeight,
           customWidth
         )
@@ -628,7 +625,7 @@
 
   function resizeObserved(entries) {
     const el = entries[0].target
-    sendSize('resizeObserver', 'resizeObserver: ' + getElementName(el))
+    sendSize('resizeObserver', `resizeObserver: ${getElementName(el)}`)
   }
 
   const checkPositionType = (element) => {
@@ -642,7 +639,7 @@
   function setupResizeObservers(el) {
     if (!el) return
     resizeObserver.observe(el)
-    log('Attached resizeObserver: ' + getElementName(el))
+    log(`Attached resizeObserver: ${getElementName(el)}`)
   }
 
   function createResizeObservers(el) {
@@ -669,7 +666,7 @@
     function addImageLoadListners(mutation) {
       function addImageLoadListener(element) {
         if (element.complete === false && !element.dataset.loading) {
-          log('Attached Mutation Observer:' + element.src)
+          log(`Attached Mutation Observer:${element.src}`)
           element.dataset.loading = true
           element.addEventListener('load', imageLoaded, false)
           element.addEventListener('error', imageError, false)
@@ -692,7 +689,7 @@
     }
 
     function removeImageLoadListener(element) {
-      log('Remove listeners from ' + element.src)
+      log(`Remove listeners from ${element.src}`)
       element.dataset.loading = false
       element.removeEventListener('load', imageLoaded, false)
       element.removeEventListener('error', imageError, false)
@@ -701,7 +698,7 @@
 
     function imageEventTriggered(event, type, typeDesc) {
       removeImageLoadListener(event.target)
-      sendSize(type, typeDesc + ': ' + event.target.src)
+      sendSize(type, `${typeDesc}: ${event.target.src}`)
     }
 
     function imageLoaded(event) {
@@ -715,7 +712,7 @@
     function mutationObserved(mutations) {
       sendSize(
         'mutationObserver',
-        'mutationObserver: ' + mutations[0].target + ' ' + mutations[0].type
+        `mutationObserver: ${mutations[0].target} ${mutations[0].type}`
       )
 
       // Deal with WebKit / Blink asyncing image loading when tags are injected into the page
@@ -748,7 +745,7 @@
     let elements = []
 
     return {
-      disconnect: function () {
+      disconnect() {
         log('Disconnect body MutationObserver')
         observer.disconnect()
         elements.forEach(removeImageLoadListener)
@@ -775,7 +772,7 @@
   function chkEventThottle(timer) {
     if (timer > throttledTimer / 2) {
       throttledTimer = 2 * timer
-      log('Event throttle increased to ' + throttledTimer + 'ms')
+      log(`Event throttle increased to ${throttledTimer}ms`)
     }
   }
 
@@ -790,13 +787,13 @@
 
     elements.forEach((element) => {
       if (!tagged && !element?.checkVisibility(checkVisibilityOptions)) {
-        log('Skipping non-visable element: ' + getElementName(element))
+        log(`Skipping non-visable element: ${getElementName(element)}`)
         return
       }
 
       elVal =
         element.getBoundingClientRect()[side] +
-        getComputedStyle('margin' + Side, element)
+        getComputedStyle(`margin${Side}`, element)
 
       if (elVal > maxVal) {
         maxVal = elVal
@@ -831,7 +828,7 @@
       return getAllElements(document)()
     }
 
-    let elements = document.querySelectorAll('[' + tag + ']')
+    let elements = document.querySelectorAll(`[${tag}]`)
 
     if (elements.length === 0) elements = noTaggedElementsFound()
 
@@ -952,7 +949,7 @@
   function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
     function recordTrigger() {
       if (!(triggerEvent in { reset: 1, resetPage: 1, init: 1 })) {
-        log('Trigger event: ' + triggerEventDesc)
+        log(`Trigger event: ${triggerEventDesc}`)
       }
     }
 
@@ -962,7 +959,7 @@
     const size = triggerEvent === 'init' ? sizeIFrame : throttle(sizeIFrame)
 
     if (isDoubleFiredEvent()) {
-      log('Trigger event cancelled: ' + triggerEvent)
+      log(`Trigger event cancelled: ${triggerEvent}`)
       return
     }
 
@@ -978,7 +975,7 @@
 
     clearTimeout(triggerLockedTimer)
 
-    triggerLockedTimer = setTimeout(function () {
+    triggerLockedTimer = setTimeout(() => {
       triggerLocked = false
       log('Trigger event lock off')
       log('--')
@@ -996,7 +993,7 @@
     const hcm = heightCalcMode
     heightCalcMode = heightCalcModeDefault
 
-    log('Reset trigger event: ' + triggerEventDesc)
+    log(`Reset trigger event: ${triggerEventDesc}`)
     lockTrigger()
     triggerReset('reset')
 
@@ -1008,15 +1005,15 @@
       if (undefined === targetOrigin) {
         targetOrigin = targetOriginDefault
       } else {
-        log('Message targetOrigin: ' + targetOrigin)
+        log(`Message targetOrigin: ${targetOrigin}`)
       }
     }
 
     function sendToParent() {
       const size = `${height + offsetHeight}:${width + offsetWidth}`
-      const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : ':' + msg}`
+      const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      log('Sending message to host page (' + message + ')')
+      log(`Sending message to host page (${message})`)
       target.postMessage(msgID + message, targetOrigin)
     }
 
@@ -1034,12 +1031,12 @@
 
         init()
         firstRun = false
-        setTimeout(function () {
+        setTimeout(() => {
           initLock = false
         }, eventCancelTimer)
       },
 
-      reset: function () {
+      reset() {
         if (initLock) {
           log('Page reset ignored by init')
         } else {
@@ -1048,29 +1045,29 @@
         }
       },
 
-      resize: function () {
+      resize() {
         sendSize('resizeParent', 'Parent window requested size check')
       },
 
-      moveToAnchor: function () {
+      moveToAnchor() {
         inPageLinks.findTarget(getData())
       },
-      inPageLink: function () {
+      inPageLink() {
         this.moveToAnchor()
       }, // Backward compatibility
 
-      pageInfo: function () {
+      pageInfo() {
         const msgBody = getData()
 
-        log('PageInfoFromParent called from parent: ' + msgBody)
+        log(`PageInfoFromParent called from parent: ${msgBody}`)
         onPageInfo(JSON.parse(msgBody))
         log(' --')
       },
 
-      message: function () {
+      message() {
         const msgBody = getData()
 
-        log('onMessage called from parent: ' + msgBody)
+        log(`onMessage called from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
         onMessage(JSON.parse(msgBody))
         log(' --')
@@ -1078,7 +1075,7 @@
     }
 
     function isMessageForUs() {
-      return msgID === ('' + event.data).slice(0, msgIdLen) // ''+ Protects against non-string messages
+      return msgID === `${event.data}`.slice(0, msgIdLen) // ''+ Protects against non-string messages
     }
 
     function getMessageType() {
@@ -1110,7 +1107,7 @@
       if (messageType in processRequestFromParent) {
         processRequestFromParent[messageType]()
       } else if (!isMiddleTier() && !isInitMsg()) {
-        warn('Unexpected message (' + event.data + ')')
+        warn(`Unexpected message (${event.data})`)
       }
     }
 
@@ -1121,9 +1118,7 @@
         processRequestFromParent.init()
       } else {
         log(
-          'Ignored message of type "' +
-            getMessageType() +
-            '". Received before initialization.'
+          `Ignored message of type "${getMessageType()}". Received before initialization.`
         )
       }
     }

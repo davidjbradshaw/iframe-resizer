@@ -52,12 +52,12 @@
     tolerance: 0,
     widthCalculationMethod: 'scroll',
     onClose: () => true,
-    onClosed: function () {},
+    onClosed() {},
     onInit: false,
     onMessage: null,
-    onMouseEnter: function () {},
-    onMouseLeave: function () {},
-    onReady: function (messageData) {
+    onMouseEnter() {},
+    onMouseLeave() {},
+    onReady(messageData) {
       if (typeof settings[messageData.id].onInit === 'function') {
         warn(
           'onInit() function is deprecated and has been replaced with onReady()'
@@ -65,7 +65,7 @@
         settings[messageData.id].onInit(messageData)
       }
     },
-    onResized: function () {},
+    onResized() {},
     onScroll: () => true
   })
 
@@ -81,18 +81,18 @@
   const removeEventListener = (el, evt, func) =>
     el.removeEventListener(evt, func, false)
 
-  const formatLogHeader = (iframeId) => msgId + '[' + getMyID(iframeId) + ']'
+  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
   const isLogEnabled = (iframeId) =>
     settings[iframeId] ? settings[iframeId].log : logEnabled
 
   function getMyID(iframeId) {
-    let retStr = 'Host page: ' + iframeId
+    let retStr = `Host page: ${iframeId}`
 
     if (window.top !== window.self) {
       retStr = window?.parentIFrame?.getId
-        ? window.parentIFrame.getId() + ': ' + iframeId
-        : 'Nested host page: ' + iframeId
+        ? `${window.parentIFrame.getId()}: ${iframeId}`
+        : `Nested host page: ${iframeId}`
     }
 
     return retStr
@@ -175,25 +175,25 @@
     }
 
     function ensureInRange(Dimension) {
-      const max = Number(settings[iframeId]['max' + Dimension])
-      const min = Number(settings[iframeId]['min' + Dimension])
+      const max = Number(settings[iframeId][`max${Dimension}`])
+      const min = Number(settings[iframeId][`min${Dimension}`])
       const dimension = Dimension.toLowerCase()
 
       let size = Number(messageData[dimension])
 
-      log(iframeId, 'Checking ' + dimension + ' is in range ' + min + '-' + max)
+      log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
 
       if (size < min) {
         size = min
-        log(iframeId, 'Set ' + dimension + ' to min value')
+        log(iframeId, `Set ${dimension} to min value`)
       }
 
       if (size > max) {
         size = max
-        log(iframeId, 'Set ' + dimension + ' to max value')
+        log(iframeId, `Set ${dimension} to max value`)
       }
 
-      messageData[dimension] = '' + size
+      messageData[dimension] = `${size}`
     }
 
     function isMessageFromIFrame() {
@@ -226,10 +226,10 @@
         return checkOrigin.constructor === Array ? checkList() : checkSingle()
       }
 
-      let origin = event.origin
+      let { origin } = event
       let checkOrigin = settings[iframeId]?.checkOrigin
 
-      if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {
+      if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
         throw new Error(
           `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`
         )
@@ -240,7 +240,7 @@
 
     function isMessageForUs() {
       return (
-        msgId === ('' + msg).slice(0, msgIdLen) &&
+        msgId === `${msg}`.slice(0, msgIdLen) &&
         msg.slice(msgIdLen).split(':')[0] in settings
       ) // ''+Protects against non-string msg
     }
@@ -297,7 +297,7 @@
 
     function sendPageInfoToIframe(iframeId) {
       function debouncedTrigger() {
-        trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframeId)
+        trigger('Send Page Info', `pageInfo:${getPageInfo()}`, iframeId)
       }
 
       debounceFrameEvents(debouncedTrigger, 32, iframeId)
@@ -313,8 +313,8 @@
           }
         }
 
-        ;['scroll', 'resize'].forEach(function (evt) {
-          log(id, type + evt + ' listener for sendPageInfo')
+        ;['scroll', 'resize'].forEach((evt) => {
+          log(id, `${type + evt} listener for sendPageInfo`)
           func(window, evt, sendPageInfo)
         })
       }
@@ -347,7 +347,7 @@
       let retBool = true
 
       if (messageData.iframe === null) {
-        warn(iframeId, 'IFrame (' + messageData.id + ') not found')
+        warn(iframeId, `IFrame (${messageData.id}) not found`)
         retBool = false
       }
 
@@ -375,7 +375,7 @@
 
       function scrollParent() {
         if (window.parentIFrame) {
-          window.parentIFrame['scrollTo' + (addOffset ? 'Offset' : '')](
+          window.parentIFrame[`scrollTo${addOffset ? 'Offset' : ''}`](
             newPosition.x,
             newPosition.y
           )
@@ -498,83 +498,68 @@
       if (settings[iframeId]?.firstRun) firstRun()
 
       switch (messageData.type) {
-        case 'close': {
+        case 'close':
           closeIFrame(messageData.iframe)
           break
-        }
 
-        case 'message': {
+        case 'message':
           forwardMsgFromIFrame(getMsgBody(6))
           break
-        }
 
-        case 'mouseenter': {
+        case 'mouseenter':
           onMouse('onMouseEnter')
           break
-        }
 
-        case 'mouseleave': {
+        case 'mouseleave':
           onMouse('onMouseLeave')
           break
-        }
 
-        case 'autoResize': {
+        case 'autoResize':
           settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
           break
-        }
 
-        case 'scrollTo': {
+        case 'scrollTo':
           scrollRequestFromChild(false)
           break
-        }
 
-        case 'scrollToOffset': {
+        case 'scrollToOffset':
           scrollRequestFromChild(true)
           break
-        }
 
-        case 'pageInfo': {
+        case 'pageInfo':
           sendPageInfoToIframe(iframeId)
           startPageInfoMonitor()
           break
-        }
 
-        case 'pageInfoStop': {
+        case 'pageInfoStop':
           stopPageInfoMonitor()
           break
-        }
 
-        case 'inPageLink': {
+        case 'inPageLink':
           findTarget(getMsgBody(9))
           break
-        }
 
-        case 'reset': {
+        case 'reset':
           resetIFrame(messageData)
           break
-        }
 
-        case 'init': {
+        case 'init':
           resizeIFrame()
           on('onReady', messageData.iframe)
           break
-        }
 
-        default: {
+        default:
           if (
             Number(messageData.width) === 0 &&
             Number(messageData.height) === 0
           ) {
             warn(
-              'Unsupported message received (' +
-                messageData.type +
-                '), this is likely due to the iframe containing a later ' +
-                'version of iframe-resizer than the parent page'
+              `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
+                `version of iframe-resizer than the parent page`
             )
           } else {
             resizeIFrame()
           }
-        }
       }
     }
 
@@ -613,7 +598,7 @@
     }
 
     if (!isMessageForUs()) {
-      info(iframeId, 'Ignored: ' + msg)
+      info(iframeId, `Ignored: ${msg}`)
       return
     }
 
@@ -626,7 +611,7 @@
     }
 
     if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
-      log(iframeId, 'Received: ' + msg)
+      log(iframeId, `Received: ${msg}`)
       settings[iframeId].loaded = true
 
       if (checkIFrameExists() && isMessageFromIFrame()) {
@@ -646,7 +631,7 @@
         retVal = func(val)
       } else {
         throw new TypeError(
-          funcName + ' on iFrame[' + iframeId + '] is not a function'
+          `${funcName} on iFrame[${iframeId}] is not a function`
         )
       }
     }
@@ -665,12 +650,12 @@
       log(iframeId, 'Close iframe cancelled by onClose event')
       return
     }
-    log(iframeId, 'Removing iFrame: ' + iframeId)
+    log(iframeId, `Removing iFrame: ${iframeId}`)
 
     try {
       // Catch race condition error with React
       if (iframe.parentNode) {
-        iframe.parentNode.removeChild(iframe)
+        iframe.remove()
       }
     } catch (error) {
       warn(error)
@@ -687,10 +672,7 @@
         x: window.scrollX,
         y: window.scrollY
       }
-      log(
-        iframeId,
-        'Get page position: ' + pagePosition.x + ',' + pagePosition.y
-      )
+      log(iframeId, `Get page position: ${pagePosition.x},${pagePosition.y}`)
     }
   }
 
@@ -701,10 +683,7 @@
   function setPagePosition(iframeId) {
     if (pagePosition !== null) {
       window.scrollTo(pagePosition.x, pagePosition.y)
-      log(
-        iframeId,
-        'Set page position: ' + pagePosition.x + ',' + pagePosition.y
-      )
+      log(iframeId, `Set page position: ${pagePosition.x},${pagePosition.y}`)
       unsetPagePosition()
     }
   }
@@ -787,7 +766,7 @@
     }
 
     function iFrameNotFound() {
-      warn(id, '[' + calleeMsg + '] IFrame(' + id + ') not found')
+      warn(id, `[${calleeMsg}] IFrame(${id}) not found`)
     }
 
     function chkAndSend() {
@@ -805,11 +784,11 @@
           errorShown = true
           warn(
             id,
-            'IFrame has not responded within ' +
-              settings[id].warningTimeout / 1000 +
-              ' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame.' +
-              ' This message can be ignored if everything is working, or you can set the' +
-              ' warningTimeout option to a higher value or zero to suppress this warning.'
+            `IFrame has not responded within ${
+              settings[id].warningTimeout / 1000
+            } seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame.` +
+              ` This message can be ignored if everything is working, or you can set the` +
+              ` warningTimeout option to a higher value or zero to suppress this warning.`
           )
         }
       }
@@ -864,24 +843,21 @@
 
         if (Infinity !== styleValue && styleValue !== 0) {
           iframe.style[style] = isNumber(styleValue)
-            ? styleValue + 'px'
+            ? `${styleValue}px`
             : styleValue
-          log(iframeId, 'Set ' + style + ' = ' + iframe.style[style])
+          log(iframeId, `Set ${style} = ${iframe.style[style]}`)
         }
       }
 
       function chkMinMax(dimension) {
-        if (!isNumber('min' + dimension) || !isNumber('max' + dimension)) return
+        if (!isNumber(`min${dimension}`) || !isNumber(`max${dimension}`)) return
 
         if (
-          settings[iframeId]['min' + dimension] >
-          settings[iframeId]['max' + dimension]
+          settings[iframeId][`min${dimension}`] >
+          settings[iframeId][`max${dimension}`]
         ) {
           throw new Error(
-            'Value for min' +
-              dimension +
-              ' can not be greater than max' +
-              dimension
+            `Value for min${dimension} can not be greater than max${dimension}`
           )
         }
       }
@@ -923,34 +899,30 @@
     function setScrolling() {
       log(
         iframeId,
-        'IFrame scrolling ' +
-          (settings[iframeId]?.scrolling ? 'enabled' : 'disabled') +
-          ` for ${iframeId}`
+        `IFrame scrolling ${
+          settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
+        } for ${iframeId}`
       )
 
       iframe.style.overflow =
         settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
 
       switch (settings[iframeId]?.scrolling) {
-        case 'omit': {
+        case 'omit':
           break
-        }
 
-        case true: {
+        case true:
           iframe.scrolling = 'yes'
           break
-        }
 
-        case false: {
+        case false:
           iframe.scrolling = 'no'
           break
-        }
 
-        default: {
+        default:
           iframe.scrolling = settings[iframeId]
             ? settings[iframeId].scrolling
             : 'no'
-        }
       }
     }
 
@@ -968,7 +940,7 @@
         settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
 
       if (!firstRun && resetRequertMethod) {
-        resetIFrame({ iframe: iframe, height: 0, width: 0, type: 'init' })
+        resetIFrame({ iframe, height: 0, width: 0, type: 'init' })
       }
     }
 
@@ -984,13 +956,13 @@
 
           resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
-          moveToAnchor: function (anchor) {
-            trigger('Move to anchor', 'moveToAnchor:' + anchor, iframeId)
+          moveToAnchor(anchor) {
+            trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
           },
 
-          sendMessage: function (message) {
+          sendMessage(message) {
             message = JSON.stringify(message)
-            trigger('Send Message', 'message:' + message, iframeId)
+            trigger('Send Message', `message:${message}`, iframeId)
           }
         }
       }
@@ -1008,13 +980,13 @@
       function createDestroyObserver(MutationObserver) {
         if (!iframe.parentNode) return
 
-        const destroyObserver = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
+        const destroyObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
             const removedNodes = Array.prototype.slice.call(
               mutation.removedNodes
             ) // Transform NodeList into an Array
 
-            removedNodes.forEach(function (removedNode) {
+            removedNodes.forEach((removedNode) => {
               if (removedNode === iframe) {
                 closeIFrame(iframe)
               }
@@ -1088,7 +1060,7 @@
 
   function debouce(fn, time) {
     if (timer === null) {
-      timer = setTimeout(function () {
+      timer = setTimeout(() => {
         timer = null
         fn()
       }, time)
@@ -1099,7 +1071,7 @@
 
   function debounceFrameEvents(fn, time, frameId) {
     if (!frameTimer[frameId]) {
-      frameTimer[frameId] = setTimeout(function () {
+      frameTimer[frameId] = setTimeout(() => {
         frameTimer[frameId] = null
         fn()
       }, time)
@@ -1131,7 +1103,7 @@
     function mutationObserved(mutations) {
       log(
         'window',
-        'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type
+        `Mutation observed: ${mutations[0].target} ${mutations[0].type}`
       )
       debouce(checkIFrames, 16)
     }
@@ -1194,7 +1166,7 @@
           throw new TypeError('Object is not a valid DOM element')
         } else if (element.tagName.toUpperCase() !== 'IFRAME') {
           throw new TypeError(
-            'Expected <IFRAME> tag, found <' + element.tagName + '>'
+            `Expected <IFRAME> tag, found <${element.tagName}>`
           )
         }
       }
@@ -1219,22 +1191,19 @@
 
       switch (typeof target) {
         case 'undefined':
-        case 'string': {
+        case 'string':
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
             setup.bind(undefined, options)
           )
           break
-        }
 
-        case 'object': {
+        case 'object':
           setup(options, target)
           break
-        }
 
-        default: {
-          throw new TypeError('Unexpected data type (' + typeof target + ')')
-        }
+        default:
+          throw new TypeError(`Unexpected data type (${typeof target})`)
       }
 
       return iFrames
