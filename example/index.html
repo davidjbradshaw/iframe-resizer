@@ -6,6 +6,11 @@
     <meta name="description" content="iFrame message passing test" />
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      /* iframe {
+        border-width: 0;
+      } */
+    </style>
   </head>
 
   <body>
@@ -20,15 +25,10 @@
     <p id="callback"></p>
     <div style="margin: 8px 0;font-size:13px;">
       For details on how this works, see
-      <a href="http://davidjbradshaw.github.io/iframe-resizer/"
-        >http://davidjbradshaw.github.io/iframe-resizer/</a
+      <a href="https://github.com/davidjbradshaw/iframe-resizer"
+        >https://github.com/davidjbradshaw/iframe-resizer</a
       >.
     </div>
-
-    <!-- MDN PolyFils for IE8 (This is not normally needed if you use the jQuery version) -->
-    <!--[if lte IE 8]>
-
-    <![endif]-->
 
     <script type="text/javascript" src="../js/iframeResizer.min.js"></script>
     <script type="text/javascript">
@@ -46,6 +46,7 @@
       iFrameResize({
         log: true, // Enable console logging
         inPageLinks: true, // Enable in page links
+        // offsetHeight: 1,
         onResized: function (messageData) {
           // Callback fn when resize is received
           callbackDisplay.innerHTML =

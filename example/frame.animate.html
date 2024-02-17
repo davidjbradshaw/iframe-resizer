@@ -11,15 +11,18 @@
         float: right;
         margin-left: 8px;
       }
-      html {
+      body {
+        margin: 0;
+        padding: 8px 10px;
         border: solid 1px red;
       }
       p {
-        padding: 5px 212px 5px 5px;
+        padding: 12px 218px 0 0;
         margin: 0 0 5px;
       }
       #abs {
         position: absolute;
+        padding: 2px 2px 0 12px;
         top: 0;
         right: 0;
         width: 200px;
@@ -28,6 +31,11 @@
         animation-duration: 5s;
         animation-iteration-count: infinite;
         animation-name: animate;
+        z-index: -1;
+      }
+
+      #abs a{
+        padding: 8px;
       }
 
       @keyframes animate {
@@ -43,30 +51,28 @@
     </style>
   </head>
 
-  <body>
+  <body data-iframe-height>
     <b>iFrame</b>
 
-    <a href="frame.content.html" class="back">Back to page 1</a>
-
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
+      This iframe contains a page element animated via CSS to change the height of the page. 
+      This is not a recommended use of this library, as it places a large load on the browser.
+      If you really need to do this, then it is recommended that you use <strong>taggedElement</strong>
+      as your <strong>heightCalculationMethod</strong> to minimise the overhead of working out 
+      the page height. See the source code of this page for an example of using this method.
     </p>
 
-    <div id="abs">
-      <p>
+    <div id="abs" data-iframe-height>
+        <a href="frame.content.html" class="back">Back to page 1</a>
+        <br><br>
         This is an absolute positioned element that will animate to a height of
         600px
-      </p>
     </div>
+
     <script>
       window.iFrameResizer = {
-        heightCalculationMethod: 'lowestElement'
+        heightCalculationMethod: 'taggedElement',
+        // offsetHeight: 1,
       }
     </script>
     <script
