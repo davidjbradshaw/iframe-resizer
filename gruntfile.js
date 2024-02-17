@@ -137,7 +137,7 @@ module.exports = function (grunt) {
       deployExample: {
         command() {
           let retStr = ''
-          const fs = require('fs')
+          const fs = require('node:fs')
 
           if (fs.existsSync('bin')) {
             retStr = 'bin/deploy.sh'
