@@ -81,18 +81,18 @@
   const removeEventListener = (el, evt, func) =>
     el.removeEventListener(evt, func, false)
 
-  const formatLogHeader = (iframeId) => msgId + '[' + getMyID(iframeId) + ']'
+  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
   const isLogEnabled = (iframeId) =>
     settings[iframeId] ? settings[iframeId].log : logEnabled
 
   function getMyID(iframeId) {
-    let retStr = 'Host page: ' + iframeId
+    let retStr = `Host page: ${iframeId}`
 
     if (window.top !== window.self) {
       retStr = window?.parentIFrame?.getId
-        ? window.parentIFrame.getId() + ': ' + iframeId
-        : 'Nested host page: ' + iframeId
+        ? `${window.parentIFrame.getId()}: ${iframeId}`
+        : `Nested host page: ${iframeId}`
     }
 
     return retStr
@@ -175,25 +175,25 @@
     }
 
     function ensureInRange(Dimension) {
-      const max = Number(settings[iframeId]['max' + Dimension])
-      const min = Number(settings[iframeId]['min' + Dimension])
+      const max = Number(settings[iframeId][`max${Dimension}`])
+      const min = Number(settings[iframeId][`min${Dimension}`])
       const dimension = Dimension.toLowerCase()
 
       let size = Number(messageData[dimension])
 
-      log(iframeId, 'Checking ' + dimension + ' is in range ' + min + '-' + max)
+      log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
 
       if (size < min) {
         size = min
-        log(iframeId, 'Set ' + dimension + ' to min value')
+        log(iframeId, `Set ${dimension} to min value`)
       }
 
       if (size > max) {
         size = max
-        log(iframeId, 'Set ' + dimension + ' to max value')
+        log(iframeId, `Set ${dimension} to max value`)
       }
 
-      messageData[dimension] = '' + size
+      messageData[dimension] = `${size}`
     }
 
     function isMessageFromIFrame() {
@@ -229,7 +229,7 @@
       let { origin } = event
       let checkOrigin = settings[iframeId]?.checkOrigin
 
-      if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {
+      if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
         throw new Error(
           `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`
         )
@@ -240,7 +240,7 @@
 
     function isMessageForUs() {
       return (
-        msgId === ('' + msg).slice(0, msgIdLen) &&
+        msgId === `${msg}`.slice(0, msgIdLen) &&
         msg.slice(msgIdLen).split(':')[0] in settings
       ) // ''+Protects against non-string msg
     }
@@ -297,7 +297,7 @@
 
     function sendPageInfoToIframe(iframeId) {
       function debouncedTrigger() {
-        trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframeId)
+        trigger('Send Page Info', `pageInfo:${getPageInfo()}`, iframeId)
       }
 
       debounceFrameEvents(debouncedTrigger, 32, iframeId)
@@ -314,7 +314,7 @@
         }
 
         ;['scroll', 'resize'].forEach((evt) => {
-          log(id, type + evt + ' listener for sendPageInfo')
+          log(id, `${type + evt} listener for sendPageInfo`)
           func(window, evt, sendPageInfo)
         })
       }
@@ -347,7 +347,7 @@
       let retBool = true
 
       if (messageData.iframe === null) {
-        warn(iframeId, 'IFrame (' + messageData.id + ') not found')
+        warn(iframeId, `IFrame (${messageData.id}) not found`)
         retBool = false
       }
 
@@ -375,7 +375,7 @@
 
       function scrollParent() {
         if (window.parentIFrame) {
-          window.parentIFrame['scrollTo' + (addOffset ? 'Offset' : '')](
+          window.parentIFrame[`scrollTo${addOffset ? 'Offset' : ''}`](
             newPosition.x,
             newPosition.y
           )
@@ -566,10 +566,8 @@
             Number(messageData.height) === 0
           ) {
             warn(
-              'Unsupported message received (' +
-                messageData.type +
-                '), this is likely due to the iframe containing a later ' +
-                'version of iframe-resizer than the parent page'
+              `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
+                `version of iframe-resizer than the parent page`
             )
           } else {
             resizeIFrame()
@@ -613,7 +611,7 @@
     }
 
     if (!isMessageForUs()) {
-      info(iframeId, 'Ignored: ' + msg)
+      info(iframeId, `Ignored: ${msg}`)
       return
     }
 
@@ -626,7 +624,7 @@
     }
 
     if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
-      log(iframeId, 'Received: ' + msg)
+      log(iframeId, `Received: ${msg}`)
       settings[iframeId].loaded = true
 
       if (checkIFrameExists() && isMessageFromIFrame()) {
@@ -646,7 +644,7 @@
         retVal = func(val)
       } else {
         throw new TypeError(
-          funcName + ' on iFrame[' + iframeId + '] is not a function'
+          `${funcName} on iFrame[${iframeId}] is not a function`
         )
       }
     }
@@ -665,7 +663,7 @@
       log(iframeId, 'Close iframe cancelled by onClose event')
       return
     }
-    log(iframeId, 'Removing iFrame: ' + iframeId)
+    log(iframeId, `Removing iFrame: ${iframeId}`)
 
     try {
       // Catch race condition error with React
@@ -687,10 +685,7 @@
         x: window.scrollX,
         y: window.scrollY
       }
-      log(
-        iframeId,
-        'Get page position: ' + pagePosition.x + ',' + pagePosition.y
-      )
+      log(iframeId, `Get page position: ${pagePosition.x},${pagePosition.y}`)
     }
   }
 
@@ -701,10 +696,7 @@
   function setPagePosition(iframeId) {
     if (pagePosition !== null) {
       window.scrollTo(pagePosition.x, pagePosition.y)
-      log(
-        iframeId,
-        'Set page position: ' + pagePosition.x + ',' + pagePosition.y
-      )
+      log(iframeId, `Set page position: ${pagePosition.x},${pagePosition.y}`)
       unsetPagePosition()
     }
   }
@@ -787,7 +779,7 @@
     }
 
     function iFrameNotFound() {
-      warn(id, '[' + calleeMsg + '] IFrame(' + id + ') not found')
+      warn(id, `[${calleeMsg}] IFrame(${id}) not found`)
     }
 
     function chkAndSend() {
@@ -805,11 +797,11 @@
           errorShown = true
           warn(
             id,
-            'IFrame has not responded within ' +
-              settings[id].warningTimeout / 1000 +
-              ' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame.' +
-              ' This message can be ignored if everything is working, or you can set the' +
-              ' warningTimeout option to a higher value or zero to suppress this warning.'
+            `IFrame has not responded within ${
+              settings[id].warningTimeout / 1000
+            } seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame.` +
+              ` This message can be ignored if everything is working, or you can set the` +
+              ` warningTimeout option to a higher value or zero to suppress this warning.`
           )
         }
       }
@@ -864,24 +856,21 @@
 
         if (Infinity !== styleValue && styleValue !== 0) {
           iframe.style[style] = isNumber(styleValue)
-            ? styleValue + 'px'
+            ? `${styleValue}px`
             : styleValue
-          log(iframeId, 'Set ' + style + ' = ' + iframe.style[style])
+          log(iframeId, `Set ${style} = ${iframe.style[style]}`)
         }
       }
 
       function chkMinMax(dimension) {
-        if (!isNumber('min' + dimension) || !isNumber('max' + dimension)) return
+        if (!isNumber(`min${dimension}`) || !isNumber(`max${dimension}`)) return
 
         if (
-          settings[iframeId]['min' + dimension] >
-          settings[iframeId]['max' + dimension]
+          settings[iframeId][`min${dimension}`] >
+          settings[iframeId][`max${dimension}`]
         ) {
           throw new Error(
-            'Value for min' +
-              dimension +
-              ' can not be greater than max' +
-              dimension
+            `Value for min${dimension} can not be greater than max${dimension}`
           )
         }
       }
@@ -923,9 +912,9 @@
     function setScrolling() {
       log(
         iframeId,
-        'IFrame scrolling ' +
-          (settings[iframeId]?.scrolling ? 'enabled' : 'disabled') +
-          ` for ${iframeId}`
+        `IFrame scrolling ${
+          settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
+        } for ${iframeId}`
       )
 
       iframe.style.overflow =
@@ -985,12 +974,12 @@
           resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
           moveToAnchor(anchor) {
-            trigger('Move to anchor', 'moveToAnchor:' + anchor, iframeId)
+            trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
           },
 
           sendMessage(message) {
             message = JSON.stringify(message)
-            trigger('Send Message', 'message:' + message, iframeId)
+            trigger('Send Message', `message:${message}`, iframeId)
           }
         }
       }
@@ -1131,7 +1120,7 @@
     function mutationObserved(mutations) {
       log(
         'window',
-        'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type
+        `Mutation observed: ${mutations[0].target} ${mutations[0].type}`
       )
       debouce(checkIFrames, 16)
     }
@@ -1194,7 +1183,7 @@
           throw new TypeError('Object is not a valid DOM element')
         } else if (element.tagName.toUpperCase() !== 'IFRAME') {
           throw new TypeError(
-            'Expected <IFRAME> tag, found <' + element.tagName + '>'
+            `Expected <IFRAME> tag, found <${element.tagName}>`
           )
         }
       }
@@ -1233,7 +1222,7 @@
         }
 
         default: {
-          throw new TypeError('Unexpected data type (' + typeof target + ')')
+          throw new TypeError(`Unexpected data type (${typeof target})`)
         }
       }
 

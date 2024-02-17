@@ -203,11 +203,7 @@ module.exports = function (grunt) {
     // set up a removal regular expression
     // eslint-disable-next-line security/detect-non-literal-regexp
     const removalRegEx = new RegExp(
-      '(// ' +
-        this.options()[0] +
-        ' //)(?:[^])*?(// ' +
-        this.options()[1] +
-        ' //)',
+      `(// ${this.options()[0]} //)(?:[^])*?(// ${this.options()[1]} //)`,
       'g'
     )
 
