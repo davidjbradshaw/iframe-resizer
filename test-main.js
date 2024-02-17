@@ -4,7 +4,7 @@ const TEST_REGEXP = /(spec|test)\.js$/i
 
 // Get a list of all the test files to include
 // eslint-disable-next-line no-underscore-dangle
-Object.keys(window.__karma__.files).forEach(function (file) {
+Object.keys(window.__karma__.files).forEach((file) => {
   if (TEST_REGEXP.test(file)) {
     // Normalize paths to RequireJS module names.
     // If you require sub-dependencies of test files to be loaded as-is (requiring file extension)

@@ -200,16 +200,16 @@
     const strBool = (str) => str === 'true'
     const data = initMsg.slice(msgIdLen).split(':')
 
-    myID = data[0]
+    myID = data[0] // eslint-disable-line prefer-destructuring
     bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]) // For V1 compatibility
     calculateWidth = undefined === data[2] ? calculateWidth : strBool(data[2])
     logging = undefined === data[3] ? logging : strBool(data[3])
     // data[4] no longer used (was intervalTimer)
     autoResize = undefined === data[6] ? autoResize : strBool(data[6])
-    bodyMarginStr = data[7]
+    bodyMarginStr = data[7] // eslint-disable-line prefer-destructuring
     heightCalcMode = undefined === data[8] ? heightCalcMode : data[8]
-    bodyBackground = data[9]
-    bodyPadding = data[10]
+    bodyBackground = data[9] // eslint-disable-line prefer-destructuring
+    bodyPadding = data[10] // eslint-disable-line prefer-destructuring
     tolerance = undefined === data[11] ? tolerance : Number(data[11])
     inPageLinks.enable = undefined === data[12] ? false : strBool(data[12])
     resizeFrom = undefined === data[13] ? resizeFrom : data[13]
@@ -289,7 +289,7 @@
 
   function manageTriggerEvent(options) {
     const listener = {
-      add: function (eventName) {
+      add(eventName) {
         function handleEvent() {
           sendSize(options.eventName, options.eventType)
         }
@@ -298,7 +298,7 @@
 
         addEventListener(window, eventName, handleEvent, { passive: true })
       },
-      remove: function (eventName) {
+      remove(eventName) {
         const handleEvent = eventHandlersByName[eventName]
         delete eventHandlersByName[eventName]
 
@@ -317,19 +317,19 @@
 
   function manageEventListeners(method) {
     manageTriggerEvent({
-      method: method,
+      method,
       eventType: 'After Print',
       eventName: 'afterprint'
     })
 
     manageTriggerEvent({
-      method: method,
+      method,
       eventType: 'Before Print',
       eventName: 'beforeprint'
     })
 
     manageTriggerEvent({
-      method: method,
+      method,
       eventType: 'Ready State Change',
       eventName: 'readystatechange'
     })
@@ -476,8 +476,8 @@
     }
 
     function checkLocationHash() {
-      const hash = window.location.hash
-      const href = window.location.href
+      const { hash } = window.location
+      const { href } = window.location
 
       if (hash !== '' && hash !== '#') {
         findTarget(href)
@@ -561,13 +561,13 @@
         return autoResize
       },
 
-      close: function () {
+      close() {
         sendMsg(0, 0, 'close')
       },
 
       getId: () => myID,
 
-      getPageInfo: function (callback) {
+      getPageInfo(callback) {
         if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
@@ -577,42 +577,42 @@
         }
       },
 
-      moveToAnchor: function (hash) {
+      moveToAnchor(hash) {
         inPageLinks.findTarget(hash)
       },
 
-      reset: function () {
+      reset() {
         resetIFrame('parentIFrame.reset')
       },
 
-      scrollTo: function (x, y) {
+      scrollTo(x, y) {
         sendMsg(y, x, 'scrollTo') // X&Y reversed at sendMsg uses height/width
       },
 
-      scrollToOffset: function (x, y) {
+      scrollToOffset(x, y) {
         sendMsg(y, x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       },
 
-      sendMessage: function (msg, targetOrigin) {
+      sendMessage(msg, targetOrigin) {
         sendMsg(0, 0, 'message', JSON.stringify(msg), targetOrigin)
       },
 
-      setHeightCalculationMethod: function (heightCalculationMethod) {
+      setHeightCalculationMethod(heightCalculationMethod) {
         heightCalcMode = heightCalculationMethod
         checkHeightMode()
       },
 
-      setWidthCalculationMethod: function (widthCalculationMethod) {
+      setWidthCalculationMethod(widthCalculationMethod) {
         widthCalcMode = widthCalculationMethod
         checkWidthMode()
       },
 
-      setTargetOrigin: function (targetOrigin) {
+      setTargetOrigin(targetOrigin) {
         log('Set targetOrigin: ' + targetOrigin)
         targetOriginDefault = targetOrigin
       },
 
-      size: function (customHeight, customWidth) {
+      size(customHeight, customWidth) {
         const valString =
           '' + (customHeight || '') + (customWidth ? ',' + customWidth : '')
 
@@ -748,7 +748,7 @@
     let elements = []
 
     return {
-      disconnect: function () {
+      disconnect() {
         log('Disconnect body MutationObserver')
         observer.disconnect()
         elements.forEach(removeImageLoadListener)
@@ -978,7 +978,7 @@
 
     clearTimeout(triggerLockedTimer)
 
-    triggerLockedTimer = setTimeout(function () {
+    triggerLockedTimer = setTimeout(() => {
       triggerLocked = false
       log('Trigger event lock off')
       log('--')
@@ -1034,12 +1034,12 @@
 
         init()
         firstRun = false
-        setTimeout(function () {
+        setTimeout(() => {
           initLock = false
         }, eventCancelTimer)
       },
 
-      reset: function () {
+      reset() {
         if (initLock) {
           log('Page reset ignored by init')
         } else {
@@ -1048,18 +1048,18 @@
         }
       },
 
-      resize: function () {
+      resize() {
         sendSize('resizeParent', 'Parent window requested size check')
       },
 
-      moveToAnchor: function () {
+      moveToAnchor() {
         inPageLinks.findTarget(getData())
       },
-      inPageLink: function () {
+      inPageLink() {
         this.moveToAnchor()
       }, // Backward compatibility
 
-      pageInfo: function () {
+      pageInfo() {
         const msgBody = getData()
 
         log('PageInfoFromParent called from parent: ' + msgBody)
@@ -1067,7 +1067,7 @@
         log(' --')
       },
 
-      message: function () {
+      message() {
         const msgBody = getData()
 
         log('onMessage called from parent: ' + msgBody)
@@ -1158,9 +1158,7 @@
 
   removeEventListener(window, 'message', receiver)
 
-  define([], function () {
-    return mockMsgListener
-  })
+  define([], () => mockMsgListener)
 
   // TEST CODE END //
 })()

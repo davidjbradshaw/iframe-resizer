@@ -135,7 +135,7 @@ module.exports = function (grunt) {
         command: 'npm publish'
       },
       deployExample: {
-        command: function () {
+        command() {
           let retStr = ''
           const fs = require('fs')
 
@@ -211,7 +211,7 @@ module.exports = function (grunt) {
       'g'
     )
 
-    this.data.forEach(function (fileObj) {
+    this.data.forEach((fileObj) => {
       const sourceFile = grunt.file.read(fileObj.src)
       const removedFile = sourceFile.replace(removalRegEx, '')
 
