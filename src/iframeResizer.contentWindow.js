@@ -428,7 +428,7 @@
     // Guard against the following having been globally redefined in CSS.
     clearFix.style.display = 'block'
     clearFix.style.height = '0'
-    document.body.appendChild(clearFix)
+    document.body.append(clearFix)
   }
 
   function setupInPageLinks() {

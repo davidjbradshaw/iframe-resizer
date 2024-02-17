@@ -668,7 +668,7 @@
     try {
       // Catch race condition error with React
       if (iframe.parentNode) {
-        iframe.parentNode.removeChild(iframe)
+        iframe.remove()
       }
     } catch (error) {
       warn(error)
