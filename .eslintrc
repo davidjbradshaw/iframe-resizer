@@ -1,6 +1,5 @@
 {
   "extends": ["auto"],
-  "plugins": ["ie11"],
   "env": {
     "amd": true,
     "browser": true,
