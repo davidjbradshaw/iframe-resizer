@@ -28,13 +28,8 @@
     "unicorn/no-array-callback-reference": 0,
     "unicorn/no-this-assignment": 0,
     "unicorn/prefer-module": 0,
-    "unicorn/prefer-number-properties": 0,
     "unicorn/prefer-query-selector": 0,
-    "unicorn/prefer-spread": 0,
-    "unicorn/prefer-string-slice": 0,
-    "unicorn/prefer-top-level-await": 0,
     "unicorn/prevent-abbreviations": 0,
-    "unicorn/switch-case-braces": 0,
     "xss/no-mixed-html": 0
   }
 }

@@ -498,69 +498,57 @@
       if (settings[iframeId]?.firstRun) firstRun()
 
       switch (messageData.type) {
-        case 'close': {
+        case 'close':
           closeIFrame(messageData.iframe)
           break
-        }
 
-        case 'message': {
+        case 'message':
           forwardMsgFromIFrame(getMsgBody(6))
           break
-        }
 
-        case 'mouseenter': {
+        case 'mouseenter':
           onMouse('onMouseEnter')
           break
-        }
 
-        case 'mouseleave': {
+        case 'mouseleave':
           onMouse('onMouseLeave')
           break
-        }
 
-        case 'autoResize': {
+        case 'autoResize':
           settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
           break
-        }
 
-        case 'scrollTo': {
+        case 'scrollTo':
           scrollRequestFromChild(false)
           break
-        }
 
-        case 'scrollToOffset': {
+        case 'scrollToOffset':
           scrollRequestFromChild(true)
           break
-        }
 
-        case 'pageInfo': {
+        case 'pageInfo':
           sendPageInfoToIframe(iframeId)
           startPageInfoMonitor()
           break
-        }
 
-        case 'pageInfoStop': {
+        case 'pageInfoStop':
           stopPageInfoMonitor()
           break
-        }
 
-        case 'inPageLink': {
+        case 'inPageLink':
           findTarget(getMsgBody(9))
           break
-        }
 
-        case 'reset': {
+        case 'reset':
           resetIFrame(messageData)
           break
-        }
 
-        case 'init': {
+        case 'init':
           resizeIFrame()
           on('onReady', messageData.iframe)
           break
-        }
 
-        default: {
+        default:
           if (
             Number(messageData.width) === 0 &&
             Number(messageData.height) === 0
@@ -572,7 +560,6 @@
           } else {
             resizeIFrame()
           }
-        }
       }
     }
 
@@ -921,25 +908,21 @@
         settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
 
       switch (settings[iframeId]?.scrolling) {
-        case 'omit': {
+        case 'omit':
           break
-        }
 
-        case true: {
+        case true:
           iframe.scrolling = 'yes'
           break
-        }
 
-        case false: {
+        case false:
           iframe.scrolling = 'no'
           break
-        }
 
-        default: {
+        default:
           iframe.scrolling = settings[iframeId]
             ? settings[iframeId].scrolling
             : 'no'
-        }
       }
     }
 
@@ -1208,22 +1191,19 @@
 
       switch (typeof target) {
         case 'undefined':
-        case 'string': {
+        case 'string':
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
             setup.bind(undefined, options)
           )
           break
-        }
 
-        case 'object': {
+        case 'object':
           setup(options, target)
           break
-        }
 
-        default: {
+        default:
           throw new TypeError(`Unexpected data type (${typeof target})`)
-        }
       }
 
       return iFrames
