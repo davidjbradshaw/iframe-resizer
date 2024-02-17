@@ -87,10 +87,9 @@
     let retStr = 'Host page: ' + iframeId
 
     if (window.top !== window.self) {
-      retStr =
-        window.parentIFrame && window.parentIFrame.getId
-          ? window.parentIFrame.getId() + ': ' + iframeId
-          : 'Nested host page: ' + iframeId
+      retStr = window?.parentIFrame?.getId
+        ? window.parentIFrame.getId() + ': ' + iframeId
+        : 'Nested host page: ' + iframeId
     }
 
     return retStr
@@ -140,7 +139,7 @@
     function processMsg() {
       const data = msg.slice(msgIdLen).split(':')
       const height = data[1] ? parseInt(data[1], 10) : 0
-      const iframe = settings[data[0]] && settings[data[0]].iframe
+      const iframe = settings[data[0]]?.iframe
       const compStyle = getComputedStyle(iframe)
 
       return {
@@ -224,7 +223,7 @@
         }
 
         function checkSingle() {
-          const remoteHost = settings[iframeId] && settings[iframeId].remoteHost
+          const remoteHost = settings[iframeId]?.remoteHost
           log(iframeId, `Checking connection is from: ${remoteHost}`)
           return origin === remoteHost
         }
@@ -233,7 +232,7 @@
       }
 
       let origin = event.origin
-      let checkOrigin = settings[iframeId] && settings[iframeId].checkOrigin
+      let checkOrigin = settings[iframeId]?.checkOrigin
 
       if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {
         throw new Error(
@@ -342,7 +341,7 @@
     }
 
     function stopPageInfoMonitor() {
-      if (settings[iframeId] && settings[iframeId].stopPageInfo) {
+      if (settings[iframeId]?.stopPageInfo) {
         settings[iframeId].stopPageInfo()
         delete settings[iframeId].stopPageInfo
       }
@@ -501,7 +500,7 @@
     }
 
     function actionMsg() {
-      if (settings[iframeId] && settings[iframeId].firstRun) firstRun()
+      if (settings[iframeId]?.firstRun) firstRun()
 
       switch (messageData.type) {
         case 'close': {
@@ -805,7 +804,7 @@
 
     function warnOnNoResponse() {
       function warning() {
-        if (settings[id] && !settings[id].loaded && !errorShown) {
+        if (!settings[id]?.loaded && !errorShown) {
           errorShown = true
           warn(
             id,
@@ -816,11 +815,7 @@
         }
       }
 
-      if (
-        !!noResponseWarning &&
-        settings[id] &&
-        !!settings[id].warningTimeout
-      ) {
+      if (!!noResponseWarning && !!settings[id]?.warningTimeout) {
         settings[id].msgTimeout = setTimeout(
           warning,
           settings[id].warningTimeout
@@ -904,7 +899,7 @@
     }
 
     function newId() {
-      let id = (options && options.id) || defaults.id + count++
+      let id = options?.id || defaults.id + count++
 
       if (document.getElementById(id) !== null) {
         id += count++
@@ -931,18 +926,14 @@
       log(
         iframeId,
         'IFrame scrolling ' +
-          (settings[iframeId] && settings[iframeId].scrolling
-            ? 'enabled'
-            : 'disabled') +
+          (settings[iframeId]?.scrolling ? 'enabled' : 'disabled') +
           ` for ${iframeId}`
       )
 
       iframe.style.overflow =
-        (settings[iframeId] && settings[iframeId].scrolling) === false
-          ? 'hidden'
-          : 'auto'
+        settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
 
-      switch (settings[iframeId] && settings[iframeId].scrolling) {
+      switch (settings[iframeId]?.scrolling) {
         case 'omit': {
           break
         }
@@ -974,10 +965,9 @@
     }
 
     function checkReset() {
-      const firstRun = settings[iframeId] && settings[iframeId].firstRun
+      const firstRun = settings[iframeId]?.firstRun
       const resetRequertMethod =
-        settings[iframeId] &&
-        settings[iframeId].heightCalculationMethod in resetRequiredMethods
+        settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
 
       if (!firstRun && resetRequertMethod) {
         resetIFrame({ iframe: iframe, height: 0, width: 0, type: 'init' })
@@ -1065,7 +1055,7 @@
       settings[iframeId] = {
         iframe,
         firstRun: true,
-        remoteHost: iframe.src && iframe.src.split('/').slice(0, 3).join('/'),
+        remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
         ...defaults,
         ...checkOptions(options)
       }
@@ -1125,16 +1115,10 @@
   function fixHiddenIFrames() {
     function checkIFrames() {
       function checkIFrame(iframeId) {
-        function chkDimension(dimension) {
-          return (
-            (settings[iframeId] &&
-              settings[iframeId].iframe.style[dimension]) === '0px'
-          )
-        }
+        const chkDimension = (dimension) =>
+          settings[iframeId]?.iframe.style[dimension] === '0px'
 
-        function isVisible(el) {
-          return el.offsetParent !== null
-        }
+        const isVisible = (el) => el.offsetParent !== null
 
         if (
           settings[iframeId] &&
@@ -1191,11 +1175,7 @@
 
   function sendTriggerMsg(eventName, event) {
     function isIFrameResizeEnabled(iframeId) {
-      return (
-        settings[iframeId] &&
-        settings[iframeId].autoResize &&
-        !settings[iframeId].firstRun
-      )
+      return settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
     }
 
     Object.keys(settings).forEach(function (iframeId) {

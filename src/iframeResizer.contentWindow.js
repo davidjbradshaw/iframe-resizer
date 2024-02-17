@@ -79,17 +79,14 @@
   let onReady = () => {}
   let onPageInfo = () => {}
 
-  function addEventListener(el, evt, func, options) {
+  const addEventListener = (el, evt, func, options) =>
     el.addEventListener(evt, func, options || {})
-  }
 
-  function removeEventListener(el, evt, func) {
+  const removeEventListener = (el, evt, func) =>
     el.removeEventListener(evt, func, false)
-  }
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1)
-  }
+  const capitalizeFirstLetter = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1)
 
   // Based on underscore.js
   function throttle(func) {
@@ -142,9 +139,7 @@
     }
   }
 
-  function isDef(value) {
-    return '' + value !== '' && value !== undefined
-  }
+  const isDef = (value) => '' + value !== '' && value !== undefined
 
   function getElementName(el) {
     switch (true) {
@@ -666,16 +661,10 @@
     sendSize('resizeObserver', 'resizeObserver: ' + getElementName(el))
   }
 
-  function logResizeObserver(el) {
-    log('Attached resizeObserver: ' + getElementName(el))
-  }
-
   function getAllNonStaticElements() {
     const checkPositionType = (element) => {
       const style = window.getComputedStyle(element)
-      return (
-        style.position && style.position !== '' && style.position !== 'static'
-      )
+      return style?.position !== '' && style?.position !== 'static'
     }
 
     return Array.prototype.filter.call(
@@ -686,8 +675,8 @@
 
   function setupResizeObservers(el) {
     if (!el) return
-    logResizeObserver(el)
     resizeObserver.observe(el)
+    log('Attached resizeObserver: ' + getElementName(el))
   }
 
   function createResizeObservers(el) {
@@ -834,11 +823,7 @@
     let timer = performance.now()
 
     elements.forEach((element) => {
-      if (
-        !tagged &&
-        element.checkVisibility &&
-        !element.checkVisibility(checkVisibilityOptions)
-      ) {
+      if (!tagged && !element?.checkVisibility(checkVisibilityOptions)) {
         log('Skipping non-visable element: ' + getElementName(element))
         return
       }
