@@ -75,13 +75,16 @@
   let pagePosition = null
   let timer = null
 
-  function addEventListener(el, evt, func) {
+  const addEventListener = (el, evt, func) =>
     el.addEventListener(evt, func, false)
-  }
 
-  function removeEventListener(el, evt, func) {
+  const removeEventListener = (el, evt, func) =>
     el.removeEventListener(evt, func, false)
-  }
+
+  const formatLogHeader = (iframeId) => msgId + '[' + getMyID(iframeId) + ']'
+
+  const isLogEnabled = (iframeId) =>
+    settings[iframeId] ? settings[iframeId].log : logEnabled
 
   function getMyID(iframeId) {
     let retStr = 'Host page: ' + iframeId
@@ -93,14 +96,6 @@
     }
 
     return retStr
-  }
-
-  function formatLogHeader(iframeId) {
-    return msgId + '[' + getMyID(iframeId) + ']'
-  }
-
-  function isLogEnabled(iframeId) {
-    return settings[iframeId] ? settings[iframeId].log : logEnabled
   }
 
   function output(type, iframeId, enabled, ...msg) {
@@ -143,7 +138,7 @@
       const compStyle = getComputedStyle(iframe)
 
       return {
-        iframe: iframe,
+        iframe,
         id: data[0],
         height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
         width: data[2],
@@ -304,6 +299,7 @@
       function debouncedTrigger() {
         trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframeId)
       }
+
       debounceFrameEvents(debouncedTrigger, 32, iframeId)
     }
 
@@ -354,6 +350,7 @@
         warn(iframeId, 'IFrame (' + messageData.id + ') not found')
         retBool = false
       }
+
       return retBool
     }
 
@@ -376,13 +373,6 @@
         log(iframeId, '--')
       }
 
-      function calcOffset() {
-        return {
-          x: Number(messageData.width) + offset.x,
-          y: Number(messageData.height) + offset.y
-        }
-      }
-
       function scrollParent() {
         if (window.parentIFrame) {
           window.parentIFrame['scrollTo' + (addOffset ? 'Offset' : '')](
@@ -397,10 +387,16 @@
         }
       }
 
-      let offset = addOffset
+      const calcOffset = (messageData, offset) => ({
+        x: Number(messageData.width) + offset.x,
+        y: Number(messageData.height) + offset.y
+      })
+
+      const offset = addOffset
         ? getElementPosition(messageData.iframe)
         : { x: 0, y: 0 }
-      let newPosition = calcOffset()
+
+      let newPosition = calcOffset(messageData, offset)
 
       log(
         iframeId,
@@ -417,9 +413,9 @@
     function scrollTo() {
       if (on('onScroll', pagePosition) === false) {
         unsetPagePosition()
-      } else {
-        setPagePosition(iframeId)
+        return
       }
+      setPagePosition(iframeId)
     }
 
     function findTarget(location) {
@@ -443,12 +439,13 @@
       function jumpToParent() {
         if (window.parentIFrame) {
           window.parentIFrame.moveToAnchor(hash)
-        } else {
-          log(
-            iframeId,
-            `In page link #${hash} not found and window.parentIFrame not found`
-          )
+          return
         }
+
+        log(
+          iframeId,
+          `In page link #${hash} not found and window.parentIFrame not found`
+        )
       }
 
       const hash = location.split('#')[1] || ''
@@ -495,9 +492,7 @@
       })
     }
 
-    function on(funcName, val) {
-      return chkEvent(iframeId, funcName, val)
-    }
+    const on = (funcName, val) => chkEvent(iframeId, funcName, val)
 
     function actionMsg() {
       if (settings[iframeId]?.firstRun) firstRun()
@@ -589,11 +584,7 @@
       if (!settings[iframeId]) {
         retBool = false
         warn(
-          messageData.type +
-            ' No settings for ' +
-            iframeId +
-            '. Message was: ' +
-            msg
+          `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`
         )
       }
 
@@ -618,25 +609,29 @@
 
     if (msg === '[iFrameResizerChild]Ready') {
       iFrameReadyMsgReceived()
-    } else if (isMessageForUs()) {
-      messageData = processMsg()
-      iframeId = messageData.id
+      return
+    }
 
-      if (!iframeId) {
-        warn('iframeResizer received messageData without id')
-        return
-      }
-
-      if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
-        log(iframeId, 'Received: ' + msg)
-        settings[iframeId].loaded = true
-
-        if (checkIFrameExists() && isMessageFromIFrame()) {
-          actionMsg()
-        }
-      }
-    } else {
+    if (!isMessageForUs()) {
       info(iframeId, 'Ignored: ' + msg)
+      return
+    }
+
+    messageData = processMsg()
+    iframeId = messageData.id
+
+    if (!iframeId) {
+      warn('iframeResizer received messageData without id')
+      return
+    }
+
+    if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
+      log(iframeId, 'Received: ' + msg)
+      settings[iframeId].loaded = true
+
+      if (checkIFrameExists() && isMessageFromIFrame()) {
+        actionMsg()
+      }
     }
   }
 
@@ -699,6 +694,10 @@
     }
   }
 
+  function unsetPagePosition() {
+    pagePosition = null
+  }
+
   function setPagePosition(iframeId) {
     if (pagePosition !== null) {
       window.scrollTo(pagePosition.x, pagePosition.y)
@@ -708,10 +707,6 @@
       )
       unsetPagePosition()
     }
-  }
-
-  function unsetPagePosition() {
-    pagePosition = null
   }
 
   function resetIFrame(messageData) {
@@ -768,7 +763,8 @@
     if (
       doNotSync !== messageData.type &&
       requestAnimationFrame &&
-      // including check for jasmine because had trouble getting spy to work in unit test using requestAnimationFrame
+      // including check for jasmine because we had trouble getting spy
+      // to work in unit test using requestAnimationFrame
       !window.jasmine
     ) {
       log(messageData.id, 'Requesting animation frame')
@@ -795,22 +791,25 @@
     }
 
     function chkAndSend() {
-      if (settings[id].postMessageTarget) {
-        postMessageToIFrame()
-      } else {
+      if (!settings[id]?.postMessageTarget) {
         iFrameNotFound()
+        return
       }
+      postMessageToIFrame()
     }
 
     function warnOnNoResponse() {
       function warning() {
         if (!settings[id]?.loaded && !errorShown) {
+          if (settings[id] === undefined) return // iframe has been closed while we where waiting
           errorShown = true
           warn(
             id,
             'IFrame has not responded within ' +
               settings[id].warningTimeout / 1000 +
-              ' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame. This message can be ignored if everything is working, or you can set the warningTimeout option to a higher value or zero to suppress this warning.'
+              ' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame.' +
+              ' This message can be ignored if everything is working, or you can set the' +
+              ' warningTimeout option to a higher value or zero to suppress this warning.'
           )
         }
       }
@@ -856,9 +855,7 @@
     ].join(':')
   }
 
-  function isNumber(value) {
-    return !Number.isNaN(value)
-  }
+  const isNumber = (value) => !Number.isNaN(value)
 
   function setupIFrame(iframe, options) {
     function setLimits() {
@@ -904,6 +901,7 @@
       if (document.getElementById(id) !== null) {
         id += count++
       }
+
       return id
     }
 
@@ -1008,9 +1006,7 @@
       }
 
       function createDestroyObserver(MutationObserver) {
-        if (!iframe.parentNode) {
-          return
-        }
+        if (!iframe.parentNode) return
 
         const destroyObserver = new MutationObserver(function (mutations) {
           mutations.forEach(function (mutation) {
@@ -1025,6 +1021,7 @@
             })
           })
         })
+
         destroyObserver.observe(iframe.parentNode, {
           childList: true
         })
@@ -1115,10 +1112,9 @@
   function fixHiddenIFrames() {
     function checkIFrames() {
       function checkIFrame(iframeId) {
+        const isVisible = (el) => el.offsetParent !== null
         const chkDimension = (dimension) =>
           settings[iframeId]?.iframe.style[dimension] === '0px'
-
-        const isVisible = (el) => el.offsetParent !== null
 
         if (
           settings[iframeId] &&
@@ -1129,9 +1125,7 @@
         }
       }
 
-      Object.keys(settings).forEach(function (key) {
-        checkIFrame(key)
-      })
+      Object.keys(settings).forEach(checkIFrame)
     }
 
     function mutationObserved(mutations) {
@@ -1145,14 +1139,14 @@
     function createMutationObserver() {
       const target = document.querySelector('body')
       const config = {
-          attributes: true,
-          attributeOldValue: false,
-          characterData: true,
-          characterDataOldValue: false,
-          childList: true,
-          subtree: true
-        },
-        observer = new MutationObserver(mutationObserved)
+        attributes: true,
+        attributeOldValue: false,
+        characterData: true,
+        characterDataOldValue: false,
+        childList: true,
+        subtree: true
+      }
+      const observer = new MutationObserver(mutationObserved)
 
       observer.observe(target, config)
     }
@@ -1174,15 +1168,16 @@
   }
 
   function sendTriggerMsg(eventName, event) {
-    function isIFrameResizeEnabled(iframeId) {
-      return settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
-    }
-
-    Object.keys(settings).forEach(function (iframeId) {
+    function triggerEnabledIframe(iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
         trigger(eventName, event, iframeId)
       }
-    })
+    }
+
+    const isIFrameResizeEnabled = (iframeId) =>
+      settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
+
+    Object.keys(settings).forEach(triggerEnabledIframe)
   }
 
   function setupEventListeners() {

@@ -225,20 +225,13 @@
 
       log('Reading data from page: ' + JSON.stringify(data))
 
-      onMessage = 'onMessage' in data ? data.onMessage : onMessage
-      onReady = 'onReady' in data ? data.onReady : onReady
-      offsetHeight = 'heightOffset' in data ? data.heightOffset : offsetHeight
-      offsetWidth = 'widthOffset' in data ? data.widthOffset : offsetWidth
-      targetOriginDefault =
-        'targetOrigin' in data ? data.targetOrigin : targetOriginDefault
-      heightCalcMode =
-        'heightCalculationMethod' in data
-          ? data.heightCalculationMethod
-          : heightCalcMode
-      widthCalcMode =
-        'widthCalculationMethod' in data
-          ? data.widthCalculationMethod
-          : widthCalcMode
+      onMessage = data?.onMessage || onMessage
+      onReady = data?.onReady || onReady
+      offsetHeight = data?.offsetHeight || offsetHeight
+      offsetWidth = data?.offsetWidth || offsetWidth
+      targetOriginDefault = data?.targetOrigin || targetOriginDefault
+      heightCalcMode = data?.heightCalculationMethod || heightCalcMode
+      widthCalcMode = data?.widthCalculationMethod || widthCalcMode
     }
 
     function setupCustomCalcMethods(calcMode, calcFunc) {
@@ -268,6 +261,7 @@
       warn('Negative CSS value ignored for ' + attr)
       value = ''
     }
+
     return value
   }
 
@@ -413,33 +407,20 @@
   }
 
   function startEventListeners() {
-    if (autoResize === true) {
-      manageEventListeners('add')
-      setupMutationObserver()
-      setupResizeObserver()
+    if (autoResize !== true) {
+      log('Auto Resize disabled')
       return
     }
-    log('Auto Resize disabled')
-  }
 
-  function disconnectResizeObservers() {
-    if (resizeObserver !== null) {
-      /* istanbul ignore next */ // Not testable in PhantonJS
-      resizeObserver.disconnect()
-    }
-  }
-
-  function disconnectMutationObserver() {
-    if (bodyObserver !== null) {
-      /* istanbul ignore next */ // Not testable in PhantonJS
-      bodyObserver.disconnect()
-    }
+    manageEventListeners('add')
+    setupMutationObserver()
+    setupResizeObserver()
   }
 
   function stopEventListeners() {
     manageEventListeners('remove')
-    disconnectResizeObservers()
-    disconnectMutationObserver()
+    resizeObserver?.disconnect()
+    bodyObserver?.disconnect()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -453,12 +434,10 @@
   }
 
   function setupInPageLinks() {
-    function getPagePosition() {
-      return {
-        x: document.documentElement.scrollLeft,
-        y: document.documentElement.scrollTop
-      }
-    }
+    const getPagePosition = () => ({
+      x: document.documentElement.scrollLeft,
+      y: document.documentElement.scrollTop
+    })
 
     function getElementPosition(el) {
       const elPosition = el.getBoundingClientRect()
@@ -475,13 +454,9 @@
         const jumpPosition = getElementPosition(target)
 
         log(
-          'Moving to in page link (#' +
-            hash +
-            ') at x: ' +
-            jumpPosition.x +
-            ' y: ' +
-            jumpPosition.y
+          `Moving to in page link (#${hash}) at x: ${jumpPosition.x}y: ${jumpPosition.y}`
         )
+
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       }
 
@@ -491,16 +466,13 @@
         document.getElementById(hashData) ||
         document.getElementsByName(hashData)[0]
 
-      if (undefined === target) {
-        log(
-          'In page link (#' +
-            hash +
-            ') not found in iFrame, so sending to parent'
-        )
-        sendMsg(0, 0, 'inPageLink', '#' + hash)
-      } else {
+      if (target !== undefined) {
         jumpToTarget(target)
+        return
       }
+
+      log(`In page link (#${hash}) not found in iFrame, so sending to parent`)
+      sendMsg(0, 0, 'inPageLink', '#' + hash)
     }
 
     function checkLocationHash() {
@@ -576,8 +548,6 @@
   }
 
   function setupPublicMethods() {
-    log('Enable public methods')
-
     win.parentIFrame = {
       autoResize: (resize) => {
         if (resize === true && autoResize === false) {
@@ -661,17 +631,13 @@
     sendSize('resizeObserver', 'resizeObserver: ' + getElementName(el))
   }
 
-  function getAllNonStaticElements() {
-    const checkPositionType = (element) => {
-      const style = window.getComputedStyle(element)
-      return style?.position !== '' && style?.position !== 'static'
-    }
-
-    return Array.prototype.filter.call(
-      getAllElements(document)(),
-      checkPositionType
-    )
+  const checkPositionType = (element) => {
+    const style = window.getComputedStyle(element)
+    return style?.position !== '' && style?.position !== 'static'
   }
+
+  const getAllNonStaticElements = () =>
+    Array.prototype.filter.call(getAllElements(document)(), checkPositionType)
 
   function setupResizeObservers(el) {
     if (!el) return
@@ -849,27 +815,25 @@
     return maxVal
   }
 
-  function getAllMeasurements(dimension) {
-    return [
-      dimension.bodyOffset(),
-      dimension.bodyOffsetMargin(),
-      dimension.bodyScroll(),
-      dimension.bodyBoundingClientRect(),
-      dimension.documentElementOffset(),
-      dimension.documentElementScroll(),
-      dimension.documentElementBoundingClientRect()
-    ]
-  }
+  const getAllMeasurements = (dimension) => [
+    dimension.bodyOffset(),
+    dimension.bodyOffsetMargin(),
+    dimension.bodyScroll(),
+    dimension.bodyBoundingClientRect(),
+    dimension.documentElementOffset(),
+    dimension.documentElementScroll(),
+    dimension.documentElementBoundingClientRect()
+  ]
 
   function getTaggedElements(side, tag) {
     function noTaggedElementsFound() {
-      warn('No tagged elements (' + tag + ') found on page')
+      warn(`No tagged elements (${tag}) found on page, checking all elements`)
       return getAllElements(document)()
     }
 
-    const elements = document.querySelectorAll('[' + tag + ']')
+    let elements = document.querySelectorAll('[' + tag + ']')
 
-    if (elements.length === 0) noTaggedElementsFound()
+    if (elements.length === 0) elements = noTaggedElementsFound()
 
     return getMaxElement(side, elements, true)
   }
@@ -879,15 +843,13 @@
       '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
     )
 
-  const getAllElementsByType = (type) => () =>
-    document.querySelectorAll(`${type} :not([hidden])`)
+  const getAllElementsByType = (type) => () => document.querySelectorAll(type)
 
-  function getLowestElement(func) {
-    return Math.max(
+  const getLowestElement = (func) =>
+    Math.max(
       getHeight.bodyOffset() || getHeight.documentElementOffset(),
       getMaxElement('bottom', func(), false)
     )
-  }
 
   const getHeight = {
     bodyOffset: () => document.body.offsetHeight,
@@ -905,6 +867,7 @@
       document.documentElement.getBoundingClientRect().bottom,
     max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
     min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
+    grow: () => getHeight.max(),
     lowestElement: () => getLowestElement(getAllElements(document)),
     lowestDivElement: () => getLowestElement(getAllElementsByType('div')),
     taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
@@ -943,10 +906,7 @@
     }
 
     function isSizeChangeDetected() {
-      function checkTolarance(a, b) {
-        const retVal = Math.abs(a - b) <= tolerance
-        return !retVal
-      }
+      const checkTolarance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
       currentHeight =
         undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
@@ -959,16 +919,12 @@
       )
     }
 
-    function isForceResizableEvent() {
-      return !(triggerEvent in { init: 1, interval: 1, size: 1 })
-    }
+    const isForceResizableEvent = () =>
+      !(triggerEvent in { init: 1, interval: 1, size: 1 })
 
-    function isForceResizableCalcMode() {
-      return (
-        heightCalcMode in resetRequiredMethods ||
-        (calculateWidth && widthCalcMode in resetRequiredMethods)
-      )
-    }
+    const isForceResizableCalcMode = () =>
+      heightCalcMode in resetRequiredMethods ||
+      (calculateWidth && widthCalcMode in resetRequiredMethods)
 
     function logIgnored() {
       log('No change in size detected')
@@ -1000,9 +956,8 @@
       }
     }
 
-    function isDoubleFiredEvent() {
-      return triggerLocked && triggerEvent in doubleEventList
-    }
+    const isDoubleFiredEvent = () =>
+      triggerLocked && triggerEvent in doubleEventList
 
     const size = triggerEvent === 'init' ? sizeIFrame : throttle(sizeIFrame)
 
@@ -1020,7 +975,9 @@
       triggerLocked = true
       log('Trigger event lock on')
     }
+
     clearTimeout(triggerLockedTimer)
+
     triggerLockedTimer = setTimeout(function () {
       triggerLocked = false
       log('Trigger event lock off')
