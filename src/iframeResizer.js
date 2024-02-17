@@ -52,12 +52,12 @@
     tolerance: 0,
     widthCalculationMethod: 'scroll',
     onClose: () => true,
-    onClosed: function () {},
+    onClosed() {},
     onInit: false,
     onMessage: null,
-    onMouseEnter: function () {},
-    onMouseLeave: function () {},
-    onReady: function (messageData) {
+    onMouseEnter() {},
+    onMouseLeave() {},
+    onReady(messageData) {
       if (typeof settings[messageData.id].onInit === 'function') {
         warn(
           'onInit() function is deprecated and has been replaced with onReady()'
@@ -65,7 +65,7 @@
         settings[messageData.id].onInit(messageData)
       }
     },
-    onResized: function () {},
+    onResized() {},
     onScroll: () => true
   })
 
@@ -226,7 +226,7 @@
         return checkOrigin.constructor === Array ? checkList() : checkSingle()
       }
 
-      let origin = event.origin
+      let { origin } = event
       let checkOrigin = settings[iframeId]?.checkOrigin
 
       if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {
@@ -313,7 +313,7 @@
           }
         }
 
-        ;['scroll', 'resize'].forEach(function (evt) {
+        ;['scroll', 'resize'].forEach((evt) => {
           log(id, type + evt + ' listener for sendPageInfo')
           func(window, evt, sendPageInfo)
         })
@@ -968,7 +968,7 @@
         settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
 
       if (!firstRun && resetRequertMethod) {
-        resetIFrame({ iframe: iframe, height: 0, width: 0, type: 'init' })
+        resetIFrame({ iframe, height: 0, width: 0, type: 'init' })
       }
     }
 
@@ -984,11 +984,11 @@
 
           resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
-          moveToAnchor: function (anchor) {
+          moveToAnchor(anchor) {
             trigger('Move to anchor', 'moveToAnchor:' + anchor, iframeId)
           },
 
-          sendMessage: function (message) {
+          sendMessage(message) {
             message = JSON.stringify(message)
             trigger('Send Message', 'message:' + message, iframeId)
           }
@@ -1008,13 +1008,13 @@
       function createDestroyObserver(MutationObserver) {
         if (!iframe.parentNode) return
 
-        const destroyObserver = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
+        const destroyObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
             const removedNodes = Array.prototype.slice.call(
               mutation.removedNodes
             ) // Transform NodeList into an Array
 
-            removedNodes.forEach(function (removedNode) {
+            removedNodes.forEach((removedNode) => {
               if (removedNode === iframe) {
                 closeIFrame(iframe)
               }
@@ -1088,7 +1088,7 @@
 
   function debouce(fn, time) {
     if (timer === null) {
-      timer = setTimeout(function () {
+      timer = setTimeout(() => {
         timer = null
         fn()
       }, time)
@@ -1099,7 +1099,7 @@
 
   function debounceFrameEvents(fn, time, frameId) {
     if (!frameTimer[frameId]) {
-      frameTimer[frameId] = setTimeout(function () {
+      frameTimer[frameId] = setTimeout(() => {
         frameTimer[frameId] = null
         fn()
       }, time)
