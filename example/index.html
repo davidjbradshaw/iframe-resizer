@@ -44,9 +44,10 @@
       const callbackDisplay = document.querySelector('p#callback')
 
       iFrameResize({
-        log: true, // Enable console logging
+        log: false, // Enable console logging
         inPageLinks: true, // Enable in page links
-        // offsetHeight: 1,
+        offsetHeight: 10,
+        // heightCalculationMethod: 'auto', // Height calculation method
         onResized: function (messageData) {
           // Callback fn when resize is received
           callbackDisplay.innerHTML =

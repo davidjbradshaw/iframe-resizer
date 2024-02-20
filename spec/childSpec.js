@@ -343,7 +343,7 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
         '[iFrameSizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.'
       )
       expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] height calculation method set to "documentElementBoundingClientRect"'
+        '[iFrameSizer][parentIFrameTests] height calculation method set to "auto"'
       )
       win.parentIFrame.size()
     })
