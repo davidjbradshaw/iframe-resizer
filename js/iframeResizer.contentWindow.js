@@ -31,7 +31,7 @@
   const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
-  const heightCalcModeDefault = 'documentElementBoundingClientRect'
+  const heightCalcModeDefault = 'auto'
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
   const resetRequiredMethods = {
@@ -822,9 +822,12 @@
     dimension.documentElementBoundingClientRect()
   ]
 
-  function getTaggedElements(side, tag) {
+  function getTaggedElements(side, tag, quite = false) {
     function noTaggedElementsFound() {
-      warn(`No tagged elements (${tag}) found on page, checking all elements`)
+      if (!quite) {
+        warn(`No tagged elements (${tag}) found on page, checking all elements`)
+      }
+
       return getAllElements(document)()
     }
 
@@ -848,7 +851,103 @@
       getMaxElement('bottom', func(), false)
     )
 
+  const getAdjustedScroll = (getDimension) =>
+    getDimension.documentElementScroll() -
+    (getDimension === getHeight ? offsetHeight : offsetWidth)
+
+  let prevScrollSize = 0
+  let prevBoundingSize = 0
+
+  function getAutoOverflow(getDimension) {
+    const boundingSize = getDimension.documentElementBoundingClientRect()
+    const scrollSize = getAdjustedScroll(getDimension)
+
+    if (scrollSize < Math.ceil(boundingSize)) return boundingSize
+
+    return Math.max(getDimension.taggedElement(), boundingSize)
+  }
+
+  function getAutoSize(getDimension) {
+    function returnBoundingClientRect() {
+      prevBoundingSize = boundingSize
+      prevScrollSize = scrollSize
+      return boundingSize
+    }
+
+    const boundingSize = getDimension.documentElementBoundingClientRect()
+    const ceilBoundingSize = Math.ceil(boundingSize)
+    const scrollSize = getAdjustedScroll(getDimension)
+
+    if (
+      triggerLocked &&
+      boundingSize === prevBoundingSize &&
+      scrollSize === prevScrollSize
+    ) {
+      log(`Size unchanged: html ${boundingSize} page: ${scrollSize}`)
+      return boundingSize
+    }
+
+    if (prevBoundingSize === 0 && prevScrollSize === 0) {
+      log(`Initial page size values: html: ${boundingSize} page: ${scrollSize}`)
+      prevBoundingSize = boundingSize
+      prevScrollSize = scrollSize
+      return Math.max(getDimension.taggedElement(true), boundingSize)
+    }
+
+    if (boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize) {
+      log(`New HTML bounding size: html: ${boundingSize} page: ${scrollSize}`)
+      return returnBoundingClientRect()
+    }
+
+    if (boundingSize < prevBoundingSize) {
+      log('HTML bounding size decreased', boundingSize)
+      return returnBoundingClientRect()
+    }
+
+    if (scrollSize === ceilBoundingSize) {
+      log('HTML bounding size equals page size', ceilBoundingSize)
+      return returnBoundingClientRect()
+    }
+
+    if (scrollSize < prevScrollSize) {
+      log('Page size decreased', scrollSize, prevScrollSize)
+      return returnBoundingClientRect()
+    }
+
+    if (boundingSize > scrollSize) {
+      log(
+        `Page size < html bounding size: html: ${boundingSize} page: ${scrollSize}`
+      )
+      return returnBoundingClientRect()
+    }
+
+    // one last check before we give up
+    if (getDimension.taggedElement(true) < ceilBoundingSize) {
+      log('No overflowen elements found on page')
+      return returnBoundingClientRect()
+    }
+
+    warn(`
+\u001B[31;1mDetected content overflowing html element\u001B[m
+    
+This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe. This can have a minor performace impact on more complex pages. 
+
+To fix this issue you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want the iframe-resizer to use when calculating the size of the iframe.
+    
+(Page size: ${scrollSize} > document size: ${boundingSize})`)
+
+    if (getDimension === getHeight) {
+      heightCalcMode = 'autoOverflow'
+    } else {
+      widthCalcMode = 'autoOverflow'
+    }
+
+    return getAutoOverflow(getDimension)
+  }
+
   const getHeight = {
+    auto: () => getAutoSize(getHeight),
+    autoOverflow: () => getAutoOverflow(getHeight),
     bodyOffset: () => document.body.offsetHeight,
     bodyOffsetMargin: () =>
       document.body.offsetHeight +
@@ -862,15 +961,18 @@
     documentElementScroll: () => document.documentElement.scrollHeight,
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().bottom,
-    max: () => Math.max.apply(null, getAllMeasurements(getHeight)),
-    min: () => Math.min.apply(null, getAllMeasurements(getHeight)),
+    max: () => Math.max(...getAllMeasurements(getHeight)),
+    min: () => Math.min(...getAllMeasurements(getHeight)),
     grow: () => getHeight.max(),
     lowestElement: () => getLowestElement(getAllElements(document)),
     lowestDivElement: () => getLowestElement(getAllElementsByType('div')),
-    taggedElement: () => getTaggedElements('bottom', 'data-iframe-height')
+    taggedElement: (quite) =>
+      getTaggedElements('bottom', 'data-iframe-height', quite)
   }
 
   const getWidth = {
+    auto: () => getAutoSize(getWidth),
+    autoOverflow: () => getAutoOverflow(getWidth),
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
     bodyOffsetMargin: () => document.body.offsetWidth, // return value for min/max function
@@ -882,8 +984,8 @@
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().right,
-    max: () => Math.max.apply(null, getAllMeasurements(getWidth)),
-    min: () => Math.min.apply(null, getAllMeasurements(getWidth)),
+    max: () => Math.max(...getAllMeasurements(getWidth)),
+    min: () => Math.min(...getAllMeasurements(getWidth)),
     rightMostElement: () =>
       getMaxElement('right', getAllElements(document)(), false),
     taggedElement: () => getTaggedElements('right', 'data-iframe-width')

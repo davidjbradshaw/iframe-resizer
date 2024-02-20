@@ -33,7 +33,7 @@
     checkOrigin: true,
     inPageLinks: false,
     enablePublicMethods: true,
-    heightCalculationMethod: 'documentElementBoundingClientRect',
+    heightCalculationMethod: 'auto',
     id: 'iFrameResizer',
     interval: 32,
     log: false,
