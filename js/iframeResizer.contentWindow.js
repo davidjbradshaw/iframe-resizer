@@ -871,7 +871,8 @@
     function returnBoundingClientRect() {
       prevBoundingSize = boundingSize
       prevScrollSize = scrollSize
-      return boundingSize
+      log(`New size set to: ${boundingSize} / ${scrollSize}`)
+      return ceilBoundingSize
     }
 
     const boundingSize = getDimension.documentElementBoundingClientRect()
@@ -884,14 +885,14 @@
       scrollSize === prevScrollSize
     ) {
       log(`Size unchanged: html ${boundingSize} page: ${scrollSize}`)
-      return boundingSize
+      return ceilBoundingSize
     }
 
     if (prevBoundingSize === 0 && prevScrollSize === 0) {
       log(`Initial page size values: html: ${boundingSize} page: ${scrollSize}`)
       prevBoundingSize = boundingSize
       prevScrollSize = scrollSize
-      return Math.max(getDimension.taggedElement(true), boundingSize)
+      return Math.max(getDimension.taggedElement(true), ceilBoundingSize)
     }
 
     if (boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize) {
@@ -921,20 +922,30 @@
       return returnBoundingClientRect()
     }
 
+    const taggedElement =
+      getDimension.taggedElement(true) -
+      (getDimension === getHeight ? offsetHeight : offsetWidth)
+
     // one last check before we give up
-    if (getDimension.taggedElement(true) < ceilBoundingSize) {
+    if (taggedElement <= ceilBoundingSize) {
       log('No overflowen elements found on page')
       return returnBoundingClientRect()
     }
 
-    warn(`
+    const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
 This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe. This can have a minor performace impact on more complex pages. 
 
 To fix this issue you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want the iframe-resizer to use when calculating the size of the iframe.
     
-(Page size: ${scrollSize} > document size: ${boundingSize})`)
+(Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
+
+    warn(
+      window.chrome
+        ? overflowDetectedMessage
+        : overflowDetectedMessage.replaceAll(/\u001B\[[\w;]*m/gi, '') // eslint-disable-line no-control-regex
+    )
 
     if (getDimension === getHeight) {
       heightCalcMode = 'autoOverflow'
@@ -998,8 +1009,8 @@ To fix this issue you can either ensure the content of the page does not overflo
     customWidth
   ) {
     function resizeIFrame() {
-      height = Math.ceil(currentHeight)
-      width = Math.ceil(currentWidth)
+      height = currentHeight
+      width = currentWidth
 
       sendMsg(height, width, triggerEvent)
     }
@@ -1007,10 +1018,12 @@ To fix this issue you can either ensure the content of the page does not overflo
     function isSizeChangeDetected() {
       const checkTolarance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
-      currentHeight =
+      currentHeight = Math.ceil(
         undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
-      currentWidth =
+      )
+      currentWidth = Math.ceil(
         undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
+      )
 
       return (
         checkTolarance(height, currentHeight) ||
@@ -1018,22 +1031,15 @@ To fix this issue you can either ensure the content of the page does not overflo
       )
     }
 
-    const isForceResizableEvent = () =>
-      !(triggerEvent in { init: 1, interval: 1, size: 1 })
+    const isForceResizableEvent = () => !(triggerEvent in { init: 1, size: 1 })
 
     const isForceResizableCalcMode = () =>
       heightCalcMode in resetRequiredMethods ||
       (calculateWidth && widthCalcMode in resetRequiredMethods)
 
-    function logIgnored() {
-      log('No change in size detected')
-    }
-
     function checkDownSizing() {
       if (isForceResizableEvent() && isForceResizableCalcMode()) {
         resetIFrame(triggerEventDesc)
-      } else if (!(triggerEvent in { interval: 1 })) {
-        logIgnored()
       }
     }
 
