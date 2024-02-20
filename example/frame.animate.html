@@ -31,12 +31,9 @@
         animation-duration: 5s;
         animation-iteration-count: infinite;
         animation-name: animate;
-        z-index: -1;
+        z-index: -10;
       }
 
-      #abs a{
-        padding: 8px;
-      }
 
       @keyframes animate {
         from {
@@ -52,6 +49,7 @@
   </head>
 
   <body data-iframe-height>
+    <a href="frame.content.html" class="back">Back to page 1</a>
     <b>iFrame</b>
 
     <p>
@@ -63,7 +61,6 @@
     </p>
 
     <div id="abs" data-iframe-height>
-        <a href="frame.content.html" class="back">Back to page 1</a>
         <br><br>
         This is an absolute positioned element that will animate to a height of
         600px
