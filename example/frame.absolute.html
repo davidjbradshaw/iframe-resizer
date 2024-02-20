@@ -17,15 +17,15 @@
         border: solid 1px red;
       }
       p {
-        padding: 5px 212px 5px 5px;
+        padding: 5px 112px 5px 5px;
         margin: 0 0 5px;
       }
       #abs {
         position: absolute;
         top: 0;
         right: 0;
-        width: 200px;
-        height: 600px;
+        width: 100px;
+        height: 900px;
         background-color: wheat;
       }
       a.top {
@@ -75,16 +75,17 @@
       off selecting <b>max</b> if you need to change away from the default
       <b>bodyOffset</b> option.
     </p>
-    <p data-iframe-height>
+    <p >
       <b>Height Calculation Method</b>
       <select id="heightCalculationMethod">
+        <option>auto</option>
         <option>bodyOffset</option>
         <option>bodyOffsetMargin</option>
         <option>bodyScroll</option>
         <option>bodyBoundingClientRect</option>
         <option>documentElementOffset</option>
         <option>documentElementScroll</option>
-        <option selected>documentElementBoundingClientRect</option>
+        <option>documentElementBoundingClientRect</option>
         <option>max</option>
         <option>min</option>
         <option>grow</option>
@@ -108,7 +109,7 @@
     </p>
     <a name="test">Test in page anchor</a>
 
-    <div id="abs">
+    <div id="abs" data-iframe-height>
       Absolute positioned element
       <a
         href="#"
