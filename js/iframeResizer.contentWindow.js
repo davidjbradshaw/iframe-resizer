@@ -418,7 +418,7 @@
       advise(
         `\u001B[31;1mDeprecated Attributes\u001B[m
           
-The \u001B[1mdata-iframe-hieght\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`
+The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`
       )
     }
   }
