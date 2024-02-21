@@ -12,7 +12,9 @@
 ;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
-  const base = 10
+  const BASE = 10
+  const SIZE_ATTR = 'data-iframe-size'
+
   const checkVisibilityOptions = {
     contentVisibilityAuto: true,
     opacityProperty: true,
@@ -204,9 +206,11 @@
     setBodyStyle('background', bodyBackground)
     setBodyStyle('padding', bodyPadding)
     injectClearFixIntoBodyElement()
+    stopInfiniteResizingOfIFrame()
     checkHeightMode()
     checkWidthMode()
-    stopInfiniteResizingOfIFrame()
+    checkDeprecatedAttrs()
+    checkHasDataSizeAttributes()
     setupPublicMethods()
     setupMouseEvents()
     startEventListeners()
@@ -301,11 +305,12 @@
   }
 
   function stopInfiniteResizingOfIFrame() {
-    const setAutoHeight = (el) => el.style.setProperty('height', 'auto', 'important')
+    const setAutoHeight = (el) =>
+      el.style.setProperty('height', 'auto', 'important')
 
     setAutoHeight(document.documentElement)
     setAutoHeight(document.body)
-    
+
     log('HTML & body height set to "auto !important"')
   }
 
@@ -396,6 +401,45 @@
     //   })
   }
 
+  function checkDeprecatedAttrs() {
+    let found = false
+
+    const checkAttrs = (attr) =>
+      document.querySelectorAll(`[${attr}]`).forEach((el) => {
+        found = true
+        el.removeAttribute(attr)
+        el.setAttribute(SIZE_ATTR, null)
+      })
+
+    checkAttrs('data-iframe-height')
+    checkAttrs('data-iframe-width')
+
+    if (found) {
+      advise(
+        `\u001B[31;1mDeprecated Attributes\u001B[m
+          
+The \u001B[1mdata-iframe-hieght\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`
+      )
+    }
+  }
+
+  function checkHasDataSizeAttributes() {
+    if (document.querySelectorAll(`[${SIZE_ATTR}]`).length > 0) {
+      if (heightCalcMode === 'auto') {
+        heightCalcMode = 'autoOverflow'
+        log(
+          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for height'
+        )
+      }
+      if (widthCalcMode === 'auto') {
+        widthCalcMode = 'autoOverflow'
+        log(
+          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for width'
+        )
+      }
+    }
+  }
+
   function checkCalcMode(calcMode, calcModeDefault, modes, type) {
     if (calcModeDefault !== calcMode) {
       if (!(calcMode in modes)) {
@@ -471,8 +515,8 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
       const pagePosition = getPagePosition()
 
       return {
-        x: parseInt(elPosition.left, 10) + parseInt(pagePosition.x, 10),
-        y: parseInt(elPosition.top, 10) + parseInt(pagePosition.y, 10)
+        x: parseInt(elPosition.left, BASE) + parseInt(pagePosition.x, BASE),
+        y: parseInt(elPosition.top, BASE) + parseInt(pagePosition.y, BASE)
       }
     }
 
@@ -797,7 +841,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     retVal = document.defaultView.getComputedStyle(el, null)
     retVal = retVal === null ? 0 : retVal[prop]
 
-    return parseInt(retVal, base)
+    return parseInt(retVal, BASE)
   }
 
   function chkEventThottle(timer) {
@@ -994,8 +1038,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     min: () => Math.min(...getAllMeasurements(getHeight)),
     grow: () => getHeight.max(),
     lowestElement: () => getLowestElement(getAllElements(document)),
-    taggedElement: (quite) =>
-      getTaggedElements('bottom', 'data-iframe-height', quite)
+    taggedElement: (quite) => getTaggedElements('bottom', SIZE_ATTR, quite)
   }
 
   const getWidth = {
@@ -1014,7 +1057,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       getMaxElement('right', getAllElements(document)(), false),
     scroll: () =>
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-    taggedElement: () => getTaggedElements('right', 'data-iframe-width')
+    taggedElement: () => getTaggedElements('right', SIZE_ATTR)
   }
 
   function sizeIFrame(
