@@ -42,7 +42,7 @@
     grow: 1,
     lowestElement: 1
   }
-  const doubleEventList = { resize: 1, click: 1 }
+  // const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
   const heightCalcModeDefault = 'auto'
@@ -87,6 +87,7 @@
   let width = 1
   let widthCalcMode = widthCalcModeDefault
   let win = window
+  
   let onMessage = () => {
     warn('onMessage function not defined')
   }
@@ -290,7 +291,7 @@
 
   function setBodyStyle(attr, value) {
     if (undefined !== value && value !== '' && value !== 'null') {
-      document.body.style[attr] = value
+      document.body.style.setProperty(attr, value)
       log(`Body ${attr} set to "${value}"`)
     }
   }
@@ -547,8 +548,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     }
 
     function checkLocationHash() {
-      const { hash } = window.location
-      const { href } = window.location
+      const { hash, href } = window.location
 
       if (hash !== '' && hash !== '#') {
         findTarget(href)
@@ -568,10 +568,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
         }
       }
 
-      Array.prototype.forEach.call(
-        document.querySelectorAll('a[href^="#"]'),
-        setupLink
-      )
+      document.querySelectorAll('a[href^="#"]').forEach(setupLink)
     }
 
     function bindLocationHash() {
@@ -628,7 +625,9 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
           autoResize = false
           stopEventListeners()
         }
+
         sendMsg(0, 0, 'autoResize', JSON.stringify(autoResize))
+
         return autoResize
       },
 
@@ -642,10 +641,11 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
         if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
-        } else {
-          onPageInfo = function () {}
-          sendMsg(0, 0, 'pageInfoStop')
+          return
         }
+
+        onPageInfo = function () {}
+        sendMsg(0, 0, 'pageInfoStop')
       },
 
       moveToAnchor(hash) {
@@ -733,8 +733,6 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     createResizeObservers(window.document)
   }
 
-  // Not testable in PhantomJS
-  /* istanbul ignore next */
   function setupBodyMutationObserver() {
     // function addImageLoadListners(mutation) {
     //   function addImageLoadListener(element) {
@@ -1119,15 +1117,15 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       }
     }
 
-    const isDoubleFiredEvent = () =>
-      triggerLocked && triggerEvent in doubleEventList
+    // const isDoubleFiredEvent = () =>
+    //   triggerLocked && triggerEvent in doubleEventList
 
     const size = triggerEvent === 'init' ? sizeIFrame : throttle(sizeIFrame)
 
-    if (isDoubleFiredEvent()) {
-      log(`Trigger event cancelled: ${triggerEvent}`)
-      return
-    }
+    // if (isDoubleFiredEvent()) {
+    //   log(`Trigger event cancelled: ${triggerEvent}`)
+    //   return
+    // }
 
     recordTrigger()
     size(triggerEvent, triggerEventDesc, customHeight, customWidth)
@@ -1170,9 +1168,10 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     function setTargetOrigin() {
       if (undefined === targetOrigin) {
         targetOrigin = targetOriginDefault
-      } else {
-        log(`Message targetOrigin: ${targetOrigin}`)
+        return
       }
+
+      log(`Message targetOrigin: ${targetOrigin}`)
     }
 
     function sendToParent() {
@@ -1205,10 +1204,10 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       reset() {
         if (initLock) {
           log('Page reset ignored by init')
-        } else {
-          log('Page size reset by host page')
-          triggerReset('resetPage')
+          return
         }
+        log('Page size reset by host page')
+        triggerReset('resetPage')
       },
 
       resize() {
@@ -1218,13 +1217,13 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       moveToAnchor() {
         inPageLinks.findTarget(getData())
       },
+
       inPageLink() {
         this.moveToAnchor()
       }, // Backward compatibility
 
       pageInfo() {
         const msgBody = getData()
-
         log(`PageInfoFromParent called from parent: ${msgBody}`)
         onPageInfo(JSON.parse(msgBody))
         log(' --')
@@ -1240,39 +1239,30 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       }
     }
 
-    function isMessageForUs() {
-      return msgID === `${event.data}`.slice(0, msgIdLen) // ''+ Protects against non-string messages
-    }
+    const isMessageForUs = () => msgID === `${event.data}`.slice(0, msgIdLen)
 
-    function getMessageType() {
-      return event.data.split(']')[1].split(':')[0]
-    }
+    const getMessageType = () => event.data.split(']')[1].split(':')[0]
 
-    function getData() {
-      return event.data.slice(event.data.indexOf(':') + 1)
-    }
+    const getData = () => event.data.slice(event.data.indexOf(':') + 1)
 
-    function isMiddleTier() {
-      return (
-        (!(typeof module !== 'undefined' && module.exports) &&
-          'iFrameResize' in window) ||
-        (window.jQuery !== undefined &&
-          'iFrameResize' in window.jQuery.prototype)
-      )
-    }
+    const isMiddleTier = () =>
+      (!(typeof module !== 'undefined' && module.exports) &&
+        'iFrameResize' in window) ||
+      (window.jQuery !== undefined && 'iFrameResize' in window.jQuery.prototype)
 
-    function isInitMsg() {
-      // Test if this message is from a child below us. This is an ugly test, however, updating
-      // the message format would break backwards compatibility.
-      return event.data.split(':')[2] in { true: 1, false: 1 }
-    }
+    // Test if this message is from a child below us. This is an ugly test, however, updating
+    // the message format would break backwards compatibility.
+    const isInitMsg = () => event.data.split(':')[2] in { true: 1, false: 1 }
 
     function callFromParent() {
       const messageType = getMessageType()
 
       if (messageType in processRequestFromParent) {
         processRequestFromParent[messageType]()
-      } else if (!isMiddleTier() && !isInitMsg()) {
+        return
+      }
+
+      if (!isMiddleTier() && !isInitMsg()) {
         warn(`Unexpected message (${event.data})`)
       }
     }
@@ -1280,13 +1270,17 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     function processMessage() {
       if (firstRun === false) {
         callFromParent()
-      } else if (isInitMsg()) {
-        processRequestFromParent.init()
-      } else {
-        log(
-          `Ignored message of type "${getMessageType()}". Received before initialization.`
-        )
+        return
       }
+
+      if (isInitMsg()) {
+        processRequestFromParent.init()
+        return
+      }
+
+      log(
+        `Ignored message of type "${getMessageType()}". Received before initialization.`
+      )
     }
 
     if (isMessageForUs()) {
