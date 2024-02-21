@@ -876,11 +876,11 @@
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
-This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe, which can have a minor performace impact on more complex pages. 
+This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page to calculate the dimensions of the iframe, which can have a minor performace impact on more complex pages. 
 
-To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want the iframe-resizer to use when calculating the size of the iframe. 
+To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want \u001B[3miframe-resizer\u001B[m to use when calculating the size of the iframe. 
   
-When present the ${furthest} element with the \u001B[1mdata-iframe-size\u001B[m attribute will be used to calculate the ${dimension} of the iframe.
+When present the ${furthest} element with a \u001B[1mdata-iframe-size\u001B[m attribute will be used to calculate the ${dimension} of the iframe.
     
 (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
@@ -916,33 +916,32 @@ When present the ${furthest} element with the \u001B[1mdata-iframe-size\u001B[m 
         boundingSize === prevBoundingSize &&
         scrollSize === prevScrollSize:
         log(`Size unchanged: ${sizes}`)
-        return boundingSize
+        return Math.max(boundingSize, scrollSize)
 
       case prevBoundingSize === 0 && prevScrollSize === 0:
         log(`Initial page size values: ${sizes}`)
-        return Math.max(
-          getDimension.taggedElement(true),
-          returnBoundingClientRect()
-        )
+        return getDimension.taggedElement(true) > ceilBoundingSize
+          ? switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize)
+          : returnBoundingClientRect()
 
       case boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize:
         log(`New HTML bounding size: ${sizes}`)
         return returnBoundingClientRect()
 
       case boundingSize < prevBoundingSize:
-        log('HTML bounding size decreased', boundingSize)
+        log('HTML bounding size decreased:', boundingSize)
         return returnBoundingClientRect()
 
       case scrollSize === ceilBoundingSize:
-        log('HTML bounding size equals page size', ceilBoundingSize)
+        log('HTML bounding size equals page size:', ceilBoundingSize)
         return returnBoundingClientRect()
 
       case scrollSize < prevScrollSize:
-        log('Page size decreased', scrollSize, prevScrollSize)
+        log('Page size decreased:', scrollSize, prevScrollSize)
         return returnBoundingClientRect()
 
       case boundingSize > scrollSize:
-        log(`Page size < html bounding size: ${sizes}`)
+        log(`Page size < HTML bounding size: ${sizes}`)
         return returnBoundingClientRect()
 
       // one last check before we give up
