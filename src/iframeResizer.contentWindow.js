@@ -28,6 +28,18 @@
       return getWidth.auto()
     }
   }
+  const deprecatedResizeMethods = {
+    bodyOffset: 1,
+    bodyScroll: 1,
+    offset: 1,
+    documentElementOffset: 1,
+    documentElementScroll: 1,
+    documentElementBoundingClientRect: 1,
+    max: 1,
+    min: 1,
+    grow: 1,
+    lowestElement: 1
+  }
   const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
@@ -289,9 +301,12 @@
   }
 
   function stopInfiniteResizingOfIFrame() {
-    document.documentElement.style.height = ''
-    document.body.style.height = ''
-    log('HTML & body height set to "auto"')
+    const setAutoHeight = (el) => el.style.setProperty('height', 'auto', 'important')
+
+    setAutoHeight(document.documentElement)
+    setAutoHeight(document.body)
+    
+    log('HTML & body height set to "auto !important"')
   }
 
   function manageTriggerEvent(options) {
@@ -386,6 +401,13 @@
       if (!(calcMode in modes)) {
         warn(`${calcMode} is not a valid option for ${type}CalculationMethod.`)
         calcMode = calcModeDefault
+      }
+      if (calcMode in deprecatedResizeMethods) {
+        advise(
+          `\u001B[31;1mDeprecated ${type}CalculationMethod (${calcMode})\u001B[m
+
+This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`
+        )
       }
       log(`${type} calculation method set to "${calcMode}"`)
     }
@@ -823,9 +845,7 @@
 
   const getAllMeasurements = (dimension) => [
     dimension.bodyOffset(),
-    dimension.bodyOffsetMargin(),
     dimension.bodyScroll(),
-    dimension.bodyBoundingClientRect(),
     dimension.documentElementOffset(),
     dimension.documentElementScroll(),
     dimension.documentElementBoundingClientRect()
@@ -851,8 +871,6 @@
     element.querySelectorAll(
       '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
     )
-
-  const getAllElementsByType = (type) => () => document.querySelectorAll(type)
 
   const getLowestElement = (func) =>
     Math.max(
@@ -961,13 +979,11 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   const getHeight = {
     auto: () => getAutoSize(getHeight),
     autoOverflow: () => getAutoOverflow(getHeight),
-    bodyOffset: () => document.body.offsetHeight,
-    bodyOffsetMargin: () =>
+    bodyOffset: () =>
       document.body.offsetHeight +
       getComputedStyle('marginTop') +
       getComputedStyle('marginBottom'),
     bodyScroll: () => document.body.scrollHeight,
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().bottom,
     offset: () => getHeight.bodyOffset(), // Backwards compatibility
     custom: () => customCalcMethods.height(),
     documentElementOffset: () => document.documentElement.offsetHeight,
@@ -978,7 +994,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     min: () => Math.min(...getAllMeasurements(getHeight)),
     grow: () => getHeight.max(),
     lowestElement: () => getLowestElement(getAllElements(document)),
-    lowestDivElement: () => getLowestElement(getAllElementsByType('div')),
     taggedElement: (quite) =>
       getTaggedElements('bottom', 'data-iframe-height', quite)
   }
@@ -988,19 +1003,17 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     autoOverflow: () => getAutoOverflow(getWidth),
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
-    bodyOffsetMargin: () => document.body.offsetWidth, // return value for min/max function
-    bodyBoundingClientRect: () => document.body.getBoundingClientRect().right,
     custom: () => customCalcMethods.width(),
     documentElementScroll: () => document.documentElement.scrollWidth,
     documentElementOffset: () => document.documentElement.offsetWidth,
-    scroll: () =>
-      Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
     documentElementBoundingClientRect: () =>
       document.documentElement.getBoundingClientRect().right,
     max: () => Math.max(...getAllMeasurements(getWidth)),
     min: () => Math.min(...getAllMeasurements(getWidth)),
     rightMostElement: () =>
       getMaxElement('right', getAllElements(document)(), false),
+    scroll: () =>
+      Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
     taggedElement: () => getTaggedElements('right', 'data-iframe-width')
   }
 
