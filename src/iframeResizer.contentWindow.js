@@ -873,14 +873,15 @@
     const isHieght = getDimension === getHeight
     const furthest = isHieght ? 'lowest' : 'right most'
     const dimension = isHieght ? 'height' : 'width'
+    const side = isHieght ? 'bottom' : 'right'
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
-This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page to calculate the dimensions of the iframe, which can have a minor performace impact on more complex pages. 
+This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a minor performace impact on more complex pages. 
 
-To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want \u001B[3miframe-resizer\u001B[m to use when calculating the size of the iframe. 
+To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want \u001B[3miframe-resizer\u001B[m to use when calculating the dimensions of the iframe. 
   
-When present the ${furthest} element with a \u001B[1mdata-iframe-size\u001B[m attribute will be used to calculate the ${dimension} of the iframe.
+When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with a \u001B[1mdata-iframe-size\u001B[m attribute will be used to set the ${dimension} of the iframe.
     
 (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
