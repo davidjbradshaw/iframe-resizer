@@ -726,9 +726,11 @@
       const observer = new window.MutationObserver(mutationObserved)
       const target = document.querySelector('body')
       const config = {
-        attributes: true,
+        // attributes: true,
+        attributes: false,
         attributeOldValue: false,
-        characterData: true,
+        // characterData: true,
+        characterData: false,
         characterDataOldValue: false,
         childList: true,
         subtree: true
@@ -746,7 +748,7 @@
 
     return {
       disconnect() {
-        log('Disconnect body MutationObserver')
+        log('Disconnect MutationObserver')
         observer.disconnect()
         // elements.forEach(removeImageLoadListener)
       }
@@ -867,6 +869,36 @@
     return Math.max(getDimension.taggedElement(), boundingSize)
   }
 
+  function switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize) {
+    const isHieght = getDimension === getHeight
+    const furthest = isHieght ? 'lowest' : 'right most'
+    const dimension = isHieght ? 'height' : 'width'
+    const overflowDetectedMessage = `
+\u001B[31;1mDetected content overflowing html element\u001B[m
+    
+This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe, which can have a minor performace impact on more complex pages. 
+
+To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want the iframe-resizer to use when calculating the size of the iframe. 
+  
+When present the ${furthest} element with the \u001B[1mdata-iframe-size\u001B[m attribute will be used to calculate the ${dimension} of the iframe.
+    
+(Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
+
+    warn(
+      window.chrome // Only show formatting in Chrome as not supported in other browsers
+        ? overflowDetectedMessage
+        : overflowDetectedMessage.replaceAll(/\u001B\[[\w;]*m/gi, '') // eslint-disable-line no-control-regex
+    )
+
+    if (isHieght) {
+      heightCalcMode = 'autoOverflow'
+    } else {
+      widthCalcMode = 'autoOverflow'
+    }
+
+    return getAutoOverflow(getDimension)
+  }
+
   function getAutoSize(getDimension) {
     function returnBoundingClientRect() {
       prevBoundingSize = boundingSize
@@ -877,78 +909,50 @@
     const boundingSize = getDimension.documentElementBoundingClientRect()
     const ceilBoundingSize = Math.ceil(boundingSize)
     const scrollSize = getAdjustedScroll(getDimension)
+    const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
 
-    if (
-      triggerLocked &&
-      boundingSize === prevBoundingSize &&
-      scrollSize === prevScrollSize
-    ) {
-      log(`Size unchanged: html ${boundingSize} page: ${scrollSize}`)
-      return boundingSize
+    switch (true) {
+      case triggerLocked &&
+        boundingSize === prevBoundingSize &&
+        scrollSize === prevScrollSize:
+        log(`Size unchanged: ${sizes}`)
+        return boundingSize
+
+      case prevBoundingSize === 0 && prevScrollSize === 0:
+        log(`Initial page size values: ${sizes}`)
+        return Math.max(
+          getDimension.taggedElement(true),
+          returnBoundingClientRect()
+        )
+
+      case boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize:
+        log(`New HTML bounding size: ${sizes}`)
+        return returnBoundingClientRect()
+
+      case boundingSize < prevBoundingSize:
+        log('HTML bounding size decreased:', boundingSize)
+        return returnBoundingClientRect()
+
+      case scrollSize === ceilBoundingSize:
+        log('HTML bounding size equals page size:', ceilBoundingSize)
+        return returnBoundingClientRect()
+
+      case scrollSize < prevScrollSize:
+        log('Page size decreased:', scrollSize, prevScrollSize)
+        return returnBoundingClientRect()
+
+      case boundingSize > scrollSize:
+        log(`Page size < HTML bounding size: ${sizes}`)
+        return returnBoundingClientRect()
+
+      // one last check before we give up
+      case getDimension.taggedElement(true) < ceilBoundingSize:
+        log('No overflowen elements found on page')
+        return returnBoundingClientRect()
+
+      default:
+        return switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize)
     }
-
-    if (prevBoundingSize === 0 && prevScrollSize === 0) {
-      log(`Initial page size values: html: ${boundingSize} page: ${scrollSize}`)
-      prevBoundingSize = boundingSize
-      prevScrollSize = scrollSize
-      return Math.max(getDimension.taggedElement(true), boundingSize)
-    }
-
-    if (boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize) {
-      log(`New HTML bounding size: html: ${boundingSize} page: ${scrollSize}`)
-      return returnBoundingClientRect()
-    }
-
-    if (boundingSize < prevBoundingSize) {
-      log('HTML bounding size decreased', boundingSize)
-      return returnBoundingClientRect()
-    }
-
-    if (scrollSize === ceilBoundingSize) {
-      log('HTML bounding size equals page size', ceilBoundingSize)
-      return returnBoundingClientRect()
-    }
-
-    if (scrollSize < prevScrollSize) {
-      log('Page size decreased', scrollSize, prevScrollSize)
-      return returnBoundingClientRect()
-    }
-
-    if (boundingSize > scrollSize) {
-      log(
-        `Page size < html bounding size: html: ${boundingSize} page: ${scrollSize}`
-      )
-      return returnBoundingClientRect()
-    }
-
-    // one last check before we give up
-    if (getDimension.taggedElement(true) < ceilBoundingSize) {
-      log('No overflowen elements found on page')
-      return returnBoundingClientRect()
-    }
-
-    const overflowDetectedMessage = `
-\u001B[31;1mDetected content overflowing html element\u001B[m
-    
-This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe, which can have a minor performace impact on more complex pages. 
-
-To fix this issue you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want the iframe-resizer to use when calculating the size of the iframe.
-    
-(Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
-
-    warn(
-      window.chrome
-        ? overflowDetectedMessage
-        : overflowDetectedMessage.replaceAll(/\u001B\[[\w;]*m/gi, '') // eslint-disable-line no-control-regex
-    )
-
-    if (getDimension === getHeight) {
-      heightCalcMode = 'autoOverflow'
-    } else {
-      widthCalcMode = 'autoOverflow'
-    }
-
-    return getAutoOverflow(getDimension)
   }
 
   const getHeight = {
