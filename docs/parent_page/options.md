@@ -104,7 +104,7 @@ Set maximum height/width of iFrame.
 
 Set minimum height/width of iFrame.
 
-### offsetHeigt / offsetWidth
+### offsetHeight / offsetWidth
 
     default: 0
     type:    integer
