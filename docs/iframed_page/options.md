@@ -16,9 +16,9 @@ The following options can be set from within the iFrame page by creating a `wind
     default: null
     type: function() { return integer }
 
-Add a custom function to calculate page size. Function must return size as an integer. This can be useful when none of the standard ways of working out the size are unsuitable. However, normally problems with sizing are due to CSS issues and this should be looked at first.
+Add a custom function to calculate page size. Function must return size as an integer. This can be useful when none of the standard ways of working out the size provide a suitable result. However, normally problems with sizing are due to CSS issues and this should be looked at first.
 
-### offsetHeigt / offsetWidth
+### offsetHeight / offsetWidth
 
     default: 0
     type:    integer
