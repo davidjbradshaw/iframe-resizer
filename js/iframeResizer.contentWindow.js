@@ -663,60 +663,60 @@
   // Not testable in PhantomJS
   /* istanbul ignore next */
   function setupBodyMutationObserver() {
-    function addImageLoadListners(mutation) {
-      function addImageLoadListener(element) {
-        if (element.complete === false && !element.dataset.loading) {
-          log(`Attached Mutation Observer:${element.src}`)
-          element.dataset.loading = true
-          element.addEventListener('load', imageLoaded, false)
-          element.addEventListener('error', imageError, false)
-          elements.push(element)
-        }
-      }
+    // function addImageLoadListners(mutation) {
+    //   function addImageLoadListener(element) {
+    //     if (element.complete === false && !element.dataset.loading) {
+    //       log(`Attached Mutation Observer:${element.src}`)
+    //       element.dataset.loading = true
+    //       element.addEventListener('load', imageLoaded, false)
+    //       element.addEventListener('error', imageError, false)
+    //       elements.push(element)
+    //     }
+    //   }
 
-      if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
-        addImageLoadListener(mutation.target)
-      } else if (mutation.type === 'childList') {
-        Array.prototype.forEach.call(
-          mutation.target.querySelectorAll('img'),
-          addImageLoadListener
-        )
-      }
-    }
+    //   if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+    //     addImageLoadListener(mutation.target)
+    //   } else if (mutation.type === 'childList') {
+    //     Array.prototype.forEach.call(
+    //       mutation.target.querySelectorAll('img'),
+    //       addImageLoadListener
+    //     )
+    //   }
+    // }
 
-    function removeFromArray(element) {
-      elements.splice(elements.indexOf(element), 1)
-    }
+    // function removeFromArray(element) {
+    //   elements.splice(elements.indexOf(element), 1)
+    // }
 
-    function removeImageLoadListener(element) {
-      log(`Remove listeners from ${element.src}`)
-      element.dataset.loading = false
-      element.removeEventListener('load', imageLoaded, false)
-      element.removeEventListener('error', imageError, false)
-      removeFromArray(element)
-    }
+    // function removeImageLoadListener(element) {
+    //   log(`Remove listeners from ${element.src}`)
+    //   element.dataset.loading = false
+    //   element.removeEventListener('load', imageLoaded, false)
+    //   element.removeEventListener('error', imageError, false)
+    //   removeFromArray(element)
+    // }
 
-    function imageEventTriggered(event, type, typeDesc) {
-      removeImageLoadListener(event.target)
-      sendSize(type, `${typeDesc}: ${event.target.src}`)
-    }
+    // function imageEventTriggered(event, type, typeDesc) {
+    //   removeImageLoadListener(event.target)
+    //   sendSize(type, `${typeDesc}: ${event.target.src}`)
+    // }
 
-    function imageLoaded(event) {
-      imageEventTriggered(event, 'imageLoad', 'Image loaded')
-    }
+    // function imageLoaded(event) {
+    //   imageEventTriggered(event, 'imageLoad', 'Image loaded')
+    // }
 
-    function imageError(event) {
-      imageEventTriggered(event, 'imageLoadFailed', 'Image load failed')
-    }
+    // function imageError(event) {
+    //   imageEventTriggered(event, 'imageLoadFailed', 'Image load failed')
+    // }
 
     function mutationObserved(mutations) {
-      sendSize(
-        'mutationObserver',
-        `mutationObserver: ${mutations[0].target} ${mutations[0].type}`
-      )
+      // sendSize(
+      //   'mutationObserver',
+      //   `mutationObserver: ${mutations[0].target} ${mutations[0].type}`
+      // )
 
       // Deal with WebKit / Blink asyncing image loading when tags are injected into the page
-      mutations.forEach(addImageLoadListners)
+      // mutations.forEach(addImageLoadListners)
 
       // Look for injected elements that need ResizeObservers
       mutations.forEach(addResizeObservers)
@@ -742,13 +742,13 @@
 
     const observer = createMutationObserver()
 
-    let elements = []
+    // const elements = []
 
     return {
       disconnect() {
         log('Disconnect body MutationObserver')
         observer.disconnect()
-        elements.forEach(removeImageLoadListener)
+        // elements.forEach(removeImageLoadListener)
       }
     }
   }
@@ -871,8 +871,7 @@
     function returnBoundingClientRect() {
       prevBoundingSize = boundingSize
       prevScrollSize = scrollSize
-      log(`New size set to: ${boundingSize} / ${scrollSize}`)
-      return ceilBoundingSize
+      return boundingSize
     }
 
     const boundingSize = getDimension.documentElementBoundingClientRect()
@@ -885,14 +884,14 @@
       scrollSize === prevScrollSize
     ) {
       log(`Size unchanged: html ${boundingSize} page: ${scrollSize}`)
-      return ceilBoundingSize
+      return boundingSize
     }
 
     if (prevBoundingSize === 0 && prevScrollSize === 0) {
       log(`Initial page size values: html: ${boundingSize} page: ${scrollSize}`)
       prevBoundingSize = boundingSize
       prevScrollSize = scrollSize
-      return Math.max(getDimension.taggedElement(true), ceilBoundingSize)
+      return Math.max(getDimension.taggedElement(true), boundingSize)
     }
 
     if (boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize) {
@@ -922,12 +921,8 @@
       return returnBoundingClientRect()
     }
 
-    const taggedElement =
-      getDimension.taggedElement(true) -
-      (getDimension === getHeight ? offsetHeight : offsetWidth)
-
     // one last check before we give up
-    if (taggedElement <= ceilBoundingSize) {
+    if (getDimension.taggedElement(true) < ceilBoundingSize) {
       log('No overflowen elements found on page')
       return returnBoundingClientRect()
     }
@@ -935,7 +930,7 @@
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
-This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe. This can have a minor performace impact on more complex pages. 
+This causes iframe-resizer to fall back to checking the position of every element on the page to calculate the dimensions of the iframe, which can have a minor performace impact on more complex pages. 
 
 To fix this issue you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want the iframe-resizer to use when calculating the size of the iframe.
     
