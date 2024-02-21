@@ -21,11 +21,11 @@
   const customCalcMethods = {
     height: () => {
       warn('Custom height calculation function not defined')
-      return document.documentElement.getBoundingClientRect().height
+      return getHeight.auto()
     },
     width: () => {
       warn('Custom width calculation function not defined')
-      return document.body.scrollWidth
+      return getWidth.auto()
     }
   }
   const doubleEventList = { resize: 1, click: 1 }
