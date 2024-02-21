@@ -177,6 +177,13 @@
     }
   }
 
+  const advise = (msg) =>
+    warn(
+      window.chrome // Only show formatting in Chrome as not supported in other browsers
+        ? msg
+        : msg.replaceAll(/\u001B\[[\w;]*m/gi, '') // eslint-disable-line no-control-regex
+    )
+
   function init() {
     readDataFromParent()
     log(`Initialising iFrame (${window.location.href})`)
@@ -885,11 +892,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     
 (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
-    warn(
-      window.chrome // Only show formatting in Chrome as not supported in other browsers
-        ? overflowDetectedMessage
-        : overflowDetectedMessage.replaceAll(/\u001B\[[\w;]*m/gi, '') // eslint-disable-line no-control-regex
-    )
+    advise(overflowDetectedMessage)
 
     if (isHieght) {
       heightCalcMode = 'autoOverflow'
