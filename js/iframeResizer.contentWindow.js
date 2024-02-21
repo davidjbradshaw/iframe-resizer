@@ -634,7 +634,7 @@
   }
 
   const getAllNonStaticElements = () =>
-    Array.prototype.filter.call(getAllElements(document)(), checkPositionType)
+    [...getAllElements(document)()].filter(checkPositionType)
 
   function setupResizeObservers(el) {
     if (!el) return
