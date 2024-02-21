@@ -54,6 +54,7 @@ When set to true, only allow incoming messages from the domain listed in the `sr
 
 When enabled in page linking inside the iFrame and from the iFrame to the parent page will be enabled.
 
+<!--
 ### heightCalculationMethod
 
     default: 'documentElementBoundingClientRect'
@@ -87,7 +88,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 <sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it can have a performance impact on complex page, due to it checking the position of every element on the page. The **lowestDivElement** and **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked</i>.
 
 <sup>*</sup> These methods can cause screen flicker in some browsers.
-
+-->
 
 ### maxHeight / maxWidth
 
@@ -153,7 +154,7 @@ Set the number of pixels the iFrame content size has to change by, before trigge
 
 Set the number of milliseconds after which a warning is logged if the iFrame has not responded. Set to `0` to supress warning messages of this type.
 
-
+<!--
 ### widthCalculationMethod
 
     default: 'scroll'
@@ -182,3 +183,4 @@ Alternatively it is possible to add your own custom sizing method directly insid
 <sup> † </sup> <i>The **rightMostElement** option is the most reliable way of determining the page width. However, it does have a performance impact as it requires calculating the position of every element on the page. The **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked.</i>
 
 <sup>*</sup> These methods can cause screen flicker in some browsers.
+-->
