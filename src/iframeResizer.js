@@ -99,14 +99,14 @@
   }
 
   function output(type, iframeId, enabled, ...msg) {
-    if (enabled === true) {
       // eslint-disable-next-line no-console
-      console[type](formatLogHeader(iframeId), ...msg)
-    }
+      return console[type](formatLogHeader(iframeId), ...msg)
   }
 
   function log(iframeId, ...msg) {
-    output('log', iframeId, isLogEnabled(iframeId), ...msg)
+    if (enabled === true) {
+      output('log', iframeId, isLogEnabled(iframeId), ...msg)
+    }
   }
 
   function info(iframeId, ...msg) {
