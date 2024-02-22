@@ -1068,6 +1068,16 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       height = currentHeight
       width = currentWidth
 
+      // if (height === 0) {
+      //   log('Height is 0. Not sending a message to the parent page.')
+      //   return
+      // }
+
+      // if (width === 0) {
+      //   log('Width is 0. Not sending a message to the parent page.')
+      //   return
+      // }
+
       sendMsg(height, width, triggerEvent)
     }
 
@@ -1077,6 +1087,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       currentHeight = Math.ceil(
         undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
       )
+
       currentWidth = Math.ceil(
         undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
       )
@@ -1117,15 +1128,14 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       }
     }
 
-    // const isDoubleFiredEvent = () =>
-    //   triggerLocked && triggerEvent in doubleEventList
-
     const size = triggerEvent === 'init' ? sizeIFrame : throttle(sizeIFrame)
 
-    // if (isDoubleFiredEvent()) {
-    //   log(`Trigger event cancelled: ${triggerEvent}`)
-    //   return
-    // }
+    if (document.hidden) {
+      // Currently only correctly supported in firefox
+      // This is checked again on the parent page
+      log('Page hidden - Ignored resize request')
+      return
+    }
 
     recordTrigger()
     size(triggerEvent, triggerEventDesc, customHeight, customWidth)

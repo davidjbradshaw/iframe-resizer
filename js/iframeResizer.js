@@ -123,21 +123,6 @@
       syncResize(resize, messageData, 'init')
     }
 
-    function processMsg() {
-      const data = msg.slice(msgIdLen).split(':')
-      const height = data[1] ? parseInt(data[1], 10) : 0
-      const iframe = settings[data[0]]?.iframe
-      const compStyle = getComputedStyle(iframe)
-
-      return {
-        iframe,
-        id: data[0],
-        height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
-        width: data[2],
-        type: data[3]
-      }
-    }
-
     function getPaddingEnds(compStyle) {
       if (compStyle.boxSizing !== 'border-box') {
         return 0
@@ -164,6 +149,21 @@
         : 0
 
       return top + bot
+    }
+
+    function processMsg() {
+      const data = msg.slice(msgIdLen).split(':')
+      const height = data[1] ? Number(data[1]) : 0
+      const iframe = settings[data[0]]?.iframe
+      const compStyle = getComputedStyle(iframe)
+
+      return {
+        iframe,
+        id: data[0],
+        height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
+        width: Number(data[2]),
+        type: data[3]
+      }
     }
 
     function ensureInRange(Dimension) {
@@ -541,17 +541,27 @@
           break
 
         default:
-          if (
-            Number(messageData.width) === 0 &&
-            Number(messageData.height) === 0
-          ) {
+          if (messageData.width === 0 && messageData.height === 0) {
             warn(
               `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
                 `version of iframe-resizer than the parent page`
             )
-          } else {
-            resizeIFrame()
+            return
           }
+
+          if (messageData.width === 0 || messageData.height === 0) {
+            log(iframeId, 'Ignoring message with 0 height or width')
+            return
+          }
+
+          // Recheck document.hidden here, as only Firefox
+          // correctly supports this in the iframe
+          if (document.hidden) {
+            log(iframeId, 'Page hidden - ignored resize request')
+            return
+          }
+
+          resizeIFrame()
       }
     }
 
@@ -806,10 +816,10 @@
 
     return [
       iframeId,
-      '8', // Backwards compatability
+      '8', // Backwards compatability (PaddingV1)
       iframeSettings.sizeWidth,
       iframeSettings.log,
-      '32', // Backwards compatability
+      '32', // Backwards compatability (Interval)
       iframeSettings.enablePublicMethods,
       iframeSettings.autoResize,
       iframeSettings.bodyMargin,
@@ -818,7 +828,7 @@
       iframeSettings.bodyPadding,
       iframeSettings.tolerance,
       iframeSettings.inPageLinks,
-      'child', // Backwards compatability
+      'child', // Backwards compatability (resizeFrom)
       iframeSettings.widthCalculationMethod,
       iframeSettings.mouseEvents,
       iframeSettings.offsetHeight,
@@ -968,30 +978,6 @@
         trigger('iFrame.onload', msg, iframe.id, true)
         checkReset()
       }
-
-      function createDestroyObserver(MutationObserver) {
-        if (!iframe.parentNode) return
-
-        const destroyObserver = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            const removedNodes = Array.prototype.slice.call(
-              mutation.removedNodes
-            ) // Transform NodeList into an Array
-
-            removedNodes.forEach((removedNode) => {
-              if (removedNode === iframe) {
-                closeIFrame(iframe)
-              }
-            })
-          })
-        })
-
-        destroyObserver.observe(iframe.parentNode, {
-          childList: true
-        })
-      }
-
-      createDestroyObserver(MutationObserver)
 
       addEventListener(iframe, 'load', iFrameLoaded)
       trigger('init', msg, iframe.id, true)
