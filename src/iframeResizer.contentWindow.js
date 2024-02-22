@@ -87,7 +87,7 @@
   let width = 1
   let widthCalcMode = widthCalcModeDefault
   let win = window
-  
+
   let onMessage = () => {
     warn('onMessage function not defined')
   }

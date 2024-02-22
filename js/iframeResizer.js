@@ -81,41 +81,34 @@
   const removeEventListener = (el, evt, func) =>
     el.removeEventListener(evt, func, false)
 
-  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
-
   const isLogEnabled = (iframeId) =>
     settings[iframeId] ? settings[iframeId].log : logEnabled
 
   function getMyID(iframeId) {
-    let retStr = `Host page: ${iframeId}`
-
-    if (window.top !== window.self) {
-      retStr = window?.parentIFrame?.getId
-        ? `${window.parentIFrame.getId()}: ${iframeId}`
-        : `Nested host page: ${iframeId}`
+    if (window.top === window.self) {
+      return `Host page: ${iframeId}`
     }
 
-    return retStr
+    return window?.parentIFrame?.getId
+      ? `${window.parentIFrame.getId()}: ${iframeId}`
+      : `Nested host page: ${iframeId}`
   }
 
-  function output(type, iframeId, enabled, ...msg) {
-    if (enabled === true) {
-      // eslint-disable-next-line no-console
-      console[type](formatLogHeader(iframeId), ...msg)
-    }
-  }
+  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
-  function log(iframeId, ...msg) {
-    output('log', iframeId, isLogEnabled(iframeId), ...msg)
-  }
+  const output = (type, iframeId, ...msg) =>
+    // eslint-disable-next-line no-console
+    console[type](formatLogHeader(iframeId), ...msg)
 
-  function info(iframeId, ...msg) {
+  const log = (iframeId, ...msg) =>
+    isLogEnabled(iframeId) === true
+      ? output('log', iframeId, isLogEnabled(iframeId), ...msg)
+      : null
+
+  const info = (iframeId, ...msg) =>
     output('info', iframeId, isLogEnabled(iframeId), ...msg)
-  }
 
-  function warn(iframeId, ...msg) {
-    output('warn', iframeId, true, ...msg)
-  }
+  const warn = (iframeId, ...msg) => output('warn', iframeId, true, ...msg)
 
   function iFrameListener(event) {
     function resizeIFrame() {
@@ -1212,7 +1205,7 @@
 
   function createJQueryPublicMethod($) {
     if (!$.fn) {
-      info('', 'Unable to bind to jQuery, it is not fully loaded.')
+      warn('', 'Unable to bind to jQuery, it is not fully loaded.')
     } else if (!$.fn.iFrameResize) {
       $.fn.iFrameResize = function (options) {
         function initJQuery(index, element) {
