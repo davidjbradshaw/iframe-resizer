@@ -35,7 +35,6 @@
     enablePublicMethods: true,
     heightCalculationMethod: 'auto',
     id: 'iFrameResizer',
-    interval: 32,
     log: false,
     maxHeight: Infinity,
     maxWidth: Infinity,
@@ -810,7 +809,7 @@
       '8', // Backwards compatability
       iframeSettings.sizeWidth,
       iframeSettings.log,
-      iframeSettings.interval,
+      '32', // Backwards compatability
       iframeSettings.enablePublicMethods,
       iframeSettings.autoResize,
       iframeSettings.bodyMargin,
@@ -1013,6 +1012,11 @@
         : remoteHost
     }
 
+    function getPostMessageTarget() {
+      if (settings[iframeId].postMessageTarget === null)
+        settings[iframeId].postMessageTarget = iframe.contentWindow
+    }
+
     function processOptions(options) {
       settings[iframeId] = {
         iframe,
@@ -1022,15 +1026,12 @@
         ...checkOptions(options)
       }
 
-      if (settings[iframeId].postMessageTarget === null)
-        settings[iframeId].postMessageTarget = iframe.contentWindow
+      getPostMessageTarget()
 
-      if (settings[iframeId]) {
-        settings[iframeId].targetOrigin =
-          settings[iframeId].checkOrigin === true
-            ? getTargetOrigin(settings[iframeId].remoteHost)
-            : '*'
-      }
+      settings[iframeId].targetOrigin =
+        settings[iframeId].checkOrigin === true
+          ? getTargetOrigin(settings[iframeId].remoteHost)
+          : '*'
     }
 
     function beenHere() {
