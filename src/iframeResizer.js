@@ -1012,6 +1012,11 @@
         : remoteHost
     }
 
+    function getPostMessageTarget() {
+      if (settings[iframeId].postMessageTarget === null)
+        settings[iframeId].postMessageTarget = iframe.contentWindow
+    }
+
     function processOptions(options) {
       settings[iframeId] = {
         iframe,
@@ -1021,15 +1026,12 @@
         ...checkOptions(options)
       }
 
-      if (settings[iframeId].postMessageTarget === null)
-        settings[iframeId].postMessageTarget = iframe.contentWindow
+      getPostMessageTarget()
 
-      if (settings[iframeId]) {
-        settings[iframeId].targetOrigin =
-          settings[iframeId].checkOrigin === true
-            ? getTargetOrigin(settings[iframeId].remoteHost)
-            : '*'
-      }
+      settings[iframeId].targetOrigin =
+        settings[iframeId].checkOrigin === true
+          ? getTargetOrigin(settings[iframeId].remoteHost)
+          : '*'
     }
 
     function beenHere() {
