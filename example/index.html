@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <style>
+      a.toggle {
+        float: right;
+        margin-left: 8px;
+      }
       /* iframe {
         border-width: 0;
       } */
@@ -14,12 +18,13 @@
   </head>
 
   <body>
+    <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
     <h2>Automagically resizing iFrame</h2>
     <p>
       Resize window or click one of the links in the iFrame to watch it resize.
       Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.
     </p>
-    <div style="margin:20px;">
+    <div id="iframeContainer" style="margin:20px;">
       <iframe src="frame.content.html" width="100%" scrolling="no"></iframe>
     </div>
     <p id="callback"></p>
@@ -98,6 +103,20 @@
           callbackDisplay.innerHTML ='<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
         },
       })
+
+      function toggle() {
+        const iframes = document.querySelectorAll('iframe')
+        const iframe = iframes[0]
+        
+        if (iframe.style.display === 'none') {
+          iframe.style.display = 'block'
+        } else {
+          iframe.style.display = 'none'
+        }
+      }
+
+      document.getElementById('toggle').addEventListener('click', toggle)
+
     </script>
   </body>
 </html>
