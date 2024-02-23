@@ -116,7 +116,7 @@
 
       setSize(messageData)
       setPagePosition(iframeId)
-      
+
       on('onResized', messageData)
     }
 
@@ -732,7 +732,6 @@
       processDimension('width')
     }
   }
-
 
   function trigger(calleeMsg, msg, id, noResponseWarning) {
     function postMessageToIFrame() {
