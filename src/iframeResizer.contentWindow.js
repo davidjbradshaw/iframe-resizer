@@ -45,6 +45,7 @@
   // const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
+  const hasCheckVisibility = 'checkVisibility' in window
   const heightCalcModeDefault = 'auto'
   const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
   const msgID = '[iFrameSizer]' // Must match host page msg ID
@@ -728,7 +729,11 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     let timer = performance.now()
 
     calcElements.forEach((element) => {
-      if (!hasTags && !element?.checkVisibility(checkVisibilityOptions)) {
+      if (
+        !hasTags &&
+        hasCheckVisibility &&
+        !element.checkVisibility(checkVisibilityOptions)
+      ) {
         log(`Skipping non-visable element: ${getElementName(element)}`)
         return
       }
@@ -750,7 +755,7 @@ Parsed ${calcElements.length} elements in ${timer.toPrecision(3)}ms
 Page ${side} found at: ${Math.ceil(maxVal)}px
 Position calculated from HTML element: ${elementSnippet(maxEl)}`
 
-    if (timer < 1.1 || isInit) {
+    if (timer < 1.1 || isInit || hasTags) {
       log(logMsg)
     } else {
       advise(

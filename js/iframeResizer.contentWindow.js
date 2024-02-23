@@ -45,6 +45,7 @@
   // const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
+  const hasCheckVisibility = 'checkVisibility' in window
   const heightCalcModeDefault = 'auto'
   const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
   const msgID = '[iFrameSizer]' // Must match host page msg ID
@@ -324,39 +325,6 @@
     //     method: method,
     //     eventType: 'Orientation Change',
     //     eventName: 'orientationchange'
-    //   })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Input',
-    //     eventName: 'input'
-    //   })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Mouse Up',
-    //     eventName: 'mouseup'
-    //   })
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Mouse Down',
-    //     eventName: 'mousedown'
-    //   })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Touch Start',
-    //     eventName: 'touchstart'
-    //   })
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Touch End',
-    //     eventName: 'touchend'
-    //   })
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Touch Cancel',
-    //     eventName: 'touchcancel'
     //   })
   }
 
@@ -701,7 +669,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
       // Look for injected elements that need ResizeObservers
       mutations.forEach(addResizeObservers)
 
-      // rebuild elements list for size calculation
+      // Rebuild elements list for size calculation
       setupCalcElements()
     }
 
@@ -761,7 +729,11 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     let timer = performance.now()
 
     calcElements.forEach((element) => {
-      if (!hasTags && !element?.checkVisibility(checkVisibilityOptions)) {
+      if (
+        !hasTags &&
+        hasCheckVisibility &&
+        !element.checkVisibility(checkVisibilityOptions)
+      ) {
         log(`Skipping non-visable element: ${getElementName(element)}`)
         return
       }
@@ -783,7 +755,7 @@ Parsed ${calcElements.length} elements in ${timer.toPrecision(3)}ms
 Page ${side} found at: ${Math.ceil(maxVal)}px
 Position calculated from HTML element: ${elementSnippet(maxEl)}`
 
-    if (timer < 1.1 || isInit) {
+    if (timer < 1.1 || isInit || hasTags) {
       log(logMsg)
     } else {
       advise(
