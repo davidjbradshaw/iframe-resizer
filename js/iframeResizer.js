@@ -111,17 +111,13 @@
 
   function iFrameListener(event) {
     function resizeIFrame() {
-      function resize() {
-        setSize(messageData)
-        setPagePosition(iframeId)
-        on('onResized', messageData)
-      }
-
       ensureInRange('Height')
       ensureInRange('Width')
 
-      resize()
-      // syncResize(resize, messageData, 'init')
+      setSize(messageData)
+      setPagePosition(iframeId)
+
+      on('onResized', messageData)
     }
 
     function getPaddingEnds(compStyle) {
@@ -736,21 +732,6 @@
       processDimension('width')
     }
   }
-
-  // function syncResize(func, messageData, doNotSync) {
-  //   if (
-  //     doNotSync !== messageData.type &&
-  //     requestAnimationFrame &&
-  //     // including check for jasmine because we had trouble getting spy
-  //     // to work in unit test using requestAnimationFrame
-  //     !window.jasmine
-  //   ) {
-  //     log(messageData.id, 'Requesting animation frame')
-  //     requestAnimationFrame(func)
-  //   } else {
-  //     func()
-  //   }
-  // }
 
   function trigger(calleeMsg, msg, id, noResponseWarning) {
     function postMessageToIFrame() {

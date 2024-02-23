@@ -46,6 +46,7 @@
   const eventCancelTimer = 128
   const eventHandlersByName = {}
   const heightCalcModeDefault = 'auto'
+  const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
   const resetRequiredMethods = {
@@ -65,12 +66,15 @@
   let bodyObserver = null
   let bodyPadding = ''
   let calculateWidth = false
+  let calcElements = null
   let firstRun = true
+  let hasTags = false
   let height = 1
   let heightCalcMode = heightCalcModeDefault // only applys if not provided by host page (V1 compatibility)
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
+  let isInit = true
   let logging = false
   let mouseEvents = false
   let myID = ''
@@ -83,7 +87,6 @@
   let tolerance = 0
   let triggerLocked = false
   let triggerLockedTimer = null
-  let throttledTimer = 16
   let width = 1
   let widthCalcMode = widthCalcModeDefault
   let win = window
@@ -102,57 +105,6 @@
 
   const capitalizeFirstLetter = (string) =>
     string.charAt(0).toUpperCase() + string.slice(1)
-
-  // Based on underscore.js
-  function throttle(func) {
-    let context
-    let args
-    let result
-    let timeout = null
-    let previous = 0
-
-    const later = function () {
-      previous = Date.now()
-      timeout = null
-      result = func.apply(context, args)
-      if (!timeout) {
-        // eslint-disable-next-line no-multi-assign
-        context = args = null
-      }
-    }
-
-    return function () {
-      const now = Date.now()
-
-      if (!previous) {
-        previous = now
-      }
-
-      const remaining = throttledTimer - (now - previous)
-
-      context = this
-      args = arguments
-
-      if (remaining <= 0 || remaining > throttledTimer) {
-        if (timeout) {
-          clearTimeout(timeout)
-          timeout = null
-        }
-
-        previous = now
-        result = func.apply(context, args)
-
-        if (!timeout) {
-          // eslint-disable-next-line no-multi-assign
-          context = args = null
-        }
-      } else if (!timeout) {
-        timeout = setTimeout(later, remaining)
-      }
-
-      return result
-    }
-  }
 
   const isDef = (value) => `${value}` !== '' && value !== undefined
 
@@ -175,28 +127,32 @@
     }
   }
 
+  function elementSnippet(el) {
+    const outer = el.outerHTML.toString()
+    return outer.length < 30
+      ? outer
+      : `${outer.slice(0, 30).replaceAll('\n', ' ')}...`
+  }
+
   // TODO: remove .join(' '), requires major test updates
   const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
 
-  function log(...msg) {
-    if (logging && typeof window.console === 'object') {
-      // eslint-disable-next-line no-console
-      console.log(formatLogMsg(...msg))
-    }
-  }
+  const log = (...msg) =>
+    // eslint-disable-next-line no-console
+    logging && window.console && console.log(formatLogMsg(...msg))
 
-  function warn(...msg) {
-    if (typeof window.console === 'object') {
-      // eslint-disable-next-line no-console
-      console.warn(formatLogMsg(...msg))
-    }
-  }
+  const warn = (...msg) =>
+    // eslint-disable-next-line no-console
+    window.console && console.warn(formatLogMsg(...msg))
 
-  const advise = (msg) =>
-    warn(
+  const advise = (...msg) =>
+    // eslint-disable-next-line no-console
+    window.console &&
+    // eslint-disable-next-line no-console
+    console.warn(
       window.chrome // Only show formatting in Chrome as not supported in other browsers
-        ? msg
-        : msg.replaceAll(/\u001B\[[\w;]*m/gi, '') // eslint-disable-line no-control-regex
+        ? formatLogMsg(...msg)
+        : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, '') // eslint-disable-line no-control-regex
     )
 
   function init() {
@@ -212,12 +168,14 @@
     checkWidthMode()
     checkDeprecatedAttrs()
     checkHasDataSizeAttributes()
+    setupCalcElements()
     setupPublicMethods()
     setupMouseEvents()
     startEventListeners()
     inPageLinks = setupInPageLinks()
     sendSize('init', 'Init message from host page')
     onReady()
+    isInit = false
   }
 
   function readDataFromParent() {
@@ -367,39 +325,6 @@
     //     eventType: 'Orientation Change',
     //     eventName: 'orientationchange'
     //   })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Input',
-    //     eventName: 'input'
-    //   })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Mouse Up',
-    //     eventName: 'mouseup'
-    //   })
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Mouse Down',
-    //     eventName: 'mousedown'
-    //   })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Touch Start',
-    //     eventName: 'touchstart'
-    //   })
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Touch End',
-    //     eventName: 'touchend'
-    //   })
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Touch Cancel',
-    //     eventName: 'touchcancel'
-    //   })
   }
 
   function checkDeprecatedAttrs() {
@@ -416,11 +341,10 @@
     checkAttrs('data-iframe-width')
 
     if (found) {
-      advise(
-        `\u001B[31;1mDeprecated Attributes\u001B[m
+      advise(`
+\u001B[31;1mDeprecated Attributes\u001B[m
           
-The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`
-      )
+The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`)
     }
   }
 
@@ -439,6 +363,12 @@ The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m a
         )
       }
     }
+  }
+
+  function setupCalcElements() {
+    const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
+    hasTags = taggedElements.length > 0
+    calcElements = hasTags ? taggedElements : getAllElements(document)()
   }
 
   function checkCalcMode(calcMode, calcModeDefault, modes, type) {
@@ -734,63 +664,12 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
   }
 
   function setupBodyMutationObserver() {
-    // function addImageLoadListners(mutation) {
-    //   function addImageLoadListener(element) {
-    //     if (element.complete === false && !element.dataset.loading) {
-    //       log(`Attached Mutation Observer:${element.src}`)
-    //       element.dataset.loading = true
-    //       element.addEventListener('load', imageLoaded, false)
-    //       element.addEventListener('error', imageError, false)
-    //       elements.push(element)
-    //     }
-    //   }
-
-    //   if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
-    //     addImageLoadListener(mutation.target)
-    //   } else if (mutation.type === 'childList') {
-    //     Array.prototype.forEach.call(
-    //       mutation.target.querySelectorAll('img'),
-    //       addImageLoadListener
-    //     )
-    //   }
-    // }
-
-    // function removeFromArray(element) {
-    //   elements.splice(elements.indexOf(element), 1)
-    // }
-
-    // function removeImageLoadListener(element) {
-    //   log(`Remove listeners from ${element.src}`)
-    //   element.dataset.loading = false
-    //   element.removeEventListener('load', imageLoaded, false)
-    //   element.removeEventListener('error', imageError, false)
-    //   removeFromArray(element)
-    // }
-
-    // function imageEventTriggered(event, type, typeDesc) {
-    //   removeImageLoadListener(event.target)
-    //   sendSize(type, `${typeDesc}: ${event.target.src}`)
-    // }
-
-    // function imageLoaded(event) {
-    //   imageEventTriggered(event, 'imageLoad', 'Image loaded')
-    // }
-
-    // function imageError(event) {
-    //   imageEventTriggered(event, 'imageLoadFailed', 'Image load failed')
-    // }
-
     function mutationObserved(mutations) {
-      // sendSize(
-      //   'mutationObserver',
-      //   `mutationObserver: ${mutations[0].target} ${mutations[0].type}`
-      // )
-
-      // Deal with WebKit / Blink asyncing image loading when tags are injected into the page
-      // mutations.forEach(addImageLoadListners)
-
       // Look for injected elements that need ResizeObservers
       mutations.forEach(addResizeObservers)
+
+      // Rebuild elements list for size calculation
+      setupCalcElements()
     }
 
     function createMutationObserver() {
@@ -815,13 +694,10 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
 
     const observer = createMutationObserver()
 
-    // const elements = []
-
     return {
       disconnect() {
         log('Disconnect MutationObserver')
         observer.disconnect()
-        // elements.forEach(removeImageLoadListener)
       }
     }
   }
@@ -842,15 +718,8 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     return parseInt(retVal, BASE)
   }
 
-  function chkEventThottle(timer) {
-    if (timer > throttledTimer / 2) {
-      throttledTimer = 2 * timer
-      log(`Event throttle increased to ${throttledTimer}ms`)
-    }
-  }
-
   // Idea from https://github.com/guardian/iframe-messenger
-  function getMaxElement(side, elements, tagged) {
+  function getMaxElement(side) {
     const Side = capitalizeFirstLetter(side)
 
     let elVal = 0
@@ -858,8 +727,8 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     let maxVal = 0
     let timer = performance.now()
 
-    elements.forEach((element) => {
-      if (!tagged && !element?.checkVisibility(checkVisibilityOptions)) {
+    calcElements.forEach((element) => {
+      if (!hasTags && !element?.checkVisibility(checkVisibilityOptions)) {
         log(`Skipping non-visable element: ${getElementName(element)}`)
         return
       }
@@ -876,12 +745,22 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
 
     timer = performance.now() - timer
 
-    log(
-      `Parsed ${elements.length} HTML elements in ${timer.toPrecision(3)}ms \nPosition calculated from HTML element: ${getElementName(maxEl)}`
-    )
+    const logMsg = `
+Parsed ${calcElements.length} elements in ${timer.toPrecision(3)}ms
+Page ${side} found at: ${Math.ceil(maxVal)}px
+Position calculated from HTML element: ${elementSnippet(maxEl)}`
 
-    chkEventThottle(timer)
+    if (timer < 1.1 || isInit) {
+      log(logMsg)
+    } else {
+      advise(
+        `
+\u001B[31;1mPerformance Warning\u001B[m
 
+Calculateing the page size took an excessive amount of time. To improve performace add the \u001B[1mdata-iframe-size\u001B[m attribute to the ${side} element on the page.
+${logMsg}`
+      )
+    }
     return maxVal
   }
 
@@ -893,31 +772,9 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     dimension.documentElementBoundingClientRect()
   ]
 
-  function getTaggedElements(side, tag, quite = false) {
-    function noTaggedElementsFound() {
-      if (!quite) {
-        warn(`No tagged elements (${tag}) found on page, checking all elements`)
-      }
-
-      return getAllElements(document)()
-    }
-
-    let elements = document.querySelectorAll(`[${tag}]`)
-
-    if (elements.length === 0) elements = noTaggedElementsFound()
-
-    return getMaxElement(side, elements, true)
-  }
-
   const getAllElements = (element) => () =>
     element.querySelectorAll(
       '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
-    )
-
-  const getLowestElement = (func) =>
-    Math.max(
-      getHeight.bodyOffset() || getHeight.documentElementOffset(),
-      getMaxElement('bottom', func(), false)
     )
 
   const getAdjustedScroll = (getDimension) =>
@@ -944,7 +801,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
-This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a minor performace impact on more complex pages. 
+This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a performace impact on more complex pages. 
 
 To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want \u001B[3miframe-resizer\u001B[m to use when calculating the dimensions of the iframe. 
   
@@ -1009,7 +866,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         return returnBoundingClientRect()
 
       // one last check before we give up
-      case getDimension.taggedElement(true) < ceilBoundingSize:
+      case getDimension.taggedElement() < ceilBoundingSize:
         log('No overflowen elements found on page')
         return returnBoundingClientRect()
 
@@ -1035,8 +892,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     max: () => Math.max(...getAllMeasurements(getHeight)),
     min: () => Math.min(...getAllMeasurements(getHeight)),
     grow: () => getHeight.max(),
-    lowestElement: () => getLowestElement(getAllElements(document)),
-    taggedElement: (quite) => getTaggedElements('bottom', SIZE_ATTR, quite)
+    lowestElement: () => getMaxElement('bottom'),
+    taggedElement: () => getMaxElement('bottom')
   }
 
   const getWidth = {
@@ -1051,11 +908,10 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       document.documentElement.getBoundingClientRect().right,
     max: () => Math.max(...getAllMeasurements(getWidth)),
     min: () => Math.min(...getAllMeasurements(getWidth)),
-    rightMostElement: () =>
-      getMaxElement('right', getAllElements(document)(), false),
+    rightMostElement: () => getMaxElement('right'),
     scroll: () =>
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-    taggedElement: () => getTaggedElements('right', SIZE_ATTR)
+    taggedElement: () => getMaxElement('right')
   }
 
   function sizeIFrame(
@@ -1122,14 +978,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   }
 
   function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
-    function recordTrigger() {
-      if (!(triggerEvent in { reset: 1, resetPage: 1, init: 1 })) {
-        log(`Trigger event: ${triggerEventDesc}`)
-      }
-    }
-
-    const size = triggerEvent === 'init' ? sizeIFrame : throttle(sizeIFrame)
-
     if (document.hidden) {
       // Currently only correctly supported in firefox
       // This is checked again on the parent page
@@ -1137,8 +985,11 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       return
     }
 
-    recordTrigger()
-    size(triggerEvent, triggerEventDesc, customHeight, customWidth)
+    if (!(triggerEvent in nonLoggableTriggerEvents)) {
+      log(`Trigger event: ${triggerEventDesc}`)
+    }
+
+    sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth)
   }
 
   function lockTrigger() {
