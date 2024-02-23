@@ -111,16 +111,13 @@
 
   function iFrameListener(event) {
     function resizeIFrame() {
-      function resize() {
-        setSize(messageData)
-        setPagePosition(iframeId)
-        on('onResized', messageData)
-      }
-
       ensureInRange('Height')
       ensureInRange('Width')
 
-      syncResize(resize, messageData, 'init')
+      setSize(messageData)
+      setPagePosition(iframeId)
+      
+      on('onResized', messageData)
     }
 
     function getPaddingEnds(compStyle) {
@@ -691,17 +688,14 @@
   }
 
   function resetIFrame(messageData) {
-    function reset() {
-      setSize(messageData)
-      trigger('reset', 'reset', messageData.id)
-    }
-
     log(
       messageData.id,
       `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`
     )
+
     getPagePosition(messageData.id)
-    syncResize(reset, messageData, 'reset')
+    setSize(messageData)
+    trigger('reset', 'reset', messageData.id)
   }
 
   function setSize(messageData) {
@@ -739,21 +733,6 @@
     }
   }
 
-  function syncResize(func, messageData, doNotSync) {
-    /* istanbul ignore if */ // Not testable in PhantomJS
-    if (
-      doNotSync !== messageData.type &&
-      requestAnimationFrame &&
-      // including check for jasmine because we had trouble getting spy
-      // to work in unit test using requestAnimationFrame
-      !window.jasmine
-    ) {
-      log(messageData.id, 'Requesting animation frame')
-      requestAnimationFrame(func)
-    } else {
-      func()
-    }
-  }
 
   function trigger(calleeMsg, msg, id, noResponseWarning) {
     function postMessageToIFrame() {
@@ -1161,7 +1140,6 @@
     let iFrames
 
     if (!setupComplete) {
-      // setupRequestAnimationFrame()
       setupEventListeners()
       setupComplete = true
     }
