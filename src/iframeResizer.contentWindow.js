@@ -13,6 +13,7 @@
   if (typeof window === 'undefined') return // don't run for server side render
 
   const BASE = 10
+  const SINGLE = 1
   const SIZE_ATTR = 'data-iframe-size'
 
   const checkVisibilityOptions = {
@@ -741,7 +742,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     timer = performance.now() - timer
 
     const logMsg = `
-Parsed ${len} element${(len = 1 ? '' : 's')} in ${timer.toPrecision(3)}ms
+Parsed ${len} element${(len = SINGLE ? '' : 's')} in ${timer.toPrecision(3)}ms
 ${Side} ${hasTags ? 'tagged' : ''} element found at: ${maxVal}px
 Position calculated from HTML element: ${elementSnippet(maxEl)}`
 
