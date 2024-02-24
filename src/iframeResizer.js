@@ -70,9 +70,7 @@
 
   let count = 0
   let logEnabled = false
-  let hiddenCheckEnabled = false
   let pagePosition = null
-  let timer = null
 
   const addEventListener = (el, evt, func) =>
     el.addEventListener(evt, func, false)
@@ -707,29 +705,11 @@
       log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`)
     }
 
-    function chkZero(dimension) {
-      // FireFox sets dimension of hidden iFrames to zero.
-      // So if we detect that set up an event to check for
-      // when iFrame becomes visible.
-
-      /* istanbul ignore next */ // Not testable in PhantomJS
-      if (!hiddenCheckEnabled && messageData[dimension] === '0') {
-        hiddenCheckEnabled = true
-        log(iframeId, 'Hidden iFrame detected, creating visibility listener')
-        fixHiddenIFrames()
-      }
-    }
-
-    function processDimension(dimension) {
-      setDimension(dimension)
-      chkZero(dimension)
-    }
-
     if (settings[iframeId].sizeHeight) {
-      processDimension('height')
+      setDimension('height')
     }
     if (settings[iframeId].sizeWidth) {
-      processDimension('width')
+      setDimension('width')
     }
   }
 
@@ -1016,15 +996,6 @@
     }
   }
 
-  function debouce(fn, time) {
-    if (timer === null) {
-      timer = setTimeout(() => {
-        timer = null
-        fn()
-      }, time)
-    }
-  }
-
   const frameTimer = {}
 
   function debounceFrameEvents(fn, time, frameId) {
@@ -1038,62 +1009,10 @@
 
   // Not testable in PhantomJS
   /* istanbul ignore next */
-
-  function fixHiddenIFrames() {
-    function checkIFrames() {
-      function checkIFrame(iframeId) {
-        const isVisible = (el) => el.offsetParent !== null
-        const chkDimension = (dimension) =>
-          settings[iframeId]?.iframe.style[dimension] === '0px'
-
-        if (
-          settings[iframeId] &&
-          isVisible(settings[iframeId].iframe) &&
-          (chkDimension('height') || chkDimension('width'))
-        ) {
-          trigger('Visibility change', 'resize', iframeId)
-        }
-      }
-
-      Object.keys(settings).forEach(checkIFrame)
-    }
-
-    function mutationObserved(mutations) {
-      log(
-        'window',
-        `Mutation observed: ${mutations[0].target} ${mutations[0].type}`
-      )
-      debouce(checkIFrames, 16)
-    }
-
-    function createMutationObserver() {
-      const target = document.querySelector('body')
-      const config = {
-        attributes: true,
-        attributeOldValue: false,
-        characterData: true,
-        characterDataOldValue: false,
-        childList: true,
-        subtree: true
-      }
-      const observer = new MutationObserver(mutationObserved)
-
-      observer.observe(target, config)
-    }
-
-    createMutationObserver()
-  }
-
-  // Not testable in PhantomJS
-  /* istanbul ignore next */
   function tabVisible() {
-    function resize() {
-      sendTriggerMsg('Tab Visible', 'resize')
-    }
-
-    if (document.visibilityState !== 'hidden') {
+    if (document.hidden === false) {
       log('document', 'Trigger event: Visibility change')
-      debouce(resize, 16)
+      sendTriggerMsg('Tab Visible', 'resize')
     }
   }
 
