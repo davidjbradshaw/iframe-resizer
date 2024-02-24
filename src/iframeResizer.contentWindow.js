@@ -633,7 +633,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
   }
 
   const checkPositionType = (element) => {
-    const style = window.getComputedStyle(element)
+    const style = getComputedStyle(element)
     return style?.position !== '' && style?.position !== 'static'
   }
 
@@ -707,23 +707,12 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     bodyObserver = setupBodyMutationObserver()
   }
 
-  // document.documentElement.offsetHeight is not reliable, so
-  // we have to jump through hoops to get a better value.
-  function getComputedStyle(prop, el) {
-    let retVal = 0
-    el = el || document.body // Not testable in phantonJS
-
-    retVal = document.defaultView.getComputedStyle(el, null)
-    retVal = retVal === null ? 0 : retVal[prop]
-
-    return parseInt(retVal, BASE)
-  }
-
   // Idea from https://github.com/guardian/iframe-messenger
   function getMaxElement(side) {
     const Side = capitalizeFirstLetter(side)
 
     let elVal = 0
+    let len = calcElements.length
     let maxEl
     let maxVal = 0
     let timer = performance.now()
@@ -735,12 +724,13 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
         !element.checkVisibility(checkVisibilityOptions)
       ) {
         log(`Skipping non-visable element: ${getElementName(element)}`)
+        len -= 1
         return
       }
 
       elVal =
         element.getBoundingClientRect()[side] +
-        getComputedStyle(`margin${Side}`, element)
+        getComputedStyle(element).getPropertyValue(`margin${Side}`)
 
       if (elVal > maxVal) {
         maxVal = elVal
@@ -751,8 +741,8 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     timer = performance.now() - timer
 
     const logMsg = `
-Parsed ${calcElements.length} elements in ${timer.toPrecision(3)}ms
-Page ${side} found at: ${Math.ceil(maxVal)}px
+Parsed ${len} element${(len = 1 ? '' : 's')} in ${timer.toPrecision(3)}ms
+${Side} ${hasTags ? 'tagged' : ''} element found at: ${maxVal}px
 Position calculated from HTML element: ${elementSnippet(maxEl)}`
 
     if (timer < 1.1 || isInit || hasTags) {
@@ -880,13 +870,21 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     }
   }
 
+  const getBodyOffset = () => {
+    const { body } = document
+    const style = getComputedStyle(body)
+
+    return (
+      body.offsetHeight +
+      parseInt(style.marginTop, BASE) +
+      parseInt(style.marginBottom, BASE)
+    )
+  }
+
   const getHeight = {
     auto: () => getAutoSize(getHeight),
     autoOverflow: () => getAutoOverflow(getHeight),
-    bodyOffset: () =>
-      document.body.offsetHeight +
-      getComputedStyle('marginTop') +
-      getComputedStyle('marginBottom'),
+    bodyOffset: getBodyOffset,
     bodyScroll: () => document.body.scrollHeight,
     offset: () => getHeight.bodyOffset(), // Backwards compatibility
     custom: () => customCalcMethods.height(),
