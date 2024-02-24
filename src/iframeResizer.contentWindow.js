@@ -860,7 +860,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         log(`Page size < HTML bounding size: ${sizes}`)
         return returnBoundingClientRect()
 
-      // one last check before we give up
+      // one last check before we switch to autoOverflow
       case getDimension.taggedElement() < ceilBoundingSize:
         log('No overflowen elements found on page')
         return returnBoundingClientRect()
