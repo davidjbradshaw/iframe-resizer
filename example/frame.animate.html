@@ -22,19 +22,24 @@
       }
       #abs {
         position: absolute;
-        padding: 2px 2px 0 12px;
+        padding: 0 2px 0 12px;
         top: 0;
         right: 0;
         width: 200px;
         height: 1px;
+        overflow: hidden;
         background-color: wheat;
         animation-direction: alternate;
-        animation-duration: 5s;
+        animation-duration: 10s;
         animation-iteration-count: infinite;
         animation-name: animate;
         z-index: -10;
       }
 
+      #abs p {
+        margin: 34px 0;
+        width: 180px;
+      }
 
       @keyframes animate {
         from {
@@ -62,9 +67,10 @@
     </p>
 
     <div id="abs" data-iframe-size>
-        <br><br>
+      <p>
         This is an absolute positioned element that will animate to a height of
         600px
+      </p>
     </div>
 
     <!-- script>
