@@ -380,11 +380,10 @@ The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m a
         calcMode = calcModeDefault
       }
       if (calcMode in deprecatedResizeMethods) {
-        advise(
-          `\u001B[31;1mDeprecated ${type}CalculationMethod (${calcMode})\u001B[m
+        advise(`
+\u001B[31;1mDeprecated ${type}CalculationMethod (${calcMode})\u001B[m
 
-This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`
-        )
+This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`)
       }
       log(`${type} calculation method set to "${calcMode}"`)
     }
