@@ -20,6 +20,11 @@
         padding: 12px 218px 0 0;
         margin: 0 0 5px;
       }
+      th {
+        text-align: right;
+        padding: 0 10px 0 0;
+      }
+
       #abs {
         position: absolute;
         padding: 0 2px 0 12px;
@@ -37,7 +42,7 @@
       }
 
       #abs p {
-        margin: 34px 0;
+        margin: 35px 0;
         width: 180px;
       }
 
@@ -48,7 +53,7 @@
         }
 
         to {
-          height: 600px;
+          height: 900px;
         }
       }
     </style>
@@ -60,11 +65,10 @@
 
     <p>
       This iframe contains a page element animated via CSS to change the height of the page. 
-      This is not a recommended use of this library, as it places a large load on the browser.
-      If you really need to do this, then it is recommended that you use <strong>taggedElement</strong>
-      as your <strong>heightCalculationMethod</strong> to minimise the overhead of working out 
-      the page height. See the source code of this page for an example of using this method.
     </p>
+
+    <h4>Data return by parentIFrame.getPageInfo()</h4>
+    <div id="data"></div>
 
     <div id="abs" data-iframe-size>
       <p>
@@ -82,7 +86,20 @@
       
     </script -->
 
-    
+    <script>
+      window.iFrameResizer = {
+        onReady: () => {
+          parentIFrame.getPageInfo((pageInfo) => {
+            document.getElementById('data').innerHTML = `<table>${
+              Object.entries(pageInfo)
+                .map(([key, value]) => `<tr><th>${key}:</th><td> ${value}</td>`)
+                .join('')
+          }`
+          })
+        }
+      }
+    </script>
+
     <script
       type="text/javascript"
       src="../js/iframeResizer.contentWindow.js"
