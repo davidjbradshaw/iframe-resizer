@@ -265,7 +265,7 @@
     function getPageInfo() {
       const bodyPosition = document.body.getBoundingClientRect()
       const iFramePosition = messageData.iframe.getBoundingClientRect()
-      const { outerHeight, outerWidth, scrollY, scrollX } = window
+      const { scrollY, scrollX } = window
       const { scrollWidth, scrollHeight, clientHeight, clientWidth } =
         document.documentElement
 
@@ -279,11 +279,7 @@
         scrollX,
         scrollY,
         scrollWidth,
-        scrollHeight,
-        // scrollTop: scrollY, // Deprecated
-        // scrollLeft: scrollX, // Deprecated
-        windowHeight: outerHeight,
-        windowWidth: outerWidth
+        scrollHeight
       })
     }
 
