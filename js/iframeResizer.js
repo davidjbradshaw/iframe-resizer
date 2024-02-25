@@ -265,56 +265,83 @@
     function getPageInfo() {
       const bodyPosition = document.body.getBoundingClientRect()
       const iFramePosition = messageData.iframe.getBoundingClientRect()
+      const { outerHeight, outerWidth, scrollY, scrollX } = window
+      const { scrollWidth, scrollHeight, clientHeight, clientWidth } =
+        document.documentElement
 
       return JSON.stringify({
-        documentHeight: document.documentElement.clientHeight,
-        documentWidth: document.documentElement.clientWidth,
+        documentHeight: clientHeight,
+        documentWidth: clientWidth,
         iframeHeight: iFramePosition.height,
         iframeWidth: iFramePosition.width,
-        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
-        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
-        scrollX: window.scrollY,
-        scrollY: window.scrollX,
-        scrollTop: window.scrollY, // Deprecated
-        scrollLeft: window.scrollX, // Deprecated
-        windowHeight: window.innerHeight,
-        windowWidth: window.innerWidth
+        offsetTop: iFramePosition.top - bodyPosition.top,
+        offsetLeft: iFramePosition.left - bodyPosition.left,
+        scrollX,
+        scrollY,
+        scrollWidth,
+        scrollHeight,
+        // scrollTop: scrollY, // Deprecated
+        // scrollLeft: scrollX, // Deprecated
+        windowHeight: outerHeight,
+        windowWidth: outerWidth
       })
     }
 
-    function sendPageInfoToIframe(iframeId) {
-      function debouncedTrigger() {
-        trigger('Send Page Info', `pageInfo:${getPageInfo()}`, iframeId)
+    const sendPageInfoToIframe = (type, iframeId) => {
+      const gate = {}
+
+      function throttle(func, frameId) {
+        if (!gate[frameId]) {
+          func()
+          gate[frameId] = requestAnimationFrame(() => {
+            gate[frameId] = null
+          })
+        }
       }
 
-      debounceFrameEvents(debouncedTrigger, 32, iframeId)
+      function gatedTrigger() {
+        trigger(
+          `Send Page Info (${type})`,
+          `pageInfo:${getPageInfo()}`,
+          iframeId
+        )
+      }
+
+      throttle(gatedTrigger, iframeId)
     }
 
     function startPageInfoMonitor() {
-      function setListener(type, func) {
-        function sendPageInfo() {
-          if (settings[id]) {
-            sendPageInfoToIframe(id)
-          } else {
-            stop()
-          }
+      const sendPageInfo = (type) => () => {
+        if (settings[id]) {
+          sendPageInfoToIframe(type, id)
+        } else {
+          stop()
         }
+      }
 
-        ;['scroll', 'resize'].forEach((evt) => {
-          log(id, `${type + evt} listener for sendPageInfo`)
-          func(window, evt, sendPageInfo)
-        })
+      function setListener(type, func) {
+        log(id, `${type} listeners for sendPageInfo`)
+        func(window, 'scroll', sendPageInfo('scroll'))
+        func(window, 'resize', sendPageInfo('resize window'))
       }
 
       function stop() {
         setListener('Remove ', removeEventListener)
+        resizeObserver.disconnect()
       }
 
       function start() {
         setListener('Add ', addEventListener)
+        resizeObserver.observe(document.body, {
+          attributes: true,
+          childList: true,
+          subtree: true
+        })
       }
 
-      let id = iframeId // Create locally scoped copy of iFrame ID
+      const id = iframeId // Create locally scoped copy of iFrame ID
+
+      const resizeObserver = new ResizeObserver(sendPageInfo('iframe observed'))
 
       start()
 
@@ -514,7 +541,7 @@
           break
 
         case 'pageInfo':
-          sendPageInfoToIframe(iframeId)
+          sendPageInfoToIframe('start', iframeId)
           startPageInfoMonitor()
           break
 
@@ -996,26 +1023,6 @@
     }
   }
 
-  const frameTimer = {}
-
-  function debounceFrameEvents(fn, time, frameId) {
-    if (!frameTimer[frameId]) {
-      frameTimer[frameId] = setTimeout(() => {
-        frameTimer[frameId] = null
-        fn()
-      }, time)
-    }
-  }
-
-  // Not testable in PhantomJS
-  /* istanbul ignore next */
-  function tabVisible() {
-    if (document.hidden === false) {
-      log('document', 'Trigger event: Visibility change')
-      sendTriggerMsg('Tab Visible', 'resize')
-    }
-  }
-
   function sendTriggerMsg(eventName, event) {
     function triggerEnabledIframe(iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
@@ -1027,6 +1034,13 @@
       settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
 
     Object.keys(settings).forEach(triggerEnabledIframe)
+  }
+
+  function tabVisible() {
+    if (document.hidden === false) {
+      log('document', 'Trigger event: Visibility change')
+      sendTriggerMsg('Tab Visible', 'resize')
+    }
   }
 
   function setupEventListeners() {
