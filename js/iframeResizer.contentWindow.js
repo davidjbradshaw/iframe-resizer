@@ -1160,6 +1160,10 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     }
   }
 
+  // Leave a flag, so same-domain parent window knows we are ready
+  window.iFrameResizer = window.iFrameResizer || {}
+  window.iFrameResizer.loaded = true
+
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
   chkLateLoaded()
