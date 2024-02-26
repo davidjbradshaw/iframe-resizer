@@ -1,14 +1,6 @@
-
 ## Options
 
 The following options can be passed to iframe-resizer on the parent page.
-
-### log
-
-	default: false
-	type:    boolean
-
-Setting the `log` option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.
 
 ### autoResize
 
@@ -17,7 +9,7 @@ Setting the `log` option to true will make the scripts in both the host page and
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.
 
-<i>Note: When set to false the iFrame will still inititally size to the contained content, only additional resizing events are disabled.</i>
+<i>Note: When set to false the iFrame will still inititally size to the contained content, to disable this behavour set the `direction` option to `none` to disable all resizing.</i>
 
 ### bodyBackground
 
@@ -46,6 +38,13 @@ Override the default body padding style in the iFrame. A string can be any valid
 	type:    boolean || array
 
 When set to true, only allow incoming messages from the domain listed in the `src` property of the iFrame tag. If your iFrame navigates between different domains, ports or protocols; then you will need to provide an array of URLs or disable this option.
+
+### direction
+
+    default: 'horizontal'
+	values: 'horizontal' || 'vertical' || 'none'
+
+Set the direction in which you want the iframe to automaticaly scale to the content size.
 
 ### inPageLinks
 
@@ -90,6 +89,13 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 <sup>*</sup> These methods can cause screen flicker in some browsers.
 -->
 
+### log
+
+	default: false
+	type:    boolean
+
+Setting the `log` option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.
+
 ### maxHeight / maxWidth
 
     default: infinity
@@ -124,28 +130,12 @@ Enable scroll bars in iFrame.
 * **false** applies `scrolling="no"`
 * **'omit'** applies no `scrolling` attribute to the iFrame
 
-### sizeHeight
-
-	default: true
-	type:    boolean
-
-Resize iFrame to content height.
-
-### sizeWidth
-
-	default: false
-	type:    boolean
-
-Resize iFrame to content width.
-
-
 ### tolerance
 
 	default: 0
 	type:    integer
 
 Set the number of pixels the iFrame content size has to change by, before triggering a resize of the iFrame.
-
 
 ### warningTimeout
 

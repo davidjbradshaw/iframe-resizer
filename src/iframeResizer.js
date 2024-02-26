@@ -28,9 +28,9 @@
     autoResize: true,
     bodyBackground: null,
     bodyMargin: null,
-    bodyMarginV1: 8,
     bodyPadding: null,
     checkOrigin: true,
+    direction: 'vertical',
     inPageLinks: false,
     enablePublicMethods: true,
     heightCalculationMethod: 'auto',
@@ -49,7 +49,7 @@
     sizeWidth: false,
     warningTimeout: 5000,
     tolerance: 0,
-    widthCalculationMethod: 'scroll',
+    widthCalculationMethod: 'auto',
     onClose: () => true,
     onClosed() {},
     onInit: false,
@@ -58,8 +58,13 @@
     onMouseLeave() {},
     onReady(messageData) {
       if (typeof settings[messageData.id].onInit === 'function') {
-        warn(
-          'onInit() function is deprecated and has been replaced with onReady()'
+        advise(
+          messageData.id,
+          `
+\u001B[31;1mDeprecated Option\u001B[m
+
+The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with \u001B[1monReady()\u001B[m. It will be removed in a future version of iFrame Resizer.
+        `
         )
         settings[messageData.id].onInit(messageData)
       }
@@ -93,19 +98,32 @@
 
   const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
+  const formatLogMsg = (iframeId, ...msg) =>
+    [`${msgId}[${iframeId}]`, ...msg].join(' ')
+
   const output = (type, iframeId, ...msg) =>
     // eslint-disable-next-line no-console
     console[type](formatLogHeader(iframeId), ...msg)
 
   const log = (iframeId, ...msg) =>
-    isLogEnabled(iframeId) === true
-      ? output('log', iframeId, isLogEnabled(iframeId), ...msg)
-      : null
+    isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null
 
-  const info = (iframeId, ...msg) =>
-    output('info', iframeId, isLogEnabled(iframeId), ...msg)
+  const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
 
-  const warn = (iframeId, ...msg) => output('warn', iframeId, true, ...msg)
+  const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
+
+  const advise = (iframeId, msg) =>
+    // eslint-disable-next-line no-console
+    window.console &&
+    // eslint-disable-next-line no-console
+    console.warn(
+      formatLogMsg(
+        iframeId,
+        window.chrome // Only show formatting in Chrome as not supported in other browsers
+          ? msg
+          : msg.replaceAll(/\u001B\[[\d;]*m/gi, '') // eslint-disable-line no-control-regex
+      )
+    )
 
   function iFrameListener(event) {
     function resizeIFrame() {
@@ -357,7 +375,7 @@
       let retBool = true
 
       if (messageData.iframe === null) {
-        warn(iframeId, `IFrame (${messageData.id}) not found`)
+        warn(iframeId, `The iframe (${messageData.id}) was not found.`)
         retBool = false
       }
 
@@ -588,7 +606,7 @@
 
       if (!settings[iframeId]) {
         retBool = false
-        warn(
+        throw new Error(
           `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`
         )
       }
@@ -626,7 +644,7 @@
     iframeId = messageData.id
 
     if (!iframeId) {
-      warn('iframeResizer received messageData without id')
+      warn('iframeResizer received messageData without id, message was: ', msg)
       return
     }
 
@@ -762,16 +780,18 @@
 
     function warnOnNoResponse() {
       function warning() {
-        if (!settings[id]?.loaded && !errorShown) {
+        if (!settings[id]?.loaded && !settings[id].loadErrorShown) {
           if (settings[id] === undefined) return // iframe has been closed while we where waiting
-          errorShown = true
-          warn(
+          settings[id].loadErrorShown = true
+          advise(
             id,
-            `IFrame has not responded within ${
-              settings[id].warningTimeout / 1000
-            } seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame.` +
-              ` This message can be ignored if everything is working, or you can set the` +
-              ` warningTimeout option to a higher value or zero to suppress this warning.`
+            `
+\u001B[31;1mNo response from iFrame\u001B[m
+            
+The iframe (\u001B[3m${id}\u001B[m) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check \u001B[1miFrameResizer.contentWindow.js\u001B[m has been loaded in the iframe.
+
+This message can be ignored if everything is working, or you can set the \u001B[1mwarningTimeout\u001B[m option to a higher value or zero to suppress this warning.
+`
           )
         }
       }
@@ -783,8 +803,6 @@
         )
       }
     }
-
-    let errorShown = false
 
     if (settings[id]) {
       chkAndSend()
@@ -813,7 +831,8 @@
       iframeSettings.widthCalculationMethod,
       iframeSettings.mouseEvents,
       iframeSettings.offsetHeight,
-      iframeSettings.offsetWidth
+      iframeSettings.offsetWidth,
+      iframeSettings.sizeHeight
     ].join(':')
   }
 
@@ -965,11 +984,49 @@
     }
 
     function checkOptions(options) {
-      if (options && typeof options !== 'object') {
+      if (!options) return {}
+
+      if (typeof options !== 'object') {
         throw new TypeError('Options is not an object')
       }
 
-      return options || {}
+      if ('sizeWidth' in options || 'sizeHeight' in options) {
+        advise(
+          iframeId,
+          `
+\u001B[31;1mDeprecated Option\u001Bm
+
+The \u001B[1msizeWidth\u001B[m and \u001B[1msizeHeight\u001B[m options have been replaced with new \u001B[1mdirection\u001B[m option which expects values of \u001B[3m"vertical"\u001B[m or \u001B[3m"horizontal"\u001B[m.
+`
+        )
+      }
+
+      return options
+    }
+
+    function setDirection() {
+      if (settings[iframeId].direction === 'horizontal') {
+        settings[iframeId].sizeWidth = true
+        settings[iframeId].sizeHeight = false
+        log(iframeId, 'Direction set to "horizontal"')
+        return
+      }
+
+      if (settings[iframeId].direction === 'none') {
+        settings[iframeId].sizeWidth = false
+        settings[iframeId].sizeHeight = false
+        log(iframeId, 'Direction set to "none"')
+        return
+      }
+
+      if (settings[iframeId].direction !== 'vertical') {
+        throw new TypeError(
+          iframeId,
+          `Direction value of "${settings[iframeId].direction}" is not valid`
+        )
+      }
+
+      log(iframeId, 'Direction set to "vertical"')
     }
 
     function getTargetOrigin(remoteHost) {
@@ -993,6 +1050,7 @@
         ...checkOptions(options)
       }
 
+      setDirection()
       getPostMessageTarget()
 
       settings[iframeId].targetOrigin =
