@@ -132,7 +132,10 @@
   }
 
   function elementSnippet(el) {
-    const outer = el.outerHTML.toString()
+    const outer = el?.outerHTML?.toString()
+
+    if (!outer) return el
+
     return outer.length < 30
       ? outer
       : `${outer.slice(0, 30).replaceAll('\n', ' ')}...`
@@ -786,8 +789,7 @@ ${logMsg}`
     )
 
   const getAdjustedScroll = (getDimension) =>
-    getDimension.documentElementScroll() -
-    (getDimension === getHeight ? offsetHeight : offsetWidth)
+    getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
   let prevScrollSize = 0
   let prevBoundingSize = 0
@@ -795,11 +797,24 @@ ${logMsg}`
   function getAutoOverflow(getDimension) {
     const boundingSize = getDimension.documentElementBoundingClientRect()
     const scrollSize = getAdjustedScroll(getDimension)
+    const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
 
-    if (!getDimension.enabled() || scrollSize < Math.ceil(boundingSize))
-      return boundingSize
+    switch (true) {
+      case !getDimension.enabled():
+        return scrollSize
 
-    return Math.max(getDimension.taggedElement(), boundingSize)
+      case boundingSize === 0:
+        log(`Page is hidden: ${sizes}`)
+        return scrollSize
+
+      case scrollSize <= Math.ceil(boundingSize):
+        log(`Page size <= HTML bounding size: ${sizes}`)
+        return boundingSize
+
+      default:
+        log(`Page size > HTML bounding size: ${sizes}`)
+        return Math.max(getDimension.taggedElement(), boundingSize)
+    }
   }
 
   function switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize) {
@@ -843,8 +858,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
     switch (true) {
       case !getDimension.enabled():
-        log(`Auto Resize disabled for ${getDimension.type}.`)
-        return returnBoundingClientRect()
+        return scrollSize
 
       case prevBoundingSize === 0 && prevScrollSize === 0:
         log(`Initial page size values: ${sizes}`)
@@ -858,8 +872,16 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         log(`Size unchanged: ${sizes}`)
         return Math.max(boundingSize, scrollSize)
 
+      case boundingSize === 0:
+        log(`Page is hidden: ${sizes}`)
+        return scrollSize
+
       case boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize:
-        log(`New HTML bounding size: ${sizes}`)
+        log(
+          `New HTML bounding size: ${sizes}`,
+          'Previous bounding size:',
+          prevBoundingSize
+        )
         return returnBoundingClientRect()
 
       case boundingSize < prevBoundingSize:
@@ -879,7 +901,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         return returnBoundingClientRect()
 
       // one last check before we switch to autoOverflow
-      case getDimension.taggedElement() < ceilBoundingSize:
+      case getDimension.taggedElement(true) < ceilBoundingSize:
         log('No overflowen elements found on page')
         return returnBoundingClientRect()
 
@@ -901,6 +923,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
   const getHeight = {
     enabled: () => calculateHeight,
+    getOffset: () => offsetHeight,
     type: 'height',
     auto: () => getAutoSize(getHeight),
     autoOverflow: () => getAutoOverflow(getHeight),
@@ -921,6 +944,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
   const getWidth = {
     enabled: () => calculateWidth,
+    getOffset: () => offsetWidth,
     type: 'width',
     auto: () => getAutoSize(getWidth),
     autoOverflow: () => getAutoOverflow(getWidth),
