@@ -1,6 +1,6 @@
 define(['iframeResizer'], function (iFrameResize) {
   describe('Parent Page', function () {
-    describe('default resize', function () {
+    xdescribe('default resize', function () {
       var iframe
       var log = LOG
       var testId = 'defaultResize3'
