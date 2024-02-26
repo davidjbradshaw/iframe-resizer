@@ -231,7 +231,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         return checkOrigin.constructor === Array ? checkList() : checkSingle()
       }
 
-      let { origin } = event
+      const { origin, sameDomain } = event
+
+      if (sameDomain) {
+        return true
+      }
+
       let checkOrigin = settings[iframeId]?.checkOrigin
 
       if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
@@ -601,17 +606,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       }
     }
 
-    function hasSettings(iframeId) {
-      let retBool = true
-
+    function checkSettings(iframeId) {
       if (!settings[iframeId]) {
-        retBool = false
         throw new Error(
           `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`
         )
       }
-
-      return retBool
     }
 
     function iFrameReadyMsgReceived() {
@@ -648,7 +648,9 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       return
     }
 
-    if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
+    checkSettings(iframeId)
+
+    if (!isMessageFromMetaParent()) {
       log(iframeId, `Received: ${msg}`)
       settings[iframeId].loaded = true
 
@@ -1100,6 +1102,7 @@ The \u001B[1msizeWidth\u001B[m and \u001B[1msizeHeight\u001B[m options have been
   function setupEventListeners() {
     addEventListener(window, 'message', iFrameListener)
     addEventListener(document, 'visibilitychange', tabVisible)
+    window.iFrameListener = (data) => iFrameListener({ data, sameDomain: true })
   }
 
   let setupComplete = false
