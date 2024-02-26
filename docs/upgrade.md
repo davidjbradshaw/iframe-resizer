@@ -18,7 +18,7 @@ With _iframe-resizer 5_, these options have been deprecated and _iframe-resizer_
 
 The name of the tag attributes have now been consolidated from `data-iframe-height` and `date-iframe-width`, to the single tag `data-iframe-size`. 
 
-Use off the old calculation options or the old tag names will trigger a deprecation warning in the console with advice on how to update your config.
+Use of the old calculation options or the old tag names will trigger a deprecation warning in the console with advice on how to update your config.
 
 ### New `direction` option replaces `sizeHeight` / `sizeWidth`
 
