@@ -14,7 +14,7 @@
       html{
         margin: 0;
         padding: 8px 10px;
-        border: solid 1px red;
+        /* border: solid 1px red; */
       }
       p {
         padding: 12px 218px 0 0;
@@ -31,7 +31,6 @@
         top: 0;
         right: 0;
         width: 200px;
-        height: 1px;
         overflow: hidden;
         background-color: wheat;
         animation-direction: alternate;
@@ -48,12 +47,12 @@
 
       @keyframes animate {
         from {
-         height: 1px;
+         height: 145px;
           
         }
 
         to {
-          height: 900px;
+          height: 602px;
         }
       }
     </style>
@@ -61,23 +60,29 @@
 
   <body>
     <a href="frame.content.html" class="back">Back to page 1</a>
-    <b>iFrame</b>
+    <b>Animated iFrame</b>
 
     <p>
       This iframe contains a page element animated via CSS to change the height of the page. 
     </p>
 
-    <h4>Data return by parentIFrame.getPageInfo()</h4>
-    <div id="data"></div>
+    <h4>Data returned by parentIFrame.getPageInfo()</h4>
+    <table id="data"></table>
 
+    <!-- 
+      The data-iframe-size attribute tells iframe-resizer to use this element
+      to calculate the height of the iframe, when the content overflows the
+      <body> element.     
+    -->
     <div id="abs" data-iframe-size>
       <p>
         This is an absolute positioned element that will animate to a height of
-        600px
+        600px using CSS keyframes. 
       </p>
     </div>
 
     <!-- script>
+      // Add some content to to show the effect of using data-iframe-size above
       for (var i = 0; i < 10000; i++) {
         document.write(
           '<div style="position: absolute">This is a test to see if the page will grow to accommodate the content.</div>'
@@ -87,16 +92,24 @@
     </script -->
 
     <script>
+      const dataTable = document.getElementById('data')
+      const row = ([key, value]) => `<tr><th>${key}</th><td>${value}</td></tr>`
+
       window.iFrameResizer = {
+        
+        // We cheat a little here, as the iframe resize is always
+        // one frame behind the actual content height in the iframe.
+        // Making the offsetHeight -2, ensures that the content height
+        // will always fill the iframe when downsizing and avoid any
+        // annoying flicker.
+        offsetHeight: -2,
+
         onReady: () => {
           parentIFrame.getPageInfo((pageInfo) => {
-            document.getElementById('data').innerHTML = `<table>${
-              Object.entries(pageInfo)
-                .map(([key, value]) => `<tr><th>${key}:</th><td> ${value}</td>`)
-                .join('')
-          }`
+            dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
           })
         }
+
       }
     </script>
 
