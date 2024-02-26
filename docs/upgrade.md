@@ -1,8 +1,8 @@
 # Upgrading to Version 5
 
-Iframe Resizer version 5 drops support for legacy browsers and changes the way content resize events are detected. This change greatly improves detection of content changes and this library can now detect a number of events, such as user `<textarea>` resizing and CSS animation that prevouis versions struggled with.
+Iframe Resizer version 5 drops support for legacy browsers and changes the way content resize events are detected. This change greatly improves detection of content changes and this library can now detect a number of events, such as user `<textarea>` resizing and CSS animation that previous versions struggled with.
 
-These changes along with futher code optimisation have lead to a large improvement in the performance of this library and it is now possible to have _iframe-resizer_ both detect and keep up with CSS animation that causes the iframe to resize on every annimation frame.
+These changes along with futher code optimisations have lead to a large improvement in the performance of this library and it is now possible to have _iframe-resizer_ both detect and keep up with CSS animation that causes the iframe to resize on every annimation frame.
 
 In addition to this, version 5 contains a number of other improvements and API changes that should be considered when upgrading from a previous version.
 
@@ -14,13 +14,13 @@ The previous versions of _iframe-resizer_ offered the choice of a wide ranage of
 
 With version 5, these options have been deprecated and _iframe-resizer_ will inspect the the page layout to automatically determine which is the best method each time the iframe is resized. If it is determind that the best calculation method is `taggedElement` and the page has no tags, an advisory warning will be logged in the console to suggest adding these.
 
-The name of the tag attributes have now been consolidated from `data-iframe-height` and `date-iframe-width`, with the single tag `data-iframe-size`. 
+The name of the tag attributes have now been consolidated from `data-iframe-height` and `date-iframe-width`, to the single tag `data-iframe-size`. 
 
 Use off the old calculation options or the old tag names will trigger a deprecation warning in the console with advice on how to update your config.
 
 ### New `direction` option replaces `sizeHeight` / `sizeWidth`
 
-This library has always supported resizing in both directions, but changing the direction confusingly required the setting of two different options in the config. This has now been consolidated in the new single `direction` options, which can have the following values: `vertical`, `horizontal` and `none`.
+This library has always supported resizing in both directions, but changing the direction confusingly required the setting of two different options in the config. This has now been consolidated in the new single `direction` option, which can have the following values: `vertical`, `horizontal` or `none`.
 
 Use of the old values will trigger a deprication warning.
 
@@ -37,7 +37,7 @@ The detection of changes to these values has also been improved.
 
 ### The `onInit()` method has been renamed to `onReady()`
 
-The `onInit()` method has been deprecated in favour of `onReady()`. This brings the parent page and iframe names for this event inline with each other.
+The `onInit()` method has been deprecated in favour of `onReady()`. This brings the parent page and iframe names for this event inline with each other. Use of `onInit()` will trigger a deprecation warning in the console.
 
 ### Min/Max size values now taken from iframe computed CSS values
 
@@ -49,7 +49,7 @@ These new options allow you to adjust the value returned by the iframe, they can
 
 ## Other Improvements
 
-In addition to the above API changes, version 5 includes the following additional enhancements.
+In addition to the above API changes, _iframe-resizer 5_ includes the following additional enhancements.
 
 ### Direct communitcation for same domain iframes
 
@@ -57,7 +57,7 @@ Iframe Resizer now detects when the iframe is on the same domain as the parent p
 
 ### Visability checking
 
-The visability of both the iframe and the parent page are now observered. This allows resizing to be disabled while the iframe is now visible to the user. 
+The visability of both the iframe and the parent page are now observered. This allows resizing to be disabled while the iframe is not visible to the user. 
 
 ### Ensures CSS sizing of iframe html and body tags set to auto
 
