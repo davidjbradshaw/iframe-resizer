@@ -1,10 +1,12 @@
-## Upgrading to version 5
+# Upgrading to Version 5
 
-Version 5 drops support for legacy browsers and changes the way content resize events in the iframe are detected. This change greatly improves _iframe-resizer_ detection of content changes and this library can now detect a number of events, such as user `<textarea>` resizing and CSS animation that prevouis versions struggled to detect.
+Iframe Resizer version 5 drops support for legacy browsers and changes the way content resize events are detected. This change greatly improves detection of content changes and this library can now detect a number of events, such as user `<textarea>` resizing and CSS animation that prevouis versions struggled with.
 
 These changes along with futher code optimisation have lead to a large improvement in the performance of this library and it is now possible to have _iframe-resizer_ both detect and keep up with CSS animation that causes the iframe to resize on every annimation frame.
 
-In addition to this version 5 contains a number of other improvements and API changes that should be considered when upgrading from a previous version.
+In addition to this, version 5 contains a number of other improvements and API changes that should be considered when upgrading from a previous version.
+
+## API Changes
 
 ### Auto detection of the best content size calculation method
 
@@ -45,6 +47,7 @@ These settings are now read from the computed style of the iframe tag. Setting t
 
 These new options allow you to adjust the value returned by the iframe, they can have either a positive or negative value.
 
+## Other Improvements
 
 
 
