@@ -32,8 +32,9 @@ The `getPageInfo()` method as been tidied up to bring it inline with modern brow
 
   * The `scrollLeft` and `scrollTop` values have been renamed to `scrollX` and `scrollY` in order to match the names of these values in the DOM of modern browsers.
   * Added `scrollHeight` and `scrollWidth` values.
-  * Removed `windowHeight` / `windowWidth` as they returned the wrong values and the correct ones are available in the iframe via `window.outerWidth` and `window.outerHeight`.
+  * Fixed `windowHeight` / `windowWidth` to return the values of `window.innerHeight` and `window.innerWidth`. The previous version returned `window.outerWidth` and `window.outerHeight`, these outer values are available directly within the iframe.
   * Removed long deprecated `clientHeight` and `clientWidth` values.
+  * Removed `documentHeight` / `documentWidth` because they return incorrect values and the correct values are available using `scrollHeight` and `scrollWidth`.
   * Returned values are now read only.
 
 The detection of changes to these values has also been improved.
@@ -64,7 +65,7 @@ The visability of both the iframe and the parent page are now observered. This a
 
 ### Ensures CSS sizing of iframe html and body tags set to auto
 
-The most common reason for Iframe Resizer to have difficulty resizing, or going into an endless loop of resizing, is the `<html>` and/or `<body>` elements having a size set on them by CSS. Iframe Resizer now inspects these elements and ensure that the height and width is set to `auto`.
+The most common reason for Iframe Resizer to have difficulty resizing, or going into an endless loop of resizing, is the `<html>` and/or `<body>` elements having a size set on them by CSS. Iframe Resizer now inspects these elements and ensures that the height and width is set to `auto`.
 
 
 
