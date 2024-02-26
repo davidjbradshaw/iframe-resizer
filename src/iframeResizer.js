@@ -293,8 +293,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         document.documentElement
 
       return JSON.stringify({
-        documentHeight: clientHeight,
-        documentWidth: clientWidth,
         iframeHeight: iFramePosition.height,
         iframeWidth: iFramePosition.width,
         offsetTop: Math.floor(iFramePosition.top - bodyPosition.top),
@@ -302,7 +300,9 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         scrollX,
         scrollY,
         scrollWidth,
-        scrollHeight
+        scrollHeight,
+        windowHeight: window.innerHeight,
+        windowWidth: window.innerWidth,
       })
     }
 
