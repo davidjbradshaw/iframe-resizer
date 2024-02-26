@@ -8,7 +8,7 @@ In addition to this, _iframe-resizer 5_ contains a number of other improvements 
 
 ## API Changes
 
-Over the last decade _iframe-resizer_ has had a graduale increase in the number of available configuration options. With _iframe-resizer 5_ the aim has been to reduce and clarify these options in order to reduce complexity of using this library. The library will now auto detect a number of settings and also log advisory warnings to the console where it thinks you should make changes to the config.
+Over the last decade _iframe-resizer_ has had a gradaul increase in the number of available configuration options. With _iframe-resizer 5_ the aim has been to reduce and clarify these options in order to reduce complexity of using this library. The library will now auto detect a number of settings and also log advisory warnings to the console where it thinks you should make changes to the config.
 
 ### Auto detection of the best content size calculation method
 
@@ -31,6 +31,7 @@ Use of the old values will trigger a deprication warning.
 The `getPageInfo()` method as been tidied up to bring it inline with modern browsers and fix some outstanding bugs. These changes are as follows:
 
   * The `scrollLeft` and `scrollTop` values have been renamed to `scrollX` and `scrollY` in order to match the names of these values in the DOM of modern browsers.
+  * Added `scrollHeight` and `scrollWidth` values.
   * Removed `windowHeight` / `windowWidth` as they returned the wrong values and the correct ones are available in the iframe via `window.outerWidth` and `window.outerHeight`.
   * Removed long deprecated `clientHeight` and `clientWidth` values.
   * Returned values are now read only.
@@ -63,7 +64,7 @@ The visability of both the iframe and the parent page are now observered. This a
 
 ### Ensures CSS sizing of iframe html and body tags set to auto
 
-The most common reason for Iframe Resizer to have difficulty resizing, or going into an endless loop of resizing, is the <html> and/or <body> elements having a size set on them by CSS. Iframe Resizer now inspects these elements and ensure that the height and width is set to `auto`.
+The most common reason for Iframe Resizer to have difficulty resizing, or going into an endless loop of resizing, is the `<html>` and/or `<body>` elements having a size set on them by CSS. Iframe Resizer now inspects these elements and ensure that the height and width is set to `auto`.
 
 
 
