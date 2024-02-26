@@ -1,4 +1,4 @@
-# Upgrading to Version 5
+# Upgrading to iframe-resizer 5
 
 Iframe Resizer version 5 drops support for legacy browsers and changes the way content resize events are detected. These changes greatly improves detection of content changes and _iframe-resizer__ can now detect a number of events, such as user `<textarea>` resizing and CSS animation that previous versions struggled with.
 
