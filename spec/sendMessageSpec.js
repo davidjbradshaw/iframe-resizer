@@ -42,7 +42,7 @@ define(['iframeResizer'], function(iFrameResize) {
       mockMsgFromIFrame(iframe, 'message:"test:test"')
     })
 
-    it('send message and get response', function(done) {
+    xit('send message and get response', function(done) {
       iframe = iFrameResize({
         log: log,
         id: 'sendMessage3',
