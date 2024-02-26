@@ -85,6 +85,7 @@
   let offsetWidth = 0
   let resizeFrom = 'child'
   let resizeObserver = null
+  let sameDomian = false
   let target = window.parent
   let targetOriginDefault = '*'
   let tolerance = 0
@@ -159,6 +160,7 @@
     )
 
   function init() {
+    checkCrossDomain()
     readDataFromParent()
     log(`Initialising iFrame (${window.location.href})`)
     readDataFromPage()
@@ -179,6 +181,14 @@
     sendSize('init', 'Init message from host page')
     onReady()
     isInit = false
+  }
+
+  function checkCrossDomain() {
+    try {
+      sameDomian = 'iFrameListener' in window.parent
+    } catch (error) {
+      log('Cross domain iframe detected.')
+    }
   }
 
   function readDataFromParent() {
@@ -786,7 +796,7 @@ ${logMsg}`
     const boundingSize = getDimension.documentElementBoundingClientRect()
     const scrollSize = getAdjustedScroll(getDimension)
 
-    if (!!getDimension.enabled || scrollSize < Math.ceil(boundingSize))
+    if (!getDimension.enabled() || scrollSize < Math.ceil(boundingSize))
       return boundingSize
 
     return Math.max(getDimension.taggedElement(), boundingSize)
@@ -832,7 +842,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
 
     switch (true) {
-      case !getDimension.enabled:
+      case !getDimension.enabled():
         log(`Auto Resize disabled for ${getDimension.type}.`)
         return returnBoundingClientRect()
 
@@ -890,7 +900,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   }
 
   const getHeight = {
-    enabled: calculateHeight,
+    enabled: () => calculateHeight,
     type: 'height',
     auto: () => getAutoSize(getHeight),
     autoOverflow: () => getAutoOverflow(getHeight),
@@ -910,7 +920,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   }
 
   const getWidth = {
-    enabled: calculateWidth,
+    enabled: () => calculateWidth,
     type: 'width',
     auto: () => getAutoSize(getWidth),
     autoOverflow: () => getAutoOverflow(getWidth),
@@ -1054,7 +1064,15 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       const size = `${height + offsetHeight}:${width + offsetWidth}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      log(`Sending message to host page (${message})`)
+      log(
+        `Sending message to host page (${message}) via ${sameDomian ? 'sameDomain' : 'postMessage'}`
+      )
+
+      if (sameDomian) {
+        window.parent.iFrameListener(msgID + message)
+        return
+      }
+
       target.postMessage(msgID + message, targetOrigin)
     }
 
@@ -1172,9 +1190,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     }
   }
 
-  // Leave a flag, so same-domain parent window knows we are ready
-  window.iFrameResizer = window.iFrameResizer || {}
-  window.iFrameResizer.loaded = true
+  window.iFrameListener = (data) => receiver({ data, sameDomian: true })
 
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
