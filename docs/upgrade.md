@@ -49,5 +49,19 @@ These new options allow you to adjust the value returned by the iframe, they can
 
 ## Other Improvements
 
+In addition to the above API changes, version 5 includes the following additional enhancements.
+
+### Direct communitcation for same domain iframes
+
+Iframe Resizer now detects when the iframe is on the same domain as the parent page, and will then pass messages directly via the browser DOM. This provides an additional performance improvement over always using `postMessage()`, which is now only used for cross-domain iframes.
+
+### Visability checking
+
+The visability of both the iframe and the parent page are now observered. This allows resizing to be disabled while the iframe is now visible to the user. 
+
+### Ensures CSS sizing of iframe html and body tags set to auto
+
+The most common reason for Iframe Resizer to have difficulty resizing, or going into an endless loop of resizing, is the <html> and/or <body> elements having a size set on them by CSS. Iframe Resizer now inspects these elements and ensure that the height and width is set to `auto`.
+
 
 
