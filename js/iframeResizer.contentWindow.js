@@ -67,6 +67,7 @@
   let bodyMarginStr = ''
   let bodyObserver = null
   let bodyPadding = ''
+  let calculateHeight = true
   let calculateWidth = false
   let calcElements = null
   let firstRun = true
@@ -201,6 +202,8 @@
     mouseEvents = undefined === data[15] ? mouseEvents : strBool(data[15])
     offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16])
     offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
+    calculateHeight =
+      undefined === data[18] ? calculateHeight : strBool(data[18])
   }
 
   function readDataFromPage() {
@@ -783,16 +786,17 @@ ${logMsg}`
     const boundingSize = getDimension.documentElementBoundingClientRect()
     const scrollSize = getAdjustedScroll(getDimension)
 
-    if (scrollSize < Math.ceil(boundingSize)) return boundingSize
+    if (!!getDimension.enabled || scrollSize < Math.ceil(boundingSize))
+      return boundingSize
 
     return Math.max(getDimension.taggedElement(), boundingSize)
   }
 
   function switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize) {
-    const isHieght = getDimension === getHeight
-    const furthest = isHieght ? 'lowest' : 'right most'
-    const dimension = isHieght ? 'height' : 'width'
-    const side = isHieght ? 'bottom' : 'right'
+    const isHeight = getDimension === getHeight
+    const furthest = isHeight ? 'lowest' : 'right most'
+    const dimension = isHeight ? 'height' : 'width'
+    const side = isHeight ? 'bottom' : 'right'
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
@@ -806,7 +810,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
     advise(overflowDetectedMessage)
 
-    if (isHieght) {
+    if (isHeight) {
       heightCalcMode = 'autoOverflow'
     } else {
       widthCalcMode = 'autoOverflow'
@@ -828,6 +832,10 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
 
     switch (true) {
+      case !getDimension.enabled:
+        log(`Auto Resize disabled for ${getDimension.type}.`)
+        return returnBoundingClientRect()
+
       case prevBoundingSize === 0 && prevScrollSize === 0:
         log(`Initial page size values: ${sizes}`)
         return getDimension.taggedElement(true) > ceilBoundingSize
@@ -882,6 +890,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   }
 
   const getHeight = {
+    enabled: calculateHeight,
+    type: 'height',
     auto: () => getAutoSize(getHeight),
     autoOverflow: () => getAutoOverflow(getHeight),
     bodyOffset: getBodyOffset,
@@ -900,6 +910,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   }
 
   const getWidth = {
+    enabled: calculateWidth,
+    type: 'width',
     auto: () => getAutoSize(getWidth),
     autoOverflow: () => getAutoOverflow(getWidth),
     bodyScroll: () => document.body.scrollWidth,
@@ -952,7 +964,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       )
 
       return (
-        checkTolarance(height, currentHeight) ||
+        (calculateHeight && checkTolarance(height, currentHeight)) ||
         (calculateWidth && checkTolarance(width, currentWidth))
       )
     }
@@ -960,7 +972,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     const isForceResizableEvent = () => !(triggerEvent in { init: 1, size: 1 })
 
     const isForceResizableCalcMode = () =>
-      heightCalcMode in resetRequiredMethods ||
+      (calculateHeight && heightCalcMode in resetRequiredMethods) ||
       (calculateWidth && widthCalcMode in resetRequiredMethods)
 
     function checkDownSizing() {
@@ -1089,7 +1101,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       pageInfo() {
         const msgBody = getData()
         log(`PageInfoFromParent called from parent: ${msgBody}`)
-        onPageInfo(JSON.parse(msgBody))
+        onPageInfo(Object.freeze(JSON.parse(msgBody)))
         log(' --')
       },
 
