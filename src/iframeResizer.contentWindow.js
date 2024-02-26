@@ -789,10 +789,10 @@ ${logMsg}`
   }
 
   function switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize) {
-    const isHieght = getDimension === getHeight
-    const furthest = isHieght ? 'lowest' : 'right most'
-    const dimension = isHieght ? 'height' : 'width'
-    const side = isHieght ? 'bottom' : 'right'
+    const isHeight = getDimension === getHeight
+    const furthest = isHeight ? 'lowest' : 'right most'
+    const dimension = isHeight ? 'height' : 'width'
+    const side = isHeight ? 'bottom' : 'right'
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
     
@@ -806,7 +806,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
     advise(overflowDetectedMessage)
 
-    if (isHieght) {
+    if (isHeight) {
       heightCalcMode = 'autoOverflow'
     } else {
       widthCalcMode = 'autoOverflow'
@@ -1089,7 +1089,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       pageInfo() {
         const msgBody = getData()
         log(`PageInfoFromParent called from parent: ${msgBody}`)
-        onPageInfo(JSON.parse(msgBody))
+        onPageInfo(Object.freeze(JSON.parse(msgBody)))
         log(' --')
       },
 
