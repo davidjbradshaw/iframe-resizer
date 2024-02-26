@@ -289,20 +289,19 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       const bodyPosition = document.body.getBoundingClientRect()
       const iFramePosition = messageData.iframe.getBoundingClientRect()
       const { scrollY, scrollX } = window
-      const { scrollWidth, scrollHeight, clientHeight, clientWidth } =
-        document.documentElement
+      const { scrollWidth, scrollHeight } = document.documentElement
 
       return JSON.stringify({
         iframeHeight: iFramePosition.height,
         iframeWidth: iFramePosition.width,
         offsetTop: Math.floor(iFramePosition.top - bodyPosition.top),
         offsetLeft: Math.floor(iFramePosition.left - bodyPosition.left),
+        scrollHeight,
+        scrollWidth,
         scrollX,
         scrollY,
-        scrollWidth,
-        scrollHeight,
         windowHeight: window.innerHeight,
-        windowWidth: window.innerWidth,
+        windowWidth: window.innerWidth
       })
     }
 
@@ -782,8 +781,9 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
     function warnOnNoResponse() {
       function warning() {
-        if (!settings[id]?.loaded && !settings[id].loadErrorShown) {
-          if (settings[id] === undefined) return // iframe has been closed while we where waiting
+        if (settings[id] === undefined) return // iframe has been closed while we where waiting
+
+        if (!settings[id].loaded && !settings[id].loadErrorShown) {
           settings[id].loadErrorShown = true
           advise(
             id,
