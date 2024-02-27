@@ -17,5 +17,5 @@
   - [jQuery](use_with/jquery.md)
   - [Google Apps Script](use_with/google_apps_script.md)
 - [Troubleshooting](troubleshooting.md)
-- [Upgrade from version 3](upgrade.md)
+- [Upgrade to version 5](upgrade.md)
 - [Version history](../CHANGELOG.md)
