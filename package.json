@@ -88,7 +88,7 @@
     "jasmine-jquery": "^2.1.1",
     "jit-grunt": "~0.10.0",
     "jquery": "^3.7.1",
-    "karma": "^6.4.2",
+    "karma": "^6.4.3",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
     "karma-firefox-launcher": "^2.1.2",
@@ -109,7 +109,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "keywords": [
     "CrossDomain",
     "Cross-Domain",
