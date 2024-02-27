@@ -1015,7 +1015,11 @@ This message can be ignored if everything is working, or you can set the \u001B[
         throw new TypeError('Options is not an object')
       }
 
-      if ('sizeWidth' in options || 'sizeHeight' in options || 'autoResize' in options) {
+      if (
+        'sizeWidth' in options ||
+        'sizeHeight' in options ||
+        'autoResize' in options
+      ) {
         advise(
           iframeId,
           `
@@ -1040,6 +1044,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
       if (settings[iframeId].direction === 'none') {
         settings[iframeId].sizeWidth = false
         settings[iframeId].sizeHeight = false
+        settings[iframeId].autoResize = false
         log(iframeId, 'Direction set to "none"')
         return
       }

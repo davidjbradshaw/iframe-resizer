@@ -1015,13 +1015,17 @@ This message can be ignored if everything is working, or you can set the \u001B[
         throw new TypeError('Options is not an object')
       }
 
-      if ('sizeWidth' in options || 'sizeHeight' in options) {
+      if (
+        'sizeWidth' in options ||
+        'sizeHeight' in options ||
+        'autoResize' in options
+      ) {
         advise(
           iframeId,
           `
 \u001B[31;1mDeprecated Option\u001Bm
 
-The \u001B[1msizeWidth\u001B[m and \u001B[1msizeHeight\u001B[m options have been replaced with new \u001B[1mdirection\u001B[m option which expects values of \u001B[3m"vertical"\u001B[m or \u001B[3m"horizontal"\u001B[m.
+The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoResize\u001B[m options have been replaced with new \u001B[1mdirection\u001B[m option which expects values of \u001B[3m"vertical"\u001B[m, \u001B[3m"horizontal"\u001B[m or \u001B[3m"horizontal"\u001B[m.
 `
         )
       }
@@ -1040,6 +1044,7 @@ The \u001B[1msizeWidth\u001B[m and \u001B[1msizeHeight\u001B[m options have been
       if (settings[iframeId].direction === 'none') {
         settings[iframeId].sizeWidth = false
         settings[iframeId].sizeHeight = false
+        settings[iframeId].autoResize = false
         log(iframeId, 'Direction set to "none"')
         return
       }
