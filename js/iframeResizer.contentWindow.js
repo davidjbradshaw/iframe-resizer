@@ -1139,6 +1139,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
           log(`PageInfoFromParent called from parent: ${msgBody}`)
           onPageInfo(Object.freeze(JSON.parse(msgBody)))
         } else {
+          // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop')
         }
         log(' --')

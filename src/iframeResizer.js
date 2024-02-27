@@ -44,6 +44,7 @@
     offsetHeight: 0,
     offsetWidth: 0,
     postMessageTarget: null,
+    sameDomain: false,
     scrolling: false,
     sizeHeight: true,
     sizeWidth: false,
@@ -526,6 +527,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
     const on = (funcName, val) => chkEvent(iframeId, funcName, val)
 
+    function checkSameDomain(id) {
+      settings[id].sameDomain =
+        !!settings[id]?.iframe?.contentWindow?.iFrameResizer
+      log(id, `sameDomain: ${settings[id].sameDomain}`)
+    }
+
     function actionMsg() {
       if (settings[iframeId]?.firstRun) firstRun()
 
@@ -577,6 +584,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
         case 'init':
           resizeIFrame()
+          checkSameDomain(iframeId)
           on('onReady', messageData.iframe)
           break
 
@@ -759,11 +767,24 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function postMessageToIFrame() {
       const { postMessageTarget, targetOrigin } = settings[id]
 
+      if (settings[id].sameDomain) {
+        try {
+          log(
+            id,
+            `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`
+          )
+          settings[id].iframe.contentWindow.iFrameListener(msgId + msg)
+          return
+        } catch (error) {
+          warn(id, `Same domain connection failed. Trying cross domain`)
+          settings[id].sameDomain = false
+        }
+      }
+
       log(
         id,
         `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`
       )
-
       postMessageTarget.postMessage(msgId + msg, targetOrigin)
     }
 
@@ -977,12 +998,14 @@ This message can be ignored if everything is working, or you can set the \u001B[
     // event listener also catches the page changing in the iFrame.
     function init(msg) {
       function iFrameLoaded() {
-        trigger('iFrame.onload', msg, iframe.id, true)
+        trigger('iFrame.onload', msg, id, true)
         checkReset()
       }
 
+      const { id } = iframe
+
       addEventListener(iframe, 'load', iFrameLoaded)
-      trigger('init', msg, iframe.id, true)
+      trigger('init', msg, id, true)
     }
 
     function checkOptions(options) {
