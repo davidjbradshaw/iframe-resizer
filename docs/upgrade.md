@@ -14,7 +14,7 @@ Over the last decade _iframe-resizer_ has had a gradaul increase in the number o
 
 The previous versions of _iframe-resizer_ offered the choice of a wide ranage of ways to calculate the size of the content in the iframe and it was left to the developer to determine which was the most appropreate by setting the `heightCalculationMethod` and `widthCalculationMethod` options.
 
-With _iframe-resizer 5_, these options have been deprecated and _iframe-resizer_ will inspect the the page layout to automatically determine which is the best page size calculation method each time the iframe is resized. If it is determind that the best calculation method is `taggedElement` and the page has no tags, an advisory warning will be logged in the console to suggest adding these.
+With _iframe-resizer 5_, these options have been deprecated and _iframe-resizer_ will now inspect the the page layout to automatically determine which is the best page size calculation method each time the iframe is resized. If it is determind that the best calculation method is `taggedElement` and the page has no tags, an advisory warning will be logged in the console to suggest adding these.
 
 The name of the tag attributes have now been consolidated from `data-iframe-height` and `date-iframe-width`, to the single tag `data-iframe-size`. 
 
