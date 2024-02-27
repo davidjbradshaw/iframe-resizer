@@ -90,7 +90,6 @@
   let targetOriginDefault = '*'
   let tolerance = 0
   let triggerLocked = false
-  let triggerLockedTimer = null
   let width = 1
   let widthCalcMode = widthCalcModeDefault
   let win = window
@@ -788,39 +787,13 @@ ${logMsg}`
       '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
     )
 
-  const getAdjustedScroll = (getDimension) =>
-    getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
-
-  let prevScrollSize = 0
-  let prevBoundingSize = 0
-
-  function getAutoOverflow(getDimension) {
-    const boundingSize = getDimension.documentElementBoundingClientRect()
-    const scrollSize = getAdjustedScroll(getDimension)
-    const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
-
-    switch (true) {
-      case !getDimension.enabled():
-        return scrollSize
-
-      case boundingSize === 0:
-        log(`Page is hidden: ${sizes}`)
-        return scrollSize
-
-      case scrollSize <= Math.ceil(boundingSize):
-        log(`Page size <= HTML bounding size: ${sizes}`)
-        return boundingSize
-
-      default:
-        log(`Page size > HTML bounding size: ${sizes}`)
-        return Math.max(getDimension.taggedElement(), boundingSize)
-    }
-  }
-
-  function switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize) {
-    const isHeight = getDimension === getHeight
+  function switchToAutoOverflow({
+    ceilBoundingSize,
+    dimension,
+    isHeight,
+    scrollSize
+  }) {
     const furthest = isHeight ? 'lowest' : 'right most'
-    const dimension = isHeight ? 'height' : 'width'
     const side = isHeight ? 'bottom' : 'right'
     const overflowDetectedMessage = `
 \u001B[31;1mDetected content overflowing html element\u001B[m
@@ -836,21 +809,36 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     advise(overflowDetectedMessage)
 
     if (isHeight) {
+      log(`Switching from ${heightCalcMode} to autoOverflow`)
       heightCalcMode = 'autoOverflow'
     } else {
+      log(`Switching from ${widthCalcMode} to autoOverflow`)
       widthCalcMode = 'autoOverflow'
     }
-
-    return getAutoOverflow(getDimension)
   }
 
-  function getAutoSize(getDimension) {
+  const prevScrollSize = {
+    height: 0,
+    width: 0
+  }
+
+  const prevBoundingSize = {
+    height: 0,
+    width: 0
+  }
+
+  const getAdjustedScroll = (getDimension) =>
+    getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
+
+  function getAutoSize(getDimension, autoOverflow) {
     function returnBoundingClientRect() {
-      prevBoundingSize = boundingSize
-      prevScrollSize = scrollSize
+      prevBoundingSize[dimension] = boundingSize
+      prevScrollSize[dimension] = scrollSize
       return boundingSize
     }
 
+    const isHeight = getDimension === getHeight
+    const dimension = isHeight ? 'height' : 'width'
     const boundingSize = getDimension.documentElementBoundingClientRect()
     const ceilBoundingSize = Math.ceil(boundingSize)
     const scrollSize = getAdjustedScroll(getDimension)
@@ -860,15 +848,18 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       case !getDimension.enabled():
         return scrollSize
 
-      case prevBoundingSize === 0 && prevScrollSize === 0:
+      case !autoOverflow &&
+        prevBoundingSize[dimension] === 0 &&
+        prevScrollSize[dimension] === 0:
         log(`Initial page size values: ${sizes}`)
-        return getDimension.taggedElement(true) > ceilBoundingSize
-          ? switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize)
-          : returnBoundingClientRect()
+        if (getDimension.taggedElement(true) <= ceilBoundingSize) {
+          return returnBoundingClientRect()
+        }
+        break
 
       case triggerLocked &&
-        boundingSize === prevBoundingSize &&
-        scrollSize === prevScrollSize:
+        boundingSize === prevBoundingSize[dimension] &&
+        scrollSize === prevScrollSize[dimension]:
         log(`Size unchanged: ${sizes}`)
         return Math.max(boundingSize, scrollSize)
 
@@ -876,15 +867,16 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         log(`Page is hidden: ${sizes}`)
         return scrollSize
 
-      case boundingSize !== prevBoundingSize && scrollSize <= prevScrollSize:
+      case boundingSize !== prevBoundingSize[dimension] &&
+        scrollSize <= prevScrollSize[dimension]:
         log(
           `New HTML bounding size: ${sizes}`,
           'Previous bounding size:',
-          prevBoundingSize
+          prevBoundingSize[dimension]
         )
         return returnBoundingClientRect()
 
-      case boundingSize < prevBoundingSize:
+      case boundingSize < prevBoundingSize[dimension]:
         log('HTML bounding size decreased:', boundingSize)
         return returnBoundingClientRect()
 
@@ -892,22 +884,25 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         log('HTML bounding size equals page size:', ceilBoundingSize)
         return returnBoundingClientRect()
 
-      case scrollSize < prevScrollSize:
-        log('Page size decreased:', scrollSize, prevScrollSize)
-        return returnBoundingClientRect()
-
       case boundingSize > scrollSize:
         log(`Page size < HTML bounding size: ${sizes}`)
         return returnBoundingClientRect()
 
-      // one last check before we switch to autoOverflow
-      case getDimension.taggedElement(true) < ceilBoundingSize:
-        log('No overflowen elements found on page')
-        return returnBoundingClientRect()
+      case !autoOverflow:
+        log(`Switch to autoOverflow: ${sizes}`)
+        switchToAutoOverflow({
+          ceilBoundingSize,
+          dimension,
+          isHeight,
+          scrollSize
+        })
+        break
 
       default:
-        return switchToAutoOverflow(getDimension, scrollSize, ceilBoundingSize)
+        log(`Content overflowing HTML element: ${sizes}`)
     }
+
+    return Math.max(getDimension.taggedElement(), returnBoundingClientRect())
   }
 
   const getBodyOffset = () => {
@@ -925,8 +920,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     enabled: () => calculateHeight,
     getOffset: () => offsetHeight,
     type: 'height',
-    auto: () => getAutoSize(getHeight),
-    autoOverflow: () => getAutoOverflow(getHeight),
+    auto: () => getAutoSize(getHeight, false),
+    autoOverflow: () => getAutoSize(getHeight, true),
     bodyOffset: getBodyOffset,
     bodyScroll: () => document.body.scrollHeight,
     offset: () => getHeight.bodyOffset(), // Backwards compatibility
@@ -946,8 +941,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     enabled: () => calculateWidth,
     getOffset: () => offsetWidth,
     type: 'width',
-    auto: () => getAutoSize(getWidth),
-    autoOverflow: () => getAutoOverflow(getWidth),
+    auto: () => getAutoSize(getWidth, false),
+    autoOverflow: () => getAutoSize(getWidth, true),
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
     custom: () => customCalcMethods.width(),
@@ -1042,18 +1037,16 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   }
 
   function lockTrigger() {
-    if (!triggerLocked) {
-      triggerLocked = true
-      log('Trigger event lock on')
-    }
+    if (triggerLocked) return
 
-    clearTimeout(triggerLockedTimer)
+    triggerLocked = true
+    log('Trigger event lock on')
 
-    triggerLockedTimer = setTimeout(() => {
+    requestAnimationFrame(() => {
       triggerLocked = false
       log('Trigger event lock off')
       log('--')
-    }, eventCancelTimer)
+    })
   }
 
   function triggerReset(triggerEvent) {
