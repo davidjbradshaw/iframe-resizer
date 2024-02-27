@@ -719,7 +719,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         x: window.scrollX,
         y: window.scrollY
       }
-      log(iframeId, `Get page position: ${pagePosition.x},${pagePosition.y}`)
+      log(iframeId, `Get page position: ${pagePosition.x}, ${pagePosition.y}`)
     }
   }
 
@@ -730,7 +730,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
   function setPagePosition(iframeId) {
     if (pagePosition !== null) {
       window.scrollTo(pagePosition.x, pagePosition.y)
-      log(iframeId, `Set page position: ${pagePosition.x},${pagePosition.y}`)
+      log(iframeId, `Set page position: ${pagePosition.x}, ${pagePosition.y}`)
       unsetPagePosition()
     }
   }

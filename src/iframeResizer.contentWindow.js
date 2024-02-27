@@ -841,6 +841,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     const dimension = isHeight ? 'height' : 'width'
     const boundingSize = getDimension.documentElementBoundingClientRect()
     const ceilBoundingSize = Math.ceil(boundingSize)
+    const floorBoundingSize = Math.floor(boundingSize)
     const scrollSize = getAdjustedScroll(getDimension)
     const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
 
@@ -867,7 +868,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         log(`Page is hidden: ${sizes}`)
         return scrollSize
 
-      case boundingSize !== prevBoundingSize[dimension] &&
+      case !autoOverflow &&
+        boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
         log(
           `New HTML bounding size: ${sizes}`,
@@ -876,12 +878,12 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         )
         return returnBoundingClientRect()
 
-      case boundingSize < prevBoundingSize[dimension]:
-        log('HTML bounding size decreased:', boundingSize)
+      case !autoOverflow && boundingSize < prevBoundingSize[dimension]:
+        log('HTML bounding size decreased:', sizes)
         return returnBoundingClientRect()
 
-      case scrollSize === ceilBoundingSize:
-        log('HTML bounding size equals page size:', ceilBoundingSize)
+      case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
+        log('HTML bounding size equals page size:', sizes)
         return returnBoundingClientRect()
 
       case boundingSize > scrollSize:
