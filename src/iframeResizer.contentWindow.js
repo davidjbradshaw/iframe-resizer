@@ -98,7 +98,7 @@
     warn('onMessage function not defined')
   }
   let onReady = () => {}
-  let onPageInfo = () => {}
+  let onPageInfo = null
 
   const addEventListener = (el, evt, func, options) =>
     el.addEventListener(evt, func, options || {})
@@ -590,7 +590,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
           return
         }
 
-        onPageInfo = function () {}
+        onPageInfo = null
         sendMsg(0, 0, 'pageInfoStop')
       },
 
@@ -1135,8 +1135,13 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
       pageInfo() {
         const msgBody = getData()
-        log(`PageInfoFromParent called from parent: ${msgBody}`)
-        onPageInfo(Object.freeze(JSON.parse(msgBody)))
+        if (onPageInfo) {
+          log(`PageInfoFromParent called from parent: ${msgBody}`)
+          onPageInfo(Object.freeze(JSON.parse(msgBody)))
+        } else {
+          // not expected, so cancel more messages
+          sendMsg(0, 0, 'pageInfoStop')
+        }
         log(' --')
       },
 
