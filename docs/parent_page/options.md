@@ -2,14 +2,14 @@
 
 The following options can be passed to iframe-resizer on the parent page.
 
-### autoResize
+<!-- ### autoResize
 
 	default: true
 	type:    boolean
 
 When enabled changes to the Window size or the DOM will cause the iFrame to resize to the new content size. Disable if using size method with custom dimensions.
 
-<i>Note: When set to false the iFrame will still inititally size to the contained content, to disable this behavour set the `direction` option to `none` to disable all resizing.</i>
+<i>Note: When set to false the iFrame will still inititally size to the contained content, to disable this behavour set the `direction` option to `none` to disable all resizing.</i> -->
 
 ### bodyBackground
 
@@ -95,7 +95,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 	type:    boolean
 
 Setting the `log` option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.
-
+<!-- 
 ### maxHeight / maxWidth
 
     default: infinity
@@ -108,7 +108,7 @@ Set maximum height/width of iFrame.
     default: 0
     type:    integer
 
-Set minimum height/width of iFrame.
+Set minimum height/width of iFrame. -->
 
 ### offsetHeight / offsetWidth
 

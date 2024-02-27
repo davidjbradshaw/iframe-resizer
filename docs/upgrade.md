@@ -20,9 +20,9 @@ The name of the tag attributes have now been consolidated from `data-iframe-heig
 
 Use of the old calculation options or the old tag names will trigger a deprecation warning in the console with advice on how to update your config.
 
-### New `direction` option replaces `sizeHeight` / `sizeWidth`
+### New `direction` option replaces `sizeHeight` / `sizeWidth` and `autoResize`
 
-This library has always supported resizing in both directions, but changing the direction confusingly required the setting of two different options in the config. This has now been consolidated into the new single `direction` option, which can have the following values: `vertical`, `horizontal` or `none`.
+This library has always supported resizing in both directions, but changing the direction confusingly required the setting of multiple different options in the config. This has now been consolidated into the new single `direction` option, which can have the following values: `vertical`, `horizontal` or `none`.
 
 Use of the old values will trigger a deprication warning.
 
