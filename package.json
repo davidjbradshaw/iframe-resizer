@@ -12,13 +12,14 @@
     }
   ],
   "scripts": {
-    "build": "grunt build",
+    "build": "npm run eslint:fix && rollup -c && npm run test",
     "eslint": "eslint *.js src/* --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "npm run eslint -- --format @microsoft/sarif --output-file eslint-results.sarif",
     "test-watch": "grunt test-watch",
-    "test": "grunt travis",
-    "upgrade": "npm-check-updates -u && npm install && npm run test"
+    "test": "./node_modules/.bin/karma start karma.conf.js --browsers Chrome",
+    "test:old": "grunt travis",
+    "upgrade": "npm-check-updates -i && npm run test"
   },
   "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
   "repository": {
@@ -128,5 +129,10 @@
     "RWD",
     "responsiveiframes",
     "responsive-iframes"
-  ]
+  ],
+  "dependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.12.0"
+  }
 }
