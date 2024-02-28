@@ -49,10 +49,11 @@
       const callbackDisplay = document.querySelector('p#callback')
 
       iFrameResize({
-        log: true, // Enable console logging
+        // log: true, // Enable console logging
         inPageLinks: true, // Enable in page links
         // offsetHeight: 10, // Alter the returned height
-        direction: 'none', // 'vertical' or 'horizontal' or 'none'
+        // direction: 'none', // 'vertical' or 'horizontal' or 'none'
+
         onResized: function (messageData) {
           // Callback fn when resize is received
           callbackDisplay.innerHTML =
@@ -65,6 +66,7 @@
               ' <b>Event type:</b> ' +
               messageData.type
         },
+
         onMouseEnter: function (messageData) {
           // Callback fn when mouse enters iframe
           callbackDisplay.innerHTML =
@@ -77,6 +79,7 @@
               ' <b>Event type:</b> ' +
               messageData.type
         },
+
         onMouseLeave: function (messageData) {
           // Callback fn when mouse enters iframe
           callbackDisplay.innerHTML =
@@ -89,6 +92,7 @@
               ' <b>Event type:</b> ' +
               messageData.type
         },
+
         onMessage: function (messageData) {
           // Callback fn when message is received
           callbackDisplay.innerHTML =
@@ -99,6 +103,7 @@
           alert(messageData.message)
           messageData.iframe.iFrameResizer.sendMessage('Hello back from parent page')
         },
+        
         onClosed: function (id) {
           // Callback fn when iFrame is closed
           callbackDisplay.innerHTML ='<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
