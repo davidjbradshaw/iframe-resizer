@@ -527,8 +527,13 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     const on = (funcName, val) => chkEvent(iframeId, funcName, val);
 
     function checkSameDomain(id) {
-      settings[id].sameDomain =
-        !!settings[id]?.iframe?.contentWindow?.iFrameResizer;
+      try {
+        settings[id].sameDomain =
+          !!settings[id]?.iframe?.contentWindow?.iFrameListener;
+      } catch (error) {
+        settings[id].sameDomain = false;
+      }
+
       log(id, `sameDomain: ${settings[id].sameDomain}`);
     }
 
@@ -768,11 +773,11 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       if (settings[id].sameDomain) {
         try {
+          settings[id].iframe.contentWindow.iFrameListener(msgId + msg);
           log(
             id,
             `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`
           );
-          settings[id].iframe.contentWindow.iFrameListener(msgId + msg);
           return
         } catch (error) {
           warn(id, `Same domain connection failed. Trying cross domain`);

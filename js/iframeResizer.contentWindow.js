@@ -1225,13 +1225,17 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     return win
   }
 
-  // eslint-disable-next-line no-restricted-globals
-  if (top.document.getElementById('banner')) {
-    win = {};
+  try {
+    // eslint-disable-next-line no-restricted-globals
+    if (top?.document?.getElementById('banner')) {
+      win = {};
 
-    removeEventListener(window, 'message', receiver);
+      removeEventListener(window, 'message', receiver);
 
-    define([], () => mockMsgListener);
+      define([], () => mockMsgListener);
+    }
+  } catch (error) {
+    // do nothing
   }
 
   // TEST CODE END //
