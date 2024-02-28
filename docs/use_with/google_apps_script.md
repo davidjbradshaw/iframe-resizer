@@ -4,7 +4,7 @@ The [Google Apps Script](https://www.google.com/script/start/) platform creates 
 
 This can be overcome by providing **iframe-resizer** some hints on where it can fimd the nested iframe, in order to establlish communication between the parent page and the GAS iframe.
 
-### iframe
+### iFrame
 
 The first step is to add the following line of code into your GAS application. This will send a message to the parent page when your application loads that contains details of where the iframe is located. These details can then passed to **iframe-resizer**.
 
