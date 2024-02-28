@@ -14,7 +14,7 @@ The first step is to add the following line of code into your GAS application. T
 
 ### Parent Page
 
-The parent page needs to wait to recieve the above message before starting **iframe-resize**, then it can pass the recieved referrences from the application iframe.
+The parent page needs to wait to recieve the above message before starting `iframeResize()`, then it can pass the recieved referrences from the application iframe.
 
 ```js
 window.addEventListener("message", (event) => {
