@@ -1,9 +1,13 @@
 {
-  "extends": ["auto"],
+  "extends": ["auto"],   
+  "ignorePatterns": ["js/*", "dist/*"],
   "env": {
     "amd": true,
     "browser": true,
-    "jasmine": true
+    "jasmine": true,
+    "jest": true,
+    "commonjs": true,
+    "es2020": true
   },
   "globals": {
     "location": true
