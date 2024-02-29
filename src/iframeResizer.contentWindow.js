@@ -591,7 +591,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
           advise(`
 \u001B[31;1mDeprecated Method (getPageInfo()\u001B[m
           
-The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with  \u001B[1mgetParentInfo()\u001B[m. Use of old methods will be removed in a future version of \u001B[3miframe-resizer\u001B[m.
+The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with  \u001B[1mgetParentInfo()\u001B[m. Use of this method will be removed in a future version of \u001B[3miframe-resizer\u001B[m.
 `)
           return
         }
