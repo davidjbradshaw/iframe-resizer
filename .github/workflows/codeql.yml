@@ -8,7 +8,7 @@ on:
     paths-ignore:
       - '**/*.md'
       - '**/*.txt'
-      - 'js/*.js'
+      - 'js/**'
   schedule:
     - cron: "39 23 * * 5"
 
