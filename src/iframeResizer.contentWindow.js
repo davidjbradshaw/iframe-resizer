@@ -99,6 +99,7 @@
   }
   let onReady = () => {}
   let onPageInfo = null
+  let onParentInfo = null
 
   const addEventListener = (el, evt, func, options) =>
     el.addEventListener(evt, func, options || {})
@@ -587,11 +588,27 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
         if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
+          advise(`
+\u001B[31;1mDeprecated Method (getPageInfo()\u001B[m
+          
+The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with  \u001B[1mgetParentInfo()\u001B[m. Use of old methods will be removed in a future version of \u001B[3miframe-resizer\u001B[m.
+`)
           return
         }
 
         onPageInfo = null
         sendMsg(0, 0, 'pageInfoStop')
+      },
+
+      getParentInfo(callback) {
+        if (typeof callback === 'function') {
+          onParentInfo = callback
+          sendMsg(0, 0, 'parentInfo')
+          return
+        }
+
+        onParentInfo = null
+        sendMsg(0, 0, 'parentInfoStop')
       },
 
       moveToAnchor(hash) {
@@ -1138,11 +1155,23 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       pageInfo() {
         const msgBody = getData()
         if (onPageInfo) {
-          log(`PageInfoFromParent called from parent: ${msgBody}`)
+          log(`PageInfo called from parent: ${msgBody}`)
           onPageInfo(Object.freeze(JSON.parse(msgBody)))
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop')
+        }
+        log(' --')
+      },
+
+      parentInfo() {
+        const msgBody = getData()
+        if (onParentInfo) {
+          log(`ParentInfo called from parent: ${msgBody}`)
+          onParentInfo(Object.freeze(JSON.parse(msgBody)))
+        } else {
+          // not expected, so cancel more messages
+          sendMsg(0, 0, 'parentInfoStop')
         }
         log(' --')
       },

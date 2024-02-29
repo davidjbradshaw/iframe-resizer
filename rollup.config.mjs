@@ -106,8 +106,10 @@ export default [
   
   {
     input: 'src/iframeResizer.contentWindow.js',
-    output: [{ file: 'js/iframeResizer.contentWindow.js',
-    sourcemap: true, }],
+    output: [{ 
+      file: 'js/iframeResizer.contentWindow.js',
+      sourcemap: true, 
+    }],
     plugins: [
       terser({
       output: {
