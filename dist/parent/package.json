@@ -1,6 +1,6 @@
 {
   "name": "@iframe-resizer/parent",
-  "version": "5.0.0",
+  "version": "5.0.0-alpha.1",
   "license": "GPL-3.0",
   "private": true,
   "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
