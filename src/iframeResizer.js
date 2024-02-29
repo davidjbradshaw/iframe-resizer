@@ -308,18 +308,25 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
     function getParentInfo() {
       const { iframe } = messageData
-      const { innerHeight, innerWidth, scrollY, scrollX } = window
       const { scrollWidth, scrollHeight } = document.documentElement
+      const { height, offsetLeft, offsetTop, pageLeft, pageTop, scale, width } =
+        window.visualViewport
 
       return JSON.stringify({
         iframe: iframe.getBoundingClientRect(),
-        scroll: {
-          x: scrollX,
-          y: scrollY,
-          height: scrollHeight,
-          width: scrollWidth
+        document: {
+          scrollHeight,
+          scrollWidth
         },
-        window: { innerHeight, innerWidth }
+        viewport: {
+          height,
+          offsetLeft,
+          offsetTop,
+          pageLeft,
+          pageTop,
+          scale,
+          width
+        }
       })
     }
 
