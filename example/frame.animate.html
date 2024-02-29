@@ -20,9 +20,25 @@
         padding: 12px 218px 0 0;
         margin: 0 0 5px;
       }
+
       th {
+        vertical-align: top;
         text-align: right;
-        padding: 0 10px 0 0;
+        padding: 5px 0;
+      }
+      td {
+        padding: 3px 0;
+      }
+      tr{
+        border-top: dashed 1px #900;
+      }
+
+      table table th {
+        width: 110px;
+        padding: 0;
+      }
+      table table td {
+        padding: 0 0 0 10px;
       }
 
       #abs {
@@ -52,7 +68,7 @@
         }
 
         to {
-          height: 601px;
+          height: 801px;
         }
       }
     </style>
@@ -66,7 +82,7 @@
       This iframe contains a page element animated via CSS to change the height of the page. 
     </p>
 
-    <h4>Data returned by parentIFrame.getPageInfo()</h4>
+    <h4>Data returned by parentIFrame.getParentInfo()</h4>
     <table id="data"></table>
 
     <!-- 
@@ -76,8 +92,8 @@
     -->
     <div id="abs" data-iframe-size>
       <p>
-        This is an absolute positioned element that will animate to a height of
-        600px using CSS keyframes. 
+        This is an absolute positioned element that will animate to 
+        a height of 800px using CSS keyframes. 
       </p>
     </div>
 
@@ -94,6 +110,7 @@
     <script>
       const dataTable = document.getElementById('data')
       const row = ([key, value]) => `<tr><th>${key}</th><td>${value}</td></tr>`
+      const rowParent = ([key, info]) => `<tr><th>${key}</th><td><table>${Object.entries(info).map(row).join('\n')}</table></td></tr>`
 
       window.iFrameResizer = {
         
@@ -113,6 +130,9 @@
           parentIFrame.getPageInfo((pageInfo) => {
             dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
           })
+          // parentIFrame.getParentInfo((pageInfo) => {
+          //   dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
+          // })
         }
 
       }

@@ -12,7 +12,7 @@
   "globals": {
     "location": true
   },
-"parserOptions": { "ecmaVersion": 2020 },
+  "parserOptions": { "ecmaVersion": 2020 },
   "rules": {
     "const-case/uppercase": 0,
     "func-names": 0,

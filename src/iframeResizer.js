@@ -287,59 +287,79 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function getPageInfo() {
       const bodyPosition = document.body.getBoundingClientRect()
       const iFramePosition = messageData.iframe.getBoundingClientRect()
-      const { scrollY, scrollX } = window
-      const { scrollWidth, scrollHeight } = document.documentElement
+      const { scrollY, scrollX, innerHeight, innerWidth } = window
+      const { clientHeight, clientWidth } = document.documentElement
 
       return JSON.stringify({
         iframeHeight: iFramePosition.height,
         iframeWidth: iFramePosition.width,
-        offsetTop: Math.floor(iFramePosition.top - bodyPosition.top),
-        offsetLeft: Math.floor(iFramePosition.left - bodyPosition.left),
-        scrollHeight,
-        scrollWidth,
-        scrollX,
-        scrollY,
-        windowHeight: window.innerHeight,
-        windowWidth: window.innerWidth
+        clientHeight: Math.max(clientHeight, innerHeight || 0),
+        clientWidth: Math.max(clientWidth, innerWidth || 0),
+        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
+        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
+        scrollTop: scrollY,
+        scrollLeft: scrollX,
+        documentHeight: clientHeight,
+        documentWidth: clientWidth,
+        windowHeight: innerHeight,
+        windowWidth: innerWidth
       })
     }
 
-    const sendPageInfoToIframe = (type, iframeId) => {
-      const gate = {}
+    function getParentInfo() {
+      const { iframe } = messageData
+      const { innerHeight, innerWidth, scrollY, scrollX } = window
+      const { scrollWidth, scrollHeight } = document.documentElement
 
-      function throttle(func, frameId) {
-        if (!gate[frameId]) {
-          func()
-          gate[frameId] = requestAnimationFrame(() => {
-            gate[frameId] = null
-          })
-        }
-      }
-
-      function gatedTrigger() {
-        trigger(
-          `Send Page Info (${type})`,
-          `pageInfo:${getPageInfo()}`,
-          iframeId
-        )
-      }
-
-      throttle(gatedTrigger, iframeId)
+      return JSON.stringify({
+        iframe: iframe.getBoundingClientRect(),
+        scroll: {
+          x: scrollX,
+          y: scrollY,
+          height: scrollHeight,
+          width: scrollWidth
+        },
+        window: { innerHeight, innerWidth }
+      })
     }
 
-    function startPageInfoMonitor() {
-      const sendPageInfo = (type) => () => {
+    const sendInfoToIframe =
+      (type, infoFunction) => (requestType, iframeId) => {
+        const gate = {}
+
+        function throttle(func, frameId) {
+          if (!gate[frameId]) {
+            func()
+            gate[frameId] = requestAnimationFrame(() => {
+              gate[frameId] = null
+            })
+          }
+        }
+
+        function gatedTrigger() {
+          trigger(
+            `Send ${type} (${requestType})`,
+            `${type}:${infoFunction()}`,
+            iframeId
+          )
+        }
+
+        throttle(gatedTrigger, iframeId)
+      }
+
+    const startInfoMonitor = (sendInfoToIframe, type) => () => {
+      const sendInfo = (requestType) => () => {
         if (settings[id]) {
-          sendPageInfoToIframe(type, id)
+          sendInfoToIframe(requestType, id)
         } else {
           stop()
         }
       }
 
-      function setListener(type, func) {
-        log(id, `${type} listeners for sendPageInfo`)
-        func(window, 'scroll', sendPageInfo('scroll'))
-        func(window, 'resize', sendPageInfo('resize window'))
+      function setListener(requestType, listenr) {
+        log(id, `${requestType} listeners for send${type}`)
+        listenr(window, 'scroll', sendInfo('scroll'))
+        listenr(window, 'resize', sendInfo('resize window'))
       }
 
       function stop() {
@@ -358,21 +378,36 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       const id = iframeId // Create locally scoped copy of iFrame ID
 
-      const resizeObserver = new ResizeObserver(sendPageInfo('iframe observed'))
+      const resizeObserver = new ResizeObserver(sendInfo('iframe observed'))
 
       start()
 
       if (settings[id]) {
-        settings[id].stopPageInfo = stop
+        settings[id][`stop${type}`] = stop
       }
     }
 
-    function stopPageInfoMonitor() {
-      if (settings[iframeId]?.stopPageInfo) {
-        settings[iframeId].stopPageInfo()
-        delete settings[iframeId].stopPageInfo
+    const stopInfoMonitor = (stopFunction) => () => {
+      if (stopFunction in settings[iframeId]) {
+        settings[iframeId][stopFunction]()
+        delete settings[iframeId][stopFunction]
       }
     }
+
+    const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
+    const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentInfo)
+
+    const startPageInfoMonitor = startInfoMonitor(
+      sendPageInfoToIframe,
+      'PageInfo'
+    )
+    const startParentInfoMonitor = startInfoMonitor(
+      sendParentInfoToIframe,
+      'ParentInfo'
+    )
+
+    const stopPageInfoMonitor = stopInfoMonitor('stopPageInfo')
+    const stopParentInfoMonitor = stopInfoMonitor('stopParentInfo')
 
     function checkIFrameExists() {
       let retBool = true
@@ -573,8 +608,17 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           startPageInfoMonitor()
           break
 
+        case 'parentInfo':
+          sendParentInfoToIframe('start', iframeId)
+          startParentInfoMonitor()
+          break
+
         case 'pageInfoStop':
           stopPageInfoMonitor()
+          break
+
+        case 'parentInfoStop':
+          stopParentInfoMonitor()
           break
 
         case 'inPageLink':
