@@ -1154,9 +1154,9 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
       pageInfo() {
         const msgBody = getData()
+        log(`PageInfo received from parent: ${msgBody}`)
         if (onPageInfo) {
-          log(`PageInfo called from parent: ${msgBody}`)
-          onPageInfo(Object.freeze(JSON.parse(msgBody)))
+          onPageInfo(JSON.parse(msgBody))
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop')
@@ -1166,8 +1166,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
       parentInfo() {
         const msgBody = getData()
+        log(`ParentInfo received from parent: ${msgBody}`)
         if (onParentInfo) {
-          log(`ParentInfo called from parent: ${msgBody}`)
           onParentInfo(Object.freeze(JSON.parse(msgBody)))
         } else {
           // not expected, so cancel more messages
@@ -1178,7 +1178,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
       message() {
         const msgBody = getData()
-
         log(`onMessage called from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
         onMessage(JSON.parse(msgBody))
