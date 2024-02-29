@@ -1,26 +1,34 @@
-/*
- * File: iframeResizer.js
- * Desc: Force iframes to size to content.
- * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
- * Doc: https://github.com/davidjbradshaw/iframe-resizer
- * Author: David J. Bradshaw - dave@bradshaw.net
+
+/**
+ *  iframe-resizer (jquery.parent) v5.0.0-alpha.1
+ *
+ *  https://github.com/davidjbradshaw/iframe-resizer
+ *
+ *  License: GPL-3.0
+ *  Author: David J. Bradshaw <dave@bradshaw.net>
+ *
+ *  Description: Keep same and cross domain iFrames sized to their content with
+ *               support for window/content resizing, and multiple iFrames.
+ *
  */
 
-// eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
-;(function (undefined) {
-  if (typeof window === 'undefined') return // don't run for server side render
 
-  const msgHeader = 'message'
-  const msgHeaderLen = msgHeader.length
-  const msgId = '[iFrameSizer]' // Must match iframe msg ID
-  const msgIdLen = msgId.length
+(function (factory) {
+  typeof define === 'function' && define.amd ? define(factory) :
+  factory();
+})((function () { 'use strict';
+
+  const msgHeader = 'message';
+  const msgHeaderLen = msgHeader.length;
+  const msgId = '[iFrameSizer]'; // Must match iframe msg ID
+  const msgIdLen = msgId.length;
   const resetRequiredMethods = Object.freeze({
     max: 1,
     scroll: 1,
     bodyScroll: 1,
     documentElementScroll: 1,
-  })
-  const settings = {}
+  });
+  const settings = {};
 
   const defaults = Object.freeze({
     autoResize: true,
@@ -64,26 +72,26 @@
 
 The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with \u001B[1monReady()\u001B[m. It will be removed in a future version of iFrame Resizer.
         `,
-        )
-        settings[messageData.id].onInit(messageData)
+        );
+        settings[messageData.id].onInit(messageData);
       }
     },
     onResized() {},
     onScroll: () => true,
-  })
+  });
 
-  let count = 0
-  let logEnabled = false
-  let pagePosition = null
+  let count = 0;
+  let logEnabled = false;
+  let pagePosition = null;
 
   const addEventListener = (el, evt, func) =>
-    el.addEventListener(evt, func, false)
+    el.addEventListener(evt, func, false);
 
   const removeEventListener = (el, evt, func) =>
-    el.removeEventListener(evt, func, false)
+    el.removeEventListener(evt, func, false);
 
   const isLogEnabled = (iframeId) =>
-    settings[iframeId] ? settings[iframeId].log : logEnabled
+    settings[iframeId] ? settings[iframeId].log : logEnabled;
 
   function getMyID(iframeId) {
     if (window.top === window.self) {
@@ -95,21 +103,21 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       : `Nested host page: ${iframeId}`
   }
 
-  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
+  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`;
 
   const formatLogMsg = (iframeId, ...msg) =>
-    [`${msgId}[${iframeId}]`, ...msg].join(' ')
+    [`${msgId}[${iframeId}]`, ...msg].join(' ');
 
   const output = (type, iframeId, ...msg) =>
     // eslint-disable-next-line no-console
-    console[type](formatLogHeader(iframeId), ...msg)
+    console[type](formatLogHeader(iframeId), ...msg);
 
   const log = (iframeId, ...msg) =>
-    isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null
+    isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null;
 
-  const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
+  const info = (iframeId, ...msg) => output('info', iframeId, ...msg);
 
-  const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
+  const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg);
 
   const advise = (iframeId, msg) =>
     // eslint-disable-next-line no-console
@@ -122,17 +130,17 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           ? msg
           : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
       ),
-    )
+    );
 
   function iFrameListener(event) {
     function resizeIFrame() {
-      ensureInRange('Height')
-      ensureInRange('Width')
+      ensureInRange('Height');
+      ensureInRange('Width');
 
-      setSize(messageData)
-      setPagePosition(iframeId)
+      setSize(messageData);
+      setPagePosition(iframeId);
 
-      on('onResized', messageData)
+      on('onResized', messageData);
     }
 
     function getPaddingEnds(compStyle) {
@@ -140,10 +148,10 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         return 0
       }
 
-      const top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
+      const top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0;
       const bot = compStyle.paddingBottom
         ? parseInt(compStyle.paddingBottom, 10)
-        : 0
+        : 0;
 
       return top + bot
     }
@@ -155,19 +163,19 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       const top = compStyle.borderTopWidth
         ? parseInt(compStyle.borderTopWidth, 10)
-        : 0
+        : 0;
       const bot = compStyle.borderBottomWidth
         ? parseInt(compStyle.borderBottomWidth, 10)
-        : 0
+        : 0;
 
       return top + bot
     }
 
     function processMsg() {
-      const data = msg.slice(msgIdLen).split(':')
-      const height = data[1] ? Number(data[1]) : 0
-      const iframe = settings[data[0]]?.iframe
-      const compStyle = getComputedStyle(iframe)
+      const data = msg.slice(msgIdLen).split(':');
+      const height = data[1] ? Number(data[1]) : 0;
+      const iframe = settings[data[0]]?.iframe;
+      const compStyle = getComputedStyle(iframe);
 
       return {
         iframe,
@@ -179,41 +187,41 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     }
 
     function ensureInRange(Dimension) {
-      const max = Number(settings[iframeId][`max${Dimension}`])
-      const min = Number(settings[iframeId][`min${Dimension}`])
-      const dimension = Dimension.toLowerCase()
+      const max = Number(settings[iframeId][`max${Dimension}`]);
+      const min = Number(settings[iframeId][`min${Dimension}`]);
+      const dimension = Dimension.toLowerCase();
 
-      let size = Number(messageData[dimension])
+      let size = Number(messageData[dimension]);
 
-      log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
+      log(iframeId, `Checking ${dimension} is in range ${min}-${max}`);
 
       if (size < min) {
-        size = min
-        log(iframeId, `Set ${dimension} to min value`)
+        size = min;
+        log(iframeId, `Set ${dimension} to min value`);
       }
 
       if (size > max) {
-        size = max
-        log(iframeId, `Set ${dimension} to max value`)
+        size = max;
+        log(iframeId, `Set ${dimension} to max value`);
       }
 
-      messageData[dimension] = `${size}`
+      messageData[dimension] = `${size}`;
     }
 
     function isMessageFromIFrame() {
       function checkAllowedOrigin() {
         function checkList() {
-          let i = 0
-          let retCode = false
+          let i = 0;
+          let retCode = false;
 
           log(
             iframeId,
             `Checking connection is from allowed list of origins: ${checkOrigin}`,
-          )
+          );
 
           for (; i < checkOrigin.length; i++) {
             if (checkOrigin[i] === origin) {
-              retCode = true
+              retCode = true;
               break
             }
           }
@@ -222,21 +230,21 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         }
 
         function checkSingle() {
-          const remoteHost = settings[iframeId]?.remoteHost
-          log(iframeId, `Checking connection is from: ${remoteHost}`)
+          const remoteHost = settings[iframeId]?.remoteHost;
+          log(iframeId, `Checking connection is from: ${remoteHost}`);
           return origin === remoteHost
         }
 
         return checkOrigin.constructor === Array ? checkList() : checkSingle()
       }
 
-      const { origin, sameDomain } = event
+      const { origin, sameDomain } = event;
 
       if (sameDomain) {
         return true
       }
 
-      let checkOrigin = settings[iframeId]?.checkOrigin
+      let checkOrigin = settings[iframeId]?.checkOrigin;
 
       if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
         throw new Error(
@@ -257,10 +265,10 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function isMessageFromMetaParent() {
       // Test if this message is from a parent above us. This is an ugly test, however, updating
       // the message format would break backwards compatibility.
-      const retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
+      const retCode = messageData.type in { true: 1, false: 1, undefined: 1 };
 
       if (retCode) {
-        log(iframeId, 'Ignoring init message from meta parent page')
+        log(iframeId, 'Ignoring init message from meta parent page');
       }
 
       return retCode
@@ -274,21 +282,21 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       log(
         iframeId,
         `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`,
-      )
+      );
 
       on('onMessage', {
         iframe: messageData.iframe,
         message: JSON.parse(msgBody),
-      })
+      });
 
-      log(iframeId, '--')
+      log(iframeId, '--');
     }
 
     function getPageInfo() {
-      const bodyPosition = document.body.getBoundingClientRect()
-      const iFramePosition = messageData.iframe.getBoundingClientRect()
-      const { scrollY, scrollX, innerHeight, innerWidth } = window
-      const { clientHeight, clientWidth } = document.documentElement
+      const bodyPosition = document.body.getBoundingClientRect();
+      const iFramePosition = messageData.iframe.getBoundingClientRect();
+      const { scrollY, scrollX, innerHeight, innerWidth } = window;
+      const { clientHeight, clientWidth } = document.documentElement;
 
       return JSON.stringify({
         iframeHeight: iFramePosition.height,
@@ -307,10 +315,10 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     }
 
     function getParentInfo() {
-      const { iframe } = messageData
-      const { scrollWidth, scrollHeight } = document.documentElement
+      const { iframe } = messageData;
+      const { scrollWidth, scrollHeight } = document.documentElement;
       const { width, height, offsetLeft, offsetTop, pageLeft, pageTop, scale } =
-        window.visualViewport
+        window.visualViewport;
 
       return JSON.stringify({
         iframe: iframe.getBoundingClientRect(),
@@ -330,107 +338,106 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       })
     }
 
-    const sendInfoToIframe =
-      (type, infoFunction) => (requestType, iframeId) => {
-        const gate = {}
+    const sendInfoToIframe = (type, infoFunction) => (requestType, iframeId) => {
+      const gate = {};
 
-        function throttle(func, frameId) {
-          if (!gate[frameId]) {
-            func()
-            gate[frameId] = requestAnimationFrame(() => {
-              gate[frameId] = null
-            })
-          }
+      function throttle(func, frameId) {
+        if (!gate[frameId]) {
+          func();
+          gate[frameId] = requestAnimationFrame(() => {
+            gate[frameId] = null;
+          });
         }
-
-        function gatedTrigger() {
-          trigger(
-            `Send ${type} (${requestType})`,
-            `${type}:${infoFunction()}`,
-            iframeId,
-          )
-        }
-
-        throttle(gatedTrigger, iframeId)
       }
+
+      function gatedTrigger() {
+        trigger(
+          `Send ${type} (${requestType})`,
+          `${type}:${infoFunction()}`,
+          iframeId,
+        );
+      }
+
+      throttle(gatedTrigger, iframeId);
+    };
 
     const startInfoMonitor = (sendInfoToIframe, type) => () => {
       const sendInfo = (requestType) => () => {
         if (settings[id]) {
-          sendInfoToIframe(requestType, id)
+          sendInfoToIframe(requestType, id);
         } else {
-          stop()
+          stop();
         }
-      }
+      };
 
       function setListener(requestType, listenr) {
-        log(id, `${requestType} listeners for send${type}`)
-        listenr(window, 'scroll', sendInfo('scroll'))
-        listenr(window, 'resize', sendInfo('resize window'))
+        log(id, `${requestType} listeners for send${type}`);
+        listenr(window, 'scroll', sendInfo('scroll'));
+        listenr(window, 'resize', sendInfo('resize window'));
       }
 
       function stop() {
-        setListener('Remove ', removeEventListener)
-        resizeObserver.disconnect()
+        setListener('Remove ', removeEventListener);
+        resizeObserver.disconnect();
       }
 
       function start() {
-        setListener('Add ', addEventListener)
+        setListener('Add ', addEventListener);
         resizeObserver.observe(document.body, {
           attributes: true,
           childList: true,
           subtree: true,
-        })
+        });
       }
 
-      const id = iframeId // Create locally scoped copy of iFrame ID
+      const id = iframeId; // Create locally scoped copy of iFrame ID
 
-      const resizeObserver = new ResizeObserver(sendInfo('iframe observed'))
+      const resizeObserver = new ResizeObserver(sendInfo('iframe observed'));
 
-      start()
+      start();
 
       if (settings[id]) {
-        settings[id][`stop${type}`] = stop
+        settings[id][`stop${type}`] = stop;
       }
-    }
+    };
 
     const stopInfoMonitor = (stopFunction) => () => {
       if (stopFunction in settings[iframeId]) {
-        settings[iframeId][stopFunction]()
-        delete settings[iframeId][stopFunction]
+        settings[iframeId][stopFunction]();
+        delete settings[iframeId][stopFunction];
       }
-    }
+    };
 
-    const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
-    const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentInfo)
+    const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo);
+    const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentInfo);
 
     const startPageInfoMonitor = startInfoMonitor(
       sendPageInfoToIframe,
       'PageInfo',
-    )
+    );
     const startParentInfoMonitor = startInfoMonitor(
       sendParentInfoToIframe,
       'ParentInfo',
-    )
+    );
 
-    const stopPageInfoMonitor = stopInfoMonitor('stopPageInfo')
-    const stopParentInfoMonitor = stopInfoMonitor('stopParentInfo')
+    const stopPageInfoMonitor = stopInfoMonitor('stopPageInfo');
+    const stopParentInfoMonitor = stopInfoMonitor('stopParentInfo');
 
     function checkIFrameExists() {
-      let retBool = true
+      let retBool = true;
 
       if (messageData.iframe === null) {
-        warn(iframeId, `The iframe (${messageData.id}) was not found.`)
-        retBool = false
+        warn(iframeId, `The iframe (${messageData.id}) was not found.`);
+        retBool = false;
       }
 
       return retBool
     }
 
     function getElementPosition(target) {
-      const iFramePosition = target.getBoundingClientRect()
+      const iFramePosition = target.getBoundingClientRect();
 
-      getPagePosition(iframeId)
+      getPagePosition(iframeId);
 
       return {
         x: Math.floor(Number(iFramePosition.left) + Number(pagePosition.x)),
@@ -441,9 +448,9 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function scrollRequestFromChild(addOffset) {
       /* istanbul ignore next */ // Not testable in Karma
       function reposition() {
-        pagePosition = newPosition
-        scrollTo()
-        log(iframeId, '--')
+        pagePosition = newPosition;
+        scrollTo();
+        log(iframeId, '--');
       }
 
       function scrollParent() {
@@ -451,110 +458,110 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           window.parentIFrame[`scrollTo${addOffset ? 'Offset' : ''}`](
             newPosition.x,
             newPosition.y,
-          )
+          );
         } else {
           warn(
             iframeId,
             'Unable to scroll to requested position, window.parentIFrame not found',
-          )
+          );
         }
       }
 
       const calcOffset = (messageData, offset) => ({
         x: Number(messageData.width) + offset.x,
         y: Number(messageData.height) + offset.y,
-      })
+      });
 
       const offset = addOffset
         ? getElementPosition(messageData.iframe)
-        : { x: 0, y: 0 }
+        : { x: 0, y: 0 };
 
-      let newPosition = calcOffset(messageData, offset)
+      let newPosition = calcOffset(messageData, offset);
 
       log(
         iframeId,
         `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`,
-      )
+      );
 
       if (window.top === window.self) {
-        reposition()
+        reposition();
       } else {
-        scrollParent()
+        scrollParent();
       }
     }
 
     function scrollTo() {
       if (on('onScroll', pagePosition) === false) {
-        unsetPagePosition()
+        unsetPagePosition();
         return
       }
-      setPagePosition(iframeId)
+      setPagePosition(iframeId);
     }
 
     function findTarget(location) {
       function jumpToTarget() {
-        const jumpPosition = getElementPosition(target)
+        const jumpPosition = getElementPosition(target);
 
         log(
           iframeId,
           `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`,
-        )
+        );
 
         pagePosition = {
           x: jumpPosition.x,
           y: jumpPosition.y,
-        }
+        };
 
-        scrollTo()
-        log(iframeId, '--')
+        scrollTo();
+        log(iframeId, '--');
       }
 
       function jumpToParent() {
         if (window.parentIFrame) {
-          window.parentIFrame.moveToAnchor(hash)
+          window.parentIFrame.moveToAnchor(hash);
           return
         }
 
         log(
           iframeId,
           `In page link #${hash} not found and window.parentIFrame not found`,
-        )
+        );
       }
 
-      const hash = location.split('#')[1] || ''
-      const hashData = decodeURIComponent(hash)
+      const hash = location.split('#')[1] || '';
+      const hashData = decodeURIComponent(hash);
 
       let target =
         document.getElementById(hashData) ||
-        document.getElementsByName(hashData)[0]
+        document.getElementsByName(hashData)[0];
 
       if (target) {
-        jumpToTarget()
+        jumpToTarget();
         return
       }
 
       if (window.top === window.self) {
-        log(iframeId, `In page link #${hash} not found`)
+        log(iframeId, `In page link #${hash} not found`);
         return
       }
 
-      jumpToParent()
+      jumpToParent();
     }
 
     function onMouse(event) {
-      let mousePos = {}
+      let mousePos = {};
 
       if (Number(messageData.width) === 0 && Number(messageData.height) === 0) {
-        const data = getMsgBody(9).split(':')
+        const data = getMsgBody(9).split(':');
         mousePos = {
           x: data[1],
           y: data[0],
-        }
+        };
       } else {
         mousePos = {
           x: messageData.width,
           y: messageData.height,
-        }
+        };
       }
 
       on(event, {
@@ -562,84 +569,84 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         screenX: Number(mousePos.x),
         screenY: Number(mousePos.y),
         type: messageData.type,
-      })
+      });
     }
 
-    const on = (funcName, val) => chkEvent(iframeId, funcName, val)
+    const on = (funcName, val) => chkEvent(iframeId, funcName, val);
 
     function checkSameDomain(id) {
       try {
         settings[id].sameDomain =
-          !!settings[id]?.iframe?.contentWindow?.iFrameListener
+          !!settings[id]?.iframe?.contentWindow?.iFrameListener;
       } catch (error) {
-        settings[id].sameDomain = false
+        settings[id].sameDomain = false;
       }
 
-      log(id, `sameDomain: ${settings[id].sameDomain}`)
+      log(id, `sameDomain: ${settings[id].sameDomain}`);
     }
 
     function actionMsg() {
-      if (settings[iframeId]?.firstRun) firstRun()
+      if (settings[iframeId]?.firstRun) firstRun();
 
       switch (messageData.type) {
         case 'close':
-          closeIFrame(messageData.iframe)
+          closeIFrame(messageData.iframe);
           break
 
         case 'message':
-          forwardMsgFromIFrame(getMsgBody(6))
+          forwardMsgFromIFrame(getMsgBody(6));
           break
 
         case 'mouseenter':
-          onMouse('onMouseEnter')
+          onMouse('onMouseEnter');
           break
 
         case 'mouseleave':
-          onMouse('onMouseLeave')
+          onMouse('onMouseLeave');
           break
 
         case 'autoResize':
-          settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+          settings[iframeId].autoResize = JSON.parse(getMsgBody(9));
           break
 
         case 'scrollTo':
-          scrollRequestFromChild(false)
+          scrollRequestFromChild(false);
           break
 
         case 'scrollToOffset':
-          scrollRequestFromChild(true)
+          scrollRequestFromChild(true);
           break
 
         case 'pageInfo':
-          sendPageInfoToIframe('start', iframeId)
-          startPageInfoMonitor()
+          sendPageInfoToIframe('start', iframeId);
+          startPageInfoMonitor();
           break
 
         case 'parentInfo':
-          sendParentInfoToIframe('start', iframeId)
-          startParentInfoMonitor()
+          sendParentInfoToIframe('start', iframeId);
+          startParentInfoMonitor();
           break
 
         case 'pageInfoStop':
-          stopPageInfoMonitor()
+          stopPageInfoMonitor();
           break
 
         case 'parentInfoStop':
-          stopParentInfoMonitor()
+          stopParentInfoMonitor();
           break
 
         case 'inPageLink':
-          findTarget(getMsgBody(9))
+          findTarget(getMsgBody(9));
           break
 
         case 'reset':
-          resetIFrame(messageData)
+          resetIFrame(messageData);
           break
 
         case 'init':
-          resizeIFrame()
-          checkSameDomain(iframeId)
-          on('onReady', messageData.iframe)
+          resizeIFrame();
+          checkSameDomain(iframeId);
+          on('onReady', messageData.iframe);
           break
 
         default:
@@ -647,23 +654,23 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
             warn(
               `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
                 `version of iframe-resizer than the parent page`,
-            )
+            );
             return
           }
 
           if (messageData.width === 0 || messageData.height === 0) {
-            log(iframeId, 'Ignoring message with 0 height or width')
+            log(iframeId, 'Ignoring message with 0 height or width');
             return
           }
 
           // Recheck document.hidden here, as only Firefox
           // correctly supports this in the iframe
           if (document.hidden) {
-            log(iframeId, 'Page hidden - ignored resize request')
+            log(iframeId, 'Page hidden - ignored resize request');
             return
           }
 
-          resizeIFrame()
+          resizeIFrame();
       }
     }
 
@@ -678,58 +685,58 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function iFrameReadyMsgReceived() {
       Object.keys(settings).forEach((iframeId) =>
         trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId),
-      )
+      );
     }
 
     function firstRun() {
       if (settings[iframeId]) {
-        settings[iframeId].firstRun = false
+        settings[iframeId].firstRun = false;
       }
     }
 
-    let msg = event.data
-    let messageData = {}
-    let iframeId = null
+    let msg = event.data;
+    let messageData = {};
+    let iframeId = null;
 
     if (msg === '[iFrameResizerChild]Ready') {
-      iFrameReadyMsgReceived()
+      iFrameReadyMsgReceived();
       return
     }
 
     if (!isMessageForUs()) {
-      info(iframeId, `Ignored: ${msg}`)
+      info(iframeId, `Ignored: ${msg}`);
       return
     }
 
-    messageData = processMsg()
-    iframeId = messageData.id
+    messageData = processMsg();
+    iframeId = messageData.id;
 
     if (!iframeId) {
-      warn('iframeResizer received messageData without id, message was: ', msg)
+      warn('iframeResizer received messageData without id, message was: ', msg);
       return
     }
 
-    checkSettings(iframeId)
+    checkSettings(iframeId);
 
     if (!isMessageFromMetaParent()) {
-      log(iframeId, `Received: ${msg}`)
-      settings[iframeId].loaded = true
+      log(iframeId, `Received: ${msg}`);
+      settings[iframeId].loaded = true;
 
       if (checkIFrameExists() && isMessageFromIFrame()) {
-        actionMsg()
+        actionMsg();
       }
     }
   }
 
   function chkEvent(iframeId, funcName, val) {
-    let func = null
-    let retVal = null
+    let func = null;
+    let retVal = null;
 
     if (settings[iframeId]) {
-      func = settings[iframeId][funcName]
+      func = settings[iframeId][funcName];
 
       if (typeof func === 'function') {
-        retVal = func(val)
+        retVal = func(val);
       } else {
         throw new TypeError(
           `${funcName} on iFrame[${iframeId}] is not a function`,
@@ -741,30 +748,30 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
   }
 
   function removeIframeListeners(iframe) {
-    const iframeId = iframe.id
-    delete settings[iframeId]
+    const iframeId = iframe.id;
+    delete settings[iframeId];
   }
 
   function closeIFrame(iframe) {
-    const iframeId = iframe.id
+    const iframeId = iframe.id;
     if (chkEvent(iframeId, 'onClose', iframeId) === false) {
-      log(iframeId, 'Close iframe cancelled by onClose event')
+      log(iframeId, 'Close iframe cancelled by onClose event');
       return
     }
-    log(iframeId, `Removing iFrame: ${iframeId}`)
+    log(iframeId, `Removing iFrame: ${iframeId}`);
 
     try {
       // Catch race condition error with React
       if (iframe.parentNode) {
-        iframe.remove()
+        iframe.remove();
       }
     } catch (error) {
-      warn(error)
+      warn(error);
     }
 
-    chkEvent(iframeId, 'onClosed', iframeId)
-    log(iframeId, '--')
-    removeIframeListeners(iframe)
+    chkEvent(iframeId, 'onClosed', iframeId);
+    log(iframeId, '--');
+    removeIframeListeners(iframe);
   }
 
   function getPagePosition(iframeId) {
@@ -772,20 +779,20 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       pagePosition = {
         x: window.scrollX,
         y: window.scrollY,
-      }
-      log(iframeId, `Get page position: ${pagePosition.x}, ${pagePosition.y}`)
+      };
+      log(iframeId, `Get page position: ${pagePosition.x}, ${pagePosition.y}`);
     }
   }
 
   function unsetPagePosition() {
-    pagePosition = null
+    pagePosition = null;
   }
 
   function setPagePosition(iframeId) {
     if (pagePosition !== null) {
-      window.scrollTo(pagePosition.x, pagePosition.y)
-      log(iframeId, `Set page position: ${pagePosition.x}, ${pagePosition.y}`)
-      unsetPagePosition()
+      window.scrollTo(pagePosition.x, pagePosition.y);
+      log(iframeId, `Set page position: ${pagePosition.x}, ${pagePosition.y}`);
+      unsetPagePosition();
     }
   }
 
@@ -793,65 +800,65 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     log(
       messageData.id,
       `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`,
-    )
+    );
 
-    getPagePosition(messageData.id)
-    setSize(messageData)
-    trigger('reset', 'reset', messageData.id)
+    getPagePosition(messageData.id);
+    setSize(messageData);
+    trigger('reset', 'reset', messageData.id);
   }
 
   function setSize(messageData) {
-    const iframeId = messageData.id
+    const iframeId = messageData.id;
 
     function setDimension(dimension) {
-      const size = `${messageData[dimension]}px`
-      messageData.iframe.style[dimension] = size
-      log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`)
+      const size = `${messageData[dimension]}px`;
+      messageData.iframe.style[dimension] = size;
+      log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`);
     }
 
     if (settings[iframeId].sizeHeight) {
-      setDimension('height')
+      setDimension('height');
     }
     if (settings[iframeId].sizeWidth) {
-      setDimension('width')
+      setDimension('width');
     }
   }
 
   function trigger(calleeMsg, msg, id, noResponseWarning) {
     function postMessageToIFrame() {
-      const { postMessageTarget, targetOrigin } = settings[id]
+      const { postMessageTarget, targetOrigin } = settings[id];
 
       if (settings[id].sameDomain) {
         try {
-          settings[id].iframe.contentWindow.iFrameListener(msgId + msg)
+          settings[id].iframe.contentWindow.iFrameListener(msgId + msg);
           log(
             id,
             `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
-          )
+          );
           return
         } catch (error) {
-          warn(id, `Same domain connection failed. Trying cross domain`)
-          settings[id].sameDomain = false
+          warn(id, `Same domain connection failed. Trying cross domain`);
+          settings[id].sameDomain = false;
         }
       }
 
       log(
         id,
         `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
-      )
-      postMessageTarget.postMessage(msgId + msg, targetOrigin)
+      );
+      postMessageTarget.postMessage(msgId + msg, targetOrigin);
     }
 
     function iFrameNotFound() {
-      warn(id, `[${calleeMsg}] IFrame(${id}) not found`)
+      warn(id, `[${calleeMsg}] IFrame(${id}) not found`);
     }
 
     function chkAndSend() {
       if (!settings[id]?.postMessageTarget) {
-        iFrameNotFound()
+        iFrameNotFound();
         return
       }
-      postMessageToIFrame()
+      postMessageToIFrame();
     }
 
     function warnOnNoResponse() {
@@ -859,7 +866,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         if (settings[id] === undefined) return // iframe has been closed while we where waiting
 
         if (!settings[id].loaded && !settings[id].loadErrorShown) {
-          settings[id].loadErrorShown = true
+          settings[id].loadErrorShown = true;
           advise(
             id,
             `
@@ -869,26 +876,23 @@ The iframe (\u001B[3m${id}\u001B[m) has not responded within ${settings[id].warn
 
 This message can be ignored if everything is working, or you can set the \u001B[1mwarningTimeout\u001B[m option to a higher value or zero to suppress this warning.
 `,
-          )
+          );
         }
       }
 
       if (!!noResponseWarning && !!settings[id]?.warningTimeout) {
-        settings[id].msgTimeout = setTimeout(
-          warning,
-          settings[id].warningTimeout,
-        )
+        settings[id].msgTimeout = setTimeout(warning, settings[id].warningTimeout);
       }
     }
 
     if (settings[id]) {
-      chkAndSend()
-      warnOnNoResponse()
+      chkAndSend();
+      warnOnNoResponse();
     }
   }
 
   function createOutgoingMsg(iframeId) {
-    const iframeSettings = settings[iframeId]
+    const iframeSettings = settings[iframeId];
 
     return [
       iframeId,
@@ -913,18 +917,18 @@ This message can be ignored if everything is working, or you can set the \u001B[
     ].join(':')
   }
 
-  const isNumber = (value) => !Number.isNaN(value)
+  const isNumber = (value) => !Number.isNaN(value);
 
   function setupIFrame(iframe, options) {
     function setLimits() {
       function addStyle(style) {
-        const styleValue = settings[iframeId][style]
+        const styleValue = settings[iframeId][style];
 
         if (Infinity !== styleValue && styleValue !== 0) {
           iframe.style[style] = isNumber(styleValue)
             ? `${styleValue}px`
-            : styleValue
-          log(iframeId, `Set ${style} = ${iframe.style[style]}`)
+            : styleValue;
+          log(iframeId, `Set ${style} = ${iframe.style[style]}`);
         }
       }
 
@@ -941,20 +945,20 @@ This message can be ignored if everything is working, or you can set the \u001B[
         }
       }
 
-      chkMinMax('Height')
-      chkMinMax('Width')
+      chkMinMax('Height');
+      chkMinMax('Width');
 
-      addStyle('maxHeight')
-      addStyle('minHeight')
-      addStyle('maxWidth')
-      addStyle('minWidth')
+      addStyle('maxHeight');
+      addStyle('minHeight');
+      addStyle('maxWidth');
+      addStyle('minWidth');
     }
 
     function newId() {
-      let id = options?.id || defaults.id + count++
+      let id = options?.id || defaults.id + count++;
 
       if (document.getElementById(id) !== null) {
-        id += count++
+        id += count++;
       }
 
       return id
@@ -967,9 +971,9 @@ This message can be ignored if everything is working, or you can set the \u001B[
 
       if (iframeId === '') {
         // eslint-disable-next-line no-multi-assign
-        iframe.id = iframeId = newId()
-        logEnabled = (options || {}).log
-        log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
+        iframe.id = iframeId = newId();
+        logEnabled = (options || {}).log;
+        log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`);
       }
 
       return iframeId
@@ -979,47 +983,47 @@ This message can be ignored if everything is working, or you can set the \u001B[
       log(
         iframeId,
         `IFrame scrolling ${
-          settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
-        } for ${iframeId}`,
-      )
+        settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
+      } for ${iframeId}`,
+      );
 
       iframe.style.overflow =
-        settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
+        settings[iframeId]?.scrolling === false ? 'hidden' : 'auto';
 
       switch (settings[iframeId]?.scrolling) {
         case 'omit':
           break
 
         case true:
-          iframe.scrolling = 'yes'
+          iframe.scrolling = 'yes';
           break
 
         case false:
-          iframe.scrolling = 'no'
+          iframe.scrolling = 'no';
           break
 
         default:
           iframe.scrolling = settings[iframeId]
             ? settings[iframeId].scrolling
-            : 'no'
+            : 'no';
       }
     }
 
     function setupBodyMarginValues() {
-      const { bodyMargin } = settings[iframeId]
+      const { bodyMargin } = settings[iframeId];
 
       if (typeof bodyMargin === 'number' || bodyMargin === '0') {
-        settings[iframeId].bodyMargin = `${bodyMargin}px`
+        settings[iframeId].bodyMargin = `${bodyMargin}px`;
       }
     }
 
     function checkReset() {
-      const firstRun = settings[iframeId]?.firstRun
+      const firstRun = settings[iframeId]?.firstRun;
       const resetRequertMethod =
-        settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
+        settings[iframeId]?.heightCalculationMethod in resetRequiredMethods;
 
       if (!firstRun && resetRequertMethod) {
-        resetIFrame({ iframe, height: 0, width: 0, type: 'init' })
+        resetIFrame({ iframe, height: 0, width: 0, type: 'init' });
       }
     }
 
@@ -1036,14 +1040,14 @@ This message can be ignored if everything is working, or you can set the \u001B[
           resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
           moveToAnchor(anchor) {
-            trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
+            trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId);
           },
 
           sendMessage(message) {
-            message = JSON.stringify(message)
-            trigger('Send Message', `message:${message}`, iframeId)
+            message = JSON.stringify(message);
+            trigger('Send Message', `message:${message}`, iframeId);
           },
-        }
+        };
       }
     }
 
@@ -1052,14 +1056,14 @@ This message can be ignored if everything is working, or you can set the \u001B[
     // event listener also catches the page changing in the iFrame.
     function init(msg) {
       function iFrameLoaded() {
-        trigger('iFrame.onload', msg, id, true)
-        checkReset()
+        trigger('iFrame.onload', msg, id, true);
+        checkReset();
       }
 
-      const { id } = iframe
+      const { id } = iframe;
 
-      addEventListener(iframe, 'load', iFrameLoaded)
-      trigger('init', msg, id, true)
+      addEventListener(iframe, 'load', iFrameLoaded);
+      trigger('init', msg, id, true);
     }
 
     function checkOptions(options) {
@@ -1081,7 +1085,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
 
 The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoResize\u001B[m options have been replaced with new \u001B[1mdirection\u001B[m option which expects values of \u001B[3m"vertical"\u001B[m, \u001B[3m"horizontal"\u001B[m or \u001B[3m"horizontal"\u001B[m.
 `,
-        )
+        );
       }
 
       return options
@@ -1089,17 +1093,17 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
 
     function setDirection() {
       if (settings[iframeId].direction === 'horizontal') {
-        settings[iframeId].sizeWidth = true
-        settings[iframeId].sizeHeight = false
-        log(iframeId, 'Direction set to "horizontal"')
+        settings[iframeId].sizeWidth = true;
+        settings[iframeId].sizeHeight = false;
+        log(iframeId, 'Direction set to "horizontal"');
         return
       }
 
       if (settings[iframeId].direction === 'none') {
-        settings[iframeId].sizeWidth = false
-        settings[iframeId].sizeHeight = false
-        settings[iframeId].autoResize = false
-        log(iframeId, 'Direction set to "none"')
+        settings[iframeId].sizeWidth = false;
+        settings[iframeId].sizeHeight = false;
+        settings[iframeId].autoResize = false;
+        log(iframeId, 'Direction set to "none"');
         return
       }
 
@@ -1110,7 +1114,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
         )
       }
 
-      log(iframeId, 'Direction set to "vertical"')
+      log(iframeId, 'Direction set to "vertical"');
     }
 
     function getTargetOrigin(remoteHost) {
@@ -1122,7 +1126,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
 
     function getPostMessageTarget() {
       if (settings[iframeId].postMessageTarget === null)
-        settings[iframeId].postMessageTarget = iframe.contentWindow
+        settings[iframeId].postMessageTarget = iframe.contentWindow;
     }
 
     function processOptions(options) {
@@ -1132,91 +1136,91 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
         remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
         ...defaults,
         ...checkOptions(options),
-      }
+      };
 
-      setDirection()
-      getPostMessageTarget()
+      setDirection();
+      getPostMessageTarget();
 
       settings[iframeId].targetOrigin =
         settings[iframeId].checkOrigin === true
           ? getTargetOrigin(settings[iframeId].remoteHost)
-          : '*'
+          : '*';
     }
 
     function beenHere() {
       return iframeId in settings && 'iFrameResizer' in iframe
     }
 
-    const iframeId = ensureHasId(iframe.id)
+    const iframeId = ensureHasId(iframe.id);
 
     if (beenHere()) {
-      warn(iframeId, 'Ignored iFrame, already setup.')
+      warn(iframeId, 'Ignored iFrame, already setup.');
     } else {
-      processOptions(options)
-      setScrolling()
-      setLimits()
-      setupBodyMarginValues()
-      init(createOutgoingMsg(iframeId))
-      setupIFrameObject()
+      processOptions(options);
+      setScrolling();
+      setLimits();
+      setupBodyMarginValues();
+      init(createOutgoingMsg(iframeId));
+      setupIFrameObject();
     }
   }
 
   function sendTriggerMsg(eventName, event) {
     function triggerEnabledIframe(iframeId) {
       if (isIFrameResizeEnabled(iframeId)) {
-        trigger(eventName, event, iframeId)
+        trigger(eventName, event, iframeId);
       }
     }
 
     const isIFrameResizeEnabled = (iframeId) =>
-      settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
+      settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun;
 
-    Object.keys(settings).forEach(triggerEnabledIframe)
+    Object.keys(settings).forEach(triggerEnabledIframe);
   }
 
   function tabVisible() {
     if (document.hidden === false) {
-      log('document', 'Trigger event: Visibility change')
-      sendTriggerMsg('Tab Visible', 'resize')
+      log('document', 'Trigger event: Visibility change');
+      sendTriggerMsg('Tab Visible', 'resize');
     }
   }
 
   function setupEventListeners() {
-    addEventListener(window, 'message', iFrameListener)
-    addEventListener(document, 'visibilitychange', tabVisible)
-    window.iFrameListener = (data) => iFrameListener({ data, sameDomain: true })
+    addEventListener(window, 'message', iFrameListener);
+    addEventListener(document, 'visibilitychange', tabVisible);
+    window.iFrameListener = (data) => iFrameListener({ data, sameDomain: true });
   }
 
-  let setupComplete = false
+  let setupComplete = false;
 
-  function factory() {
+  function createIframeResize() {
     function setup(options, element) {
       function chkType() {
         if (!element.tagName) {
           throw new TypeError('Object is not a valid DOM element')
         } else if (element.tagName.toUpperCase() !== 'IFRAME') {
-          throw new TypeError(
-            `Expected <IFRAME> tag, found <${element.tagName}>`,
-          )
+          throw new TypeError(`Expected <IFRAME> tag, found <${element.tagName}>`)
         }
       }
 
       if (element) {
-        chkType()
-        setupIFrame(element, options)
-        iFrames.push(element)
+        chkType();
+        setupIFrame(element, options);
+        iFrames.push(element);
       }
     }
 
-    let iFrames
+    let iFrames;
 
     if (!setupComplete) {
-      setupEventListeners()
-      setupComplete = true
+      setupEventListeners();
+      setupComplete = true;
     }
 
     return function (options, target) {
-      iFrames = [] // Only return iFrames past in on this call
+      if (typeof window === 'undefined') return [] // don't run for server side render
+
+      iFrames = []; // Only return iFrames past in on this call
 
       switch (typeof target) {
         case 'undefined':
@@ -1224,11 +1228,11 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
             setup.bind(undefined, options),
-          )
+          );
           break
 
         case 'object':
-          setup(options, target)
+          setup(options, target);
           break
 
         default:
@@ -1239,31 +1243,26 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
     }
   }
 
+  createIframeResize();
+
   function createJQueryPublicMethod($) {
     if (!$.fn) {
-      warn('', 'Unable to bind to jQuery, it is not fully loaded.')
+      warn('', 'Unable to bind to jQuery, it is not fully loaded.');
     } else if (!$.fn.iFrameResize) {
       $.fn.iFrameResize = function (options) {
         function initJQuery(index, element) {
-          setupIFrame(element, options)
+          setupIFrame(element, options);
         }
 
         return this.filter('iframe').each(initJQuery).end()
-      }
+      };
     }
   }
 
-  if (window.jQuery !== undefined) {
-    createJQueryPublicMethod(window.jQuery)
+  if (window.jQuery === undefined) {
+    warn('', 'Unable to bind to jQuery, it is not available.');
+  } else {
+    createJQueryPublicMethod(window.jQuery);
   }
 
-  if (typeof define === 'function' && define.amd) {
-    define([], factory)
-  }
-
-  if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = factory()
-  }
-
-  window.iFrameResize = window.iFrameResize || factory()
-})()
+}));

@@ -12,9 +12,9 @@ const paths = {
   jQuery: 'dist/jquery/',
 }
 
-const BANNER = `
+const createBanner =  (file) => `
 /**
- *  iframe-resizer v${parentPkg.version}
+ *  iframe-resizer (${file}) v${parentPkg.version}
  *
  *  ${parentPkg.homepage}
  *
@@ -25,26 +25,34 @@ const BANNER = `
  *               support for window/content resizing, and multiple iFrames.
  *
  */
+
 `
+
+const terserOptions = (file) => ({
+  output: {
+    preamble: createBanner(file),
+    comments: false
+  }
+})
 
 console.log('\nBuilding version', parentPkg.version)
 
 export default [ 
   // CommonJS (for Node) and ES module (for bundlers) build.
   {
-    input: 'src/iframeResizer.js',
+    input: 'src/parent.js',
     output: [
       {
         file: paths.parent + parentPkg.main, format: 'cjs',
-        sourcemap: true,
+        sourcemap: false,
       },
       {
         file: paths.parent + parentPkg.module, format: 'es',
-        sourcemap: true,
+        sourcemap: false,
       }
     ],
     plugins: [
-      terser(),
+      terser(terserOptions('parent')),
       copy({
         targets: [
           { 
@@ -58,29 +66,29 @@ export default [
 
   // browser-friendly UMD build
   {
-    input: 'src/iframeResizer.js',
+    input: 'src/umd.js',
     output: {
       name: 'iframeResize',
       file: paths.parent + parentPkg.browser,
       format: 'umd',
-      sourcemap: true,
+      sourcemap: false,
     },
     plugins: [
       resolve(), 
       commonjs(),
-      terser(),
+      terser(terserOptions('parent')),
     ],
   }, 
   
   // Content Window
   {
-    input: 'src/iframeResizer.contentWindow.js',
+    input: 'src/child.js',
     output: [{
       file: paths.content + 'index.min.js',
-      sourcemap: true,
+      sourcemap: false,
     }],
     plugins: [
-      terser(),
+      terser(terserOptions('child')),
       stripCode({
         start_comment: '// TEST CODE START //',
         end_comment: '// TEST CODE END //',
@@ -88,35 +96,44 @@ export default [
     ],
   }, 
 
+
+  // JS folder
   {
-    input: 'src/iframeResizer.js',
-    output: [{ 
-      file: 'js/iframeResizer.js',
-      sourcemap: true,
+    input: 'src/umd.js',
+    output: [{
+      name: 'iframeResize',
+      file: 'js/iframeResizer.parent.js',
+      format: 'umd',
+      banner: createBanner('parent'),
+      sourcemap: false,
     }],
     plugins: [
-      terser({
-      output: {
-        preamble: BANNER,
-        comments: false
-      }
-    }),
+      // terser(terserOptions('parent')),
     ],
   }, 
   
   {
-    input: 'src/iframeResizer.contentWindow.js',
-    output: [{ 
-      file: 'js/iframeResizer.contentWindow.js',
-      sourcemap: true, 
+    input: 'src/jquery.js',
+    output: [{
+      name: 'iframeResize',
+      file: 'js/jquery.iframeResizer.parent.js',
+      format: 'umd',
+      banner: createBanner('jquery.parent'),
+      sourcemap: false,
     }],
     plugins: [
-      terser({
-      output: {
-        preamble: BANNER,
-        comments: false
-      }
-    }),
+      // terser(terserOptions('jquery.parent')),
+    ],
+  }, 
+  
+  {
+    input: 'src/child.js',
+    output: [{ 
+      file: 'js/iframeResizer.child.js',
+      sourcemap: false, 
+    }],
+    plugins: [
+      terser(terserOptions('child')),
       stripCode({
         start_comment: '// TEST CODE START //',
         end_comment: '// TEST CODE END //',
