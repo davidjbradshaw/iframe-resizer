@@ -127,12 +127,12 @@
         offsetHeight: -1,
 
         onReady: () => {
-          parentIFrame.getPageInfo((pageInfo) => {
-            dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
+        //   parentIFrame.getPageInfo((pageInfo) => {
+        //     dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
+        //   })
+          parentIFrame.getParentInfo((pageInfo) => {
+            dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })
-          // parentIFrame.getParentInfo((pageInfo) => {
-          //   dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
-          // })
         }
 
       }
