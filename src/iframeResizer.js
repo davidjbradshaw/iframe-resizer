@@ -309,7 +309,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function getParentInfo() {
       const { iframe } = messageData
       const { scrollWidth, scrollHeight } = document.documentElement
-      const { height, offsetLeft, offsetTop, pageLeft, pageTop, scale, width } =
+      const { width, height, offsetLeft, offsetTop, pageLeft, pageTop, scale } =
         window.visualViewport
 
       return JSON.stringify({
@@ -319,13 +319,13 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           scrollWidth
         },
         viewport: {
+          width,
           height,
           offsetLeft,
           offsetTop,
           pageLeft,
           pageTop,
-          scale,
-          width
+          scale
         }
       })
     }
