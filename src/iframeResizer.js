@@ -18,7 +18,7 @@
     max: 1,
     scroll: 1,
     bodyScroll: 1,
-    documentElementScroll: 1
+    documentElementScroll: 1,
   })
   const settings = {}
 
@@ -63,13 +63,13 @@
 \u001B[31;1mDeprecated Option\u001B[m
 
 The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with \u001B[1monReady()\u001B[m. It will be removed in a future version of iFrame Resizer.
-        `
+        `,
         )
         settings[messageData.id].onInit(messageData)
       }
     },
     onResized() {},
-    onScroll: () => true
+    onScroll: () => true,
   })
 
   let count = 0
@@ -120,8 +120,8 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         iframeId,
         window.chrome // Only show formatting in Chrome as not supported in other browsers
           ? msg
-          : msg.replaceAll(/\u001B\[[\d;]*m/gi, '') // eslint-disable-line no-control-regex
-      )
+          : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
+      ),
     )
 
   function iFrameListener(event) {
@@ -174,7 +174,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         id: data[0],
         height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
         width: Number(data[2]),
-        type: data[3]
+        type: data[3],
       }
     }
 
@@ -208,7 +208,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
           log(
             iframeId,
-            `Checking connection is from allowed list of origins: ${checkOrigin}`
+            `Checking connection is from allowed list of origins: ${checkOrigin}`,
           )
 
           for (; i < checkOrigin.length; i++) {
@@ -240,7 +240,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
         throw new Error(
-          `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`
+          `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`,
         )
       }
 
@@ -273,12 +273,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function forwardMsgFromIFrame(msgBody) {
       log(
         iframeId,
-        `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`
+        `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`,
       )
 
       on('onMessage', {
         iframe: messageData.iframe,
-        message: JSON.parse(msgBody)
+        message: JSON.parse(msgBody),
       })
 
       log(iframeId, '--')
@@ -302,7 +302,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         documentHeight: clientHeight,
         documentWidth: clientWidth,
         windowHeight: innerHeight,
-        windowWidth: innerWidth
+        windowWidth: innerWidth,
       })
     }
 
@@ -315,8 +315,8 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       return JSON.stringify({
         iframe: iframe.getBoundingClientRect(),
         document: {
+          scrollWidth,
           scrollHeight,
-          scrollWidth
         },
         viewport: {
           width,
@@ -325,8 +325,8 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           offsetTop,
           pageLeft,
           pageTop,
-          scale
-        }
+          scale,
+        },
       })
     }
 
@@ -347,7 +347,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           trigger(
             `Send ${type} (${requestType})`,
             `${type}:${infoFunction()}`,
-            iframeId
+            iframeId,
           )
         }
 
@@ -379,7 +379,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         resizeObserver.observe(document.body, {
           attributes: true,
           childList: true,
-          subtree: true
+          subtree: true,
         })
       }
 
@@ -406,11 +406,11 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
     const startPageInfoMonitor = startInfoMonitor(
       sendPageInfoToIframe,
-      'PageInfo'
+      'PageInfo',
     )
     const startParentInfoMonitor = startInfoMonitor(
       sendParentInfoToIframe,
-      'ParentInfo'
+      'ParentInfo',
     )
 
     const stopPageInfoMonitor = stopInfoMonitor('stopPageInfo')
@@ -434,7 +434,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       return {
         x: Math.floor(Number(iFramePosition.left) + Number(pagePosition.x)),
-        y: Math.floor(Number(iFramePosition.top) + Number(pagePosition.y))
+        y: Math.floor(Number(iFramePosition.top) + Number(pagePosition.y)),
       }
     }
 
@@ -450,19 +450,19 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         if (window.parentIFrame) {
           window.parentIFrame[`scrollTo${addOffset ? 'Offset' : ''}`](
             newPosition.x,
-            newPosition.y
+            newPosition.y,
           )
         } else {
           warn(
             iframeId,
-            'Unable to scroll to requested position, window.parentIFrame not found'
+            'Unable to scroll to requested position, window.parentIFrame not found',
           )
         }
       }
 
       const calcOffset = (messageData, offset) => ({
         x: Number(messageData.width) + offset.x,
-        y: Number(messageData.height) + offset.y
+        y: Number(messageData.height) + offset.y,
       })
 
       const offset = addOffset
@@ -473,7 +473,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       log(
         iframeId,
-        `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`
+        `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`,
       )
 
       if (window.top === window.self) {
@@ -497,12 +497,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
         log(
           iframeId,
-          `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`
+          `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`,
         )
 
         pagePosition = {
           x: jumpPosition.x,
-          y: jumpPosition.y
+          y: jumpPosition.y,
         }
 
         scrollTo()
@@ -517,7 +517,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
         log(
           iframeId,
-          `In page link #${hash} not found and window.parentIFrame not found`
+          `In page link #${hash} not found and window.parentIFrame not found`,
         )
       }
 
@@ -548,12 +548,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         const data = getMsgBody(9).split(':')
         mousePos = {
           x: data[1],
-          y: data[0]
+          y: data[0],
         }
       } else {
         mousePos = {
           x: messageData.width,
-          y: messageData.height
+          y: messageData.height,
         }
       }
 
@@ -561,7 +561,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         iframe: messageData.iframe,
         screenX: Number(mousePos.x),
         screenY: Number(mousePos.y),
-        type: messageData.type
+        type: messageData.type,
       })
     }
 
@@ -646,7 +646,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           if (messageData.width === 0 && messageData.height === 0) {
             warn(
               `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
-                `version of iframe-resizer than the parent page`
+                `version of iframe-resizer than the parent page`,
             )
             return
           }
@@ -670,14 +670,14 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function checkSettings(iframeId) {
       if (!settings[iframeId]) {
         throw new Error(
-          `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`
+          `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`,
         )
       }
     }
 
     function iFrameReadyMsgReceived() {
       Object.keys(settings).forEach((iframeId) =>
-        trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
+        trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId),
       )
     }
 
@@ -732,7 +732,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         retVal = func(val)
       } else {
         throw new TypeError(
-          `${funcName} on iFrame[${iframeId}] is not a function`
+          `${funcName} on iFrame[${iframeId}] is not a function`,
         )
       }
     }
@@ -771,7 +771,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     if (pagePosition === null) {
       pagePosition = {
         x: window.scrollX,
-        y: window.scrollY
+        y: window.scrollY,
       }
       log(iframeId, `Get page position: ${pagePosition.x}, ${pagePosition.y}`)
     }
@@ -792,7 +792,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
   function resetIFrame(messageData) {
     log(
       messageData.id,
-      `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`
+      `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`,
     )
 
     getPagePosition(messageData.id)
@@ -826,7 +826,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           settings[id].iframe.contentWindow.iFrameListener(msgId + msg)
           log(
             id,
-            `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`
+            `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
           )
           return
         } catch (error) {
@@ -837,7 +837,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       log(
         id,
-        `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`
+        `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
       )
       postMessageTarget.postMessage(msgId + msg, targetOrigin)
     }
@@ -868,7 +868,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 The iframe (\u001B[3m${id}\u001B[m) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check \u001B[1miFrameResizer.contentWindow.js\u001B[m has been loaded in the iframe.
 
 This message can be ignored if everything is working, or you can set the \u001B[1mwarningTimeout\u001B[m option to a higher value or zero to suppress this warning.
-`
+`,
           )
         }
       }
@@ -876,7 +876,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
       if (!!noResponseWarning && !!settings[id]?.warningTimeout) {
         settings[id].msgTimeout = setTimeout(
           warning,
-          settings[id].warningTimeout
+          settings[id].warningTimeout,
         )
       }
     }
@@ -909,7 +909,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
       iframeSettings.mouseEvents,
       iframeSettings.offsetHeight,
       iframeSettings.offsetWidth,
-      iframeSettings.sizeHeight
+      iframeSettings.sizeHeight,
     ].join(':')
   }
 
@@ -936,7 +936,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
           settings[iframeId][`max${dimension}`]
         ) {
           throw new Error(
-            `Value for min${dimension} can not be greater than max${dimension}`
+            `Value for min${dimension} can not be greater than max${dimension}`,
           )
         }
       }
@@ -980,7 +980,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
         iframeId,
         `IFrame scrolling ${
           settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
-        } for ${iframeId}`
+        } for ${iframeId}`,
       )
 
       iframe.style.overflow =
@@ -1030,7 +1030,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
 
           removeListeners: removeIframeListeners.bind(
             null,
-            settings[iframeId].iframe
+            settings[iframeId].iframe,
           ),
 
           resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
@@ -1042,7 +1042,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
           sendMessage(message) {
             message = JSON.stringify(message)
             trigger('Send Message', `message:${message}`, iframeId)
-          }
+          },
         }
       }
     }
@@ -1080,7 +1080,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
 \u001B[31;1mDeprecated Option\u001Bm
 
 The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoResize\u001B[m options have been replaced with new \u001B[1mdirection\u001B[m option which expects values of \u001B[3m"vertical"\u001B[m, \u001B[3m"horizontal"\u001B[m or \u001B[3m"horizontal"\u001B[m.
-`
+`,
         )
       }
 
@@ -1106,7 +1106,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
       if (settings[iframeId].direction !== 'vertical') {
         throw new TypeError(
           iframeId,
-          `Direction value of "${settings[iframeId].direction}" is not valid`
+          `Direction value of "${settings[iframeId].direction}" is not valid`,
         )
       }
 
@@ -1131,7 +1131,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
         firstRun: true,
         remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
         ...defaults,
-        ...checkOptions(options)
+        ...checkOptions(options),
       }
 
       setDirection()
@@ -1196,7 +1196,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
           throw new TypeError('Object is not a valid DOM element')
         } else if (element.tagName.toUpperCase() !== 'IFRAME') {
           throw new TypeError(
-            `Expected <IFRAME> tag, found <${element.tagName}>`
+            `Expected <IFRAME> tag, found <${element.tagName}>`,
           )
         }
       }
@@ -1223,7 +1223,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
         case 'string':
           Array.prototype.forEach.call(
             document.querySelectorAll(target || 'iframe'),
-            setup.bind(undefined, options)
+            setup.bind(undefined, options),
           )
           break
 

@@ -14,6 +14,7 @@
   },
   "parserOptions": { "ecmaVersion": 2020 },
   "rules": {
+    "comma-dangle": [1, "always-multiline"],
     "const-case/uppercase": 0,
     "func-names": 0,
     "global-require": 0,

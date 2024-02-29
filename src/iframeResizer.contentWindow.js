@@ -19,7 +19,7 @@
   const checkVisibilityOptions = {
     contentVisibilityAuto: true,
     opacityProperty: true,
-    visibilityProperty: true
+    visibilityProperty: true,
   }
   const customCalcMethods = {
     height: () => {
@@ -29,7 +29,7 @@
     width: () => {
       warn('Custom width calculation function not defined')
       return getWidth.auto()
-    }
+    },
   }
   const deprecatedResizeMethods = {
     bodyOffset: 1,
@@ -41,7 +41,7 @@
     max: 1,
     min: 1,
     grow: 1,
-    lowestElement: 1
+    lowestElement: 1,
   }
   // const doubleEventList = { resize: 1, click: 1 }
   const eventCancelTimer = 128
@@ -55,7 +55,7 @@
     max: 1,
     min: 1,
     bodyScroll: 1,
-    documentElementScroll: 1
+    documentElementScroll: 1,
   }
   const resizeObserveTargets = ['body']
   const sendPermit = true
@@ -159,7 +159,7 @@
     console.warn(
       window.chrome // Only show formatting in Chrome as not supported in other browsers
         ? formatLogMsg(...msg)
-        : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, '') // eslint-disable-line no-control-regex
+        : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
     )
 
   function init() {
@@ -307,7 +307,7 @@
         delete eventHandlersByName[eventName]
 
         removeEventListener(window, eventName, handleEvent)
-      }
+      },
     }
 
     listener[options.method](options.eventName)
@@ -315,7 +315,7 @@
     log(
       `${capitalizeFirstLetter(options.method)} event listener: ${
         options.eventType
-      }`
+      }`,
     )
   }
 
@@ -323,19 +323,19 @@
     manageTriggerEvent({
       method,
       eventType: 'After Print',
-      eventName: 'afterprint'
+      eventName: 'afterprint',
     })
 
     manageTriggerEvent({
       method,
       eventType: 'Before Print',
-      eventName: 'beforeprint'
+      eventName: 'beforeprint',
     })
 
     manageTriggerEvent({
       method,
       eventType: 'Ready State Change',
-      eventName: 'readystatechange'
+      eventName: 'readystatechange',
     })
 
     //   manageTriggerEvent({
@@ -371,13 +371,13 @@ The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m a
       if (heightCalcMode === 'auto') {
         heightCalcMode = 'autoOverflow'
         log(
-          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for height'
+          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for height',
         )
       }
       if (widthCalcMode === 'auto') {
         widthCalcMode = 'autoOverflow'
         log(
-          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for width'
+          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for width',
         )
       }
     }
@@ -412,7 +412,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
       heightCalcMode,
       heightCalcModeDefault,
       getHeight,
-      'height'
+      'height',
     )
   }
 
@@ -421,7 +421,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
       widthCalcMode,
       widthCalcModeDefault,
       getWidth,
-      'width'
+      'width',
     )
   }
 
@@ -455,7 +455,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
   function setupInPageLinks() {
     const getPagePosition = () => ({
       x: document.documentElement.scrollLeft,
-      y: document.documentElement.scrollTop
+      y: document.documentElement.scrollTop,
     })
 
     function getElementPosition(el) {
@@ -464,7 +464,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
 
       return {
         x: parseInt(elPosition.left, BASE) + parseInt(pagePosition.x, BASE),
-        y: parseInt(elPosition.top, BASE) + parseInt(pagePosition.y, BASE)
+        y: parseInt(elPosition.top, BASE) + parseInt(pagePosition.y, BASE),
       }
     }
 
@@ -473,7 +473,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
         const jumpPosition = getElementPosition(target)
 
         log(
-          `Moving to in page link (#${hash}) at x: ${jumpPosition.x}y: ${jumpPosition.y}`
+          `Moving to in page link (#${hash}) at x: ${jumpPosition.x}y: ${jumpPosition.y}`,
         )
 
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
@@ -542,7 +542,7 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     }
 
     return {
-      findTarget
+      findTarget,
     }
   }
 
@@ -653,9 +653,9 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
           'size',
           `parentIFrame.size(${valString})`,
           customHeight,
-          customWidth
+          customWidth,
         )
-      }
+      },
     }
   }
 
@@ -681,7 +681,7 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
   function createResizeObservers(el) {
     ;[
       ...getAllNonStaticElements(),
-      ...resizeObserveTargets.flatMap((target) => el.querySelector(target))
+      ...resizeObserveTargets.flatMap((target) => el.querySelector(target)),
     ].forEach(setupResizeObservers)
   }
 
@@ -716,7 +716,7 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
         characterData: false,
         characterDataOldValue: false,
         childList: true,
-        subtree: true
+        subtree: true,
       }
 
       log('Create <body/> MutationObserver')
@@ -731,7 +731,7 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
       disconnect() {
         log('Disconnect MutationObserver')
         observer.disconnect()
-      }
+      },
     }
   }
 
@@ -785,7 +785,7 @@ Position calculated from HTML element: ${elementSnippet(maxEl)}`
 \u001B[31;1mPerformance Warning\u001B[m
 
 Calculateing the page size took an excessive amount of time. To improve performace add the \u001B[1mdata-iframe-size\u001B[m attribute to the ${side} element on the page.
-${logMsg}`
+${logMsg}`,
       )
     }
     return maxVal
@@ -796,19 +796,19 @@ ${logMsg}`
     dimension.bodyScroll(),
     dimension.documentElementOffset(),
     dimension.documentElementScroll(),
-    dimension.documentElementBoundingClientRect()
+    dimension.documentElementBoundingClientRect(),
   ]
 
   const getAllElements = (element) => () =>
     element.querySelectorAll(
-      '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)'
+      '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
     )
 
   function switchToAutoOverflow({
     ceilBoundingSize,
     dimension,
     isHeight,
-    scrollSize
+    scrollSize,
   }) {
     const furthest = isHeight ? 'lowest' : 'right most'
     const side = isHeight ? 'bottom' : 'right'
@@ -836,12 +836,12 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
   const prevScrollSize = {
     height: 0,
-    width: 0
+    width: 0,
   }
 
   const prevBoundingSize = {
     height: 0,
-    width: 0
+    width: 0,
   }
 
   const getAdjustedScroll = (getDimension) =>
@@ -891,7 +891,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         log(
           `New HTML bounding size: ${sizes}`,
           'Previous bounding size:',
-          prevBoundingSize[dimension]
+          prevBoundingSize[dimension],
         )
         return returnBoundingClientRect()
 
@@ -913,7 +913,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
           ceilBoundingSize,
           dimension,
           isHeight,
-          scrollSize
+          scrollSize,
         })
         break
 
@@ -953,7 +953,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     min: () => Math.min(...getAllMeasurements(getHeight)),
     grow: () => getHeight.max(),
     lowestElement: () => getMaxElement('bottom'),
-    taggedElement: () => getMaxElement('bottom')
+    taggedElement: () => getMaxElement('bottom'),
   }
 
   const getWidth = {
@@ -974,14 +974,14 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     rightMostElement: () => getMaxElement('right'),
     scroll: () =>
       Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-    taggedElement: () => getMaxElement('right')
+    taggedElement: () => getMaxElement('right'),
   }
 
   function sizeIFrame(
     triggerEvent,
     triggerEventDesc,
     customHeight,
-    customWidth
+    customWidth,
   ) {
     function resizeIFrame() {
       height = currentHeight
@@ -1004,11 +1004,11 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       const checkTolarance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
       currentHeight = Math.ceil(
-        undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
+        undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
       )
 
       currentWidth = Math.ceil(
-        undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
+        undefined === customWidth ? getWidth[widthCalcMode]() : customWidth,
       )
 
       return (
@@ -1101,7 +1101,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
       log(
-        `Sending message to host page (${message}) via ${sameDomian ? 'sameDomain' : 'postMessage'}`
+        `Sending message to host page (${message}) via ${sameDomian ? 'sameDomain' : 'postMessage'}`,
       )
 
       if (sameDomian) {
@@ -1182,7 +1182,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         // eslint-disable-next-line sonarjs/no-extra-arguments
         onMessage(JSON.parse(msgBody))
         log(' --')
-      }
+      },
     }
 
     const isMessageForUs = () => msgID === `${event.data}`.slice(0, msgIdLen)
@@ -1225,7 +1225,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       }
 
       log(
-        `Ignored message of type "${getMessageType()}". Received before initialization.`
+        `Ignored message of type "${getMessageType()}". Received before initialization.`,
       )
     }
 

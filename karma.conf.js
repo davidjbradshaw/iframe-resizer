@@ -30,7 +30,7 @@ module.exports = function (config) {
       { pattern: 'example/*.html', included: false },
       { pattern: 'spec/*Spec.js', included: false },
       { pattern: 'spec/resources/*', included: false },
-      { pattern: 'spec/javascripts/fixtures/*.html', included: false }
+      { pattern: 'spec/javascripts/fixtures/*.html', included: false },
     ],
 
     // list of files to exclude
@@ -39,16 +39,16 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/*.js': ['coverage']
+      'src/*.js': ['coverage'],
     },
 
     coverageReporter: {
       type: 'html',
-      dir: 'coverage/'
+      dir: 'coverage/',
     },
 
     client: {
-      captureConsole: true
+      captureConsole: true,
     },
 
     // test results reporter to use
@@ -75,6 +75,6 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: true,
   })
 }
