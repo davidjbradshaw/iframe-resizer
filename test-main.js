@@ -23,12 +23,12 @@ require.config({
     iframeResizerMin: 'js/iframeResizer.min',
     iframeResizer: 'src/iframeResizer',
     iframeResizerContentMin: 'js/iframeResizer.contentWindow.min',
-    iframeResizerContent: 'src/iframeResizer.contentWindow'
+    iframeResizerContent: 'src/iframeResizer.contentWindow',
   },
 
   // dynamically load all test files
   deps: allTestFiles,
 
   // we have to kickoff jasmine, as it is asynchronous
-  callback: window.__karma__.start // eslint-disable-line no-underscore-dangle
+  callback: window.__karma__.start, // eslint-disable-line no-underscore-dangle
 })

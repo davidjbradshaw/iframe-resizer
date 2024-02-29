@@ -9,7 +9,7 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     'bump-only': 'grunt-bump',
     'bump-commit': 'grunt-bump',
-    coveralls: 'grunt-karma-coveralls'
+    coveralls: 'grunt-karma-coveralls',
   })
 
   // Project configuration.
@@ -31,32 +31,32 @@ module.exports = function (grunt) {
         ' *        to force the iframe to resize to the content size.\n' +
         ' *  Requires: iframeResizer.min.js on host page.\n' +
         ' *  Copyright: (c) <%= grunt.template.today("yyyy") %> David J. Bradshaw - dave@bradshaw.net\n' +
-        ' *  License: MIT\n */\n'
+        ' *  License: MIT\n */\n',
     },
 
     clean: ['coverage', 'coverageLcov'],
 
     karma: {
       options: {
-        configFile: 'karma.conf.js'
+        configFile: 'karma.conf.js',
       },
       travis: {
         singleRun: true,
         browsers: ['Chrome'], // 'PhantomJS'
         coverageReporter: {
           type: 'lcov',
-          dir: 'coverageLcov/'
-        }
+          dir: 'coverageLcov/',
+        },
       },
       single: {
         singleRun: true,
-        browsers: ['Chrome'] // 'Safari', 'PhantomJS', 'Firefox'
+        browsers: ['Chrome'], // 'Safari', 'PhantomJS', 'Firefox'
       },
       watch: {
         singleRun: false,
         browsers: ['Chrome'], // 'Firefox', 'Safari', 'PhantomJS'
-        reporters: ['logcapture', 'progress']
-      }
+        reporters: ['logcapture', 'progress'],
+      },
     },
 
     coveralls: {
@@ -65,37 +65,37 @@ module.exports = function (grunt) {
         coverageDir: 'coverageLcov',
         dryRun: false,
         force: true,
-        recursive: true
-      }
+        recursive: true,
+      },
     },
 
     uglify: {
       options: {
         sourceMap: true,
         sourceMapIncludeSources: true,
-        report: 'gzip'
+        report: 'gzip',
       },
       local: {
         options: {
           banner: '<%= meta.bannerLocal %>',
-          sourceMapName: 'js/iframeResizer.map'
+          sourceMapName: 'js/iframeResizer.map',
         },
         src: ['js/iframeResizer.js'],
-        dest: 'js/iframeResizer.min.js'
+        dest: 'js/iframeResizer.min.js',
       },
       remote: {
         options: {
           banner: '<%= meta.bannerRemote %>',
-          sourceMapName: 'js/iframeResizer.contentWindow.map'
+          sourceMapName: 'js/iframeResizer.contentWindow.map',
         },
         src: ['js/iframeResizer.contentWindow.js'],
-        dest: 'js/iframeResizer.contentWindow.min.js'
-      }
+        dest: 'js/iframeResizer.contentWindow.min.js',
+      },
     },
 
     watch: {
       files: ['src/**/*'],
-      tasks: 'default'
+      tasks: 'default',
     },
 
     bump: {
@@ -110,18 +110,18 @@ module.exports = function (grunt) {
         tagMessage: 'Version %VERSION%',
         push: true,
         pushTo: 'origin',
-        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
-      }
+        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d', // options to use with '$ git describe'
+      },
     },
 
     shell: {
       options: {
         stdout: true,
         stderr: true,
-        failOnError: true
+        failOnError: true,
       },
       npm: {
-        command: 'npm publish'
+        command: 'npm publish',
       },
       deployExample: {
         command() {
@@ -133,14 +133,14 @@ module.exports = function (grunt) {
           }
 
           return retStr
-        }
-      }
+        },
+      },
     },
 
     jsonlint: {
       json: {
-        src: ['*.json']
-      }
+        src: ['*.json'],
+      },
     },
 
     removeBlock: {
@@ -148,25 +148,25 @@ module.exports = function (grunt) {
       files: [
         {
           src: 'src/iframeResizer.contentWindow.js',
-          dest: 'js/iframeResizer.contentWindow.js'
-        }
-      ]
+          dest: 'js/iframeResizer.contentWindow.js',
+        },
+      ],
     },
 
     copy: {
       main: {
         nonull: true,
         src: 'src/iframeResizer.js',
-        dest: 'js/iframeResizer.js'
-      }
+        dest: 'js/iframeResizer.js',
+      },
     },
 
     eslint: {
       options: {
-        fix: true
+        fix: true,
       },
-      target: ['src/**', '*.js']
-    }
+      target: ['src/**', '*.js'],
+    },
   })
 
   grunt.registerTask('default', ['notest', 'karma:single'])
@@ -187,7 +187,7 @@ module.exports = function (grunt) {
     // eslint-disable-next-line security/detect-non-literal-regexp
     const removalRegEx = new RegExp(
       `(// ${this.options()[0]} //)(?:[^])*?(// ${this.options()[1]} //)`,
-      'g'
+      'g',
     )
 
     this.data.forEach((fileObj) => {
