@@ -36,17 +36,6 @@ module.exports = function (grunt) {
 
     clean: ['coverage', 'coverageLcov'],
 
-    // qunit: {
-    //   files: ['test/*.html'],
-    //   puppeteer: {
-    //     args: [
-    //       '--disable-web-security',
-    //       '--allow-file-access-from-files',
-    //       '--user-data-dir=/tmp'
-    //     ]
-    //   }
-    // },
-
     karma: {
       options: {
         configFile: 'karma.conf.js'
@@ -183,15 +172,9 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['notest', 'karma:single'])
   grunt.registerTask('build', ['removeBlock', 'copy', 'uglify'])
   grunt.registerTask('notest', ['eslint', 'jsonlint', 'build'])
-  grunt.registerTask('test', ['clean', 'eslint', 'karma:single']) // , 'qunit'
+  grunt.registerTask('test', ['clean', 'eslint', 'karma:single'])
   grunt.registerTask('test-watch', ['clean', 'karma:watch'])
-  grunt.registerTask('travis', [
-    'clean',
-    'notest',
-    // 'qunit',
-    'karma:travis',
-    'coveralls'
-  ])
+  grunt.registerTask('travis', ['clean', 'notest', 'karma:travis', 'coveralls'])
 
   grunt.registerTask('postBump', ['build', 'bump-commit', 'shell'])
   grunt.registerTask('preBump', ['clean', 'notest'])
