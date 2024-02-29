@@ -5,6 +5,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+      - 'js/*.js'
   schedule:
     - cron: "39 23 * * 5"
 
