@@ -31,7 +31,6 @@ const deprecatedResizeMethods = {
   grow: 1,
   lowestElement: 1,
 }
-// const doubleEventList = { resize: 1, click: 1 }
 const eventCancelTimer = 128
 const eventHandlersByName = {}
 const hasCheckVisibility = 'checkVisibility' in window

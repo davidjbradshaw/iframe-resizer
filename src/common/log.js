@@ -27,11 +27,11 @@ function getMyID(iframeId) {
 const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
 const formatLogMsg = (iframeId, ...msg) =>
-  [`${msgId}[${iframeId}]`, ...msg].join(' ')
+  [`${msgId}[${iframeId}]`, ...msg]
 
 const output = (type, iframeId, ...msg) =>
   // eslint-disable-next-line no-console
-  console[type](formatLogHeader(iframeId), ...msg)
+  window?.console[type](formatLogHeader(iframeId), ...msg)
 
 export const log = (iframeId, ...msg) =>
   isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null
@@ -42,9 +42,7 @@ export const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
 
 export const advise = (iframeId, msg) =>
   // eslint-disable-next-line no-console
-  window.console &&
-  // eslint-disable-next-line no-console
-  console.warn(
+  window?.console.warn(
     formatLogMsg(
       iframeId,
       window.chrome // Only show formatting in Chrome as not supported in other browsers
