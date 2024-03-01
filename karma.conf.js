@@ -24,9 +24,8 @@ module.exports = function (config) {
     files: [
       'test-main.js',
       'spec/lib/*.js',
-      'js/ie8.polyfils.min.js',
       { pattern: 'js/*.js', included: false },
-      { pattern: 'src/*.js', included: false },
+      // { pattern: 'src/*.js', included: false },
       { pattern: 'example/*.html', included: false },
       { pattern: 'spec/*Spec.js', included: false },
       { pattern: 'spec/resources/*', included: false },
@@ -39,7 +38,7 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/*.js': ['coverage'],
+      'js/*.js': ['coverage'],
     },
 
     coverageReporter: {
