@@ -1,4 +1,4 @@
-import { createIframeResize } from './parent'
+import createIframeResize from './factory'
 
 const iframeResize = createIframeResize()
 
