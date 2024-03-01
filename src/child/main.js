@@ -1,3 +1,5 @@
+import { addEventListener, removeEventListener } from '../common/listeners'
+
 const BASE = 10
 const SINGLE = 1
 const SIZE_ATTR = 'data-iframe-size'
@@ -87,12 +89,6 @@ let onReady = () => {}
 let onPageInfo = null
 let onParentInfo = null
 
-const addEventListener = (el, evt, func, options) =>
-  el.addEventListener(evt, func, options || {})
-
-const removeEventListener = (el, evt, func) =>
-  el.removeEventListener(evt, func, false)
-
 const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1)
 
@@ -132,17 +128,15 @@ const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
 
 const log = (...msg) =>
   // eslint-disable-next-line no-console
-  logging && window.console && console.log(formatLogMsg(...msg))
+  logging && console?.log(formatLogMsg(...msg))
 
 const warn = (...msg) =>
   // eslint-disable-next-line no-console
-  window.console && console.warn(formatLogMsg(...msg))
+  console?.warn(formatLogMsg(...msg))
 
 const advise = (...msg) =>
   // eslint-disable-next-line no-console
-  window.console &&
-  // eslint-disable-next-line no-console
-  console.warn(
+  console?.warn(
     window.chrome // Only show formatting in Chrome as not supported in other browsers
       ? formatLogMsg(...msg)
       : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
@@ -1172,8 +1166,7 @@ function receiver(event) {
   const getData = () => event.data.slice(event.data.indexOf(':') + 1)
 
   const isMiddleTier = () =>
-    (!(typeof module !== 'undefined' && module.exports) &&
-      'iFrameResize' in window) ||
+    'iFrameResize' in window ||
     (window.jQuery !== undefined && 'iFrameResize' in window.jQuery.prototype)
 
   // Test if this message is from a child below us. This is an ugly test, however, updating

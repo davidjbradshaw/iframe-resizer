@@ -54,23 +54,12 @@ export default [
   // browser-friendly UMD build
   {
     input: 'src/parent/umd.js',
-    output: {
+    output: [{
       name: 'iframeResize',
       file: paths.parent + parentPkg.browser,
       format: 'umd',
       sourcemap,
-    },
-    plugins: [
-      resolve(), 
-      commonjs(),
-      terser(terserOptions('parent')),
-    ],
-  }, 
-
-  // JS folder
-  {
-    input: 'src/parent/umd.js',
-    output: [{
+    },{
       name: 'iframeResize',
       file: 'js/iframeResizer.parent.js',
       format: 'umd',
@@ -86,7 +75,7 @@ export default [
   
   // child
   {
-    input: 'src/child.js',
+    input: 'src/child/main.js',
     output: [{
       file: paths.content + 'index.min.js',
       format: 'umd',
