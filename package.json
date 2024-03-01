@@ -2,15 +2,19 @@
   "name": "iframe-resizer",
   "version": "5.0.0-aplha.1",
   "private": true,
+  "type": "module",
   "homepage": "https://github.com/davidjbradshaw/iframe-resizer",
-  "author": "David J. Bradshaw <dave@bradshaw.net>",
+  "author": {
+    "name": "David J. Bradshaw",
+    "email": "dave@bradshaw.net"
+  },
   "scripts": {
-    "build": "npm run eslint:fix && rollup -c && npm run test",
+    "build": "npm run eslint:fix && rollup -c",
     "eslint": "eslint *.js src/* --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "npm run eslint -- --format @microsoft/sarif --output-file eslint-results.sarif",
     "test-watch": "grunt test-watch",
-    "test": "./node_modules/.bin/karma start karma.conf.js --browsers Chrome",
+    "test": "./node_modules/.bin/karma start karma.conf.cjs --browsers Chrome",
     "upgrade": "npm-check-updates -i && npm run build"
   },
   "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",

@@ -1,4 +1,6 @@
-import { setupIFrame, warn } from './parent'
+import { setupEventListeners, setupIFrame, warn } from './parent/main'
+
+let setupComplete = false
 
 function createJQueryPublicMethod($) {
   if (!$.fn) {
@@ -7,6 +9,11 @@ function createJQueryPublicMethod($) {
     $.fn.iFrameResize = function (options) {
       function initJQuery(index, element) {
         setupIFrame(element, options)
+      }
+
+      if (!setupComplete) {
+        setupEventListeners()
+        setupComplete = true
       }
 
       return this.filter('iframe').each(initJQuery).end()
