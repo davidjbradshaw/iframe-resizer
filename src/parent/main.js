@@ -1,3 +1,13 @@
+import { addEventListener, removeEventListener } from '../common/listeners'
+import {
+  advise,
+  info,
+  log,
+  setLogEnabled,
+  setLogSettings,
+  warn,
+} from '../common/log'
+
 const msgHeader = 'message'
 const msgHeaderLen = msgHeader.length
 const msgId = '[iFrameSizer]' // Must match iframe msg ID
@@ -61,56 +71,9 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 })
 
 let count = 0
-let logEnabled = false
 let pagePosition = null
 
-const addEventListener = (el, evt, func) =>
-  el.addEventListener(evt, func, false)
-
-const removeEventListener = (el, evt, func) =>
-  el.removeEventListener(evt, func, false)
-
-const isLogEnabled = (iframeId) =>
-  settings[iframeId] ? settings[iframeId].log : logEnabled
-
-function getMyID(iframeId) {
-  if (window.top === window.self) {
-    return `Host page: ${iframeId}`
-  }
-
-  return window?.parentIFrame?.getId
-    ? `${window.parentIFrame.getId()}: ${iframeId}`
-    : `Nested host page: ${iframeId}`
-}
-
-const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
-
-const formatLogMsg = (iframeId, ...msg) =>
-  [`${msgId}[${iframeId}]`, ...msg].join(' ')
-
-const output = (type, iframeId, ...msg) =>
-  // eslint-disable-next-line no-console
-  console[type](formatLogHeader(iframeId), ...msg)
-
-const log = (iframeId, ...msg) =>
-  isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null
-
-const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
-
-export const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
-
-const advise = (iframeId, msg) =>
-  // eslint-disable-next-line no-console
-  window.console &&
-  // eslint-disable-next-line no-console
-  console.warn(
-    formatLogMsg(
-      iframeId,
-      window.chrome // Only show formatting in Chrome as not supported in other browsers
-        ? msg
-        : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
-    ),
-  )
+setLogSettings(settings)
 
 function iFrameListener(event) {
   function resizeIFrame() {
@@ -952,7 +915,7 @@ export function setupIFrame(iframe, options) {
     if (iframeId === '') {
       // eslint-disable-next-line no-multi-assign
       iframe.id = iframeId = newId()
-      logEnabled = (options || {}).log
+      setLogEnabled((options || {}).log)
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
 
