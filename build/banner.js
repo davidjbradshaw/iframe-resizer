@@ -5,7 +5,6 @@ function capitalizeFirstLetter(string) {
 }
 
 const year = new Date().getFullYear()
-capitalizeFirstLetter
 
 const createBanner =  (file) => `/**
  *  iframe-resizer (${file}) v${pkg.version}
