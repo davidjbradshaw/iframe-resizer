@@ -1,3 +1,4 @@
+import { VERSION } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 
 const BASE = 10
@@ -144,7 +145,7 @@ const advise = (...msg) =>
 function init() {
   checkCrossDomain()
   readDataFromParent()
-  log(`Initialising iFrame (${window.location.href})`)
+  log(`Initialising iFrame v${VERSION} (${window.location.href})`)
   readDataFromPage()
   setMargin()
   setBodyStyle('background', bodyBackground)
