@@ -1,27 +1,42 @@
-import commonjs from '@rollup/plugin-commonjs'
+import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
-import resolve from '@rollup/plugin-node-resolve'
+import filesize from 'rollup-plugin-filesize'
+import strip from '@rollup/plugin-strip'
 import stripCode from "rollup-plugin-strip-code"
 import terser from '@rollup/plugin-terser'
+import versionInjector from 'rollup-plugin-version-injector';
 
 import BANNER from './build/banner.js'
 
 import parentPkg from './dist/parent/package.json' with { type: "json" }
 
+const { ROLLUP_WATCH, DEBUG } = process.env
+
+const debugMode = DEBUG || ROLLUP_WATCH
+const sourcemap = debugMode
+const logging = debugMode
+
 const paths = {
   parent: 'dist/parent/',
-  content: 'dist/child/',
+  child: 'dist/child/',
   jQuery: 'dist/jquery/',
 }
 
-const sourcemap = true
-
 const terserOptions = (file) => ({
   output: {
+    comments: false,
     preamble: BANNER[file],
-    comments: false
   }
 })
+
+const plugins = (file) => {
+  const p =[
+    versionInjector(),
+    terser(terserOptions(file)),
+  ]
+
+  return logging ? p : [strip({ functions: ['log'] })].concat(p)
+}
 
 console.log('\nBuilding iframe-resizer version', parentPkg.version)
 
@@ -39,7 +54,7 @@ export default [
         sourcemap,
       }],
     plugins: [
-      terser(terserOptions('parent')),
+      ...plugins('parent'),
       copy({
         targets: [
           { 
@@ -59,17 +74,9 @@ export default [
       file: paths.parent + parentPkg.browser,
       format: 'umd',
       sourcemap,
-    },{
-      name: 'iframeResize',
-      file: 'js/iframeResizer.parent.js',
-      format: 'umd',
-      banner: BANNER.parent,
-      sourcemap,
     }],
     plugins: [
-      resolve(), 
-      commonjs(),
-      terser(terserOptions('parent')),
+      ...plugins('parent'),
     ],
   }, 
   
@@ -77,22 +84,17 @@ export default [
   {
     input: 'src/child/main.js',
     output: [{
-      file: paths.content + 'index.min.js',
+      file: paths.child + 'index.min.js',
       format: 'umd',
       banner: BANNER.child,
       sourcemap,
-    },{ 
-      file: 'js/iframeResizer.child.js',
-      format: 'umd',
-      banner: BANNER.child,
-      sourcemap: true, 
     }],
     plugins: [
-      terser(terserOptions('child')),
       stripCode({
         start_comment: '// TEST CODE START //',
         end_comment: '// TEST CODE END //',
-      })
+      }),
+      ...plugins('child'),
     ],
   }, 
 
@@ -104,15 +106,59 @@ export default [
       format: 'umd',
       banner: BANNER.jQuery,
       sourcemap,
-    },{
+    }],
+    plugins: [
+      ...plugins('jQuery'),
+    ],
+  }, 
+
+  // JS folder
+  {
+    input: 'src/parent/umd.js',
+    output: [{
+      name: 'iframeResize',
+      file: 'js/iframeResizer.parent.js',
+      format: 'umd',
+      banner: BANNER.parent,
+      sourcemap,
+    }],
+    plugins: [
+      clear({ targets: ['js']}),
+      ...plugins('parent'),
+      filesize(),
+    ],
+  }, 
+
+  {
+    input: 'src/child/main.js',
+    output: [{ 
+      file: 'js/iframeResizer.child.js',
+      format: 'umd',
+      banner: BANNER.child,
+      sourcemap,
+    }],
+    plugins: [
+      stripCode({
+        start_comment: '// TEST CODE START //',
+        end_comment: '// TEST CODE END //',
+      }),
+      ...plugins('child'),
+      filesize(),
+    ],
+  }, 
+
+  {
+    input: 'src/jquery.js',
+    output: [{
       file: 'js/jquery.iframeResizer.parent.js',
       format: 'umd',
       banner: BANNER.jQuery,
       sourcemap,
     }],
     plugins: [
-      terser(terserOptions('jQuery')),
+      ...plugins('jQuery'),
+      filesize(),
     ],
   }, 
-]
 
+]

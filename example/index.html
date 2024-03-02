@@ -41,15 +41,13 @@
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iFrameResize({log:true});
+       *   iFrameResize()
        *
-       * Once you have it working, set the log option to false.
        */
 
       const callbackDisplay = document.querySelector('p#callback')
 
-      iFrameResize({
-        log: true, // Enable console logging
+      iframeResize({
         inPageLinks: true, // Enable in page links
         // offsetHeight: 10, // Alter the returned height
         // direction: 'none', // 'vertical' or 'horizontal' or 'none'

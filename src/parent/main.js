@@ -1,3 +1,4 @@
+import { VERSION } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import {
   advise,
@@ -857,6 +858,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.offsetHeight,
     iframeSettings.offsetWidth,
     iframeSettings.sizeHeight,
+    VERSION,
   ].join(':')
 }
 
@@ -1099,6 +1101,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
   if (beenHere()) {
     warn(iframeId, 'Ignored iFrame, already setup.')
   } else {
+    log('Version', VERSION)
     processOptions(options)
     setScrolling()
     setLimits()
