@@ -40,7 +40,7 @@ const plugins = (file) => {
 
 console.log('\nBuilding iframe-resizer version', parentPkg.version)
 
-export default [ 
+const npm = [
   //  ES module (for bundlers) and CommonJS (for Node) build.
   {
     input: 'src/parent/esm.js',
@@ -111,8 +111,10 @@ export default [
       ...plugins('jQuery'),
     ],
   }, 
+]
 
-  // JS folder
+// JS folder
+const js = [ 
   {
     input: 'src/parent/umd.js',
     output: [{
@@ -160,5 +162,6 @@ export default [
       filesize(),
     ],
   }, 
-
 ]
+
+export default debugMode ? js : npm.concat(js)
