@@ -12,7 +12,7 @@
     "build": "npm run eslint:fix && rollup -c",
     "eslint": "eslint *.js src/* --color",
     "eslint:fix": "npm run eslint -- --fix",
-    "eslint:sarif": "npm run eslint -- --format @microsoft/sarif --output-file eslint-results.sarif",
+    "eslint:sarif": "eslint src/* --format @microsoft/sarif --output-file eslint-results.sarif",
     "test-watch": "grunt test-watch",
     "test": "./node_modules/.bin/karma start karma.conf.cjs --browsers Chrome",
     "upgrade": "npm-check-updates -i && npm run build"
