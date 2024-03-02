@@ -1,9 +1,5 @@
-import { VERSION } from '../common/consts'
+import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
-
-const BASE = 10
-const SINGLE = 1
-const SIZE_ATTR = 'data-iframe-size'
 
 const checkVisibilityOptions = {
   contentVisibilityAuto: true,
