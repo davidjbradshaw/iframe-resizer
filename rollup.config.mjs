@@ -41,7 +41,7 @@ const plugins = (file) => {
     }),
   ]
 
-  return logging ? base.concat(prod) : base
+  return logging ? base : base.concat(prod)
 }
 
 console.log('\nBuilding iframe-resizer version', parentPkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
@@ -165,4 +165,4 @@ const js = [
   }, 
 ]
 
-export default debugMode ? js : npm
+export default debugMode ? js : npm.concat(js)
