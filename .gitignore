@@ -8,6 +8,7 @@ npm-debug.log
 bower_components
 coverage*
 .idea
+js/*
 js/*.js.map
 js/*.map.js
 dist/**/*.map

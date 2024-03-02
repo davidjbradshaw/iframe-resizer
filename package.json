@@ -139,8 +139,5 @@
     "RWD",
     "responsiveiframes",
     "responsive-iframes"
-  ],
-  "dependencies": {
-    "@microsoft/eslint-formatter-sarif": "^3.0.0"
-  }
+  ]
 }
