@@ -1,2 +1,5 @@
 export const VERSION = '[VI]{version}[/VI]'
-export const IFRAME = 'iFrame'
+
+export const BASE = 10
+export const SINGLE = 1
+export const SIZE_ATTR = 'data-iframe-size'
