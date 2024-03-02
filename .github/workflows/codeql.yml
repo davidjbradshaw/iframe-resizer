@@ -20,7 +20,7 @@ jobs:
       actions: read
       contents: read
       security-events: write
-
+    
     strategy:
       fail-fast: false
       matrix:
@@ -34,6 +34,7 @@ jobs:
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
+          paths: 'src/**'
           queries: +security-and-quality
 
       - name: Autobuild
