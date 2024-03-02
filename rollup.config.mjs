@@ -22,23 +22,29 @@ const paths = {
   jQuery: 'dist/jquery/',
 }
 
-const terserOptions = (file) => ({
-  output: {
-    comments: false,
-    preamble: BANNER[file],
-  }
-})
-
 const plugins = (file) => {
-  const p =[
+  const base =[
     versionInjector(),
-    terser(terserOptions(file)),
+    terser({
+      output: {
+        comments: false,
+        preamble: BANNER[file],
+      }
+    }),
   ]
 
-  return logging ? p : [strip({ functions: ['log'] })].concat(p)
+  const prod = [
+    strip({ functions: ['log'] }),
+    stripCode({
+      start_comment: '// TEST CODE START //',
+      end_comment: '// TEST CODE END //',
+    }),
+  ]
+
+  return logging ? base.concat(prod) : base
 }
 
-console.log('\nBuilding iframe-resizer version', parentPkg.version)
+console.log('\nBuilding iframe-resizer version', parentPkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
 
 const npm = [
   //  ES module (for bundlers) and CommonJS (for Node) build.
@@ -77,6 +83,7 @@ const npm = [
     }],
     plugins: [
       ...plugins('parent'),
+      filesize(),
     ],
   }, 
   
@@ -90,11 +97,8 @@ const npm = [
       sourcemap,
     }],
     plugins: [
-      stripCode({
-        start_comment: '// TEST CODE START //',
-        end_comment: '// TEST CODE END //',
-      }),
       ...plugins('child'),
+      filesize(),
     ],
   }, 
 
@@ -109,6 +113,7 @@ const npm = [
     }],
     plugins: [
       ...plugins('jQuery'),
+      filesize(),
     ],
   }, 
 ]
@@ -140,10 +145,6 @@ const js = [
       sourcemap,
     }],
     plugins: [
-      stripCode({
-        start_comment: '// TEST CODE START //',
-        end_comment: '// TEST CODE END //',
-      }),
       ...plugins('child'),
       filesize(),
     ],
@@ -164,4 +165,4 @@ const js = [
   }, 
 ]
 
-export default debugMode ? js : npm.concat(js)
+export default debugMode ? js : npm
