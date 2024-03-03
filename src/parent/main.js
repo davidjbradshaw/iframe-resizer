@@ -1,4 +1,10 @@
-import { VERSION } from '../common/consts'
+import {
+  msgHeaderLen,
+  msgId,
+  msgIdLen,
+  resetRequiredMethods,
+  VERSION,
+} from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import {
   advise,
@@ -8,68 +14,8 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
-
-const msgHeader = 'message'
-const msgHeaderLen = msgHeader.length
-const msgId = '[iFrameSizer]' // Must match iframe msg ID
-const msgIdLen = msgId.length
-const resetRequiredMethods = Object.freeze({
-  max: 1,
-  scroll: 1,
-  bodyScroll: 1,
-  documentElementScroll: 1,
-})
-const settings = {}
-
-const defaults = Object.freeze({
-  autoResize: true,
-  bodyBackground: null,
-  bodyMargin: null,
-  bodyPadding: null,
-  checkOrigin: true,
-  direction: 'vertical',
-  inPageLinks: false,
-  enablePublicMethods: true,
-  heightCalculationMethod: 'auto',
-  id: 'iFrameResizer',
-  log: false,
-  maxHeight: Infinity,
-  maxWidth: Infinity,
-  minHeight: 0,
-  minWidth: 0,
-  mouseEvents: true,
-  offsetHeight: 0,
-  offsetWidth: 0,
-  postMessageTarget: null,
-  sameDomain: false,
-  scrolling: false,
-  sizeHeight: true,
-  sizeWidth: false,
-  warningTimeout: 5000,
-  tolerance: 0,
-  widthCalculationMethod: 'auto',
-  onClose: () => true,
-  onClosed() {},
-  onInit: false,
-  onMessage: null,
-  onMouseEnter() {},
-  onMouseLeave() {},
-  onReady(messageData) {
-    if (typeof settings[messageData.id].onInit === 'function') {
-      advise(
-        messageData.id,
-        `
-\u001B[31;1mDeprecated Option\u001B[m
-
-The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with \u001B[1monReady()\u001B[m. It will be removed in a future version of iFrame Resizer.
-        `,
-      )
-      settings[messageData.id].onInit(messageData)
-    }
-  },
-  onResized() {},
-  onScroll: () => true,
-})
+import defaults from './defaults'
+import settings from './settings'
 
 let count = 0
 let pagePosition = null
