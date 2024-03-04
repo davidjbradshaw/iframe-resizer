@@ -1,14 +1,16 @@
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import filesize from 'rollup-plugin-filesize'
+import generatePackageJson from 'rollup-plugin-generate-package-json'
 import strip from '@rollup/plugin-strip'
 import stripCode from "rollup-plugin-strip-code"
 import terser from '@rollup/plugin-terser'
 import versionInjector from 'rollup-plugin-version-injector';
 
 import BANNER from './build/banner.js'
+import createPkgJson from './build/pkg.js'
 
-import parentPkg from './dist/parent/package.json' with { type: "json" }
+import pkg from './package.json' with { type: "json" }
 
 const { ROLLUP_WATCH, DEBUG, TEST } = process.env
 
@@ -22,11 +24,16 @@ const paths = {
   jQuery: 'dist/jquery/',
 }
 
+const vi = {
+  injectInComments: false,
+  logLevel: 'warn',
+}
+
 const plugins = (file) => {
-  // if (TEST) return [versionInjector()]
+  // if (TEST) return [versionInjector(vi)]
 
   const base =[
-    versionInjector(),
+    versionInjector(vi),
     terser({
       output: {
         comments: false,
@@ -36,6 +43,10 @@ const plugins = (file) => {
   ]
 
   const prod = [
+    generatePackageJson({
+      baseContents: createPkgJson(file),
+      outputFolder: 'dist/' + file,
+    }),
     strip({ functions: ['log'] }),
     stripCode({
       start_comment: '// TEST CODE START //',
@@ -46,18 +57,18 @@ const plugins = (file) => {
   return logging ? base : prod.concat(base)
 }
 
-console.log('\nBuilding iframe-resizer version', parentPkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
+console.log('\nBuilding iframe-resizer version', pkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
 
 const npm = [
   //  ES module (for bundlers) and CommonJS (for Node) build.
   {
     input: 'src/parent/esm.js',
     output: [{
-        file: paths.parent + parentPkg.module,
+        file: paths.parent + 'iframe-resizer.parent.mjs',
         format: 'es',
         sourcemap,
       }, {
-        file: paths.parent + parentPkg.main,
+        file: paths.parent + 'iframe-resizer.parent.cjs',
         format: 'cjs',
         sourcemap,
       }],
@@ -79,7 +90,7 @@ const npm = [
     input: 'src/parent/umd.js',
     output: [{
       name: 'iframeResize',
-      file: paths.parent + parentPkg.browser,
+      file: paths.parent + 'iframe-resizer.parent.js',
       format: 'umd',
       sourcemap,
     }],
@@ -93,7 +104,7 @@ const npm = [
   {
     input: 'src/child/main.js',
     output: [{
-      file: paths.child + 'index.min.js',
+      file: paths.child + 'iframe-resizer.child.js',
       format: 'umd',
       banner: BANNER.child,
       sourcemap,
@@ -108,7 +119,7 @@ const npm = [
   {
     input: 'src/jquery/plugin.js',
     output: [{
-      file: paths.jQuery + 'index.min.js',
+      file: paths.jQuery + 'iframe-resizer.jquery.js',
       format: 'umd',
       banner: BANNER.jQuery,
       sourcemap,
@@ -126,7 +137,7 @@ const js = [
     input: 'src/parent/umd.js',
     output: [{
       name: 'iframeResize',
-      file: 'js/iframeResizer.parent.js',
+      file: 'js/iframe-resizer.parent.js',
       format: 'umd',
       banner: BANNER.parent,
       sourcemap,
@@ -141,7 +152,7 @@ const js = [
   {
     input: 'src/child/main.js',
     output: [{ 
-      file: 'js/iframeResizer.child.js',
+      file: 'js/iframe-resizer.child.js',
       format: TEST ? undefined : 'umd',
       banner: BANNER.child,
       sourcemap,
@@ -155,7 +166,7 @@ const js = [
   {
     input: 'src/jquery/plugin.js',
     output: [{
-      file: 'js/iframeResizer.parent.jquery.js',
+      file: 'js/iframe-resizer.parent.jquery.js',
       format: 'umd',
       banner: BANNER.jQuery,
       sourcemap,
