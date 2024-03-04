@@ -121,7 +121,7 @@ define(['iframeResizer'], function (iFrameResize) {
         tearDown(iframe)
       })
 
-      xit('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
+      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
         setUp('border-box', 'px')
 
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp
@@ -133,7 +133,7 @@ define(['iframeResizer'], function (iFrameResize) {
         }, 100)
       })
 
-      xit('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
+      it('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
         const REM = 14
 
         // changes the rem units of the doc so we can test accurately
@@ -150,7 +150,7 @@ define(['iframeResizer'], function (iFrameResize) {
         }, 100)
       })
 
-      xit('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "content-box"', (done) => {
+      it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "content-box"', (done) => {
         setUp('content-box', 'px')
 
         // timeout needed because of requestAnimationFrame and must be more than window.postMessage in setUp

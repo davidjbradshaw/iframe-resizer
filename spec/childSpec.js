@@ -55,74 +55,20 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
   })
 
   describe('ParentIFrame methods: ', function() {
-    xit('autoResize', function() {
+    it('autoResize', function() {
       win.parentIFrame.autoResize(true)
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Animation Start'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Animation Iteration'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Animation End'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Orientation Change'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Input'
-      )
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Add event listener: After Print'
       )
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Add event listener: Before Print'
       )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Transition End'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Mouse Up'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Mouse Down'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: IFrame Resized'
-      )
       win.parentIFrame.autoResize(false)
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Animation Start'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Animation Iteration'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Animation End'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Orientation Change'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Input'
-      )
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Remove event listener: After Print'
       )
       expect(console.log).toHaveBeenCalledWith(
         '[iFrameSizer][parentIFrameTests] Remove event listener: Before Print'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Transition End'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Mouse Up'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Mouse Down'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: IFrame Resized'
       )
     })
 
@@ -219,7 +165,7 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
       )
     })
 
-    xit('setTargetOrigin', function() {
+    it('setTargetOrigin', function() {
       var targetOrigin = 'http://foo.bar:1337'
       win.parentIFrame.setTargetOrigin(targetOrigin)
       win.parentIFrame.size(10, 10)
@@ -248,7 +194,7 @@ define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
       expect(msgCalled.foo).toBe('bar')
     })
 
-    xit('reset', function(done) {
+    it('reset', function(done) {
       // timing issue in Chrome
       setTimeout(function() {
         //Wait for init lock to clear

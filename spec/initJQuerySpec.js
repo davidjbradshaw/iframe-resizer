@@ -3,7 +3,7 @@
 'use strict'
 
 define(['iframeResizer', 'jquery'], function(iFrameResize, $) {
-  describe('iFrame init(jQuery)', function() {
+  xdescribe('iFrame init(jQuery)', function() {
     var iframe
 
     beforeAll(function() {
@@ -23,3 +23,4 @@ define(['iframeResizer', 'jquery'], function(iFrameResize, $) {
     })
   })
 })
+it

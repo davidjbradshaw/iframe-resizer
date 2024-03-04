@@ -32,12 +32,12 @@
 	<div style="margin:20px;">
 	</div>
 
-	<script src="jquery.js"></script>
+	<script src="../../node_modules/jquery/dist/jquery.js"></script>
 	<script>
 		$(document).ready(function () {
 			setTimeout(function () {
 				console.log('Load Script');
-				$.getScript('../../js/iframeResizer.contentWindow.min.js');
+				$.getScript('../../js/iframeResizer.child.js');
 			}, 500);
 		});
 	</script>
