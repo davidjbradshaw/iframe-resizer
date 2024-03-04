@@ -44,7 +44,7 @@ const plugins = (file) => {
 
   const prod = [
     generatePackageJson({
-      baseContents: createPkgJson(file),
+      baseContents: createPkgJson(file.toLowerCase()),
       outputFolder: 'dist/' + file,
     }),
     strip({ functions: ['log'] }),
