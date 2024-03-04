@@ -87,7 +87,6 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 <sup> † </sup> <i>The **lowestElement** option is the most reliable way of determining the page height. However, it can have a performance impact on complex page, due to it checking the position of every element on the page. The **lowestDivElement** and **taggedElement** option provides much greater performance by limiting the number of elements that need their position checked</i>.
 
 <sup>*</sup> These methods can cause screen flicker in some browsers.
--->
 
 ### log
 
@@ -95,7 +94,7 @@ In cases where CSS styles causes the content to flow outside the `body` you may 
 	type:    boolean
 
 Setting the `log` option to true will make the scripts in both the host page and the iFrame output everything they do to the JavaScript console so you can see the communication between the two scripts.
-<!-- 
+
 ### maxHeight / maxWidth
 
     default: infinity
