@@ -153,7 +153,7 @@ const js = [
   {
     input: 'src/jquery.js',
     output: [{
-      file: 'js/jquery.iframeResizer.parent.js',
+      file: 'js/iframeResizer.parent.jquery.js',
       format: 'umd',
       banner: BANNER.jQuery,
       sourcemap,
