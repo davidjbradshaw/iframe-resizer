@@ -10,11 +10,11 @@ import BANNER from './build/banner.js'
 
 import parentPkg from './dist/parent/package.json' with { type: "json" }
 
-const { ROLLUP_WATCH, DEBUG } = process.env
+const { ROLLUP_WATCH, DEBUG, TEST } = process.env
 
 const debugMode = DEBUG || ROLLUP_WATCH
 const sourcemap = debugMode
-const logging = debugMode
+const logging = debugMode || TEST
 
 const paths = {
   parent: 'dist/parent/',
@@ -23,6 +23,8 @@ const paths = {
 }
 
 const plugins = (file) => {
+  if (TEST) return [versionInjector()]
+
   const base =[
     versionInjector(),
     terser({
@@ -140,7 +142,7 @@ const js = [
     input: 'src/child/main.js',
     output: [{ 
       file: 'js/iframeResizer.child.js',
-      format: 'umd',
+      format: TEST ? undefined : 'umd',
       banner: BANNER.child,
       sourcemap,
     }],
