@@ -28,5 +28,12 @@ switch (true) {
       return this.filter('iframe').each(initJQuery(options)).end()
     }
 
-    window.jQuery.fn.iFrameResize = window.jQuery.fn.iframeResize
+    window.jQuery.fn.iFrameResize = function (options) {
+      warn(
+        '',
+        'Deprecated:  Use the iframeResize method instead of iFrameResize'
+      )
+
+      return this.iframeResize(options)
+    }
 }
