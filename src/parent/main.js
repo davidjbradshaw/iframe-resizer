@@ -15,10 +15,8 @@ import {
   warn,
 } from '../common/log'
 import defaults from './defaults'
+import page from './page'
 import settings from './settings'
-
-let count = 0
-let pagePosition = null
 
 setLogSettings(settings)
 
@@ -330,15 +328,15 @@ function iFrameListener(event) {
     getPagePosition(iframeId)
 
     return {
-      x: Math.floor(Number(iFramePosition.left) + Number(pagePosition.x)),
-      y: Math.floor(Number(iFramePosition.top) + Number(pagePosition.y)),
+      x: Math.floor(Number(iFramePosition.left) + Number(page.position.x)),
+      y: Math.floor(Number(iFramePosition.top) + Number(page.position.y)),
     }
   }
 
   function scrollRequestFromChild(addOffset) {
     /* istanbul ignore next */ // Not testable in Karma
     function reposition() {
-      pagePosition = newPosition
+      page.position = newPosition
       scrollTo()
       log(iframeId, '--')
     }
@@ -381,7 +379,7 @@ function iFrameListener(event) {
   }
 
   function scrollTo() {
-    if (on('onScroll', pagePosition) === false) {
+    if (on('onScroll', page.position) === false) {
       unsetPagePosition()
       return
     }
@@ -397,7 +395,7 @@ function iFrameListener(event) {
         `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`,
       )
 
-      pagePosition = {
+      page.position = {
         x: jumpPosition.x,
         y: jumpPosition.y,
       }
@@ -665,23 +663,23 @@ function closeIFrame(iframe) {
 }
 
 function getPagePosition(iframeId) {
-  if (pagePosition === null) {
-    pagePosition = {
+  if (page.position === null) {
+    page.position = {
       x: window.scrollX,
       y: window.scrollY,
     }
-    log(iframeId, `Get page position: ${pagePosition.x}, ${pagePosition.y}`)
+    log(iframeId, `Get page position: ${page.position.x}, ${page.position.y}`)
   }
 }
 
 function unsetPagePosition() {
-  pagePosition = null
+  page.position = null
 }
 
 function setPagePosition(iframeId) {
-  if (pagePosition !== null) {
-    window.scrollTo(pagePosition.x, pagePosition.y)
-    log(iframeId, `Set page position: ${pagePosition.x}, ${pagePosition.y}`)
+  if (page.position !== null) {
+    window.scrollTo(page.position.x, page.position.y)
+    log(iframeId, `Set page position: ${page.position.x}, ${page.position.y}`)
     unsetPagePosition()
   }
 }
@@ -804,10 +802,11 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.offsetHeight,
     iframeSettings.offsetWidth,
     iframeSettings.sizeHeight,
-    VERSION,
+    page.version,
   ].join(':')
 }
 
+let count = 0
 const isNumber = (value) => !Number.isNaN(value)
 
 export function setupIFrame(iframe, options) {
