@@ -15,7 +15,7 @@
     "build:clobber": "npm run build:reinstall && npm run rollup:prod",
     "build:dev": "time npm run rollup:debug",
     "build:prod": "time npm run rollup:prod",
-    "build:test": "time npm run rollup:test",
+    "build:test": "time npm run test:all",
     "eslint": "eslint *.js src/* --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "eslint src/* --format @microsoft/sarif --output-file eslint-results.sarif",
@@ -23,7 +23,8 @@
     "rollup:test": "npm run eslint:fix && rollup -c --environment TEST",
     "rollup:prod": "npm run eslint:fix && rollup -c",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test-watch": "grunt test-watch",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:all": "npm run rollup:test && npm run test && npm run test:e2e",
     "test:e2e": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
     "upgrade": "npm-check-updates -i && npm run build"
   },

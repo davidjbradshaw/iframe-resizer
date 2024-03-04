@@ -23,7 +23,7 @@ const paths = {
 }
 
 const plugins = (file) => {
-  if (TEST) return [versionInjector()]
+  // if (TEST) return [versionInjector()]
 
   const base =[
     versionInjector(),
@@ -43,7 +43,7 @@ const plugins = (file) => {
     }),
   ]
 
-  return logging ? base : base.concat(prod)
+  return logging ? base : prod.concat(base)
 }
 
 console.log('\nBuilding iframe-resizer version', parentPkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
@@ -167,4 +167,4 @@ const js = [
   }, 
 ]
 
-export default debugMode ? js : npm.concat(js)
+export default debugMode || TEST ? js : npm.concat(js)
