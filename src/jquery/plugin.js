@@ -19,7 +19,7 @@ switch (true) {
     break
 
   default:
-    window.jQuery.fn.iFrameResize = function (options) {
+    window.jQuery.fn.iframeResize = function (options) {
       if (!eventListenesEnabled) {
         setupEventListeners()
         eventListenesEnabled = true
@@ -27,4 +27,6 @@ switch (true) {
 
       return this.filter('iframe').each(initJQuery(options)).end()
     }
+
+    window.jQuery.fn.iFrameResize = window.jQuery.fn.iframeResize
 }
