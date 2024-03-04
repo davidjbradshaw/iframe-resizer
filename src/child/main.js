@@ -1220,8 +1220,6 @@ if (typeof window !== 'undefined') {
 }
 
 // TEST CODE START //
-
-// Create test hooks
 function mockMsgListener(msgObject) {
   receiver(msgObject)
   return win
@@ -1231,6 +1229,9 @@ try {
   // eslint-disable-next-line no-restricted-globals
   if (top?.document?.getElementById('banner')) {
     win = {}
+
+    // Create test hooks
+    window.mockMsgListener = mockMsgListener
 
     removeEventListener(window, 'message', receiver)
 
