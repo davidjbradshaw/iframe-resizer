@@ -20,10 +20,11 @@ require.config({
 
   paths: {
     jquery: 'node_modules/jquery/dist/jquery',
-    iframeResizerMin: 'js/iframeResizer.min',
-    iframeResizer: 'src/iframeResizer',
-    iframeResizerContentMin: 'js/iframeResizer.contentWindow.min',
-    iframeResizerContent: 'src/iframeResizer.contentWindow',
+    iframeResizer: 'js/iframeResizer.parent',
+    iframeResizerContent: 'js/iframeResizer.child',
+    iframeResizerParent: 'js/iframeResizer.parent',
+    iframeResizerJquery: 'js/iframeResizer.parent.jquery',
+    iframeResizerChild: 'js/iframeResizer.child',
   },
 
   // dynamically load all test files
