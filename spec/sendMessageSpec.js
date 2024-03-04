@@ -44,7 +44,7 @@ define(['iframeResizer'], function(iFrameResize) {
 
     xit('send message and get response', function(done) {
       iframe = iFrameResize({
-        log: log,
+        log,
         id: 'sendMessage3',
         onReady: function(iframe) {
           iframe.iFrameResizer.sendMessage('chkSendMsg')
