@@ -31,7 +31,7 @@ switch (true) {
     window.jQuery.fn.iFrameResize = function (options) {
       warn(
         '',
-        'Deprecated:  Use the iframeResize method instead of iFrameResize'
+        'Deprecated:  Use the iframeResize method instead of iFrameResize',
       )
 
       return this.iframeResize(options)
