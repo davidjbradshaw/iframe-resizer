@@ -104,7 +104,7 @@ const npm = [
 
   // jQuery
   {
-    input: 'src/jquery.js',
+    input: 'src/jquery/plugin.js',
     output: [{
       file: paths.jQuery + 'index.min.js',
       format: 'umd',
@@ -151,7 +151,7 @@ const js = [
   }, 
 
   {
-    input: 'src/jquery.js',
+    input: 'src/jquery/plugin.js',
     output: [{
       file: 'js/iframeResizer.parent.jquery.js',
       format: 'umd',

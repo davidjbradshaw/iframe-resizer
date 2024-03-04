@@ -4,10 +4,12 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const year = new Date().getFullYear()
+const date = new Date()
+const year = date.getFullYear()
+const today = date.toISOString().split('T')[0]
 
 const createBanner =  (file) => `/**
- *  iframe-resizer (${file}) v${pkg.version}
+ *  iframe-resizer (${file}) v${pkg.version} - ${today}
  *
  *  License:    ${pkg.license}
  *  Copyright:  (c) 2013 - ${year}, David J. Bradshaw. All rights reserved.
