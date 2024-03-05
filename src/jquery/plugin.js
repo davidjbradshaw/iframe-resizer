@@ -14,8 +14,8 @@ switch (true) {
     warn('', 'Unable to bind to jQuery, it is not fully loaded.')
     break
 
-  case window.jQuery.fn.iFrameResize:
-    warn('', 'iFrameResize is already assigned to jQuery.fn.')
+  case window.jQuery.fn.iframeResize:
+    warn('', 'iframeResize is already assigned to jQuery.fn.')
     break
 
   default:

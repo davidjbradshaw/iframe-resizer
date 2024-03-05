@@ -1162,8 +1162,8 @@ function receiver(event) {
   const getData = () => event.data.slice(event.data.indexOf(':') + 1)
 
   const isMiddleTier = () =>
-    'iFrameResize' in window ||
-    (window.jQuery !== undefined && 'iFrameResize' in window.jQuery.prototype)
+    'iframeResize' in window ||
+    (window.jQuery !== undefined && '' in window.jQuery.prototype)
 
   // Test if this message is from a child below us. This is an ugly test, however, updating
   // the message format would break backwards compatibility.
