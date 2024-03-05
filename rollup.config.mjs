@@ -3,14 +3,19 @@ import filesize from 'rollup-plugin-filesize'
 
 import BANNER from './build/banner.js'
 import { output, outputs } from './build/output.js'
-import { pluginsBase, pluginsProd } from './build/plugins.js'
+import { pluginsBase, pluginsProd, injectVersion } from './build/plugins.js'
 
 import pkg from './package.json' with { type: "json" }
 
 const { ROLLUP_WATCH, DEBUG, TEST } = process.env
 
-const debugMode = DEBUG || ROLLUP_WATCH || TEST
+const debugMode = DEBUG || ROLLUP_WATCH || false
 const sourcemap = debugMode
+const logging = debugMode || TEST
+
+const pluginsJs = TEST 
+    ? injectVersion()
+    : pluginsBase(!logging)
 
 console.log('\nBuilding iframe-resizer version', pkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
 
@@ -63,7 +68,7 @@ const js = [
     }],
     plugins: [
       clear({ targets: ['js']}),
-      ...pluginsBase('parent'),
+      ...pluginsJs('parent'),
       filesize(),
     ],
   }, 
@@ -77,7 +82,7 @@ const js = [
       sourcemap,
     }],
     plugins: [
-      ...pluginsBase('child'),
+      ...pluginsJs('child'),
       filesize(),
     ],
   }, 
@@ -91,10 +96,10 @@ const js = [
       sourcemap,
     }],
     plugins: [
-      ...pluginsBase('jquery'),
+      ...pluginsJs('jquery'),
       filesize(),
     ],
   }, 
 ]
 
-export default debugMode ? js : npm.concat(js)
+export default debugMode || TEST ? js : npm.concat(js)

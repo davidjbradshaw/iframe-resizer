@@ -18,4 +18,1254 @@
  */
 
 
-!function(e){"function"==typeof define&&define.amd?define(e):e()}((function(){"use strict";const e="5.0.0-alpha.1",t=10,n="data-iframe-size",o=(e,t,n,o)=>e.addEventListener(t,n,o||!1),i=(e,t,n)=>e.removeEventListener(t,n,!1),a={contentVisibilityAuto:!0,opacityProperty:!0,visibilityProperty:!0},r={height:()=>(ae("Custom height calculation function not defined"),Ie.auto()),width:()=>(ae("Custom width calculation function not defined"),Ce.auto())},c={bodyOffset:1,bodyScroll:1,offset:1,documentElementOffset:1,documentElementScroll:1,documentElementBoundingClientRect:1,max:1,min:1,grow:1,lowestElement:1},s=128,d={},l="checkVisibility"in window,u="auto",m={reset:1,resetPage:1,init:1},f="[iFrameSizer]",g=f.length,h={max:1,min:1,bodyScroll:1,documentElementScroll:1},p=["body"],w="scroll";let v=!0,y="",b=0,$="",z=null,S="",M=!0,O=!1,E=null,T=!0,I=!1,C=1,P=u,R=!0,x="",L={},N=!0,k=!1,A=!1,H="",B=0,F=0,q="child",D=null,U=!1,W=window.parent,J="*",V=0,j=!1,Q=1,X=w,Y=window,G=()=>{ae("onMessage function not defined")},K=()=>{},Z=null,_=null;const ee=e=>e.charAt(0).toUpperCase()+e.slice(1),te=e=>""!=`${e}`&&void 0!==e;function ne(e){switch(!0){case!te(e):return"";case te(e.id):return`${e.nodeName.toUpperCase()}#${e.id}`;case te(e.name):return`${e.nodeName.toUpperCase()} (${e.name})`;default:return e.nodeName.toUpperCase()+(te(e.className)?`.${e.className}`:"")}}const oe=(...e)=>[`${f}[${H}]`,...e].join(" "),ie=(...e)=>k&&console?.log(oe(...e)),ae=(...e)=>console?.warn(oe(...e)),re=(...e)=>console?.warn(window.chrome?oe(...e):oe(...e).replaceAll(/\u001B\[[\d;]*m/gi,""));function ce(){!function(){try{U="iFrameListener"in window.parent}catch(e){ie("Cross domain iframe detected.")}}(),function(){const e=e=>"true"===e,t=x.slice(g).split(":");H=t[0],b=void 0===t[1]?b:Number(t[1]),O=void 0===t[2]?O:e(t[2]),k=void 0===t[3]?k:e(t[3]),v=void 0===t[6]?v:e(t[6]),$=t[7],P=void 0===t[8]?P:t[8],y=t[9],S=t[10],V=void 0===t[11]?V:Number(t[11]),L.enable=void 0!==t[12]&&e(t[12]),q=void 0===t[13]?q:t[13],X=void 0===t[14]?X:t[14],A=void 0===t[15]?A:e(t[15]),B=void 0===t[16]?B:Number(t[16]),F=void 0===t[17]?F:Number(t[17]),M=void 0===t[18]?M:e(t[18])}(),ie(`Initialising iFrame v${e} (${window.location.href})`),function(){function e(){const e=window.iFrameResizer;ie(`Reading data from page: ${JSON.stringify(e)}`),G=e?.onMessage||G,K=e?.onReady||K,B=e?.offsetHeight||B,F=e?.offsetWidth||F,J=e?.targetOrigin||J,P=e?.heightCalculationMethod||P,X=e?.widthCalculationMethod||X}function t(e,t){return"function"==typeof e&&(ie(`Setup custom ${t}CalcMethod`),r[t]=e,e="custom"),e}"iFrameResizer"in window&&Object===window.iFrameResizer.constructor&&(e(),P=t(P,"height"),X=t(X,"width"));ie(`TargetOrigin for parent set to: ${J}`)}(),function(){void 0===$&&($=`${b}px`);se("margin",function(e,t){t.includes("-")&&(ae(`Negative CSS value ignored for ${e}`),t="");return t}("margin",$))}(),se("background",y),se("padding",S),function(){const e=document.createElement("div");e.style.clear="both",e.style.display="block",e.style.height="0",document.body.append(e)}(),function(){const e=e=>e.style.setProperty("height","auto","important");e(document.documentElement),e(document.body),ie('HTML & body height set to "auto !important"')}(),fe(),ge(),function(){let e=!1;const t=t=>document.querySelectorAll(`[${t}]`).forEach((o=>{e=!0,o.removeAttribute(t),o.setAttribute(n,null)}));t("data-iframe-height"),t("data-iframe-width"),e&&re("\n[31;1mDeprecated Attributes[m\n          \nThe [1mdata-iframe-height[m and [1mdata-iframe-width[m attributes have been deprecated and replaced with the single [1mdata-iframe-size[m attribute. Use of the old attributes will be removed in a future version of [3miframe-resizer[m.")}(),document.querySelectorAll(`[${n}]`).length>0&&("auto"===P&&(P="autoOverflow",ie('data-iframe-size attribute found on page, using "autoOverflow" calculation method for height')),"auto"===X&&(X="autoOverflow",ie('data-iframe-size attribute found on page, using "autoOverflow" calculation method for width'))),ue(),Y.parentIFrame={autoResize:e=>(!0===e&&!1===v?(v=!0,he()):!1===e&&!0===v&&(v=!1,le("remove"),D?.disconnect(),z?.disconnect()),ke(0,0,"autoResize",JSON.stringify(v)),v),close(){ke(0,0,"close")},getId:()=>H,getPageInfo(e){if("function"==typeof e)return Z=e,ke(0,0,"pageInfo"),void re("\n[31;1mDeprecated Method (getPageInfo()[m\n          \nThe [1mgetPageInfo()[m method has been deprecated and replaced with  [1mgetParentInfo()[m. Use of this method will be removed in a future version of [3miframe-resizer[m.\n");Z=null,ke(0,0,"pageInfoStop")},getParentInfo(e){if("function"==typeof e)return _=e,void ke(0,0,"parentInfo");_=null,ke(0,0,"parentInfoStop")},moveToAnchor(e){L.findTarget(e)},reset(){Ne("parentIFrame.reset")},scrollTo(e,t){ke(t,e,"scrollTo")},scrollToOffset(e,t){ke(t,e,"scrollToOffset")},sendMessage(e,t){ke(0,0,"message",JSON.stringify(e),t)},setHeightCalculationMethod(e){P=e,fe()},setWidthCalculationMethod(e){X=e,ge()},setTargetOrigin(e){ie(`Set targetOrigin: ${e}`),J=e},size(e,t){Re("size",`parentIFrame.size(${e||""}${t?`,${t}`:""})`,e,t)}},function(){if(!0!==A)return;function e(e){ke(0,0,e.type,`${e.screenY}:${e.screenX}`)}function t(t,n){ie(`Add event listener: ${n}`),o(window.document,t,e)}t("mouseenter","Mouse Enter"),t("mouseleave","Mouse Leave")}(),he(),L=function(){const e=()=>({x:document.documentElement.scrollLeft,y:document.documentElement.scrollTop});function n(n){const o=n.getBoundingClientRect(),i=e();return{x:parseInt(o.left,t)+parseInt(i.x,t),y:parseInt(o.top,t)+parseInt(i.y,t)}}function i(e){function t(e){const t=n(e);ie(`Moving to in page link (#${o}) at x: ${t.x}y: ${t.y}`),ke(t.y,t.x,"scrollToOffset")}const o=e.split("#")[1]||e,i=decodeURIComponent(o),a=document.getElementById(i)||document.getElementsByName(i)[0];void 0===a?(ie(`In page link (#${o}) not found in iFrame, so sending to parent`),ke(0,0,"inPageLink",`#${o}`)):t(a)}function a(){const{hash:e,href:t}=window.location;""!==e&&"#"!==e&&i(t)}function r(){function e(e){function t(e){e.preventDefault(),i(this.getAttribute("href"))}"#"!==e.getAttribute("href")&&o(e,"click",t)}document.querySelectorAll('a[href^="#"]').forEach(e)}function c(){o(window,"hashchange",a)}function d(){setTimeout(a,s)}function l(){ie("Setting up location.hash handlers"),r(),c(),d()}L.enable?l():ie("In page linking not enabled");return{findTarget:i}}(),Re("init","Init message from host page"),K(),N=!1}function se(e,t){void 0!==t&&""!==t&&"null"!==t&&(document.body.style.setProperty(e,t),ie(`Body ${e} set to "${t}"`))}function de(e){({add(t){function n(){Re(e.eventName,e.eventType)}d[t]=n,o(window,t,n,{passive:!0})},remove(e){const t=d[e];delete d[e],i(window,e,t)}})[e.method](e.eventName),ie(`${ee(e.method)} event listener: ${e.eventType}`)}function le(e){de({method:e,eventType:"After Print",eventName:"afterprint"}),de({method:e,eventType:"Before Print",eventName:"beforeprint"}),de({method:e,eventType:"Ready State Change",eventName:"readystatechange"})}function ue(){const e=document.querySelectorAll(`[${n}]`);I=e.length>0,E=I?e:Me(document)()}function me(e,t,n,o){return t!==e&&(e in n||(ae(`${e} is not a valid option for ${o}CalculationMethod.`),e=t),e in c&&re(`\n[31;1mDeprecated ${o}CalculationMethod (${e})[m\n\nThis version of [3miframe-resizer[m can auto detect the most suitable ${o} calculation method. It is recommended that you remove this option.`),ie(`${o} calculation method set to "${e}"`)),e}function fe(){P=me(P,u,Ie,"height")}function ge(){X=me(X,w,Ce,"width")}function he(){!0===v?(le("add"),z=function(){function e(e){e.forEach($e),ue()}function t(){const t=new window.MutationObserver(e),n=document.querySelector("body"),o={attributes:!1,attributeOldValue:!1,characterData:!1,characterDataOldValue:!1,childList:!0,subtree:!0};return ie("Create <body/> MutationObserver"),t.observe(n,o),t}const n=t();return{disconnect(){ie("Disconnect MutationObserver"),n.disconnect()}}}(),D=new ResizeObserver(pe),be(window.document)):ie("Auto Resize disabled")}function pe(e){Re("resizeObserver",`resizeObserver: ${ne(e[0].target)}`)}const we=e=>{const t=getComputedStyle(e);return""!==t?.position&&"static"!==t?.position},ve=()=>[...Me(document)()].filter(we);function ye(e){e&&(D.observe(e),ie(`Attached resizeObserver: ${ne(e)}`))}function be(e){[...ve(),...p.flatMap((t=>e.querySelector(t)))].forEach(ye)}function $e(e){"childList"===e.type&&be(e.target)}function ze(e){const t=ee(e);let n,o=0,i=E.length,r=0,c=performance.now();E.forEach((c=>{if(!I&&l&&!c.checkVisibility(a))return ie(`Skipping non-visable element: ${ne(c)}`),void(i-=1);o=c.getBoundingClientRect()[e]+getComputedStyle(c).getPropertyValue(`margin${t}`),o>r&&(r=o,n=c)})),c=performance.now()-c;const s=`\nParsed ${i} element${i=""} in ${c.toPrecision(3)}ms\n${t} ${I?"tagged":""} element found at: ${r}px\nPosition calculated from HTML element: ${function(e){const t=e?.outerHTML?.toString();return t?t.length<30?t:`${t.slice(0,30).replaceAll("\n"," ")}...`:e}(n)}`;return c<1.1||N||I?ie(s):re(`\n[31;1mPerformance Warning[m\n\nCalculateing the page size took an excessive amount of time. To improve performace add the [1mdata-iframe-size[m attribute to the ${e} element on the page.\n${s}`),r}const Se=e=>[e.bodyOffset(),e.bodyScroll(),e.documentElementOffset(),e.documentElementScroll(),e.documentElementBoundingClientRect()],Me=e=>()=>e.querySelectorAll("* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)");const Oe={height:0,width:0},Ee={height:0,width:0};function Te(e,t){function n(){return Ee[i]=a,Oe[i]=s,a}const o=e===Ie,i=o?"height":"width",a=e.documentElementBoundingClientRect(),r=Math.ceil(a),c=Math.floor(a),s=(e=>e.documentElementScroll()+Math.max(0,e.getOffset()))(e),d=`HTML: ${a}  Page: ${s}`;switch(!0){case!e.enabled():return s;case!t&&0===Ee[i]&&0===Oe[i]:if(ie(`Initial page size values: ${d}`),e.taggedElement(!0)<=r)return n();break;case j&&a===Ee[i]&&s===Oe[i]:return ie(`Size unchanged: ${d}`),Math.max(a,s);case 0===a:return ie(`Page is hidden: ${d}`),s;case!t&&a!==Ee[i]&&s<=Oe[i]:return ie(`New HTML bounding size: ${d}`,"Previous bounding size:",Ee[i]),n();case!t&&a<Ee[i]:return ie("HTML bounding size decreased:",d),n();case s===c||s===r:return ie("HTML bounding size equals page size:",d),n();case a>s:return ie(`Page size < HTML bounding size: ${d}`),n();case!t:ie(`Switch to autoOverflow: ${d}`),function({ceilBoundingSize:e,dimension:t,isHeight:n,scrollSize:o}){const i=n?"bottom":"right";re(`\n[31;1mDetected content overflowing html element[m\n    \nThis causes [3miframe-resizer[m to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${i} margin, and position of every visable HTML element will have a performace impact on more complex pages. \n\nTo fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the [1m<HTML>[m element or alternatively you can add the attribute [1mdata-iframe-size[m to the elements on the page that you want [3miframe-resizer[m to use when calculating the dimensions of the iframe. \n  \nWhen present the [3m${i} margin of the ${n?"lowest":"right most"} element[m with a [1mdata-iframe-size[m attribute will be used to set the ${t} of the iframe.\n    \n(Page size: ${o} > document size: ${e})`),n?(ie(`Switching from ${P} to autoOverflow`),P="autoOverflow"):(ie(`Switching from ${X} to autoOverflow`),X="autoOverflow")}({ceilBoundingSize:r,dimension:i,isHeight:o,scrollSize:s});break;default:ie(`Content overflowing HTML element: ${d}`)}return Math.max(e.taggedElement(),n())}const Ie={enabled:()=>M,getOffset:()=>B,type:"height",auto:()=>Te(Ie,!1),autoOverflow:()=>Te(Ie,!0),bodyOffset:()=>{const{body:e}=document,n=getComputedStyle(e);return e.offsetHeight+parseInt(n.marginTop,t)+parseInt(n.marginBottom,t)},bodyScroll:()=>document.body.scrollHeight,offset:()=>Ie.bodyOffset(),custom:()=>r.height(),documentElementOffset:()=>document.documentElement.offsetHeight,documentElementScroll:()=>document.documentElement.scrollHeight,documentElementBoundingClientRect:()=>document.documentElement.getBoundingClientRect().bottom,max:()=>Math.max(...Se(Ie)),min:()=>Math.min(...Se(Ie)),grow:()=>Ie.max(),lowestElement:()=>ze("bottom"),taggedElement:()=>ze("bottom")},Ce={enabled:()=>O,getOffset:()=>F,type:"width",auto:()=>Te(Ce,!1),autoOverflow:()=>Te(Ce,!0),bodyScroll:()=>document.body.scrollWidth,bodyOffset:()=>document.body.offsetWidth,custom:()=>r.width(),documentElementScroll:()=>document.documentElement.scrollWidth,documentElementOffset:()=>document.documentElement.offsetWidth,documentElementBoundingClientRect:()=>document.documentElement.getBoundingClientRect().right,max:()=>Math.max(...Se(Ce)),min:()=>Math.min(...Se(Ce)),rightMostElement:()=>ze("right"),scroll:()=>Math.max(Ce.bodyScroll(),Ce.documentElementScroll()),taggedElement:()=>ze("right")};function Pe(e,t,n,o){let i,a;!function(){const e=(e,t)=>!(Math.abs(e-t)<=V);return i=Math.ceil(void 0===n?Ie[P]():n),a=Math.ceil(void 0===o?Ce[X]():o),M&&e(C,i)||O&&e(Q,a)}()&&"init"!==e?!(e in{init:1,size:1})&&(M&&P in h||O&&X in h)&&Ne(t):(xe(),C=i,Q=a,ke(C,Q,e))}function Re(e,t,n,o){document.hidden?ie("Page hidden - Ignored resize request"):(e in m||ie(`Trigger event: ${t}`),Pe(e,t,n,o))}function xe(){j||(j=!0,ie("Trigger event lock on"),requestAnimationFrame((()=>{j=!1,ie("Trigger event lock off"),ie("--")})))}function Le(e){C=Ie[P](),Q=Ce[X](),ke(C,Q,e)}function Ne(e){const t=P;P=u,ie(`Reset trigger event: ${e}`),xe(),Le("reset"),P=t}function ke(e,t,n,o,i){void 0!==i?ie(`Message targetOrigin: ${i}`):i=J,function(){const a=`${H}:${e+B}:${t+F}:${n}${void 0===o?"":`:${o}`}`;ie(`Sending message to host page (${a}) via ${U?"sameDomain":"postMessage"}`),U?window.parent.iFrameListener(f+a):W.postMessage(f+a,i)}()}function Ae(e){const t={init:function(){x=e.data,W=e.source,ce(),T=!1,setTimeout((()=>{R=!1}),s)},reset(){R?ie("Page reset ignored by init"):(ie("Page size reset by host page"),Le("resetPage"))},resize(){Re("resizeParent","Parent window requested size check")},moveToAnchor(){L.findTarget(o())},inPageLink(){this.moveToAnchor()},pageInfo(){const e=o();ie(`PageInfo received from parent: ${e}`),Z?Z(JSON.parse(e)):ke(0,0,"pageInfoStop"),ie(" --")},parentInfo(){const e=o();ie(`ParentInfo received from parent: ${e}`),_?_(Object.freeze(JSON.parse(e))):ke(0,0,"parentInfoStop"),ie(" --")},message(){const e=o();ie(`onMessage called from parent: ${e}`),G(JSON.parse(e)),ie(" --")}},n=()=>e.data.split("]")[1].split(":")[0],o=()=>e.data.slice(e.data.indexOf(":")+1),i=()=>"iFrameResize"in window||void 0!==window.jQuery&&"iFrameResize"in window.jQuery.prototype,a=()=>e.data.split(":")[2]in{true:1,false:1};f===`${e.data}`.slice(0,g)&&(!1!==T?a()?t.init():ie(`Ignored message of type "${n()}". Received before initialization.`):function(){const o=n();o in t?t[o]():i()||a()||ae(`Unexpected message (${e.data})`)}())}function He(){"loading"!==document.readyState&&window.parent.postMessage("[iFrameResizerChild]Ready","*")}function Be(e){return Ae(e),Y}"undefined"!=typeof window&&(window.iFrameListener=e=>Ae({data:e,sameDomian:!0}),o(window,"message",Ae),o(window,"readystatechange",He),He());try{top?.document?.getElementById("banner")&&(Y={},window.mockMsgListener=Be,i(window,"message",Ae),define([],(()=>Be)))}catch(e){}}));
+const VERSION = '5.0.0-alpha.1';
+
+const BASE = 10;
+const SIZE_ATTR = 'data-iframe-size';
+
+const addEventListener = (el, evt, func, options) =>
+  el.addEventListener(evt, func, options || false);
+
+const removeEventListener = (el, evt, func) =>
+  el.removeEventListener(evt, func, false);
+
+const checkVisibilityOptions = {
+  contentVisibilityAuto: true,
+  opacityProperty: true,
+  visibilityProperty: true,
+};
+const customCalcMethods = {
+  height: () => {
+    warn('Custom height calculation function not defined');
+    return getHeight.auto()
+  },
+  width: () => {
+    warn('Custom width calculation function not defined');
+    return getWidth.auto()
+  },
+};
+const deprecatedResizeMethods = {
+  bodyOffset: 1,
+  bodyScroll: 1,
+  offset: 1,
+  documentElementOffset: 1,
+  documentElementScroll: 1,
+  documentElementBoundingClientRect: 1,
+  max: 1,
+  min: 1,
+  grow: 1,
+  lowestElement: 1,
+};
+const eventCancelTimer = 128;
+const eventHandlersByName = {};
+const hasCheckVisibility = 'checkVisibility' in window;
+const heightCalcModeDefault = 'auto';
+const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 };
+const msgID = '[iFrameSizer]'; // Must match host page msg ID
+const msgIdLen = msgID.length;
+const resetRequiredMethods = {
+  max: 1,
+  min: 1,
+  bodyScroll: 1,
+  documentElementScroll: 1,
+};
+const resizeObserveTargets = ['body'];
+const widthCalcModeDefault = 'scroll';
+
+let autoResize = true;
+let bodyBackground = '';
+let bodyMargin = 0;
+let bodyMarginStr = '';
+let bodyObserver = null;
+let bodyPadding = '';
+let calculateHeight = true;
+let calculateWidth = false;
+let calcElements = null;
+let firstRun = true;
+let hasTags = false;
+let height = 1;
+let heightCalcMode = heightCalcModeDefault; // only applys if not provided by host page (V1 compatibility)
+let initLock = true;
+let initMsg = '';
+let inPageLinks = {};
+let isInit = true;
+let logging = false;
+let mouseEvents = false;
+let myID = '';
+let offsetHeight = 0;
+let offsetWidth = 0;
+let resizeFrom = 'child';
+let resizeObserver = null;
+let sameDomian = false;
+let target = window.parent;
+let targetOriginDefault = '*';
+let tolerance = 0;
+let triggerLocked = false;
+let width = 1;
+let widthCalcMode = widthCalcModeDefault;
+let win = window;
+
+let onMessage = () => {
+  warn('onMessage function not defined');
+};
+let onReady = () => {};
+let onPageInfo = null;
+let onParentInfo = null;
+
+const capitalizeFirstLetter = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
+
+const isDef = (value) => `${value}` !== '' && value !== undefined;
+
+function getElementName(el) {
+  switch (true) {
+    case !isDef(el):
+      return ''
+
+    case isDef(el.id):
+      return `${el.nodeName.toUpperCase()}#${el.id}`
+
+    case isDef(el.name):
+      return `${el.nodeName.toUpperCase()} (${el.name})`
+
+    default:
+      return (
+        el.nodeName.toUpperCase() +
+        (isDef(el.className) ? `.${el.className}` : '')
+      )
+  }
+}
+
+function elementSnippet(el) {
+  const outer = el?.outerHTML?.toString();
+
+  if (!outer) return el
+
+  return outer.length < 30
+    ? outer
+    : `${outer.slice(0, 30).replaceAll('\n', ' ')}...`
+}
+
+// TODO: remove .join(' '), requires major test updates
+const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ');
+
+const log = (...msg) =>
+  // eslint-disable-next-line no-console
+  logging && console?.log(formatLogMsg(...msg));
+
+const warn = (...msg) =>
+  // eslint-disable-next-line no-console
+  console?.warn(formatLogMsg(...msg));
+
+const advise = (...msg) =>
+  // eslint-disable-next-line no-console
+  console?.warn(
+    window.chrome // Only show formatting in Chrome as not supported in other browsers
+      ? formatLogMsg(...msg)
+      : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
+  );
+
+function init() {
+  checkCrossDomain();
+  readDataFromParent();
+  log(`Initialising iFrame v${VERSION} (${window.location.href})`);
+  readDataFromPage();
+  setMargin();
+  setBodyStyle('background', bodyBackground);
+  setBodyStyle('padding', bodyPadding);
+  injectClearFixIntoBodyElement();
+  stopInfiniteResizingOfIFrame();
+  checkHeightMode();
+  checkWidthMode();
+  checkDeprecatedAttrs();
+  checkHasDataSizeAttributes();
+  setupCalcElements();
+  setupPublicMethods();
+  setupMouseEvents();
+  startEventListeners();
+  inPageLinks = setupInPageLinks();
+  sendSize('init', 'Init message from host page');
+  onReady();
+  isInit = false;
+}
+
+function checkCrossDomain() {
+  try {
+    sameDomian = 'iFrameListener' in window.parent;
+  } catch (error) {
+    log('Cross domain iframe detected.');
+  }
+}
+
+function readDataFromParent() {
+  const strBool = (str) => str === 'true';
+  const data = initMsg.slice(msgIdLen).split(':');
+
+  myID = data[0]; // eslint-disable-line prefer-destructuring
+  bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]); // For V1 compatibility
+  calculateWidth = undefined === data[2] ? calculateWidth : strBool(data[2]);
+  logging = undefined === data[3] ? logging : strBool(data[3]);
+  // data[4] no longer used (was intervalTimer)
+  autoResize = undefined === data[6] ? autoResize : strBool(data[6]);
+  bodyMarginStr = data[7]; // eslint-disable-line prefer-destructuring
+  heightCalcMode = undefined === data[8] ? heightCalcMode : data[8];
+  bodyBackground = data[9]; // eslint-disable-line prefer-destructuring
+  bodyPadding = data[10]; // eslint-disable-line prefer-destructuring
+  tolerance = undefined === data[11] ? tolerance : Number(data[11]);
+  inPageLinks.enable = undefined === data[12] ? false : strBool(data[12]);
+  resizeFrom = undefined === data[13] ? resizeFrom : data[13];
+  widthCalcMode = undefined === data[14] ? widthCalcMode : data[14];
+  mouseEvents = undefined === data[15] ? mouseEvents : strBool(data[15]);
+  offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16]);
+  offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17]);
+  calculateHeight = undefined === data[18] ? calculateHeight : strBool(data[18]);
+}
+
+function readDataFromPage() {
+  function readData() {
+    const data = window.iFrameResizer;
+
+    log(`Reading data from page: ${JSON.stringify(data)}`);
+
+    onMessage = data?.onMessage || onMessage;
+    onReady = data?.onReady || onReady;
+    offsetHeight = data?.offsetHeight || offsetHeight;
+    offsetWidth = data?.offsetWidth || offsetWidth;
+    targetOriginDefault = data?.targetOrigin || targetOriginDefault;
+    heightCalcMode = data?.heightCalculationMethod || heightCalcMode;
+    widthCalcMode = data?.widthCalculationMethod || widthCalcMode;
+  }
+
+  function setupCustomCalcMethods(calcMode, calcFunc) {
+    if (typeof calcMode === 'function') {
+      log(`Setup custom ${calcFunc}CalcMethod`);
+      customCalcMethods[calcFunc] = calcMode;
+      calcMode = 'custom';
+    }
+
+    return calcMode
+  }
+
+  if (
+    'iFrameResizer' in window &&
+    Object === window.iFrameResizer.constructor
+  ) {
+    readData();
+    heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height');
+    widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width');
+  }
+
+  log(`TargetOrigin for parent set to: ${targetOriginDefault}`);
+}
+
+function chkCSS(attr, value) {
+  if (value.includes('-')) {
+    warn(`Negative CSS value ignored for ${attr}`);
+    value = '';
+  }
+
+  return value
+}
+
+function setBodyStyle(attr, value) {
+  if (undefined !== value && value !== '' && value !== 'null') {
+    document.body.style.setProperty(attr, value);
+    log(`Body ${attr} set to "${value}"`);
+  }
+}
+
+function setMargin() {
+  // If called via V1 script, convert bodyMargin from int to str
+  if (undefined === bodyMarginStr) {
+    bodyMarginStr = `${bodyMargin}px`;
+  }
+
+  setBodyStyle('margin', chkCSS('margin', bodyMarginStr));
+}
+
+function stopInfiniteResizingOfIFrame() {
+  const setAutoHeight = (el) =>
+    el.style.setProperty('height', 'auto', 'important');
+
+  setAutoHeight(document.documentElement);
+  setAutoHeight(document.body);
+
+  log('HTML & body height set to "auto !important"');
+}
+
+function manageTriggerEvent(options) {
+  const listener = {
+    add(eventName) {
+      function handleEvent() {
+        sendSize(options.eventName, options.eventType);
+      }
+
+      eventHandlersByName[eventName] = handleEvent;
+
+      addEventListener(window, eventName, handleEvent, { passive: true });
+    },
+    remove(eventName) {
+      const handleEvent = eventHandlersByName[eventName];
+      delete eventHandlersByName[eventName];
+
+      removeEventListener(window, eventName, handleEvent);
+    },
+  };
+
+  listener[options.method](options.eventName);
+
+  log(
+    `${capitalizeFirstLetter(options.method)} event listener: ${
+      options.eventType
+    }`,
+  );
+}
+
+function manageEventListeners(method) {
+  manageTriggerEvent({
+    method,
+    eventType: 'After Print',
+    eventName: 'afterprint',
+  });
+
+  manageTriggerEvent({
+    method,
+    eventType: 'Before Print',
+    eventName: 'beforeprint',
+  });
+
+  manageTriggerEvent({
+    method,
+    eventType: 'Ready State Change',
+    eventName: 'readystatechange',
+  });
+
+  //   manageTriggerEvent({
+  //     method: method,
+  //     eventType: 'Orientation Change',
+  //     eventName: 'orientationchange'
+  //   })
+}
+
+function checkDeprecatedAttrs() {
+  let found = false;
+
+  const checkAttrs = (attr) =>
+    document.querySelectorAll(`[${attr}]`).forEach((el) => {
+      found = true;
+      el.removeAttribute(attr);
+      el.setAttribute(SIZE_ATTR, null);
+    });
+
+  checkAttrs('data-iframe-height');
+  checkAttrs('data-iframe-width');
+
+  if (found) {
+    advise(`
+\u001B[31;1mDeprecated Attributes\u001B[m
+          
+The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`);
+  }
+}
+
+function checkHasDataSizeAttributes() {
+  if (document.querySelectorAll(`[${SIZE_ATTR}]`).length > 0) {
+    if (heightCalcMode === 'auto') {
+      heightCalcMode = 'autoOverflow';
+      log(
+        'data-iframe-size attribute found on page, using "autoOverflow" calculation method for height',
+      );
+    }
+    if (widthCalcMode === 'auto') {
+      widthCalcMode = 'autoOverflow';
+      log(
+        'data-iframe-size attribute found on page, using "autoOverflow" calculation method for width',
+      );
+    }
+  }
+}
+
+function setupCalcElements() {
+  const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`);
+  hasTags = taggedElements.length > 0;
+  calcElements = hasTags ? taggedElements : getAllElements(document)();
+}
+
+function checkCalcMode(calcMode, calcModeDefault, modes, type) {
+  if (calcModeDefault !== calcMode) {
+    if (!(calcMode in modes)) {
+      warn(`${calcMode} is not a valid option for ${type}CalculationMethod.`);
+      calcMode = calcModeDefault;
+    }
+    if (calcMode in deprecatedResizeMethods) {
+      advise(`
+\u001B[31;1mDeprecated ${type}CalculationMethod (${calcMode})\u001B[m
+
+This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`);
+    }
+    log(`${type} calculation method set to "${calcMode}"`);
+  }
+
+  return calcMode
+}
+
+function checkHeightMode() {
+  heightCalcMode = checkCalcMode(
+    heightCalcMode,
+    heightCalcModeDefault,
+    getHeight,
+    'height',
+  );
+}
+
+function checkWidthMode() {
+  widthCalcMode = checkCalcMode(
+    widthCalcMode,
+    widthCalcModeDefault,
+    getWidth,
+    'width',
+  );
+}
+
+function startEventListeners() {
+  if (autoResize !== true) {
+    log('Auto Resize disabled');
+    return
+  }
+
+  manageEventListeners('add');
+  setupMutationObserver();
+  setupResizeObserver();
+}
+
+function stopEventListeners() {
+  manageEventListeners('remove');
+  resizeObserver?.disconnect();
+  bodyObserver?.disconnect();
+}
+
+function injectClearFixIntoBodyElement() {
+  const clearFix = document.createElement('div');
+
+  clearFix.style.clear = 'both';
+  // Guard against the following having been globally redefined in CSS.
+  clearFix.style.display = 'block';
+  clearFix.style.height = '0';
+  document.body.append(clearFix);
+}
+
+function setupInPageLinks() {
+  const getPagePosition = () => ({
+    x: document.documentElement.scrollLeft,
+    y: document.documentElement.scrollTop,
+  });
+
+  function getElementPosition(el) {
+    const elPosition = el.getBoundingClientRect();
+    const pagePosition = getPagePosition();
+
+    return {
+      x: parseInt(elPosition.left, BASE) + parseInt(pagePosition.x, BASE),
+      y: parseInt(elPosition.top, BASE) + parseInt(pagePosition.y, BASE),
+    }
+  }
+
+  function findTarget(location) {
+    function jumpToTarget(target) {
+      const jumpPosition = getElementPosition(target);
+
+      log(
+        `Moving to in page link (#${hash}) at x: ${jumpPosition.x}y: ${jumpPosition.y}`,
+      );
+
+      sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
+    }
+
+    const hash = location.split('#')[1] || location; // Remove # if present
+    const hashData = decodeURIComponent(hash);
+    const target =
+      document.getElementById(hashData) ||
+      document.getElementsByName(hashData)[0];
+
+    if (target !== undefined) {
+      jumpToTarget(target);
+      return
+    }
+
+    log(`In page link (#${hash}) not found in iFrame, so sending to parent`);
+    sendMsg(0, 0, 'inPageLink', `#${hash}`);
+  }
+
+  function checkLocationHash() {
+    const { hash, href } = window.location;
+
+    if (hash !== '' && hash !== '#') {
+      findTarget(href);
+    }
+  }
+
+  function bindAnchors() {
+    function setupLink(el) {
+      function linkClicked(e) {
+        e.preventDefault();
+
+        findTarget(this.getAttribute('href'));
+      }
+
+      if (el.getAttribute('href') !== '#') {
+        addEventListener(el, 'click', linkClicked);
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(setupLink);
+  }
+
+  function bindLocationHash() {
+    addEventListener(window, 'hashchange', checkLocationHash);
+  }
+
+  function initCheck() {
+    // Check if page loaded with location hash after init resize
+    setTimeout(checkLocationHash, eventCancelTimer);
+  }
+
+  function enableInPageLinks() {
+    /* istanbul ignore else */ // Not testable in phantonJS
+    log('Setting up location.hash handlers');
+    bindAnchors();
+    bindLocationHash();
+    initCheck();
+  }
+
+  if (inPageLinks.enable) {
+    enableInPageLinks();
+  } else {
+    log('In page linking not enabled');
+  }
+
+  return {
+    findTarget,
+  }
+}
+
+function setupMouseEvents() {
+  if (mouseEvents !== true) return
+
+  function sendMouse(e) {
+    sendMsg(0, 0, e.type, `${e.screenY}:${e.screenX}`);
+  }
+
+  function addMouseListener(evt, name) {
+    log(`Add event listener: ${name}`);
+    addEventListener(window.document, evt, sendMouse);
+  }
+
+  addMouseListener('mouseenter', 'Mouse Enter');
+  addMouseListener('mouseleave', 'Mouse Leave');
+}
+
+function setupPublicMethods() {
+  win.parentIFrame = {
+    autoResize: (resize) => {
+      if (resize === true && autoResize === false) {
+        autoResize = true;
+        startEventListeners();
+      } else if (resize === false && autoResize === true) {
+        autoResize = false;
+        stopEventListeners();
+      }
+
+      sendMsg(0, 0, 'autoResize', JSON.stringify(autoResize));
+
+      return autoResize
+    },
+
+    close() {
+      sendMsg(0, 0, 'close');
+    },
+
+    getId: () => myID,
+
+    getPageInfo(callback) {
+      if (typeof callback === 'function') {
+        onPageInfo = callback;
+        sendMsg(0, 0, 'pageInfo');
+        advise(`
+\u001B[31;1mDeprecated Method (getPageInfo()\u001B[m
+          
+The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with  \u001B[1mgetParentInfo()\u001B[m. Use of this method will be removed in a future version of \u001B[3miframe-resizer\u001B[m.
+`);
+        return
+      }
+
+      onPageInfo = null;
+      sendMsg(0, 0, 'pageInfoStop');
+    },
+
+    getParentInfo(callback) {
+      if (typeof callback === 'function') {
+        onParentInfo = callback;
+        sendMsg(0, 0, 'parentInfo');
+        return
+      }
+
+      onParentInfo = null;
+      sendMsg(0, 0, 'parentInfoStop');
+    },
+
+    moveToAnchor(hash) {
+      inPageLinks.findTarget(hash);
+    },
+
+    reset() {
+      resetIFrame('parentIFrame.reset');
+    },
+
+    scrollTo(x, y) {
+      sendMsg(y, x, 'scrollTo'); // X&Y reversed at sendMsg uses height/width
+    },
+
+    scrollToOffset(x, y) {
+      sendMsg(y, x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
+    },
+
+    sendMessage(msg, targetOrigin) {
+      sendMsg(0, 0, 'message', JSON.stringify(msg), targetOrigin);
+    },
+
+    setHeightCalculationMethod(heightCalculationMethod) {
+      heightCalcMode = heightCalculationMethod;
+      checkHeightMode();
+    },
+
+    setWidthCalculationMethod(widthCalculationMethod) {
+      widthCalcMode = widthCalculationMethod;
+      checkWidthMode();
+    },
+
+    setTargetOrigin(targetOrigin) {
+      log(`Set targetOrigin: ${targetOrigin}`);
+      targetOriginDefault = targetOrigin;
+    },
+
+    size(customHeight, customWidth) {
+      const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`;
+
+      sendSize(
+        'size',
+        `parentIFrame.size(${valString})`,
+        customHeight,
+        customWidth,
+      );
+    },
+  };
+}
+
+function resizeObserved(entries) {
+  const el = entries[0].target;
+  sendSize('resizeObserver', `resizeObserver: ${getElementName(el)}`);
+}
+
+const checkPositionType = (element) => {
+  const style = getComputedStyle(element);
+  return style?.position !== '' && style?.position !== 'static'
+};
+
+const getAllNonStaticElements = () =>
+  [...getAllElements(document)()].filter(checkPositionType);
+
+function setupResizeObservers(el) {
+  if (!el) return
+  resizeObserver.observe(el);
+  log(`Attached resizeObserver: ${getElementName(el)}`);
+}
+
+function createResizeObservers(el) {
+[
+    ...getAllNonStaticElements(),
+    ...resizeObserveTargets.flatMap((target) => el.querySelector(target)),
+  ].forEach(setupResizeObservers);
+}
+
+function addResizeObservers(mutation) {
+  if (mutation.type === 'childList') {
+    createResizeObservers(mutation.target);
+  }
+}
+
+function setupResizeObserver() {
+  resizeObserver = new ResizeObserver(resizeObserved);
+  createResizeObservers(window.document);
+}
+
+function setupBodyMutationObserver() {
+  function mutationObserved(mutations) {
+    // Look for injected elements that need ResizeObservers
+    mutations.forEach(addResizeObservers);
+
+    // Rebuild elements list for size calculation
+    setupCalcElements();
+  }
+
+  function createMutationObserver() {
+    const observer = new window.MutationObserver(mutationObserved);
+    const target = document.querySelector('body');
+    const config = {
+      // attributes: true,
+      attributes: false,
+      attributeOldValue: false,
+      // characterData: true,
+      characterData: false,
+      characterDataOldValue: false,
+      childList: true,
+      subtree: true,
+    };
+
+    log('Create <body/> MutationObserver');
+    observer.observe(target, config);
+
+    return observer
+  }
+
+  const observer = createMutationObserver();
+
+  return {
+    disconnect() {
+      log('Disconnect MutationObserver');
+      observer.disconnect();
+    },
+  }
+}
+
+function setupMutationObserver() {
+  bodyObserver = setupBodyMutationObserver();
+}
+
+// Idea from https://github.com/guardian/iframe-messenger
+function getMaxElement(side) {
+  const Side = capitalizeFirstLetter(side);
+
+  let elVal = 0;
+  let len = calcElements.length;
+  let maxEl;
+  let maxVal = 0;
+  let timer = performance.now();
+
+  calcElements.forEach((element) => {
+    if (
+      !hasTags &&
+      hasCheckVisibility &&
+      !element.checkVisibility(checkVisibilityOptions)
+    ) {
+      log(`Skipping non-visable element: ${getElementName(element)}`);
+      len -= 1;
+      return
+    }
+
+    elVal =
+      element.getBoundingClientRect()[side] +
+      getComputedStyle(element).getPropertyValue(`margin${Side}`);
+
+    if (elVal > maxVal) {
+      maxVal = elVal;
+      maxEl = element;
+    }
+  });
+
+  timer = performance.now() - timer;
+
+  const logMsg = `
+Parsed ${len} element${(len = '' )} in ${timer.toPrecision(3)}ms
+${Side} ${hasTags ? 'tagged' : ''} element found at: ${maxVal}px
+Position calculated from HTML element: ${elementSnippet(maxEl)}`;
+
+  if (timer < 1.1 || isInit || hasTags) {
+    log(logMsg);
+  } else {
+    advise(
+      `
+\u001B[31;1mPerformance Warning\u001B[m
+
+Calculateing the page size took an excessive amount of time. To improve performace add the \u001B[1mdata-iframe-size\u001B[m attribute to the ${side} element on the page.
+${logMsg}`,
+    );
+  }
+  return maxVal
+}
+
+const getAllMeasurements = (dimension) => [
+  dimension.bodyOffset(),
+  dimension.bodyScroll(),
+  dimension.documentElementOffset(),
+  dimension.documentElementScroll(),
+  dimension.documentElementBoundingClientRect(),
+];
+
+const getAllElements = (element) => () =>
+  element.querySelectorAll(
+    '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
+  );
+
+function switchToAutoOverflow({
+  ceilBoundingSize,
+  dimension,
+  isHeight,
+  scrollSize,
+}) {
+  const furthest = isHeight ? 'lowest' : 'right most';
+  const side = isHeight ? 'bottom' : 'right';
+  const overflowDetectedMessage = `
+\u001B[31;1mDetected content overflowing html element\u001B[m
+    
+This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a performace impact on more complex pages. 
+
+To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want \u001B[3miframe-resizer\u001B[m to use when calculating the dimensions of the iframe. 
+  
+When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with a \u001B[1mdata-iframe-size\u001B[m attribute will be used to set the ${dimension} of the iframe.
+    
+(Page size: ${scrollSize} > document size: ${ceilBoundingSize})`;
+
+  advise(overflowDetectedMessage);
+
+  if (isHeight) {
+    log(`Switching from ${heightCalcMode} to autoOverflow`);
+    heightCalcMode = 'autoOverflow';
+  } else {
+    log(`Switching from ${widthCalcMode} to autoOverflow`);
+    widthCalcMode = 'autoOverflow';
+  }
+}
+
+const prevScrollSize = {
+  height: 0,
+  width: 0,
+};
+
+const prevBoundingSize = {
+  height: 0,
+  width: 0,
+};
+
+const getAdjustedScroll = (getDimension) =>
+  getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset());
+
+function getAutoSize(getDimension, autoOverflow) {
+  function returnBoundingClientRect() {
+    prevBoundingSize[dimension] = boundingSize;
+    prevScrollSize[dimension] = scrollSize;
+    return boundingSize
+  }
+
+  const isHeight = getDimension === getHeight;
+  const dimension = isHeight ? 'height' : 'width';
+  const boundingSize = getDimension.documentElementBoundingClientRect();
+  const ceilBoundingSize = Math.ceil(boundingSize);
+  const floorBoundingSize = Math.floor(boundingSize);
+  const scrollSize = getAdjustedScroll(getDimension);
+  const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`;
+
+  switch (true) {
+    case !getDimension.enabled():
+      return scrollSize
+
+    case !autoOverflow &&
+      prevBoundingSize[dimension] === 0 &&
+      prevScrollSize[dimension] === 0:
+      log(`Initial page size values: ${sizes}`);
+      if (getDimension.taggedElement(true) <= ceilBoundingSize) {
+        return returnBoundingClientRect()
+      }
+      break
+
+    case triggerLocked &&
+      boundingSize === prevBoundingSize[dimension] &&
+      scrollSize === prevScrollSize[dimension]:
+      log(`Size unchanged: ${sizes}`);
+      return Math.max(boundingSize, scrollSize)
+
+    case boundingSize === 0:
+      log(`Page is hidden: ${sizes}`);
+      return scrollSize
+
+    case !autoOverflow &&
+      boundingSize !== prevBoundingSize[dimension] &&
+      scrollSize <= prevScrollSize[dimension]:
+      log(
+        `New HTML bounding size: ${sizes}`,
+        'Previous bounding size:',
+        prevBoundingSize[dimension],
+      );
+      return returnBoundingClientRect()
+
+    case !autoOverflow && boundingSize < prevBoundingSize[dimension]:
+      log('HTML bounding size decreased:', sizes);
+      return returnBoundingClientRect()
+
+    case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
+      log('HTML bounding size equals page size:', sizes);
+      return returnBoundingClientRect()
+
+    case boundingSize > scrollSize:
+      log(`Page size < HTML bounding size: ${sizes}`);
+      return returnBoundingClientRect()
+
+    case !autoOverflow:
+      log(`Switch to autoOverflow: ${sizes}`);
+      switchToAutoOverflow({
+        ceilBoundingSize,
+        dimension,
+        isHeight,
+        scrollSize,
+      });
+      break
+
+    default:
+      log(`Content overflowing HTML element: ${sizes}`);
+  }
+
+  return Math.max(getDimension.taggedElement(), returnBoundingClientRect())
+}
+
+const getBodyOffset = () => {
+  const { body } = document;
+  const style = getComputedStyle(body);
+
+  return (
+    body.offsetHeight +
+    parseInt(style.marginTop, BASE) +
+    parseInt(style.marginBottom, BASE)
+  )
+};
+
+const getHeight = {
+  enabled: () => calculateHeight,
+  getOffset: () => offsetHeight,
+  type: 'height',
+  auto: () => getAutoSize(getHeight, false),
+  autoOverflow: () => getAutoSize(getHeight, true),
+  bodyOffset: getBodyOffset,
+  bodyScroll: () => document.body.scrollHeight,
+  offset: () => getHeight.bodyOffset(), // Backwards compatibility
+  custom: () => customCalcMethods.height(),
+  documentElementOffset: () => document.documentElement.offsetHeight,
+  documentElementScroll: () => document.documentElement.scrollHeight,
+  documentElementBoundingClientRect: () =>
+    document.documentElement.getBoundingClientRect().bottom,
+  max: () => Math.max(...getAllMeasurements(getHeight)),
+  min: () => Math.min(...getAllMeasurements(getHeight)),
+  grow: () => getHeight.max(),
+  lowestElement: () => getMaxElement('bottom'),
+  taggedElement: () => getMaxElement('bottom'),
+};
+
+const getWidth = {
+  enabled: () => calculateWidth,
+  getOffset: () => offsetWidth,
+  type: 'width',
+  auto: () => getAutoSize(getWidth, false),
+  autoOverflow: () => getAutoSize(getWidth, true),
+  bodyScroll: () => document.body.scrollWidth,
+  bodyOffset: () => document.body.offsetWidth,
+  custom: () => customCalcMethods.width(),
+  documentElementScroll: () => document.documentElement.scrollWidth,
+  documentElementOffset: () => document.documentElement.offsetWidth,
+  documentElementBoundingClientRect: () =>
+    document.documentElement.getBoundingClientRect().right,
+  max: () => Math.max(...getAllMeasurements(getWidth)),
+  min: () => Math.min(...getAllMeasurements(getWidth)),
+  rightMostElement: () => getMaxElement('right'),
+  scroll: () =>
+    Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
+  taggedElement: () => getMaxElement('right'),
+};
+
+function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
+  function resizeIFrame() {
+    height = currentHeight;
+    width = currentWidth;
+
+    // if (height === 0) {
+    //   log('Height is 0. Not sending a message to the parent page.')
+    //   return
+    // }
+
+    // if (width === 0) {
+    //   log('Width is 0. Not sending a message to the parent page.')
+    //   return
+    // }
+
+    sendMsg(height, width, triggerEvent);
+  }
+
+  function isSizeChangeDetected() {
+    const checkTolarance = (a, b) => !(Math.abs(a - b) <= tolerance);
+
+    currentHeight = Math.ceil(
+      undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
+    );
+
+    currentWidth = Math.ceil(
+      undefined === customWidth ? getWidth[widthCalcMode]() : customWidth,
+    );
+
+    return (
+      (calculateHeight && checkTolarance(height, currentHeight)) ||
+      (calculateWidth && checkTolarance(width, currentWidth))
+    )
+  }
+
+  const isForceResizableEvent = () => !(triggerEvent in { init: 1, size: 1 });
+
+  const isForceResizableCalcMode = () =>
+    (calculateHeight && heightCalcMode in resetRequiredMethods) ||
+    (calculateWidth && widthCalcMode in resetRequiredMethods);
+
+  function checkDownSizing() {
+    if (isForceResizableEvent() && isForceResizableCalcMode()) {
+      resetIFrame(triggerEventDesc);
+    }
+  }
+
+  let currentHeight;
+  let currentWidth;
+
+  if (isSizeChangeDetected() || triggerEvent === 'init') {
+    lockTrigger();
+    resizeIFrame();
+  } else {
+    checkDownSizing();
+  }
+}
+
+function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
+  if (document.hidden) {
+    // Currently only correctly supported in firefox
+    // This is checked again on the parent page
+    log('Page hidden - Ignored resize request');
+    return
+  }
+
+  if (!(triggerEvent in nonLoggableTriggerEvents)) {
+    log(`Trigger event: ${triggerEventDesc}`);
+  }
+
+  sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth);
+}
+
+function lockTrigger() {
+  if (triggerLocked) return
+
+  triggerLocked = true;
+  log('Trigger event lock on');
+
+  requestAnimationFrame(() => {
+    triggerLocked = false;
+    log('Trigger event lock off');
+    log('--');
+  });
+}
+
+function triggerReset(triggerEvent) {
+  height = getHeight[heightCalcMode]();
+  width = getWidth[widthCalcMode]();
+
+  sendMsg(height, width, triggerEvent);
+}
+
+function resetIFrame(triggerEventDesc) {
+  const hcm = heightCalcMode;
+  heightCalcMode = heightCalcModeDefault;
+
+  log(`Reset trigger event: ${triggerEventDesc}`);
+  lockTrigger();
+  triggerReset('reset');
+
+  heightCalcMode = hcm;
+}
+
+function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
+  function setTargetOrigin() {
+    if (undefined === targetOrigin) {
+      targetOrigin = targetOriginDefault;
+      return
+    }
+
+    log(`Message targetOrigin: ${targetOrigin}`);
+  }
+
+  function sendToParent() {
+    const size = `${height + offsetHeight}:${width + offsetWidth}`;
+    const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`;
+
+    log(
+      `Sending message to host page (${message}) via ${sameDomian ? 'sameDomain' : 'postMessage'}`,
+    );
+
+    if (sameDomian) {
+      window.parent.iFrameListener(msgID + message);
+      return
+    }
+
+    target.postMessage(msgID + message, targetOrigin);
+  }
+
+  {
+    setTargetOrigin();
+    sendToParent();
+  }
+}
+
+function receiver(event) {
+  const processRequestFromParent = {
+    init: function initFromParent() {
+      initMsg = event.data;
+      target = event.source;
+
+      init();
+      firstRun = false;
+      setTimeout(() => {
+        initLock = false;
+      }, eventCancelTimer);
+    },
+
+    reset() {
+      if (initLock) {
+        log('Page reset ignored by init');
+        return
+      }
+      log('Page size reset by host page');
+      triggerReset('resetPage');
+    },
+
+    resize() {
+      sendSize('resizeParent', 'Parent window requested size check');
+    },
+
+    moveToAnchor() {
+      inPageLinks.findTarget(getData());
+    },
+
+    inPageLink() {
+      this.moveToAnchor();
+    }, // Backward compatibility
+
+    pageInfo() {
+      const msgBody = getData();
+      log(`PageInfo received from parent: ${msgBody}`);
+      if (onPageInfo) {
+        onPageInfo(JSON.parse(msgBody));
+      } else {
+        // not expected, so cancel more messages
+        sendMsg(0, 0, 'pageInfoStop');
+      }
+      log(' --');
+    },
+
+    parentInfo() {
+      const msgBody = getData();
+      log(`ParentInfo received from parent: ${msgBody}`);
+      if (onParentInfo) {
+        onParentInfo(Object.freeze(JSON.parse(msgBody)));
+      } else {
+        // not expected, so cancel more messages
+        sendMsg(0, 0, 'parentInfoStop');
+      }
+      log(' --');
+    },
+
+    message() {
+      const msgBody = getData();
+      log(`onMessage called from parent: ${msgBody}`);
+      // eslint-disable-next-line sonarjs/no-extra-arguments
+      onMessage(JSON.parse(msgBody));
+      log(' --');
+    },
+  };
+
+  const isMessageForUs = () => msgID === `${event.data}`.slice(0, msgIdLen);
+
+  const getMessageType = () => event.data.split(']')[1].split(':')[0];
+
+  const getData = () => event.data.slice(event.data.indexOf(':') + 1);
+
+  const isMiddleTier = () =>
+    'iFrameResize' in window ||
+    (window.jQuery !== undefined && 'iFrameResize' in window.jQuery.prototype);
+
+  // Test if this message is from a child below us. This is an ugly test, however, updating
+  // the message format would break backwards compatibility.
+  const isInitMsg = () => event.data.split(':')[2] in { true: 1, false: 1 };
+
+  function callFromParent() {
+    const messageType = getMessageType();
+
+    if (messageType in processRequestFromParent) {
+      processRequestFromParent[messageType]();
+      return
+    }
+
+    if (!isMiddleTier() && !isInitMsg()) {
+      warn(`Unexpected message (${event.data})`);
+    }
+  }
+
+  function processMessage() {
+    if (firstRun === false) {
+      callFromParent();
+      return
+    }
+
+    if (isInitMsg()) {
+      processRequestFromParent.init();
+      return
+    }
+
+    log(
+      `Ignored message of type "${getMessageType()}". Received before initialization.`,
+    );
+  }
+
+  if (isMessageForUs()) {
+    processMessage();
+  }
+}
+
+// Normally the parent kicks things off when it detects the iFrame has loaded.
+// If this script is async-loaded, then tell parent page to retry init.
+function chkLateLoaded() {
+  if (document.readyState !== 'loading') {
+    window.parent.postMessage('[iFrameResizerChild]Ready', '*');
+  }
+}
+
+// Don't run for server side render
+if (typeof window !== 'undefined') {
+  window.iFrameListener = (data) => receiver({ data, sameDomian: true });
+  addEventListener(window, 'message', receiver);
+  addEventListener(window, 'readystatechange', chkLateLoaded);
+  chkLateLoaded();
+}
+
+// TEST CODE START //
+function mockMsgListener(msgObject) {
+  receiver(msgObject);
+  return win
+}
+
+try {
+  // eslint-disable-next-line no-restricted-globals
+  if (top?.document?.getElementById('banner')) {
+    win = {};
+
+    // Create test hooks
+    window.mockMsgListener = mockMsgListener;
+
+    removeEventListener(window, 'message', receiver);
+
+    define([], () => mockMsgListener);
+  }
+} catch (error) {
+  // do nothing
+}
+
+// TEST CODE END //

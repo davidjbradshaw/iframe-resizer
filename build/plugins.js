@@ -13,8 +13,13 @@ const vi = {
   injectInComments: false,
   logLevel: 'warn',
 }
-  
-export const pluginsBase = (file) => [
+
+export const injectVersion = () => [versionInjector(vi)]
+
+export const pluginsBase = (stripLog) => (file) => {
+  const delog = [strip({ functions: ['log'] })]
+
+  const base = [
     versionInjector(vi),
     terser({
       output: {
@@ -23,6 +28,9 @@ export const pluginsBase = (file) => [
       }
     }),
   ]
+
+  return stripLog ? delog.concat(base) : base
+}
 
 export const pluginsProd = (file) => {
   const path = 'dist/' + file
@@ -38,10 +46,10 @@ export const pluginsProd = (file) => {
         { src: 'LICENSE', dest: path},
       ]
     }),
-    strip({ functions: ['log'] }),
     stripCode({
       start_comment: '// TEST CODE START //',
       end_comment: '// TEST CODE END //',
     }),
-  ].concat(pluginsBase(file))
+    ...pluginsBase(true)(file),
+  ]
 }
