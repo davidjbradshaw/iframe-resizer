@@ -19,7 +19,7 @@
     "eslint": "eslint *.js src/* build/pkg.js --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "eslint src/* --format @microsoft/sarif --output-file eslint-results.sarif",
-    "rollup:debug": "npm run eslint:fix && rollup -c --environment DEBUG",
+    "rollup:debug": "rollup -c --environment DEBUG",
     "rollup:test": "npm run eslint:fix && rollup -c --environment TEST",
     "rollup:prod": "npm run eslint:fix && rollup -c",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
