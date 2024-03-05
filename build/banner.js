@@ -32,6 +32,6 @@ const createBanner =  (file) => `/**
 export default {
     parent: createBanner('parent'),
     child: createBanner('child'),
-    jQuery: createBanner('jQuery'),
+    jquery: createBanner('jQuery'),
 }
 
