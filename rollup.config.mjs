@@ -58,11 +58,11 @@ const npm = [
 // JS folder
 const js = [ 
   {
-    input: 'src/parent/umd.js',
+    input: `src/parent/${TEST ? 'umd' : 'iife' }.js`,
     output: [{
       name: 'iframeResize',
       file: 'js/iframe-resizer.parent.js',
-      format: 'umd',
+      format: TEST ? 'umd' : 'iife' ,
       banner: BANNER.parent,
       sourcemap,
     }],
@@ -77,7 +77,7 @@ const js = [
     input: 'src/child/main.js',
     output: [{ 
       file: 'js/iframe-resizer.child.js',
-      format: TEST ? undefined : 'umd',
+      format: TEST ? 'iife': 'umd',
       banner: BANNER.child,
       sourcemap,
     }],
@@ -91,7 +91,7 @@ const js = [
     input: 'src/jquery/plugin.js',
     output: [{
       file: 'js/iframe-resizer.parent.jquery.js',
-      format: 'umd',
+      format: 'iife',
       banner: BANNER.jquery,
       sourcemap,
     }],
