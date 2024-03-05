@@ -1,4 +1,4 @@
-import { advise } from '../common/log'
+import { advise } from '../../common/log'
 import settings from './settings'
 
 const onReadyDeprecated = (messageData) => {
