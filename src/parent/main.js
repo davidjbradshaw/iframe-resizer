@@ -855,11 +855,11 @@ export function setupIFrame(iframe, options) {
   }
 
   function ensureHasId(iframeId) {
-    if (typeof iframeId !== 'string') {
+    if (iframeId && typeof iframeId !== 'string') {
       throw new TypeError('Invaild id for iFrame. Expected String')
     }
 
-    if (iframeId === '') {
+    if (iframeId === '' || !iframeId) {
       // eslint-disable-next-line no-multi-assign
       iframe.id = iframeId = newId()
       setLogEnabled((options || {}).log)

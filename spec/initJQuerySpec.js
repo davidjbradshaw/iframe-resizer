@@ -2,7 +2,7 @@
 
 'use strict'
 
-define(['iframeResizer', 'jquery'], function(iFrameResize, $) {
+define(['iframeResizerJquery', 'jquery'], function(iFrameResize, $) {
   xdescribe('iFrame init(jQuery)', function() {
     var iframe
 

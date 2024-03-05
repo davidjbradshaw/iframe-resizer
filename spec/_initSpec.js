@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iFrameResize) {
   xdescribe('iFrame init', function() {
     var iframe
     var id = 'initTest'

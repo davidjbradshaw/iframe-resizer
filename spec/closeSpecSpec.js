@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iFrameResize) {
   describe('Close iFrame', function() {
     var iframe
 

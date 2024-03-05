@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iFrameResize) {
   describe('Get Page info', function() {
     var log = LOG
     var testId = 'anchor'

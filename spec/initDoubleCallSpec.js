@@ -2,7 +2,7 @@
 
 'use strict'
 
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iFrameResize) {
   describe('iFrame init(Double)', function() {
     var iframe
 
