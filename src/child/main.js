@@ -164,7 +164,7 @@ function init() {
 
 function checkCrossDomain() {
   try {
-    sameDomian = 'iFrameListener' in window.parent
+    sameDomian = 'iframeParentListener' in window.parent
   } catch (error) {
     log('Cross domain iframe detected.')
   }
@@ -1075,7 +1075,7 @@ function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
     )
 
     if (sameDomian) {
-      window.parent.iFrameListener(msgID + message)
+      window.parent.iframeParentListener(msgID + message)
       return
     }
 
@@ -1193,7 +1193,7 @@ function receiver(event) {
       return
     }
 
-    log(
+    warn(
       `Ignored message of type "${getMessageType()}". Received before initialization.`,
     )
   }
@@ -1213,7 +1213,7 @@ function chkLateLoaded() {
 
 // Don't run for server side render
 if (typeof window !== 'undefined') {
-  window.iFrameListener = (data) => receiver({ data, sameDomian: true })
+  window.iframeChildListener = (data) => receiver({ data, sameDomian: true })
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
   chkLateLoaded()
