@@ -1,4 +1,4 @@
-define(['iframeResizer'], function (iFrameResize) {
+define(['iframeResizerParent'], function (iFrameResize) {
   describe('Parent Page', function () {
     xdescribe('default resize', function () {
       var iframe

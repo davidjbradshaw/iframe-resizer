@@ -33,19 +33,19 @@
       >.
     </div>
 
-    <script type="text/javascript" src="../src/iframeResizer.js"></script>
+    <script type="text/javascript" src="../js/iframe-resizer.parent.js"></script>
     <script type="text/javascript">
       /*
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iFrameResize();
+       *   iframeResize();
        *
        */
 
       const callbackDisplay = document.querySelector('p#callback')
 
-      iFrameResize({
+      iframeResize({
         enableInPageLinks: true,
         onResized: function(messageData) {
           // Callback fn when resize is received

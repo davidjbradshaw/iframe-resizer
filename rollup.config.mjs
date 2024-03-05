@@ -58,11 +58,11 @@ const npm = [
 // JS folder
 const js = [ 
   {
-    input: `src/parent/${TEST ? 'umd' : 'iife' }.js`,
+    input: `src/parent/iife.js`,
     output: [{
       name: 'iframeResize',
       file: 'js/iframe-resizer.parent.js',
-      format: TEST ? 'umd' : 'iife' ,
+      format: 'iife' ,
       banner: BANNER.parent,
       sourcemap,
     }],
@@ -102,4 +102,4 @@ const js = [
   }, 
 ]
 
-export default debugMode || TEST ? js : npm.concat(js)
+export default debugMode ? js : npm.concat(js)

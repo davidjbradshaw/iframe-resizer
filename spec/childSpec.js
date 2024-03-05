@@ -1,4 +1,4 @@
-define(['iframeResizerContent', 'jquery'], function(mockMsgListener, $) {
+define(['iframeResizerChild', 'jquery'], function(mockMsgListener, $) {
   function createMsg(msg) {
     return {
       data: '[iFrameSizer]' + msg,
