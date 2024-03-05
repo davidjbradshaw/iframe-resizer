@@ -14,7 +14,7 @@ const sourcemap = debugMode
 const logging = debugMode || TEST
 
 const pluginsJs = TEST 
-    ? injectVersion()
+    ? injectVersion
     : pluginsBase(!logging)
 
 console.log('\nBuilding iframe-resizer version', pkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
