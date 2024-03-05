@@ -194,7 +194,7 @@
 
   function checkCrossDomain() {
     try {
-      sameDomian = 'iFrameListener' in window.parent;
+      sameDomian = 'iframeParentListener' in window.parent;
     } catch (error) {
       log('Cross domain iframe detected.');
     }
@@ -1105,7 +1105,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       );
 
       if (sameDomian) {
-        window.parent.iFrameListener(msgID + message);
+        window.parent.iframeParentListener(msgID + message);
         return
       }
 
@@ -1243,7 +1243,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
   // Don't run for server side render
   if (typeof window !== 'undefined') {
-    window.iFrameListener = (data) => receiver({ data, sameDomian: true });
+    window.iframeChildListener = (data) => receiver({ data, sameDomian: true });
     addEventListener(window, 'message', receiver);
     addEventListener(window, 'readystatechange', chkLateLoaded);
     chkLateLoaded();

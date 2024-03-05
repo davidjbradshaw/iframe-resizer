@@ -20,7 +20,7 @@ import settings from './values/settings'
 
 setLogSettings(settings)
 
-function iFrameListener(event) {
+function iframeListener(event) {
   function resizeIFrame() {
     ensureInRange('Height')
     ensureInRange('Width')
@@ -465,7 +465,7 @@ function iFrameListener(event) {
   function checkSameDomain(id) {
     try {
       settings[id].sameDomain =
-        !!settings[id]?.iframe?.contentWindow?.iFrameListener
+        !!settings[id]?.iframe?.contentWindow?.iframeChildListener
     } catch (error) {
       settings[id].sameDomain = false
     }
@@ -718,14 +718,14 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
 
     if (settings[id].sameDomain) {
       try {
-        settings[id].iframe.contentWindow.iFrameListener(msgId + msg)
+        settings[id].iframe.contentWindow.iframeChildListener(msgId + msg)
         log(
           id,
           `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
         )
         return
       } catch (error) {
-        warn(id, `Same domain connection failed. Trying cross domain`)
+        info(id, `Same domain connection failed. Trying cross domain`)
         settings[id].sameDomain = false
       }
     }
@@ -1077,7 +1077,8 @@ function tabVisible() {
 }
 
 export function setupEventListeners() {
-  addEventListener(window, 'message', iFrameListener)
+  addEventListener(window, 'message', iframeListener)
   addEventListener(document, 'visibilitychange', tabVisible)
-  window.iFrameListener = (data) => iFrameListener({ data, sameDomain: true })
+  window.iframeParentListener = (data) =>
+    iframeListener({ data, sameDomain: true })
 }
