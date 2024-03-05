@@ -7,7 +7,7 @@ import terser from '@rollup/plugin-terser'
 import versionInjector from 'rollup-plugin-version-injector';
 
 import BANNER from './banner.js'
-import createPkgJson from './pkg.js'
+import createPkgJson from './pkgJson.js'
 
 const vi = {
   injectInComments: false,
