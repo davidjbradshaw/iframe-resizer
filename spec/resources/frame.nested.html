@@ -28,7 +28,7 @@
 	<script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
 	<script type="text/javascript">
 
-		iFrameResize({
+		iframeResize({
 			log: true,                  // Enable console logging
 			onResized: function (messageData) { // Callback fn when message is received
 				setTimeout(function () { parentIFrame.sendMessage('nested') }, 50);

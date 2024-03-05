@@ -2,14 +2,14 @@
 
 'use strict'
 
-define(['iframeResizerJquery', 'jquery'], function(iFrameResize, $) {
+define(['iframeResizerJquery', 'jquery'], function(iframeResize, $) {
   xdescribe('iFrame init(jQuery)', function() {
     var iframe
 
     beforeAll(function() {
       loadIFrame('iframe600.html')
 
-      var $iframes = $('iframe').iFrameResize()
+      var $iframes = $('iframe').iframeResize()
 
       iframe = $iframes.get(0)
     })
