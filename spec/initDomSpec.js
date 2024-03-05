@@ -2,14 +2,14 @@
 
 'use strict'
 
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('iFrame init(DOM Object)', function() {
     var iframe
 
     beforeAll(function() {
       loadIFrame('iframe600.html')
 
-      iframe = iFrameResize(
+      iframe = iframeResize(
         {
           log: LOG
         },

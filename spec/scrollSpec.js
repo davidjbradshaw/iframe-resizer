@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], iframeResize({function(iframeResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Scroll Page', function() {
     var iframe
     var log = LOG

@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Close iFrame', function() {
     var iframe
 
@@ -9,7 +9,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     it('closes from parent', function(done) {
       var evtCounter = 0
 
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: LOG,
         id: 'close1',
         onClosed: function() {
@@ -23,7 +23,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     it('closes from iframe', function(done) {
       var evtCounter = 0
 
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: LOG,
         id: 'close2',
         onClosed: function() {

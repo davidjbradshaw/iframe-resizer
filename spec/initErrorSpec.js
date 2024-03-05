@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Setup error', function() {
     var iframe
     var log = LOG
@@ -9,7 +9,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
 
     it('min > max', function() {
       expect(function() {
-        iFrameResize({
+        iframeResize({
           log: log,
           id: 'error1',
           maxHeight: 100,
@@ -22,7 +22,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
 
     it('Unexpected data type', function() {
       expect(function() {
-        iFrameResize(
+        iframeResize(
           {
             log: log,
             id: 'error2'
@@ -34,7 +34,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
 
     it('Expected <IFRAME> tag', function() {
       expect(function() {
-        iFrameResize(
+        iframeResize(
           {
             log: log,
             id: 'error3'
@@ -46,7 +46,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
 
     it('Object is not a valid DOM element', function() {
       expect(function() {
-        iFrameResize(
+        iframeResize(
           {
             log: log,
             id: 'error4'
@@ -58,7 +58,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
 
     it('Options is not an object', function() {
       expect(function() {
-        iFrameResize('ERROR')
+        iframeResize('ERROR')
       }).toThrow(new TypeError('Options is not an object'))
     })
   })

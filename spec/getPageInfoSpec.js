@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Get Page info', function() {
     var log = LOG
     var testId = 'anchor'
@@ -8,7 +8,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     })
 
     it('requested from iFrame', function(done) {
-      var iframe1 = iFrameResize({
+      var iframe1 = iframeResize({
         log: log,
         id: 'getPageInfo'
       })[0]
@@ -40,7 +40,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     })
 
     xit('must send pageInfo to second frame', function(done) {
-      var iframes = iFrameResize({
+      var iframes = iframeResize({
         log: log,
         id: '#frame1,#frame2',
         onReady: function(iframe) {

@@ -45,7 +45,7 @@ The `onInit()` method has been deprecated in favour of `onReady()`. This brings 
 
 ### Min/Max size values now taken from iframe computed CSS values
 
-These settings are now read from the computed style of the iframe tag. Setting them via the call to `iFrameResize()` will trigger a deprication warning.
+These settings are now read from the computed style of the iframe tag. Setting them via the call to `iframeResize()` will trigger a deprication warning.
 
 ### New `offsetHeight` and `offsetWidth` options
 
