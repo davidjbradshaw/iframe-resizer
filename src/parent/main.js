@@ -14,9 +14,9 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
-import defaults from './defaults'
-import page from './page'
-import settings from './settings'
+import defaults from './values/defaults'
+import page from './values/page'
+import settings from './values/settings'
 
 setLogSettings(settings)
 
