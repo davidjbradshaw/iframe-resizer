@@ -2,7 +2,7 @@
 
 'use strict'
 
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('iFrame init(Double)', function() {
     var iframe
 
@@ -21,8 +21,8 @@ define(['iframeResizerParent'], function(iFrameResize) {
           return 'getIdTest'
         }
       }
-      iframe = iFrameResize({ log: LOG }, '#doubleTest')[0]
-      iFrameResize({ log: LOG }, '#doubleTest')
+      iframe = iframeResize({ log: LOG }, '#doubleTest')[0]
+      iframeResize({ log: LOG }, '#doubleTest')
       expect(iframe.iFrameResizer).toBeDefined()
       expect(console.warn).toHaveBeenCalled()
       delete window.parentIFrame

@@ -38,7 +38,7 @@ This package can be installed via NPM (`npm install iframe-resizer --save`).
 The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/tree/master/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with via JavaScript:
 
 ```js
-const iframes = iFrameResize( [{options}], [css selector] || [iframe] );
+const iframes = ( [{options}], [css selector] || [iframe] );
 ```
 
 The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) needs placing in the page(s) contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependencies and won't do anything until it's activated by a message from the containing page</i>.
@@ -57,7 +57,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 <script src="/js/iframeResizer.min.js"></script>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
 <script>
-  iFrameResize({ log: true }, '#myIframe')
+  iframeResize({ log: true }, '#myIframe')
 </script>
 ```
 

@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('jump to anchor', function() {
     var iframe
     var log = LOG
@@ -13,7 +13,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     })
 
     it('requested from host page', function(done) {
-      var iframe1 = iFrameResize({
+      var iframe1 = iframeResize({
         log: log,
         id: 'anchor1'
       })[0]
@@ -31,7 +31,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     })
 
     it('mock incoming message', function(done) {
-      iframe2 = iFrameResize({
+      iframe2 = iframeResize({
         log: log,
         id: 'anchor2',
         onScroll: function(position) {
@@ -45,7 +45,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     })
 
     it('mock incoming message to parent', function(done) {
-      iframe3 = iFrameResize({
+      iframe3 = iframeResize({
         log: log,
         id: 'anchor3'
       })[0]

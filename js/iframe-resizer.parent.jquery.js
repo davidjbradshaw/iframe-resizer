@@ -1209,8 +1209,8 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
       warn('', 'Unable to bind to jQuery, it is not fully loaded.');
       break
 
-    case window.jQuery.fn.iFrameResize:
-      warn('', 'iFrameResize is already assigned to jQuery.fn.');
+    case window.jQuery.fn.iframeResize:
+      warn('', 'iframeResize is already assigned to jQuery.fn.');
       break
 
     default:

@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   xdescribe('iFrame init', function() {
     var iframe
     var id = 'initTest'
@@ -6,7 +6,7 @@ define(['iframeResizerParent'], function(iFrameResize) {
     beforeEach(function(done) {
       loadIFrame('iframe600.html')
 
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: LOG,
         id: id + '-',
         checkOrigin: false,

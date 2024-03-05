@@ -95,7 +95,7 @@ define(['iframeResizerParent'], function (iframeResize) {
       var setUp = (boxSizing, units) => {
         loadIFrame('iframe.html')
 
-        iframe = ({
+        iframe = iframeResize({
           log: log,
           id: testId
         })[0]

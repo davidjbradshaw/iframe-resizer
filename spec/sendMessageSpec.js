@@ -1,4 +1,4 @@
-define(['iframeResizerParent'], iframeResize({function(iframeResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Send Message from Host Page', function() {
     var iframe
     var log = LOG
