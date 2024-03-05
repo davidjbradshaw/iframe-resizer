@@ -1,10 +1,10 @@
+import strip from '@rollup/plugin-strip'
+import terser from '@rollup/plugin-terser'
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
-import strip from '@rollup/plugin-strip'
-import stripCode from "rollup-plugin-strip-code"
-import terser from '@rollup/plugin-terser'
-import versionInjector from 'rollup-plugin-version-injector';
+import stripCode from 'rollup-plugin-strip-code'
+import versionInjector from 'rollup-plugin-version-injector'
 
 import BANNER from './banner.js'
 import createPkgJson from './pkgJson.js'
@@ -25,7 +25,7 @@ export const pluginsBase = (stripLog) => (file) => {
       output: {
         comments: false,
         preamble: BANNER[file],
-      }
+      },
     }),
   ]
 
@@ -33,18 +33,16 @@ export const pluginsBase = (stripLog) => (file) => {
 }
 
 export const pluginsProd = (file) => {
-  const path = 'dist/' + file
-  
+  const path = `dist/${file}`
+
   return [
-    clear({ targets: [path]}),
+    clear({ targets: [path] }),
     generatePackageJson({
       baseContents: createPkgJson(file),
       outputFolder: path,
     }),
     copy({
-      targets: [
-        { src: 'LICENSE', dest: path},
-      ]
+      targets: [{ src: 'LICENSE', dest: path }],
     }),
     stripCode({
       start_comment: '// TEST CODE START //',

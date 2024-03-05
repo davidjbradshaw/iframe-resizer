@@ -16,7 +16,7 @@
     "build:dev": "time npm run rollup:debug",
     "build:prod": "time npm run rollup:prod",
     "build:test": "time npm run test:all",
-    "eslint": "eslint *.js src/* build/pkg.js --color",
+    "eslint": "eslint *.js src/* --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "eslint src/* --format @microsoft/sarif --output-file eslint-results.sarif",
     "rollup:debug": "rollup -c --environment DEBUG",
