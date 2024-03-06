@@ -1,9 +1,6 @@
 import connectResizer from '@iframe-resizer/core'
 
-// import $ from 'jquery'
 import { warn } from '../common/log'
-
-// $.fn.foo = function () {}
 
 switch (true) {
   case window.jQuery === undefined:
