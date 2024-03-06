@@ -10,6 +10,8 @@ import versionInjector from 'rollup-plugin-version-injector'
 import BANNER from './banner.js'
 import createPkgJson from './pkgJson.js'
 
+import pkg from '../package.json' with { type: "json" }
+
 const vi = {
   injectInComments: false,
   logLevel: 'warn',
@@ -34,12 +36,16 @@ export const pluginsBase = (stripLog) => (file) => {
   return stripLog ? delog.concat(base) : base
 }
 
+const fixVersion = (file) => 
+  file in {core:1, child:1} ? {} : { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+
 export const pluginsProd = (file) => {
   const path = `dist/${file}`
 
   return [
     clear({ targets: [path] }),
     generatePackageJson({
+      ...fixVersion(file),
       baseContents: createPkgJson(file),
       outputFolder: path,
     }),
