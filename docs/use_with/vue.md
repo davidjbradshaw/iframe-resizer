@@ -4,14 +4,14 @@ Create the following Vue directive
 
 ```js
 import Vue from 'vue'
-import iframeResize from 'iframe-resizer/js/iframeResizer';
+import connectResizer from '@iframe-resizer/core'
 
-Vue.directive('resize', {
+Vue.directive('resizer', {
   bind: function(el, { value = {} }) {
-    el.addEventListener('load', () => iframeResize(value, el))
+    connectResizer(value)(el)
   },
   unbind: function (el) {
-    el.iFrameResizer.removeListeners();
+    el.iFrameResizer.removeListeners()
   }
 })
 ```
@@ -20,7 +20,7 @@ and then include it on your page as follows.
 
 ```html
 <iframe
-  v-resize="{ log: true }"
+  v-resizer
   width="100%"
   src="myiframe.html"
   frameborder="0"
@@ -35,7 +35,7 @@ Create the following Vue directive (EG `utils/directives/iframeResize.ts`)
 
 ```ts
 import { Directive, DirectiveBinding } from 'vue'
-import iframeResize from 'iframe-resizer/js/iframeResizer'
+import connectResizer from '@iframe-resizer/core'
 
 interface ResizableHTMLElement extends HTMLElement {
     iFrameResizer?: {
@@ -43,19 +43,18 @@ interface ResizableHTMLElement extends HTMLElement {
     }
 }
 
-const resize: Directive = {
-    mounted(el: HTMLElement, binding: DirectiveBinding) {
-        const options = binding.value || {}
+const resizer: Directive = {
+  mounted(el: HTMLElement, binding: DirectiveBinding) {
+    const options = binding.value || {}
+    el.addEventListener('load', () => iframeResize(options, el))
+  },
+  unmounted(el: HTMLElement) {
+    const resizableEl = el as ResizableHTMLElement
 
-        el.addEventListener('load', () => iframeResize(options, el))
-    },
-    unmounted(el: HTMLElement) {
-        const resizableEl = el as ResizableHTMLElement
-
-        if (resizableEl.iFrameResizer) {
-            resizableEl.iFrameResizer.removeListeners()
-        }
-    },
+    if (resizableEl.iFrameResizer) {
+      resizableEl.iFrameResizer.removeListeners()
+    }
+  },
 }
 
 export default resize
@@ -65,7 +64,7 @@ Register the directive
 ```ts
 const app = createApp(App)
 ...
-app.directive('resize', iframeResize)
+app.directive('resizer', connectResizer)
 ...
 app.mount('#app')
 
@@ -75,7 +74,7 @@ and then include it on your page as follows.
 
 ```html
 <iframe
-  v-resize="{ log: true }"
+  v-resizer
   width="100%"
   src="myiframe.html"
   frameborder="0"
