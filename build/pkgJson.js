@@ -7,6 +7,7 @@ export default (file) =>
     description,
     github,
     repository,
+    dependencies,
     funding,
     keywords,
   }) => ({
@@ -20,8 +21,8 @@ export default (file) =>
     github,
     repository,
     funding,
-    keywords: [...keywords, file],
     main: `iframe-resizer.${file}.cjs`,
     module: `iframe-resizer.${file}.mjs`,
     browser: `iframe-resizer.${file}.js`,
+    keywords: [...keywords, file],
   })

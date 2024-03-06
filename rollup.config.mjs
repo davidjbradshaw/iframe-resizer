@@ -36,19 +36,6 @@ const npm = [
     plugins: pluginsProd('core'),
   }, 
 
-  // browser-friendly UMD build
-  {
-    input: 'src/parent/umd.js',
-    output: [{
-      name: 'iframeResize',
-      ...output('parent')('umd'),
-    }],
-    plugins:[
-      ...pluginsProd('parent'),
-      resolve(),
-    ]
-  }, 
-
   //  ES module (for bundlers) and CommonJS (for Node) build.
   {
     input: 'src/parent/esm.js',
@@ -60,21 +47,24 @@ const npm = [
     plugins: pluginsProd('parent'),
   },
   
+  // parent browser-friendly UMD build
+  {
+    input: 'src/parent/umd.js',
+    output: [{
+      name: 'iframeResize',
+      ...output('parent')('umd'),
+    }],
+    plugins:[
+      ...pluginsProd('parent'),
+      resolve(),
+    ]
+  }, 
+  
   // child
   {
     input: 'src/child/index.js',
     output: outputs('child'),
     plugins: pluginsProd('child'),
-  },
-
-  // jquery (umd)
-  {
-    input: 'src/jquery/plugin.js',
-    output: output('jquery')('umd'),
-    plugins: [
-      ...pluginsProd('jquery'),
-      resolve()
-    ],
   },
 
   //  jQuery (ES) 
@@ -86,6 +76,16 @@ const npm = [
     ],
     external: ['@iframe-resizer/core'],
     plugins: pluginsProd('parent'),
+  },
+
+  // jquery (umd)
+  {
+    input: 'src/jquery/plugin.js',
+    output: output('jquery')('umd'),
+    plugins: [
+      ...pluginsProd('jquery'),
+      resolve()
+    ],
   },
 
   // react

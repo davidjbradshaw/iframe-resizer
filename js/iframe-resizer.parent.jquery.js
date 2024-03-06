@@ -1176,8 +1176,6 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
 
   const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg);
 
-  // $.fn.foo = function () {}
-
   switch (true) {
     case window.jQuery === undefined:
       warn('', 'Unable to bind to jQuery, it is not available.');
