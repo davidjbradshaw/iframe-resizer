@@ -22,7 +22,7 @@ const pluginsJs = TEST
 console.log('\nBuilding iframe-resizer version', pkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
 
 const npm = [
-  // core
+  // Core
   {
     input: 'src/core/index.js',
     output: [
@@ -36,7 +36,7 @@ const npm = [
     plugins: pluginsProd('core'),
   }, 
 
-  //  ES module (for bundlers) and CommonJS (for Node) build.
+  //  Parent ES module (for bundlers) and CommonJS (for Node) build.
   {
     input: 'src/parent/esm.js',
     output: [
@@ -47,7 +47,7 @@ const npm = [
     plugins: pluginsProd('parent'),
   },
   
-  // parent browser-friendly UMD build
+  // Parent browser-friendly UMD build
   {
     input: 'src/parent/umd.js',
     output: [{
@@ -59,8 +59,8 @@ const npm = [
       resolve(),
     ]
   }, 
-  
-  // child
+
+  // Child
   {
     input: 'src/child/index.js',
     output: outputs('child'),
@@ -78,7 +78,7 @@ const npm = [
     plugins: pluginsProd('parent'),
   },
 
-  // jquery (umd)
+  // jQuery (umd)
   {
     input: 'src/jquery/plugin.js',
     output: output('jquery')('umd'),
@@ -88,7 +88,7 @@ const npm = [
     ],
   },
 
-  // react
+  // React
   {
     input: 'src/react/index.jsx',
     output: [
@@ -110,10 +110,10 @@ const js = [
   {
     input: `src/parent/iife.js`,
     output: [{
-      name: 'iframeResize',
+      banner: BANNER.parent,
       file: 'js/iframe-resizer.parent.js',
       format: 'iife' ,
-      banner: BANNER.parent,
+      name: 'iframeResize',
       sourcemap,
     }],
     plugins: [
@@ -127,9 +127,9 @@ const js = [
   {
     input: 'src/child/index.js',
     output: [{ 
+      banner: BANNER.child,
       file: 'js/iframe-resizer.child.js',
       format: TEST ? 'iife': 'umd',
-      banner: BANNER.child,
       sourcemap,
     }],
     plugins: [
