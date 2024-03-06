@@ -1271,7 +1271,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
           break
 
         default:
-          throw new TypeError(`Unexpected data type (${typeof target})`)
+          throw new TypeError(`${id}Unexpected data type (${typeof target})`)
       }
 
       return iFrames

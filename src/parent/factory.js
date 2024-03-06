@@ -42,7 +42,7 @@ export default function createIframeResize() {
         break
 
       default:
-        throw new TypeError(`Unexpected data type (${typeof target})`)
+        throw new TypeError(`${id}Unexpected data type (${typeof target})`)
     }
 
     return iFrames
