@@ -1,5 +1,6 @@
 import strip from '@rollup/plugin-strip'
 import terser from '@rollup/plugin-terser'
+import commonjs from '@rollup/plugin-commonjs';
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
@@ -21,6 +22,7 @@ export const pluginsBase = (stripLog) => (file) => {
 
   const base = [
     versionInjector(vi),
+    commonjs(), 
     terser({
       output: {
         comments: false,

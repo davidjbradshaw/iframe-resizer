@@ -1,4 +1,4 @@
-import connectResizer from '../core/index'
+import connectResizer from '@iframe-resizer/core'
 
 const id = '[iframeResizer] '
 

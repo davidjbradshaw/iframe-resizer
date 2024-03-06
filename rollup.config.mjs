@@ -1,5 +1,7 @@
+import { babel } from '@rollup/plugin-babel'
 import clear from 'rollup-plugin-clear'
 import filesize from 'rollup-plugin-filesize'
+import resolve from '@rollup/plugin-node-resolve';
 
 import BANNER from './build/banner.js'
 import { output, outputs } from './build/output.js'
@@ -14,46 +16,12 @@ const sourcemap = debugMode
 const logging = debugMode || TEST
 
 const pluginsJs = TEST 
-    ? injectVersion
-    : pluginsBase(!logging)
+  ? injectVersion
+  : pluginsBase(!logging)
 
 console.log('\nBuilding iframe-resizer version', pkg.version, debugMode ? 'DEVELOPMENT' : 'PRODUCTION', '\n')
 
 const npm = [
-  //  ES module (for bundlers) and CommonJS (for Node) build.
-  {
-    input: 'src/parent/esm.js',
-    output: [
-      output('parent')('es'), 
-      output('parent')('cjs')
-    ],
-    plugins: pluginsProd('parent'),
-  },
-
-  // browser-friendly UMD build
-  {
-    input: 'src/parent/umd.js',
-    output: [{
-      name: 'iframeResize',
-      ...output('parent')('umd')
-    }],
-    plugins: pluginsProd('parent'),
-  }, 
-  
-  // child
-  {
-    input: 'src/child/index.js',
-    output: outputs('child'),
-    plugins: pluginsProd('child'),
-  }, 
-
-  // jquery
-  {
-    input: 'src/jquery/plugin.js',
-    output: outputs('jquery'),
-    plugins: pluginsProd('jquery'),
-  }, 
-
   // core
   {
     input: 'src/core/index.js',
@@ -66,6 +34,74 @@ const npm = [
       output('core')('cjs')
     ],
     plugins: pluginsProd('core'),
+  }, 
+
+  // browser-friendly UMD build
+  {
+    input: 'src/parent/umd.js',
+    output: [{
+      name: 'iframeResize',
+      ...output('parent')('umd'),
+    }],
+    plugins:[
+      ...pluginsProd('parent'),
+      resolve(),
+    ]
+  }, 
+
+  //  ES module (for bundlers) and CommonJS (for Node) build.
+  {
+    input: 'src/parent/esm.js',
+    output: [
+      output('parent')('es'), 
+      output('parent')('cjs')
+    ],
+    external: ['@iframe-resizer/core'],
+    plugins: pluginsProd('parent'),
+  },
+  
+  // child
+  {
+    input: 'src/child/index.js',
+    output: outputs('child'),
+    plugins: pluginsProd('child'),
+  },
+
+  // jquery (umd)
+  {
+    input: 'src/jquery/plugin.js',
+    output: output('jquery')('umd'),
+    plugins: [
+      ...pluginsProd('jquery'),
+      resolve()
+    ],
+  },
+
+  //  jQuery (ES) 
+  {
+    input: 'src/jquery/plugin.js',
+    output: [
+      output('jquery')('es'), 
+      output('jquery')('cjs')
+    ],
+    external: ['@iframe-resizer/core'],
+    plugins: pluginsProd('parent'),
+  },
+
+  // react
+  {
+    input: 'src/react/index.jsx',
+    output: [
+      output('react')('es'), 
+      output('react')('cjs')
+    ],
+    external: ['@iframe-resizer/core', 'react', 'prop-types', 'warning'],
+    plugins: [
+      ...pluginsProd('react'),
+      babel({
+        exclude: 'node_modules/**',
+      }),
+    ]
   }, 
 ]
 
@@ -82,8 +118,9 @@ const js = [
     }],
     plugins: [
       clear({ targets: ['js']}),
-      ...pluginsJs('parent'),
       filesize(),
+      ...pluginsJs('parent'),,
+      resolve(),
     ],
   }, 
 
@@ -96,22 +133,23 @@ const js = [
       sourcemap,
     }],
     plugins: [
-      ...pluginsJs('child'),
       filesize(),
+      ...pluginsJs('child'),
     ],
   }, 
 
   {
     input: 'src/jquery/plugin.js',
     output: [{
+      banner: BANNER.jquery,
       file: 'js/iframe-resizer.parent.jquery.js',
       format: 'iife',
-      banner: BANNER.jquery,
       sourcemap,
     }],
     plugins: [
-      ...pluginsJs('jquery'),
       filesize(),
+      ...pluginsJs('jquery'),
+      resolve(),
     ],
   }, 
 ]
