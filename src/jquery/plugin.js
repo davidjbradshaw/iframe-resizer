@@ -1,9 +1,5 @@
 import { warn } from '../common/log'
-import { setupEventListeners, setupIFrame } from '../parent/main'
-
-let eventListenesEnabled = false
-
-const initJQuery = (options) => (element) => setupIFrame(element, options)
+import connectResizer from '../core/index'
 
 switch (true) {
   case window.jQuery === undefined:
@@ -20,12 +16,9 @@ switch (true) {
 
   default:
     window.jQuery.fn.iframeResize = function (options) {
-      if (!eventListenesEnabled) {
-        setupEventListeners()
-        eventListenesEnabled = true
-      }
+      const connectWithOptions = connectResizer(options)
 
-      return this.filter('iframe').each(initJQuery(options)).end()
+      return this.filter('iframe').each(connectWithOptions).end()
     }
 
     window.jQuery.fn.iFrameResize = function (options) {

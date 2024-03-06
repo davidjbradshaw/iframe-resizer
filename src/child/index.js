@@ -1193,7 +1193,7 @@ function receiver(event) {
       return
     }
 
-    warn(
+    log(
       `Ignored message of type "${getMessageType()}". Received before initialization.`,
     )
   }

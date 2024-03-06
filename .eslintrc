@@ -20,6 +20,7 @@
     "global-require": 0,
     "no-param-reassign": 0,
     "no-plusplus": 0,
+    "no-return-assign": [2, "except-parens"],
     "no-use-before-define": 0,
     "no-shadow": 0,
     "prefer-rest-params": 0,

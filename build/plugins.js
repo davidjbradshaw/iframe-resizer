@@ -21,12 +21,12 @@ export const pluginsBase = (stripLog) => (file) => {
 
   const base = [
     versionInjector(vi),
-    terser({
-      output: {
-        comments: false,
-        preamble: BANNER[file],
-      },
-    }),
+    // terser({
+    //   output: {
+    //     comments: false,
+    //     preamble: BANNER[file],
+    //   },
+    // }),
   ]
 
   return stripLog ? delog.concat(base) : base
