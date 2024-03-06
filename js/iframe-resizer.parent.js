@@ -1229,20 +1229,23 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
       iframeListener({ data, sameDomain: true });
   });
 
+  const id = '[iframeResizer] ';
+
   function createIframeResize() {
     function setup(element) {
       switch (true) {
         case !element:
-          throw new TypeError('No element is undefined')
+          throw new TypeError(`${id}iframe is not defined`)
 
         case !element.tagName:
-          throw new TypeError('Object is not a valid DOM element')
+          throw new TypeError(`${id}Not a valid DOM element`)
 
         case element.tagName.toUpperCase() !== 'IFRAME':
-          throw new TypeError(`Expected <IFRAME> tag, found <${element.tagName}>`)
+          throw new TypeError(
+            `${id}Expected <IFRAME> tag, found <${element.tagName}>`,
+          )
 
         default:
-          console.warn('', 'iFrameResizer setup for element', element);
           connectWithOptions(element);
           iFrames.push(element);
       }

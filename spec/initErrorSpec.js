@@ -41,10 +41,10 @@ define(['iframeResizerParent'], function(iframeResize) {
           },
           'div'
         )
-      }).toThrow(new TypeError('Expected <IFRAME> tag, found <DIV>'))
+      }).toThrow(new TypeError('[iframeResizer] Expected <IFRAME> tag, found <DIV>'))
     })
 
-    it('Object is not a valid DOM element', function() {
+    it('Not a valid DOM element', function() {
       expect(function() {
         iframeResize(
           {
@@ -53,7 +53,7 @@ define(['iframeResizerParent'], function(iframeResize) {
           },
           {}
         )
-      }).toThrow(new TypeError('Object is not a valid DOM element'))
+      }).toThrow(new TypeError('[iframeResizer] Not a valid DOM element'))
     })
 
     it('Options is not an object', function() {

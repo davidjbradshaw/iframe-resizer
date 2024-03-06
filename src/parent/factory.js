@@ -1,18 +1,20 @@
 import connectResizer from '../core/index'
 
-const id = '[iframeResize]'
+const id = '[iframeResizer] '
 
 export default function createIframeResize() {
   function setup(element) {
     switch (true) {
       case !element:
-        throw new TypeError(id + 'iframe is not defined')
+        throw new TypeError(`${id}iframe is not defined`)
 
       case !element.tagName:
-        throw new TypeError(id + 'Not a valid DOM element')
+        throw new TypeError(`${id}Not a valid DOM element`)
 
       case element.tagName.toUpperCase() !== 'IFRAME':
-        throw new TypeError(id + `Expected <IFRAME> tag, found <${element.tagName}>`)
+        throw new TypeError(
+          `${id}Expected <IFRAME> tag, found <${element.tagName}>`,
+        )
 
       default:
         connectWithOptions(element)
