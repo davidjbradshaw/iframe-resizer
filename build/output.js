@@ -1,7 +1,5 @@
 import BANNER from './banner.js'
 
-
-
 const ext = (format) =>
   format === 'es' ? 'mjs' : format === 'umd' ? 'js' : format
 
