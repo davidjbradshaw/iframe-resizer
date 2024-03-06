@@ -14,6 +14,7 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
+import { isNumber, once } from '../common/utils'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -807,9 +808,8 @@ function createOutgoingMsg(iframeId) {
 }
 
 let count = 0
-const isNumber = (value) => !Number.isNaN(value)
 
-export function setupIFrame(iframe, options) {
+export default (options) => (iframe) => {
   function setLimits() {
     function addStyle(style) {
       const styleValue = settings[iframeId][style]
@@ -1048,6 +1048,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
   } else {
     log('Version', VERSION)
     processOptions(options)
+    setupEventListenersOnce()
     setScrolling()
     setLimits()
     setupBodyMarginValues()
@@ -1076,9 +1077,9 @@ function tabVisible() {
   }
 }
 
-export function setupEventListeners() {
+const setupEventListenersOnce = once(() => {
   addEventListener(window, 'message', iframeListener)
   addEventListener(document, 'visibilitychange', tabVisible)
   window.iframeParentListener = (data) =>
     iframeListener({ data, sameDomain: true })
-}
+})

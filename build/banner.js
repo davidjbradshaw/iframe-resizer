@@ -33,5 +33,6 @@ export default {
     parent: createBanner('parent'),
     child: createBanner('child'),
     jquery: createBanner('jQuery'),
+    core: createBanner('core'),
 }
 

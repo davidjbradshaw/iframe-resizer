@@ -42,7 +42,7 @@ const npm = [
   
   // child
   {
-    input: 'src/child/main.js',
+    input: 'src/child/index.js',
     output: outputs('child'),
     plugins: pluginsProd('child'),
   }, 
@@ -52,6 +52,20 @@ const npm = [
     input: 'src/jquery/plugin.js',
     output: outputs('jquery'),
     plugins: pluginsProd('jquery'),
+  }, 
+
+  // core
+  {
+    input: 'src/core/index.js',
+    output: [
+      {
+        name: 'createResizer',
+        ...output('core')('umd')
+      },
+      output('core')('es'), 
+      output('core')('cjs')
+    ],
+    plugins: pluginsProd('core'),
   }, 
 ]
 
@@ -74,7 +88,7 @@ const js = [
   }, 
 
   {
-    input: 'src/child/main.js',
+    input: 'src/child/index.js',
     output: [{ 
       file: 'js/iframe-resizer.child.js',
       format: TEST ? 'iife': 'umd',

@@ -1,14 +1,3 @@
-const main = (file) =>
-  file === 'parent'
-    ? {
-        main: 'iframe-resizer.parent.cjs',
-        module: 'iframe-resizer.parent.mjs',
-        browser: 'iframe-resizer.parent.js',
-      }
-    : {
-        main: `iframe-resizer.${file}.js`,
-      }
-
 export default (file) =>
   ({
     version,
@@ -32,5 +21,7 @@ export default (file) =>
     repository,
     funding,
     keywords: [...keywords, file],
-    ...main(file),
+    main: 'iframe-resizer.${file}.cjs',
+    module: 'iframe-resizer.${file}.mjs',
+    browser: 'iframe-resizer.${file}.js',
   })

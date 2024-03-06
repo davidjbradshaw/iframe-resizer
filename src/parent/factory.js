@@ -1,47 +1,42 @@
-import { setupEventListeners, setupIFrame } from './main'
+import connectResizer from '../core/index'
 
-let setupComplete = false
+const id = '[iframeResize]'
 
 export default function createIframeResize() {
-  function setup(options, element) {
-    function chkType() {
-      if (!element.tagName) {
-        throw new TypeError('Object is not a valid DOM element')
-      } else if (element.tagName.toUpperCase() !== 'IFRAME') {
-        throw new TypeError(`Expected <IFRAME> tag, found <${element.tagName}>`)
-      }
-    }
+  function setup(element) {
+    switch (true) {
+      case !element:
+        throw new TypeError(id + 'iframe is not defined')
 
-    if (element) {
-      chkType()
-      setupIFrame(element, options)
-      iFrames.push(element)
+      case !element.tagName:
+        throw new TypeError(id + 'Not a valid DOM element')
+
+      case element.tagName.toUpperCase() !== 'IFRAME':
+        throw new TypeError(id + `Expected <IFRAME> tag, found <${element.tagName}>`)
+
+      default:
+        connectWithOptions(element)
+        iFrames.push(element)
     }
   }
 
+  let connectWithOptions
   let iFrames
-
-  if (!setupComplete) {
-    setupEventListeners()
-    setupComplete = true
-  }
 
   return function (options, target) {
     if (typeof window === 'undefined') return [] // don't run for server side render
 
+    connectWithOptions = connectResizer(options)
     iFrames = [] // Only return iFrames past in on this call
 
     switch (typeof target) {
       case 'undefined':
       case 'string':
-        Array.prototype.forEach.call(
-          document.querySelectorAll(target || 'iframe'),
-          setup.bind(undefined, options),
-        )
+        ;[...document.querySelectorAll(target || 'iframe')].forEach(setup)
         break
 
       case 'object':
-        setup(options, target)
+        setup(target)
         break
 
       default:
