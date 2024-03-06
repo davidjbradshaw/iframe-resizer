@@ -1,10 +1,12 @@
-// import BANNER from './banner.js'
+import BANNER from './banner.js'
+
+
 
 const ext = (format) =>
   format === 'es' ? 'mjs' : format === 'umd' ? 'js' : format
 
 export const output = (file) => (format) => ({
-  // banner: BANNER[file],
+  banner: BANNER[file],
   file: `dist/${file}/iframe-resizer.${file}.${ext(format)}`,
   format,
   sourcemap: false,

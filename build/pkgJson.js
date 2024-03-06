@@ -21,7 +21,7 @@ export default (file) =>
     repository,
     funding,
     keywords: [...keywords, file],
-    main: 'iframe-resizer.${file}.cjs',
-    module: 'iframe-resizer.${file}.mjs',
-    browser: 'iframe-resizer.${file}.js',
+    main: `iframe-resizer.${file}.cjs`,
+    module: `iframe-resizer.${file}.mjs`,
+    browser: `iframe-resizer.${file}.js`,
   })

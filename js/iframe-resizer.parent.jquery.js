@@ -21,65 +21,32 @@
 (function () {
   'use strict';
 
-  const msgId$1 = '[iframeResizer]';
+  /**
+   *  iframe-resizer (core) v5.0.0-alpha.1 - 2024-03-06
+   *
+   *  License:    GPL-3.0
+   *  Copyright:  (c) 2013 - 2024, David J. Bradshaw. All rights reserved.
+   * 
+   *  Desciption: Keep same and cross domain iFrames sized to their content with
+   *              support for window/content resizing, and multiple iFrames.
+   *
+   *  @preserve
+   *  @module @iframe-resizer/core
+   *  @version 5.0.0-alpha.1
+   *  @license GPL-3.0
+   *  @author David J. Bradshaw <dave@bradshaw.net>
+   *  @fileoverview Core window script for iframe-resizer.
+   *  @copyright (c) 2013 - 2024, David J. Bradshaw. All rights reserved.
+   *  @see {@link https://github.com/davidjbradshaw/iframe-resizer}
+   */
 
-  let settings$1 = {};
-  let logEnabled = false;
-
-  function setLogEnabled(enabled) {
-    logEnabled = enabled;
-  }
-
-  function setLogSettings(newSettings) {
-    settings$1 = newSettings;
-  }
-
-  const isLogEnabled = (iframeId) =>
-    settings$1[iframeId] ? settings$1[iframeId].log : logEnabled;
-
-  function getMyID(iframeId) {
-    if (window.top === window.self) {
-      return `Host page: ${iframeId}`
-    }
-
-    return window?.parentIFrame?.getId
-      ? `${window.parentIFrame.getId()}: ${iframeId}`
-      : `Nested host page: ${iframeId}`
-  }
-
-  const formatLogHeader = (iframeId) => `${msgId$1}[${getMyID(iframeId)}]`;
-
-  const formatLogMsg = (iframeId, ...msg) =>
-    [`${msgId$1}[${iframeId}]`, ...msg].join(' ');
-
-  const output = (type, iframeId, ...msg) =>
-    // eslint-disable-next-line no-console
-    window?.console[type](formatLogHeader(iframeId), ...msg);
-
-  const log = (iframeId, ...msg) =>
-    isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null;
-
-  const info = (iframeId, ...msg) => output('info', iframeId, ...msg);
-
-  const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg);
-
-  const advise = (iframeId, msg) =>
-    // eslint-disable-next-line no-console
-    window?.console.warn(
-      formatLogMsg(
-        iframeId,
-        window.chrome // Only show formatting in Chrome as not supported in other browsers
-          ? msg
-          : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
-      ),
-    );
 
   const VERSION = '5.0.0-alpha.1';
 
   const msgHeader = 'message';
   const msgHeaderLen = msgHeader.length;
-  const msgId = '[iFrameSizer]'; // Must match iframe msg ID
-  const msgIdLen = msgId.length;
+  const msgId$1 = '[iFrameSizer]'; // Must match iframe msg ID
+  const msgIdLen = msgId$1.length;
   const resetRequiredMethods = Object.freeze({
     max: 1,
     scroll: 1,
@@ -92,6 +59,45 @@
 
   const removeEventListener = (el, evt, func) =>
     el.removeEventListener(evt, func, false);
+
+  const msgId$2 = '[iframeResizer]';
+
+  function setLogEnabled(enabled) {
+  }
+
+  function getMyID$1(iframeId) {
+    if (window.top === window.self) {
+      return `Host page: ${iframeId}`
+    }
+
+    return window?.parentIFrame?.getId
+      ? `${window.parentIFrame.getId()}: ${iframeId}`
+      : `Nested host page: ${iframeId}`
+  }
+
+  const formatLogHeader$1 = (iframeId) => `${msgId$2}[${getMyID$1(iframeId)}]`;
+
+  const formatLogMsg = (iframeId, ...msg) =>
+    [`${msgId$2}[${iframeId}]`, ...msg].join(' ');
+
+  const output$1 = (type, iframeId, ...msg) =>
+    // eslint-disable-next-line no-console
+    window?.console[type](formatLogHeader$1(iframeId), ...msg);
+
+  const info = (iframeId, ...msg) => output$1('info', iframeId, ...msg);
+
+  const warn$1 = (iframeId, ...msg) => output$1('warn', iframeId, ...msg);
+
+  const advise = (iframeId, msg) =>
+    // eslint-disable-next-line no-console
+    window?.console.warn(
+      formatLogMsg(
+        iframeId,
+        window.chrome // Only show formatting in Chrome as not supported in other browsers
+          ? msg
+          : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
+      ),
+    );
 
   const isNumber = (value) => !Number.isNaN(value);
 
@@ -164,15 +170,13 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     version: VERSION,
   };
 
-  setLogSettings(settings);
-
   function iframeListener(event) {
     function resizeIFrame() {
       ensureInRange('Height');
       ensureInRange('Width');
 
       setSize(messageData);
-      setPagePosition(iframeId);
+      setPagePosition();
 
       on('onResized', messageData);
     }
@@ -227,16 +231,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       let size = Number(messageData[dimension]);
 
-      log(iframeId, `Checking ${dimension} is in range ${min}-${max}`);
-
       if (size < min) {
         size = min;
-        log(iframeId, `Set ${dimension} to min value`);
       }
 
       if (size > max) {
         size = max;
-        log(iframeId, `Set ${dimension} to max value`);
       }
 
       messageData[dimension] = `${size}`;
@@ -247,11 +247,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         function checkList() {
           let i = 0;
           let retCode = false;
-
-          log(
-            iframeId,
-            `Checking connection is from allowed list of origins: ${checkOrigin}`,
-          );
 
           for (; i < checkOrigin.length; i++) {
             if (checkOrigin[i] === origin) {
@@ -265,7 +260,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
         function checkSingle() {
           const remoteHost = settings[iframeId]?.remoteHost;
-          log(iframeId, `Checking connection is from: ${remoteHost}`);
           return origin === remoteHost
         }
 
@@ -291,7 +285,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
     function isMessageForUs() {
       return (
-        msgId === `${msg}`.slice(0, msgIdLen) &&
+        msgId$1 === `${msg}`.slice(0, msgIdLen) &&
         msg.slice(msgIdLen).split(':')[0] in settings
       ) // ''+Protects against non-string msg
     }
@@ -301,10 +295,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       // the message format would break backwards compatibility.
       const retCode = messageData.type in { true: 1, false: 1, undefined: 1 };
 
-      if (retCode) {
-        log(iframeId, 'Ignoring init message from meta parent page');
-      }
-
       return retCode
     }
 
@@ -313,17 +303,11 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     }
 
     function forwardMsgFromIFrame(msgBody) {
-      log(
-        iframeId,
-        `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`,
-      );
 
       on('onMessage', {
         iframe: messageData.iframe,
         message: JSON.parse(msgBody),
       });
-
-      log(iframeId, '--');
     }
 
     function getPageInfo() {
@@ -405,7 +389,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       };
 
       function setListener(requestType, listenr) {
-        log(id, `${requestType} listeners for send${type}`);
         listenr(window, 'scroll', sendInfo('scroll'));
         listenr(window, 'resize', sendInfo('resize window'));
       }
@@ -461,7 +444,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       let retBool = true;
 
       if (messageData.iframe === null) {
-        warn(iframeId, `The iframe (${messageData.id}) was not found.`);
+        warn$1(iframeId, `The iframe (${messageData.id}) was not found.`);
         retBool = false;
       }
 
@@ -471,7 +454,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function getElementPosition(target) {
       const iFramePosition = target.getBoundingClientRect();
 
-      getPagePosition(iframeId);
+      getPagePosition();
 
       return {
         x: Math.floor(Number(iFramePosition.left) + Number(page.position.x)),
@@ -484,7 +467,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       function reposition() {
         page.position = newPosition;
         scrollTo();
-        log(iframeId, '--');
       }
 
       function scrollParent() {
@@ -494,7 +476,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
             newPosition.y,
           );
         } else {
-          warn(
+          warn$1(
             iframeId,
             'Unable to scroll to requested position, window.parentIFrame not found',
           );
@@ -512,11 +494,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       let newPosition = calcOffset(messageData, offset);
 
-      log(
-        iframeId,
-        `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`,
-      );
-
       if (window.top === window.self) {
         reposition();
       } else {
@@ -529,17 +506,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         unsetPagePosition();
         return
       }
-      setPagePosition(iframeId);
+      setPagePosition();
     }
 
     function findTarget(location) {
       function jumpToTarget() {
         const jumpPosition = getElementPosition(target);
-
-        log(
-          iframeId,
-          `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`,
-        );
 
         page.position = {
           x: jumpPosition.x,
@@ -547,7 +519,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         };
 
         scrollTo();
-        log(iframeId, '--');
       }
 
       function jumpToParent() {
@@ -555,11 +526,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           window.parentIFrame.moveToAnchor(hash);
           return
         }
-
-        log(
-          iframeId,
-          `In page link #${hash} not found and window.parentIFrame not found`,
-        );
       }
 
       const hash = location.split('#')[1] || '';
@@ -575,7 +541,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       }
 
       if (window.top === window.self) {
-        log(iframeId, `In page link #${hash} not found`);
         return
       }
 
@@ -615,8 +580,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
       } catch (error) {
         settings[id].sameDomain = false;
       }
-
-      log(id, `sameDomain: ${settings[id].sameDomain}`);
     }
 
     function actionMsg() {
@@ -685,7 +648,7 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
         default:
           if (messageData.width === 0 && messageData.height === 0) {
-            warn(
+            warn$1(
               `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
                 `version of iframe-resizer than the parent page`,
             );
@@ -693,14 +656,12 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
           }
 
           if (messageData.width === 0 || messageData.height === 0) {
-            log(iframeId, 'Ignoring message with 0 height or width');
             return
           }
 
           // Recheck document.hidden here, as only Firefox
           // correctly supports this in the iframe
           if (document.hidden) {
-            log(iframeId, 'Page hidden - ignored resize request');
             return
           }
 
@@ -746,14 +707,13 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     iframeId = messageData.id;
 
     if (!iframeId) {
-      warn('iframeResizer received messageData without id, message was: ', msg);
+      warn$1('iframeResizer received messageData without id, message was: ', msg);
       return
     }
 
     checkSettings(iframeId);
 
     if (!isMessageFromMetaParent()) {
-      log(iframeId, `Received: ${msg}`);
       settings[iframeId].loaded = true;
 
       if (checkIFrameExists() && isMessageFromIFrame()) {
@@ -789,10 +749,8 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
   function closeIFrame(iframe) {
     const iframeId = iframe.id;
     if (chkEvent(iframeId, 'onClose', iframeId) === false) {
-      log(iframeId, 'Close iframe cancelled by onClose event');
       return
     }
-    log(iframeId, `Removing iFrame: ${iframeId}`);
 
     try {
       // Catch race condition error with React
@@ -800,11 +758,10 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         iframe.remove();
       }
     } catch (error) {
-      warn(error);
+      warn$1(error);
     }
 
     chkEvent(iframeId, 'onClosed', iframeId);
-    log(iframeId, '--');
     removeIframeListeners(iframe);
   }
 
@@ -814,7 +771,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
         x: window.scrollX,
         y: window.scrollY,
       };
-      log(iframeId, `Get page position: ${page.position.x}, ${page.position.y}`);
     }
   }
 
@@ -825,16 +781,11 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
   function setPagePosition(iframeId) {
     if (page.position !== null) {
       window.scrollTo(page.position.x, page.position.y);
-      log(iframeId, `Set page position: ${page.position.x}, ${page.position.y}`);
       unsetPagePosition();
     }
   }
 
   function resetIFrame(messageData) {
-    log(
-      messageData.id,
-      `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`,
-    );
 
     getPagePosition(messageData.id);
     setSize(messageData);
@@ -847,7 +798,6 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
     function setDimension(dimension) {
       const size = `${messageData[dimension]}px`;
       messageData.iframe.style[dimension] = size;
-      log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`);
     }
 
     if (settings[iframeId].sizeHeight) {
@@ -864,27 +814,18 @@ The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with 
 
       if (settings[id].sameDomain) {
         try {
-          settings[id].iframe.contentWindow.iframeChildListener(msgId + msg);
-          log(
-            id,
-            `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
-          );
+          settings[id].iframe.contentWindow.iframeChildListener(msgId$1 + msg);
           return
         } catch (error) {
           info(id, `Same domain connection failed. Trying cross domain`);
           settings[id].sameDomain = false;
         }
       }
-
-      log(
-        id,
-        `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
-      );
-      postMessageTarget.postMessage(msgId + msg, targetOrigin);
+      postMessageTarget.postMessage(msgId$1 + msg, targetOrigin);
     }
 
     function iFrameNotFound() {
-      warn(id, `[${calleeMsg}] IFrame(${id}) not found`);
+      warn$1(id, `[${calleeMsg}] IFrame(${id}) not found`);
     }
 
     function chkAndSend() {
@@ -954,7 +895,7 @@ This message can be ignored if everything is working, or you can set the \u001B[
 
   let count = 0;
 
-  var connectResizer = (options) => (iframe) => {
+  var index = (options) => (iframe) => {
     function setLimits() {
       function addStyle(style) {
         const styleValue = settings[iframeId][style];
@@ -963,7 +904,6 @@ This message can be ignored if everything is working, or you can set the \u001B[
           iframe.style[style] = isNumber(styleValue)
             ? `${styleValue}px`
             : styleValue;
-          log(iframeId, `Set ${style} = ${iframe.style[style]}`);
         }
       }
 
@@ -1008,19 +948,12 @@ This message can be ignored if everything is working, or you can set the \u001B[
         // eslint-disable-next-line no-multi-assign
         iframe.id = iframeId = newId();
         setLogEnabled((options || {}).log);
-        log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`);
       }
 
       return iframeId
     }
 
     function setScrolling() {
-      log(
-        iframeId,
-        `IFrame scrolling ${
-        settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
-      } for ${iframeId}`,
-      );
 
       iframe.style.overflow =
         settings[iframeId]?.scrolling === false ? 'hidden' : 'auto';
@@ -1130,7 +1063,6 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
       if (settings[iframeId].direction === 'horizontal') {
         settings[iframeId].sizeWidth = true;
         settings[iframeId].sizeHeight = false;
-        log(iframeId, 'Direction set to "horizontal"');
         return
       }
 
@@ -1138,7 +1070,6 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
         settings[iframeId].sizeWidth = false;
         settings[iframeId].sizeHeight = false;
         settings[iframeId].autoResize = false;
-        log(iframeId, 'Direction set to "none"');
         return
       }
 
@@ -1148,8 +1079,6 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
           `Direction value of "${settings[iframeId].direction}" is not valid`,
         )
       }
-
-      log(iframeId, 'Direction set to "vertical"');
     }
 
     function getTargetOrigin(remoteHost) {
@@ -1189,9 +1118,8 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
     const iframeId = ensureHasId(iframe.id);
 
     if (beenHere()) {
-      warn(iframeId, 'Ignored iFrame, already setup.');
+      warn$1(iframeId, 'Ignored iFrame, already setup.');
     } else {
-      log('Version', VERSION);
       processOptions(options);
       setupEventListenersOnce();
       setScrolling();
@@ -1217,7 +1145,6 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
 
   function tabVisible() {
     if (document.hidden === false) {
-      log('document', 'Trigger event: Visibility change');
       sendTriggerMsg('Tab Visible', 'resize');
     }
   }
@@ -1228,6 +1155,28 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
     window.iframeParentListener = (data) =>
       iframeListener({ data, sameDomain: true });
   });
+
+  const msgId = '[iframeResizer]';
+
+  function getMyID(iframeId) {
+    if (window.top === window.self) {
+      return `Host page: ${iframeId}`
+    }
+
+    return window?.parentIFrame?.getId
+      ? `${window.parentIFrame.getId()}: ${iframeId}`
+      : `Nested host page: ${iframeId}`
+  }
+
+  const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`;
+
+  const output = (type, iframeId, ...msg) =>
+    // eslint-disable-next-line no-console
+    window?.console[type](formatLogHeader(iframeId), ...msg);
+
+  const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg);
+
+  // $.fn.foo = function () {}
 
   switch (true) {
     case window.jQuery === undefined:
@@ -1244,7 +1193,7 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
 
     default:
       window.jQuery.fn.iframeResize = function (options) {
-        const connectWithOptions = connectResizer(options);
+        const connectWithOptions = index(options);
 
         return this.filter('iframe').each(connectWithOptions).end()
       };
