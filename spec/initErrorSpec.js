@@ -29,7 +29,7 @@ define(['iframeResizerParent'], function(iframeResize) {
           },
           1
         )
-      }).toThrow(new TypeError('Unexpected data type (number)'))
+      }).toThrow(new TypeError('[iframeResizer] Unexpected data type (number)'))
     })
 
     it('Expected <IFRAME> tag', function() {
