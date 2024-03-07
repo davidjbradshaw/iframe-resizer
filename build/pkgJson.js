@@ -1,3 +1,6 @@
+const browser = (file) =>
+  file === 'react' ? {} : { browser: `iframe-resizer.${file}.js` }
+
 export default (file) =>
   ({
     version,
@@ -7,7 +10,6 @@ export default (file) =>
     description,
     github,
     repository,
-    dependencies,
     funding,
     keywords,
   }) => ({
@@ -23,6 +25,6 @@ export default (file) =>
     funding,
     main: `iframe-resizer.${file}.cjs`,
     module: `iframe-resizer.${file}.mjs`,
-    browser: `iframe-resizer.${file}.js`,
+    ...browser(file),
     keywords: [...keywords, file],
   })
