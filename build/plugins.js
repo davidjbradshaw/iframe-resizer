@@ -19,7 +19,7 @@ const vi = {
 
 export const injectVersion = () => [versionInjector(vi)]
 
-export const pluginsBase = (stripLog) => (file) => {
+export const pluginsBase = (stripLog) => (file, format) => {
   const delog = [strip({ functions: ['log'] })]
 
   const base = [
@@ -39,7 +39,7 @@ export const pluginsBase = (stripLog) => (file) => {
 const fixVersion = (file) => 
   file in {core:1, child:1} ? {} : { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
 
-export const pluginsProd = (file) => {
+export const pluginsProd = (file, format) => {
   const path = `dist/${file}`
 
   return [
@@ -56,6 +56,6 @@ export const pluginsProd = (file) => {
       start_comment: '// TEST CODE START //',
       end_comment: '// TEST CODE END //',
     }),
-    ...pluginsBase(true)(file),
+    ...pluginsBase(true)(file, format),
   ]
 }

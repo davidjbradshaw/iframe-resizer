@@ -5,6 +5,7 @@
     <title>iFrame message passing test</title>
     <meta name="description" content="iFrame message passing test" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script type="text/javascript" src="../../js/iframe-resizer.child.js" defer></script>
     <script>
       function toggle() {
         const { style } = document.getElementsByTagName('p')[1]
@@ -12,7 +13,13 @@
         return false
       }
     </script>
-    <script type="text/javascript" src="../../js/iframe-resizer.child.js" defer></script>
+    <script>
+      window.iFrameResizer = {
+        onMessage(message) {
+          alert(message, parentIFrame.getId())
+        },
+      }
+    </script>
     <!-- html/body height is set to test that iframe-resier can over ride this value and set it back to 'auto' -->
     <style>
       html, body { height: 100vh;}
@@ -128,14 +135,5 @@
         .getElementById('nested')
         .setAttribute('href', `frame.nested.html?${++level}`)
     </script>
-
-    <script>
-      window.iFrameResizer = {
-        onMessage(message) {
-          alert(message, parentIFrame.getId())
-        },
-      }
-    </script>
-
   </body>
 </html>
