@@ -1,5 +1,6 @@
 import { babel } from '@rollup/plugin-babel'
 import clear from 'rollup-plugin-clear'
+import copy from 'rollup-plugin-copy'
 import filesize from 'rollup-plugin-filesize'
 import resolve from '@rollup/plugin-node-resolve';
 
@@ -30,7 +31,7 @@ const npm = [
         name: 'createResizer',
         ...output('core')('umd')
       },
-      output('core')('es'), 
+      output('core')('esm'), 
       output('core')('cjs')
     ],
     plugins: pluginsProd('core'),
@@ -40,7 +41,7 @@ const npm = [
   {
     input: 'src/parent/esm.js',
     output: [
-      output('parent')('es'), 
+      output('parent')('esm'), 
       output('parent')('cjs')
     ],
     external: ['@iframe-resizer/core'],
@@ -71,7 +72,7 @@ const npm = [
   {
     input: 'src/jquery/plugin.js',
     output: [
-      output('jquery')('es'), 
+      output('jquery')('esm'), 
       output('jquery')('cjs')
     ],
     external: ['@iframe-resizer/core'],
@@ -92,12 +93,19 @@ const npm = [
   {
     input: 'src/react/index.jsx',
     output: [
-      output('react')('es'), 
-      output('react')('cjs')
+      output('react')('esm'), 
+      output('react')('cjs'),
     ],
-    external: ['@iframe-resizer/core', 'react', 'prop-types', 'warning'],
+    external: ['@iframe-resizer/core', 'prop-types', 'react', 'warning'],
     plugins: [
       ...pluginsProd('react'),
+      copy({
+        targets: [{ 
+          src: 'src/react/index.d.ts',
+          dest: 'dist/react/',
+          rename: 'iframe-resizer.react.d.ts',
+        }],
+      }),
       babel({
         exclude: 'node_modules/**',
       }),
@@ -110,7 +118,7 @@ const js = [
   {
     input: `src/parent/iife.js`,
     output: [{
-      banner: createBanner('parent'),
+      banner: createBanner('parent', 'iife'),
       file: 'js/iframe-resizer.parent.js',
       format: 'iife' ,
       name: 'iframeResize',
@@ -127,7 +135,7 @@ const js = [
   {
     input: 'src/child/index.js',
     output: [{ 
-      banner: createBanner('child'),
+      banner: createBanner('child', TEST ? 'iife': 'umd'),
       file: 'js/iframe-resizer.child.js',
       format: TEST ? 'iife': 'umd',
       sourcemap,
@@ -141,8 +149,8 @@ const js = [
   {
     input: 'src/jquery/plugin.js',
     output: [{
-      banner: createBanner('jquery'),
-      file: 'js/iframe-resizer.parent.jquery.js',
+      banner: createBanner('jquery', 'iife'),
+      file: 'js/iframe-resizer.jquery.js',
       format: 'iife',
       sourcemap,
     }],
