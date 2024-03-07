@@ -10,12 +10,13 @@
 *.map
 node_modules
 bin
+dist
 docs
 example
 img
 test
 spec
-src
+packages
 npm-debug.log
 bower_components
 bower.json

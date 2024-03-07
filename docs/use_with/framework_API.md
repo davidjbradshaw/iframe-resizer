@@ -23,7 +23,7 @@ window.jQuery.fn.iframeResize = function (options) {
 }
 ```
 
-The actual `@iframe-resizer/jquery` plugin provides a few more [safety checks]([http://gitgub.com/](https://github.com/davidjbradshaw/iframe-resizer/blob/master/src/jquery/plugin.js)) to help inexperinced users get up and running.
+The actual `@iframe-resizer/jquery` plugin provides a few more [safety checks]([http://gitgub.com/](https://github.com/davidjbradshaw/iframe-resizer/blob/master/packages/jquery/plugin.js)) to help inexperinced users get up and running.
 
 ### connectResizer()() vs iframeResize()
 

@@ -25,7 +25,7 @@ module.exports = function(config) {
       { pattern: 'dist/parent/*.js', included: false },
       { pattern: 'dist/child/*.js', included: false },
       { pattern: 'dist/jquery/*.js', included: false },
-      // { pattern: 'src/*.js', included: false },
+      // { pattern: 'packages/*.js', included: false },
       { pattern: 'example/*.html', included: false },
       { pattern: 'spec/*Spec.js', included: false },
       { pattern: 'spec/resources/*', included: false },
