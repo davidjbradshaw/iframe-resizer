@@ -8,8 +8,8 @@ const date = new Date()
 const year = date.getFullYear()
 const today = date.toISOString().split('T')[0]
 
-const createBanner =  (file) => `/**
- *  iframe-resizer (${file}) v${pkg.version} - ${today}
+export default (file, type) => `/**
+ *  iframe-resizer (${file}) v${pkg.version} (${type}) - ${today}
  *
  *  License:    ${pkg.license}
  *  Copyright:  (c) 2013 - ${year}, David J. Bradshaw. All rights reserved.
@@ -29,11 +29,5 @@ const createBanner =  (file) => `/**
 
 `
 
-export default {
-    core: createBanner('core'),
-    child: createBanner('child'),
-    jquery: createBanner('jQuery'),
-    parent: createBanner('parent'),
-    react: createBanner('react'),
-}
+
 

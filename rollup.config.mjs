@@ -3,7 +3,7 @@ import clear from 'rollup-plugin-clear'
 import filesize from 'rollup-plugin-filesize'
 import resolve from '@rollup/plugin-node-resolve';
 
-import BANNER from './build/banner.js'
+import createBanner from './build/banner.js'
 import { output, outputs } from './build/output.js'
 import { pluginsBase, pluginsProd, injectVersion } from './build/plugins.js'
 
@@ -110,7 +110,7 @@ const js = [
   {
     input: `src/parent/iife.js`,
     output: [{
-      banner: BANNER.parent,
+      banner: createBanner('parent'),
       file: 'js/iframe-resizer.parent.js',
       format: 'iife' ,
       name: 'iframeResize',
@@ -127,7 +127,7 @@ const js = [
   {
     input: 'src/child/index.js',
     output: [{ 
-      banner: BANNER.child,
+      banner: createBanner('child'),
       file: 'js/iframe-resizer.child.js',
       format: TEST ? 'iife': 'umd',
       sourcemap,
@@ -141,7 +141,7 @@ const js = [
   {
     input: 'src/jquery/plugin.js',
     output: [{
-      banner: BANNER.jquery,
+      banner: createBanner('jquery'),
       file: 'js/iframe-resizer.parent.jquery.js',
       format: 'iife',
       sourcemap,
