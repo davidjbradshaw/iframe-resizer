@@ -12,7 +12,7 @@
       *,
       *:before,
       *:after {
-        box-model: border-box;
+        box-sizing: border-box;
       }
       a {
         float: right;
@@ -67,9 +67,7 @@
 
         // Callback fn when iFrame resized, update the data being displayed
         onResized(messageData) {
-          callbackDisplay.innerHTML = (
-            ` <b> Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
-          )
+          callbackDisplay.innerHTML = ` <b> Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
         },
 
         // Callback fn when message is received, forward to parent page
@@ -79,14 +77,16 @@
 
         // Callback fn when iFrame is closed
         onClosed(id) {
-          callbackDisplay.innerHTML = (`<b>IFrame (</b>${id}<b>) removed from page.</b>`)
+          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
         },
       })
 
       // Forward messages from parent page to nested iFrames
       window.iFrameResizer = {
         onMessage: (message) =>
-          iframes.forEach((iframe) => iframe.iFrameResizer?.sendMessage(`${message} (via parent ${id} )`)),
+          iframes.forEach((iframe) =>
+      iframe.iFrameResizer?.sendMessage(`${message} (via parent ${id} )`),
+    ),
       }
     </script>
   </body>

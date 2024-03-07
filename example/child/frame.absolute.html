@@ -121,13 +121,16 @@
       src="../../js/iframe-resizer.child.js"
     ></script>
     
-    <script>
-      document.getElementById('heightCalculationMethod').addEventListener('change', function() {
-        if ('parentIFrame' in window) {
-          parentIFrame.setHeightCalculationMethod(this.value)
-          parentIFrame.size()
-        }
-      })
+    <script>document
+  .getElementById('heightCalculationMethod')
+  .addEventListener('change', function () {
+      if ('parentIFrame' in window) {
+        const { parentIFrame } = window
+  
+        parentIFrame.setHeightCalculationMethod(this.value)
+        parentIFrame.size()
+      }
+    })
     </script>
   </body>
 </html>
