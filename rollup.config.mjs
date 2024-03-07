@@ -25,7 +25,7 @@ console.log('\nBuilding iframe-resizer version', pkg.version, debugMode ? 'DEVEL
 const npm = [
   // Core
   {
-    input: 'src/core/index.js',
+    input: 'packages/core/index.js',
     output: [
       {
         name: 'createResizer',
@@ -39,7 +39,7 @@ const npm = [
 
   //  Parent ES module (for bundlers) and CommonJS (for Node) build.
   {
-    input: 'src/parent/esm.js',
+    input: 'packages/parent/esm.js',
     output: [
       output('parent')('esm'), 
       output('parent')('cjs')
@@ -50,7 +50,7 @@ const npm = [
   
   // Parent browser-friendly UMD build
   {
-    input: 'src/parent/umd.js',
+    input: 'packages/parent/umd.js',
     output: [{
       name: 'iframeResize',
       ...output('parent')('umd'),
@@ -63,14 +63,14 @@ const npm = [
 
   // Child
   {
-    input: 'src/child/index.js',
+    input: 'packages/child/index.js',
     output: outputs('child'),
     plugins: pluginsProd('child'),
   },
 
   //  jQuery (ES) 
   {
-    input: 'src/jquery/plugin.js',
+    input: 'packages/jquery/plugin.js',
     output: [
       output('jquery')('esm'), 
       output('jquery')('cjs')
@@ -81,7 +81,7 @@ const npm = [
 
   // jQuery (umd)
   {
-    input: 'src/jquery/plugin.js',
+    input: 'packages/jquery/plugin.js',
     output: output('jquery')('umd'),
     plugins: [
       ...pluginsProd('jquery'),
@@ -91,7 +91,7 @@ const npm = [
 
   // React
   {
-    input: 'src/react/index.jsx',
+    input: 'packages/react/index.jsx',
     output: [
       output('react')('esm'), 
       output('react')('cjs'),
@@ -101,7 +101,7 @@ const npm = [
       ...pluginsProd('react'),
       copy({
         targets: [{ 
-          src: 'src/react/index.d.ts',
+          src: 'packages/react/index.d.ts',
           dest: 'dist/react/',
           rename: 'iframe-resizer.react.d.ts',
         }],
@@ -116,7 +116,7 @@ const npm = [
 // JS folder
 const js = [ 
   {
-    input: `src/parent/iife.js`,
+    input: `packages/parent/iife.js`,
     output: [{
       banner: createBanner('parent', 'iife'),
       file: 'js/iframe-resizer.parent.js',
@@ -133,7 +133,7 @@ const js = [
   }, 
 
   {
-    input: 'src/child/index.js',
+    input: 'packages/child/index.js',
     output: [{ 
       banner: createBanner('child', TEST ? 'iife': 'umd'),
       file: 'js/iframe-resizer.child.js',
@@ -147,7 +147,7 @@ const js = [
   }, 
 
   {
-    input: 'src/jquery/plugin.js',
+    input: 'packages/jquery/plugin.js',
     output: [{
       banner: createBanner('jquery', 'iife'),
       file: 'js/iframe-resizer.jquery.js',
