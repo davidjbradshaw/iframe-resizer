@@ -5,7 +5,7 @@ import warning from 'warning'
 
 import filterIframeAttribs from './filter-iframe-attribs'
 
-const IframeResizer = (props) => {
+function IframeResizer(props) {
   const { title, forwardRef, ...rest } = props
   const iframeProps = filterIframeAttribs(rest)
   const iframeRef = useRef(null)
@@ -15,7 +15,7 @@ const IframeResizer = (props) => {
       !iframeRef.current,
       `[iframeSizerReact][${
         iframeRef && iframeRef.current && iframeRef.current.id
-      }] Close event ignored, to remove the iframe update your React component`
+      }] Close event ignored, to remove the iframe update your React component`,
     )
     return !iframeRef.current
   }
@@ -48,6 +48,11 @@ IframeResizer.defaultProps = {
 
 IframeResizer.propTypes = {
   title: PropTypes.string,
+  forwardRef: PropTypes.oneOfType([
+    PropTypes.func,
+    // eslint-disable-next-line react/forbid-prop-types
+    PropTypes.shape({ current: PropTypes.any }),
+  ]).isRequired,
 }
 
 export default IframeResizer
