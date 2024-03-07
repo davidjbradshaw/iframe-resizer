@@ -46,14 +46,12 @@
     <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
     <script type="text/javascript">
       const level = document.location.search.replace(/\?/, '') || 0
+      const id = `nestedIFrame${level}`
       const callbackDisplay = document.querySelector('p#callback')
-
-      callbackDisplay.setAttribute('id', 'nestedIFrame' + level)
-      callbackDisplay.setAttribute('src', 'frame.content.html?' + level)
-
       const iframe = document.getElementById('nestedIFrame')
-      iframe.setAttribute('id', 'nestedIFrame' + level)
-      iframe.setAttribute('src', 'frame.content.html?' + level)
+
+      iframe.setAttribute('id', id)
+      iframe.setAttribute('src', `frame.content.html?${level}`)
 
       /*
        * If you do not understand what the code below does, then please just use the
@@ -63,46 +61,31 @@
        *
        */
 
-      const iframes = iframeResize({
+      const iframes = window.iframeResize({
         inPageLinks: true,
 
-        onResized: function(messageData) {
-          // Callback fn when message is received
-         callbackDisplay.innerHTML =
-            '<b>Frame ID:</b> ' +
-              messageData.iframe.id +
-              ' <b>Height:</b> ' +
-              messageData.height +
-              ' <b>Width:</b> ' +
-              messageData.width +
-              ' <b>Event type:</b> ' +
-              messageData.type
-        },
-
-        onMessage: function(messageData) {
-          // Callback fn when message is received
-          parentIFrame.sendMessage(
-            messageData.message +
-              ' (via ' + 
-              document
-                .getElementsByTagName('iframe')[0]
-                .getAttribute('id') + 
-              ')'
+        // Callback fn when iFrame resized, update the data being displayed
+        onResized(messageData) {
+          callbackDisplay.innerHTML = (
+            ` <b> Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
           )
         },
 
-        onClosed: function(id) {
-          /// Callback fn when iFrame is closed
-         callbackDisplay.innerHTML
-            '<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
-        }
+        // Callback fn when message is received, forward to parent page
+        onMessage(messageData) {
+          window.parentIFrame.sendMessage(`${messageData.message} (via ${id})`)
+        },
+
+        // Callback fn when iFrame is closed
+        onClosed(id) {
+          callbackDisplay.innerHTML = (`<b>IFrame (</b>${id}<b>) removed from page.</b>`)
+        },
       })
 
+      // Forward messages from parent page to nested iFrames
       window.iFrameResizer = {
         onMessage: (message) =>
-          iframes.forEach(({ iFrameResizer }) => 
-            iFrameResizer.sendMessage(message)
-          )
+          iframes.forEach((iframe) => iframe.iFrameResizer?.sendMessage(message)),
       }
     </script>
     <script
