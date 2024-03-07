@@ -34,7 +34,7 @@ export default function createIframeResize() {
     switch (typeof target) {
       case 'undefined':
       case 'string':
-        ;[...document.querySelectorAll(target || 'iframe')].forEach(setup)
+        document.querySelectorAll(target || 'iframe').forEach(setup)
         break
 
       case 'object':
