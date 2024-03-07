@@ -36,14 +36,14 @@
     <div style="margin:20px;">
       <iframe
         id="nestedIFrame"
-        src="frame.content.html"
+        src="../child/frame.content.html"
         width="100%"
         scrolling="no"
       ></iframe>
     </div>
     <p id="callback"></p>
 
-    <script type="text/javascript" src="../js/iframe-resizer.parent.js"></script>
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
     <script type="text/javascript">
       const level = document.location.search.replace(/\?/, '') || 0
       const callbackDisplay = document.querySelector('p#callback')
@@ -51,18 +51,21 @@
       callbackDisplay.setAttribute('id', 'nestedIFrame' + level)
       callbackDisplay.setAttribute('src', 'frame.content.html?' + level)
 
+      const iframe = document.getElementById('nestedIFrame')
+      iframe.setAttribute('id', 'nestedIFrame' + level)
+      iframe.setAttribute('src', 'frame.content.html?' + level)
+
       /*
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iframeResize({log:true});
+       *   iframeResize()
        *
-       * Once you have it working, set the log option to false.
        */
 
-      iframeResize({
-        log: true, // Enable console logging
+      const iframes = iframeResize({
         inPageLinks: true,
+
         onResized: function(messageData) {
           // Callback fn when message is received
          callbackDisplay.innerHTML =
@@ -75,6 +78,7 @@
               ' <b>Event type:</b> ' +
               messageData.type
         },
+
         onMessage: function(messageData) {
           // Callback fn when message is received
           parentIFrame.sendMessage(
@@ -86,16 +90,24 @@
               ')'
           )
         },
+
         onClosed: function(id) {
           /// Callback fn when iFrame is closed
          callbackDisplay.innerHTML
             '<b>IFrame (</b>' + id + '<b>) removed from page.</b>'
         }
       })
+
+      window.iFrameResizer = {
+        onMessage: (message) =>
+          iframes.forEach(({ iFrameResizer }) => 
+            iFrameResizer.sendMessage(message)
+          )
+      }
     </script>
     <script
       type="text/javascript"
-      src="../js/iframe-resizer.child.js"
+      src="../../js/iframe-resizer.child.js"
     ></script>
   </body>
 </html>
