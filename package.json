@@ -39,6 +39,7 @@
     "url": "https://github.com/davidjbradshaw/iframe-resizer/blob/master/FUNDING.md"
   },
   "dependencies": {
+    "@iframe-resizer/child": "file:./src/child/",
     "@iframe-resizer/core": "file:./src/core/",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -50,7 +51,6 @@
     "@jest/globals": "^29.7.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-strip": "^3.0.4",
     "@rollup/plugin-terser": "^0.4.4",
     "babel-jest": "^29.7.0",
