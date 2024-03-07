@@ -7,7 +7,7 @@ import generatePackageJson from 'rollup-plugin-generate-package-json'
 import stripCode from 'rollup-plugin-strip-code'
 import versionInjector from 'rollup-plugin-version-injector'
 
-import BANNER from './banner.js'
+import createBanner from './banner.js'
 import createPkgJson from './pkgJson.js'
 
 import pkg from '../package.json' with { type: "json" }
@@ -28,7 +28,7 @@ export const pluginsBase = (stripLog) => (file) => {
     terser({
       output: {
         comments: false,
-        preamble: BANNER[file],
+        preamble: createBanner(file),
       },
     }),
   ]
