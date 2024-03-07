@@ -12,7 +12,7 @@
 		*,
 		*:before,
 		*:after {
-			box-model: border-box;
+			box-sizing: border-box;
 		}
 
 		a {
@@ -34,12 +34,12 @@
 
 	<script src="../../node_modules/jquery/dist/jquery.js"></script>
 	<script>
-		$(document).ready(function () {
-			setTimeout(function () {
-				console.log('Load Script');
-				$.getScript('../../js/iframe-resizer.child.js');
-			}, 500);
-		});
+		$(document).ready(() => {
+		  setTimeout(() => {
+		    console.log('Load Script')
+		    $.getScript('../../js/iframe-resizer.child.js')
+		  }, 500)
+		})
 	</script>
 
 </body>

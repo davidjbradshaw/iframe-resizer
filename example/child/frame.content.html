@@ -8,10 +8,11 @@
     <script>
       function toggle() {
         const { style } = document.getElementsByTagName('p')[1]
-        style.display = style.display === 'none' ? '': 'none'
+        style.display = style.display === 'none' ? '' : 'none'
         return false
       }
     </script>
+    <script type="text/javascript" src="../../js/iframe-resizer.child.js" defer></script>
     <!-- html/body height is set to test that iframe-resier can over ride this value and set it back to 'auto' -->
     <style>
       html, body { height: 100vh;}
@@ -125,21 +126,16 @@
 
       document
         .getElementById('nested')
-        .setAttribute('href', 'frame.nested.html?' + ++level)
+        .setAttribute('href', `frame.nested.html?${++level}`)
     </script>
 
     <script>
       window.iFrameResizer = {
-        onMessage: function(message) {
+        onMessage(message) {
           alert(message, parentIFrame.getId())
-        }
+        },
       }
     </script>
 
-    <script
-      type="text/javascript"
-      src="../../js/iframe-resizer.child.js"
-      defer
-    ></script>
   </body>
 </html>

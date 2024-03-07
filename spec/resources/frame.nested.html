@@ -26,15 +26,15 @@
 	<script type="text/javascript" src="../../js/iframe-resizer.child.js"></script>
 	<script src="../../node_modules/jquery/dist/jquery.js"></script>
 	<script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
-	<script type="text/javascript">
-
-		iframeResize({
-			log: true,                  // Enable console logging
-			onResized: function (messageData) { // Callback fn when message is received
-				setTimeout(function () { parentIFrame.sendMessage('nested') }, 50);
-			}
-		});
-
+	<script type="text/javascript">iframeResize({
+		  log: true, // Enable console logging
+		    onResized(messageData) {
+    // Callback fn when message is received
+    setTimeout(() => {
+      parentIFrame.sendMessage('nested')
+    }, 50)
+  },
+})
 	</script>
 
 </body>

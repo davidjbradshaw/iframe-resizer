@@ -6,11 +6,15 @@
     "browser": true,
     "jasmine": true,
     "jest": true,
+    "jquery": true,
     "commonjs": true,
     "es2020": true
   },
   "globals": {
-    "location": true
+    "location": true,
+    "iframeResize": true,
+    "parentIFrame": true,
+
   },
   "parserOptions": { "ecmaVersion": 2020 },
   "rules": {
@@ -37,5 +41,20 @@
     "unicorn/prefer-query-selector": 0,
     "unicorn/prevent-abbreviations": 0,
     "xss/no-mixed-html": 0
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "rules": {
+        "no-alert": 0,
+        "no-console": 0,
+        "no-restricted-globals": 0,
+        "no-undef": 0,
+        "no-unused-vars": 0,
+        "no-unsanitized/property": 0,
+        "prettier/prettier": 0,
+        "xss/no-location-href-assign": 0
+      }
+    }
+  ]
 }
