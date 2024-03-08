@@ -1,5 +1,5 @@
 /**
- *  iframe-resizer (child) v5.0.0-alpha.1 (iife) - 2024-03-07
+ *  iframe-resizer/child   5.0.0-alpha.1 (umd)  -  2024-03-08
  *
  *  License:    GPL-3.0
  *  Copyright:  (c) 2013 - 2024, David J. Bradshaw. All rights reserved.
@@ -18,10 +18,10 @@
  */
 
 
-(function () {
-  'use strict';
-
-  const VERSION = '5.0.0-alpha.1';
+(function (factory) {
+  typeof define === 'function' && define.amd ? define(factory) :
+  factory();
+})((function () { 'use strict';
 
   const BASE = 10;
   const SIZE_ATTR = 'data-iframe-size';
@@ -63,7 +63,6 @@
   const eventHandlersByName = {};
   const hasCheckVisibility = 'checkVisibility' in window;
   const heightCalcModeDefault = 'auto';
-  const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 };
   const msgID = '[iFrameSizer]'; // Must match host page msg ID
   const msgIdLen = msgID.length;
   const resetRequiredMethods = {
@@ -152,10 +151,6 @@
   // TODO: remove .join(' '), requires major test updates
   const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ');
 
-  const log = (...msg) =>
-    // eslint-disable-next-line no-console
-    logging && console?.log(formatLogMsg(...msg));
-
   const warn = (...msg) =>
     // eslint-disable-next-line no-console
     console?.warn(formatLogMsg(...msg));
@@ -171,7 +166,6 @@
   function init() {
     checkCrossDomain();
     readDataFromParent();
-    log(`Initialising iFrame v${VERSION} (${window.location.href})`);
     readDataFromPage();
     setMargin();
     setBodyStyle('background', bodyBackground);
@@ -196,7 +190,6 @@
     try {
       sameDomian = 'iframeParentListener' in window.parent;
     } catch (error) {
-      log('Cross domain iframe detected.');
     }
   }
 
@@ -228,8 +221,6 @@
     function readData() {
       const data = window.iFrameResizer;
 
-      log(`Reading data from page: ${JSON.stringify(data)}`);
-
       onMessage = data?.onMessage || onMessage;
       onReady = data?.onReady || onReady;
       offsetHeight = data?.offsetHeight || offsetHeight;
@@ -241,7 +232,6 @@
 
     function setupCustomCalcMethods(calcMode, calcFunc) {
       if (typeof calcMode === 'function') {
-        log(`Setup custom ${calcFunc}CalcMethod`);
         customCalcMethods[calcFunc] = calcMode;
         calcMode = 'custom';
       }
@@ -257,8 +247,6 @@
       heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height');
       widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width');
     }
-
-    log(`TargetOrigin for parent set to: ${targetOriginDefault}`);
   }
 
   function chkCSS(attr, value) {
@@ -273,7 +261,6 @@
   function setBodyStyle(attr, value) {
     if (undefined !== value && value !== '' && value !== 'null') {
       document.body.style.setProperty(attr, value);
-      log(`Body ${attr} set to "${value}"`);
     }
   }
 
@@ -292,8 +279,6 @@
 
     setAutoHeight(document.documentElement);
     setAutoHeight(document.body);
-
-    log('HTML & body height set to "auto !important"');
   }
 
   function manageTriggerEvent(options) {
@@ -316,12 +301,6 @@
     };
 
     listener[options.method](options.eventName);
-
-    log(
-      `${capitalizeFirstLetter(options.method)} event listener: ${
-      options.eventType
-    }`,
-    );
   }
 
   function manageEventListeners(method) {
@@ -375,15 +354,9 @@ The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m a
     if (document.querySelectorAll(`[${SIZE_ATTR}]`).length > 0) {
       if (heightCalcMode === 'auto') {
         heightCalcMode = 'autoOverflow';
-        log(
-          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for height',
-        );
       }
       if (widthCalcMode === 'auto') {
         widthCalcMode = 'autoOverflow';
-        log(
-          'data-iframe-size attribute found on page, using "autoOverflow" calculation method for width',
-        );
       }
     }
   }
@@ -406,7 +379,6 @@ The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m a
 
 This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`);
       }
-      log(`${type} calculation method set to "${calcMode}"`);
     }
 
     return calcMode
@@ -432,7 +404,6 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
 
   function startEventListeners() {
     if (autoResize !== true) {
-      log('Auto Resize disabled');
       return
     }
 
@@ -477,10 +448,6 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
       function jumpToTarget(target) {
         const jumpPosition = getElementPosition(target);
 
-        log(
-          `Moving to in page link (#${hash}) at x: ${jumpPosition.x}y: ${jumpPosition.y}`,
-        );
-
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset'); // X&Y reversed at sendMsg uses height/width
       }
 
@@ -494,8 +461,6 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
         jumpToTarget(target);
         return
       }
-
-      log(`In page link (#${hash}) not found in iFrame, so sending to parent`);
       sendMsg(0, 0, 'inPageLink', `#${hash}`);
     }
 
@@ -534,7 +499,6 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
 
     function enableInPageLinks() {
       /* istanbul ignore else */ // Not testable in phantonJS
-      log('Setting up location.hash handlers');
       bindAnchors();
       bindLocationHash();
       initCheck();
@@ -542,8 +506,6 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
 
     if (inPageLinks.enable) {
       enableInPageLinks();
-    } else {
-      log('In page linking not enabled');
     }
 
     return {
@@ -559,12 +521,11 @@ This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitabl
     }
 
     function addMouseListener(evt, name) {
-      log(`Add event listener: ${name}`);
       addEventListener(window.document, evt, sendMouse);
     }
 
-    addMouseListener('mouseenter', 'Mouse Enter');
-    addMouseListener('mouseleave', 'Mouse Leave');
+    addMouseListener('mouseenter');
+    addMouseListener('mouseleave');
   }
 
   function setupPublicMethods() {
@@ -621,7 +582,7 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
       },
 
       reset() {
-        resetIFrame('parentIFrame.reset');
+        resetIFrame();
       },
 
       scrollTo(x, y) {
@@ -647,7 +608,6 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
       },
 
       setTargetOrigin(targetOrigin) {
-        log(`Set targetOrigin: ${targetOrigin}`);
         targetOriginDefault = targetOrigin;
       },
 
@@ -680,7 +640,6 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
   function setupResizeObservers(el) {
     if (!el) return
     resizeObserver.observe(el);
-    log(`Attached resizeObserver: ${getElementName(el)}`);
   }
 
   function createResizeObservers(el) {
@@ -723,8 +682,6 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
         childList: true,
         subtree: true,
       };
-
-      log('Create <body/> MutationObserver');
       observer.observe(target, config);
 
       return observer
@@ -734,7 +691,6 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
 
     return {
       disconnect() {
-        log('Disconnect MutationObserver');
         observer.disconnect();
       },
     }
@@ -760,7 +716,6 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
         hasCheckVisibility &&
         !element.checkVisibility(checkVisibilityOptions)
       ) {
-        log(`Skipping non-visable element: ${getElementName(element)}`);
         len -= 1;
         return
       }
@@ -782,9 +737,7 @@ Parsed ${len} element${(len = '' )} in ${timer.toPrecision(3)}ms
 ${Side} ${hasTags ? 'tagged' : ''} element found at: ${maxVal}px
 Position calculated from HTML element: ${elementSnippet(maxEl)}`;
 
-    if (timer < 1.1 || isInit || hasTags) {
-      log(logMsg);
-    } else {
+    if (timer < 1.1 || isInit || hasTags) ; else {
       advise(
         `
 \u001B[31;1mPerformance Warning\u001B[m
@@ -831,10 +784,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     advise(overflowDetectedMessage);
 
     if (isHeight) {
-      log(`Switching from ${heightCalcMode} to autoOverflow`);
       heightCalcMode = 'autoOverflow';
     } else {
-      log(`Switching from ${widthCalcMode} to autoOverflow`);
       widthCalcMode = 'autoOverflow';
     }
   }
@@ -865,7 +816,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     const ceilBoundingSize = Math.ceil(boundingSize);
     const floorBoundingSize = Math.floor(boundingSize);
     const scrollSize = getAdjustedScroll(getDimension);
-    const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`;
 
     switch (true) {
       case !getDimension.enabled():
@@ -874,7 +824,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       case !autoOverflow &&
         prevBoundingSize[dimension] === 0 &&
         prevScrollSize[dimension] === 0:
-        log(`Initial page size values: ${sizes}`);
         if (getDimension.taggedElement(true) <= ceilBoundingSize) {
           return returnBoundingClientRect()
         }
@@ -883,37 +832,26 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
       case triggerLocked &&
         boundingSize === prevBoundingSize[dimension] &&
         scrollSize === prevScrollSize[dimension]:
-        log(`Size unchanged: ${sizes}`);
         return Math.max(boundingSize, scrollSize)
 
       case boundingSize === 0:
-        log(`Page is hidden: ${sizes}`);
         return scrollSize
 
       case !autoOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
-        log(
-          `New HTML bounding size: ${sizes}`,
-          'Previous bounding size:',
-          prevBoundingSize[dimension],
-        );
         return returnBoundingClientRect()
 
       case !autoOverflow && boundingSize < prevBoundingSize[dimension]:
-        log('HTML bounding size decreased:', sizes);
         return returnBoundingClientRect()
 
       case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
-        log('HTML bounding size equals page size:', sizes);
         return returnBoundingClientRect()
 
       case boundingSize > scrollSize:
-        log(`Page size < HTML bounding size: ${sizes}`);
         return returnBoundingClientRect()
 
       case !autoOverflow:
-        log(`Switch to autoOverflow: ${sizes}`);
         switchToAutoOverflow({
           ceilBoundingSize,
           dimension,
@@ -921,9 +859,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
           scrollSize,
         });
         break
-
-      default:
-        log(`Content overflowing HTML element: ${sizes}`);
     }
 
     return Math.max(getDimension.taggedElement(), returnBoundingClientRect())
@@ -1025,7 +960,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
     function checkDownSizing() {
       if (isForceResizableEvent() && isForceResizableCalcMode()) {
-        resetIFrame(triggerEventDesc);
+        resetIFrame();
       }
     }
 
@@ -1044,12 +979,7 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     if (document.hidden) {
       // Currently only correctly supported in firefox
       // This is checked again on the parent page
-      log('Page hidden - Ignored resize request');
       return
-    }
-
-    if (!(triggerEvent in nonLoggableTriggerEvents)) {
-      log(`Trigger event: ${triggerEventDesc}`);
     }
 
     sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth);
@@ -1059,12 +989,9 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
     if (triggerLocked) return
 
     triggerLocked = true;
-    log('Trigger event lock on');
 
     requestAnimationFrame(() => {
       triggerLocked = false;
-      log('Trigger event lock off');
-      log('--');
     });
   }
 
@@ -1078,8 +1005,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
   function resetIFrame(triggerEventDesc) {
     const hcm = heightCalcMode;
     heightCalcMode = heightCalcModeDefault;
-
-    log(`Reset trigger event: ${triggerEventDesc}`);
     lockTrigger();
     triggerReset('reset');
 
@@ -1092,17 +1017,11 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         targetOrigin = targetOriginDefault;
         return
       }
-
-      log(`Message targetOrigin: ${targetOrigin}`);
     }
 
     function sendToParent() {
       const size = `${height + offsetHeight}:${width + offsetWidth}`;
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`;
-
-      log(
-        `Sending message to host page (${message}) via ${sameDomian ? 'sameDomain' : 'postMessage'}`,
-      );
 
       if (sameDomian) {
         window.parent.iframeParentListener(msgID + message);
@@ -1133,10 +1052,8 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
       reset() {
         if (initLock) {
-          log('Page reset ignored by init');
           return
         }
-        log('Page size reset by host page');
         triggerReset('resetPage');
       },
 
@@ -1154,34 +1071,28 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
       pageInfo() {
         const msgBody = getData();
-        log(`PageInfo received from parent: ${msgBody}`);
         if (onPageInfo) {
           onPageInfo(JSON.parse(msgBody));
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop');
         }
-        log(' --');
       },
 
       parentInfo() {
         const msgBody = getData();
-        log(`ParentInfo received from parent: ${msgBody}`);
         if (onParentInfo) {
           onParentInfo(Object.freeze(JSON.parse(msgBody)));
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'parentInfoStop');
         }
-        log(' --');
       },
 
       message() {
         const msgBody = getData();
-        log(`onMessage called from parent: ${msgBody}`);
         // eslint-disable-next-line sonarjs/no-extra-arguments
         onMessage(JSON.parse(msgBody));
-        log(' --');
       },
     };
 
@@ -1222,10 +1133,6 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
         processRequestFromParent.init();
         return
       }
-
-      log(
-        `Ignored message of type "${getMessageType()}". Received before initialization.`,
-      );
     }
 
     if (isMessageForUs()) {
@@ -1273,4 +1180,4 @@ When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with
 
   // TEST CODE END //
 
-})();
+}));
