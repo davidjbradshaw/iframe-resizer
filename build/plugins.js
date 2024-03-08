@@ -45,6 +45,11 @@ export const pluginsProd = (file) => {
 
   const transform = createTransform(file)
 
+  const targets = [
+    { src: ['LICENSE', 'FUNDING.md', /* 'SECURITY.md' */], dest},
+    { src: `${src}/README.md`, dest, transform }
+  ]
+
   return [
     clear({ targets: [dest] }),
     generatePackageJson({
@@ -54,10 +59,7 @@ export const pluginsProd = (file) => {
     }),
     copy({
       copyOnce: true,
-      targets: [
-        { src: ['LICENSE', 'FUNDING.md', 'SECURITY.md'], dest},
-        { src: `${src}/README.md`, dest, transform }
-      ],
+      targets,
       verbose: true,
     }),
     stripCode({

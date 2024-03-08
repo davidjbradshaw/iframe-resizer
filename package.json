@@ -127,22 +127,22 @@
     "node": ">=20.0.0"
   },
   "keywords": [
-    "CrossDomain",
-    "Cross-Domain",
     "iFrame",
     "Resizing",
     "Resizer",
-    "postMessage",
-    "autoheight",
     "auto-height",
     "iframe-auto-height",
     "height-iframe",
-    "heightiframe",
+    "responsive-iframes",
+    "Cross-Domain",
     "width",
+    "postMessage",
     "mutationObserver",
     "resizeObserver",
     "RWD",
-    "responsiveiframes",
-    "responsive-iframes"
+    "autoheight",
+    "CrossDomain",
+    "heightiframe",
+    "responsiveiframes"
   ]
 }
