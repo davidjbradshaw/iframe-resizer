@@ -73,15 +73,15 @@ Your callback function will be recalled when the parent page is scrolled or resi
 
 Pass `false` to disable the callback.
 
-### scrollTo(x,y)
+### scrollTo(x, y)
 
 Scroll the parent page to the coordinates x and y.
 
-### scrollToOffset(x,y)
+### scrollToOffset(x, y)
 
 Scroll the parent page to the coordinates x and y relative to the position of the iFrame.
 
-### sendMessage(message,[targetOrigin])
+### sendMessage(message, [targetOrigin])
 
 Send data to the containing page, `message` can be any data type that can be serialized into JSON. The `targetOrigin` option is used to restrict where the message is sent to; to stop an attacker mimicking your parent page. See the MDN documentation on [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) for more details.
 
