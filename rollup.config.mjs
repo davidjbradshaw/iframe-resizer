@@ -27,6 +27,12 @@ const outputPlugins = (file, format) => ({
 })
   
 
+const filterDeps = (contents) => {
+  const pkg = JSON.parse(contents)
+  delete pkg.dependencies.react
+  return JSON.stringify(pkg, null, 2)
+}
+
 const pluginsJs = TEST 
   ? injectVersion
   : pluginsBase(!logging)
@@ -115,11 +121,17 @@ const npm = [
     plugins: [
       ...pluginsProd('react'),
       copy({
+        hook: 'closeBundle',
         targets: [{ 
           src: 'packages/react/index.d.ts',
           dest: 'dist/react/',
           rename: 'iframe-resizer.react.d.ts',
-        }],
+        }, {
+          src: 'dist/react/package.json',
+          dest: 'dist/react/',
+          transform: filterDeps
+        },  
+      ],
       }),
       babel({
         exclude: 'node_modules/**',

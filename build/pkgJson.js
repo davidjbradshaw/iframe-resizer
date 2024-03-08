@@ -5,7 +5,7 @@ const isReact = (file) =>
           react: '^16.8.0 || ^17.0.0 || ^18.0.0',
           'react-dom': '^16.8.0 || ^17.0.0 || ^18.0.0',
         },
-        moain: 'iframe-resizer.react..cjs.js',
+        main: 'iframe-resizer.react..cjs.js',
         module: 'iframe-resizer.react.esm.js',
         types: 'iframe-resizer.react.d.ts',
       }
