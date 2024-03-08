@@ -3,6 +3,7 @@ import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import filesize from 'rollup-plugin-filesize'
 import resolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser'
 
 import createBanner from './build/banner.js'
 import { output, outputs } from './build/output.js'
@@ -15,6 +16,16 @@ const { ROLLUP_WATCH, DEBUG, TEST } = process.env
 const debugMode = DEBUG || ROLLUP_WATCH || false
 const sourcemap = debugMode
 const logging = debugMode || TEST
+
+const outputPlugins = (file, format) => ({
+  plugins: terser({
+    output: {
+      comments: false,
+      preamble: createBanner(file, format),
+    },
+  })
+})
+  
 
 const pluginsJs = TEST 
   ? injectVersion
@@ -128,6 +139,7 @@ const js = [
       format: 'iife' ,
       name: 'iframeResize',
       sourcemap,
+      ...outputPlugins('parent', 'iife'),
     }],
     plugins: [
       clear({ targets: ['js']}),
@@ -144,6 +156,7 @@ const js = [
       file: 'js/iframe-resizer.child.js',
       format: TEST ? 'iife': 'umd',
       sourcemap,
+      ...outputPlugins('child', TEST ? 'iife': 'umd',),
     }],
     plugins: [
       filesize(),
@@ -158,6 +171,7 @@ const js = [
       file: 'js/iframe-resizer.jquery.js',
       format: 'iife',
       sourcemap,
+      ...outputPlugins('jquery', 'iife'),
     }],
     plugins: [
       filesize(),

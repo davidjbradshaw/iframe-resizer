@@ -9,7 +9,7 @@ const year = date.getFullYear()
 const today = date.toISOString().split('T')[0]
 
 export default (file, type) => `/**
- *  iframe-resizer/${file}   ${pkg.version} (${type})  -  ${today}
+ *  iframe-resizer/${file} ${pkg.version} (${type}) - ${today}
  *
  *  License:    ${pkg.license}
  *  Copyright:  (c) 2013 - ${year}, David J. Bradshaw. All rights reserved.
