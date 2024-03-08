@@ -77,6 +77,14 @@ const npm = [
     plugins:[
       ...pluginsProd('parent'),
       resolve(),
+      copy({
+        targets: [{ 
+          src: 'packages/parent/index.d.ts',
+          dest: 'dist/parent/',
+          rename: 'iframe-resizer.parent.d.ts',
+        }],
+        verbose: true,
+      }),
     ]
   }, 
 
@@ -117,7 +125,7 @@ const npm = [
       output('react')('esm'), 
       output('react')('cjs'),
     ],
-    external: ['@iframe-resizer/core', 'prop-types', 'react', 'warning'],
+    external: ['@iframe-resizer/core', 'prop-types', 'react', 'warning', /@babel\/runtime/],
     plugins: [
       ...pluginsProd('react'),
       copy({
@@ -130,12 +138,14 @@ const npm = [
           src: 'dist/react/package.json',
           dest: 'dist/react/',
           transform: filterDeps
-        },  
-      ],
+        }],
+        verbose: true,
       }),
       babel({
+        babelHelpers: 'runtime',
         exclude: 'node_modules/**',
       }),
+      filesize(),
     ],
 		watch: false,
   }, 
@@ -164,11 +174,11 @@ const js = [
   {
     input: 'packages/child/index.js',
     output: [{ 
-      banner: createBanner('child', TEST ? 'iife': 'umd'),
+      banner: createBanner('child', TEST ?  'umd' : 'iife'),
       file: 'js/iframe-resizer.child.js',
-      format: TEST ? 'iife': 'umd',
+      format: TEST ?  'umd' : 'iife',
       sourcemap,
-      ...outputPlugins('child', TEST ? 'iife': 'umd',),
+      ...outputPlugins('child', TEST ?  'umd' : 'iife'),
     }],
     plugins: [
       filesize(),

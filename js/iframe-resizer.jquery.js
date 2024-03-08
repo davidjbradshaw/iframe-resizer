@@ -1,5 +1,5 @@
 /**
- *  iframe-resizer/jquery   5.0.0-alpha.1 (iife)  -  2024-03-08
+ *  iframe-resizer/jquery 5.0.0-alpha.1 (iife) - 2024-03-08
  *
  *  License:    GPL-3.0
  *  Copyright:  (c) 2013 - 2024, David J. Bradshaw. All rights reserved.
