@@ -42,7 +42,7 @@ Ask the containing page for its positioning coordinates. You need to provide a c
     scrollHeight
   },
 
-  // window.viewport
+  // window.visualViewport
   viewport: {
     width
     height
