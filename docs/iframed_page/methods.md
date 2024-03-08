@@ -20,10 +20,43 @@ Remove the iFrame from the parent page.
 
 Returns the ID of the iFrame that the page is contained in.
 
-### getPageInfo(callback || false)
+### getParentInfo(callback || false)
 
 Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
 
+```js
+{
+  // iframe.getBoundingRect()
+  iframe: {
+    width
+    height
+    top
+    right	
+    bottom
+    left
+  },
+
+  // fron document.documentEkement
+  document: {
+    scrollWidth
+    scrollHeight
+  },
+
+  // window.viewport
+  viewport: {
+    width
+    height
+    offsetLeft
+    offsetTop
+    pageLeft
+    pageTop
+    scale
+  }
+}
+```
+
+
+<!--
 * **documentHeight** The containing document's height in pixels (the equivalent of  `document.documentElement.clientHeight` in the container)
 * **documentWidth** The containing document's width in pixels (the equivalent of `document.documentElement.clientWidth` in the container)
 * **iframeHeight** The height of the iframe in pixels
@@ -34,7 +67,7 @@ Ask the containing page for its positioning coordinates. You need to provide a c
 * **scrollY** The number of pixels between the left edge of the iframe and the left edge of the iframe viewport (`window.scrollY`)
 * **windowHeight** The containing window's height in pixels (the equivalent of `window.innerHeight` in the container)
 * **windowWidth** The containing window's width in pixels (the equivalent of `window.innerWidth` in the container)
-
+-->
 
 Your callback function will be recalled when the parent page is scrolled or resized.
 
