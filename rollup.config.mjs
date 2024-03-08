@@ -35,6 +35,7 @@ const npm = [
       output('core')('cjs')
     ],
     plugins: pluginsProd('core'),
+		watch: false,
   }, 
 
   //  Parent ES module (for bundlers) and CommonJS (for Node) build.
@@ -46,6 +47,7 @@ const npm = [
     ],
     external: ['@iframe-resizer/core'],
     plugins: pluginsProd('parent'),
+		watch: false,
   },
   
   // Parent browser-friendly UMD build
@@ -66,6 +68,7 @@ const npm = [
     input: 'packages/child/index.js',
     output: outputs('child'),
     plugins: pluginsProd('child'),
+		watch: false,
   },
 
   //  jQuery (ES) 
@@ -77,6 +80,7 @@ const npm = [
     ],
     external: ['@iframe-resizer/core'],
     plugins: pluginsProd('parent'),
+		watch: false,
   },
 
   // jQuery (umd)
@@ -109,7 +113,8 @@ const npm = [
       babel({
         exclude: 'node_modules/**',
       }),
-    ]
+    ],
+		watch: false,
   }, 
 ]
 
@@ -127,7 +132,7 @@ const js = [
     plugins: [
       clear({ targets: ['js']}),
       filesize(),
-      ...pluginsJs('parent'),,
+      ...pluginsJs('parent'),
       resolve(),
     ],
   }, 
