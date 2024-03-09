@@ -1,5 +1,5 @@
 {
-  "extends": ["auto"],   
+  "extends": ["auto"],
   "ignorePatterns": ["js/*", "dist/*", "*.d.ts"],
   "env": {
     "amd": true,
@@ -13,8 +13,7 @@
   "globals": {
     "location": true,
     "iframeResize": true,
-    "parentIFrame": true,
-
+    "parentIFrame": true
   },
   "parserOptions": { "ecmaVersion": 2020 },
   "rules": {
@@ -54,6 +53,40 @@
         "no-unsanitized/property": 0,
         "prettier/prettier": 0,
         "xss/no-location-href-assign": 0
+      }
+    },
+    {
+      "files": ["spec/**"],
+      "globals": {
+        "jasmine": true,
+        "describe": true,
+        "it": true,
+        "expect": true,
+        "beforeEach": true,
+        "afterEach": true,
+        "spyOn": true,
+        "spyOnProperty": true,
+        "spyOnAllFunctions": true,
+        "spyOnIFramePostMessage": true,
+        "getTarget": true,
+        "LOG": true,
+        "tearDown": true,
+        "loadIFrame": true,
+        "mockMsgFromIFrame": true,
+        "loadFixtures": true,
+        "spyPostMsg": true,
+        "msgObject": true,
+        "msgCalled": true,
+        "win": true
+      },
+      "rules": {
+        "no-console": 0,
+        "prefer-destructuring": 0,
+        "jest/expect-expect": 0,
+        "jest/no-done-callback": 0,
+        "jest/no-jasmine-globals": 0,
+        "jest/no-test-prefixes": 0,
+        "sonarjs/no-duplicate-string": 0
       }
     }
   ]
