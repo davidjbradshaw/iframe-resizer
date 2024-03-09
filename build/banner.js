@@ -1,7 +1,7 @@
-import pkg from '../package.json' with { type: "json" }
+import pkg from '../package.json' with { type: 'json' }
 
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 const date = new Date()
@@ -9,7 +9,7 @@ const year = date.getFullYear()
 const today = date.toISOString().split('T')[0]
 
 export default (file, type) => `/**
- *  iframe-resizer/${file} ${pkg.version} (${type}) - ${today}
+ *  iframe-resizer/${file} ${pkg.version} (${type}) ${type === 'iife' ? '' : `- ${today}`}
  *
  *  License:    ${pkg.license}
  *  Copyright:  (c) 2013 - ${year}, David J. Bradshaw. All rights reserved.
@@ -28,6 +28,3 @@ export default (file, type) => `/**
  */
 
 `
-
-
-
