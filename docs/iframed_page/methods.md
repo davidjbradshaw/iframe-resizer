@@ -22,7 +22,7 @@ Returns the ID of the iFrame that the page is contained in.
 
 ### getParentInfo(callback || false)
 
-Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following properties:
+Ask the containing page for its positioning coordinates. You need to provide a callback which receives an object with the following read only properties:
 
 ```js
 {
