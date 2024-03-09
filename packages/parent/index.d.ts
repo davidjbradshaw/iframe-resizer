@@ -1,11 +1,11 @@
 /**
  * @fileoverview Type definitions for iframe-resizer
  *
- * This is a fork of the DefinitelyTyped type definitions for iframe-resizer
- * updated to include the new API methods/options and remove deprecated ones 
+ * This is a fork of the DefinitelyTyped type definitions for iframe-resizer,
+ * updated to include the new API methods/options and remove deprecated ones.
  * https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/iframe-resizer/index.d.ts
  * 
- * I'm not a TypeScript dev, so please feel free to submit PRs to improve this file
+ * I'm not a TypeScript dev, so please feel free to submit PRs to improve this file.
  */
 
 
@@ -285,10 +285,12 @@ declare namespace iframeResizer {
   }
   function iframeResizer(options: IFrameOptions, target: string | HTMLElement): IFrameComponent[];
 }
+
 // leave this declaration outside the namespace so the 'require'd import is still callable
 declare function iframeResizer(
   options: iframeResizer.IFrameOptions,
   target: string | HTMLElement,
 ): iframeResizer.IFrameComponent[];
+
 export = iframeResizer;
 export as namespace iframeResizer;
