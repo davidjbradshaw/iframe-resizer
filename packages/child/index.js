@@ -42,7 +42,6 @@ const resetRequiredMethods = {
   documentElementScroll: 1,
 }
 const resizeObserveTargets = ['body']
-const sendPermit = true
 const widthCalcModeDefault = 'scroll'
 
 let autoResize = true
@@ -1082,10 +1081,8 @@ function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
     target.postMessage(msgID + message, targetOrigin)
   }
 
-  if (sendPermit === true) {
-    setTargetOrigin()
-    sendToParent()
-  }
+  setTargetOrigin()
+  sendToParent()
 }
 
 function receiver(event) {
