@@ -82,10 +82,12 @@
       "rules": {
         "no-console": 0,
         "prefer-destructuring": 0,
+        "jasmine/no-disabled-tests": 0,
         "jest/expect-expect": 0,
         "jest/no-done-callback": 0,
         "jest/no-jasmine-globals": 0,
         "jest/no-test-prefixes": 0,
+        "jest/prefer-to-be:": 0,
         "sonarjs/no-duplicate-string": 0
       }
     }
