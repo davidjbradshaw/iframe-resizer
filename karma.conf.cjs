@@ -1,8 +1,8 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
-    
+
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine-jquery', 'jasmine', 'requirejs'],
@@ -22,11 +22,13 @@ module.exports = function(config) {
       'test-main.js',
       'spec/lib/*.js',
       { pattern: 'js/*.js', included: false },
+      { pattern: 'test-js/*.js', included: false },
       { pattern: 'dist/parent/*.js', included: false },
       { pattern: 'dist/child/*.js', included: false },
       { pattern: 'dist/jquery/*.js', included: false },
       // { pattern: 'packages/*.js', included: false },
-      { pattern: 'example/*.html', included: false },
+      { pattern: 'example/html/*.html', included: false },
+      { pattern: 'example/child/*.html', included: false },
       { pattern: 'spec/*Spec.js', included: false },
       { pattern: 'spec/resources/*', included: false },
       { pattern: 'spec/javascripts/fixtures/*.html', included: false },
@@ -35,7 +37,7 @@ module.exports = function(config) {
     // list of files to exclude
     exclude: [],
 
-     // preprocess matching files before serving them to the browser
+    // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'js/*.js': ['coverage'],
@@ -49,13 +51,13 @@ module.exports = function(config) {
     client: {
       captureConsole: true,
     },
-    
+
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['logcapture', 'progress', 'verbose-summary', 'coverage'],
 
-// web server port
+    // web server port
     port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
@@ -67,6 +69,6 @@ module.exports = function(config) {
     browsers: ['ChromeHeadless'],
     autoWatch: false,
     // singleRun: false, // Karma captures browsers, runs the tests and exits
-    concurrency: Infinity
+    concurrency: Infinity,
   })
 }

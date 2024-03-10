@@ -11,3 +11,4 @@ coverage*
 js/*.js.map
 js/*.map.js
 dist
+test-js

@@ -22,7 +22,7 @@ require.config({
     jquery: 'node_modules/jquery/dist/jquery',
     iframeResizerParent: 'dist/parent/iframe-resizer.parent.umd',
     iframeResizerJquery: 'dist/jquery/iframe-resizer.jquery.umd',
-    iframeResizerChild: 'js/iframe-resizer.child',
+    iframeResizerChild: 'test-js/iframe-resizer.child',
   },
 
   // dynamically load all test files

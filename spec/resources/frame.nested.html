@@ -1,42 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      *,
+      *:before,
+      *:after {
+        box-model: border-box;
+      }
+      a {
+        float: right;
+        margin-left: 10px;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
 
-<head>
-	<meta charset="utf-8">
-	<title>iFrame message passing test</title>
-	<meta name="description" content="iFrame message passing test">
-	<meta name="viewport" content="width=device-width">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<style>
-		*, *:before, *:after {box-model: border-box;}
-			a { float:right; margin-left:10px;}
-			h2 {margin-top: 0;}
-		</style>
-</head>
+  <body>
+    <h2>Nested iFrame</h2>
+    <p>
+      Resize window or click one of the links in the nested iFrame to watch it
+      resize.
+    </p>
+    <div style="margin: 20px">
+      <iframe
+        id="nestedIFrame"
+        src="frame.content.html"
+        width="100%"
+        scrolling="no"
+      ></iframe>
+    </div>
+    <p id="callback"></p>
 
-<body>
-	<h2>Nested iFrame</h2>
-	<p>Resize window or click one of the links in the nested iFrame to watch it resize.</p>
-	<div style="margin:20px;">
-		<iframe id="nestedIFrame" src="frame.content.html" width="100%" scrolling="no"></iframe>
-	</div>
-	<p id="callback">
-	</p>
-
-	<script type="text/javascript" src="../../js/iframe-resizer.child.js"></script>
-	<script src="../../node_modules/jquery/dist/jquery.js"></script>
-	<script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
-	<script type="text/javascript">iframeResize({
-		  log: true, // Enable console logging
-		    onResized(messageData) {
-    // Callback fn when message is received
-    setTimeout(() => {
-      parentIFrame.sendMessage('nested')
-    }, 50)
-  },
-})
-	</script>
-
-</body>
-
+    <script
+      type="text/javascript"
+      src="../../test-js/iframe-resizer.child.js"
+    ></script>
+    <script src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.parent.js"
+    ></script>
+    <script type="text/javascript">
+      iframeResize({
+        log: true, // Enable console logging
+        onResized(messageData) {
+          // Callback fn when message is received
+          setTimeout(() => {
+            parentIFrame.sendMessage('nested')
+          }, 50)
+        },
+      })
+    </script>
+  </body>
 </html>
