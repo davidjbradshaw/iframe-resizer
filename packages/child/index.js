@@ -734,10 +734,9 @@ function getMaxElement(side) {
       return
     }
 
-    elVal = Number(
+    elVal =
       element.getBoundingClientRect()[side] +
-        getComputedStyle(element).getPropertyValue(`margin${Side}`),
-    )
+      parseFloat(getComputedStyle(element).getPropertyValue(`margin-${side}`))
 
     if (elVal > maxVal) {
       maxVal = elVal
@@ -749,7 +748,7 @@ function getMaxElement(side) {
 
   const logMsg = `
 Parsed ${len} element${(len = SINGLE ? '' : 's')} in ${timer.toPrecision(3)}ms
-${Side} ${hasTags ? 'tagged' : ''} element found at: ${maxVal}px
+${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${elementSnippet(maxEl)}`
 
   if (timer < 1.1 || isInit || hasTags) {
