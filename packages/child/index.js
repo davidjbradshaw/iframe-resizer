@@ -734,9 +734,10 @@ function getMaxElement(side) {
       return
     }
 
-    elVal =
+    elVal = Number(
       element.getBoundingClientRect()[side] +
-      getComputedStyle(element).getPropertyValue(`margin${Side}`)
+        getComputedStyle(element).getPropertyValue(`margin${Side}`),
+    )
 
     if (elVal > maxVal) {
       maxVal = elVal
