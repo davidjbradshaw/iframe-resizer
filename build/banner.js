@@ -8,23 +8,22 @@ const date = new Date()
 const year = date.getFullYear()
 const today = date.toISOString().split('T')[0]
 
-export default (file, type) => `/**
- *  iframe-resizer/${file} ${pkg.version} (${type}) ${type === 'iife' ? '' : `- ${today}`}
- *
- *  License:    ${pkg.license}
- *  Copyright:  (c) 2013 - ${year}, David J. Bradshaw. All rights reserved.
- * 
- *  Desciption: Keep same and cross domain iFrames sized to their content with
- *              support for window/content resizing, and multiple iFrames.
- *
+export default (file, type) => `/*!
  *  @preserve
- *  @module @iframe-resizer/${file.toLowerCase()}
- *  @version ${pkg.version}
- *  @license ${pkg.license}
- *  @author ${pkg.author.name} <${pkg.author.email}>
- *  @fileoverview ${capitalizeFirstLetter(file)}${file === 'jQuery' ? ' parent' : ''} window script for iframe-resizer.
- *  @copyright (c) 2013 - ${year}, ${pkg.author.name}. All rights reserved.
- *  @see {@link ${pkg.homepage}}
+ *  
+ *  @module     iframe-resizer/${file} ${pkg.version} (${type}) ${type === 'iife' ? '' : `- ${today}`}
+ *
+ *  @license    ${pkg.license} for non-commercial use only.
+ *              For commercial use, you must purchase a license from
+ *              ${pkg.homepage}/pricing
+ * 
+ *  @desciption Keep same and cross domain iFrames sized to their content 
+ *
+ *  @author     ${pkg.author.name} <${pkg.author.email}>
+ * 
+ *  @see        {@link ${pkg.homepage}}
+ * 
+ *  @copyright  (c) 2013 - ${year}, ${pkg.author.name}. All rights reserved.
  */
 
 `
