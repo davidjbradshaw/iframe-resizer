@@ -1,0 +1,4 @@
+dist
+js
+**/*.d.js
+coverage

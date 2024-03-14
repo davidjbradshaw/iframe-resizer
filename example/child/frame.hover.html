@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame :hover example</title>
+    <meta name="description" content="iFrame :hover example" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      a {
+        float: right;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <b>iFrame :Hover Example</b>
+    <a href="frame.content.html">Back to page 1</a>
+
+    <p>
+      Mouse over the code example below. 
+    </p>
+
+    <xmp>
+	  	<!--  #code  -->
+	  </xmp>
+
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.child.js"
+    ></script>
+
+    <div id="code">
+      <style>
+        xmp {
+          background-color: #eee;
+          padding: 20px;
+          display: block;
+        }
+
+        xmp:hover {
+          border: #c33 solid 40px;
+        }
+      </style>
+    </div>
+
+    <script>
+      document.getElementsByTagName('xmp')[0].textContent =
+        document.getElementById('code').innerHTML
+    </script>
+  </body>
+</html>

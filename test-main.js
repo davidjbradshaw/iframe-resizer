@@ -1,15 +1,15 @@
-var allTestFiles = []
+const allTestFiles = []
 
-var TEST_REGEXP = /(spec|test)\.js$/i
+const TEST_REGEXP = /(spec|test)\.js$/i
 
 // Get a list of all the test files to include
 // eslint-disable-next-line no-underscore-dangle
-Object.keys(window.__karma__.files).forEach(function (file) {
+Object.keys(window.__karma__.files).forEach((file) => {
   if (TEST_REGEXP.test(file)) {
     // Normalize paths to RequireJS module names.
     // If you require sub-dependencies of test files to be loaded as-is (requiring file extension)
     // then do not normalize the paths
-    var normalizedTestModule = file.replaceAll(/^\/base\/|\.js$/g, '')
+    const normalizedTestModule = file.replaceAll(/^\/base\/|\.js$/g, '')
     allTestFiles.push(normalizedTestModule)
   }
 })
@@ -20,15 +20,14 @@ require.config({
 
   paths: {
     jquery: 'node_modules/jquery/dist/jquery',
-    iframeResizerMin: 'js/iframeResizer.min',
-    iframeResizer: 'src/iframeResizer',
-    iframeResizerContentMin: 'js/iframeResizer.contentWindow.min',
-    iframeResizerContent: 'src/iframeResizer.contentWindow'
+    iframeResizerParent: 'dist/parent/iframe-resizer.parent.umd',
+    iframeResizerJquery: 'dist/jquery/iframe-resizer.jquery.umd',
+    iframeResizerChild: 'test-js/iframe-resizer.child',
   },
 
   // dynamically load all test files
   deps: allTestFiles,
 
   // we have to kickoff jasmine, as it is asynchronous
-  callback: window.__karma__.start // eslint-disable-line no-underscore-dangle
+  callback: window.__karma__.start, // eslint-disable-line no-underscore-dangle
 })

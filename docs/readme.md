@@ -11,9 +11,11 @@
   - [Methods](iframed_page/methods.md)
 - **Use with Libraries and Frameworks**
   - [React](https://github.com/davidjbradshaw/iframe-resizer-react)
-  - [Vue](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/vue.md)
+  - [Vue2](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/vue2.md) &amp; [Vue3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/vue3.md)
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
+  - [Ember](https://github.com/alexlafroscia/ember-iframe-resizer-modifier)
   - [jQuery](use_with/jquery.md)
+  - [Google Apps Script](use_with/google_apps_script.md)
 - [Troubleshooting](troubleshooting.md)
-- [Upgrade from version 3](upgrade.md)
+- [Upgrade to version 5](upgrade.md)
 - [Version history](../CHANGELOG.md)

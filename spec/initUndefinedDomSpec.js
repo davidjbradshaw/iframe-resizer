@@ -1,15 +1,15 @@
-/* jshint undef: false, unused: true */
+
 
 'use strict'
 
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('iFrame init(DOM Object)', function() {
     var iframe
 
     beforeAll(function() {
       loadIFrame('iframe600.html')
 
-      iframe = iFrameResize(
+      iframe = iframeResize(
         undefined,
         document.getElementsByTagName('iframe')[0]
       )[0]

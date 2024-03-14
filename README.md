@@ -1,8 +1,8 @@
 <img src="https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/img/logo-no-background.svg" alt="iFrame Resizer" style="margin-bottom: -20">
 
 [![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
-[![NPM Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://npm-stat.com/charts.html?package=iframe-resizer&from=2014-12-31)
-[![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer)
+[![NPM Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://npm-stat.com/charts.html?package=iframe-resizer&from=2014-12-31) <!--
+[![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer) -->
 [![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content. It provides a range of features to address the most common issues with using iFrames, these include:
@@ -12,7 +12,8 @@ This library enables the automatic resizing of the height and width of both same
 - Domain authentication for cross domain iFrames.
 - Provides a range of page size calculation methods to support complex CSS layouts.
 - Detects changes to the DOM that can cause the page to resize using [MutationObserver](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
-- Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Orientation Change and Mouse events).
+- Detects HTML elements resizing with [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver/ResizeObserver).
+- Detects events that can cause the page to resize (Window Resize, CSS Animation and Transition, Orientation Change, Browser Tab visability, plus a selection of Mouse and Touch events).
 - Simplified messaging between iFrame and host page via [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage).
 - Fixes in page links in iFrame and supports links between the iFrame and parent page.
 - Provides custom sizing and scrolling methods.
@@ -37,7 +38,7 @@ This package can be installed via NPM (`npm install iframe-resizer --save`).
 The package contains two minified JavaScript files in the [js](https://github.com/davidjbradshaw/iframe-resizer/tree/master/js) folder. The first ([iframeResizer.min.js](https://raw.githubusercontent.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js)) is for the page hosting the iFrames. It can be called with via JavaScript:
 
 ```js
-const iframes = iFrameResize( [{options}], [css selector] || [iframe] );
+const iframes = ( [{options}], [css selector] || [iframe] );
 ```
 
 The second file ([iframeResizer.contentWindow.min.js](https://raw.github.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js)) needs placing in the page(s) contained within your iFrame. <i>This file is designed to be a guest on someone else's system, so has no dependencies and won't do anything until it's activated by a message from the containing page</i>.
@@ -56,7 +57,7 @@ The normal configuration is to have the iFrame resize when the browser window ch
 <script src="/js/iframeResizer.min.js"></script>
 <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe>
 <script>
-  iFrameResize({ log: true }, '#myIframe')
+  iframeResize({ log: true }, '#myIframe')
 </script>
 ```
 
@@ -87,14 +88,14 @@ IFrame-Resizer provides an extensive range of options and APIs for both the pare
   - [Angular](https://github.com/davidjbradshaw/iframe-resizer/issues/478#issuecomment-347958630)
   - [Ember](https://github.com/alexlafroscia/ember-iframe-resizer-modifier)
   - [jQuery](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/jquery.md)
-  - [Google Apps Script](https://stackoverflow.com/a/65724113/2087070)
+  - [Google Apps Script](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/use_with/google_apps_script.md)
 - [Troubleshooting](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/troubleshooting.md)
-- [Upgrade from version 3](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
+- [Upgrade to version 5](https://github.com/davidjbradshaw/iframe-resizer/blob/master/docs/upgrade.md)
 - [Version history](https://github.com/davidjbradshaw/iframe-resizer/blob/master/CHANGELOG.md)
 
 ## License
 
-Copyright &copy; 2013-23 [David J. Bradshaw](https://github.com/davidjbradshaw) -
+Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -
 Licensed under the [MIT License](LICENSE)
 
 <!--

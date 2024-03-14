@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      a.back {
+        float: right;
+        margin-left: 8px;
+      }
+      body {
+        margin: 0;
+        padding: 8px 10px;
+        border: solid 1px red;
+      }
+      p {
+        padding: 5px 222px 5px 5px;
+        margin: 0 0 5px;
+      }
+      #abs {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background-color: wheat;
+        padding: 12px;
+      }
+      #abs p {
+        margin: 0 0 16px;
+        font-weight: 600;
+      }
+      a.top {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>
+      <b>iFrame</b>
+
+      <a href="frame.content.html" class="back">Back to page 1</a>
+      &nbsp;
+      <a
+        href="#"
+        class="back"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;"
+        >Bottom</a
+      >
+      &nbsp;
+      <a
+        href="#"
+        class="back"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;"
+        >Scroll to iFrame</a
+      >
+      &nbsp;
+      <a href="#test" class="back">Jump to iFrame anchor</a>
+      <a href="#anchorParentTest" class="back">Jump to parent anchor</a>
+    </p>
+    <p>
+      This page has an absolute position element that take it out side the
+      normal document body, which is marked with a red border on this page. This
+      prevents the normal height calculation, which is based on the body tag
+      from returning the correct height.
+    </p>
+    <p>
+      <span style="visibility: collapse">a</span>
+      <span style="visibility: hidden">a</span>
+      <span style="display: none">a</span>
+    </p>
+
+    <div id="abs">
+      <p>Overflowing&nbsp;text</p>
+      <span style="margin: 1ex 2ex 1em">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </span>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.child.js"
+    ></script>
+  </body>
+</html>

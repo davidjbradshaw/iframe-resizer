@@ -21,7 +21,7 @@ Good bug reports are extremely helpful, so thanks!
 
 Guidelines for bug reports:
 
-0. **Lint your code** &mdash; Use [jshint](http://jshint.com/)
+0. **Lint your code** &mdash; Using `npm run eslint:fix` 
    to ensure your problem isn't caused by a simple error in your own code.
 
 1. **Use the GitHub issue search** &mdash; check if the issue has already been

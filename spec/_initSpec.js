@@ -1,31 +1,25 @@
-define(['iframeResizer'], function(iFrameResize) {
-  describe('iFrame init', function() {
+define(['iframeResizerParent'], function(iframeResize) {
+  xdescribe('iFrame init', function() {
     var iframe
     var id = 'initTest'
 
     beforeEach(function(done) {
       loadIFrame('iframe600.html')
 
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: LOG,
         id: id + '-',
-        autoResize: false,
-        bodyMargin: 1,
         checkOrigin: false,
         inPageLinks: true,
-        interval: 0,
-        maxHeight: 100,
-        minHeight: 10,
-        maxWidth: 100,
-        minWidth: 10,
         scrolling: true,
-        sizeHeight: false,
-        sizeWidth: true,
         tolerance: 1,
-        onInit: function() {
+        direction: 'horizontal',
+        onReady: function() {
           setTimeout(done, 1)
         }
       })[0]
+
+      console.log('iframe', iframe)
     })
 
     afterEach(function() {

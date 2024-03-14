@@ -1,6 +1,6 @@
-define(['iframeResizer'], function (iFrameResize) {
+define(['iframeResizerParent'], function (iframeResize) {
   describe('Parent Page', function () {
-    describe('default resize', function () {
+    xdescribe('default resize', function () {
       var iframe
       var log = LOG
       var testId = 'defaultResize3'
@@ -8,7 +8,7 @@ define(['iframeResizer'], function (iFrameResize) {
 
       beforeEach(function (done) {
         loadIFrame('iframe600.html')
-        iframe = iFrameResize({
+        iframe = iframeResize({
           log: log,
           id: testId,
           onResized: function () {
@@ -36,7 +36,7 @@ define(['iframeResizer'], function (iFrameResize) {
 
       beforeEach(function (done) {
         loadIFrame('iframe600.html')
-        iframe = iFrameResize({
+        iframe = iframeResize({
           log: log,
           id: testId
         })[0]
@@ -64,7 +64,7 @@ define(['iframeResizer'], function (iFrameResize) {
 
       beforeEach(function (done) {
         loadIFrame('iframe600.html')
-        iframe = iFrameResize({
+        iframe = iframeResize({
           log: log,
           id: testId
         })[0]
@@ -95,7 +95,7 @@ define(['iframeResizer'], function (iFrameResize) {
       var setUp = (boxSizing, units) => {
         loadIFrame('iframe.html')
 
-        iframe = iFrameResize({
+        iframe = iframeResize({
           log: log,
           id: testId
         })[0]

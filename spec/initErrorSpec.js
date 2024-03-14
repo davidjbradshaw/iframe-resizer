@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Setup error', function() {
     var iframe
     var log = LOG
@@ -9,7 +9,7 @@ define(['iframeResizer'], function(iFrameResize) {
 
     it('min > max', function() {
       expect(function() {
-        iFrameResize({
+        iframeResize({
           log: log,
           id: 'error1',
           maxHeight: 100,
@@ -22,43 +22,43 @@ define(['iframeResizer'], function(iFrameResize) {
 
     it('Unexpected data type', function() {
       expect(function() {
-        iFrameResize(
+        iframeResize(
           {
             log: log,
             id: 'error2'
           },
           1
         )
-      }).toThrow(new TypeError('Unexpected data type (number)'))
+      }).toThrow(new TypeError('[iframeResizer] Unexpected data type (number)'))
     })
 
     it('Expected <IFRAME> tag', function() {
       expect(function() {
-        iFrameResize(
+        iframeResize(
           {
             log: log,
             id: 'error3'
           },
           'div'
         )
-      }).toThrow(new TypeError('Expected <IFRAME> tag, found <DIV>'))
+      }).toThrow(new TypeError('[iframeResizer] Expected <IFRAME> tag, found <DIV>'))
     })
 
-    it('Object is not a valid DOM element', function() {
+    it('Not a valid DOM element', function() {
       expect(function() {
-        iFrameResize(
+        iframeResize(
           {
             log: log,
             id: 'error4'
           },
           {}
         )
-      }).toThrow(new TypeError('Object is not a valid DOM element'))
+      }).toThrow(new TypeError('[iframeResizer] Not a valid DOM element'))
     })
 
     it('Options is not an object', function() {
       expect(function() {
-        iFrameResize('ERROR')
+        iframeResize('ERROR')
       }).toThrow(new TypeError('Options is not an object'))
     })
   })

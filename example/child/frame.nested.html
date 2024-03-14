@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
+    <script type="text/javascript" src="../../js/iframe-resizer.child.js"></script>
+    <style>
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+      }
+      a {
+        float: right;
+        margin-left: 10px;
+      }
+
+      h2 {
+        margin-top: 0;
+      }
+      body {
+        margin: 8px !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="frame.content.html">Back to page 1</a>
+    <h2>Nested iFrame</h2>
+    <p>
+      Resize window or click one of the links in the nested iFrame to watch it
+      resize.
+    </p>
+    <div style="margin:20px;">
+      <iframe
+        id="nestedIFrame"
+        src="../child/frame.content.html"
+        width="100%"
+        scrolling="no"
+      ></iframe>
+    </div>
+    <p id="callback"></p>
+
+    <script type="text/javascript">
+      const level = document.location.search.replace(/\?/, '') || 0
+      const id = `nestedIFrame${level}`
+      const callbackDisplay = document.querySelector('p#callback')
+      const iframe = document.getElementById('nestedIFrame')
+
+      iframe.setAttribute('id', id)
+      iframe.setAttribute('src', `frame.content.html?${level}`)
+
+      /*
+       * If you do not understand what the code below does, then please just use the
+       * following call in your own code.
+       *
+       *   iframeResize()
+       *
+       */
+
+      const iframes = window.iframeResize({
+        inPageLinks: true,
+
+        // Callback fn when iFrame resized, update the data being displayed
+        onResized(messageData) {
+          callbackDisplay.innerHTML = ` <b> Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
+        },
+
+        // Callback fn when message is received, forward to parent page
+        onMessage(messageData) {
+          window.parentIFrame.sendMessage(`${messageData.message} (via ${id})`)
+        },
+
+        // Callback fn when iFrame is closed
+        onClosed(id) {
+          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+        },
+      })
+
+      // Forward messages from parent page to nested iFrames
+      window.iFrameResizer = {
+        onMessage: (message) =>
+          iframes.forEach((iframe) =>
+      iframe.iFrameResizer?.sendMessage(`${message} (via parent ${id} )`),
+    ),
+      }
+    </script>
+  </body>
+</html>

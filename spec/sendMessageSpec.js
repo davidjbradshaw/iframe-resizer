@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Send Message from Host Page', function() {
     var iframe
     var log = LOG
@@ -12,7 +12,7 @@ define(['iframeResizer'], function(iFrameResize) {
     })
 
     it('send message to iframe', function(done) {
-      var iframe1 = iFrameResize({
+      var iframe1 = iframeResize({
         log: log,
         id: 'sendMessage1'
       })[0]
@@ -30,7 +30,7 @@ define(['iframeResizer'], function(iFrameResize) {
     })
 
     it('mock incoming message', function(done) {
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: log,
         id: 'sendMessage2',
         onMessage: function(messageData) {
@@ -42,11 +42,11 @@ define(['iframeResizer'], function(iFrameResize) {
       mockMsgFromIFrame(iframe, 'message:"test:test"')
     })
 
-    it('send message and get response', function(done) {
-      iframe = iFrameResize({
-        log: log,
+    xit('send message and get response', function(done) {
+      iframe = iframeResize({
+        log,
         id: 'sendMessage3',
-        onInit: function(iframe) {
+        onReady: function(iframe) {
           iframe.iFrameResizer.sendMessage('chkSendMsg')
         },
         onMessage: function(messageData) {

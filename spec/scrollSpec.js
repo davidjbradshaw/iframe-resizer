@@ -1,4 +1,4 @@
-define(['iframeResizer'], function(iFrameResize) {
+define(['iframeResizerParent'], function(iframeResize) {
   describe('Scroll Page', function() {
     var iframe
     var log = LOG
@@ -12,7 +12,7 @@ define(['iframeResizer'], function(iFrameResize) {
     })
 
     it('mock incoming message', function(done) {
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: log,
         id: 'scroll1'
       })[0]
@@ -29,7 +29,7 @@ define(['iframeResizer'], function(iFrameResize) {
     })
 
     it('mock incoming message', function(done) {
-      iframe = iFrameResize({
+      iframe = iframeResize({
         log: log,
         id: 'scroll2'
       })[0]

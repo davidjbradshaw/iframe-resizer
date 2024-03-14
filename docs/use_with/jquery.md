@@ -1,7 +1,7 @@
 ## jQuery
 
-If jQuery is detected on the page, then this library provides a simple jQuery interface. 
+The `@iframe-resizer/jquery` package provides a jQuery plugin for use on the parent page.
 
 ```js
-$('iframe').iFrameResize([{ options }])
+$('iframe').([{ options }])
 ```
