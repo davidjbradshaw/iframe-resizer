@@ -68,7 +68,8 @@
       onScroll: function () {
         return true
       }
-    })
+    }),
+    destroyObserver
 
   function getMutationObserver() {
     return (
@@ -729,6 +730,8 @@
     chkEvent(iframeId, 'onClosed', iframeId)
     log(iframeId, '--')
     removeIframeListeners(iframe)
+    destroyObserver && destroyObserver.disconnect()
+    destroyObserver = null
   }
 
   function getPagePosition(iframeId) {
@@ -1146,11 +1149,12 @@
         destroyObserver.observe(iframe.parentNode, {
           childList: true
         })
+        return destroyObserver
       }
 
       var MutationObserver = getMutationObserver()
       if (MutationObserver) {
-        createDestroyObserver(MutationObserver)
+        destroyObserver = createDestroyObserver(MutationObserver)
       }
 
       addEventListener(iframe, 'load', iFrameLoaded)
