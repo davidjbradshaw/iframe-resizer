@@ -23,7 +23,7 @@ export default {
   },
 
   once(event, listener) {
-    const remove = this.on(event, (...args) => {
+    const remove = this.addListener(event, (...args) => {
       remove()
       listener(...args)
     })
