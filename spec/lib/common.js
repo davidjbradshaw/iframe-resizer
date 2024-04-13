@@ -1,38 +1,36 @@
-'use strict';
+/* eslint-disable no-unused-vars */
+/* eslint-disable prefer-template */
 
-var LOG = true;
+const LOG = true
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
-jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures';
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000
+jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures'
 
 function tearDown(iframe) {
-  if (iframe) setTimeout(iframe.iFrameResizer.close, 1);
-  window.parentIFrame = undefined;
+  if (iframe) setTimeout(iframe.iFrameResizer.close, 1)
+  window.parentIFrame = undefined
 }
 
 function loadIFrame(filename) {
-  loadFixtures(filename);
+  loadFixtures(filename)
 }
 
 function getTarget(iframe) {
-  return iframe.src
-    .split('/')
-    .slice(0, 3)
-    .join('/');
+  return iframe.src.split('/').slice(0, 3).join('/')
 }
 
 function mockPostMsgViaHook(testIFrame, id, msg, callback) {
-  return testIFrame('[iFrameSizer]' + id + ':' + msg, callback);
+  return testIFrame('[iFrameSizer]' + id + ':' + msg, callback)
 }
 
 function mockPostMsg(id, msg) {
-  var message = '[iFrameSizer]' + id + ':' + msg;
-  console.log('Mock postMessage: ', message);
-  window.postMessage(message, '*');
+  const message = '[iFrameSizer]' + id + ':' + msg
+  console.log('Mock postMessage:', message)
+  window.postMessage(message, '*')
 }
 
 function mockMsgFromIFrame(iframe, msg) {
-  mockPostMsg(iframe.id, '0:0:' + msg);
+  mockPostMsg(iframe.id, '0:0:' + msg)
 }
 
 function mockInitFromParent(testIFrame, id, log, callback) {
@@ -40,28 +38,28 @@ function mockInitFromParent(testIFrame, id, log, callback) {
     testIFrame,
     id,
     '8:false:' + log + ':0:true:false:null:max:wheat:null:0:true:child:scroll',
-    callback
-  );
+    callback,
+  )
 }
 
 function spyOnPostMessage(target) {
-  spyOn(target, 'postMessage');
+  spyOn(target, 'postMessage')
 }
 
 function spyOnWindowPostMessage() {
-  spyOnPostMessage(window.parent);
-  return window.parent.postMessage;
+  spyOnPostMessage(window.parent)
+  return window.parent.postMessage
 }
 
 function spyOnIFramePostMessage(iframe) {
-  spyOnPostMessage(iframe.contentWindow);
+  spyOnPostMessage(iframe.contentWindow)
 }
 
 function closeChild(window, done) {
-  window.parentIFrame.close();
-  done();
+  window.parentIFrame.close()
+  done()
 }
 
 function strEnd(str, num) {
-  return str.slice(-num);
+  return str.slice(-num)
 }

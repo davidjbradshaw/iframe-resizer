@@ -1,53 +1,53 @@
-define(['iframeResizerParent'], function(iframeResize) {
-  xdescribe('iFrame init', function() {
+define(['iframeResizerParent'], function (iframeResize) {
+  xdescribe('iFrame init', () => {
     var iframe
     var id = 'initTest'
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
       loadIFrame('iframe600.html')
 
       iframe = iframeResize({
-        log: LOG,
+        log,
         id: id + '-',
         checkOrigin: false,
         inPageLinks: true,
         scrolling: true,
         tolerance: 1,
         direction: 'horizontal',
-        onReady: function() {
+        onReady: () => {
           setTimeout(done, 1)
-        }
+        },
       })[0]
 
       console.log('iframe', iframe)
     })
 
-    afterEach(function() {
+    afterEach(() => {
       //tearDown(iframe);
     })
 
-    it('should add an ID', function() {
+    it('should add an ID', () => {
       expect(iframe.id.split('-')[0]).toBe(id)
     })
 
-    describe('methods', function() {
-      it('should create iFrameResizer object', function() {
+    describe('methods', () => {
+      it('should create iFrameResizer object', () => {
         expect(iframe.iFrameResizer).toBeDefined()
       })
 
-      it('should create a close method', function() {
+      it('should create a close method', () => {
         expect(iframe.iFrameResizer.close).toBeDefined()
       })
 
-      it('should create a resize method', function() {
+      it('should create a resize method', () => {
         expect(iframe.iFrameResizer.resize).toBeDefined()
       })
 
-      it('should create a moveToAnchor method', function() {
+      it('should create a moveToAnchor method', () => {
         expect(iframe.iFrameResizer.moveToAnchor).toBeDefined()
       })
 
-      it('should create a sendMessage method', function() {
+      it('should create a sendMessage method', () => {
         expect(iframe.iFrameResizer.sendMessage).toBeDefined()
       })
     })

@@ -1,30 +1,27 @@
+define(['iframeResizerParent'], (iframeResize) => {
+  describe('iFrame init(Double)', () => {
+    let iframe
 
-
-'use strict'
-
-define(['iframeResizerParent'], function(iframeResize) {
-  describe('iFrame init(Double)', function() {
-    var iframe
-
-    beforeAll(function() {
+    beforeAll(() => {
       loadIFrame('iframe600WithId.html')
       //spyOn(console,'warn');
     })
 
-    afterAll(function() {
+    afterAll(() => {
       tearDown(iframe)
     })
 
-    it('should create iFrameResizer object', function() {
+    it('should create iFrameResizer object', () => {
       window.parentIFrame = {
-        getId: function() {
-          return 'getIdTest'
-        }
+        getId: () => 'getIdTest',
       }
-      iframe = iframeResize({ log: LOG }, '#doubleTest')[0]
-      iframeResize({ log: LOG }, '#doubleTest')
+
+      iframe = iframeResize({}, '#doubleTest')[0]
+      iframeResize({}, '#doubleTest')
+
       expect(iframe.iFrameResizer).toBeDefined()
       expect(console.warn).toHaveBeenCalled()
+
       delete window.parentIFrame
     })
   })
