@@ -955,17 +955,6 @@ function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
   function resizeIFrame() {
     height = currentHeight
     width = currentWidth
-
-    // if (height === 0) {
-    //   log('Height is 0. Not sending a message to the parent page.')
-    //   return
-    // }
-
-    // if (width === 0) {
-    //   log('Width is 0. Not sending a message to the parent page.')
-    //   return
-    // }
-
     sendMsg(height, width, triggerEvent)
   }
 
