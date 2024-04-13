@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -45,14 +45,14 @@
       &nbsp;
       <a
         href="#"
-        class=" back"
+        class="back"
         onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;"
         >Bottom</a
       >
       &nbsp;
       <a
         href="#"
-        class=" back"
+        class="back"
         onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;"
         >Scroll to iFrame</a
       >
@@ -75,7 +75,7 @@
       off selecting <b>max</b> if you need to change away from the default
       <b>bodyOffset</b> option.
     </p>
-    <p >
+    <p>
       <b>Height Calculation Method</b>
       <select id="heightCalculationMethod">
         <option>auto</option>
@@ -91,9 +91,9 @@
         <option>taggedElement</option>
       </select>
     </p>
-    <span style="visibility: collapse;">a</span>
-    <span style="visibility: hidden;">a</span>
-    <span style="display: none;">a</span>
+    <span style="visibility: collapse">a</span>
+    <span style="visibility: hidden">a</span>
+    <span style="display: none">a</span>
     <p>
       <i
         >This option should be used sparingly, as the alternate methods can be
@@ -120,17 +120,18 @@
       type="text/javascript"
       src="../../js/iframe-resizer.child.js"
     ></script>
-    
-    <script>document
-  .getElementById('heightCalculationMethod')
-  .addEventListener('change', function () {
-      if ('parentIFrame' in window) {
-        const { parentIFrame } = window
-  
-        parentIFrame.setHeightCalculationMethod(this.value)
-        parentIFrame.size()
-      }
-    })
+
+    <script>
+      document
+        .getElementById('heightCalculationMethod')
+        .addEventListener('change', () => {
+          if ('parentIFrame' in window) {
+            const { parentIFrame } = window
+
+            parentIFrame.setHeightCalculationMethod(this.value)
+            parentIFrame.size()
+          }
+        })
     </script>
   </body>
 </html>
