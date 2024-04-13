@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -24,18 +24,25 @@
       Resize window or click one of the links in the iFrame to watch it resize.
       Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.
     </p>
-    <div id="iframeContainer" style="margin:20px;">
-      <iframe src="../child/frame.content.html" width="100%" scrolling="no"></iframe>
+    <div id="iframeContainer" style="margin: 20px">
+      <iframe
+        src="../child/frame.content.html"
+        width="100%"
+        scrolling="no"
+      ></iframe>
     </div>
     <p id="callback"></p>
-    <div style="margin: 8px 0;font-size:13px;">
+    <div style="margin: 8px 0; font-size: 13px">
       For details on how this works, see
       <a href="https://github.com/davidjbradshaw/iframe-resizer"
         >https://github.com/davidjbradshaw/iframe-resizer</a
       >.
     </div>
 
-    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.parent.js"
+    ></script>
     <script type="text/javascript">
       /*
        * If you do not understand what the code below does, then please just use the
@@ -47,7 +54,7 @@
 
       const callbackDisplay = document.querySelector('p#callback')
 
-      iframeResize({
+      const iframes = iframeResize({
         inPageLinks: true, // Enable in page links
         // offsetHeight: 10, // Alter the returned height
         // direction: 'none', // 'vertical' or 'horizontal' or 'none'
@@ -71,20 +78,23 @@
           // Callback fn when message is received
           callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Message:</b> ${messageData.message}`
           alert(messageData.message)
-          messageData.iframe.iFrameResizer.sendMessage('Hello back from parent page')
+          messageData.iframe.iFrameResizer.sendMessage(
+            'Hello back from parent page',
+          )
         },
-      
+
         onClosed(id) {
-    // Callback fn when iFrame is closed
-    callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
-  },
+          // Callback fn when iFrame is closed
+          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+        },
       })
 
       function toggle() {
         const iframes = document.querySelectorAll('iframe')
         const iframe = iframes[0]
-      
-        iframe.style.display = iframe.style.display === 'none' ? 'block' : 'none'
+
+        iframe.style.display =
+          iframe.style.display === 'none' ? 'block' : 'none'
       }
 
       document.getElementById('toggle').addEventListener('click', toggle)
