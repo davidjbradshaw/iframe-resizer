@@ -1,5 +1,5 @@
 import strip from '@rollup/plugin-strip'
-import commonjs from '@rollup/plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs'
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
@@ -8,7 +8,7 @@ import versionInjector from 'rollup-plugin-version-injector'
 
 import createPkgJson from './pkgJson.js'
 
-import pkg from '../package.json' with { type: "json" }
+import pkg from '../package.json' with { type: 'json' }
 
 const vi = {
   injectInComments: false,
@@ -20,24 +20,23 @@ export const injectVersion = () => [versionInjector(vi)]
 export const pluginsBase = (stripLog) => (file) => {
   const delog = [strip({ functions: ['log'] })]
 
-  const base = [
-    versionInjector(vi),
-    commonjs(), 
-  ]
+  const base = [versionInjector(vi), commonjs()]
 
   return stripLog ? delog.concat(base) : base
 }
 
-const fixVersion = (file) => 
-  file in {core:1, child:1} ? {} : { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+const fixVersion = (file) =>
+  file in { core: 1, child: 1 }
+    ? {}
+    : { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
 
 const today = new Date().toISOString().split('T').join(' - ')
 
 const createTransform = (file) => (contents) =>
   String(contents)
-    .replace(/__PKG_NAME__/g, `@iframe-resizer/${file}`)
-    .replace(/__PKG_VERSION__/g, pkg.version)
-    .replace(/__BUILD_DATE__/g, today)
+    .replace(/@@PKG_NAME@@/g, `@iframe-resizer/${file}`)
+    .replace(/@@PKG_VERSION@@/g, pkg.version)
+    .replace(/@@BUILD_DATE@@/g, today)
 
 export const pluginsProd = (file) => {
   const dest = `dist/${file}`
@@ -46,8 +45,8 @@ export const pluginsProd = (file) => {
   const transform = createTransform(file)
 
   const targets = [
-    { src: ['LICENSE', 'FUNDING.md', /* 'SECURITY.md' */], dest},
-    { src: `${src}/README.md`, dest, transform }
+    { src: ['LICENSE', 'FUNDING.md' /* 'SECURITY.md' */], dest },
+    { src: `${src}/README.md`, dest, transform },
   ]
 
   return [

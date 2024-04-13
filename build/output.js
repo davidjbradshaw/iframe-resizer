@@ -5,7 +5,7 @@ import createBanner from './banner.js'
 
 export const output = (file) => (format) => ({
   banner: createBanner(file, format),
-  file: `dist/${file}/iframe-resizer.${file}.${format}.js`,
+  file: `dist/${file}/index.${format}.js`,
   generatedCode: 'es2015',
   format,
   plugins: terser({

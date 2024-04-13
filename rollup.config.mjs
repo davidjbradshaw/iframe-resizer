@@ -29,6 +29,7 @@ const outputPlugins = (file, format) => ({
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
   delete pkg.dependencies.react
+  delete pkg.private
   return JSON.stringify(pkg, null, 2)
 }
 
