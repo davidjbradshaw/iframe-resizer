@@ -1,6 +1,7 @@
-## __PKG_NAME__
+## **PKG_NAME**
 
-This is package is part of [iframe-resizer](http://davidjbradshaw.github.io/iframe-resizer/).
+This is package is part of [iframe-resizer](http://davidjbradshaw.github.io/iframe-resizer-docs/).
 
---
-_ iframe-resizer version __PKG_VERSION__  __BUILD_DATE__ _
+---
+
+_iframe-resizer version **PKG_VERSION** **BUILD_DATE**_
