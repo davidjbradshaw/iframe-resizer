@@ -45,6 +45,6 @@ export default function createIframeResize() {
         throw new TypeError(`${id}Unexpected data type (${typeof target})`)
     }
 
-    return iFrames
+    return Object.freeze(iFrames)
   }
 }
