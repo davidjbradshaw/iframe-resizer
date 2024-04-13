@@ -1,58 +1,58 @@
-define(['iframeResizerParent'], function(iframeResize) {
-  describe('Send Message from Host Page', function() {
+define(['iframeResizerParent'], function (iframeResize) {
+  describe('Send Message from Host Page', () => {
     var iframe
-    var log = LOG
+    const log = LOG
 
-    beforeEach(function() {
+    beforeEach(() => {
       loadIFrame('iframe600.html')
     })
 
-    afterEach(function() {
+    afterEach(() => {
       tearDown(iframe)
     })
 
-    it('send message to iframe', function(done) {
+    it('send message to iframe', function (done) {
       var iframe1 = iframeResize({
-        log: log,
-        id: 'sendMessage1'
+        log,
+        id: 'sendMessage1',
       })[0]
 
       spyOnIFramePostMessage(iframe1)
-      setTimeout(function() {
+      setTimeout(() => {
         iframe1.iFrameResizer.sendMessage('chkSendMsg:test')
         expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
           '[iFrameSizer]message:"chkSendMsg:test"',
-          getTarget(iframe1)
+          getTarget(iframe1),
         )
         tearDown(iframe1)
         done()
       }, 100)
     })
 
-    it('mock incoming message', function(done) {
+    it('mock incoming message', function (done) {
       iframe = iframeResize({
-        log: log,
+        log,
         id: 'sendMessage2',
-        onMessage: function(messageData) {
+        onMessage: function (messageData) {
           expect(messageData.message).toBe('test:test')
           done()
-        }
+        },
       })[0]
 
       mockMsgFromIFrame(iframe, 'message:"test:test"')
     })
 
-    xit('send message and get response', function(done) {
+    xit('send message and get response', function (done) {
       iframe = iframeResize({
         log,
         id: 'sendMessage3',
-        onReady: function(iframe) {
+        onReady: function (iframe) {
           iframe.iFrameResizer.sendMessage('chkSendMsg')
         },
-        onMessage: function(messageData) {
+        onMessage: function (messageData) {
           expect(messageData.message).toBe('message: test string')
           done()
-        }
+        },
       })[0]
     })
   })

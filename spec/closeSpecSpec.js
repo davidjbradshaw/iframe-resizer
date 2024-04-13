@@ -1,37 +1,37 @@
-define(['iframeResizerParent'], function(iframeResize) {
-  describe('Close iFrame', function() {
+define(['iframeResizerParent'], function (iframeResize) {
+  describe('Close iFrame', () => {
     var iframe
 
-    beforeEach(function() {
+    beforeEach(() => {
       loadIFrame('iframe600.html')
     })
 
-    it('closes from parent', function(done) {
+    it('closes from parent', function (done) {
       var evtCounter = 0
 
       iframe = iframeResize({
-        log: LOG,
+        log,
         id: 'close1',
-        onClosed: function() {
+        onClosed: () => {
           setTimeout(done, 0)
-        }
+        },
       })[0]
 
       setTimeout(iframe.iFrameResizer.close, 1)
     })
 
-    it('closes from iframe', function(done) {
+    it('closes from iframe', function (done) {
       var evtCounter = 0
 
       iframe = iframeResize({
-        log: LOG,
+        log,
         id: 'close2',
-        onClosed: function() {
+        onClosed: () => {
           setTimeout(done, 0)
         },
-        onReady: function(iframe) {
+        onReady: function (iframe) {
           iframe.iFrameResizer.sendMessage('close')
-        }
+        },
       })[0]
 
       mockMsgFromIFrame(iframe, 'close')

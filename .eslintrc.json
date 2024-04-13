@@ -82,6 +82,7 @@
       "rules": {
         "no-console": 0,
         "prefer-destructuring": 0,
+        "yoda": 0,
         "jasmine/no-disabled-tests": 0,
         "jest/expect-expect": 0,
         "jest/no-done-callback": 0,

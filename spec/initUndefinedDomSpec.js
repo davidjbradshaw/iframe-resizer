@@ -1,25 +1,23 @@
-
-
 'use strict'
 
-define(['iframeResizerParent'], function(iframeResize) {
-  describe('iFrame init(DOM Object)', function() {
+define(['iframeResizerParent'], (iframeResize) => {
+  describe('iFrame init(DOM Object)', function () {
     var iframe
 
-    beforeAll(function() {
+    beforeAll(function () {
       loadIFrame('iframe600.html')
 
       iframe = iframeResize(
         undefined,
-        document.getElementsByTagName('iframe')[0]
+        document.getElementsByTagName('iframe')[0],
       )[0]
     })
 
-    afterAll(function() {
+    afterAll(function () {
       tearDown(iframe)
     })
 
-    it('should create iFrameResizer object', function() {
+    it('should create iFrameResizer object', function () {
       expect(iframe.iFrameResizer).toBeDefined()
     })
   })
