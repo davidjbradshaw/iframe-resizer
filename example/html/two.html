@@ -53,7 +53,8 @@
       const callbackDisplay = document.querySelector('p#callback')
 
       const iframes = iframeResize({
-        enableInPageLinks: true,
+        inPageLinks: true, // Enable in page links
+        license: 'GPL-V3',
         onResized(messageData) {
           // Callback fn when resize is received
           callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
