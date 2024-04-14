@@ -922,10 +922,19 @@ export default (options) => (iframe) => {
       settings[iframeId].iframe.iFrameResizer = {
         close: closeIFrame.bind(null, settings[iframeId].iframe),
 
-        removeListeners: removeIframeListeners.bind(
-          null,
-          settings[iframeId].iframe,
-        ),
+        disconnect: removeIframeListeners.bind(null, settings[iframeId].iframe),
+
+        removeListeners() {
+          advise(
+            iframeId,
+            `
+\u001B[31;1mDeprecated Method Name\u001Bm
+
+The \u001B[removeListeners()\u001B[m method has been renamed to \u001B[disconnect()\u001B[m.
+`,
+          )
+          this.disconnect()
+        },
 
         resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
@@ -1055,6 +1064,8 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
     init(createOutgoingMsg(iframeId))
     setupIFrameObject()
   }
+
+  return iframe?.iFrameResizer
 }
 
 function sendTriggerMsg(eventName, event) {
