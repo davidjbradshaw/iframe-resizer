@@ -24,10 +24,8 @@ function IframeResizer(props) {
   // deal with changes to the element and does not need recalling
   useEffect(() => {
     const iframe = iframeRef.current
-
-    connectResizer({ ...rest, onClose })(iframe)
-
-    return () => iframe?.iFrameResizer.removeListeners()
+    const resizer = connectResizer({ ...rest, onClose })(iframe)
+    return () => resizer.disconnect()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useImperativeHandle(forwardRef, () => ({
