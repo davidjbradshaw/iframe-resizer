@@ -15,6 +15,7 @@ import {
   warn,
 } from '../common/log'
 import { isNumber, once } from '../common/utils'
+import cyrb from './cyrb'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -803,6 +804,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.offsetHeight,
     iframeSettings.offsetWidth,
     iframeSettings.sizeHeight,
+    cyrb(iframeSettings.license),
     page.version,
   ].join(':')
 }
@@ -919,7 +921,7 @@ export default (options) => (iframe) => {
 
   function setupIFrameObject() {
     if (settings[iframeId]) {
-      settings[iframeId].iframe.iFrameResizer = {
+      const resizer = {
         close: closeIFrame.bind(null, settings[iframeId].iframe),
 
         disconnect: removeIframeListeners.bind(null, settings[iframeId].iframe),
@@ -947,6 +949,9 @@ The \u001B[removeListeners()\u001B[m method has been renamed to \u001B[disconnec
           trigger('Send Message', `message:${message}`, iframeId)
         },
       }
+
+      settings[iframeId].iframe.iframeResizer = resizer
+      settings[iframeId].iframe.iFrameResizer = resizer
     }
   }
 

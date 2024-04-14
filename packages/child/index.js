@@ -53,6 +53,7 @@ let bodyPadding = ''
 let calculateHeight = true
 let calculateWidth = false
 let calcElements = null
+// let check
 let firstRun = true
 let hasTags = false
 let height = 1
@@ -191,6 +192,8 @@ function readDataFromParent() {
   offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16])
   offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
   calculateHeight = undefined === data[18] ? calculateHeight : strBool(data[18])
+  // check = data[19] // eslint-disable-line prefer-destructuring
+  // version = data[20] // eslint-disable-line prefer-destructuring
 }
 
 function readDataFromPage() {

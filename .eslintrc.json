@@ -15,7 +15,7 @@
     "iframeResize": true,
     "parentIFrame": true
   },
-  "parserOptions": { "ecmaVersion": 2020 },
+  "parserOptions": { "ecmaVersion": 2021 },
   "rules": {
     "comma-dangle": [1, "always-multiline"],
     "const-case/uppercase": 0,
