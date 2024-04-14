@@ -4,7 +4,7 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        targets: 'last 2 versions',
+        targets: 'last 4 versions',
       },
     ],
     '@babel/preset-react',
