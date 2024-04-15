@@ -762,7 +762,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
           `
 \u001B[31;1mNo response from iFrame\u001B[m
             
-The iframe (\u001B[3m${id}\u001B[m) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check \u001B[1miFrameResizer.contentWindow.js\u001B[m has been loaded in the iframe.
+The iframe (\u001B[3m${id}\u001B[m) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check \u001B[1m@iframe-resizer/child\u001B[m package has been loaded in the iframe.
 
 This message can be ignored if everything is working, or you can set the \u001B[1mwarningTimeout\u001B[m option to a higher value or zero to suppress this warning.
 `,
