@@ -13,6 +13,7 @@
   if (typeof window === 'undefined') return // don't run for server side render
 
   var count = 0,
+    destroyObserver,
     logEnabled = false,
     hiddenCheckEnabled = false,
     msgHeader = 'message',
@@ -68,8 +69,7 @@
       onScroll: function () {
         return true
       }
-    }),
-    destroyObserver
+    })
 
   function getMutationObserver() {
     return (
