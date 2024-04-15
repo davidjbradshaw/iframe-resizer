@@ -53,7 +53,7 @@ let bodyPadding = ''
 let calculateHeight = true
 let calculateWidth = false
 let calcElements = null
-// let check
+let check
 let firstRun = true
 let hasTags = false
 let height = 1
@@ -63,6 +63,7 @@ let initMsg = ''
 let inPageLinks = {}
 let isInit = true
 let logging = false
+let mode = 0
 let mouseEvents = false
 let myID = ''
 let offsetHeight = 0
@@ -119,12 +120,37 @@ function elementSnippet(el) {
     : `${outer.slice(0, 30).replaceAll('\n', ' ')}...`
 }
 
+const rot = (s) =>
+  s.replaceAll(/[A-Za-z]/g, (c) =>
+    String.fromCodePoint(
+      (c <= 'Z' ? 90 : 122) >= (c = c.codePointAt(0) + 19) ? c : c - 26, // eslint-disable-line no-cond-assign
+    ),
+  )
+
+const encode = (s) =>
+  s
+    .replaceAll('<br>', '\n')
+    .replaceAll('<rb>', '\u001B[31;1m')
+    .replaceAll('</>', '\u001B[m')
+    .replaceAll('<b>', '\u001B[1m')
+    .replaceAll('<i>', '\u001B[3m')
+    .replaceAll('<u>', '\u001B[4m')
+
 // TODO: remove .join(' '), requires major test updates
 const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
+
+const formatAdvise = (...msg) =>
+  window.chrome // Only show formatting in Chrome as not supported in other browsers
+    ? encode(formatLogMsg(...msg))
+    : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, '') // eslint-disable-line no-control-regex
 
 const log = (...msg) =>
   // eslint-disable-next-line no-console
   logging && console?.log(formatLogMsg(...msg))
+
+// const info = (...msg) =>
+//   // eslint-disable-next-line no-console
+//   console?.info(formatAdvise(...msg))
 
 const warn = (...msg) =>
   // eslint-disable-next-line no-console
@@ -132,22 +158,22 @@ const warn = (...msg) =>
 
 const advise = (...msg) =>
   // eslint-disable-next-line no-console
-  console?.warn(
-    window.chrome // Only show formatting in Chrome as not supported in other browsers
-      ? formatLogMsg(...msg)
-      : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
-  )
+  console?.warn(formatAdvise(...msg))
+
+const adviser = (msg) => advise(rot(msg))
 
 function init() {
   checkCrossDomain()
   readDataFromParent()
   log(`Initialising iFrame v${VERSION} (${window.location.href})`)
   readDataFromPage()
+  setMode()
   setMargin()
   setBodyStyle('background', bodyBackground)
   setBodyStyle('padding', bodyPadding)
   injectClearFixIntoBodyElement()
   stopInfiniteResizingOfIFrame()
+  checkMode()
   checkHeightMode()
   checkWidthMode()
   checkDeprecatedAttrs()
@@ -192,7 +218,7 @@ function readDataFromParent() {
   offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16])
   offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
   calculateHeight = undefined === data[18] ? calculateHeight : strBool(data[18])
-  // check = data[19] // eslint-disable-line prefer-destructuring
+  check = data[19] // eslint-disable-line prefer-destructuring
   // version = data[20] // eslint-disable-line prefer-destructuring
 }
 
@@ -360,6 +386,12 @@ function checkHasDataSizeAttributes() {
   }
 }
 
+function setMode() {
+  mode = ['1jqr0si6pnt', 'foo', 'bar'].indexOf(check)
+  if (mode === -1 && check !== '') mode = -2
+  log('Mode set to', mode)
+}
+
 function setupCalcElements() {
   const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
   hasTags = taggedElements.length > 0
@@ -400,6 +432,19 @@ function checkWidthMode() {
     getWidth,
     'width',
   )
+}
+
+const modeData = [
+  '<iy><yi>Puchspk Spjluzl Rlf</><iy><iy>',
+  '<iy><yi>Tpzzpun Spjluzl Rlf</><iy><iy>',
+  "Aopz spiyhyf pz hchpshisl dpao ivao Jvttlyjphs huk Vwlu-Zvbylz spjluzlz.<iy><iy><i>Jvttlyjphs Spjluzl</><iy>Mvy jvttlyjphs bzl, <p>pmyhtl-ylzpgly</> ylxbpylz h svd jvza vul aptul spjluzl mll. Mvy tvyl pumvythapvu cpzpa <b>oaaw://pmyhtl-ylzpgly.jvt/wypjpun</>.<iy><iy><i>Vwlu Zvbyjl Spjluzl</><iy>Pm fvb hyl bzpun aopz spiyhyf pu h uvu-jvtlyjphs vwlu zvbyjl wyvqlja, fvb jhu bzl pa mvy myll bukly aol alytz vm aol NWS C3 Spjluzl. Av jvumpyt fvb hjjlwa aolzl alytz, wslhzl zla aol <i>spjlujl</> rlf pu pmyhtlYlzpgl vwapvuz av <i>'NWS-C3'</>.<iy><iy>Mvy tvyl pumvythapvu vu aol Nub Wbispj Spjluzl <iy><b>oaaw://pmyhtl-ylzpgly.jvt/vwlu-zvbyjl-spjluzl</>",
+  '<i>NWS-C3 Spjluzl Clyzpvu</><iy><iy>Aopz clyzpvu vm <p>pmyhtl-ylzpgly</> pz ilpun bzlk bukly aol alytz vm aol <i>NWS C3</> spjluzl. Pm fvb hyl bzpun aopz spiyhyf pu h jvttlyjphs wyvqlja, fvb dpss ullk av wbyjohzl h svd jvza vul aptl spjluzl. Mvy tvyl pumvythapvu cpzpa <b>oaaw://pmyhtl-ylzpgly.jvt/wypjpun</>.',
+]
+
+function checkMode() {
+  if (mode < 0) return adviser(`${modeData[mode + 2]}${modeData[2]}`)
+  if (mode === 0) return adviser(modeData[3])
+  return 0
 }
 
 function startEventListeners() {
@@ -1048,6 +1093,8 @@ function resetIFrame(triggerEventDesc) {
 }
 
 function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
+  if (mode < 0) return
+
   function setTargetOrigin() {
     if (undefined === targetOrigin) {
       targetOrigin = targetOriginDefault
