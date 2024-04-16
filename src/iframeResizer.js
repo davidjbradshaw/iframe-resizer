@@ -43,7 +43,7 @@
       heightCalculationMethod: 'bodyOffset',
       id: 'iFrameResizer',
       interval: 32,
-      license: 'GPL-V3',
+      license: '1jqr0si6pnt',
       log: false,
       maxHeight: Infinity,
       maxWidth: Infinity,
