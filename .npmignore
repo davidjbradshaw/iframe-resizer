@@ -7,8 +7,6 @@
 .travis.yml
 .github
 *.md
-js/*.min.js
-js/*.map
 node_modules
 bin
 docs
