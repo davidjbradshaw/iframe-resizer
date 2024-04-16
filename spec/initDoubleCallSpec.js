@@ -4,7 +4,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     beforeAll(() => {
       loadIFrame('iframe600WithId.html')
-      //spyOn(console,'warn');
+      spyOn(console, 'warn')
     })
 
     afterAll(() => {
