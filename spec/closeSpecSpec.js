@@ -10,7 +10,6 @@ define(['iframeResizerParent'], function (iframeResize) {
       var evtCounter = 0
 
       iframe = iframeResize({
-        log,
         id: 'close1',
         onClosed: () => {
           setTimeout(done, 0)
@@ -24,7 +23,6 @@ define(['iframeResizerParent'], function (iframeResize) {
       var evtCounter = 0
 
       iframe = iframeResize({
-        log,
         id: 'close2',
         onClosed: () => {
           setTimeout(done, 0)
