@@ -730,8 +730,10 @@
     chkEvent(iframeId, 'onClosed', iframeId)
     log(iframeId, '--')
     removeIframeListeners(iframe)
-    destroyObserver && destroyObserver.disconnect()
-    destroyObserver = null
+    if (destroyObserver) {
+      destroyObserver.disconnect()
+      destroyObserver = null  
+    }
   }
 
   function getPagePosition(iframeId) {
@@ -1133,7 +1135,7 @@
 
       function createDestroyObserver(MutationObserver) {
         if (!iframe.parentNode) {
-          return
+          return null
         }
 
         var destroyObserver = new MutationObserver(function (mutations) {
