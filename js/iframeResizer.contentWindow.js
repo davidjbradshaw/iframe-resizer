@@ -1297,9 +1297,15 @@
     }
   }
 
-  addEventListener(window, 'message', receiver)
-  addEventListener(window, 'readystatechange', chkLateLoaded)
-  chkLateLoaded()
+  // Setup if not already running
+  if (!('iframeResizer' in window)) {
+    window.iframeChildListener = function (data) {
+      receiver({ data, sameDomian: true })
+    }
+    addEventListener(window, 'message', receiver)
+    addEventListener(window, 'readystatechange', chkLateLoaded)
+    chkLateLoaded()
+  }
 
   
 })()

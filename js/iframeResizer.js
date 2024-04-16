@@ -12,6 +12,8 @@
 ;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
+  var VERSION = '4.3.10'
+
   var count = 0,
     logEnabled = false,
     hiddenCheckEnabled = false,
@@ -41,6 +43,7 @@
       heightCalculationMethod: 'bodyOffset',
       id: 'iFrameResizer',
       interval: 32,
+      license: 'GPL-V3',
       log: false,
       maxHeight: Infinity,
       maxWidth: Infinity,
@@ -945,7 +948,11 @@
       ':' +
       settings[iframeId].widthCalculationMethod +
       ':' +
-      settings[iframeId].mouseEvents
+      settings[iframeId].mouseEvents +
+      ':' +
+      settings[iframeId].license +
+      ':' +
+      VERSION
     )
   }
 
