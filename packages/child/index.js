@@ -363,9 +363,9 @@ function checkDeprecatedAttrs() {
 
   if (found) {
     advise(`
-\u001B[31;1mDeprecated Attributes\u001B[m
+<rb>Deprecated Attributes</>
           
-The \u001B[1mdata-iframe-height\u001B[m and \u001B[1mdata-iframe-width\u001B[m attributes have been deprecated and replaced with the single \u001B[1mdata-iframe-size\u001B[m attribute. Use of the old attributes will be removed in a future version of \u001B[3miframe-resizer\u001B[m.`)
+The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been deprecated and replaced with the single <b>data-iframe-size</> attribute. Use of the old attributes will be removed in a future version of <i>iframe-resizer</>.`)
   }
 }
 
@@ -387,7 +387,7 @@ function checkHasDataSizeAttributes() {
 }
 
 function setMode() {
-  mode = ['1jqr0si6pnt', 'foo', 'bar'].indexOf(check)
+  mode = ['1jqr0si6pnt', 'GPL-V3', 'bar'].indexOf(check)
   if (mode === -1 && check !== '') mode = -2
   log('Mode set to', mode)
 }
@@ -406,9 +406,9 @@ function checkCalcMode(calcMode, calcModeDefault, modes, type) {
     }
     if (calcMode in deprecatedResizeMethods) {
       advise(`
-\u001B[31;1mDeprecated ${type}CalculationMethod (${calcMode})\u001B[m
+<rb>Deprecated ${type}CalculationMethod (${calcMode})</>
 
-This version of \u001B[3miframe-resizer\u001B[m can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`)
+This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`)
     }
     log(`${type} calculation method set to "${calcMode}"`)
   }
@@ -443,7 +443,7 @@ const modeData = [
 
 function checkMode() {
   if (mode < 0) return adviser(`${modeData[mode + 2]}${modeData[2]}`)
-  if (mode === 0) return adviser(modeData[3])
+  if (mode < 2) return adviser(modeData[3])
   return 0
 }
 
@@ -585,7 +585,7 @@ function setupMouseEvents() {
 }
 
 function setupPublicMethods() {
-  win.parentIFrame = {
+  win.parentIframe = Object.freeze({
     autoResize: (resize) => {
       if (resize === true && autoResize === false) {
         autoResize = true
@@ -611,9 +611,9 @@ function setupPublicMethods() {
         onPageInfo = callback
         sendMsg(0, 0, 'pageInfo')
         advise(`
-\u001B[31;1mDeprecated Method (getPageInfo()\u001B[m
+<rb>Deprecated Method (getPageInfo()</>
           
-The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with  \u001B[1mgetParentInfo()\u001B[m. Use of this method will be removed in a future version of \u001B[3miframe-resizer\u001B[m.
+The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentInfo()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
 `)
         return
       }
@@ -678,7 +678,9 @@ The \u001B[1mgetPageInfo()\u001B[m method has been deprecated and replaced with 
         customWidth,
       )
     },
-  }
+  })
+
+  win.parentIFrame = win.parentIframe
 }
 
 function resizeObserved(entries) {
@@ -804,9 +806,9 @@ Position calculated from HTML element: ${elementSnippet(maxEl)}`
   } else {
     advise(
       `
-\u001B[31;1mPerformance Warning\u001B[m
+<rb>Performance Warning</>
 
-Calculateing the page size took an excessive amount of time. To improve performace add the \u001B[1mdata-iframe-size\u001B[m attribute to the ${side} element on the page.
+Calculateing the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} element on the page.
 ${logMsg}`,
     )
   }
@@ -835,13 +837,13 @@ function switchToAutoOverflow({
   const furthest = isHeight ? 'lowest' : 'right most'
   const side = isHeight ? 'bottom' : 'right'
   const overflowDetectedMessage = `
-\u001B[31;1mDetected content overflowing html element\u001B[m
+<rb>Detected content overflowing html element</>
     
-This causes \u001B[3miframe-resizer\u001B[m to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a performace impact on more complex pages. 
+This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a performace impact on more complex pages. 
 
-To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the \u001B[1m<HTML>\u001B[m element or alternatively you can add the attribute \u001B[1mdata-iframe-size\u001B[m to the elements on the page that you want \u001B[3miframe-resizer\u001B[m to use when calculating the dimensions of the iframe. 
+To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe. 
   
-When present the \u001B[3m${side} margin of the ${furthest} element\u001B[m with a \u001B[1mdata-iframe-size\u001B[m attribute will be used to set the ${dimension} of the iframe.
+When present the <i>${side} margin of the ${furthest} element</> with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
     
 (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
