@@ -1,454 +1,499 @@
-define(['iframeResizerChild', 'jquery'], function(mockMsgListener, $) {
-  function createMsg(msg) {
-    return {
-      data: '[iFrameSizer]' + msg,
-      source: {
-        postMessage: function(msg) {
-          if (log) {
-            console.log('PostMessage: ' + msg)
-          }
-        }
+define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
+  describe('Child', () => {
+    function createMsg(msg) {
+      return {
+        data: `[iFrameSizer]${msg}`,
+        source: {
+          postMessage(msg) {
+            if (log) {
+              console.log('PostMessage: ' + msg)
+            }
+          },
+        },
       }
     }
-  }
 
-  window.iFrameResizer = {
-    onMessage: function(msg) {
-      msgCalled = msg
-    },
-    onReady: function() {
-      this.readyCalled = true
-    },
-    targetOrigin: '*'
-  }
+    window.iFrameResizer = {
+      onMessage(msg) {
+        msgCalled = msg
+      },
+      onReady() {
+        this.readyCalled = true
+      },
+      targetOrigin: '*',
+    }
 
-  $(window.document.body).append('<a href="#foo" id="bar"></a>')
+    $(window.document.body).append('<a href="#foo" id="bar"></a>')
 
-  //test early message is ignored
-  mockMsgListener(createMsg('resize'))
+    // test early message is ignored
+    mockMsgListener(createMsg('resize'))
 
-  var id = 'parentIFrameTests',
-    log = true,
-    childMsg =
+    let log = true
+
+    const id = 'parentIFrameTests'
+    const childMsg =
       '8:true:' +
       log +
-      ':9999:true:false:-8px:max:wheat:null:0:true:child:scroll'
-  ;(msgObject = createMsg(id + ':' + childMsg)),
-    (win = mockMsgListener(msgObject))
+      ':9999:true:false:-8px:max:wheat:null:0:true:child:scroll:true:GPL-V3:5.0.0'
+    const msgObject = createMsg(id + ':' + childMsg)
+    const win = mockMsgListener(msgObject)
 
-  //test reset is ignored during init
-  mockMsgListener(createMsg('reset'))
+    // test reset is ignored during init
+    mockMsgListener(createMsg('reset'))
 
-  window.msgCalled = null
-  //window.readyCalled = null;
+    window.msgCalled = null
+    // window.readyCalled = null;
 
-  beforeEach(function() {
-    spyOn(msgObject.source, 'postMessage')
-    spyOn(window.iFrameResizer, 'onMessage')
-    spyOn(window.iFrameResizer, 'onReady')
-    spyOn(console, 'log')
-    spyOn(console, 'warn')
-  })
-
-  afterAll(function() {
-    win.parentIFrame.close()
-  })
-
-  describe('ParentIFrame methods: ', function() {
-    it('autoResize', function() {
-      win.parentIFrame.autoResize(true)
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: After Print'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Add event listener: Before Print'
-      )
-      win.parentIFrame.autoResize(false)
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: After Print'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Remove event listener: Before Print'
-      )
+    beforeEach(() => {
+      spyOn(msgObject.source, 'postMessage')
+      spyOn(window.iFrameResizer, 'onMessage')
+      spyOn(window.iFrameResizer, 'onReady')
+      spyOn(console, 'log')
+      spyOn(console, 'warn')
     })
 
-    it('Get ID of iFrame is same as iFrame', function() {
-      expect(win.parentIFrame.getId()).toBe(id)
+    afterAll(() => {
+      win.parentIFrame.close()
     })
 
-    it('move to anchor', function() {
-      win.parentIFrame.moveToAnchor('foo')
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo',
-        '*'
-      )
-      win.parentIFrame.moveToAnchor('bar')
-      expect(msgObject.source.postMessage.calls.argsFor(1)[0]).toContain(
-        ':scrollToOffset'
-      )
-    })
+    describe('ParentIFrame methods', () => {
+      it('autoResize', () => {
+        win.parentIFrame.autoResize(true)
 
-    it('reset', function() {
-      win.parentIFrame.reset()
-      expect(msgObject.source.postMessage.calls.argsFor(0)[0]).toContain(
-        ':reset'
-      )
-    })
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Add event listener: After Print',
+        )
 
-    it('getPageInfo', function(done) {
-      win.parentIFrame.getPageInfo(function(pageInfo) {
-        expect(pageInfo.iframeHeight).toBe(500)
-        expect(pageInfo.iframeWidth).toBe(300)
-        expect(pageInfo.offsetLeft).toBe(20)
-        expect(pageInfo.offsetTop).toBe(85)
-        expect(pageInfo.scrollTop).toBe(0)
-        expect(pageInfo.scrollLeft).toBe(0)
-        expect(pageInfo.documentHeight).toBe(645)
-        expect(pageInfo.documentWidth).toBe(1295)
-        expect(pageInfo.windowHeight).toBe(645)
-        expect(pageInfo.windowWidth).toBe(1295)
-        expect(pageInfo.clientHeight).toBe(645)
-        expect(pageInfo.clientWidth).toBe(1295)
-        done()
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Add event listener: Before Print',
+        )
+        win.parentIFrame.autoResize(false)
+
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Remove event listener: After Print',
+        )
+
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Remove event listener: Before Print',
+        )
       })
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:0:0:pageInfo',
-        '*'
-      )
-      mockMsgListener(
-        createMsg(
-          'pageInfo:{"iframeHeight":500,"iframeWidth":300,"clientHeight":645,' +
-          '"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,' +
-          '"scrollTop":0,"documentHeight":645,"documentWidth":1295,' +
-          '"windowHeight":645,"windowWidth":1295}'
-        )
-      )
-    })
 
-    it('getPageInfoStop', function() {
-      win.parentIFrame.getPageInfo()
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:0:0:pageInfoStop',
-        '*'
-      )
-    })
+      it('Get ID of iFrame is same as iFrame', () => {
+        expect(win.parentIFrame.getId()).toBe(id)
+      })
 
-    it('scrollTo', function() {
-      win.parentIFrame.scrollTo(10, 10)
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:10:10:scrollTo',
-        '*'
-      )
-    })
+      it('move to anchor', () => {
+        win.parentIFrame.moveToAnchor('foo')
 
-    it('scrollToOffset', function() {
-      win.parentIFrame.scrollToOffset(10, 10)
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:10:10:scrollToOffset',
-        '*'
-      )
-    })
-
-    it('sendMessage (string)', function() {
-      win.parentIFrame.sendMessage('foo:bar')
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:0:0:message:"foo:bar"',
-        '*'
-      )
-    })
-
-    it('sendMessage (object)', function() {
-      win.parentIFrame.sendMessage({ foo: 'bar' }, 'http://foo.bar:1337')
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:0:0:message:{"foo":"bar"}',
-        'http://foo.bar:1337'
-      )
-    })
-
-    it('setTargetOrigin', function() {
-      var targetOrigin = 'http://foo.bar:1337'
-      win.parentIFrame.setTargetOrigin(targetOrigin)
-      win.parentIFrame.size(10, 10)
-      win.parentIFrame.setTargetOrigin('*')
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:10:10:size',
-        targetOrigin
-      )
-    })
-  })
-
-  describe('inbound message: ', function() {
-    it('readyCallack', function() {
-      expect(window.readyCalled).toEqual(true)
-    })
-
-    it('message (String)', function() {
-      var msg = 'foo'
-      mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
-      expect(msgCalled).toBe(msg)
-    })
-
-    it('message (Object)', function() {
-      var msg = { foo: 'bar' }
-      mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
-      expect(msgCalled.foo).toBe('bar')
-    })
-
-    it('reset', function(done) {
-      // timing issue in Chrome
-      setTimeout(function() {
-        //Wait for init lock to clear
-        mockMsgListener(createMsg('reset'))
-        console.log('>> ', msgObject.source.postMessage.calls.argsFor(0))
-        expect(msgObject.source.postMessage.calls.argsFor(0)[0]).toContain(
-          ':reset'
-        )
-        done()
-      }, 200)
-    })
-
-    it('resize(max)', function() {
-      win.parentIFrame.setHeightCalculationMethod('max')
-      mockMsgListener(createMsg('resize'))
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check'
-      )
-    })
-
-    it('resize(lowestElement)', function() {
-      win.parentIFrame.setHeightCalculationMethod('lowestElement')
-      mockMsgListener(createMsg('resize'))
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check'
-      )
-    })
-
-    it('resize(rightMostElement)', function() {
-      win.parentIFrame.setWidthCalculationMethod('rightMostElement')
-      mockMsgListener(createMsg('resize'))
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check'
-      )
-    })
-
-    it('move to anchor', function() {
-      mockMsgListener(createMsg('moveToAnchor:foo'))
-      expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-        '[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo',
-        '*'
-      )
-    })
-
-    xit('unexpected message', function() {
-      mockMsgListener(createMsg('foo'))
-      expect(console.warn).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] Unexpected message ([iFrameSizer]foo)'
-      )
-    })
-  })
-
-  xdescribe('performance: ', function() {
-    it('trottles', function(done) {
-      win.parentIFrame.size(10, 10)
-      win.parentIFrame.size(20, 10)
-      win.parentIFrame.size(30, 10)
-      win.parentIFrame.size(40, 10)
-      win.parentIFrame.size(50, 10)
-      win.parentIFrame.size(60, 10)
-      setTimeout(function() {
-        // expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', '*');
-        expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:20:10:size',
-          '*'
-        )
-        expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:30:10:size',
-          '*'
-        )
-        expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:40:10:size',
-          '*'
-        )
-        expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:50:10:size',
-          '*'
-        )
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:60:10:size',
-          '*'
+          '[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo',
+          '*',
         )
-        done()
-      }, 17)
-    })
-  })
+        win.parentIFrame.moveToAnchor('bar')
 
-  describe('height calculation methods: ', function() {
-    it('invalid', function() {
-      win.parentIFrame.setHeightCalculationMethod('foo')
-      expect(console.warn).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] height calculation method set to "auto"'
-      )
-      win.parentIFrame.size()
+        expect(msgObject.source.postMessage.calls.argsFor(1)[0]).toContain(
+          ':scrollToOffset',
+        )
+      })
+
+      it('reset', () => {
+        win.parentIFrame.reset()
+
+        expect(msgObject.source.postMessage.calls.argsFor(0)[0]).toContain(
+          ':reset',
+        )
+      })
+
+      it('getPageInfo', (done) => {
+        win.parentIFrame.getPageInfo((pageInfo) => {
+          expect(pageInfo.iframeHeight).toBe(500)
+
+          expect(pageInfo.iframeWidth).toBe(300)
+
+          expect(pageInfo.offsetLeft).toBe(20)
+
+          expect(pageInfo.offsetTop).toBe(85)
+
+          expect(pageInfo.scrollTop).toBe(0)
+
+          expect(pageInfo.scrollLeft).toBe(0)
+
+          expect(pageInfo.documentHeight).toBe(645)
+
+          expect(pageInfo.documentWidth).toBe(1295)
+
+          expect(pageInfo.windowHeight).toBe(645)
+
+          expect(pageInfo.windowWidth).toBe(1295)
+
+          expect(pageInfo.clientHeight).toBe(645)
+
+          expect(pageInfo.clientWidth).toBe(1295)
+          done()
+        })
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:0:0:pageInfo',
+          '*',
+        )
+        mockMsgListener(
+          createMsg(
+            'pageInfo:{"iframeHeight":500,"iframeWidth":300,"clientHeight":645,' +
+              '"clientWidth":1295,"offsetLeft":20,"offsetTop":85,"scrollLeft":0,' +
+              '"scrollTop":0,"documentHeight":645,"documentWidth":1295,' +
+              '"windowHeight":645,"windowWidth":1295}',
+          ),
+        )
+      })
+
+      it('getPageInfoStop', () => {
+        win.parentIFrame.getPageInfo()
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:0:0:pageInfoStop',
+          '*',
+        )
+      })
+
+      it('scrollTo', () => {
+        win.parentIFrame.scrollTo(10, 10)
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:10:10:scrollTo',
+          '*',
+        )
+      })
+
+      it('scrollToOffset', () => {
+        win.parentIFrame.scrollToOffset(10, 10)
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:10:10:scrollToOffset',
+          '*',
+        )
+      })
+
+      it('sendMessage (string)', () => {
+        win.parentIFrame.sendMessage('foo:bar')
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:0:0:message:"foo:bar"',
+          '*',
+        )
+      })
+
+      it('sendMessage (object)', () => {
+        win.parentIFrame.sendMessage({ foo: 'bar' }, 'http://foo.bar:1337')
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:0:0:message:{"foo":"bar"}',
+          'http://foo.bar:1337',
+        )
+      })
+
+      it('setTargetOrigin', () => {
+        const targetOrigin = 'http://foo.bar:1337'
+
+        win.parentIFrame.setTargetOrigin(targetOrigin)
+        win.parentIFrame.size(10, 10)
+        win.parentIFrame.setTargetOrigin('*')
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:10:10:size',
+          targetOrigin,
+        )
+      })
     })
 
-    it('bodyOffset', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('bodyOffset')
-        win.parentIFrame.size()
-        done()
-      }, 10)
-    })
+    describe('inbound message', () => {
+      it('readyCallack', () => {
+        expect(window.readyCalled).toEqual(true)
+      })
 
-    it('offset', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('offset')
-        win.parentIFrame.size()
-        done()
-      }, 20)
-    })
+      it('message (String)', () => {
+        const msg = 'foo'
+        mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
 
-    it('bodyScroll', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('bodyScroll')
-        win.parentIFrame.size()
-        done()
-      }, 30)
-    })
+        expect(msgCalled).toBe(msg)
+      })
 
-    it('documentElementOffset', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('documentElementOffset')
-        win.parentIFrame.size()
-        done()
-      }, 40)
-    })
+      it('message (Object)', () => {
+        const msg = { foo: 'bar' }
+        mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
 
-    it('documentElementScroll', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('documentElementScroll')
-        win.parentIFrame.size()
-        done()
-      }, 50)
-    })
+        expect(msgCalled.foo).toBe('bar')
+      })
 
-    it('max', function(done) {
-      setTimeout(function() {
+      it('reset 2', (done) => {
+        //  timing issue in Chrome
+        setTimeout(() => {
+          // Wait for init lock to clear
+          mockMsgListener(createMsg('reset'))
+          console.log('>>', msgObject.source.postMessage.calls.argsFor(0))
+
+          expect(msgObject.source.postMessage.calls.argsFor(0)[0]).toContain(
+            ':reset',
+          )
+          done()
+        }, 200)
+      })
+
+      it('resize(max)', () => {
         win.parentIFrame.setHeightCalculationMethod('max')
-        win.parentIFrame.size()
-        done()
-      }, 60)
-    })
+        mockMsgListener(createMsg('resize'))
 
-    it('min', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('min')
-        win.parentIFrame.size()
-        done()
-      }, 70)
-    })
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check',
+        )
+      })
 
-    it('lowestElement', function(done) {
-      setTimeout(function() {
+      it('resize(lowestElement)', () => {
         win.parentIFrame.setHeightCalculationMethod('lowestElement')
-        win.parentIFrame.size()
-        done()
-      }, 90)
+        mockMsgListener(createMsg('resize'))
+
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check',
+        )
+      })
+
+      it('resize(rightMostElement)', () => {
+        win.parentIFrame.setWidthCalculationMethod('rightMostElement')
+        mockMsgListener(createMsg('resize'))
+
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check',
+        )
+      })
+
+      it('move to anchor 2', () => {
+        mockMsgListener(createMsg('moveToAnchor:foo'))
+
+        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+          '[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo',
+          '*',
+        )
+      })
+
+      xit('unexpected message', () => {
+        mockMsgListener(createMsg('foo'))
+
+        expect(console.warn).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] Unexpected message ([iFrameSizer]foo)',
+        )
+      })
     })
 
-    it('taggedElement', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setHeightCalculationMethod('taggedElement')
-        win.parentIFrame.size()
-        done()
-      }, 100)
-    })
-  })
+    xdescribe('performance', () => {
+      it('trottles', (done) => {
+        win.parentIFrame.size(10, 10)
+        win.parentIFrame.size(20, 10)
+        win.parentIFrame.size(30, 10)
+        win.parentIFrame.size(40, 10)
+        win.parentIFrame.size(50, 10)
+        win.parentIFrame.size(60, 10)
+        setTimeout(() => {
+          //  expect(msgObject.source.postMessage).toHaveBeenCalledWith('[iFrameSizer]parentIFrameTests:10:10:size', '*');
+          expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
+            '[iFrameSizer]parentIFrameTests:20:10:size',
+            '*',
+          )
 
-  describe('width calculation methods: ', function() {
-    it('invalid', function() {
-      win.parentIFrame.setWidthCalculationMethod('foo')
-      expect(console.warn).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] foo is not a valid option for widthCalculationMethod.'
-      )
-      expect(console.log).toHaveBeenCalledWith(
-        '[iFrameSizer][parentIFrameTests] width calculation method set to "scroll"'
-      )
-      win.parentIFrame.size()
-    })
+          expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
+            '[iFrameSizer]parentIFrameTests:30:10:size',
+            '*',
+          )
 
-    it('bodyOffset', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('bodyOffset')
-        win.parentIFrame.size()
-        done()
-      }, 110)
-    })
+          expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
+            '[iFrameSizer]parentIFrameTests:40:10:size',
+            '*',
+          )
 
-    it('bodyScroll', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('bodyScroll')
-        win.parentIFrame.size()
-        done()
-      }, 120)
-    })
+          expect(msgObject.source.postMessage).not.toHaveBeenCalledWith(
+            '[iFrameSizer]parentIFrameTests:50:10:size',
+            '*',
+          )
 
-    it('documentElementOffset', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('documentElementOffset')
-        win.parentIFrame.size()
-        done()
-      }, 130)
+          expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+            '[iFrameSizer]parentIFrameTests:60:10:size',
+            '*',
+          )
+          done()
+        }, 17)
+      })
     })
 
-    it('documentElementScroll:', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('documentElementScroll:')
+    describe('height calculation methods', () => {
+      it('invalid', () => {
+        win.parentIFrame.setHeightCalculationMethod('foo')
+
+        expect(console.warn).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.',
+        )
+
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] height calculation method set to "auto"',
+        )
         win.parentIFrame.size()
-        done()
-      }, 140)
+      })
+
+      it('bodyOffset', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('bodyOffset')
+          win.parentIFrame.size()
+          done()
+        }, 10)
+      })
+
+      it('offset', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('offset')
+          win.parentIFrame.size()
+          done()
+        }, 20)
+      })
+
+      it('bodyScroll', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('bodyScroll')
+          win.parentIFrame.size()
+          done()
+        }, 30)
+      })
+
+      it('documentElementOffset', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('documentElementOffset')
+          win.parentIFrame.size()
+          done()
+        }, 40)
+      })
+
+      it('documentElementScroll', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('documentElementScroll')
+          win.parentIFrame.size()
+          done()
+        }, 50)
+      })
+
+      it('max', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('max')
+          win.parentIFrame.size()
+          done()
+        }, 60)
+      })
+
+      it('min', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('min')
+          win.parentIFrame.size()
+          done()
+        }, 70)
+      })
+
+      it('lowestElement', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('lowestElement')
+          win.parentIFrame.size()
+          done()
+        }, 90)
+      })
+
+      it('taggedElement', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setHeightCalculationMethod('taggedElement')
+          win.parentIFrame.size()
+          done()
+        }, 100)
+      })
     })
 
-    it('scroll', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('scroll')
-        win.parentIFrame.size()
-        done()
-      }, 150)
-    })
+    describe('width calculation methods', () => {
+      it('invalid 2', () => {
+        win.parentIFrame.setWidthCalculationMethod('foo')
 
-    it('max', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('max')
-        win.parentIFrame.size()
-        done()
-      }, 160)
-    })
+        expect(console.warn).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] foo is not a valid option for widthCalculationMethod.',
+        )
 
-    it('min', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('min')
+        expect(console.log).toHaveBeenCalledWith(
+          '[iFrameSizer][parentIFrameTests] width calculation method set to "scroll"',
+        )
         win.parentIFrame.size()
-        done()
-      }, 170)
-    })
+      })
 
-    it('leftMostElement', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('leftMostElement')
-        win.parentIFrame.size()
-        done()
-      }, 180)
-    })
+      it('bodyOffset 2', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('bodyOffset')
+          win.parentIFrame.size()
+          done()
+        }, 110)
+      })
 
-    it('taggedElement', function(done) {
-      setTimeout(function() {
-        win.parentIFrame.setWidthCalculationMethod('taggedElement')
-        win.parentIFrame.size()
-        done()
-      }, 190)
+      it('bodyScroll 2', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('bodyScroll')
+          win.parentIFrame.size()
+          done()
+        }, 120)
+      })
+
+      it('documentElementOffset 2', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('documentElementOffset')
+          win.parentIFrame.size()
+          done()
+        }, 130)
+      })
+
+      it('documentElementScroll:', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('documentElementScroll:')
+          win.parentIFrame.size()
+          done()
+        }, 140)
+      })
+
+      it('scroll', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('scroll')
+          win.parentIFrame.size()
+          done()
+        }, 150)
+      })
+
+      it('max 2', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('max')
+          win.parentIFrame.size()
+          done()
+        }, 160)
+      })
+
+      it('min 2', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('min')
+          win.parentIFrame.size()
+          done()
+        }, 170)
+      })
+
+      it('leftMostElement', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('leftMostElement')
+          win.parentIFrame.size()
+          done()
+        }, 180)
+      })
+
+      it('taggedElement 2', (done) => {
+        setTimeout(() => {
+          win.parentIFrame.setWidthCalculationMethod('taggedElement')
+          win.parentIFrame.size()
+          done()
+        }, 190)
+      })
     })
   })
 })
