@@ -475,6 +475,10 @@ function iframeListener(event) {
     log(id, `sameDomain: ${settings[id].sameDomain}`)
   }
 
+  function started() {
+    setup = true
+  }
+
   function actionMsg() {
     if (settings[iframeId]?.firstRun) firstRun()
 
@@ -536,6 +540,7 @@ function iframeListener(event) {
       case 'init':
         resizeIFrame()
         checkSameDomain(iframeId)
+        started()
         on('onReady', messageData.iframe)
         break
 
@@ -810,6 +815,7 @@ function createOutgoingMsg(iframeId) {
 }
 
 let count = 0
+let setup = false
 
 export default (options) => (iframe) => {
   function setLimits() {
@@ -960,14 +966,14 @@ The \u001B[removeListeners()\u001B[m method has been renamed to \u001B[disconnec
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
     function iFrameLoaded() {
-      trigger('iFrame.onload', msg, id, true)
+      trigger('iFrame.onload', `${msg}:${setup}`, id, true)
       checkReset()
     }
 
     const { id } = iframe
 
     addEventListener(iframe, 'load', iFrameLoaded)
-    trigger('init', msg, id, true)
+    trigger('init', `${msg}:${setup}`, id, true)
   }
 
   function checkOptions(options) {
