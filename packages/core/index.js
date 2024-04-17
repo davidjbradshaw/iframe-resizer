@@ -1066,7 +1066,13 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
   if (beenHere()) {
     warn(iframeId, 'Ignored iFrame, already setup.')
   } else {
-    log('Version', VERSION)
+    info(`v${VERSION}`)
+    advise(
+      iframe.id,
+      `\u001B[31;1mAlpha Release\u001B[m
+        
+Do not use in production, API is not stable.`,
+    )
     processOptions(options)
     setupEventListenersOnce()
     setScrolling()
