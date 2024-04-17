@@ -64,6 +64,7 @@ let inPageLinks = {}
 let isInit = true
 let logging = false
 let mode = 0
+let modeSet = false
 let mouseEvents = false
 let myID = ''
 let offsetHeight = 0
@@ -75,6 +76,7 @@ let target = window.parent
 let targetOriginDefault = '*'
 let tolerance = 0
 let triggerLocked = false
+let version
 let width = 1
 let widthCalcMode = widthCalcModeDefault
 let win = window
@@ -219,7 +221,8 @@ function readDataFromParent() {
   offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
   calculateHeight = undefined === data[18] ? calculateHeight : strBool(data[18])
   check = data[19] // eslint-disable-line prefer-destructuring
-  // version = data[20] // eslint-disable-line prefer-destructuring
+  version = data[20] // eslint-disable-line prefer-destructuring
+  modeSet = undefined === data[21] ? modeSet : strBool(data[21])
 }
 
 function readDataFromPage() {
@@ -389,7 +392,8 @@ function checkHasDataSizeAttributes() {
 function setMode() {
   mode = ['1jqr0si6pnt', 'GPL-V3', 'bar'].indexOf(check)
   if (mode === -1 && check !== '') mode = -2
-  log('Mode set to', mode)
+  if (modeSet || !version) mode = 9
+  log('Mode set to', mode, modeSet, version)
 }
 
 function setupCalcElements() {
