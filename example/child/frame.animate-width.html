@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      a.back {
+        float: left;
+        margin-left: 8px;
+      }
+      html {
+        margin: 0;
+        padding: 8px 10px;
+        /* border: solid 1px red; */
+      }
+      p {
+        margin: 0 0 5px;
+      }
+
+      th {
+        vertical-align: top;
+        text-align: right;
+        padding: 5px 0;
+      }
+      td {
+        padding: 3px 0;
+      }
+      tr {
+        border-top: dashed 1px #900;
+      }
+
+      table table th {
+        width: 110px;
+        padding: 0;
+      }
+      table table td {
+        padding: 0 0 0 10px;
+      }
+
+      #bar {
+        height: 20px;
+        width: 402px;
+        background-color: rgb(135, 248, 180);
+        margin: 0;
+        padding: 0;
+      }
+
+      #abs {
+        position: absolute;
+        padding: 0px;
+        height: 140px;
+        align-content: center;
+        vertical-align: middle;
+        background-color: wheat;
+        animation-direction: alternate;
+        animation-duration: 6s;
+        animation-iteration-count: infinite;
+        animation-name: animate;
+        z-index: 6;
+      }
+
+      #abs p {
+        margin: -10px 0 0 20px;
+        width: 300px;
+      }
+
+      #bar,
+      #abs {
+        margin-left: -20px;
+      }
+
+      @keyframes animate {
+        from {
+          width: 200px;
+        }
+
+        to {
+          width: 802px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <b>Animated Width iFrame</b>
+
+    <!-- 
+      The data-iframe-size attribute tells iframe-resizer to use this element
+      to calculate the height of the iframe, when the content overflows the
+      <body> element.     
+    -->
+
+    <div id="bar"></div>
+
+    <div id="abs">
+      <p>This element will animate to a width of 800px using CSS keyframes.</p>
+    </div>
+
+    <!-- script>
+      // Add some content to to show the effect of using data-iframe-size above
+      for (var i = 0; i < 10000; i++) {
+        document.write(
+          '<div style="position: absolute">This is a test to see if the page will grow to accommodate the content.</div>'
+        );
+      }
+      
+    </script -->
+
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.child.js"
+    ></script>
+  </body>
+</html>

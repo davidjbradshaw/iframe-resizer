@@ -21,13 +21,13 @@
     <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
     <h2>Automagically resizing iFrame</h2>
     <p>
-      Resize window or click one of the links in the iFrame to watch it resize.
-      Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.
+      Back to
+      <a name="anchorParentTest" href="index.html">horizontal iFrames</a>.
     </p>
     <div id="iframeContainer" style="margin: 20px">
       <iframe
-        src="../child/frame.content.html"
-        width="100%"
+        src="../child/frame.animate-width.html"
+        height="300px"
         scrolling="no"
       ></iframe>
     </div>
@@ -58,7 +58,10 @@
       iframeResize({
         log: true, // Enable console logging
         inPageLinks: true, // Enable in page links
+        direction: 'horizontal', // Enable horizontal resizing
         license: 'GPL-V3',
+        overflow: -30,
+
         // offsetHeight: 10, // Alter the returned height
         onResized(messageData) {
           // Callback fn when resize is received
