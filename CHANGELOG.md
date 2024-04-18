@@ -1,5 +1,5 @@
 # Version History
-- v4.3.10 Fix close release destroyObserver [[Steve Hong](https://github.com/aniude)]
+- v4.3.10 [#1229](https://github.com/davidjbradshaw/iframe-resizer/pull/1229) Fix close release destroyObserver [[Steve Hong](https://github.com/aniude)]
 
 - v4.3.9 Reduce package size
 
