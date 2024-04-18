@@ -1,4 +1,5 @@
 # Version History
+- v4.3.10 Fix close release destroyObserver [[Steve Hong](https://github.com/aniude)]
 
 - v4.3.11 Fix bug in init message format that would effect interop with the future version 5.
 
