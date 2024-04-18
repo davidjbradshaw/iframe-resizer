@@ -957,6 +957,8 @@
       ':' +
       settings[iframeId].license +
       ':' +
+      '1jqr0si6pnt' +
+      ':' +
       VERSION
     )
   }
