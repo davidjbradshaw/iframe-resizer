@@ -820,7 +820,7 @@ Position calculated from HTML element: ${elementSnippet(maxEl)}`
       `
 <rb>Performance Warning</>
 
-Calculateing the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} element on the page.
+Calculateing the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
 ${logMsg}`,
     )
   }
@@ -930,6 +930,16 @@ function getAutoSize(getDimension, autoOverflow) {
         prevBoundingSize[dimension],
       )
       return returnBoundingClientRect()
+
+    case !isHeight:
+      return autoOverflow
+        ? getDimension.taggedElement()
+        : switchToAutoOverflow({
+            ceilBoundingSize,
+            dimension,
+            isHeight,
+            scrollSize,
+          })
 
     case !autoOverflow && boundingSize < prevBoundingSize[dimension]:
       log('HTML bounding size decreased:', sizes)
