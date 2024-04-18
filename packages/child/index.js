@@ -138,13 +138,15 @@ const encode = (s) =>
     .replaceAll('<i>', '\u001B[3m')
     .replaceAll('<u>', '\u001B[4m')
 
+const remove = (s) => s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
+
 // TODO: remove .join(' '), requires major test updates
 const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
 
 const formatAdvise = (...msg) =>
   window.chrome // Only show formatting in Chrome as not supported in other browsers
     ? encode(formatLogMsg(...msg))
-    : formatLogMsg(...msg).replaceAll(/\u001B\[[\d;]*m/gi, '') // eslint-disable-line no-control-regex
+    : remove(formatLogMsg(...msg))
 
 const log = (...msg) =>
   // eslint-disable-next-line no-console
@@ -390,7 +392,13 @@ function checkHasDataSizeAttributes() {
 }
 
 function setMode() {
-  mode = ['1jqr0si6pnt', 'GPL-V3', 'bar'].indexOf(check)
+  mode = [
+    '1jqr0si6pnt',
+    'tw4ra3kya',
+    'gz3au7jfuk',
+    '1irylf8sei5',
+    '1p37k9w4kov', // α
+  ].indexOf(check)
   if (mode === -1 && check !== '') mode = -2
   if (modeSet || !version) mode = 9
   log('Mode set to', mode, modeSet, version)
