@@ -1,5 +1,7 @@
 # Version History
 
+- v4.3.10 [#1229](https://github.com/davidjbradshaw/iframe-resizer/pull/1229) Fix close release destroyObserver [[Steve Hong](https://github.com/aniude)]
+
 - v4.3.9 Reduce package size
 
 - v4.3.7 Minor documentation updates and remove Bower package manager support
@@ -10,7 +12,7 @@
 
 - v4.3.4 [#990](https://github.com/davidjbradshaw/iframe-resizer/pull/990) Fix readDataFromParent mouseEvents Boolean to strBool [[Tony Living](https://github.com/tonyliving)]
 
-- v4.3.3 [#1100](https://github.com/davidjbradshaw/iframe-resizer/issues/1100) Fix jQuery check [[Gabriel Grant](https://github.com/gabrielgrant)] 
+- v4.3.3 [#1100](https://github.com/davidjbradshaw/iframe-resizer/issues/1100) Fix jQuery check [[Gabriel Grant](https://github.com/gabrielgrant)]
 
 - v4.3.2 [#936](https://github.com/davidjbradshaw/iframe-resizer/issues/936) Allow max/min values for iFrame size to be set using units other than `px` [[Luke Murray](https://github.com/lukesmurray)]
 
