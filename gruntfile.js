@@ -53,7 +53,7 @@ module.exports = function (grunt) {
       },
       travis: {
         singleRun: true,
-        browsers: ['Chrome'], // 'PhantomJS'
+        browsers: ['ChromeHeadless'], // 'PhantomJS'
         coverageReporter: {
           type: 'lcov',
           dir: 'coverageLcov/'
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
       },
       single: {
         singleRun: true,
-        browsers: ['Chrome'] // 'Safari', 'PhantomJS', 'Firefox'
+        browsers: ['ChromeHeadless'] // 'Safari', 'PhantomJS', 'Firefox'
       },
       watch: {
         singleRun: false,
