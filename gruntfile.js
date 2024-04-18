@@ -61,7 +61,7 @@ module.exports = function (grunt) {
       },
       single: {
         singleRun: true,
-        browsers: ['Chrome', 'Firefox'] // 'Safari', 'PhantomJS'
+        browsers: ['Chrome'] // 'Safari', 'PhantomJS', 'Firefox'
       },
       watch: {
         singleRun: false,

@@ -15,6 +15,7 @@
   var VERSION = '4.3.10'
 
   var count = 0,
+    destroyObserver,
     logEnabled = false,
     hiddenCheckEnabled = false,
     msgHeader = 'message',
@@ -43,7 +44,7 @@
       heightCalculationMethod: 'bodyOffset',
       id: 'iFrameResizer',
       interval: 32,
-      license: 'GPL-V3',
+      license: '1jqr0si6pnt',
       log: false,
       maxHeight: Infinity,
       maxWidth: Infinity,
@@ -732,6 +733,10 @@
     chkEvent(iframeId, 'onClosed', iframeId)
     log(iframeId, '--')
     removeIframeListeners(iframe)
+    if (destroyObserver) {
+      destroyObserver.disconnect()
+      destroyObserver = null  
+    }
   }
 
   function getPagePosition(iframeId) {
@@ -1137,7 +1142,7 @@
 
       function createDestroyObserver(MutationObserver) {
         if (!iframe.parentNode) {
-          return
+          return null
         }
 
         var destroyObserver = new MutationObserver(function (mutations) {
@@ -1153,11 +1158,12 @@
         destroyObserver.observe(iframe.parentNode, {
           childList: true
         })
+        return destroyObserver
       }
 
       var MutationObserver = getMutationObserver()
       if (MutationObserver) {
-        createDestroyObserver(MutationObserver)
+        destroyObserver = createDestroyObserver(MutationObserver)
       }
 
       addEventListener(iframe, 'load', iFrameLoaded)

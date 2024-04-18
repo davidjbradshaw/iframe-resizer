@@ -18,7 +18,15 @@
     <a href="frame.content.html">Back to page 1</a>
 
     <p>
-      Mouse over the code example below.
+      Mouse over the code example below. 
+    </p>
+    <p>  
+      In modern browsers size changes caused by CSS are detected via the ResizeObserver API, 
+      however, if you have an element outside the standard document flow, or in really old browses you may need to detect this
+      yourself and ask iFrameResizer to update the page size.
+    </p>
+    <p>  
+      Uncomment the code below to see this working.
     </p>
 
     <xmp>
@@ -31,10 +39,10 @@
       }
     </script>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="jquery-3.7.1.min.js"></script>
     <script
       type="text/javascript"
-      src="../js/iframeResizer.contentWindow.min.js"
+      src="../js/iframeResizer.contentWindow.js"
     ></script>
 
     <div id="code">
@@ -50,14 +58,14 @@
         }
       </style>
       <script>
-        ;(function() {
-          $('xmp').hover(function() {
-            if ('parentIFrame' in window) {
-              // Fix race condition in FireFox with setTimeout
-              setTimeout(parentIFrame.size.bind(parentIFrame), 0)
-            }
-          })
-        })()
+        // ;(function() {
+        //   $('xmp').hover(function() {
+        //     if ('parentIFrame' in window) {
+        //       // Fix race condition in FireFox with setTimeout
+        //       setTimeout(parentIFrame.size.bind(parentIFrame), 0)
+        //     }
+        //   })
+        // })()
       </script>
     </div>
 

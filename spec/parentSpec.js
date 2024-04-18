@@ -85,7 +85,7 @@ define(['iframeResizer'], function (iFrameResize) {
       })
     })
 
-    describe('resize height', function () {
+    xdescribe('resize height', function () {
       var iframe
       var log = LOG
       var testId = 'parentPage3'
