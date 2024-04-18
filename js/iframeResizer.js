@@ -735,7 +735,7 @@
     removeIframeListeners(iframe)
     if (destroyObserver) {
       destroyObserver.disconnect()
-      destroyObserver = null  
+      destroyObserver = null
     }
   }
 
@@ -956,6 +956,8 @@
       settings[iframeId].mouseEvents +
       ':' +
       settings[iframeId].license +
+      ':' +
+      '1jqr0si6pnt' +
       ':' +
       VERSION
     )
