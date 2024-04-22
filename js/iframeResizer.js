@@ -12,7 +12,7 @@
 ;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
-  var VERSION = '4.3.10'
+  // var VERSION = '4.3.11'
 
   var count = 0,
     destroyObserver,
