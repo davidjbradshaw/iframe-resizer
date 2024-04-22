@@ -35,6 +35,7 @@
     "switch-case/no-case-curly": 0,
     "unicorn/consistent-function-scoping": 0,
     "unicorn/no-array-callback-reference": 0,
+    "unicorn/no-array-reduce": 0,
     "unicorn/no-this-assignment": 0,
     "unicorn/prefer-module": 0,
     "unicorn/prefer-query-selector": 0,
