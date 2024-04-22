@@ -953,13 +953,7 @@
       ':' +
       settings[iframeId].widthCalculationMethod +
       ':' +
-      settings[iframeId].mouseEvents +
-      ':' +
-      settings[iframeId].license +
-      ':' +
-      '1jqr0si6pnt' +
-      ':' +
-      VERSION
+      settings[iframeId].mouseEvents
     )
   }
 

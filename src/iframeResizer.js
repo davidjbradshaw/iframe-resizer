@@ -12,7 +12,7 @@
 ;(function (undefined) {
   if (typeof window === 'undefined') return // don't run for server side render
 
-  var VERSION = '4.3.10'
+  // var VERSION = '4.3.11'
 
   var count = 0,
     destroyObserver,
@@ -953,13 +953,7 @@
       ':' +
       settings[iframeId].widthCalculationMethod +
       ':' +
-      settings[iframeId].mouseEvents +
-      ':' +
-      settings[iframeId].license +
-      ':' +
-      '1jqr0si6pnt' +
-      ':' +
-      VERSION
+      settings[iframeId].mouseEvents
     )
   }
 
