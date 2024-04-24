@@ -6,7 +6,8 @@ import warning from 'warning'
 import filterIframeAttribs from './filter-iframe-attribs'
 
 function IframeResizer(props) {
-  const { title, forwardRef, ...rest } = props
+  // eslint-disable-next-line react/prop-types
+  const { title = 'iframe', forwardRef, ...rest } = props
   const iframeProps = filterIframeAttribs(rest)
   const iframeRef = useRef(null)
 
@@ -29,6 +30,7 @@ function IframeResizer(props) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useImperativeHandle(forwardRef, () => ({
+    getIframeElement: () => iframeRef.current,
     resize: () => iframeRef.current.iFrameResizer.resize(),
     moveToAnchor: (anchor) =>
       iframeRef.current.iFrameResizer.moveToAnchor(anchor),
@@ -40,17 +42,8 @@ function IframeResizer(props) {
   return <iframe title={title} {...iframeProps} ref={iframeRef} />
 }
 
-IframeResizer.defaultProps = {
-  title: 'iframe',
-}
-
 IframeResizer.propTypes = {
-  title: PropTypes.string,
-  forwardRef: PropTypes.oneOfType([
-    PropTypes.func,
-    // eslint-disable-next-line react/forbid-prop-types
-    PropTypes.shape({ current: PropTypes.any }),
-  ]).isRequired,
+  title: PropTypes.string, // eslint-disable-line react/require-default-props
 }
 
 export default IframeResizer
