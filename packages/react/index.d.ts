@@ -3,14 +3,16 @@ declare module '@iframe-resizer/react' {
 
   namespace IframeResizer {
     type IFrameObject = {
-      close: () => void
       moveToAnchor: (anchor: string) => void
       resize: () => void
       sendMessage: (message: any, targetOrigin?: string) => void
-      removeListeners: () => void
     }
     interface IFrameComponent extends HTMLIFrameElement {
       iFrameResizer: IFrameObject
+    }
+
+    type IFrameForwardRef = Omit<IFrameObject, 'close' | 'removeListeners'> & {
+      getIframeElement: () => IFrameComponent
     }
 
     type IframeProps = React.DetailedHTMLProps<
