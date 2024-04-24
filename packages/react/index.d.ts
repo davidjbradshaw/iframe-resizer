@@ -26,6 +26,7 @@ declare module '@iframe-resizer/react' {
       direction?: 'vertical' | 'horizontal' | 'none'
       forwardRef?: any
       inPageLinks?: boolean
+      license: string
       enablePublicMethods?: boolean
       offsetHeight?: number
       offsetWidth?: number

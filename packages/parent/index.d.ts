@@ -64,6 +64,10 @@ declare namespace iframeResizer {
     inPageLinks?: boolean | undefined
 
     /**
+     * Set iFrame-resizer license.
+     */
+    license: string
+    /**
      * Set offset height of iFrame content.
      */
     offsetHeight?: number | undefined
