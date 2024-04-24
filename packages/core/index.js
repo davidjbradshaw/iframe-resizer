@@ -599,7 +599,7 @@ function iframeListener(event) {
   }
 
   if (!isMessageForUs()) {
-    log(iframeId, `Ignored: ${msg}`)
+    log(iframeId, 'Ignored:', msg)
     return
   }
 
