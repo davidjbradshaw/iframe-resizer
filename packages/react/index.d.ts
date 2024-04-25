@@ -34,6 +34,7 @@ declare module '@iframe-resizer/react' {
       offsetWidth?: number
       scrolling?: boolean | 'omit'
       tolerance?: number
+      warningTimeout?: number
     }
 
     type ResizerEvents = {

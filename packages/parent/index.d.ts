@@ -87,6 +87,8 @@ declare namespace iframeResizer {
      */
     tolerance?: number | undefined
 
+    warningTimeout?: number | undefined
+
     /**
      * Called before iFrame is closed via parentIFrame.close() or iframe.iFrameResizer.close() methods. Returning false will prevent the iFrame from closing.
      */

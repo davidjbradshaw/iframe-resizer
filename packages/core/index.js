@@ -81,7 +81,7 @@ function iframeListener(event) {
     const min = Number(settings[iframeId][`min${Dimension}`])
     const dimension = Dimension.toLowerCase()
 
-    let size = Number(messageData[dimension])
+    let size = messageData[dimension]
 
     log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
 
@@ -95,7 +95,7 @@ function iframeListener(event) {
       log(iframeId, `Set ${dimension} to max value`)
     }
 
-    messageData[dimension] = `${size}`
+    messageData[dimension] = size
   }
 
   function isMessageFromIFrame() {
@@ -358,8 +358,8 @@ function iframeListener(event) {
     }
 
     const calcOffset = (messageData, offset) => ({
-      x: Number(messageData.width) + offset.x,
-      y: Number(messageData.height) + offset.y,
+      x: messageData.width + offset.x,
+      y: messageData.height + offset.y,
     })
 
     const offset = addOffset
@@ -441,7 +441,7 @@ function iframeListener(event) {
   function onMouse(event) {
     let mousePos = {}
 
-    if (Number(messageData.width) === 0 && Number(messageData.height) === 0) {
+    if (messageData.width === 0 && messageData.height === 0) {
       const data = getMsgBody(9).split(':')
       mousePos = {
         x: data[1],
