@@ -7,7 +7,8 @@
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content and provides a range of features to address the most common issues with using iFrames,
 
-See [iframe-resizer.com](https://iframe-resizer.com) for details.
+### See [iframe-resizer.com](https://iframe-resizer.com) for details.
+
 
 <!--
 ## Donate
