@@ -1,3 +1,5 @@
+<img src="https:iframe-resizer.com/logo-full.svg" alt="" title="" />
+
 # @@PKG_NAME@@
 
 > _Keep same and cross domain iframes sized to their content_
