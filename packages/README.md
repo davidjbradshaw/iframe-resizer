@@ -1,8 +1,6 @@
-<img src="https:iframe-resizer.com/logo-full.svg" alt="" title="" />
+<img src="https://iframe-resizer.com/logo-full.png" alt="" title="" />
 
 # @@PKG_NAME@@
-
-> _Keep same and cross domain iframes sized to their content_
 
 This package is an alpha release of version 5 of _iframe-resizer_ for the production version see the [iframe-resizer](https://www.npmjs.com/package/iframe-resizer) package.
 

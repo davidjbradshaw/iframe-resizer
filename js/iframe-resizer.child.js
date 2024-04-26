@@ -1,7 +1,7 @@
 /*!
  *  @preserve
  *  
- *  @module     iframe-resizer/child 5.0.0-alpha.10 (iife) 
+ *  @module     iframe-resizer/child 5.0.0-alpha.11 (iife) 
  *
  *  @license    GPL-3.0 for non-commercial use only.
  *              For commercial use, you must purchase a license from
