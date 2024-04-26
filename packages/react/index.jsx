@@ -28,11 +28,11 @@ function IframeResizer(props) {
 
   useImperativeHandle(forwardRef, () => ({
     getIframeElement: () => iframeRef.current,
-    resize: () => iframeRef.current.iFrameResizer.resize(),
+    resize: () => iframeRef.current.iframeResizer.resize(),
     moveToAnchor: (anchor) =>
-      iframeRef.current.iFrameResizer.moveToAnchor(anchor),
+      iframeRef.current.iframeResizer.moveToAnchor(anchor),
     sendMessage: (message, targetOrigin) => {
-      iframeRef.current.iFrameResizer.sendMessage(message, targetOrigin)
+      iframeRef.current.iframeResizer.sendMessage(message, targetOrigin)
     },
   }))
 
