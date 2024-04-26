@@ -1,5 +1,4 @@
 import connectResizer from '@iframe-resizer/core'
-import PropTypes from 'prop-types'
 import React, { useEffect, useImperativeHandle, useRef } from 'react'
 import warning from 'warning'
 
@@ -38,10 +37,6 @@ function IframeResizer(props) {
   }))
 
   return <iframe title={title} {...iframeProps} ref={iframeRef} />
-}
-
-IframeResizer.propTypes = {
-  title: PropTypes.string, // eslint-disable-line react/require-default-props
 }
 
 export default IframeResizer

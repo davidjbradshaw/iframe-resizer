@@ -122,7 +122,7 @@ const npm = [
     output: [output('react')('esm'), output('react')('cjs')],
     external: [
       '@iframe-resizer/core',
-      'prop-types',
+      // 'prop-types',
       'react',
       'warning',
       /@babel\/runtime/,
