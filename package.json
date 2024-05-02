@@ -43,7 +43,6 @@
   "dependencies": {
     "@iframe-resizer/child": "file:./packages/child/",
     "@iframe-resizer/core": "file:./packages/core/",
-    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "warning": "^4.0.3"
   },
