@@ -80,7 +80,7 @@
     "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "~1.1.0",
     "grunt-eslint": "^24.3.0",
-    "grunt-jsonlint": "^2.1.3",
+    "grunt-jsonlint": "^3.0.0",
     "grunt-karma": "^4.0.2",
     "grunt-karma-coveralls": "^2.5.4",
     "grunt-shell": "~4.0.0",
