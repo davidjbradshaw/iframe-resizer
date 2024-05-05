@@ -1,17 +1,19 @@
 export default (props) => {
   const {
+    license,
     bodyBackground,
     bodyMargin,
     bodyPadding,
     checkOrigin,
     inPageLinks,
+    offset,
     offsetHeight,
     offsetWidth,
     scrolling,
     warningTimeout,
     tolerance,
     onClosed,
-    onInit,
+    onReady,
     onMessage,
     onResized,
     ...iframeProps
