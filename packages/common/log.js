@@ -1,3 +1,5 @@
+import formatAdvise from './format-advise'
+
 const msgId = '[iframeResizer]'
 
 let settings = {}
@@ -26,7 +28,9 @@ function getMyID(iframeId) {
 
 const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
-const formatLogMsg = (iframeId, ...msg) => [`${msgId}[${iframeId}]`, ...msg]
+const formatLogMsg =
+  (iframeId) =>
+  (...msg) => [`${msgId}[${iframeId}]`, ...msg].join(' ')
 
 const output = (type, iframeId, ...msg) =>
   // eslint-disable-next-line no-console
@@ -39,13 +43,18 @@ export const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
 
 export const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
 
+// export const advise = (iframeId, msg) =>
+//   // eslint-disable-next-line no-console
+//   window?.console.warn.apply(
+//     null,
+//     formatLogMsg(iframeId)(
+//       window.chrome // Only show formatting in Chrome as not supported in other browsers
+//         ? msg
+//         : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
+//       )
+//     ),
+//   )
+
 export const advise = (iframeId, msg) =>
   // eslint-disable-next-line no-console
-  window?.console.warn(
-    formatLogMsg(
-      iframeId,
-      window.chrome // Only show formatting in Chrome as not supported in other browsers
-        ? msg
-        : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
-    ),
-  )
+  console?.warn(formatAdvise(formatLogMsg(iframeId))(msg))

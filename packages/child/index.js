@@ -1,4 +1,5 @@
 import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
+import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 
 const checkVisibilityOptions = {
@@ -129,24 +130,8 @@ const rot = (s) =>
     ),
   )
 
-const encode = (s) =>
-  s
-    .replaceAll('<br>', '\n')
-    .replaceAll('<rb>', '\u001B[31;1m')
-    .replaceAll('</>', '\u001B[m')
-    .replaceAll('<b>', '\u001B[1m')
-    .replaceAll('<i>', '\u001B[3m')
-    .replaceAll('<u>', '\u001B[4m')
-
-const remove = (s) => s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
-
 // TODO: remove .join(' '), requires major test updates
 const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
-
-const formatAdvise = (...msg) =>
-  window.chrome // Only show formatting in Chrome as not supported in other browsers
-    ? encode(formatLogMsg(...msg))
-    : remove(formatLogMsg(...msg))
 
 const log = (...msg) =>
   // eslint-disable-next-line no-console
@@ -162,7 +147,7 @@ const warn = (...msg) =>
 
 const advise = (...msg) =>
   // eslint-disable-next-line no-console
-  console?.warn(formatAdvise(...msg))
+  console?.warn(formatAdvise(formatLogMsg)(...msg))
 
 const adviser = (msg) => advise(rot(msg))
 
