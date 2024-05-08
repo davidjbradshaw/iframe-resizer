@@ -9,7 +9,7 @@ const encode = (s) =>
 
 const remove = (s) => s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
 
-export default (formatLogMsg) => (msg) => 
+export default (formatLogMsg) => (msg) =>
   window.chrome // Only show formatting in Chrome as not supported in other browsers
     ? formatLogMsg(encode(msg))
     : formatLogMsg(remove(msg))

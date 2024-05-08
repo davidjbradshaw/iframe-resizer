@@ -30,7 +30,8 @@ const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
 
 const formatLogMsg =
   (iframeId) =>
-  (...msg) => [`${msgId}[${iframeId}]`, ...msg].join(' ')
+  (...msg) =>
+    [`${msgId}[${iframeId}]`, ...msg].join(' ')
 
 const output = (type, iframeId, ...msg) =>
   // eslint-disable-next-line no-console
