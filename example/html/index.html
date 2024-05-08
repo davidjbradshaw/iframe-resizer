@@ -11,6 +11,9 @@
         float: right;
         margin-left: 8px;
       }
+      #callback {
+        margin: -5px 0 5px 24px;
+      }
       /* iframe {
         border-width: 0;
       } */
@@ -32,7 +35,7 @@
       ></iframe>
     </div>
     <p id="callback"></p>
-    <div style="margin: 8px 0; font-size: 13px">
+    <div style="margin: 8px 0 0 24px; font-size: 13px">
       For details on how this works, see
       <a href="https://github.com/davidjbradshaw/iframe-resizer"
         >https://github.com/davidjbradshaw/iframe-resizer</a
@@ -62,22 +65,23 @@
 
         onResized(messageData) {
           // Callback fn when resize is received
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
+          callbackDisplay.innerHTML = 
+          `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Height:</b> ${messageData.height} <br><b>Width:</b> ${messageData.width} <br><b>Event type:</b> ${messageData.type}`
         },
 
         onMouseEnter(messageData) {
           // Callback fn when mouse enters iframe
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>ScreenX:</b> ${messageData.screenX} <b>ScreenY:</b> ${messageData.screenY} <b>Event type:</b> ${messageData.type}`
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>ScreenX:</b> ${messageData.screenX} <br><b>ScreenY:</b> ${messageData.screenY} <br><b>Event type:</b> ${messageData.type}`
         },
 
         onMouseLeave(messageData) {
           // Callback fn when mouse enters iframe
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>ScreenX:</b> ${messageData.screenX} <b>ScreenY:</b> ${messageData.screenY} <b>Event type:</b> ${messageData.type}`
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>ScreenX:</b> ${messageData.screenX} <br><b>ScreenY:</b> ${messageData.screenY} <br><b>Event type:</b> ${messageData.type}`
         },
 
         onMessage(messageData) {
           // Callback fn when message is received
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Message:</b> ${messageData.message}`
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Message:</b> ${messageData.message}`
           alert(messageData.message)
           messageData.iframe.iFrameResizer.sendMessage(
             'Hello back from parent page',
