@@ -5,6 +5,7 @@ import {
   resetRequiredMethods,
   VERSION,
 } from '../common/consts'
+import cyrb from '../common/cyrb'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import {
   advise,
@@ -15,7 +16,6 @@ import {
   warn,
 } from '../common/log'
 import { isNumber, once } from '../common/utils'
-import cyrb from './cyrb'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -306,7 +306,10 @@ function iframeListener(event) {
   }
 
   const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
-  const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentProperties)
+  const sendParentInfoToIframe = sendInfoToIframe(
+    'parentInfo',
+    getParentProperties,
+  )
 
   const startPageInfoMonitor = startInfoMonitor(
     sendPageInfoToIframe,
@@ -772,11 +775,11 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         advise(
           id,
           `
-\u001B[31;1mNo response from iFrame\u001B[m
+<rb>No response from iFrame</>
             
-The iframe (\u001B[3m${id}\u001B[m) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check \u001B[1m@iframe-resizer/child\u001B[m package has been loaded in the iframe.
+The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 
-This message can be ignored if everything is working, or you can set the \u001B[1mwarningTimeout\u001B[m option to a higher value or zero to suppress this warning.
+This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
 `,
         )
       }
@@ -825,39 +828,39 @@ let count = 0
 let setup = false
 
 export default (options) => (iframe) => {
-  function setLimits() {
-    function addStyle(style) {
-      const styleValue = settings[iframeId][style]
+  // function setLimits() {
+  //   function addStyle(style) {
+  //     const styleValue = settings[iframeId][style]
 
-      if (Infinity !== styleValue && styleValue !== 0) {
-        iframe.style[style] = isNumber(styleValue)
-          ? `${styleValue}px`
-          : styleValue
-        log(iframeId, `Set ${style} = ${iframe.style[style]}`)
-      }
-    }
+  //     if (Infinity !== styleValue && styleValue !== 0) {
+  //       iframe.style[style] = isNumber(styleValue)
+  //         ? `${styleValue}px`
+  //         : styleValue
+  //       log(iframeId, `Set ${style} = ${iframe.style[style]}`)
+  //     }
+  //   }
 
-    function chkMinMax(dimension) {
-      if (!isNumber(`min${dimension}`) || !isNumber(`max${dimension}`)) return
+  //   function chkMinMax(dimension) {
+  //     if (!isNumber(`min${dimension}`) || !isNumber(`max${dimension}`)) return
 
-      if (
-        settings[iframeId][`min${dimension}`] >
-        settings[iframeId][`max${dimension}`]
-      ) {
-        throw new Error(
-          `Value for min${dimension} can not be greater than max${dimension}`,
-        )
-      }
-    }
+  //     if (
+  //       settings[iframeId][`min${dimension}`] >
+  //       settings[iframeId][`max${dimension}`]
+  //     ) {
+  //       throw new Error(
+  //         `Value for min${dimension} can not be greater than max${dimension}`,
+  //       )
+  //     }
+  //   }
 
-    chkMinMax('Height')
-    chkMinMax('Width')
+  //   chkMinMax('Height')
+  //   chkMinMax('Width')
 
-    addStyle('maxHeight')
-    addStyle('minHeight')
-    addStyle('maxWidth')
-    addStyle('minWidth')
-  }
+  //   addStyle('maxHeight')
+  //   addStyle('minHeight')
+  //   addStyle('maxWidth')
+  //   addStyle('minWidth')
+  // }
 
   function newId() {
     let id = options?.id || defaults.id + count++
@@ -943,9 +946,9 @@ export default (options) => (iframe) => {
           advise(
             iframeId,
             `
-\u001B[31;1mDeprecated Method Name\u001Bm
+<rb>Deprecated Method Name\u001Bm
 
-The \u001B[removeListeners()\u001B[m method has been renamed to \u001B[disconnect()\u001B[m.
+The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</>.
 `,
           )
           this.disconnect()
@@ -998,9 +1001,9 @@ The \u001B[removeListeners()\u001B[m method has been renamed to \u001B[disconnec
       advise(
         iframeId,
         `
-\u001B[31;1mDeprecated Option\u001Bm
+<rb>Deprecated Option\u001Bm
 
-The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoResize\u001B[m options have been replaced with new \u001B[1mdirection\u001B[m option which expects values of \u001B[3m"vertical"\u001B[m, \u001B[3m"horizontal"\u001B[m or \u001B[3m"horizontal"\u001B[m.
+The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <i>"vertical"</>, <i>"horizontal"</> or <i>"horizontal"</>.
 `,
       )
     }
@@ -1076,14 +1079,14 @@ The \u001B[1msizeWidth\u001B[m, \u001B[1msizeHeight\u001B[m and \u001B[1mautoRes
     info(`v${VERSION}`)
     advise(
       iframe.id,
-      `\u001B[31;1mAlpha Release\u001B[m
+      `<rb>Alpha Release</>
         
 Do not use in production, API is not stable.`,
     )
     processOptions(options)
     setupEventListenersOnce()
     setScrolling()
-    setLimits()
+    // setLimits()
     setupBodyMarginValues()
     init(createOutgoingMsg(iframeId))
     setupIFrameObject()
