@@ -625,7 +625,7 @@ function setupPublicMethods() {
         advise(`
 <rb>Deprecated Method</>
           
-The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentgetParentProperties()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentProperties()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
 `)
         return
       }
@@ -634,10 +634,10 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       sendMsg(0, 0, 'pageInfoStop')
     },
 
-    getParentgetParentProperties(callback) {
+    getParentProperties(callback) {
       if (typeof callback !== 'function') {
         throw new TypeError(
-          'parentIFrame.getParentgetParentProperties(callback) callback not a function',
+          'parentIFrame.getParentProperties(callback) callback not a function',
         )
       }
 
@@ -973,14 +973,13 @@ function getAutoSize(getDimension, autoOverflow) {
 
     case !autoOverflow:
       log(`Switch to autoOverflow: ${sizes}`)
-      switchToAutoOverflow({
+      return switchToAutoOverflow({
         ceilBoundingSize,
         dimension,
         getDimension,
         isHeight,
         scrollSize,
       })
-      break
 
     default:
       log(`Content overflowing HTML element: ${sizes}`)
@@ -1052,13 +1051,18 @@ function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
   function isSizeChangeDetected() {
     const checkTolarance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
-    currentHeight = Math.ceil(
-      undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
-    )
+    // currentHeight = Math.ceil(
+    //  undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
+    // )
 
-    currentWidth = Math.ceil(
-      undefined === customWidth ? getWidth[widthCalcMode]() : customWidth,
-    )
+    // currentWidth = Math.ceil(
+    //  undefined === customWidth ? getWidth[widthCalcMode]() : customWidth,
+    // )
+
+    currentHeight =
+      undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
+    currentWidth =
+      undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
 
     return (
       (calculateHeight && checkTolarance(height, currentHeight)) ||

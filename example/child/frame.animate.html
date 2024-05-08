@@ -82,7 +82,7 @@
       This iframe contains a page element animated via CSS to change the height of the page. 
     </p>
 
-    <h4>Data returned by parentIFrame.getParentInfo()</h4>
+    <h4>Data returned by parentIFrame.getParentProperties()</h4>
     <table id="data"></table>
 
     <!-- 
@@ -124,13 +124,13 @@
         // annoying 1px gaps at the bottom.
         //
         // You should not need to do this with same domain iframes.
-        offsetHeight: -1,
+        // offsetHeight: -1,
 
         onReady: () => {
           //   parentIFrame.getPageInfo((pageInfo) => {
           //     dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
           //   })
-          parentIFrame.getParentInfo((pageInfo) => {
+          parentIFrame.getParentProperties((pageInfo) => {
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })
         },
