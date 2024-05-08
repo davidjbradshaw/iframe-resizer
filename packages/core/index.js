@@ -268,21 +268,28 @@ function iframeListener(event) {
 
     function stop() {
       setListener('Remove ', removeEventListener)
-      resizeObserver.disconnect()
+      pageObserver.disconnect()
+      iframeObserver.disconnect()
     }
 
     function start() {
       setListener('Add ', addEventListener)
-      resizeObserver.observe(document.body, {
+      pageObserver.observe(document.body, {
         attributes: true,
         childList: true,
         subtree: true,
+      })
+      iframeObserver.observe(settings[id].iframe, {
+        attributes: true,
+        childList: false,
+        subtree: false,
       })
     }
 
     const id = iframeId // Create locally scoped copy of iFrame ID
 
-    const resizeObserver = new ResizeObserver(sendInfo('iframe observed'))
+    const pageObserver = new ResizeObserver(sendInfo('page observed'))
+    const iframeObserver = new ResizeObserver(sendInfo('iframe observed'))
 
     start()
 

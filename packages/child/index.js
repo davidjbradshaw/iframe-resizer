@@ -843,6 +843,7 @@ const getAllElements = (element) => () =>
 function switchToAutoOverflow({
   ceilBoundingSize,
   dimension,
+  getDimension,
   isHeight,
   scrollSize,
 }) {
@@ -868,6 +869,8 @@ When present the <i>${side} margin of the ${furthest} element</> with a <b>data-
     log(`Switching from ${widthCalcMode} to autoOverflow`)
     widthCalcMode = 'autoOverflow'
   }
+
+  return getDimension.taggedElement()
 }
 
 const prevScrollSize = {
@@ -937,6 +940,7 @@ function getAutoSize(getDimension, autoOverflow) {
         : switchToAutoOverflow({
             ceilBoundingSize,
             dimension,
+            getDimension,
             isHeight,
             scrollSize,
           })
@@ -958,6 +962,7 @@ function getAutoSize(getDimension, autoOverflow) {
       switchToAutoOverflow({
         ceilBoundingSize,
         dimension,
+        getDimension,
         isHeight,
         scrollSize,
       })
