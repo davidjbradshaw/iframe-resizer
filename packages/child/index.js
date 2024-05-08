@@ -625,7 +625,7 @@ function setupPublicMethods() {
         advise(`
 <rb>Deprecated Method</>
           
-The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentInfo()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentgetParentProperties()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
 `)
         return
       }
@@ -634,10 +634,10 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       sendMsg(0, 0, 'pageInfoStop')
     },
 
-    getParentInfo(callback) {
+    getParentgetParentProperties(callback) {
       if (typeof callback !== 'function') {
         throw new TypeError(
-          'parentIFrame.getParentInfo(callback) callback not a function',
+          'parentIFrame.getParentgetParentProperties(callback) callback not a function',
         )
       }
 
