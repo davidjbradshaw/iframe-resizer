@@ -274,7 +274,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         )
       })
 
-      xit('unexpected message', () => {
+      it('unexpected message', () => {
         mockMsgListener(createMsg('foo'))
 
         expect(console.warn).toHaveBeenCalledWith(
