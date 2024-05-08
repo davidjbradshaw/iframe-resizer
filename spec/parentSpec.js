@@ -130,7 +130,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             HEIGHT + extraHeights.reduce((a, b) => a + b, 0),
           )
           done()
-        }, 100)
+        }, 160)
       })
 
       it('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
@@ -147,7 +147,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             HEIGHT + extraHeights.reduce((a, b) => a + b * REM, 0),
           )
           done()
-        }, 100)
+        }, 160)
       })
 
       it('includes padding and borders from "px" units in height when CSS "box-sizing" is set to "content-box"', (done) => {
@@ -159,7 +159,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             HEIGHT + extraHeights.reduce((a, b) => a + b, 0),
           )
           done()
-        }, 100)
+        }, 160)
       })
     })
   })

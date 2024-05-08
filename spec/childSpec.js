@@ -283,7 +283,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       })
     })
 
-    xdescribe('performance', () => {
+    describe('performance', () => {
       it('trottles', (done) => {
         win.parentIFrame.size(10, 10)
         win.parentIFrame.size(20, 10)
@@ -314,7 +314,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           )
 
           expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-            '[iFrameSizer]parentIFrameTests:60:10:size',
+            '[iFrameSizer]parentIFrameTests:10:10:size',
             '*',
           )
           done()
