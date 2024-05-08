@@ -24,8 +24,8 @@ setLogSettings(settings)
 
 function iframeListener(event) {
   function resizeIFrame() {
-    ensureInRange('Height')
-    ensureInRange('Width')
+    // ensureInRange('Height')
+    // ensureInRange('Width')
 
     setSize(messageData)
     setPagePosition(iframeId)
@@ -76,27 +76,27 @@ function iframeListener(event) {
     }
   }
 
-  function ensureInRange(Dimension) {
-    const max = Number(settings[iframeId][`max${Dimension}`])
-    const min = Number(settings[iframeId][`min${Dimension}`])
-    const dimension = Dimension.toLowerCase()
+  // function ensureInRange(Dimension) {
+  //   const max = Number(settings[iframeId][`max${Dimension}`])
+  //   const min = Number(settings[iframeId][`min${Dimension}`])
+  //   const dimension = Dimension.toLowerCase()
 
-    let size = messageData[dimension]
+  //   let size = messageData[dimension]
 
-    log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
+  //   log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
 
-    if (size < min) {
-      size = min
-      log(iframeId, `Set ${dimension} to min value`)
-    }
+  //   if (size < min) {
+  //     size = min
+  //     log(iframeId, `Set ${dimension} to min value`)
+  //   }
 
-    if (size > max) {
-      size = max
-      log(iframeId, `Set ${dimension} to max value`)
-    }
+  //   if (size > max) {
+  //     size = max
+  //     log(iframeId, `Set ${dimension} to max value`)
+  //   }
 
-    messageData[dimension] = size
-  }
+  //   messageData[dimension] = size
+  // }
 
   function isMessageFromIFrame() {
     function checkAllowedOrigin() {
