@@ -623,7 +623,7 @@ function setupPublicMethods() {
         onPageInfo = callback
         sendMsg(0, 0, 'pageInfo')
         advise(`
-<rb>Deprecated Method (getPageInfo()</>
+<rb>Deprecated Method</>
           
 The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentInfo()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
 `)
@@ -635,14 +635,19 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
     },
 
     getParentInfo(callback) {
-      if (typeof callback === 'function') {
-        onParentInfo = callback
-        sendMsg(0, 0, 'parentInfo')
-        return
+      if (typeof callback !== 'function') {
+        throw new TypeError(
+          'parentIFrame.getParentInfo(callback) callback not a function',
+        )
       }
 
-      onParentInfo = null
-      sendMsg(0, 0, 'parentInfoStop')
+      onParentInfo = callback
+      sendMsg(0, 0, 'parentInfo')
+
+      return () => {
+        onParentInfo = null
+        sendMsg(0, 0, 'parentInfoStop')
+      }
     },
 
     moveToAnchor(hash) {
@@ -680,7 +685,7 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       targetOriginDefault = targetOrigin
     },
 
-    size(customHeight, customWidth) {
+    resize(customHeight, customWidth) {
       const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
 
       sendSize(
@@ -689,6 +694,15 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
         customHeight,
         customWidth,
       )
+    },
+
+    size(customHeight, customWidth) {
+      advise(`
+<rb>Deprecated Method</>
+          
+The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+`)
+      this.resize(customHeight, customWidth)
     },
   })
 
