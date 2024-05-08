@@ -177,7 +177,7 @@ declare namespace iframeResizer {
      *
      * Pass false to disable the callback.
      */
-    getParentInfo(callback: ((data: PageInfo) => void) | false): void
+    getParentProperties(callback: ((data: PageInfo) => void)): void
 
     /**
      * Scroll the parent page to the coordinates x and y

@@ -204,7 +204,7 @@ function iframeListener(event) {
     })
   }
 
-  function getParentInfo() {
+  function getParentProperties() {
     const { iframe } = messageData
     const { scrollWidth, scrollHeight } = document.documentElement
     const { width, height, offsetLeft, offsetTop, pageLeft, pageTop, scale } =
@@ -306,7 +306,7 @@ function iframeListener(event) {
   }
 
   const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
-  const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentInfo)
+  const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentProperties)
 
   const startPageInfoMonitor = startInfoMonitor(
     sendPageInfoToIframe,
@@ -337,8 +337,8 @@ function iframeListener(event) {
     getPagePosition(iframeId)
 
     return {
-      x: Math.floor(Number(iFramePosition.left) + Number(page.position.x)),
-      y: Math.floor(Number(iFramePosition.top) + Number(page.position.y)),
+      x: Number(iFramePosition.left) + Number(page.position.x),
+      y: Number(iFramePosition.top) + Number(page.position.y),
     }
   }
 
