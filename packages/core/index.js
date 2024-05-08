@@ -15,7 +15,7 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
-import { isNumber, once } from '../common/utils'
+import { once } from '../common/utils'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
