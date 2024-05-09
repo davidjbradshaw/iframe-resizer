@@ -2,11 +2,21 @@
 
 # @@PKG_NAME@@
 
-This package is an alpha release of version 5 of _iframe-resizer_, for the production version see the [iframe-resizer](https://www.npmjs.com/package/iframe-resizer) package.
+This package is package is part of _iframe-resizer_, see our website http://iframe-resizer.com/ for details on using this library.
 
-This version has an unstable API and should not be used on production sites.
+## Install
 
-Alpha version 5 docs: http://iframe-resizer.com/.
+Using npm:
+
+```bash
+npm install @@PKG_NAME@@ --save
+```
+
+or using yarn:
+
+```bash
+npm add @@PKG_NAME@@
+```
 
 ---
 
