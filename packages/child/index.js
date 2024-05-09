@@ -68,8 +68,8 @@ let mode = 0
 let modeSet = false
 let mouseEvents = false
 let myID = ''
-let offsetHeight = 0
-let offsetWidth = 0
+let offsetHeight
+let offsetWidth
 let resizeFrom = 'child'
 let resizeObserver = null
 let sameDomian = false
@@ -220,8 +220,12 @@ function readDataFromPage() {
 
     onMessage = data?.onMessage || onMessage
     onReady = data?.onReady || onReady
-    offsetHeight = data?.offsetHeight || offsetHeight
-    offsetWidth = data?.offsetWidth || offsetWidth
+
+    if (typeof data?.offset === 'number') {
+      if (calculateHeight) offsetHeight = data?.offset
+      if (calculateWidth) offsetWidth = data?.offset
+    }
+
     targetOriginDefault = data?.targetOrigin || targetOriginDefault
     heightCalcMode = data?.heightCalculationMethod || heightCalcMode
     widthCalcMode = data?.widthCalculationMethod || widthCalcMode
@@ -431,17 +435,11 @@ function checkWidthMode() {
   )
 }
 
-const modeData = [
-  '<iy><yi>Puchspk Spjluzl Rlf</><iy><iy>',
-  '<iy><yi>Tpzzpun Spjluzl Rlf</><iy><iy>',
-  "Aopz spiyhyf pz hchpshisl dpao ivao Jvttlyjphs huk Vwlu-Zvbylz spjluzlz.<iy><iy><i>Jvttlyjphs Spjluzl</><iy>Mvy jvttlyjphs bzl, <p>pmyhtl-ylzpgly</> ylxbpylz h svd jvza vul aptul spjluzl mll. Mvy tvyl pumvythapvu cpzpa <b>oaaw://pmyhtl-ylzpgly.jvt/wypjpun</>.<iy><iy><i>Vwlu Zvbyjl Spjluzl</><iy>Pm fvb hyl bzpun aopz spiyhyf pu h uvu-jvtlyjphs vwlu zvbyjl wyvqlja, fvb jhu bzl pa mvy myll bukly aol alytz vm aol NWS C3 Spjluzl. Av jvumpyt fvb hjjlwa aolzl alytz, wslhzl zla aol <i>spjlujl</> rlf pu pmyhtlYlzpgl vwapvuz av <i>'NWS-C3'</>.<iy><iy>Mvy tvyl pumvythapvu vu aol Nub Wbispj Spjluzl <iy><b>oaaw://pmyhtl-ylzpgly.jvt/vwlu-zvbyjl-spjluzl</>",
-  '<i>NWS-C3 Spjluzl Clyzpvu</><iy><iy>Aopz clyzpvu vm <p>pmyhtl-ylzpgly</> pz ilpun bzlk bukly aol alytz vm aol <i>NWS C3</> spjluzl. Pm fvb hyl bzpun aopz spiyhyf pu h jvttlyjphs wyvqlja, fvb dpss ullk av wbyjohzl h svd jvza vul aptl spjluzl. Mvy tvyl pumvythapvu cpzpa <b>oaaw://pmyhtl-ylzpgly.jvt/wypjpun</>.',
-]
-
 function checkMode() {
+  log(`Mode: ${mode}`)
   if (mode < 0) return adviser(`${modeData[mode + 2]}${modeData[2]}`)
   if (mode < 2) return adviser(modeData[3])
-  return 0
+  return mode
 }
 
 function startEventListeners() {
@@ -580,6 +578,13 @@ function setupMouseEvents() {
   addMouseListener('mouseenter', 'Mouse Enter')
   addMouseListener('mouseleave', 'Mouse Leave')
 }
+
+const modeData = [
+  '<iy><yi>Puchspk Spjluzl Rlf</><iy><iy>',
+  '<iy><yi>Tpzzpun Spjluzl Rlf</><iy><iy>',
+  "Aopz spiyhyf pz hchpshisl dpao ivao Jvttlyjphs huk Vwlu-Zvbylz spjluzlz.<iy><iy><i>Jvttlyjphs Spjluzl</><iy>Mvy jvttlyjphs bzl, <p>pmyhtl-ylzpgly</> ylxbpylz h svd jvza vul aptul spjluzl mll. Mvy tvyl pumvythapvu cpzpa <b>oaaw://pmyhtl-ylzpgly.jvt/wypjpun</>.<iy><iy><i>Vwlu Zvbyjl Spjluzl</><iy>Pm fvb hyl bzpun aopz spiyhyf pu h uvu-jvtlyjphs vwlu zvbyjl wyvqlja, fvb jhu bzl pa mvy myll bukly aol alytz vm aol NWS C3 Spjluzl. Av jvumpyt fvb hjjlwa aolzl alytz, wslhzl zla aol <i>spjlujl</> rlf pu pmyhtlYlzpgl vwapvuz av <i>'NWS-C3'</>.<iy><iy>Mvy tvyl pumvythapvu vu aol Nub Wbispj Spjluzl <iy><b>oaaw://pmyhtl-ylzpgly.jvt/vwlu-zvbyjl-spjluzl</>",
+  '<i>NWS-C3 Spjluzl Clyzpvu</><iy><iy>Aopz clyzpvu vm <p>pmyhtl-ylzpgly</> pz ilpun bzlk bukly aol alytz vm aol <i>NWS C3</> spjluzl. Pm fvb hyl bzpun aopz spiyhyf pu h jvttlyjphs wyvqlja, fvb dpss ullk av wbyjohzl h svd jvza vul aptl spjluzl. Mvy tvyl pumvythapvu cpzpa <b>oaaw://pmyhtl-ylzpgly.jvt/wypjpun</>.',
+]
 
 function setupPublicMethods() {
   win.parentIframe = Object.freeze({
@@ -839,6 +844,8 @@ const getAllElements = (element) => () =>
     '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
   )
 
+let switchChecked = false
+
 function switchToAutoOverflow({
   ceilBoundingSize,
   dimension,
@@ -846,6 +853,12 @@ function switchToAutoOverflow({
   isHeight,
   scrollSize,
 }) {
+  if (!switchChecked) {
+    // If this just happens once, then it is likely we just came from a large page.
+    switchChecked = true
+    return getDimension.taggedElement()
+  }
+
   const furthest = isHeight ? 'lowest' : 'right most'
   const side = isHeight ? 'bottom' : 'right'
   const overflowDetectedMessage = `
@@ -1137,7 +1150,7 @@ function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
   }
 
   function sendToParent() {
-    const size = `${height + offsetHeight}:${width + offsetWidth}`
+    const size = `${height + (offsetHeight || 0)}:${width + (offsetWidth || 0)}`
     const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
     log(
