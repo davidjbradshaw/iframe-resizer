@@ -1,9 +1,11 @@
 <img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">
 
-[![NPM version](https://badge.fury.io/js/iframe-resizer.svg)](http://badge.fury.io/js/iframe-resizer)
-[![NPM Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://npm-stat.com/charts.html?package=iframe-resizer&from=2014-12-31) <!--
-[![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer) -->
+[![NPM version](https://badge.fury.io/js/@iframe-resizer/parent.svg)](http://badge.fury.io/js/@iframe-resizer/parent)
+ <!--
+[![NPM Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://npm-stat.com/charts.html?package=iframe-resizer&from=2014-12-31)
+[![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer) 
 [![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
+-->
 
 This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content and provides a range of features to address the most common issues with using iFrame.
 
