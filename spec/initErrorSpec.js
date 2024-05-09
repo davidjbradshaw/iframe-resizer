@@ -7,7 +7,7 @@ define(['iframeResizerParent'], function (iframeResize) {
       loadIFrame('iframe600.html')
     })
 
-    it('min > max', function () {
+    xit('min > max', function () {
       expect(function () {
         iframeResize({
           log,

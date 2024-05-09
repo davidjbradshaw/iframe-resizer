@@ -61,20 +61,20 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.autoResize(true)
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Add event listener: After Print',
+          '[iframe-resizer][parentIFrameTests] Add event listener: After Print',
         )
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Add event listener: Before Print',
+          '[iframe-resizer][parentIFrameTests] Add event listener: Before Print',
         )
         win.parentIFrame.autoResize(false)
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Remove event listener: After Print',
+          '[iframe-resizer][parentIFrameTests] Remove event listener: After Print',
         )
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Remove event listener: Before Print',
+          '[iframe-resizer][parentIFrameTests] Remove event listener: Before Print',
         )
       })
 
@@ -243,7 +243,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check',
+          '[iframe-resizer][parentIFrameTests] Trigger event: Parent window requested size check',
         )
       })
 
@@ -252,7 +252,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check',
+          '[iframe-resizer][parentIFrameTests] Trigger event: Parent window requested size check',
         )
       })
 
@@ -261,7 +261,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Trigger event: Parent window requested size check',
+          '[iframe-resizer][parentIFrameTests] Trigger event: Parent window requested size check',
         )
       })
 
@@ -278,7 +278,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('foo'))
 
         expect(console.warn).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] Unexpected message ([iFrameSizer]foo)',
+          '[iframe-resizer][parentIFrameTests] Unexpected message ([iFrameSizer]foo)',
         )
       })
     })
@@ -327,11 +327,11 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setHeightCalculationMethod('foo')
 
         expect(console.warn).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.',
+          '[iframe-resizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.',
         )
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] height calculation method set to "auto"',
+          '[iframe-resizer][parentIFrameTests] height calculation method set to "auto"',
         )
         win.parentIFrame.size()
       })
@@ -414,11 +414,11 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setWidthCalculationMethod('foo')
 
         expect(console.warn).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] foo is not a valid option for widthCalculationMethod.',
+          '[iframe-resizer][parentIFrameTests] foo is not a valid option for widthCalculationMethod.',
         )
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iFrameSizer][parentIFrameTests] width calculation method set to "scroll"',
+          '[iframe-resizer][parentIFrameTests] width calculation method set to "scroll"',
         )
         win.parentIFrame.size()
       })
