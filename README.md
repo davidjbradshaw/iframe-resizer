@@ -7,7 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/davidjbradshaw/iframe-resizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/davidjbradshaw/iframe-resizer)
 -->
 
-This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content and provides a range of features to address the most common issues with using iFrame.
+This library enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content and provides a range of features to address the most common issues with using iFrames.
 
 ### See [iframe-resizer.com](https://iframe-resizer.com) for details.
 
