@@ -5,13 +5,13 @@
  *
  *  @license    GPL-3.0 for non-commercial use only.
  *              For commercial use, you must purchase a license from
- *              http://iframe-resizer.com/pricing
+ *              https://iframe-resizer.com/pricing
  * 
  *  @desciption Keep same and cross domain iFrames sized to their content 
  *
  *  @author     David J. Bradshaw <dave@bradshaw.net>
  * 
- *  @see        {@link http://iframe-resizer.com}
+ *  @see        {@link https://iframe-resizer.com}
  * 
  *  @copyright  (c) 2013 - 2024, David J. Bradshaw. All rights reserved.
  */
