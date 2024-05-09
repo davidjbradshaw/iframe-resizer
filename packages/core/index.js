@@ -1106,12 +1106,6 @@ function showVersion() {
   if (!vShown) {
     vShown = true
     info(`v${VERSION}`)
-    advise(
-      VERSION,
-      `<rb>Alpha Release</>
-        
-Do not use in production, API is not stable.`,
-    )
   }
 }
 

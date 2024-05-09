@@ -131,7 +131,7 @@ const rot = (s) =>
   )
 
 // TODO: remove .join(' '), requires major test updates
-const formatLogMsg = (...msg) => [`${msgID}[${myID}]`, ...msg].join(' ')
+const formatLogMsg = (...msg) => [`[iframe-resizer][${myID}]`, ...msg].join(' ')
 
 const log = (...msg) =>
   // eslint-disable-next-line no-console
@@ -356,10 +356,11 @@ function checkDeprecatedAttrs() {
   checkAttrs('data-iframe-width')
 
   if (found) {
-    advise(`
-<rb>Deprecated Attributes</>
+    advise(
+      `<rb>Deprecated Attributes</>
           
-The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been deprecated and replaced with the single <b>data-iframe-size</> attribute. Use of the old attributes will be removed in a future version of <i>iframe-resizer</>.`)
+The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been deprecated and replaced with the single <b>data-iframe-size</> attribute. Use of the old attributes will be removed in a future version of <i>iframe-resizer</>.`,
+    )
   }
 }
 
@@ -406,10 +407,11 @@ function checkCalcMode(calcMode, calcModeDefault, modes, type) {
       calcMode = calcModeDefault
     }
     if (calcMode in deprecatedResizeMethods) {
-      advise(`
-<rb>Deprecated ${type}CalculationMethod (${calcMode})</>
+      advise(
+        `<rb>Deprecated ${type}CalculationMethod (${calcMode})</>
 
-This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`)
+This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`,
+      )
     }
     log(`${type} calculation method set to "${calcMode}"`)
   }
@@ -612,11 +614,12 @@ function setupPublicMethods() {
       if (typeof callback === 'function') {
         onPageInfo = callback
         sendMsg(0, 0, 'pageInfo')
-        advise(`
-<rb>Deprecated Method</>
+        advise(
+          `<rb>Deprecated Method</>
           
 The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentProperties()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
-`)
+`,
+        )
         return
       }
 
@@ -687,11 +690,12 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
     },
 
     size(customHeight, customWidth) {
-      advise(`
-<rb>Deprecated Method</>
+      advise(
+        `<rb>Deprecated Method</>
           
 The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
-`)
+`,
+      )
       this.resize(customHeight, customWidth)
     },
   })
@@ -821,8 +825,7 @@ Position calculated from HTML element: ${elementSnippet(maxEl)}`
     log(logMsg)
   } else {
     advise(
-      `
-<rb>Performance Warning</>
+      `<rb>Performance Warning</>
 
 Calculateing the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
 ${logMsg}`,
@@ -861,8 +864,7 @@ function switchToAutoOverflow({
 
   const furthest = isHeight ? 'lowest' : 'right most'
   const side = isHeight ? 'bottom' : 'right'
-  const overflowDetectedMessage = `
-<rb>Detected content overflowing html element</>
+  const overflowDetectedMessage = `<rb>Detected content overflowing html element</>
     
 This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a performace impact on more complex pages. 
 
