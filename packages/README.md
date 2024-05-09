@@ -17,7 +17,7 @@ npm install @@PKG_NAME@@ --save
 or using yarn:
 
 ```bash
-npm add @@PKG_NAME@@
+yarn add @@PKG_NAME@@
 ```
 
 ---
