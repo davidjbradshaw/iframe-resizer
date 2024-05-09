@@ -742,7 +742,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         )
         return
       } catch (error) {
-        info(id, `Same domain connection failed. Trying cross domain`)
+        log(id, `Same domain connection failed. Trying cross domain`)
         settings[id].sameDomain = false
       }
     }
@@ -946,7 +946,7 @@ export default (options) => (iframe) => {
           advise(
             iframeId,
             `
-<rb>Deprecated Method Name\u001Bm
+<rb>Deprecated Method Name</>
 
 The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</>.
 `,
@@ -1000,8 +1000,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
     ) {
       advise(
         iframeId,
-        `
-<rb>Deprecated Option\u001Bm
+        `<rb>Deprecated Option</>
 
 The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <i>"vertical"</>, <i>"horizontal"</> or <i>"horizontal"</>.
 `,
@@ -1037,6 +1036,17 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     log(iframeId, 'Direction set to "vertical"')
   }
 
+  function setOffset(offset) {
+    if (!offset) return
+    if (settings[iframeId].direction === 'vertical') {
+      settings[iframeId].offsetHeight = offset
+      log(iframeId, `Offset height set to ${offset}`)
+    } else {
+      settings[iframeId].offsetWidth = offset
+      log(iframeId, `Offset width set to ${offset}`)
+    }
+  }
+
   function getTargetOrigin(remoteHost) {
     return remoteHost === '' ||
       remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
@@ -1059,6 +1069,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     setDirection()
+    setOffset(options?.offset)
     getPostMessageTarget()
 
     settings[iframeId].targetOrigin =
@@ -1076,13 +1087,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   if (beenHere()) {
     warn(iframeId, 'Ignored iFrame, already setup.')
   } else {
-    info(`v${VERSION}`)
-    advise(
-      iframe.id,
-      `<rb>Alpha Release</>
-        
-Do not use in production, API is not stable.`,
-    )
+    showVersion()
     processOptions(options)
     setupEventListenersOnce()
     setScrolling()
@@ -1093,6 +1098,21 @@ Do not use in production, API is not stable.`,
   }
 
   return iframe?.iFrameResizer
+}
+
+let vShown = false
+
+function showVersion() {
+  if (!vShown) {
+    vShown = true
+    info(`v${VERSION}`)
+    advise(
+      VERSION,
+      `<rb>Alpha Release</>
+        
+Do not use in production, API is not stable.`,
+    )
+  }
 }
 
 function sendTriggerMsg(eventName, event) {
