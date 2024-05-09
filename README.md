@@ -1,4 +1,4 @@
-<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">
+[<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">](https://iframe-resizer.com)
 
 [![npm version](https://badge.fury.io/js/@iframe-resizer%2Fparent.svg)](https://badge.fury.io/js/@iframe-resizer%2Fparent)
  <!--
