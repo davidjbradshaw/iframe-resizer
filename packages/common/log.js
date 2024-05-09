@@ -1,6 +1,6 @@
 import formatAdvise from './format-advise'
 
-const msgId = '[iframeResizer]'
+const msgId = '[iframe-resizer]'
 
 let settings = {}
 let logEnabled = false
@@ -43,18 +43,6 @@ export const log = (iframeId, ...msg) =>
 export const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
 
 export const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
-
-// export const advise = (iframeId, msg) =>
-//   // eslint-disable-next-line no-console
-//   window?.console.warn.apply(
-//     null,
-//     formatLogMsg(iframeId)(
-//       window.chrome // Only show formatting in Chrome as not supported in other browsers
-//         ? msg
-//         : msg.replaceAll(/\u001B\[[\d;]*m/gi, ''), // eslint-disable-line no-control-regex
-//       )
-//     ),
-//   )
 
 export const advise = (iframeId, msg) =>
   // eslint-disable-next-line no-console
