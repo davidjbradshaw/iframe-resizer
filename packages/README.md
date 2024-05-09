@@ -2,7 +2,7 @@
 
 # @@PKG_NAME@@
 
-This package is package is part of __iframe-resizer__, a library that enables the automatic resizing of the height and width of both same and cross domain iFrames to fit their contained content. It also provides a range of features to address the most common issues with using iFrames.
+This package is part of __iframe-resizer__, a library that enables the automatic resizing of the height and width of both same and cross domain iframes to fit their contained content. It also provides a range of features to address the most common issues with using iframes.
 
 __See [iframe-resizer.com](https://iframe-resizer.com) for details.__
 
