@@ -1,6 +1,6 @@
 [<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">](https://iframe-resizer.com)
 
-This package is a legacy version of [iframe-resizer](https://iframe-resizer.com). Version 5 is now available via the following packages.
+This package is a legacy version of __[iframe-resizer](https://iframe-resizer.com)__. Version 5 is now available via the following packages.
 
  * [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
  * [@iframe-resizer/child](https://www.npmjs.com/package/@iframe-resizer/child)
