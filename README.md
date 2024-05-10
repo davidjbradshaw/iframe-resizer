@@ -7,9 +7,7 @@ This package is a legacy version of [iframe-resizer](https://iframe-resizer.com)
  * [@iframe-resizer/react](https://www.npmjs.com/package/@iframe-resizer/react)
  * [@iframe-resizer/jquery](https://www.npmjs.com/package/@iframe-resizer/jquery)
 
-**For more details please see our new website: [https://iframe-resizer.com](https://iframe-resizer.com).
+**For more details please see our new website: [https://iframe-resizer.com](https://iframe-resizer.com).**
 
 ---
 Copyright &copy; 2013-23 [David J. Bradshaw](https://github.com/davidjbradshaw) 
-
-
