@@ -23,9 +23,3 @@ Iframe-resizer is the result of many 100s of hours of work, if you would like to
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -
 Licensed under the [GPL V3](LICENSE)
 
-<!--
-[![NPM](https://nodei.co/npm/iframe-resizer.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iframe-resizer/)
-
-[![Build Status](https://travis-ci.org/davidjbradshaw/iframe-resizer.svg?branch=master)](https://travis-ci.org/davidjbradshaw/iframe-resizer)
-[![Known Vulnerabilities](https://snyk.io/test/github/davidjbradshaw/iframe-resizer/badge.svg)](https://snyk.io/test/github/davidjbradshaw/iframe-resizer)
--->
