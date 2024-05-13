@@ -1,5 +1,5 @@
-const MessageData = ({ data }) => {
-  return data ? (
+const MessageData = ({ data }) =>
+  data ? (
     data.message ? (
       <span>
         <b>Frame ID:</b> {data.iframe.id} <br/>
@@ -14,6 +14,5 @@ const MessageData = ({ data }) => {
       </span>
     )
   ) : null
-}
 
 export default MessageData
