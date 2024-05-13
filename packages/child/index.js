@@ -783,6 +783,9 @@ function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
 
+
+
+
 // Idea from https://github.com/guardian/iframe-messenger
 function getMaxElement(side) {
   const Side = capitalizeFirstLetter(side)
