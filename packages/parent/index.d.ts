@@ -272,6 +272,7 @@ declare namespace iframeResizer {
     x: number
     y: number
   }
+  
   function iframeResize(
     options: IFrameOptions,
     target: string | HTMLElement,
