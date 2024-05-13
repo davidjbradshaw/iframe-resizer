@@ -10,4 +10,4 @@ This package is a legacy version of __[iframe-resizer](https://iframe-resizer.co
 **For more details please see our new website: [https://iframe-resizer.com](https://iframe-resizer.com).**
 
 ---
-Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) 
+Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw)
