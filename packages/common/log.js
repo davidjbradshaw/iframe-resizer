@@ -18,12 +18,12 @@ const isLogEnabled = (iframeId) =>
 
 function getMyID(iframeId) {
   if (window.top === window.self) {
-    return `Host page: ${iframeId}`
+    return `Parent page: ${iframeId}`
   }
 
   return window?.parentIFrame?.getId
     ? `${window.parentIFrame.getId()}: ${iframeId}`
-    : `Nested host page: ${iframeId}`
+    : `Nested parent page: ${iframeId}`
 }
 
 const formatLogHeader = (iframeId) => `${msgId}[${getMyID(iframeId)}]`
