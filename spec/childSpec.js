@@ -34,7 +34,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     const childMsg =
       '8:true:' +
       log +
-      ':9999:true:false:-8px:max:wheat:null:0:true:child:scroll:true:0:0:GPL-V3:5.0.0'
+      ':9999:true:false:-8px:max:wheat:null:0:true:child:scroll:true:0:0:GPLv3:5.0.0'
     const msgObject = createMsg(id + ':' + childMsg)
     const win = mockMsgListener(msgObject)
 
