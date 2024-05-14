@@ -261,6 +261,8 @@ function readDataFromPage() {
     return calcMode
   }
 
+  if (mode === 1) return
+
   if (
     'iFrameResizer' in window &&
     Object === window.iFrameResizer.constructor
