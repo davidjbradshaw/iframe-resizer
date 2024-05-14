@@ -5,7 +5,6 @@ import {
   resetRequiredMethods,
   VERSION,
 } from '../common/consts'
-import cyrb from '../common/cyrb'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import {
   advise,
@@ -15,6 +14,7 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
+import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
 import defaults from './values/defaults'
 import page from './values/page'
@@ -75,28 +75,6 @@ function iframeListener(event) {
       type: data[3],
     }
   }
-
-  // function ensureInRange(Dimension) {
-  //   const max = Number(settings[iframeId][`max${Dimension}`])
-  //   const min = Number(settings[iframeId][`min${Dimension}`])
-  //   const dimension = Dimension.toLowerCase()
-
-  //   let size = messageData[dimension]
-
-  //   log(iframeId, `Checking ${dimension} is in range ${min}-${max}`)
-
-  //   if (size < min) {
-  //     size = min
-  //     log(iframeId, `Set ${dimension} to min value`)
-  //   }
-
-  //   if (size > max) {
-  //     size = max
-  //     log(iframeId, `Set ${dimension} to max value`)
-  //   }
-
-  //   messageData[dimension] = size
-  // }
 
   function isMessageFromIFrame() {
     function checkAllowedOrigin() {
@@ -588,9 +566,10 @@ function iframeListener(event) {
   }
 
   function iFrameReadyMsgReceived() {
-    Object.keys(settings).forEach((iframeId) =>
-      trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId),
-    )
+    Object.keys(settings).forEach((iframeId) => {
+      if (settings[iframeId].mode >= 0)
+        trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
+    })
   }
 
   function firstRun() {
@@ -704,7 +683,7 @@ function setPagePosition(iframeId) {
 function resetIFrame(messageData) {
   log(
     messageData.id,
-    `Size reset requested by ${messageData.type === 'init' ? 'host page' : 'iFrame'}`,
+    `Size reset requested by ${messageData.type === 'init' ? 'parent page' : 'child page'}`,
   )
 
   getPagePosition(messageData.id)
@@ -819,49 +798,17 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.offsetHeight,
     iframeSettings.offsetWidth,
     iframeSettings.sizeHeight,
-    cyrb(iframeSettings.license),
+    iframeSettings.license,
     page.version,
+    iframeSettings.mode,
   ].join(':')
 }
 
 let count = 0
 let setup = false
+let vAdvised = false
 
 export default (options) => (iframe) => {
-  // function setLimits() {
-  //   function addStyle(style) {
-  //     const styleValue = settings[iframeId][style]
-
-  //     if (Infinity !== styleValue && styleValue !== 0) {
-  //       iframe.style[style] = isNumber(styleValue)
-  //         ? `${styleValue}px`
-  //         : styleValue
-  //       log(iframeId, `Set ${style} = ${iframe.style[style]}`)
-  //     }
-  //   }
-
-  //   function chkMinMax(dimension) {
-  //     if (!isNumber(`min${dimension}`) || !isNumber(`max${dimension}`)) return
-
-  //     if (
-  //       settings[iframeId][`min${dimension}`] >
-  //       settings[iframeId][`max${dimension}`]
-  //     ) {
-  //       throw new Error(
-  //         `Value for min${dimension} can not be greater than max${dimension}`,
-  //       )
-  //     }
-  //   }
-
-  //   chkMinMax('Height')
-  //   chkMinMax('Width')
-
-  //   addStyle('maxHeight')
-  //   addStyle('minHeight')
-  //   addStyle('maxWidth')
-  //   addStyle('minWidth')
-  // }
-
   function newId() {
     let id = options?.id || defaults.id + count++
 
@@ -982,8 +929,10 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
 
     const { id } = iframe
 
-    addEventListener(iframe, 'load', iFrameLoaded)
-    trigger('init', `${msg}:${setup}`, id, true)
+    if (settings[iframeId].mode >= 0) {
+      addEventListener(iframe, 'load', iFrameLoaded)
+      trigger('init', `${msg}:${setup}`, id, true)
+    }
   }
 
   function checkOptions(options) {
@@ -1008,6 +957,15 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     return options
+  }
+
+  function checkMode() {
+    const { mode } = settings[iframeId]
+    if (mode < 0) advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
+    if (vAdvised || mode < 0) return
+    vAdvised = true
+    info(`v${VERSION} (${getModeLabel(mode)})`)
+    if (mode < 1) advise('Parent', getModeData(3))
   }
 
   function setDirection() {
@@ -1066,6 +1024,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
       ...defaults,
       ...checkOptions(options),
+      mode: setMode(options),
     }
 
     setDirection()
@@ -1087,26 +1046,16 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   if (beenHere()) {
     warn(iframeId, 'Ignored iFrame, already setup.')
   } else {
-    showVersion()
     processOptions(options)
+    checkMode()
     setupEventListenersOnce()
     setScrolling()
-    // setLimits()
     setupBodyMarginValues()
     init(createOutgoingMsg(iframeId))
     setupIFrameObject()
   }
 
   return iframe?.iFrameResizer
-}
-
-let vShown = false
-
-function showVersion() {
-  if (!vShown) {
-    vShown = true
-    info(`v${VERSION}`)
-  }
 }
 
 function sendTriggerMsg(eventName, event) {
