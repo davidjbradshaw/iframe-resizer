@@ -130,7 +130,7 @@
           //   parentIFrame.getPageInfo((pageInfo) => {
           //     dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
           //   })
-          parentIFrame.getParentProperties((pageInfo) => {
+          window.parentIFrame.getParentProperties((pageInfo) => {
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })
         },

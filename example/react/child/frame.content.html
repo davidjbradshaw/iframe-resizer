@@ -11,6 +11,7 @@
       defer
     ></script>
     <script>
+      // eslint-disable-next-line no-unused-vars
       function toggle() {
         const { style } = document.getElementsByTagName('p')[1]
         style.display = style.display === 'none' ? '' : 'none'
@@ -20,7 +21,7 @@
     <script>
       window.iFrameResizer = {
         onMessage(message) {
-          alert(message, parentIFrame.getId())
+          alert(message, window.parentIFrame.getId())
         },
       }
     </script>
