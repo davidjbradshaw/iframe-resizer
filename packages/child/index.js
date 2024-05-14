@@ -1,6 +1,7 @@
 import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
+import { getModeData } from '../common/mode'
 
 const checkVisibilityOptions = {
   contentVisibilityAuto: true,
@@ -54,7 +55,6 @@ let bodyPadding = ''
 let calculateHeight = true
 let calculateWidth = false
 let calcElements = null
-let check
 let firstRun = true
 let hasTags = false
 let height = 1
@@ -64,8 +64,8 @@ let initMsg = ''
 let inPageLinks = {}
 let isInit = true
 let logging = false
+let licenseKey = ''
 let mode = 0
-let modeSet = false
 let mouseEvents = false
 let myID = ''
 let offsetHeight
@@ -77,7 +77,7 @@ let target = window.parent
 let targetOriginDefault = '*'
 let tolerance = 0
 let triggerLocked = false
-let version
+let version = ''
 let width = 1
 let widthCalcMode = widthCalcModeDefault
 let win = window
@@ -123,13 +123,6 @@ function elementSnippet(el) {
     : `${outer.slice(0, 30).replaceAll('\n', ' ')}...`
 }
 
-const rot = (s) =>
-  s.replaceAll(/[A-Za-z]/g, (c) =>
-    String.fromCodePoint(
-      (c <= 'Z' ? 90 : 122) >= (c = c.codePointAt(0) + 19) ? c : c - 26, // eslint-disable-line no-cond-assign
-    ),
-  )
-
 // TODO: remove .join(' '), requires major test updates
 const formatLogMsg = (...msg) => [`[iframe-resizer][${myID}]`, ...msg].join(' ')
 
@@ -149,20 +142,20 @@ const advise = (...msg) =>
   // eslint-disable-next-line no-console
   console?.warn(formatAdvise(formatLogMsg)(...msg))
 
-const adviser = (msg) => advise(rot(msg))
+const adviser = (msg) => advise(msg)
 
 function init() {
   checkCrossDomain()
   readDataFromParent()
   log(`Initialising iFrame v${VERSION} (${window.location.href})`)
   readDataFromPage()
-  setMode()
   setMargin()
   setBodyStyle('background', bodyBackground)
   setBodyStyle('padding', bodyPadding)
   injectClearFixIntoBodyElement()
   stopInfiniteResizingOfIFrame()
   checkMode()
+  checkVersion()
   checkHeightMode()
   checkWidthMode()
   checkDeprecatedAttrs()
@@ -175,6 +168,31 @@ function init() {
   sendSize('init', 'Init message from host page')
   onReady()
   isInit = false
+}
+
+function checkVersion() {
+  if (!version || version === '' || version === 'false') {
+    advise(
+      `<rb>Legacy version detected on parent page</>
+
+The version of <i>iframe-resizer</> you are using on the parent page does not match the child page. 
+
+Whilst running a differnet version on the parent and child pages will most likely work, it is not a supported configuration and you are reccommend to upgrade the version on the parent page to v${VERSION} to match the child page.
+`,
+    )
+    return
+  }
+
+  if (version !== VERSION) {
+    advise(
+      `<rb>Version mismatch</>
+
+The parent and child pages are running different versions of <i>iframe resizer</>.
+
+Parent page: ${version} - Child page: ${VERSION}.
+`,
+    )
+  }
 }
 
 function checkCrossDomain() {
@@ -207,9 +225,11 @@ function readDataFromParent() {
   offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16])
   offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
   calculateHeight = undefined === data[18] ? calculateHeight : strBool(data[18])
-  check = data[19] // eslint-disable-line prefer-destructuring
-  version = data[20] // eslint-disable-line prefer-destructuring
-  modeSet = undefined === data[21] ? modeSet : strBool(data[21])
+  licenseKey = data[19] // eslint-disable-line prefer-destructuring
+  version = data[20] || version
+  mode = undefined === data[21] ? mode : Number(data[21])
+
+  log(`License: ${licenseKey}`)
 }
 
 function readDataFromPage() {
@@ -381,19 +401,6 @@ function checkHasDataSizeAttributes() {
   }
 }
 
-function setMode() {
-  mode = [
-    '1jqr0si6pnt',
-    'tw4ra3kya',
-    'gz3au7jfuk',
-    '1irylf8sei5',
-    '1p37k9w4kov', // α
-  ].indexOf(check)
-  if (mode === -1 && check !== '') mode = -2
-  if (modeSet || !version) mode = 9
-  log('Mode set to', mode, modeSet, version)
-}
-
 function setupCalcElements() {
   const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
   hasTags = taggedElements.length > 0
@@ -439,8 +446,9 @@ function checkWidthMode() {
 
 function checkMode() {
   log(`Mode: ${mode}`)
-  if (mode < 0) return adviser(`${modeData[mode + 2]}${modeData[2]}`)
-  if (mode < 2) return adviser(modeData[3])
+  if (mode < 0) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
+  if (version.codePointAt(0) > 4) return mode
+  if (mode < 2) return adviser(getModeData(3))
   return mode
 }
 
@@ -555,7 +563,13 @@ function setupInPageLinks() {
   }
 
   if (inPageLinks.enable) {
-    enableInPageLinks()
+    if (mode === 1) {
+      advise(
+        `In page linking requires a Profesional or Business license. Please see https://iframe-resizer.com/pricing for more details.`,
+      )
+    } else {
+      enableInPageLinks()
+    }
   } else {
     log('In page linking not enabled')
   }
@@ -581,14 +595,9 @@ function setupMouseEvents() {
   addMouseListener('mouseleave', 'Mouse Leave')
 }
 
-const modeData = [
-  '<iy><yi>Puchspk Spjluzl Rlf</><iy><iy>',
-  '<iy><yi>Tpzzpun Spjluzl Rlf</><iy><iy>',
-  'Aopz spiyhyf pz hchpshisl dpao ivao Jvttlyjphs huk Vwlu-Zvbylz spjluzlz.<iy><iy><i>Jvttlyjphs Spjluzl</><iy>Mvy jvttlyjphs bzl, <p>pmyhtl-ylzpgly</> ylxbpylz h svd jvza vul aptl spjluzl mll. Mvy tvyl pumvythapvu cpzpa <b>oaawz://pmyhtl-ylzpgly.jvt/wypjpun</>.<iy><iy><i>Vwlu Zvbyjl Spjluzl</><iy>Pm fvb hyl bzpun aopz spiyhyf pu h uvu-jvtlyjphs vwlu zvbyjl wyvqlja aolu fvb jhu bzl pa mvy myll bukly aol alytz vm aol NWS C3 Spjluzl. Av jvumpyt fvb hjjlwa aolzl alytz, wslhzl zla aol <i>spjlujl</> rlf pu <p>pmyhtl-ylzpgly</> vwapvuz av <i>NWS-C3</>.<iy><iy>Mvy tvyl pumvythapvu wslhzl zll: <b>oaawz://pmyhtl-ylzpgly.jvt/nws</>',
-  '<i>NWS-C3 Spjluzl Clyzpvu</><iy><iy>Aopz clyzpvu vm <p>pmyhtl-ylzpgly</> pz ilpun bzlk bukly aol alytz vm aol <i>NWS C3</> spjluzl. Aopz spjluzl hssvdz fvb av bzl <p>pmyhtl-ylzpgly</> pu Vwlu Zvbyjl wyvqljaz, iba pa ylxbpylz fvby wyvqlja av il wbispj, wyvcpkl haaypibapvu huk il spjluzlk bukly clyzpvu 3 vy shaly vm aol NUB Nlulyhs Wbispj Spjluzl.<iy><iy>Pm fvb hyl bzpun aopz spiyhyf pu h uvu-vwlu zvbyjl wyvqlja vy dlizpal, fvb dpss ullk av wbyjohzl h svd jvza vul aptl jvttlyjphs spjluzl.<iy><iy>Mvy tvyl pumvythapvu cpzpa <b>oaawz://pmyhtl-ylzpgly.jvt/wypjpun</>.',
-]
-
 function setupPublicMethods() {
+  if (mode === 1) return
+
   win.parentIframe = Object.freeze({
     autoResize: (resize) => {
       if (resize === true && autoResize === false) {
@@ -782,9 +791,6 @@ function setupBodyMutationObserver() {
 function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
-
-
-
 
 // Idea from https://github.com/guardian/iframe-messenger
 function getMaxElement(side) {

@@ -31,6 +31,7 @@
     "import/no-unresolved": 0,
     "lodash/prefer-noop": 0,
     "pii/no-email": 0,
+    "react/prop-types": 0,
     "sonarjs/no-nested-template-literals": 0,
     "switch-case/no-case-curly": 0,
     "unicorn/consistent-function-scoping": 0,
