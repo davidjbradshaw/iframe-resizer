@@ -1,24 +1,20 @@
+define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
+  xdescribe('iFrame init(jQuery)', () => {
+    let iframe
 
-
-'use strict'
-
-define(['iframeResizerJquery', 'jquery'], function(iframeResize, $) {
-  xdescribe('iFrame init(jQuery)', function() {
-    var iframe
-
-    beforeAll(function() {
+    beforeAll(() => {
       loadIFrame('iframe600.html')
 
-      var $iframes = $('iframe').iframeResize()
+      const $iframes = $('iframe').iframeResize()
 
       iframe = $iframes.get(0)
     })
 
-    afterAll(function() {
+    afterAll(() => {
       tearDown(iframe)
     })
 
-    it('should create iFrameResizer object', function() {
+    it('should create iFrameResizer object', () => {
       expect(iframe.iFrameResizer).toBeDefined()
     })
   })

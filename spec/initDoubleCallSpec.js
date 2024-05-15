@@ -16,8 +16,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         getId: () => 'getIdTest',
       }
 
-      iframe = iframeResize({}, '#doubleTest')[0]
-      iframeResize({}, '#doubleTest')
+      iframe = iframeResize({ license: 'GPLv3' }, '#doubleTest')[0]
+      iframeResize({ license: 'GPLv3' }, '#doubleTest')
 
       expect(iframe.iFrameResizer).toBeDefined()
       expect(console.warn).toHaveBeenCalled()
