@@ -7,7 +7,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       iframe = iframeResize(
         {
-          log: LOG,
+          license: 'GPLv3',
         },
         document.getElementsByTagName('iframe')[0],
       )[0]
