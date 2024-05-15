@@ -1,6 +1,5 @@
 #! /bin/bash
 
-npm run test:all
 npm run build:prod
 cd dist/parent
 npm publish

@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-RC.1",
   "private": true,
   "type": "module",
   "license": "GPL-3.0",
@@ -19,7 +19,7 @@
     "eslint": "eslint *.js packages/** **/*.html **/*.jsx --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "eslint packages/* --format @microsoft/sarif --output-file eslint-results.sarif",
-    "publish": "bin/publish.sh",
+    "publish": "npm run test:all && bin/publish.sh",
     "rollup:debug": "rollup -c --environment DEBUG",
     "rollup:watch": "rollup -c --environment DEBUG --watch",
     "rollup:test": "npm run eslint:fix && rollup -c --environment TEST",
