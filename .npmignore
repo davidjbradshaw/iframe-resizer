@@ -26,3 +26,4 @@ karma.conf.js
 test-main.js
 package-lock.json
 coverage*
+FUNDING.md
