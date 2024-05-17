@@ -370,7 +370,8 @@ function iframeListener(event) {
 
   function scrollTo(iframeId) {
     const { x, y } = page.position
-    if (on('onScroll', { iframeId, top: y, left: x, x, y }) === false) {
+    const iframe = settings[iframeId]?.iframe
+    if (on('onScroll', { iframe, top: y, left: x, x, y }) === false) {
       unsetPagePosition()
       return
     }
