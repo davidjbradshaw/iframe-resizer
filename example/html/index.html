@@ -88,13 +88,13 @@
 
         onClosed(id) {
           // Callback fn when iFrame is closed
-          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+          callbackDisplay.innerHTML = `<b>Iframe (</b>${id}<b>) removed from page.</b>`
         },
 
         onScroll(messageData) {
           // Callback fn when iframe is scrolled
           console.log('onScroll', messageData)
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframeId} <br><b>iframeId:</b> ${messageData.iframeId} <br><b>top:</b> ${messageData.top} <br><b>Event left:</b> ${messageData.left}`
+          callbackDisplay.innerHTML = `<b>Iframe ID:</b> ${messageData.iframe.id} <br><b>Top:</b> ${messageData.top} <br><b>Left:</b> ${messageData.left}`
         },
       })
 
