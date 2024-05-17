@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "5.0.0-RC.1",
+  "version": "5.0.0-RC.2",
   "private": true,
   "type": "module",
   "license": "GPL-3.0",
@@ -38,7 +38,7 @@
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
     "type": "individual",
-    "url": "https://github.com/davidjbradshaw/iframe-resizer/blob/master/FUNDING.md"
+    "url": "https://iframe-resizer.com/licenses/"
   },
   "dependencies": {
     "@iframe-resizer/child": "file:./packages/child/",
