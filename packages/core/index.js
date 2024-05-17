@@ -327,7 +327,7 @@ function iframeListener(event) {
     /* istanbul ignore next */ // Not testable in Karma
     function reposition() {
       page.position = newPosition
-      scrollTo()
+      scrollTo(iframeId)
       log(iframeId, '--')
     }
 
@@ -368,8 +368,9 @@ function iframeListener(event) {
     }
   }
 
-  function scrollTo() {
-    if (on('onScroll', page.position) === false) {
+  function scrollTo(iframeId) {
+    const { x, y } = page.position
+    if (on('onScroll', { iframeId, top: y, left: x, x, y }) === false) {
       unsetPagePosition()
       return
     }
@@ -390,7 +391,7 @@ function iframeListener(event) {
         y: jumpPosition.y,
       }
 
-      scrollTo()
+      scrollTo(iframeId)
       log(iframeId, '--')
     }
 
