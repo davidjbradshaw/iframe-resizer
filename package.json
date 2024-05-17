@@ -1,15 +1,9 @@
 {
   "name": "iframe-resizer",
-  "version": "4.3.11",
+  "version": "4.4.0",
   "homepage": "https://iframe-resizer.com",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
-  ],
-  "maintainers": [
-    {
-      "name": "David J. Bradshaw",
-      "email": "dave@bradshaw.net"
-    }
   ],
   "scripts": {
     "build": "grunt build",
@@ -19,7 +13,7 @@
     "test": "grunt travis",
     "upgrade": "npm-check-updates -u && npm install && npm run test"
   },
-  "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
+  "description": "This package has now been split into two separate packages. Please use '@iframe-resizer/parent' and '@iframe-resizer/child' for new projects. This package will continue to be maintained for existing projects.",
   "repository": {
     "type": "git",
     "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
@@ -27,7 +21,7 @@
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
     "type": "individual",
-    "url": "https://github.com/davidjbradshaw/iframe-resizer/blob/master/FUNDING.md"
+    "url": "https://iframe-resizer.com/licenses/"
   },
   "devDependencies": {
     "cosmiconfig": "^9.0.0",
@@ -113,7 +107,7 @@
   "engines": {
     "node": ">=0.8.0"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "keywords": [
     "CrossDomain",
     "Cross-Domain",
