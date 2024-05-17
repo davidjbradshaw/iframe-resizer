@@ -33,7 +33,7 @@
   "description": "Keep same and cross domain iFrames sized to their content with support for window/content resizing, and multiple iFrames.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
+    "url": "git+https://github.com/davidjbradshaw/iframe-resizer.git"
   },
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
