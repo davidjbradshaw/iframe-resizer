@@ -175,9 +175,9 @@ function checkVersion() {
     advise(
       `<rb>Legacy version detected on parent page</>
 
-The version of <i>iframe-resizer</> you are using on the parent page does not match the child page. 
+Detected legacy version of parent page script. It is recommended to update the parent page to use <b>@iframe-resizer/parent</>.
 
-Whilst running a differnet version on the parent and child pages will most likely work, it is not a supported configuration and you are reccommend to upgrade the version on the parent page to v${VERSION} to match the child page.
+See <u>https://iframe-resizer.com/setup/<u> for more details.`,
 `,
     )
     return
