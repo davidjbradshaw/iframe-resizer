@@ -177,7 +177,7 @@ function checkVersion() {
 
 Detected legacy version of parent page script. It is recommended to update the parent page to use <b>@iframe-resizer/parent</>.
 
-See <u>https://iframe-resizer.com/setup/<u> for more details.`,
+See <u>https://iframe-resizer.com/setup/<u> for more details.
 `,
     )
     return
