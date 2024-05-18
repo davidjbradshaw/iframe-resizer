@@ -73,6 +73,7 @@ function iframeListener(event) {
       height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
       width: Number(data[2]),
       type: data[3],
+      version: data[4],
     }
   }
 
@@ -465,6 +466,23 @@ function iframeListener(event) {
     log(id, `sameDomain: ${settings[id].sameDomain}`)
   }
 
+  function checkVersion(version) {
+    if (version === VERSION) return
+    if (version === undefined) {
+      advise(
+        iframeId,
+        `<rb>Legacy version detected in iframe</>
+
+Detected legacy version of child page script. It is recommended to update the page in the iframe to use <b>@iframe-resizer/child</>.
+
+See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
+`,
+      )
+      return
+    }
+    log(iframeId, `Version mismatch (Child: ${version} !== Parent: ${VERSION})`)
+  }
+
   function started() {
     setup = true
   }
@@ -530,6 +548,7 @@ function iframeListener(event) {
       case 'init':
         resizeIFrame()
         checkSameDomain(iframeId)
+        checkVersion(messageData.version)
         started()
         on('onReady', messageData.iframe)
         break

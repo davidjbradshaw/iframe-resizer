@@ -26,7 +26,7 @@ export default Object.freeze({
   enablePublicMethods: true,
   heightCalculationMethod: 'auto',
   id: 'iFrameResizer',
-  log: true,
+  log: false,
   license: undefined,
   // maxHeight: Infinity,
   // maxWidth: Infinity,

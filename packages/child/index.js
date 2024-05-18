@@ -72,7 +72,7 @@ let offsetHeight
 let offsetWidth
 let resizeFrom = 'child'
 let resizeObserver = null
-let sameDomian = false
+let sameDomain = false
 let target = window.parent
 let targetOriginDefault = '*'
 let tolerance = 0
@@ -165,7 +165,7 @@ function init() {
   setupMouseEvents()
   startEventListeners()
   inPageLinks = setupInPageLinks()
-  sendSize('init', 'Init message from host page')
+  sendSize('init', 'Init message from host page', undefined, undefined, VERSION)
   onReady()
   isInit = false
 }
@@ -197,7 +197,7 @@ Parent page: ${version} - Child page: ${VERSION}.
 
 function checkCrossDomain() {
   try {
-    sameDomian = 'iframeParentListener' in window.parent
+    sameDomain = 'iframeParentListener' in window.parent
   } catch (error) {
     log('Cross domain iframe detected.')
   }
@@ -1052,15 +1052,21 @@ const getWidth = {
   taggedElement: () => getMaxElement('right'),
 }
 
-function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
+function sizeIFrame(
+  triggerEvent,
+  triggerEventDesc,
+  customHeight,
+  customWidth,
+  msg,
+) {
   function resizeIFrame() {
     height = currentHeight
     width = currentWidth
-    sendMsg(height, width, triggerEvent)
+    sendMsg(height, width, triggerEvent, msg)
   }
 
   function isSizeChangeDetected() {
-    const checkTolarance = (a, b) => !(Math.abs(a - b) <= tolerance)
+    const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
     // currentHeight = Math.ceil(
     //  undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
@@ -1076,8 +1082,8 @@ function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
       undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
 
     return (
-      (calculateHeight && checkTolarance(height, currentHeight)) ||
-      (calculateWidth && checkTolarance(width, currentWidth))
+      (calculateHeight && checkTolerance(height, currentHeight)) ||
+      (calculateWidth && checkTolerance(width, currentWidth))
     )
   }
 
@@ -1104,7 +1110,13 @@ function sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth) {
   }
 }
 
-function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
+function sendSize(
+  triggerEvent,
+  triggerEventDesc,
+  customHeight,
+  customWidth,
+  msg,
+) {
   if (document.hidden) {
     // Currently only correctly supported in firefox
     // This is checked again on the parent page
@@ -1116,7 +1128,7 @@ function sendSize(triggerEvent, triggerEventDesc, customHeight, customWidth) {
     log(`Trigger event: ${triggerEventDesc}`)
   }
 
-  sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth)
+  sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
 }
 
 function lockTrigger() {
@@ -1167,10 +1179,10 @@ function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
     const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
     log(
-      `Sending message to host page (${message}) via ${sameDomian ? 'sameDomain' : 'postMessage'}`,
+      `Sending message to host page (${message}) via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
     )
 
-    if (sameDomian) {
+    if (sameDomain) {
       window.parent.iframeParentListener(msgID + message)
       return
     }
@@ -1307,7 +1319,7 @@ function chkLateLoaded() {
 
 // Don't run for server side render
 if (typeof window !== 'undefined') {
-  window.iframeChildListener = (data) => receiver({ data, sameDomian: true })
+  window.iframeChildListener = (data) => receiver({ data, sameDomain: true })
   addEventListener(window, 'message', receiver)
   addEventListener(window, 'readystatechange', chkLateLoaded)
   chkLateLoaded()
