@@ -23,6 +23,12 @@ const customConfig = (file) => {
         types: `iframe-resizer.${file}.d.ts`,
       }
 
+    case 'child':
+      return {
+        ...entryPoints,
+        types: `iframe-resizer.${file}.d.ts`,
+      }
+
     default:
       return entryPoints
   }

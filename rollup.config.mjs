@@ -96,7 +96,19 @@ const npm = [
   {
     input: 'packages/child/index.js',
     output: outputs('child'),
-    plugins: pluginsProd('child'),
+    plugins: [
+      ...pluginsProd('child'),
+      copy({
+        targets: [
+          {
+            src: 'packages/child/index.d.ts',
+            dest: 'dist/child/',
+            rename: 'iframe-resizer.child.d.ts',
+          },
+        ],
+        verbose: true,
+      }),
+    ],
     watch: false,
   },
 
