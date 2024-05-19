@@ -15,7 +15,7 @@ Please see the [iframe-resizer](https://iframe-resizer.com) website for API docu
 
 ## Main packages
 
-For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across deferent domains and better support tree shaking.
+For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking.
 
 ### [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
 
