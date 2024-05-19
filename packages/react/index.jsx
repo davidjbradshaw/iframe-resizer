@@ -27,6 +27,8 @@ function IframeResizer(props) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useImperativeHandle(forwardRef, () => ({
+    getRef: () => iframeRef,
+    getElement: () => iframeRef.current,
     getIframeElement: () => iframeRef.current,
     resize: () => iframeRef.current.iframeResizer.resize(),
     moveToAnchor: (anchor) =>
