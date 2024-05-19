@@ -8,6 +8,7 @@
 -->
 
 This library enables the automatic resizing of the height and width of both same and cross domain iframes to fit their contained content and provides a range of features to address the most common issues with using iframes.
+<br><br>
 
 ## Setup and API guide
 
