@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Type definitions for @iframe-resizer/react
+ *
+ * I'm not a TypeScript dev, so please feel free to submit PRs to improve this file.
+ */
+
 declare module '@iframe-resizer/react' {
   import * as React from 'react'
 
