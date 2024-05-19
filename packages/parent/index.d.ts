@@ -176,5 +176,4 @@ declare module '@iframe-resizer/parent' {
     target: string | HTMLElement,
   ): iframeResizer.IFrameComponent[]
 
-  export = iframeResize
 }
