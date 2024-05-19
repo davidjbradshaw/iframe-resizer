@@ -21,7 +21,7 @@ npm publish
 
 
 git commit -am "Release $VERSION"
-git tag -a $VERSION -m "Release $VERSION"
+git tag "v$VERSION"
 git push --tags
 git push
 
