@@ -61,6 +61,5 @@ Guides for using _iframe-resizer_ on different web development platforms.
 Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
 
 ---
-Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -
-Licensed under the [GPL V3](LICENSE)
+Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -Licensed under the [GPL V3](LICENSE)
 
