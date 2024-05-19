@@ -29,7 +29,6 @@ function IframeResizer(props) {
   useImperativeHandle(forwardRef, () => ({
     getRef: () => iframeRef,
     getElement: () => iframeRef.current,
-    getIframeElement: () => iframeRef.current,
     resize: () => iframeRef.current.iframeResizer.resize(),
     moveToAnchor: (anchor) =>
       iframeRef.current.iframeResizer.moveToAnchor(anchor),

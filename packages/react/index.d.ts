@@ -5,14 +5,16 @@ declare module '@iframe-resizer/react' {
     type IFrameObject = {
       moveToAnchor: (anchor: string) => void
       resize: () => void
-      sendMessage: (message: any, targetOrigin?: string) => void
+      sendMessage: (message: string, targetOrigin?: string) => void
     }
+
     interface IFrameComponent extends HTMLIFrameElement {
       iFrameResizer: IFrameObject
     }
 
-    type IFrameForwardRef = Omit<IFrameObject, 'close' | 'removeListeners'> & {
-      getIframeElement: () => IFrameComponent
+    type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
+      getElement: () => IFrameComponent
+      getRef: () => any
     }
 
     type IframeProps = React.DetailedHTMLProps<
@@ -30,8 +32,7 @@ declare module '@iframe-resizer/react' {
       inPageLinks?: boolean
       license: string
       enablePublicMethods?: boolean
-      offsetHeight?: number
-      offsetWidth?: number
+      offset?: number
       scrolling?: boolean | 'omit'
       tolerance?: number
       warningTimeout?: number
@@ -57,5 +58,6 @@ declare module '@iframe-resizer/react' {
   function IframeResizer(
     props: IframeResizer.IframeResizerProps,
   ): React.ReactElement
+
   export = IframeResizer
 }
