@@ -9,7 +9,13 @@
 
 This library enables the automatic resizing of the height and width of both same and cross domain iframes to fit their contained content and provides a range of features to address the most common issues with using iframes.
 
-For version 5 __[iframe-resizer](https://iframe-resizer.com)__ has been split into two main packages to make it simpler to deploy across deferent domains.
+## Setup and API guide
+
+Please see the [iframe-resizer](https://iframe-resizer.com) website for API documentation and setup guides.
+
+## Main packages
+
+For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across deferent domains and better support tree shaking.
 
 ### [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
 
@@ -44,9 +50,7 @@ A simple jQuery wrapper for the parent page.
 
 [GAS setup guide](https://iframe-resizer.com/frameworks/google_apps_script/).
 
-
-__See [iframe-resizer.com](https://iframe-resizer.com) for more details and setup guides.__
-
+---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -
 Licensed under the [GPL V3](LICENSE)
 
