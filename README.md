@@ -17,11 +17,11 @@ Please see the [iframe-resizer](https://iframe-resizer.com) website for setup gu
 
 For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking.
 
-### [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
+### @iframe-resizer/parent
 
 The page package sets up an iframe for automatic content resizing. Their are versions of this package for several popular libraries and frameworks (see below).
 
-### [@iframe-resizer/child](https://www.npmjs.com/package/@iframe-resizer/child)
+### @iframe-resizer/child
 
 This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
@@ -30,17 +30,17 @@ This package needs loading into the iframe, where it will quietly wait for a mes
 
 In addition to the two main packages, their are versions of the parent package for the following platforms.
 
-### [@iframe-resizer/react](https://www.npmjs.com/package/@iframe-resizer/react)
+### @iframe-resizer/react
 
-A React component for the parent page.
+A React component for the parent page ([setup guide](https://iframe-resizer.com/frameworks/react/)).
 
 ### @iframe-resizer/vue
 
 Coming soon.
 
-### [@iframe-resizer/jquery]()
+### @iframe-resizer/jquery
 
-A simple jQuery wrapper for the parent page.
+A simple jQuery wrapper for the parent page.([setup guide](https://iframe-resizer.com/frameworks/jquery/)).
 
 ### Wordpress
 
