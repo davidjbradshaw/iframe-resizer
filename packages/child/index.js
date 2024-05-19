@@ -557,7 +557,6 @@ function setupInPageLinks() {
   }
 
   function enableInPageLinks() {
-    /* istanbul ignore else */ // Not testable in phantonJS
     log('Setting up location.hash handlers')
     bindAnchors()
     bindLocationHash()
@@ -567,7 +566,7 @@ function setupInPageLinks() {
   if (inPageLinks.enable) {
     if (mode === 1) {
       advise(
-        `In page linking requires a Profesional or Business license. Please see https://iframe-resizer.com/pricing for more details.`,
+        `In page linking requires a Professional or Business license. Please see https://iframe-resizer.com/pricing for more details.`,
       )
     } else {
       enableInPageLinks()
@@ -810,7 +809,7 @@ function getMaxElement(side) {
       hasCheckVisibility &&
       !element.checkVisibility(checkVisibilityOptions)
     ) {
-      log(`Skipping non-visable element: ${getElementName(element)}`)
+      log(`Skipping non-visible element: ${getElementName(element)}`)
       len -= 1
       return
     }
@@ -838,7 +837,7 @@ Position calculated from HTML element: ${elementSnippet(maxEl)}`
     advise(
       `<rb>Performance Warning</>
 
-Calculateing the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
+Calculating the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
 ${logMsg}`,
     )
   }
@@ -877,7 +876,7 @@ function switchToAutoOverflow({
   const side = isHeight ? 'bottom' : 'right'
   const overflowDetectedMessage = `<rb>Detected content overflowing html element</>
     
-This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visable HTML element will have a performace impact on more complex pages. 
+This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visible HTML element will have a performance impact on more complex pages. 
 
 To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe. 
   

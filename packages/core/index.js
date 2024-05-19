@@ -24,9 +24,6 @@ setLogSettings(settings)
 
 function iframeListener(event) {
   function resizeIFrame() {
-    // ensureInRange('Height')
-    // ensureInRange('Width')
-
     setSize(messageData)
     setPagePosition(iframeId)
 
@@ -239,10 +236,10 @@ function iframeListener(event) {
       }
     }
 
-    function setListener(requestType, listenr) {
+    function setListener(requestType, listener) {
       log(id, `${requestType} listeners for send${type}`)
-      listenr(window, 'scroll', sendInfo('scroll'))
-      listenr(window, 'resize', sendInfo('resize window'))
+      listener(window, 'scroll', sendInfo('scroll'))
+      listener(window, 'resize', sendInfo('resize window'))
     }
 
     function stop() {
@@ -801,10 +798,10 @@ function createOutgoingMsg(iframeId) {
 
   return [
     iframeId,
-    '8', // Backwards compatability (PaddingV1)
+    '8', // Backwards compatibility (PaddingV1)
     iframeSettings.sizeWidth,
     iframeSettings.log,
-    '32', // Backwards compatability (Interval)
+    '32', // Backwards compatibility (Interval)
     iframeSettings.enablePublicMethods,
     iframeSettings.autoResize,
     iframeSettings.bodyMargin,
@@ -813,7 +810,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.bodyPadding,
     iframeSettings.tolerance,
     iframeSettings.inPageLinks,
-    'child', // Backwards compatability (resizeFrom)
+    'child', // Backwards compatibility (resizeFrom)
     iframeSettings.widthCalculationMethod,
     iframeSettings.mouseEvents,
     iframeSettings.offsetHeight,
@@ -842,7 +839,7 @@ export default (options) => (iframe) => {
 
   function ensureHasId(iframeId) {
     if (iframeId && typeof iframeId !== 'string') {
-      throw new TypeError('Invaild id for iFrame. Expected String')
+      throw new TypeError('Invalid id for iFrame. Expected String')
     }
 
     if (iframeId === '' || !iframeId) {
@@ -895,10 +892,10 @@ export default (options) => (iframe) => {
 
   function checkReset() {
     const firstRun = settings[iframeId]?.firstRun
-    const resetRequertMethod =
+    const resetRequestMethod =
       settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
 
-    if (!firstRun && resetRequertMethod) {
+    if (!firstRun && resetRequestMethod) {
       resetIFrame({ iframe, height: 0, width: 0, type: 'init' })
     }
   }

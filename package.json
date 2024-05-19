@@ -128,7 +128,7 @@
     "node": ">=20.0.0"
   },
   "keywords": [
-    "iFrame",
+    "iframe",
     "Resizing",
     "Resizer",
     "auto-height",
