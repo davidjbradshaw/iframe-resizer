@@ -42,7 +42,11 @@ Coming soon.
 
 ### @iframe-resizer/jquery
 
-A simple jQuery wrapper for the parent page.([setup guide](https://iframe-resizer.com/frameworks/jquery/)).
+A simple jQuery wrapper for the parent page ([setup guide](https://iframe-resizer.com/frameworks/jquery/)).
+
+## Platform Guides
+
+Guides for using _iframe-resizer_ on different web development platforms.
 
 ### Wordpress
 
@@ -51,6 +55,10 @@ A simple jQuery wrapper for the parent page.([setup guide](https://iframe-resize
 ### Google Apps Script
 
 [GAS setup guide](https://iframe-resizer.com/frameworks/google_apps_script/).
+
+## Framework API
+
+Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
 
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -
