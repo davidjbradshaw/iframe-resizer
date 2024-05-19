@@ -34,7 +34,7 @@ In addition to the two main packages, their are versions of the parent package f
 
 ### @iframe-resizer/react
 
-A React component for the parent page ([setup guide](https://iframe-resizer.com/frameworks/react/)).
+A [React component](https://iframe-resizer.com/frameworks/react/) for the parent page.
 
 ### @iframe-resizer/vue
 
@@ -42,7 +42,7 @@ Coming soon.
 
 ### @iframe-resizer/jquery
 
-A simple jQuery wrapper for the parent page ([setup guide](https://iframe-resizer.com/frameworks/jquery/)).
+A simple [jQuery wrapper](https://iframe-resizer.com/frameworks/jquery/) for the parent page.
 
 ## Platform Guides
 
