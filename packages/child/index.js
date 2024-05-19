@@ -234,7 +234,7 @@ function readDataFromParent() {
 
 function readDataFromPage() {
   function readData() {
-    const data = window.iFrameResizer
+    const data = window.iframeResizer || window.iFrameResizer
 
     log(`Reading data from page: ${JSON.stringify(data)}`)
 
