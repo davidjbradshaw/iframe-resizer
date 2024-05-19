@@ -11,7 +11,7 @@ This library enables the automatic resizing of the height and width of both same
 
 ## Setup and API guide
 
-Please see the [iframe-resizer](https://iframe-resizer.com) website for API documentation and setup guides.
+Please see the [iframe-resizer](https://iframe-resizer.com) website for setup guides and API documentation.
 
 ## Main packages
 
