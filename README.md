@@ -13,6 +13,8 @@ This library enables the automatic resizing of the height and width of both same
 
 Please see the [iframe-resizer](https://iframe-resizer.com) website for setup guides and API documentation.
 
+<br><br>
+
 ## Main packages
 
 For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking.
@@ -25,6 +27,7 @@ The page package sets up an iframe for automatic content resizing. Their are ver
 
 This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
+<br><br>
 
 ## Frameworks and Libraries
 
