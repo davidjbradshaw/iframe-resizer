@@ -9,16 +9,43 @@
 
 This library enables the automatic resizing of the height and width of both same and cross domain iframes to fit their contained content and provides a range of features to address the most common issues with using iframes.
 
-### See [iframe-resizer.com](https://iframe-resizer.com) for details.
+For version 5 __[iframe-resizer](https://iframe-resizer.com)__ has been split into two main packages to make it simpler to deploy across deferent domains.
+
+### [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
+
+The page package sets up an iframe for automatic content resizing. Their are versions of this package for several popular libraries and frameworks (see below).
+
+### [@iframe-resizer/child](https://www.npmjs.com/package/@iframe-resizer/child)
+
+This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
 
-<!--
-## Donate
+## Frameworks and Libraries
 
-Iframe-resizer is the result of many 100s of hours of work, if you would like to join others in showing support for the continued development of this project, then please feel free to buy me a coffee.
+In addition to the two main packages, their are versions of the parent package for the following platforms.
 
-<a href="https://www.buymeacoffee.com/davidjbradshaw " target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
--->
+### [@iframe-resizer/react](https://www.npmjs.com/package/@iframe-resizer/react)
+
+A React component for the parent page.
+
+### @iframe/resizer/vue
+
+Coming soon.
+
+### [@iframe-resizer/jquery]()
+
+A simple jQuery wrapper for the parent page.
+
+### Wordpress
+
+[Wordpress setup guide](https://iframe-resizer.com/frameworks/wordpress/).
+
+### Google Apps Script
+
+[GAS setup guide](https://iframe-resizer.com/frameworks/google_apps_script/).
+
+
+__See [iframe-resizer.com](https://iframe-resizer.com) for more details and setup guides.__
 
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -
 Licensed under the [GPL V3](LICENSE)
