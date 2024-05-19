@@ -23,7 +23,6 @@ export default Object.freeze({
   checkOrigin: true,
   direction: 'vertical',
   inPageLinks: false,
-  enablePublicMethods: true,
   heightCalculationMethod: 'auto',
   id: 'iFrameResizer',
   log: false,

@@ -37,7 +37,6 @@ declare module '@iframe-resizer/react' {
       forwardRef?: any
       inPageLinks?: boolean
       license: string
-      enablePublicMethods?: boolean
       offset?: number
       scrolling?: boolean | 'omit'
       tolerance?: number

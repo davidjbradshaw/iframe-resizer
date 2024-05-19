@@ -802,7 +802,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.sizeWidth,
     iframeSettings.log,
     '32', // Backwards compatibility (Interval)
-    iframeSettings.enablePublicMethods,
+    true, // Backwards compatibility (EnablePublicMethods)
     iframeSettings.autoResize,
     iframeSettings.bodyMargin,
     iframeSettings.heightCalculationMethod,
