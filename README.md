@@ -34,7 +34,7 @@ In addition to the two main packages, their are versions of the parent package f
 
 A React component for the parent page.
 
-### @iframe/resizer/vue
+### @iframe-resizer/vue
 
 Coming soon.
 
