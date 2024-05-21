@@ -713,9 +713,21 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   win.parentIFrame = win.parentIframe
 }
 
+let dispatchResized
+
 function resizeObserved(entries) {
+  if (!Array.isArray(entries) || entries.length === 0) return
+
   const el = entries[0].target
-  sendSize('resizeObserver', `resizeObserver: ${getElementName(el)}`)
+
+  dispatchResized = () =>
+    sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
+
+  // Throttle event to once per current call stack (Safari issue)
+  setTimeout(() => {
+    if (dispatchResized) dispatchResized()
+    dispatchResized = undefined
+  }, 0)
 }
 
 const checkPositionType = (element) => {
