@@ -45,7 +45,7 @@ export const pluginsProd = (file) => {
   const transform = createTransform(file)
 
   const targets = [
-    { src: ['LICENSE', 'FUNDING.md' /* 'SECURITY.md' */], dest },
+    { src: ['LICENSE' /* 'FUNDING.md',  'SECURITY.md' */], dest },
     { src: `${src}/README.md`, dest, transform },
   ]
 
