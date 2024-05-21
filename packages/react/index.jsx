@@ -6,19 +6,19 @@ import filterIframeAttribs from './filter-iframe-attribs'
 
 function IframeResizer(props) {
   // eslint-disable-next-line react/prop-types
-  const { title = 'iframe', forwardRef, ...rest } = props
-  const iframeProps = filterIframeAttribs(rest)
+  const { title = 'iframe-resizer', forwardRef, ...rest } = props
+  const filteredProps = filterIframeAttribs(rest)
   const iframeRef = useRef(null)
 
   const onClose = () => {
     warning(
       !iframeRef.current,
-      `[iframeSizerReact][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component`,
+      `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
     )
-    return !iframeRef.current
+    return !iframeRef.current // Allow React to close this
   }
 
-  // This hook is only run once, as once iframeResizer is bound, it will
+  // This hook is only run once, as once iframe-resizer is bound, it will
   // deal with changes to the element and does not need recalling
   useEffect(() => {
     const iframe = iframeRef.current
@@ -37,7 +37,7 @@ function IframeResizer(props) {
     },
   }))
 
-  return <iframe title={title} {...iframeProps} ref={iframeRef} />
+  return <iframe title={title} {...filteredProps} ref={iframeRef} />
 }
 
 export default IframeResizer
