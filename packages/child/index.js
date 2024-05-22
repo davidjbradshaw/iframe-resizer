@@ -34,6 +34,7 @@ const eventCancelTimer = 128
 const eventHandlersByName = {}
 const hasCheckVisibility = 'checkVisibility' in window
 const heightCalcModeDefault = 'auto'
+// const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
 const msgID = '[iFrameSizer]' // Must match host page msg ID
 const msgIdLen = msgID.length
@@ -447,7 +448,6 @@ function checkWidthMode() {
 }
 
 function checkMode() {
-  log(`Mode: ${mode}`)
   if (mode < 0) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
   if (version.codePointAt(0) > 4) return mode
   if (mode < 2) return adviser(getModeData(3))
@@ -805,7 +805,6 @@ function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
 
-// Idea from https://github.com/guardian/iframe-messenger
 function getMaxElement(side) {
   const Side = capitalizeFirstLetter(side)
 
@@ -849,7 +848,7 @@ Position calculated from HTML element: ${elementSnippet(maxEl)}`
     advise(
       `<rb>Performance Warning</>
 
-Calculating the page size took an excessive amount of time. To improve performace add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
+Calculating the page size took an excessive amount of time. To improve performance add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
 ${logMsg}`,
     )
   }
@@ -1080,7 +1079,7 @@ function sizeIFrame(
     const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
     // currentHeight = Math.ceil(
-    //  undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
+    //   undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
     // )
 
     // currentWidth = Math.ceil(
