@@ -131,19 +131,17 @@
     "iframe",
     "Resizing",
     "Resizer",
-    "auto-height",
-    "iframe-auto-height",
-    "height-iframe",
-    "responsive-iframes",
-    "Cross-Domain",
+    "resize",
+    "cross",
+    "same",
+    "domain",
     "width",
+    "height",
     "postMessage",
     "mutationObserver",
     "resizeObserver",
     "RWD",
-    "autoheight",
     "CrossDomain",
-    "heightiframe",
-    "responsiveiframes"
+    "responsive"
   ]
 }

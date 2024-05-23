@@ -1,7 +1,9 @@
 {
   "cSpell.words": [
+    "compat",
     "consts",
     "Loggable",
+    "sarif",
     "sonarjs"
   ]
 }
