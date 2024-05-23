@@ -38,7 +38,7 @@
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
     "type": "individual",
-    "url": "https://iframe-resizer.com/licenses/"
+    "url": "https://iframe-resizer.com/pricing/"
   },
   "dependencies": {
     "@iframe-resizer/child": "file:./packages/child/",
