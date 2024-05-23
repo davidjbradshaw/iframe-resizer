@@ -7,7 +7,7 @@
   "homepage": "https://iframe-resizer.com",
   "author": {
     "name": "David J. Bradshaw",
-    "email": "dave@bradshaw.net"
+    "email": "info@iframe-resizer.com"
   },
   "scripts": {
     "build:clean": "time npm run build:clobber",
