@@ -70,7 +70,7 @@ function iframeListener(event) {
       height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
       width: Number(data[2]),
       type: data[3],
-      version: data[4],
+      msg: data[4],
     }
   }
 
@@ -480,6 +480,12 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     log(iframeId, `Version mismatch (Child: ${version} !== Parent: ${VERSION})`)
   }
 
+  function setTitle(title, iframeId) {
+    if (!settings[iframeId]) return
+    settings[iframeId].iframe.title = title
+    log(iframeId, `Set title attribute to: ${title}`)
+  }
+
   function started() {
     setup = true
   }
@@ -538,6 +544,10 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         findTarget(getMsgBody(9))
         break
 
+      case 'title':
+        setTitle(messageData.msg, iframeId)
+        break
+
       case 'reset':
         resetIFrame(messageData)
         break
@@ -545,7 +555,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       case 'init':
         resizeIFrame()
         checkSameDomain(iframeId)
-        checkVersion(messageData.version)
+        checkVersion(messageData.msg)
         started()
         on('onReady', messageData.iframe)
         break

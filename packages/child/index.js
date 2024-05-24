@@ -167,8 +167,15 @@ function init() {
   startEventListeners()
   inPageLinks = setupInPageLinks()
   sendSize('init', 'Init message from host page', undefined, undefined, VERSION)
+  sendTitle()
   onReady()
   isInit = false
+}
+
+function sendTitle() {
+  if (document.title && document.title !== '') {
+    sendMsg(0, 0, 'title', document.title)
+  }
 }
 
 function checkVersion() {
