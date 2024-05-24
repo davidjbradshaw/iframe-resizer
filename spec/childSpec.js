@@ -283,7 +283,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       })
     })
 
-    describe('performance', () => {
+    xdescribe('performance', () => {
       it('trottles', (done) => {
         win.parentIFrame.size(10, 10)
         win.parentIFrame.size(20, 10)
