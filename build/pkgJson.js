@@ -8,21 +8,25 @@ const customConfig = (file) => {
   switch (file) {
     case 'react':
       return {
+        main: 'index.cjs.js',
+        module: 'index.esm.js',
+        types: `iframe-resizer.${file}.d.ts`,
         peerDependencies: {
           react: '^16.8.0 || ^17.0.0 || ^18.0.0',
           'react-dom': '^16.8.0 || ^17.0.0 || ^18.0.0',
         },
+      }
+
+    case 'vue':
+      return {
         main: 'index.cjs.js',
         module: 'index.esm.js',
-        types: `iframe-resizer.${file}.d.ts`,
+        peerDependencies: {
+          vue: '^2.6.0 || ^3.0.0',
+        },
       }
 
     case 'parent':
-      return {
-        ...entryPoints,
-        types: `iframe-resizer.${file}.d.ts`,
-      }
-
     case 'child':
       return {
         ...entryPoints,
