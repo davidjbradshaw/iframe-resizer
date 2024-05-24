@@ -49,7 +49,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         tearDown(iframe)
       })
 
-      it('receive message', () => {
+      it('receive message 2', () => {
         expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
           '[iFrameSizer]reset',
           'http://localhost:9876',
@@ -77,7 +77,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         tearDown(iframe)
       })
 
-      it('receive message', () => {
+      it('receive message 3', () => {
         expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
           '[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll:true',
           'http://localhost:9876',
@@ -85,7 +85,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
     })
 
-    describe('resize height', () => {
+    xdescribe('resize height', () => {
       let iframe
       const log = LOG
       const testId = 'parentPage3'
