@@ -23,7 +23,7 @@
     "rollup:debug": "rollup -c --environment DEBUG",
     "rollup:watch": "rollup -c --environment DEBUG --watch",
     "rollup:test": "npm run eslint:fix && rollup -c --environment TEST",
-    "rollup:test:ci": "npm run eslint:fix && rollup -c --environment TEST",
+    "rollup:test:ci": "rollup -c --environment TEST",
     "rollup:prod": "npm run eslint:fix && rollup -c",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
