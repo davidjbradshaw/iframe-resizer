@@ -16,7 +16,7 @@
     "build:dev": "time npm run rollup:debug",
     "build:prod": "time npm run rollup:prod",
     "build:test": "time npm run test:all",
-    "eslint": "eslint *.js packages/** **/*.html **/*.jsx --color",
+    "eslint": "eslint *.js packages/ **/*.html **/*.jsx --color",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "eslint packages/* --format @microsoft/sarif --output-file eslint-results.sarif",
     "publish": "npm run test:all && time bin/publish.sh",
