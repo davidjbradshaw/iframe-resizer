@@ -1051,7 +1051,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function processOptions(options) {
-    console.log('options', options)
     settings[iframeId] = {
       iframe,
       firstRun: true,
