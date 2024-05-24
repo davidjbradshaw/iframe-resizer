@@ -2,11 +2,11 @@ import connectResizer from '@iframe-resizer/core'
 import React, { useEffect, useImperativeHandle, useRef } from 'react'
 import warning from 'warning'
 
-import filterIframeAttribs from './filter-iframe-attribs'
+import filterIframeAttribs from '../common/filter-iframe-attribs'
 
 function IframeResizer(props) {
   // eslint-disable-next-line react/prop-types
-  const { title = 'iframe-resizer', forwardRef, ...rest } = props
+  const { title, forwardRef, ...rest } = props
   const filteredProps = filterIframeAttribs(rest)
   const iframeRef = useRef(null)
 
