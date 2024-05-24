@@ -321,6 +321,17 @@ function iframeListener(event) {
     }
   }
 
+  function scrollBy() {
+    const x = messageData.width
+    const y = messageData.height
+
+    const target = window.parentIFrame || window
+
+    log(iframeId, `Scroll request received from parent: x: ${x} y: ${y}`)
+
+    target.scrollBy(x, y)
+  }
+
   function scrollRequestFromChild(addOffset) {
     /* istanbul ignore next */ // Not testable in Karma
     function reposition() {
@@ -506,6 +517,10 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
       case 'autoResize':
         settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+        break
+
+      case 'scrollBy':
+        scrollBy()
         break
 
       case 'scrollTo':
@@ -1036,6 +1051,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function processOptions(options) {
+    console.log('options', options)
     settings[iframeId] = {
       iframe,
       firstRun: true,

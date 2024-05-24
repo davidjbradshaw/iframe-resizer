@@ -2,6 +2,7 @@
   "cSpell.words": [
     "compat",
     "consts",
+    "filesize",
     "Loggable",
     "sarif",
     "sonarjs"

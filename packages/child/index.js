@@ -661,6 +661,10 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       resetIFrame('parentIFrame.reset')
     },
 
+    scrollBy(x, y) {
+      sendMsg(y, x, 'scrollBy') // X&Y reversed at sendMsg uses height/width
+    },
+
     scrollTo(x, y) {
       sendMsg(y, x, 'scrollTo') // X&Y reversed at sendMsg uses height/width
     },
