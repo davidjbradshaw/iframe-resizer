@@ -92,6 +92,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.7",
     "eslint-plugin-scanjs-rules": "^0.2.1",
     "eslint-plugin-security": "^2.1.1",
     "eslint-plugin-simple-import-sort": "^12.0.0",
