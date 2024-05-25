@@ -481,7 +481,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function setTitle(title, iframeId) {
-    if (!settings[iframeId]) return
+    if (!settings[iframeId]?.syncTitle) return
     settings[iframeId].iframe.title = title
     log(iframeId, `Set title attribute to: ${title}`)
   }
@@ -1045,6 +1045,11 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       settings[iframeId].postMessageTarget = iframe.contentWindow
   }
 
+  function chkTitle(iframeId) {
+    const { title } = document.getElementById(iframeId)
+    return title === ''
+  }
+
   function processOptions(options) {
     settings[iframeId] = {
       iframe,
@@ -1053,6 +1058,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       ...defaults,
       ...checkOptions(options),
       mode: setMode(options),
+      syncTitle: chkTitle(iframeId),
     }
 
     setDirection()
