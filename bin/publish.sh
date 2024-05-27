@@ -24,7 +24,9 @@ rm -v ../iframe-resizer.zip
 zip ../iframe-resizer.zip **
 cd ..
 
-git add iframe-resizer.zip
+cp -rv js js-dist 
+
+git add .
 
 git commit -am "Release $VERSION"
 git tag "v$VERSION"
