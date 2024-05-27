@@ -50,11 +50,11 @@ Guides for using _iframe-resizer_ on different web development platforms.
 
 ### Wordpress
 
-[Wordpress setup guide](https://iframe-resizer.com/frameworks/wordpress/).
+[Wordpress setup guide](https://iframe-resizer.com/guides/wordpress/).
 
 ### Google Apps Script
 
-[GAS setup guide](https://iframe-resizer.com/frameworks/google_apps_script/).
+[GAS setup guide](https://iframe-resizer.com/guides/google_apps_script/).
 
 ## Framework API
 
