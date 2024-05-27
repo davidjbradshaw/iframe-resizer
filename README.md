@@ -17,7 +17,7 @@ Please see the [iframe-resizer](https://iframe-resizer.com) website for setup gu
 
 ## Main packages
 
-For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking.
+For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking. These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
 ### @iframe-resizer/parent
 
@@ -27,7 +27,6 @@ The parent page package sets up an iframe for automatic content resizing. Their 
 
 This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
-These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
 ## Frameworks and Libraries
 
