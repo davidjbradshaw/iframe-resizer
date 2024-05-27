@@ -27,8 +27,7 @@ The parent page package sets up an iframe for automatic content resizing. Their 
 
 This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
-These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/blob/master/iframe-resizer.zip) as a zip file.
-
+These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
 ## Frameworks and Libraries
 
