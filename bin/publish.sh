@@ -28,7 +28,7 @@ cp -rv js js-dist
 
 git add .
 
-git commit -am "Release $VERSION"
+git commit -am "Release v$VERSION"
 git tag "v$VERSION"
 git push --tags
 git push
