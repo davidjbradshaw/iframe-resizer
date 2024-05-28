@@ -163,28 +163,6 @@ const npm = [
     watch: false,
   },
 
-  // Vue (umd)
-  // {
-  //   input: 'packages/vue/index.js',
-  //   output: [
-  //     {
-  //       name: 'IframeResizer',
-  //       ...output('vue')('umd'),
-  //     },
-  //   ],
-  //   external: ['@iframe-resizer/core', 'vue'],
-  //   plugins: [
-  //     typescript(),
-  //     vue({
-  //       css: true,
-  //       compileTemplate: true,
-  //     }),
-  //     ...pluginsProd('vue'),
-  //     resolve()
-  //   ],
-  //   watch: false,
-  // },
-
   // Vue
   {
     input: 'packages/vue/index.js',
