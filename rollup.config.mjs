@@ -168,24 +168,40 @@ const npm = [
   //   input: 'packages/vue/index.js',
   //   output: [
   //     {
-  //       name: 'iframeResize',
+  //       name: 'IframeResizer',
   //       ...output('vue')('umd'),
   //     },
   //   ],
   //   external: ['@iframe-resizer/core', 'vue'],
-  //   plugins: [typescript(), vue(), ...pluginsProd('jquery'), resolve()],
+  //   plugins: [
+  //     typescript(),
+  //     vue({
+  //       css: true,
+  //       compileTemplate: true,
+  //     }),
+  //     ...pluginsProd('vue'),
+  //     resolve()
+  //   ],
   //   watch: false,
   // },
 
   // Vue
   {
     input: 'packages/vue/index.js',
-    output: [output('vue')('esm'), output('vue')('cjs')],
+    output: [
+      {
+        name: 'IframeResizer',
+        ...output('vue')('umd'),
+      },
+      output('vue')('esm'),
+      output('vue')('cjs')
+    ],
     external: ['@iframe-resizer/core', 'vue'],
     plugins: [
       typescript(),
       vue({
-        defaultLang: { script: 'ts' },
+        css: true,
+        compileTemplate: true,
       }),
       ...pluginsProd('vue'),
       copy({

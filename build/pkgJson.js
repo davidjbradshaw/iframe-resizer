@@ -19,8 +19,11 @@ const customConfig = (file) => {
 
     case 'vue':
       return {
-        main: 'index.cjs.js',
+        main: 'index.umd.js',
         module: 'index.esm.js',
+        browser: {
+          './sfc': 'iframe-resizer.vue',
+        },
         peerDependencies: {
           vue: '^2.6.0 || ^3.0.0',
         },
