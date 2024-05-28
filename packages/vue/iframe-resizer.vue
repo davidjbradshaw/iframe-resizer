@@ -7,8 +7,6 @@
 
   const emit = defineEmits(['onReady', 'onMessage', 'onResized'])
 
-  window.vueIframeResizer = { emit }
-
   defineProps({
       license: {
         type: String,
@@ -51,20 +49,24 @@
     name: 'IframeResizer',
     
     mounted() {
+      const self = this
+      const { iframe } = this.$refs
       const options = {
         ...Object.fromEntries(
           Object
             .entries(this.$props)
             .filter(([key, value]) => value !== undefined)
         ),
+
         onClose:() => false, // Disable close methods, use Vue to remove iframe
-        onReady: (...args) => window.vueIframeResizer.emit('onReady', ...args),
-        onMessage: (...args) => window.vueIframeResizer.emit('onMessage', ...args),
-        onResized: (...args) => window.vueIframeResizer.emit('onResized', ...args),
+        onReady: (...args) => self.$emit('onReady', ...args),
+        onMessage: (...args) => self.$emit('onMessage', ...args),
+        onResized: (...args) => self.$emit('onResized', ...args),
       }
 
       const connectWithOptions = connectResizer(options)
-      this.$refs.iframe.addEventListener("load", () => window.r =connectWithOptions(this.$refs.iframe))
+
+      iframe.addEventListener("load", () => connectWithOptions(iframe))
     },
     
     beforeDestroy() {
