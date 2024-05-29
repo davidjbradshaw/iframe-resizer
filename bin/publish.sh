@@ -19,8 +19,16 @@ npm publish
 cd ../react
 npm publish
 
+cd ../../js
+rm -v ../iframe-resizer.zip
+zip ../iframe-resizer.zip **
+cd ..
 
-git commit -am "Release $VERSION"
+cp -rv js js-dist 
+
+git add .
+
+git commit -am "Release v$VERSION"
 git tag "v$VERSION"
 git push --tags
 git push

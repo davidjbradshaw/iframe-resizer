@@ -62,8 +62,8 @@ export const pluginsProd = (file) => {
       verbose: true,
     }),
     stripCode({
-      start_comment: '// TEST CODE START //',
-      end_comment: '// TEST CODE END //',
+      start_comment: 'TEST CODE START',
+      end_comment: 'TEST CODE END',
     }),
     ...pluginsBase(true)(file),
   ]

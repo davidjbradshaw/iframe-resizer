@@ -8,12 +8,12 @@ export const output = (file) => (format) => ({
   file: `dist/${file}/index.${format}.js`,
   generatedCode: 'es2015',
   format,
-  plugins: terser({
-    output: {
-      comments: false,
-      preamble: createBanner(file, format),
-    },
-  }),
+  // plugins: terser({
+  //   output: {
+  //     comments: false,
+  //     preamble: createBanner(file, format),
+  //   },
+  // }),
   sourcemap: false,
 })
 

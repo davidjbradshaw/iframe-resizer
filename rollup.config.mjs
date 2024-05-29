@@ -4,12 +4,14 @@ import copy from 'rollup-plugin-copy'
 import filesize from 'rollup-plugin-filesize'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
+import vue from 'rollup-plugin-vue'
 
 import createBanner from './build/banner.js'
 import { output, outputs } from './build/output.js'
 import { pluginsBase, pluginsProd, injectVersion } from './build/plugins.js'
 
 import pkg from './package.json' with { type: 'json' }
+import typescript from '@rollup/plugin-typescript'
 
 const { ROLLUP_WATCH, DEBUG, TEST } = process.env
 
@@ -29,6 +31,7 @@ const outputPlugins = (file, format) => ({
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
   delete pkg.dependencies.react
+  delete pkg.dependencies.vue
   delete pkg.private
   return JSON.stringify(pkg, null, 2)
 }
@@ -132,13 +135,7 @@ const npm = [
   {
     input: 'packages/react/index.jsx',
     output: [output('react')('esm'), output('react')('cjs')],
-    external: [
-      '@iframe-resizer/core',
-      // 'prop-types',
-      'react',
-      'warning',
-      /@babel\/runtime/,
-    ],
+    external: ['@iframe-resizer/core', 'react', 'warning', /@babel\/runtime/],
     plugins: [
       ...pluginsProd('react'),
       copy({
@@ -165,7 +162,53 @@ const npm = [
     ],
     watch: false,
   },
+
+  // Vue
+  {
+    input: 'packages/vue/index.js',
+    output: [
+      {
+        name: 'IframeResizer',
+        ...output('vue')('umd'),
+      },
+      output('vue')('esm'),
+      output('vue')('cjs')
+    ],
+    external: ['@iframe-resizer/core', 'vue'],
+    plugins: [
+      typescript(),
+      vue({
+        css: true,
+        compileTemplate: true,
+      }),
+      ...pluginsProd('vue'),
+      copy({
+        hook: 'closeBundle',
+        targets: [
+          {
+            src: 'dist/vue/package.json',
+            dest: 'dist/vue/',
+            transform: filterDeps,
+          },
+          {
+            src: 'dist/vue/*.js',
+            dest: 'dist/vue/',
+            transform: (contents, filename) =>
+              contents.toString().replace('packages/vue', '.'),
+          },
+          {
+            src: 'packages/vue/iframe-resizer.vue',
+            dest: 'dist/vue/',
+          },
+        ],
+        verbose: true,
+      }),
+      filesize(),
+    ],
+    watch: false,
+  },
 ]
+
 
 // JS folder (iife)
 const js = [
