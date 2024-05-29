@@ -2,12 +2,13 @@
   <iframe ref="iframe" v-bind="$attrs"></iframe>
 </template>
 
-<script setup>
+<script>
   import connectResizer from '@iframe-resizer/core'
 
-  const emit = defineEmits(['onReady', 'onMessage', 'onResized'])
+  export default {
+    name: 'IframeResizer',
 
-  defineProps({
+    props: {
       license: {
         type: String,
         required: true
@@ -43,10 +44,7 @@
       warningTimeout: {
         type: Number,
       },
-    })
-
-  defineOptions({
-    name: 'IframeResizer',
+    },
     
     mounted() {
       const self = this
@@ -58,7 +56,7 @@
             .filter(([key, value]) => value !== undefined)
         ),
 
-        onClose:() => false, // Disable close methods, use Vue to remove iframe
+        onClose: () => false, // Disable close methods, use Vue to remove iframe
         onReady: (...args) => self.$emit('onReady', ...args),
         onMessage: (...args) => self.$emit('onMessage', ...args),
         onResized: (...args) => self.$emit('onResized', ...args),
@@ -66,14 +64,26 @@
 
       const connectWithOptions = connectResizer(options)
 
-      iframe.addEventListener("load", () => connectWithOptions(iframe))
+      iframe.addEventListener("load", () => {
+        self.resizer = connectWithOptions(iframe)
+      })
     },
     
-    beforeDestroy() {
-      if (this.$refs.iframe.iFrameResizer) {
-        this.$refs.iframe.iFrameResizer.disconnect();
-      }
-    }
-  })
+    beforeUnmount() {
+      this.resizer?.disconnect()
+    },
+
+    methods: {
+      moveToAnchor(anchor) {
+        this.resizer.moveToAnchor(anchor)
+      },
+      resize() {
+        this.resizer.resize()
+      },
+      sendMessage(msg, target) {
+        this.resizer.sendMessage(msg, target)
+      },
+    },
+  }
 
 </script>
