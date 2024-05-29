@@ -2,6 +2,8 @@
   "cSpell.words": [
     "compat",
     "consts",
+    "delog",
+    "filesize",
     "Loggable",
     "sarif",
     "sonarjs"

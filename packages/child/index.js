@@ -1342,7 +1342,7 @@ if (typeof window !== 'undefined') {
   chkLateLoaded()
 }
 
-// TEST CODE START //
+/* TEST CODE START */
 function mockMsgListener(msgObject) {
   receiver(msgObject)
   return win
@@ -1364,4 +1364,4 @@ try {
   // do nothing
 }
 
-// TEST CODE END //
+/* TEST CODE END */

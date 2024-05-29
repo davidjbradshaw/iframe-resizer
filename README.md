@@ -17,7 +17,7 @@ Please see the [iframe-resizer](https://iframe-resizer.com) website for setup gu
 
 ## Main packages
 
-For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking.
+For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking. These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
 ### @iframe-resizer/parent
 
@@ -38,7 +38,7 @@ A [React component](https://iframe-resizer.com/frameworks/react/) for the parent
 
 ### @iframe-resizer/vue
 
-Coming soon.
+a [Vue component](https://iframe-resizer.com/vue) for the parent page.
 
 ### @iframe-resizer/jquery
 
@@ -50,11 +50,11 @@ Guides for using _iframe-resizer_ on different web development platforms.
 
 ### Wordpress
 
-[Wordpress setup guide](https://iframe-resizer.com/frameworks/wordpress/).
+[Wordpress setup guide](https://iframe-resizer.com/guides/wordpress/).
 
 ### Google Apps Script
 
-[GAS setup guide](https://iframe-resizer.com/frameworks/google_apps_script/).
+[GAS setup guide](https://iframe-resizer.com/guides/google_apps_script/).
 
 ## Framework API
 
