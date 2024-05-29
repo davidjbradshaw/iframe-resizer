@@ -38,7 +38,7 @@ A [React component](https://iframe-resizer.com/frameworks/react/) for the parent
 
 ### @iframe-resizer/vue
 
-Coming soon.
+a [Vue component](https://iframe-resizer.com/vue) for the parent page.
 
 ### @iframe-resizer/jquery
 
