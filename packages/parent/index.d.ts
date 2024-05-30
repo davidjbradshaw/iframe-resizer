@@ -163,7 +163,7 @@ declare module '@iframe-resizer/parent' {
       x: number
       y: number
     }
-  
+
     function iframeResize(
       options: IFrameOptions,
       target: string | HTMLElement,
@@ -176,4 +176,5 @@ declare module '@iframe-resizer/parent' {
     target: string | HTMLElement,
   ): iframeResizer.IFrameComponent[]
 
+  export default iframeResize;
 }
