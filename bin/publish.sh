@@ -26,7 +26,7 @@ rm -v ../iframe-resizer.zip
 zip ../iframe-resizer.zip **
 cd ..
 
-cp -rv js js-dist 
+cp -rv js/* js-dist 
 
 git add .
 
