@@ -18,6 +18,8 @@ cd ../jquery
 npm publish
 cd ../react
 npm publish
+cd ../vue
+npm publish
 
 cd ../../js
 rm -v ../iframe-resizer.zip
