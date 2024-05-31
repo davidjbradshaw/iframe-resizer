@@ -8,7 +8,6 @@
 .github
 *.md
 node_modules
-bin
 docs
 example
 img

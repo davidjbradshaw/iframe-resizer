@@ -1,7 +1,6 @@
 .DS_Store
 .coveralls.yml
 node_modules
-bin
 example/test.html
 test/*.off
 npm-debug.log

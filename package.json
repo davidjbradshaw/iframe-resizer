@@ -1,11 +1,12 @@
 {
   "name": "iframe-resizer",
-  "version": "4.4.0",
+  "version": "4.4.2",
   "homepage": "https://iframe-resizer.com",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
   ],
   "scripts": {
+    "postinstall": "node bin/post.js",
     "build": "grunt build",
     "eslint": "eslint *.js src/* --color",
     "eslint:fix": "npm run eslint -- --fix",
@@ -21,7 +22,7 @@
   "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
     "type": "individual",
-    "url": "https://iframe-resizer.com/licenses/"
+    "url": "https://iframe-resizer.com//pricing"
   },
   "devDependencies": {
     "cosmiconfig": "^9.0.0",
