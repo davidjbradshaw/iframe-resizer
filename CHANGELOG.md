@@ -2,8 +2,6 @@
 
 - v5.0.0 See [Release notes](https://github.com/davidjbradshaw/iframe-resizer/releases/) for future updates
 
-- v4.3.10 [#1229](https://github.com/davidjbradshaw/iframe-resizer/pull/1229) Fix close release destroyObserver [[Steve Hong](https://github.com/aniude)]
-
 - v4.3.11 Fix bug in init message format that would effect interop with the future version 5.
 
 - v4.3.10 [#1229](https://github.com/davidjbradshaw/iframe-resizer/pull/1229) Fix close release destroyObserver [[Steve Hong](https://github.com/aniude)]
