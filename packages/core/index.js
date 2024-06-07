@@ -180,7 +180,7 @@ function iframeListener(event) {
     })
   }
 
-  function getParentProperties() {
+  function getParentProps() {
     const { iframe } = messageData
     const { scrollWidth, scrollHeight } = document.documentElement
     const { width, height, offsetLeft, offsetTop, pageLeft, pageTop, scale } =
@@ -282,10 +282,7 @@ function iframeListener(event) {
   }
 
   const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
-  const sendParentInfoToIframe = sendInfoToIframe(
-    'parentInfo',
-    getParentProperties,
-  )
+  const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentProps)
 
   const startPageInfoMonitor = startInfoMonitor(
     sendPageInfoToIframe,
