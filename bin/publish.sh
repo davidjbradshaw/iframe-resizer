@@ -18,13 +18,14 @@ cd ../jquery
 npm publish
 cd ../react
 npm publish
+cd ../vue
+npm publish
 
-cd ../../js
-rm -v ../iframe-resizer.zip
-zip ../iframe-resizer.zip **
-cd ..
+cd ../..
+rm -v iframe-resizer.zip
+zip iframe-resizer.zip js/**
 
-cp -rv js js-dist 
+cp -v js/** js-dist 
 
 git add .
 
@@ -33,3 +34,5 @@ git tag "v$VERSION"
 git push --tags
 git push
 
+
+cp -v js/* ../docs/public/js
