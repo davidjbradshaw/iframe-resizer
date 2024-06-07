@@ -70,7 +70,7 @@ function iframeListener(event) {
       height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
       width: Number(data[2]),
       type: data[3],
-      version: data[4],
+      msg: data[4],
     }
   }
 
@@ -180,7 +180,7 @@ function iframeListener(event) {
     })
   }
 
-  function getParentProperties() {
+  function getParentProps() {
     const { iframe } = messageData
     const { scrollWidth, scrollHeight } = document.documentElement
     const { width, height, offsetLeft, offsetTop, pageLeft, pageTop, scale } =
@@ -282,10 +282,7 @@ function iframeListener(event) {
   }
 
   const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
-  const sendParentInfoToIframe = sendInfoToIframe(
-    'parentInfo',
-    getParentProperties,
-  )
+  const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentProps)
 
   const startPageInfoMonitor = startInfoMonitor(
     sendPageInfoToIframe,
@@ -491,6 +488,12 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     log(iframeId, `Version mismatch (Child: ${version} !== Parent: ${VERSION})`)
   }
 
+  function setTitle(title, iframeId) {
+    if (!settings[iframeId]?.syncTitle) return
+    settings[iframeId].iframe.title = title
+    log(iframeId, `Set title attribute to: ${title}`)
+  }
+
   function started() {
     setup = true
   }
@@ -553,6 +556,10 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         findTarget(getMsgBody(9))
         break
 
+      case 'title':
+        setTitle(messageData.msg, iframeId)
+        break
+
       case 'reset':
         resetIFrame(messageData)
         break
@@ -560,7 +567,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       case 'init':
         resizeIFrame()
         checkSameDomain(iframeId)
-        checkVersion(messageData.version)
+        checkVersion(messageData.msg)
         started()
         on('onReady', messageData.iframe)
         break
@@ -1050,6 +1057,11 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       settings[iframeId].postMessageTarget = iframe.contentWindow
   }
 
+  function chkTitle(iframeId) {
+    const { title } = document.getElementById(iframeId)
+    return title === ''
+  }
+
   function processOptions(options) {
     settings[iframeId] = {
       iframe,
@@ -1058,6 +1070,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       ...defaults,
       ...checkOptions(options),
       mode: setMode(options),
+      syncTitle: chkTitle(iframeId),
     }
 
     setDirection()

@@ -82,7 +82,7 @@
       This iframe contains a page element animated via CSS to change the height of the page. 
     </p>
 
-    <h4>Data returned by parentIFrame.getParentProperties()</h4>
+    <h4>Data returned by parentIFrame.getParentProps()</h4>
     <table id="data"></table>
 
     <!-- 
@@ -130,7 +130,7 @@
           //   parentIFrame.getPageInfo((pageInfo) => {
           //     dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
           //   })
-          window.parentIFrame.getParentProperties((pageInfo) => {
+          window.parentIframe.getParentProps((pageInfo) => {
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })
         },
