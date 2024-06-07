@@ -53,7 +53,7 @@ declare module '@iframe-resizer/child' {
        *
        * Pass false to disable the callback.
        */
-      getParentProps(callback: (data: ParentProperties) => void): void
+      getParentProps(callback: (data: ParentProps) => void): void
 
       /**
        * Scroll the parent page to the coordinates x and y
@@ -84,7 +84,7 @@ declare module '@iframe-resizer/child' {
       size(customHeight?: string, customWidth?: string): void
     }
 
-    interface ParentProperties {
+    interface ParentProps {
       /**
        * The values returned by iframe.getBoundingClientRect()
        */
