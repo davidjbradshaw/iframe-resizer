@@ -664,7 +664,7 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       advise(
         `<rb>Renamed Method</>
           
-The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.
 `,
       )
       this.getParentProps(callback)
