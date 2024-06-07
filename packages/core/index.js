@@ -762,7 +762,6 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         return
       } catch (error) {
         log(id, `Same domain connection failed. Trying cross domain`)
-        settings[id].sameDomain = false
       }
     }
 
