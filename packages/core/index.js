@@ -971,7 +971,8 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
 
     if (settings[iframeId].mode >= 0) {
       addEventListener(iframe, 'load', iFrameLoaded)
-      trigger('init', `${msg}:${setup}`, id, true)
+      if (settings[iframeId].waitForLoad === false)
+        trigger('init', `${msg}:${setup}`, id, true)
     }
   }
 

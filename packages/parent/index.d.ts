@@ -89,6 +89,8 @@ declare module '@iframe-resizer/parent' {
        */
       tolerance?: number | undefined
 
+      waitForLoad?: boolean | undefined
+
       warningTimeout?: number | undefined
 
       /**

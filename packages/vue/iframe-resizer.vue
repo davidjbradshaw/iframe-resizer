@@ -55,6 +55,7 @@
             .entries(this.$props)
             .filter(([key, value]) => value !== undefined)
         ),
+        waitForLoad: true,
 
         onClose: () => false, // Disable close methods, use Vue to remove iframe
         onReady: (...args) => self.$emit('onReady', ...args),
@@ -64,9 +65,7 @@
 
       const connectWithOptions = connectResizer(options)
 
-      iframe.addEventListener("load", () => {
-        self.resizer = connectWithOptions(iframe)
-      })
+      self.resizer = connectWithOptions(iframe)
     },
     
     beforeUnmount() {
