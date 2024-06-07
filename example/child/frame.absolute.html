@@ -53,6 +53,13 @@
       <a
         href="#"
         class="back"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollBy(0,50);return false;"
+        >scrollBy(50)</a
+      >
+      &nbsp;
+      <a
+        href="#"
+        class="back"
         onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;"
         >Scroll to iFrame</a
       >

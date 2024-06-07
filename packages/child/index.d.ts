@@ -56,6 +56,11 @@ declare module '@iframe-resizer/child' {
       getParentProps(callback: (data: ParentProps) => void): void
 
       /**
+       * Scroll the parent page by x and y
+       */
+      scrollBy(x: number, y: number): void
+
+      /**
        * Scroll the parent page to the coordinates x and y
        */
       scrollTo(x: number, y: number): void

@@ -63,7 +63,9 @@
        */
 
       const iframes = window.iframeResize({
+        license: 'GPLv3',
         inPageLinks: true,
+        log: true,
 
         // Callback fn when iFrame resized, update the data being displayed
         onResized(messageData) {
@@ -85,8 +87,8 @@
       window.iFrameResizer = {
         onMessage: (message) =>
           iframes.forEach((iframe) =>
-      iframe.iFrameResizer?.sendMessage(`${message} (via parent ${id} )`),
-    ),
+            iframe.iFrameResizer?.sendMessage(`${message} (via parent ${id} )`),
+          ),
       }
     </script>
   </body>
