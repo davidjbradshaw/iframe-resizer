@@ -37,6 +37,7 @@ export default Object.freeze({
   sizeWidth: false,
   warningTimeout: 5000,
   tolerance: 0,
+  waitForLoad: false,
   widthCalculationMethod: 'auto',
   onClose: () => true,
   onClosed() {},
