@@ -325,9 +325,9 @@ function iframeListener(event) {
     const x = messageData.width
     const y = messageData.height
 
-    const target = window.parentIFrame || window
+    const target = window.parentIframe || window
 
-    log(iframeId, `Scroll request received from parent: x: ${x} y: ${y}`)
+    log(iframeId, `Scroll request received by parent: x: ${x} y: ${y}`)
 
     target.scrollBy(x, y)
   }
