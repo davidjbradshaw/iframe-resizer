@@ -628,7 +628,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   if (!isMessageForUs()) {
-    log(iframeId, 'Ignored:', msg)
+    if (iframeId !== null) log(iframeId, 'Ignored:', msg)
     return
   }
 
