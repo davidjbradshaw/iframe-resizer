@@ -11,7 +11,7 @@
 
 The _[iframe-resizer](https://iframe-resizer.com)_ library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
 
-As browsers don’t provide a single consistently reliable method to calculate content size, iframe-resizer automatically inspects your page and selects the best value for your content every time it detects something changed.
+As browsers don’t provide a single consistently reliable method to calculate content size, _iframe-resizer_ automatically inspects your page and selects the best value for your content every time it detects something changed.
 
 Supports both internal (same-domain) and external (cross-domain) iframes via a simple JS file that is designed to be a zero impact guest on the sites hosting it.
 
