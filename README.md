@@ -71,13 +71,13 @@ A simple jQuery wrapper for the parent page.
 
 Guides for using _iframe-resizer_ on different web development platforms.
 
-### [Wordpress](https://iframe-resizer.com/guides/wordpress/)
+### Wordpress
 
-Wordpress setup guide.
+[Wordpress setup guide](https://iframe-resizer.com/guides/wordpress/).
 
-### [Google Apps Script](https://iframe-resizer.com/guides/google_apps_script/)
+### Google Apps Script
 
-GAS setup guide.
+[GAS setup guide](https://iframe-resizer.com/guides/google_apps_script/).
 
 ## Framework API
 
