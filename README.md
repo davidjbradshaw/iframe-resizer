@@ -79,9 +79,9 @@ Wordpress setup guide.
 
 GAS setup guide.
 
-## [Framework API](https://iframe-resizer.com/frameworks/api/)
+## Framework API
 
-Their is also an API to support the creation of additional custom components.
+Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
 
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -Licensed under the [GPL V3](LICENSE)
