@@ -15,6 +15,8 @@ As browsers don’t provide a single consistently reliable method to calculate c
 
 Supports both internal (same-domain) and external (cross-domain) iframes via a simple JS file that is designed to be a zero impact guest on the sites hosting it.
 
+### Extended API
+
 Additionally iframe-resizer provides a range of missing browser API features, that allows you to securely integrate your iframe content with the parent page.
 
 * Scroll the page, relative to the iframe or parent page’s position
@@ -24,7 +26,7 @@ Additionally iframe-resizer provides a range of missing browser API features, th
 * Simplified message passing between the iframe and the parent page
 * Automatic domain authentication
 
-When combined with viewer.js it can even resize iframes containing PDF and ODF documents.
+When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
 ### Version 5
 
