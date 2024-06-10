@@ -7,13 +7,34 @@
 
 -->
 
-This library enables the simple automatic resizing of the height and width of both same and cross domain iframes to fit their contained content and provides a range of features to address the most common issues with using iframes.
+## Introduction
 
+The iframe-resizer library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
 
-## Setup and API guide
+As browsers don’t provide a single consistently reliable method to calculate content size, iframe-resizer automatically inspects your page and selects the best value for your content every time it detects something changed.
+
+Supports both internal (same-domain) and external (cross-domain) iframes via a simple JS file that is designed to be a zero impact guest on the sites hosting it.
+
+Additionally iframe-resizer provides a range of missing browser API features, that allows you to securely integrate your iframe content with the parent page.
+
+* Scroll the page, relative to the iframe or parent page’s position
+* Get details of the position of the iframe, the scroll position and viewport of the parent page
+* Fixes in page linking in the iframe and allows links to propagate to the parent page
+* Adds onMouseEnter and onMouseLeave events to the iframe element
+* Simplified message passing between the iframe and the parent page
+* Automatic domain authentication
+
+When combined with viewer.js it can even resize iframes containing PDF and ODF documents.
+
+### Version 5
+
+This version of iframe-resizer has been extensively rewritten to use modern browser APIs, this has enabled significantly better performance and greater accuracy in the detection of content resizing events.
+
+With this release, the opportunity has been taken to refresh and simplify the API, if you are coming from a previous version then their is an [Upgrade Guide](https://iframe-resizer.com/upgrade) to explain the changes.
+
+### Setup and API guide
 
 Please see the [iframe-resizer](https://iframe-resizer.com) website for setup guides and API documentation.
-
 
 ## Main packages
 
