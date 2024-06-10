@@ -61,7 +61,7 @@ A React component for the parent page.
 
 ### [@iframe-resizer/vue](https://iframe-resizer.com/vue)
 
-a Vue component for the parent page.
+A Vue component for the parent page.
 
 ### [@iframe-resizer/jquery](https://iframe-resizer.com/frameworks/jquery/)
 
