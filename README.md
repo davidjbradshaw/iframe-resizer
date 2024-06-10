@@ -9,7 +9,7 @@
 
 ## Introduction
 
-The [iframe-resizer](https://iframe-resizer.com) library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
+The _[iframe-resizer](https://iframe-resizer.com)_ library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
 
 As browsers don’t provide a single consistently reliable method to calculate content size, iframe-resizer automatically inspects your page and selects the best value for your content every time it detects something changed.
 
@@ -17,7 +17,7 @@ Supports both internal (same-domain) and external (cross-domain) iframes via a s
 
 ### Extended API
 
-Additionally iframe-resizer provides a range of missing browser API features, that allows you to securely integrate your iframe content with the parent page.
+Additionally _iframe-resizer_ provides a range of missing browser API features, that allows you to securely integrate your iframe content with the parent page.
 
 * Scroll the page, relative to the iframe or parent page’s position
 * Get details of the position of the iframe, the scroll position and viewport of the parent page
@@ -30,7 +30,7 @@ When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes
 
 ### Setup and API guide
 
-Please see the [iframe-resizer](https://iframe-resizer.com) website for setup guides and API documentation.
+Please see the _[iframe-resizer](https://iframe-resizer.com)_ website for setup guides and API documentation.
 
 ### Version 5
 
@@ -42,11 +42,11 @@ With this release, the opportunity has been taken to refresh and simplify the AP
 
 For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking. These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
-### @iframe-resizer/parent
+### [@iframe-resizer/parent](https://iframe-resizer.com/setup/#parent-page-setup)
 
 The parent page package sets up an iframe for automatic content resizing. Their are versions of this package for several popular libraries and frameworks (see below).
 
-### @iframe-resizer/child
+### [@iframe-resizer/child](https://iframe-resizer.com/setup/#child-page-setup)
 
 This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
@@ -55,33 +55,33 @@ This package needs loading into the iframe, where it will quietly wait for a mes
 
 In addition to the two main packages, their are versions of the parent package for the following platforms.
 
-### @iframe-resizer/react
+### [@iframe-resizer/react](https://iframe-resizer.com/frameworks/react/)
 
-A [React component](https://iframe-resizer.com/frameworks/react/) for the parent page.
+A React component for the parent page.
 
-### @iframe-resizer/vue
+### [@iframe-resizer/vue](https://iframe-resizer.com/vue)
 
-a [Vue component](https://iframe-resizer.com/vue) for the parent page.
+a Vue component for the parent page.
 
-### @iframe-resizer/jquery
+### [@iframe-resizer/jquery](https://iframe-resizer.com/frameworks/jquery/)
 
-A simple [jQuery wrapper](https://iframe-resizer.com/frameworks/jquery/) for the parent page.
+A simple jQuery wrapper for the parent page.
 
 ## Platform Guides
 
 Guides for using _iframe-resizer_ on different web development platforms.
 
-### Wordpress
+### [Wordpress](https://iframe-resizer.com/guides/wordpress/)
 
-[Wordpress setup guide](https://iframe-resizer.com/guides/wordpress/).
+Wordpress setup guide.
 
-### Google Apps Script
+### [Google Apps Script](https://iframe-resizer.com/guides/google_apps_script/)
 
-[GAS setup guide](https://iframe-resizer.com/guides/google_apps_script/).
+GAS setup guide.
 
-## Framework API
+## [Framework API](https://iframe-resizer.com/frameworks/api/)
 
-Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
+Their is also an API to support the creation of additional custom components.
 
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -Licensed under the [GPL V3](LICENSE)
