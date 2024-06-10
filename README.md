@@ -9,7 +9,7 @@
 
 ## Introduction
 
-The iframe-resizer library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
+The [iframe-resizer](https://iframe-resizer.com) library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
 
 As browsers don’t provide a single consistently reliable method to calculate content size, iframe-resizer automatically inspects your page and selects the best value for your content every time it detects something changed.
 
@@ -28,15 +28,15 @@ Additionally iframe-resizer provides a range of missing browser API features, th
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
+### Setup and API guide
+
+Please see the [iframe-resizer](https://iframe-resizer.com) website for setup guides and API documentation.
+
 ### Version 5
 
 This version of iframe-resizer has been extensively rewritten to use modern browser APIs, this has enabled significantly better performance and greater accuracy in the detection of content resizing events.
 
 With this release, the opportunity has been taken to refresh and simplify the API, if you are coming from a previous version then their is an [Upgrade Guide](https://iframe-resizer.com/upgrade) to explain the changes.
-
-### Setup and API guide
-
-Please see the [iframe-resizer](https://iframe-resizer.com) website for setup guides and API documentation.
 
 ## Main packages
 
