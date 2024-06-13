@@ -32,15 +32,15 @@ When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes
 
 Please see the _[iframe-resizer](https://iframe-resizer.com)_ website for setup guides and API documentation. This includes versions for:
 
-* Vanilla JS
-* React
-* Vue
-* jQuery
+* **Vanilla JS**
+* **React**
+* **Vue**
+* **jQuery**
 
 Along with setup guides for:
   
-* Wordpress
-* Google Apps Script
+* **Wordpress**
+* **Google Apps Script**
 
 Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
 
