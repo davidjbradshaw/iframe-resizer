@@ -257,6 +257,14 @@ function readDataFromPage() {
     }
 
     if (Object.prototype.hasOwnProperty.call(data, 'sizeSelector')) {
+      if (data.sizeSelector === false && sizeSelector !== '') {
+        advise(`<rb>sizeSelector disabled</>
+
+The <b>sizeSelector</> option has been disabled by setting it to <b>false</> in this iframe.
+
+To remove this warning, remove the <b>sizeSelector: ${sizeSelector}</> option from the parent page.
+`)
+      }
       sizeSelector = data.sizeSelector
     }
 
@@ -929,7 +937,7 @@ This causes <i>iframe-resizer</> to fall back to checking the position of every 
 
 To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe. 
   
-When present the <i>${side} margin of the ${furthest} element</> with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
+When present the ${side} margin of the ${furthest} element with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
     
 (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
