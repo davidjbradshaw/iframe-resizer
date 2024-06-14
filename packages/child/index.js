@@ -1194,7 +1194,7 @@ function resetIFrame(triggerEventDesc) {
 }
 
 function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
-  if (mode < 0) return
+  if (mode < 0 && version !== '') return
 
   function setTargetOrigin() {
     if (undefined === targetOrigin) {
