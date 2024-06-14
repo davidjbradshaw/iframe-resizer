@@ -34,6 +34,7 @@ export default Object.freeze({
   sameDomain: false,
   scrolling: false,
   sizeHeight: true,
+  sizeSelector: '',
   sizeWidth: false,
   warningTimeout: 5000,
   tolerance: 0,
