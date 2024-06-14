@@ -65,7 +65,7 @@ let initMsg = ''
 let inPageLinks = {}
 let isInit = true
 let logging = false
-let licenseKey = ''
+let licenseKey = '' // eslint-disable-line no-unused-vars
 let mode = 0
 let mouseEvents = false
 let myID = ''
@@ -74,6 +74,7 @@ let offsetWidth
 let resizeFrom = 'child'
 let resizeObserver = null
 let sameDomain = false
+let sizeSelector = ''
 let target = window.parent
 let targetOriginDefault = '*'
 let tolerance = 0
@@ -155,6 +156,7 @@ function init() {
   setBodyStyle('padding', bodyPadding)
   injectClearFixIntoBodyElement()
   stopInfiniteResizingOfIFrame()
+  applySizeSelector()
   checkMode()
   checkVersion()
   checkHeightMode()
@@ -211,6 +213,7 @@ function checkCrossDomain() {
   }
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 function readDataFromParent() {
   const strBool = (str) => str === 'true'
   const data = initMsg.slice(msgIdLen).split(':')
@@ -236,8 +239,7 @@ function readDataFromParent() {
   licenseKey = data[19] // eslint-disable-line prefer-destructuring
   version = data[20] || version
   mode = undefined === data[21] ? mode : Number(data[21])
-
-  log(`License: ${licenseKey}`)
+  sizeSelector = data[22] || sizeSelector
 }
 
 function readDataFromPage() {
@@ -254,6 +256,7 @@ function readDataFromPage() {
       if (calculateWidth) offsetWidth = data?.offset
     }
 
+    sizeSelector = data?.sizeSelector || sizeSelector
     targetOriginDefault = data?.targetOrigin || targetOriginDefault
     heightCalcMode = data?.heightCalculationMethod || heightCalcMode
     widthCalcMode = data?.widthCalculationMethod || widthCalcMode
@@ -297,6 +300,17 @@ function setBodyStyle(attr, value) {
     document.body.style.setProperty(attr, value)
     log(`Body ${attr} set to "${value}"`)
   }
+}
+
+function applySizeSelector() {
+  if (sizeSelector === '') return
+
+  log(`Applying sizeSelector: ${sizeSelector}`)
+
+  document.querySelectorAll(sizeSelector).forEach((el) => {
+    log(`Applying data-iframe-size to: ${getElementName(el)}`)
+    el.dataset.iframeSize = true
+  })
 }
 
 function setMargin() {

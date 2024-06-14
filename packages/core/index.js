@@ -840,6 +840,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.license,
     page.version,
     iframeSettings.mode,
+    iframeSettings.sizeSelector,
   ].join(':')
 }
 

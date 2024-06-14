@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>iFrame message passing test</title>
+    <title>iFrame animate example</title>
     <meta name="description" content="iFrame message passing test" />
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -90,7 +90,7 @@
       to calculate the height of the iframe, when the content overflows the
       <body> element.     
     -->
-    <div id="abs" data-iframe-size>
+    <div id="abs">
       <p>
         This is an absolute positioned element that will animate to 
         a height of 800px using CSS keyframes. 
@@ -125,6 +125,8 @@
         //
         // You should not need to do this with same domain iframes.
         // offsetHeight: -1,
+
+        sizeSelector: '#abs',
 
         onReady: () => {
           //   parentIFrame.getPageInfo((pageInfo) => {
