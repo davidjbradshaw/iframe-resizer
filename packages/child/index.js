@@ -256,7 +256,10 @@ function readDataFromPage() {
       if (calculateWidth) offsetWidth = data?.offset
     }
 
-    sizeSelector = data?.sizeSelector || sizeSelector
+    if (Object.prototype.hasOwnProperty.call(data, 'sizeSelector')) {
+      sizeSelector = data.sizeSelector
+    }
+
     targetOriginDefault = data?.targetOrigin || targetOriginDefault
     heightCalcMode = data?.heightCalculationMethod || heightCalcMode
     widthCalcMode = data?.widthCalculationMethod || widthCalcMode
@@ -303,7 +306,7 @@ function setBodyStyle(attr, value) {
 }
 
 function applySizeSelector() {
-  if (sizeSelector === '') return
+  if (sizeSelector === '' || sizeSelector === false) return
 
   log(`Applying sizeSelector: ${sizeSelector}`)
 
