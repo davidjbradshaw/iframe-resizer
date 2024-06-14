@@ -813,6 +813,9 @@ function setupBodyMutationObserver() {
     // Look for injected elements that need ResizeObservers
     mutations.forEach(addResizeObservers)
 
+    // apply sizeSelector to new elements
+    applySizeSelector()
+
     // Rebuild elements list for size calculation
     setupCalcElements()
   }
