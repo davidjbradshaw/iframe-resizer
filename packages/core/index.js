@@ -14,6 +14,7 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
+import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
 import defaults from './values/defaults'
@@ -840,7 +841,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.license,
     page.version,
     iframeSettings.mode,
-    iframeSettings.sizeSelector,
+    // iframeSettings.sizeSelector,
   ].join(':')
 }
 
@@ -969,11 +970,12 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
 
     const { id } = iframe
 
-    if (settings[iframeId].mode >= 0) {
-      addEventListener(iframe, 'load', iFrameLoaded)
-      if (settings[iframeId].waitForLoad === false)
-        trigger('init', `${msg}:${setup}`, id, true)
-    }
+    if (settings[id].mode === -1) modal()
+    if (settings[id].mode === -2) return
+
+    addEventListener(iframe, 'load', iFrameLoaded)
+    if (settings[id].waitForLoad === false)
+      trigger('init', `${msg}:${setup}`, id, true)
   }
 
   function checkOptions(options) {
