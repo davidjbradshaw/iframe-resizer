@@ -239,7 +239,7 @@ function readDataFromParent() {
   licenseKey = data[19] // eslint-disable-line prefer-destructuring
   version = data[20] || version
   mode = undefined === data[21] ? mode : Number(data[21])
-  sizeSelector = data[22] || sizeSelector
+  // sizeSelector = data[22] || sizeSelector
 }
 
 function readDataFromPage() {
@@ -257,14 +257,6 @@ function readDataFromPage() {
     }
 
     if (Object.prototype.hasOwnProperty.call(data, 'sizeSelector')) {
-      if (data.sizeSelector === false && sizeSelector !== '') {
-        advise(`<rb>sizeSelector disabled</>
-
-The <b>sizeSelector</> option has been disabled by setting it to <b>false</> in this iframe.
-
-To remove this warning, remove the <b>sizeSelector: ${sizeSelector}</> option from the parent page.
-`)
-      }
       sizeSelector = data.sizeSelector
     }
 
@@ -314,7 +306,7 @@ function setBodyStyle(attr, value) {
 }
 
 function applySizeSelector() {
-  if (sizeSelector === '' || sizeSelector === false) return
+  if (sizeSelector === '') return
 
   log(`Applying sizeSelector: ${sizeSelector}`)
 
@@ -480,7 +472,7 @@ function checkWidthMode() {
 }
 
 function checkMode() {
-  if (mode < 0) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
+  if (mode < -1) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
   if (version.codePointAt(0) > 4) return mode
   if (mode < 2) return adviser(getModeData(3))
   return mode
@@ -1222,7 +1214,7 @@ function resetIFrame(triggerEventDesc) {
 }
 
 function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
-  if (mode < 0) return
+  if (mode < -1) return
 
   function setTargetOrigin() {
     if (undefined === targetOrigin) {
