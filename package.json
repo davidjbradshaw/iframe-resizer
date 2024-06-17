@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "5.0.2",
+  "version": "5.1.0",
   "private": true,
   "type": "module",
   "license": "GPL-3.0",
@@ -25,7 +25,7 @@
     "rollup:test": "npm run eslint:fix && rollup -c --environment TEST",
     "rollup:test:ci": "rollup -c --environment TEST",
     "rollup:prod": "npm run eslint:fix && rollup -c",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --trace-deprecation --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "test:all": "time npm run rollup:test && npm run test && npm run test:int",
     "test:ci": "time npm run rollup:test:ci && npm run test && npm run test:int",
