@@ -79,22 +79,6 @@ A **Vue** component for the parent page.
 
 A simple **jQuery** wrapper for the parent page.
 
-## Platform Guides
-
-Guides for using _iframe-resizer_ on different web development platforms.
-
-### Wordpress
-
-[Wordpress setup guide](https://iframe-resizer.com/guides/wordpress/).
-
-### Google Apps Script
-
-[GAS setup guide](https://iframe-resizer.com/guides/google_apps_script/).
-
-## Framework API
-
-Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
-
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -Licensed under the [GPL V3](LICENSE)
 
