@@ -80,5 +80,5 @@ A **Vue** component for the parent page.
 A simple **jQuery** wrapper for the parent page.
 
 ---
-Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) -Licensed under the [GPL V3](LICENSE)
+Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
 
