@@ -4,6 +4,7 @@
     "consts",
     "delog",
     "filesize",
+    "logcapture",
     "Loggable",
     "sarif",
     "sonarjs"
