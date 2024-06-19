@@ -97,15 +97,15 @@
       </p>
     </div>
 
-    <!-- script>
+    <script>
       // Add some content to to show the effect of using data-iframe-size above
-      for (var i = 0; i < 10000; i++) {
+      for (let i = 0; i < 10_000; i++) {
         document.write(
-          '<div style="position: absolute">This is a test to see if the page will grow to accommodate the content.</div>'
-        );
+          '<div style="position: absolute">This is a test to see if the page will grow to accommodate the content.</div>',
+  );
       }
       
-    </script -->
+    </script>
 
     <script>
       const dataTable = document.getElementById('data')
@@ -126,12 +126,9 @@
         // You should not need to do this with same domain iframes.
         // offsetHeight: -1,
 
-        sizeSelector: "#abs",
+        // sizeSelector: "#abs",
 
         onReady: () => {
-          //   parentIFrame.getPageInfo((pageInfo) => {
-          //     dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
-          //   })
           parentIFrame.getParentProps((pageInfo) => {
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })

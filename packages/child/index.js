@@ -115,14 +115,14 @@ function getElementName(el) {
   }
 }
 
-function elementSnippet(el) {
+function elementSnippet(el, maxChars = 30) {
   const outer = el?.outerHTML?.toString()
 
   if (!outer) return el
 
-  return outer.length < 30
+  return outer.length < maxChars
     ? outer
-    : `${outer.slice(0, 30).replaceAll('\n', ' ')}...`
+    : `${outer.slice(0, maxChars).replaceAll('\n', ' ')}...`
 }
 
 // TODO: remove .join(' '), requires major test updates
@@ -847,13 +847,19 @@ function setupMutationObserver() {
 }
 
 const usedTags = new WeakSet()
+usedTags.add(document.documentElement)
+usedTags.add(document.body)
 
 function usedEl(el) {
   if (usedTags.has(el)) return true
   usedTags.add(el)
-  info(`\nHeight calculated from: ${getElementName(el)}`)
+  info(
+    `\nHeight calculated from: ${getElementName(el)} (${elementSnippet(el)})`,
+  )
   return false
 }
+
+let perfWarned = 0
 
 function getMaxElement(side) {
   const Side = capitalizeFirstLetter(side)
@@ -892,15 +898,19 @@ function getMaxElement(side) {
   const logMsg = `
 Parsed ${len} element${(len = SINGLE ? '' : 's')} in ${timer.toPrecision(3)}ms
 ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
-Position calculated from HTML element: ${elementSnippet(maxEl)}`
+Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
   if (timer < 1.1 || isInit || hasTags) {
     log(logMsg)
   } else {
+    if (perfWarned > timer) return maxVal
+    perfWarned = timer
     advise(
       `<rb>Performance Warning</>
 
 Calculating the page size took an excessive amount of time. To improve performance add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
+
+More info: https://iframe-resizer.com/performance.
 ${logMsg}`,
     )
   }
