@@ -84,7 +84,7 @@ A simple **jQuery** wrapper for the parent page.
 
 ### [@iframe-resizer/core](https://www.npmjs.com/package/@iframe-resizer/core)
 
-The core API for the parent page, used by `@iframe-resizer/parent`, plus the framework and library components.
+The core API for the parent page, used by `@iframe-resizer/parent`, plus the framework and library component versions.
 
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
