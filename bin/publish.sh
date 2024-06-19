@@ -31,8 +31,8 @@ git add .
 
 git commit -am "Release v$VERSION"
 git tag "v$VERSION"
-git push --tags
+git pull
 git push
-
+git push --tags
 
 cp -v js/* ../docs/public/js
