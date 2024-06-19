@@ -1061,8 +1061,8 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function chkTitle(iframeId) {
-    const { title } = document.getElementById(iframeId)
-    return title === ''
+    const title = settings[iframeId]?.iframe?.title
+    return title === '' || title === undefined
   }
 
   function processOptions(options) {
