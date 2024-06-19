@@ -132,9 +132,9 @@ const log = (...msg) =>
   // eslint-disable-next-line no-console
   logging && console?.log(formatLogMsg(...msg))
 
-// const info = (...msg) =>
-//   // eslint-disable-next-line no-console
-//   console?.info(formatAdvise(...msg))
+const info = (...msg) =>
+  // eslint-disable-next-line no-console
+  console?.info(formatLogMsg(...msg))
 
 const warn = (...msg) =>
   // eslint-disable-next-line no-console
@@ -472,7 +472,7 @@ function checkWidthMode() {
 }
 
 function checkMode() {
-  if (mode < -1) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
+  if (mode < 0) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
   if (version.codePointAt(0) > 4) return mode
   if (mode < 2) return adviser(getModeData(3))
   return mode
@@ -846,6 +846,15 @@ function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
 
+const usedTags = new WeakSet()
+
+function usedEl(el) {
+  if (usedTags.has(el)) return true
+  usedTags.add(el)
+  info(`\nHeight calculated from: ${getElementName(el)}`)
+  return false
+}
+
 function getMaxElement(side) {
   const Side = capitalizeFirstLetter(side)
 
@@ -878,6 +887,8 @@ function getMaxElement(side) {
 
   timer = performance.now() - timer
 
+  if (len > 1) usedEl(maxEl)
+
   const logMsg = `
 Parsed ${len} element${(len = SINGLE ? '' : 's')} in ${timer.toPrecision(3)}ms
 ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
@@ -893,6 +904,7 @@ Calculating the page size took an excessive amount of time. To improve performan
 ${logMsg}`,
     )
   }
+
   return maxVal
 }
 

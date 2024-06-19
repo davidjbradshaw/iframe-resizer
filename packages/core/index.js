@@ -14,7 +14,7 @@ import {
   setLogSettings,
   warn,
 } from '../common/log'
-import modal from '../common/modal'
+// import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
 import defaults from './values/defaults'
@@ -970,7 +970,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
 
     const { id } = iframe
 
-    if (settings[id].mode === -1) modal()
+    if (settings[id].mode === -1) return // modal()
     if (settings[id].mode === -2) return
 
     addEventListener(iframe, 'load', iFrameLoaded)
