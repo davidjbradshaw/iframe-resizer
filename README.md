@@ -30,7 +30,7 @@ When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes
 
 ### Setup and API guide
 
-Please see the _[iframe-resizer](https://iframe-resizer.com)_ website for setup guides and API documentation. This includes versions for:
+Please see the **_[iframe-resizer](https://iframe-resizer.com)_** website for setup guides and API documentation. This includes versions for:
 
 * **[Vanilla JS](https://iframe-resizer.com/setup)**
 * **[React](https://iframe-resizer.com/frameworks/react)**
