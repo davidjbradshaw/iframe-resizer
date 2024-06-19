@@ -79,6 +79,13 @@ A **Vue** component for the parent page.
 
 A simple **jQuery** wrapper for the parent page.
 
+
+## API
+
+### [@iframe-resizer/core](https://www.npmjs.com/package/@iframe-resizer/core)
+
+The core API for the parent page, used by `@iframe-resizer/parent` and the framework and library components.
+
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
 
