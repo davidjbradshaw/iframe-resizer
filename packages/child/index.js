@@ -862,7 +862,8 @@ function usedEl(el) {
   return false
 }
 
-let perfWarned = 0
+let perfWarned = PERF_TIME_LIMIT
+let lastTimer = PERF_TIME_LIMIT
 
 function getMaxElement(side) {
   const Side = capitalizeFirstLetter(side)
@@ -907,8 +908,8 @@ Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippe
 
   if (timer < PERF_TIME_LIMIT || len < PERF_MIN_ELEMENTS || hasTags || isInit) {
     log(logMsg)
-  } else if (perfWarned < timer) {
-    perfWarned = timer
+  } else if (perfWarned < timer && perfWarned < lastTimer) {
+    perfWarned = timer + 1
     advise(
       `<rb>Performance Warning</>
 
@@ -919,6 +920,7 @@ ${logMsg}`,
     )
   }
 
+  lastTimer = timer
   return maxVal
 }
 
