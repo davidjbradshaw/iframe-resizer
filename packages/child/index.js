@@ -866,8 +866,10 @@ function getMaxElement(side) {
 
   let elVal = 0
   let len = calcElements.length
-  let maxEl
-  let maxVal = 0
+  let maxEl = document.documentElement
+  let maxVal = hasTags
+    ? 0
+    : document.documentElement.getBoundingClientRect().bottom
   let timer = performance.now()
 
   calcElements.forEach((element) => {
@@ -896,11 +898,12 @@ function getMaxElement(side) {
   if (len > 1) usedEl(maxEl)
 
   const logMsg = `
-Parsed ${len} element${(len = SINGLE ? '' : 's')} in ${timer.toPrecision(3)}ms
+Parsed ${len} element${len === SINGLE ? '' : 's'} in ${timer.toPrecision(3)}ms
 ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
-  if (timer < 1.1 || isInit || hasTags) {
+  if (timer < 4 || len < 10 || hasTags || isInit) {
+    console.log('len', len)
     log(logMsg)
   } else {
     if (perfWarned > timer) return maxVal
