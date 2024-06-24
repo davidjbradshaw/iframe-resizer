@@ -5,6 +5,7 @@
     "consts",
     "delog",
     "filesize",
+    "iife",
     "logcapture",
     "Loggable",
     "sarif",

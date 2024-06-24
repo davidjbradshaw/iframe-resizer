@@ -3,19 +3,31 @@ import terser from '@rollup/plugin-terser'
 
 import createBanner from './banner.js'
 
-export const output = (file) => (format) => ({
-  banner: createBanner(file, format),
-  file: `dist/${file}/index.${format}.js`,
-  generatedCode: 'es2015',
-  format,
-  plugins: terser({
-    output: {
-      comments: false,
-      preamble: createBanner(file, format),
-    },
-  }),
-  sourcemap: false,
-})
+export const output = (file) => (format) => { 
+  const settings = {
+    banner: createBanner(file, format),
+    file: `dist/${file}/index.${format}.js`,
+    generatedCode: 'es2015',
+    format,
+    sourcemap: false,
+  }
+
+  if (
+    format === 'umd' ||
+    format === 'iife' ||
+    file === 'core' ||
+    file === 'child'
+  ) {
+    settings.plugins = terser({
+      output: {
+        comments: false,
+        preamble: createBanner(file, format),
+      },
+    })
+  }
+
+  return settings
+}
 
 export const outputs = (file) => {
   const out = output(file)
