@@ -3,6 +3,9 @@ import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
 
+const PERF_TIME_LIMIT = 4
+const PERF_MIN_ELEMENTS = 10
+
 const checkVisibilityOptions = {
   contentVisibilityAuto: true,
   opacityProperty: true,
@@ -902,10 +905,9 @@ Parsed ${len} element${len === SINGLE ? '' : 's'} in ${timer.toPrecision(3)}ms
 ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
-  if (timer < 4 || len < 10 || hasTags || isInit) {
+  if (timer < PERF_TIME_LIMIT || len < PERF_MIN_ELEMENTS || hasTags || isInit) {
     log(logMsg)
-  } else {
-    if (perfWarned > timer) return maxVal
+  } else if (perfWarned < timer) {
     perfWarned = timer
     advise(
       `<rb>Performance Warning</>
