@@ -909,7 +909,7 @@ Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippe
   if (timer < PERF_TIME_LIMIT || len < PERF_MIN_ELEMENTS || hasTags || isInit) {
     log(logMsg)
   } else if (perfWarned < timer && perfWarned < lastTimer) {
-    perfWarned = timer + 1
+    perfWarned = timer * 1.2
     advise(
       `<rb>Performance Warning</>
 
