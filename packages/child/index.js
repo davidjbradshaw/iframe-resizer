@@ -903,7 +903,6 @@ ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
   if (timer < 4 || len < 10 || hasTags || isInit) {
-    console.log('len', len)
     log(logMsg)
   } else {
     if (perfWarned > timer) return maxVal
