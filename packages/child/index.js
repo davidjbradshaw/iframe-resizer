@@ -4,7 +4,7 @@ import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
 
 const PERF_TIME_LIMIT = 4
-const PERF_MIN_ELEMENTS = 10
+const PERF_MIN_ELEMENTS = 99
 
 const checkVisibilityOptions = {
   contentVisibilityAuto: true,
@@ -914,8 +914,6 @@ Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippe
       `<rb>Performance Warning</>
 
 Calculating the page size took an excessive amount of time. To improve performance add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
-
-More info: https://iframe-resizer.com/performance.
 ${logMsg}`,
     )
   }
@@ -961,7 +959,9 @@ This causes <i>iframe-resizer</> to fall back to checking the position of every 
 To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe. 
   
 When present the ${side} margin of the ${furthest} element with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
-    
+
+More info: https://iframe-resizer.com/performance.
+
 (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
   advise(overflowDetectedMessage)
