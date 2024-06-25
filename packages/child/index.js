@@ -2,6 +2,7 @@ import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
+import { isOverflowed, observeOverflow } from './overflow'
 
 const PERF_TIME_LIMIT = 4
 const PERF_MIN_ELEMENTS = 99
@@ -440,6 +441,7 @@ function setupCalcElements() {
   const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
   hasTags = taggedElements.length > 0
   calcElements = hasTags ? taggedElements : getAllElements(document)()
+  if (!hasTags) observeOverflow(calcElements)
 }
 
 function checkCalcMode(calcMode, calcModeDefault, modes, type) {
@@ -881,16 +883,30 @@ function getMaxElement(side) {
     : document.documentElement.getBoundingClientRect().bottom
   let timer = performance.now()
 
+  const elements = []
+
   calcElements.forEach((element) => {
     if (
       !hasTags &&
       hasCheckVisibility &&
       !element.checkVisibility(checkVisibilityOptions)
     ) {
-      log(`Skipping non-visible element: ${getElementName(element)}`)
+      console.log(`Skipping non-visible element: ${getElementName(element)}`)
       len -= 1
       return
     }
+
+    if (!hasTags && !isOverflowed(element)) {
+      // console.log(
+      //   `Skipping contained element: ${getElementName(element)}`,
+      //   element,
+      // )
+      len -= 1
+      return
+    }
+    elements.push(element)
+
+    console.log(isOverflowed(element))
 
     elVal =
       element.getBoundingClientRect()[side] +
@@ -912,7 +928,7 @@ ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
   if (timer < PERF_TIME_LIMIT || len < PERF_MIN_ELEMENTS || hasTags || isInit) {
-    log(logMsg)
+    console.log(logMsg, elements)
   } else if (perfWarned < timer && perfWarned < lastTimer) {
     perfWarned = timer * 1.2
     advise(
