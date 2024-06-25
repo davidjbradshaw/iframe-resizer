@@ -99,6 +99,9 @@ const capitalizeFirstLetter = (string) =>
 
 const isDef = (value) => `${value}` !== '' && value !== undefined
 
+const usedTags = new WeakSet()
+const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
+
 function getElementName(el) {
   switch (true) {
     case !isDef(el):
@@ -171,6 +174,8 @@ function init() {
   setupMouseEvents()
   startEventListeners()
   inPageLinks = setupInPageLinks()
+  addUsedTag(document.documentElement)
+  addUsedTag(document.body)
   sendSize('init', 'Init message from host page', undefined, undefined, VERSION)
   sendTitle()
   onReady()
@@ -849,13 +854,9 @@ function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
 
-const usedTags = new WeakSet()
-usedTags.add(document.documentElement)
-usedTags.add(document.body)
-
 function usedEl(el) {
   if (usedTags.has(el)) return true
-  usedTags.add(el)
+  addUsedTag(el)
   info(
     `\nHeight calculated from: ${getElementName(el)} (${elementSnippet(el)})`,
   )
