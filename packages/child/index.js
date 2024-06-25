@@ -784,9 +784,13 @@ const checkPositionType = (element) => {
 const getAllNonStaticElements = () =>
   [...getAllElements(document)()].filter(checkPositionType)
 
+const resizeSet = new WeakSet()
+
 function setupResizeObservers(el) {
   if (!el) return
+  if (resizeSet.has(el)) return
   resizeObserver.observe(el)
+  resizeSet.add(el)
   log(`Attached resizeObserver: ${getElementName(el)}`)
 }
 
