@@ -886,16 +886,8 @@ function getMaxElement(side) {
     : document.documentElement.getBoundingClientRect().bottom
   let timer = performance.now()
 
-  const elements = [] // TODO: remove
-
   const targetElements =
     !hasTags && isOverflowed() ? getOverflowedElements() : calcElements
-
-  // console.log('!hasTags', !hasTags)
-  console.log('isOverflowed', isOverflowed())
-  console.log('test', !hasTags && isOverflowed())
-  console.log('targetElements', targetElements)
-  // console.log('calcElements', calcElements)
 
   let len = targetElements.length
 
@@ -908,9 +900,6 @@ function getMaxElement(side) {
       len -= 1
       return
     }
-
-    // console.log('element', element)
-    elements.push(element) // TODO: remove
 
     elVal =
       element.getBoundingClientRect()[side] +
@@ -932,7 +921,7 @@ ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
   if (timer < PERF_TIME_LIMIT || len < PERF_MIN_ELEMENTS || hasTags || isInit) {
-    console.log(logMsg, elements) // log(logMsg)
+    log(logMsg)
   } else if (perfWarned < timer && perfWarned < lastTimer) {
     perfWarned = timer * 1.2
     advise(
