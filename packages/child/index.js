@@ -79,7 +79,7 @@ let mouseEvents = false
 let myID = ''
 let offsetHeight
 let offsetWidth
-let observeOverflow = () => null
+let observeOverflow = (x) => x
 let resizeFrom = 'child'
 let resizeObserver = null
 let sameDomain = false
