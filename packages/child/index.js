@@ -2,7 +2,11 @@ import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { isOverflowed, observeOverflow } from './overflow'
+import {
+  getOverflowedElements,
+  isOverflowed,
+  observeOverflow,
+} from './overflow'
 
 const PERF_TIME_LIMIT = 4
 const PERF_MIN_ELEMENTS = 99
@@ -876,37 +880,37 @@ function getMaxElement(side) {
   const Side = capitalizeFirstLetter(side)
 
   let elVal = 0
-  let len = calcElements.length
   let maxEl = document.documentElement
   let maxVal = hasTags
     ? 0
     : document.documentElement.getBoundingClientRect().bottom
   let timer = performance.now()
 
-  const elements = []
+  const elements = [] // TODO: remove
 
-  calcElements.forEach((element) => {
+  const targetElements =
+    !hasTags && isOverflowed() ? getOverflowedElements() : calcElements
+
+  // console.log('!hasTags', !hasTags)
+  console.log('isOverflowed', isOverflowed())
+  console.log('test', !hasTags && isOverflowed())
+  console.log('targetElements', targetElements)
+  // console.log('calcElements', calcElements)
+
+  let len = targetElements.length
+
+  targetElements.forEach((element) => {
     if (
       !hasTags &&
-      hasCheckVisibility &&
+      hasCheckVisibility && // Safari missing checkVisibility
       !element.checkVisibility(checkVisibilityOptions)
     ) {
-      console.log(`Skipping non-visible element: ${getElementName(element)}`)
       len -= 1
       return
     }
 
-    if (!hasTags && !isOverflowed(element)) {
-      // console.log(
-      //   `Skipping contained element: ${getElementName(element)}`,
-      //   element,
-      // )
-      len -= 1
-      return
-    }
-    elements.push(element)
-
-    console.log(isOverflowed(element))
+    // console.log('element', element)
+    elements.push(element) // TODO: remove
 
     elVal =
       element.getBoundingClientRect()[side] +
@@ -928,7 +932,7 @@ ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
   if (timer < PERF_TIME_LIMIT || len < PERF_MIN_ELEMENTS || hasTags || isInit) {
-    console.log(logMsg, elements)
+    console.log(logMsg, elements) // log(logMsg)
   } else if (perfWarned < timer && perfWarned < lastTimer) {
     perfWarned = timer * 1.2
     advise(

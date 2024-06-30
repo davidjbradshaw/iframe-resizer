@@ -85,6 +85,8 @@
     <h4>Data returned by parentIFrame.getParentProps()</h4>
     <table id="data"></table>
 
+    <span id="insert"></span>
+
     <!-- 
       The data-iframe-size attribute tells iframe-resizer to use this element
       to calculate the height of the iframe, when the content overflows the
@@ -101,6 +103,7 @@
       // Add some content to to show the effect of using data-iframe-size above
       for (let i = 0; i < 500; i++) {
         const span = document.createElement('span')
+        span.style.setProperty('position', 'relative')
         span.textContent = `. `
         document.getElementById('insert').append(span);
       }
