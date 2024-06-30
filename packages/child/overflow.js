@@ -17,17 +17,12 @@ const callback = (entries) => {
       entry.boundingClientRect[side] >= entry.rootBounds[side]
     ) {
       entry.target.setAttribute(OVERFLOW, true)
-      // console.log(
-      //   entry.target,
-      //   entry.boundingClientRect[side],
-      //   entry.rootBounds[side],
-      // )
     } else {
       entry.target.removeAttribute(OVERFLOW)
     }
   })
   overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
-  console.log('overflowed', overflowedElements)
+  // console.log('overflowed', overflowedElements)
 }
 
 const observer = new IntersectionObserver(callback, options)
