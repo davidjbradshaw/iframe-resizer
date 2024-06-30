@@ -1,21 +1,33 @@
+const OVERFLOW = 'data-iframe-overflow'
+const side = 'bottom'
+
 const options = {
   root: document.documentElement,
   rootMargin: '0px',
   threshold: 1,
 }
 
-const overflowedElements = new WeakSet()
+let overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
 const observedElements = new WeakSet()
 
 const callback = (entries) => {
   entries.forEach((entry) => {
-    if (entry.intersectionRatio === 0) {
-      overflowedElements.add(entry.target)
+    if (
+      entry.boundingClientRect[side] === 0 ||
+      entry.boundingClientRect[side] >= entry.rootBounds[side]
+    ) {
+      entry.target.setAttribute(OVERFLOW, true)
+      // console.log(
+      //   entry.target,
+      //   entry.boundingClientRect[side],
+      //   entry.rootBounds[side],
+      // )
     } else {
-      overflowedElements.delete(entry.target)
+      entry.target.removeAttribute(OVERFLOW)
     }
   })
-  console.log('overflowedElements', overflowedElements)
+  overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
+  console.log('overflowed', overflowedElements)
 }
 
 const observer = new IntersectionObserver(callback, options)
@@ -28,4 +40,6 @@ export const observeOverflow = (nodeList) => {
   })
 }
 
-export const isOverflowed = (el) => overflowedElements.has(el)
+export const isOverflowed = () => overflowedElements.length > 0
+
+export const getOverflowedElements = () => overflowedElements
