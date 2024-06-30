@@ -5,7 +5,7 @@ import { getModeData } from '../common/mode'
 import {
   getOverflowedElements,
   isOverflowed,
-  observeOverflow,
+  overflowObserver,
 } from './overflow'
 
 const PERF_TIME_LIMIT = 4
@@ -79,6 +79,7 @@ let mouseEvents = false
 let myID = ''
 let offsetHeight
 let offsetWidth
+let observeOverflow = () => null
 let resizeFrom = 'child'
 let resizeObserver = null
 let sameDomain = false
@@ -177,6 +178,7 @@ function init() {
   setupCalcElements()
   setupPublicMethods()
   setupMouseEvents()
+  setupObserveOverflow()
   startEventListeners()
   inPageLinks = setupInPageLinks()
   addUsedTag(document.documentElement)
@@ -185,6 +187,13 @@ function init() {
   sendTitle()
   onReady()
   isInit = false
+}
+
+function setupObserveOverflow() {
+  if (calculateHeight === calculateWidth) return
+  observeOverflow = overflowObserver({
+    side: calculateHeight ? 'bottom' : 'right',
+  })
 }
 
 function sendTitle() {
@@ -409,7 +418,7 @@ function checkDeprecatedAttrs() {
     document.querySelectorAll(`[${attr}]`).forEach((el) => {
       found = true
       el.removeAttribute(attr)
-      el.setAttribute(SIZE_ATTR, null)
+      el.setAttribute(SIZE_ATTR, true)
     })
 
   checkAttrs('data-iframe-height')

@@ -1,5 +1,5 @@
 const OVERFLOW = 'data-iframe-overflow'
-const side = 'bottom'
+let side = 'bottom'
 
 const options = {
   root: document.documentElement,
@@ -7,7 +7,7 @@ const options = {
   threshold: 1,
 }
 
-let overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
+let overflowedElements = []
 const observedElements = new WeakSet()
 
 const callback = (entries) => {
@@ -27,7 +27,11 @@ const callback = (entries) => {
 
 const observer = new IntersectionObserver(callback, options)
 
-export const observeOverflow = (nodeList) => {
+export const overflowObserver = (options) => (nodeList) => {
+  if (options && options.side) {
+    side = options.side
+  }
+
   nodeList.forEach((el) => {
     if (observedElements.has(el)) return
     observer.observe(el)
