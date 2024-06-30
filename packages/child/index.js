@@ -873,11 +873,11 @@ function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
 
-function usedEl(el) {
+function usedEl(el, Side) {
   if (usedTags.has(el)) return true
   addUsedTag(el)
   info(
-    `\nHeight calculated from: ${getElementName(el)} (${elementSnippet(el)})`,
+    `\n${Side} position calculated from: ${getElementName(el)} (${elementSnippet(el)})`,
   )
   return false
 }
@@ -922,7 +922,7 @@ function getMaxElement(side) {
 
   timer = performance.now() - timer
 
-  if (len > 1) usedEl(maxEl)
+  if (len > 1) usedEl(maxEl, Side)
 
   const logMsg = `
 Parsed ${len} element${len === SINGLE ? '' : 's'} in ${timer.toPrecision(3)}ms
