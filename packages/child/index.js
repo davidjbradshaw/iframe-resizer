@@ -2,7 +2,7 @@ import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { once } from '../common/utils'
+import { id, once } from '../common/utils'
 import {
   getOverflowedElements,
   isOverflowed,
@@ -80,7 +80,7 @@ let mouseEvents = false
 let myID = ''
 let offsetHeight
 let offsetWidth
-let observeOverflow = (x) => x
+let observeOverflow = id
 let resizeFrom = 'child'
 let resizeObserver = null
 let sameDomain = false
