@@ -958,7 +958,7 @@ const getAllMeasurements = (dimension) => [
 
 const getAllElements = (element) => () =>
   element.querySelectorAll(
-    '* :not(head):not(body):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
+    '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
   )
 
 const prevScrollSize = {
