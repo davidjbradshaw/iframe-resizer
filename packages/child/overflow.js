@@ -3,7 +3,7 @@ import { id } from '../common/utils'
 const OVERFLOW = 'data-iframe-overflow'
 let side = 'bottom'
 
-let start = id
+let init = id
 
 const options = {
   root: document.documentElement,
@@ -26,14 +26,14 @@ const callback = (entries) => {
     }
   })
   overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
-  start()
+  init()
 }
 
 const observer = new IntersectionObserver(callback, options)
 
 export const overflowObserver = (options) => {
   side = options.side
-  start = options.start
+  init = options.init
 
   return (nodeList) =>
     nodeList.forEach((el) => {
