@@ -979,42 +979,6 @@ const getAllElements = (element) => () =>
     '* :not(head):not(body):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
   )
 
-// const switchChecked = false
-
-// function switchToAutoOverflow({ getDimension, isHeight }) {
-//   if (!switchChecked) {
-//     // If this just happens once, then it is likely we just came from a large page.
-//     switchChecked = true
-//     return getDimension.taggedElement()
-//   }
-
-//   // const furthest = isHeight ? 'lowest' : 'right most'
-//   // const side = isHeight ? 'bottom' : 'right'
-//   //   const overflowDetectedMessage = `<rb>Detected content overflowing html element</>
-
-//   // This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visible HTML element will have a performance impact on more complex pages.
-
-//   // To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe.
-
-//   // When present the ${side} margin of the ${furthest} element with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
-
-//   // More info: https://iframe-resizer.com/performance.
-
-//   // (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
-
-//   //   advise(overflowDetectedMessage)
-
-//   if (isHeight) {
-//     log(`Switching from ${heightCalcMode} to autoOverflow`)
-//     heightCalcMode = 'autoOverflow'
-//   } else {
-//     log(`Switching from ${widthCalcMode} to autoOverflow`)
-//     widthCalcMode = 'autoOverflow'
-//   }
-
-//   return getDimension.taggedElement()
-// }
-
 const prevScrollSize = {
   height: 0,
   width: 0,
@@ -1035,7 +999,7 @@ function getAutoSize(getDimension) {
     return boundingSize
   }
 
-  const isOverflowed = isOverflowed()
+  const hasOverflow = isOverflowed()
   const isHeight = getDimension === getHeight
   const dimension = isHeight ? 'height' : 'width'
   const boundingSize = getDimension.documentElementBoundingClientRect()
@@ -1051,14 +1015,11 @@ function getAutoSize(getDimension) {
     case hasTags:
       return getDimension.taggedElement()
 
-    case !isOverflowed &&
+    case !hasOverflow &&
       prevBoundingSize[dimension] === 0 &&
       prevScrollSize[dimension] === 0:
       log(`Initial page size values: ${sizes}`)
-      if (getDimension.taggedElement(true) <= ceilBoundingSize) {
-        return returnBoundingClientRect()
-      }
-      break
+      return returnBoundingClientRect()
 
     case triggerLocked &&
       boundingSize === prevBoundingSize[dimension] &&
@@ -1070,28 +1031,20 @@ function getAutoSize(getDimension) {
       log(`Page is hidden: ${sizes}`)
       return scrollSize
 
-    case !isOverflowed &&
+    case !hasOverflow &&
       boundingSize !== prevBoundingSize[dimension] &&
       scrollSize <= prevScrollSize[dimension]:
       log(
         `New HTML bounding size: ${sizes}`,
         'Previous bounding size:',
         prevBoundingSize[dimension],
-        'Bounding size:',
-        boundingSize,
       )
       return returnBoundingClientRect()
 
     case !isHeight:
       return getDimension.taggedElement()
-    // return autoOverflow
-    //   ? getDimension.taggedElement()
-    //   : switchToAutoOverflow({
-    //       getDimension,
-    //       isHeight,
-    //     })
 
-    case !isOverflowed && boundingSize < prevBoundingSize[dimension]:
+    case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
       log('HTML bounding size decreased:', sizes)
       return returnBoundingClientRect()
 
@@ -1102,13 +1055,6 @@ function getAutoSize(getDimension) {
     case boundingSize > scrollSize:
       log(`Page size < HTML bounding size: ${sizes}`)
       return returnBoundingClientRect()
-
-    // case !autoOverflow:
-    //   log(`Switch to autoOverflow: ${sizes}`)
-    //   return switchToAutoOverflow({
-    //     getDimension,
-    //     isHeight,
-    //   })
 
     default:
       log(`Content overflowing HTML element: ${sizes}`)
