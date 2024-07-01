@@ -191,31 +191,31 @@ function init() {
 }
 
 // Continue init after intersection observer has been setup
-const start = once(() => {
+const initContinue = once(() => {
   sendSize('init', 'Init message from host page', undefined, undefined, VERSION)
   sendTitle()
-  startEventListeners()
+  initEventListeners()
   onReady()
   isInit = false
   log('Initialization complete')
   log('---')
 })
 
+function setupObserveOverflow() {
+  if (calculateHeight === calculateWidth) return
+  observeOverflow = overflowObserver({
+    init: initContinue,
+    side: calculateHeight ? 'bottom' : 'right',
+  })
+}
+
 function setupCalcElements() {
   const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
   hasTags = taggedElements.length > 0
   log(`Tagged elements found: ${hasTags}`)
   calcElements = hasTags ? taggedElements : getAllElements(document)()
-  if (hasTags) setTimeout(start)
+  if (hasTags) setTimeout(initContinue)
   else observeOverflow(calcElements)
-}
-
-function setupObserveOverflow() {
-  if (calculateHeight === calculateWidth) return
-  observeOverflow = overflowObserver({
-    start,
-    side: calculateHeight ? 'bottom' : 'right',
-  })
 }
 
 function sendTitle() {
@@ -499,7 +499,7 @@ function checkMode() {
   return mode
 }
 
-function startEventListeners() {
+function initEventListeners() {
   if (autoResize !== true) {
     log('Auto Resize disabled')
     return
@@ -648,7 +648,7 @@ function setupPublicMethods() {
     autoResize: (resize) => {
       if (resize === true && autoResize === false) {
         autoResize = true
-        startEventListeners()
+        initEventListeners()
       } else if (resize === false && autoResize === true) {
         autoResize = false
         stopEventListeners()
