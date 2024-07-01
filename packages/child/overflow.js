@@ -11,7 +11,7 @@ const options = {
   threshold: 1,
 }
 
-let overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
+let overflowedElements = []
 const observedElements = new WeakSet()
 
 const callback = (entries) => {
@@ -43,6 +43,6 @@ export const overflowObserver = (options) => {
     })
 }
 
-export const isOverflowed = () => overflowedElements?.length > 0 || false
+export const isOverflowed = () => overflowedElements.length > 0
 
 export const getOverflowedElements = () => overflowedElements
