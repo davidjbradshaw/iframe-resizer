@@ -14,17 +14,15 @@ const options = {
 let overflowedElements = []
 const observedElements = new WeakSet()
 
+const isTarget = (entry) =>
+  entry.boundingClientRect[side] === 0 ||
+  entry.boundingClientRect[side] >= entry.rootBounds[side]
+
 const callback = (entries) => {
   entries.forEach((entry) => {
-    if (
-      entry.boundingClientRect[side] === 0 ||
-      entry.boundingClientRect[side] >= entry.rootBounds[side]
-    ) {
-      entry.target.toggleAttribute(OVERFLOW, true)
-    } else {
-      entry.target.removeAttribute(OVERFLOW)
-    }
+    entry.target.toggleAttribute(OVERFLOW, isTarget(entry))
   })
+
   overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
   init()
 }
