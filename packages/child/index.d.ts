@@ -127,8 +127,8 @@ declare module '@iframe-resizer/child' {
 
   global {
     interface Window {
-      iFrameResizer: iframeResizer.IFramePageOptions
-      parentIFrame: iframeResizer.IFramePage
+      iFrameResizer: IFramePageOptions
+      parentIFrame: IFramePage
     }
   }
 }
