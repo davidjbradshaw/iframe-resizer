@@ -2,6 +2,7 @@ import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
+import { once } from '../common/utils'
 import {
   getOverflowedElements,
   isOverflowed,
@@ -146,7 +147,7 @@ const log = (...msg) =>
 
 const info = (...msg) =>
   // eslint-disable-next-line no-console
-  console?.info(formatLogMsg(...msg))
+  console?.info(`[iframe-resizer][${myID}]`, ...msg)
 
 const warn = (...msg) =>
   // eslint-disable-next-line no-console
@@ -159,39 +160,61 @@ const advise = (...msg) =>
 const adviser = (msg) => advise(msg)
 
 function init() {
-  checkCrossDomain()
   readDataFromParent()
-  log(`Initialising iFrame v${VERSION} (${window.location.href})`)
   readDataFromPage()
-  setMargin()
-  setBodyStyle('background', bodyBackground)
-  setBodyStyle('padding', bodyPadding)
-  injectClearFixIntoBodyElement()
-  stopInfiniteResizingOfIFrame()
-  applySizeSelector()
+
+  log(`Initialising iFrame v${VERSION} (${window.location.href})`)
+
+  checkCrossDomain()
   checkMode()
   checkVersion()
   checkHeightMode()
   checkWidthMode()
   checkDeprecatedAttrs()
   checkHasDataSizeAttributes()
+
+  setupObserveOverflow()
   setupCalcElements()
   setupPublicMethods()
   setupMouseEvents()
-  setupObserveOverflow()
-  startEventListeners()
   inPageLinks = setupInPageLinks()
+
   addUsedTag(document.documentElement)
   addUsedTag(document.body)
+
+  setMargin()
+  setBodyStyle('background', bodyBackground)
+  setBodyStyle('padding', bodyPadding)
+
+  injectClearFixIntoBodyElement()
+  stopInfiniteResizingOfIFrame()
+  applySizeSelector()
+}
+
+// Continue init after intersection observer has been setup
+const start = once(() => {
   sendSize('init', 'Init message from host page', undefined, undefined, VERSION)
   sendTitle()
+  startEventListeners()
   onReady()
   isInit = false
+  log('Initialization complete')
+  log('---')
+})
+
+function setupCalcElements() {
+  const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
+  hasTags = taggedElements.length > 0
+  log(`Tagged elements found: ${hasTags}`)
+  calcElements = hasTags ? taggedElements : getAllElements(document)()
+  if (hasTags) setTimeout(start)
+  else observeOverflow(calcElements)
 }
 
 function setupObserveOverflow() {
   if (calculateHeight === calculateWidth) return
   observeOverflow = overflowObserver({
+    start,
     side: calculateHeight ? 'bottom' : 'right',
   })
 }
@@ -418,7 +441,7 @@ function checkDeprecatedAttrs() {
     document.querySelectorAll(`[${attr}]`).forEach((el) => {
       found = true
       el.removeAttribute(attr)
-      el.setAttribute(SIZE_ATTR, true)
+      el.toggleAttribute(SIZE_ATTR, true)
     })
 
   checkAttrs('data-iframe-height')
@@ -448,13 +471,6 @@ function checkHasDataSizeAttributes() {
       )
     }
   }
-}
-
-function setupCalcElements() {
-  const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
-  hasTags = taggedElements.length > 0
-  calcElements = hasTags ? taggedElements : getAllElements(document)()
-  if (!hasTags) observeOverflow(calcElements)
 }
 
 function checkCalcMode(calcMode, calcModeDefault, modes, type) {
@@ -873,13 +889,18 @@ function setupMutationObserver() {
   bodyObserver = setupBodyMutationObserver()
 }
 
-function usedEl(el, Side) {
-  if (usedTags.has(el)) return true
-  addUsedTag(el)
+let lastEl = null
+
+function usedEl(el, Side, time, len) {
+  if (usedTags.has(el) || lastEl === el || (hasTags && len <= 1)) return
+  // addUsedTag(el)
+  lastEl = el
+
   info(
-    `\n${Side} position calculated from: ${getElementName(el)} (${elementSnippet(el)})`,
+    `\n${Side} position calculated from:\n`,
+    el,
+    `\nParsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${time}ms`, // ${getElementName(el)} (${elementSnippet(el)})
   )
-  return false
 }
 
 let perfWarned = PERF_TIME_LIMIT
@@ -920,12 +941,12 @@ function getMaxElement(side) {
     }
   })
 
-  timer = performance.now() - timer
+  timer = (performance.now() - timer).toPrecision(1)
 
-  if (len > 1) usedEl(maxEl, Side)
+  usedEl(maxEl, Side, timer, len)
 
   const logMsg = `
-Parsed ${len} element${len === SINGLE ? '' : 's'} in ${timer.toPrecision(3)}ms
+Parsed ${len} element${len === SINGLE ? '' : 's'} in ${timer}ms
 ${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
 Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
 
@@ -955,50 +976,44 @@ const getAllMeasurements = (dimension) => [
 
 const getAllElements = (element) => () =>
   element.querySelectorAll(
-    '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
+    '* :not(head):not(body):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
   )
 
-let switchChecked = false
+// const switchChecked = false
 
-function switchToAutoOverflow({
-  ceilBoundingSize,
-  dimension,
-  getDimension,
-  isHeight,
-  scrollSize,
-}) {
-  if (!switchChecked) {
-    // If this just happens once, then it is likely we just came from a large page.
-    switchChecked = true
-    return getDimension.taggedElement()
-  }
+// function switchToAutoOverflow({ getDimension, isHeight }) {
+//   if (!switchChecked) {
+//     // If this just happens once, then it is likely we just came from a large page.
+//     switchChecked = true
+//     return getDimension.taggedElement()
+//   }
 
-  const furthest = isHeight ? 'lowest' : 'right most'
-  const side = isHeight ? 'bottom' : 'right'
-  const overflowDetectedMessage = `<rb>Detected content overflowing html element</>
-    
-This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visible HTML element will have a performance impact on more complex pages. 
+//   // const furthest = isHeight ? 'lowest' : 'right most'
+//   // const side = isHeight ? 'bottom' : 'right'
+//   //   const overflowDetectedMessage = `<rb>Detected content overflowing html element</>
 
-To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe. 
-  
-When present the ${side} margin of the ${furthest} element with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
+//   // This causes <i>iframe-resizer</> to fall back to checking the position of every element on the page in order to calculate the correct dimensions of the iframe. Inspecting the size, ${side} margin, and position of every visible HTML element will have a performance impact on more complex pages.
 
-More info: https://iframe-resizer.com/performance.
+//   // To fix this issue, and remove this warning, you can either ensure the content of the page does not overflow the <b><HTML></> element or alternatively you can add the attribute <b>data-iframe-size</> to the elements on the page that you want <i>iframe-resizer</> to use when calculating the dimensions of the iframe.
 
-(Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
+//   // When present the ${side} margin of the ${furthest} element with a <b>data-iframe-size</> attribute will be used to set the ${dimension} of the iframe.
 
-  advise(overflowDetectedMessage)
+//   // More info: https://iframe-resizer.com/performance.
 
-  if (isHeight) {
-    log(`Switching from ${heightCalcMode} to autoOverflow`)
-    heightCalcMode = 'autoOverflow'
-  } else {
-    log(`Switching from ${widthCalcMode} to autoOverflow`)
-    widthCalcMode = 'autoOverflow'
-  }
+//   // (Page size: ${scrollSize} > document size: ${ceilBoundingSize})`
 
-  return getDimension.taggedElement()
-}
+//   //   advise(overflowDetectedMessage)
+
+//   if (isHeight) {
+//     log(`Switching from ${heightCalcMode} to autoOverflow`)
+//     heightCalcMode = 'autoOverflow'
+//   } else {
+//     log(`Switching from ${widthCalcMode} to autoOverflow`)
+//     widthCalcMode = 'autoOverflow'
+//   }
+
+//   return getDimension.taggedElement()
+// }
 
 const prevScrollSize = {
   height: 0,
@@ -1013,13 +1028,14 @@ const prevBoundingSize = {
 const getAdjustedScroll = (getDimension) =>
   getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
-function getAutoSize(getDimension, autoOverflow) {
+function getAutoSize(getDimension) {
   function returnBoundingClientRect() {
     prevBoundingSize[dimension] = boundingSize
     prevScrollSize[dimension] = scrollSize
     return boundingSize
   }
 
+  const isOverflowed = isOverflowed()
   const isHeight = getDimension === getHeight
   const dimension = isHeight ? 'height' : 'width'
   const boundingSize = getDimension.documentElementBoundingClientRect()
@@ -1032,7 +1048,10 @@ function getAutoSize(getDimension, autoOverflow) {
     case !getDimension.enabled():
       return scrollSize
 
-    case !autoOverflow &&
+    case hasTags:
+      return getDimension.taggedElement()
+
+    case !isOverflowed &&
       prevBoundingSize[dimension] === 0 &&
       prevScrollSize[dimension] === 0:
       log(`Initial page size values: ${sizes}`)
@@ -1051,28 +1070,28 @@ function getAutoSize(getDimension, autoOverflow) {
       log(`Page is hidden: ${sizes}`)
       return scrollSize
 
-    case !autoOverflow &&
+    case !isOverflowed &&
       boundingSize !== prevBoundingSize[dimension] &&
       scrollSize <= prevScrollSize[dimension]:
       log(
         `New HTML bounding size: ${sizes}`,
         'Previous bounding size:',
         prevBoundingSize[dimension],
+        'Bounding size:',
+        boundingSize,
       )
       return returnBoundingClientRect()
 
     case !isHeight:
-      return autoOverflow
-        ? getDimension.taggedElement()
-        : switchToAutoOverflow({
-            ceilBoundingSize,
-            dimension,
-            getDimension,
-            isHeight,
-            scrollSize,
-          })
+      return getDimension.taggedElement()
+    // return autoOverflow
+    //   ? getDimension.taggedElement()
+    //   : switchToAutoOverflow({
+    //       getDimension,
+    //       isHeight,
+    //     })
 
-    case !autoOverflow && boundingSize < prevBoundingSize[dimension]:
+    case !isOverflowed && boundingSize < prevBoundingSize[dimension]:
       log('HTML bounding size decreased:', sizes)
       return returnBoundingClientRect()
 
@@ -1084,15 +1103,12 @@ function getAutoSize(getDimension, autoOverflow) {
       log(`Page size < HTML bounding size: ${sizes}`)
       return returnBoundingClientRect()
 
-    case !autoOverflow:
-      log(`Switch to autoOverflow: ${sizes}`)
-      return switchToAutoOverflow({
-        ceilBoundingSize,
-        dimension,
-        getDimension,
-        isHeight,
-        scrollSize,
-      })
+    // case !autoOverflow:
+    //   log(`Switch to autoOverflow: ${sizes}`)
+    //   return switchToAutoOverflow({
+    //     getDimension,
+    //     isHeight,
+    //   })
 
     default:
       log(`Content overflowing HTML element: ${sizes}`)
@@ -1116,8 +1132,8 @@ const getHeight = {
   enabled: () => calculateHeight,
   getOffset: () => offsetHeight,
   type: 'height',
-  auto: () => getAutoSize(getHeight, false),
-  autoOverflow: () => getAutoSize(getHeight, true),
+  auto: () => getAutoSize(getHeight),
+  autoOverflow: () => getAutoSize(getHeight),
   bodyOffset: getBodyOffset,
   bodyScroll: () => document.body.scrollHeight,
   offset: () => getHeight.bodyOffset(), // Backwards compatibility
@@ -1137,8 +1153,8 @@ const getWidth = {
   enabled: () => calculateWidth,
   getOffset: () => offsetWidth,
   type: 'width',
-  auto: () => getAutoSize(getWidth, false),
-  autoOverflow: () => getAutoSize(getWidth, true),
+  auto: () => getAutoSize(getWidth),
+  autoOverflow: () => getAutoSize(getWidth),
   bodyScroll: () => document.body.scrollWidth,
   bodyOffset: () => document.body.offsetWidth,
   custom: () => customCalcMethods.width(),

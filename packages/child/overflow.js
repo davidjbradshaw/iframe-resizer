@@ -1,5 +1,9 @@
+import { id } from '../common/utils'
+
 const OVERFLOW = 'data-iframe-overflow'
 let side = 'bottom'
+
+let start = id
 
 const options = {
   root: document.documentElement,
@@ -7,7 +11,7 @@ const options = {
   threshold: 1,
 }
 
-let overflowedElements = []
+let overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
 const observedElements = new WeakSet()
 
 const callback = (entries) => {
@@ -16,29 +20,29 @@ const callback = (entries) => {
       entry.boundingClientRect[side] === 0 ||
       entry.boundingClientRect[side] >= entry.rootBounds[side]
     ) {
-      entry.target.setAttribute(OVERFLOW, true)
+      entry.target.toggleAttribute(OVERFLOW, true)
     } else {
       entry.target.removeAttribute(OVERFLOW)
     }
   })
   overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
-  // console.log('overflowed', overflowedElements)
+  start()
 }
 
 const observer = new IntersectionObserver(callback, options)
 
-export const overflowObserver = (options) => (nodeList) => {
-  if (options && options.side) {
-    side = options.side
-  }
+export const overflowObserver = (options) => {
+  side = options.side
+  start = options.start
 
-  nodeList.forEach((el) => {
-    if (observedElements.has(el)) return
-    observer.observe(el)
-    observedElements.add(el)
-  })
+  return (nodeList) =>
+    nodeList.forEach((el) => {
+      if (observedElements.has(el)) return
+      observer.observe(el)
+      observedElements.add(el)
+    })
 }
 
-export const isOverflowed = () => overflowedElements.length > 0
+export const isOverflowed = () => overflowedElements?.length > 0 || false
 
 export const getOverflowedElements = () => overflowedElements
