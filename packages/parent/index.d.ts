@@ -9,10 +9,9 @@
  */
 
 declare module '@iframe-resizer/parent' {
-
   namespace iframeResizer {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameObject {
+    export interface IFrameObject {
       close(): void
 
       moveToAnchor(anchor: string): void
@@ -25,12 +24,12 @@ declare module '@iframe-resizer/parent' {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameComponent extends HTMLIFrameElement {
+    export interface IFrameComponent extends HTMLIFrameElement {
       iFrameResizer: IFrameObject
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameOptions {
+    export interface IFrameOptions {
       /**
        * Override the body background style in the iFrame.
        */
@@ -139,7 +138,7 @@ declare module '@iframe-resizer/parent' {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameMouseData {
+    export interface IFrameMouseData {
       iframe: IFrameComponent
       height: number
       width: number
@@ -147,7 +146,7 @@ declare module '@iframe-resizer/parent' {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameResizedData {
+    export interface IFrameResizedData {
       iframe: IFrameComponent
       height: number
       width: number
@@ -155,13 +154,13 @@ declare module '@iframe-resizer/parent' {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameMessageData {
+    export interface IFrameMessageData {
       iframe: IFrameComponent
       message: any
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFrameScrollData {
+    export interface IFrameScrollData {
       x: number
       y: number
     }
@@ -178,5 +177,5 @@ declare module '@iframe-resizer/parent' {
     target: string | HTMLElement,
   ): iframeResizer.IFrameComponent[]
 
-  export default iframeResize;
+  export default iframeResize
 }

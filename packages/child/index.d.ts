@@ -11,7 +11,7 @@
 declare module '@iframe-resizer/child' {
   namespace iframeResizer {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFramePageOptions {
+    export interface IFramePageOptions {
       /**
        * This option allows you to restrict the domain of the parent page,
        * to prevent other sites mimicking your parent page.
@@ -30,7 +30,7 @@ declare module '@iframe-resizer/child' {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    interface IFramePage {
+    export interface IFramePage {
       /**
        * Turn autoResizing of the iFrame on and off. Returns bool of current state.
        */
@@ -89,7 +89,7 @@ declare module '@iframe-resizer/child' {
       size(customHeight?: string, customWidth?: string): void
     }
 
-    interface ParentProps {
+    export interface ParentProps {
       /**
        * The values returned by iframe.getBoundingClientRect()
        */
@@ -133,5 +133,4 @@ declare module '@iframe-resizer/child' {
       parentIFrame: iframeResizer.IFramePage
     }
   }
-
 }
