@@ -171,7 +171,6 @@ function init() {
   checkHeightMode()
   checkWidthMode()
   checkDeprecatedAttrs()
-  checkHasDataSizeAttributes()
 
   setupObserveOverflow()
   setupCalcElements()
@@ -453,23 +452,6 @@ function checkDeprecatedAttrs() {
           
 The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been deprecated and replaced with the single <b>data-iframe-size</> attribute. Use of the old attributes will be removed in a future version of <i>iframe-resizer</>.`,
     )
-  }
-}
-
-function checkHasDataSizeAttributes() {
-  if (document.querySelectorAll(`[${SIZE_ATTR}]`).length > 0) {
-    if (heightCalcMode === 'auto') {
-      heightCalcMode = 'autoOverflow'
-      log(
-        'data-iframe-size attribute found on page, using "autoOverflow" calculation method for height',
-      )
-    }
-    if (widthCalcMode === 'auto') {
-      widthCalcMode = 'autoOverflow'
-      log(
-        'data-iframe-size attribute found on page, using "autoOverflow" calculation method for width',
-      )
-    }
   }
 }
 
@@ -1077,9 +1059,7 @@ const getBodyOffset = () => {
 const getHeight = {
   enabled: () => calculateHeight,
   getOffset: () => offsetHeight,
-  type: 'height',
   auto: () => getAutoSize(getHeight),
-  autoOverflow: () => getAutoSize(getHeight),
   bodyOffset: getBodyOffset,
   bodyScroll: () => document.body.scrollHeight,
   offset: () => getHeight.bodyOffset(), // Backwards compatibility
@@ -1098,9 +1078,7 @@ const getHeight = {
 const getWidth = {
   enabled: () => calculateWidth,
   getOffset: () => offsetWidth,
-  type: 'width',
   auto: () => getAutoSize(getWidth),
-  autoOverflow: () => getAutoSize(getWidth),
   bodyScroll: () => document.body.scrollWidth,
   bodyOffset: () => document.body.offsetWidth,
   custom: () => customCalcMethods.width(),
