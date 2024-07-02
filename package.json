@@ -16,6 +16,7 @@
     "build:beta": "time npm run rollup:beta",
     "build:dev": "time npm run rollup:debug",
     "build:prod": "time npm run rollup:prod",
+    "build:latest": "time npm run rollup:prod",
     "build:test": "time npm run test:all",
     "eslint": "eslint *.js packages/ **/*.html **/*.jsx --color",
     "eslint:fix": "npm run eslint -- --fix",
