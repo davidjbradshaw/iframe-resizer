@@ -8,32 +8,32 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-if [[ $VERSION = *"-"* ]] && [ $1 = "prod" ]; then
-    echo "Cannot publish a beta version as prod"
+if [[ $VERSION = *"-"* ]] && [ $1 = "latest" ]; then
+    echo "Cannot publish a beta version as latest"
     echo
     exit 1
 fi
 
 echo
-echo "Publishing version $VERSION"
+echo "Publishing version $VERSION as $1"
 echo
 
 npm run build:$1
 
 cd dist/parent
-npm publish
+npm publish --tag $1
 cd ../child
-npm publish
+npm publish --tag $1 
 cd ../core
-npm publish
+npm publish --tag $1
 cd ../jquery
-npm publish
+npm publish --tag $1
 cd ../react
-npm publish
+npm publish --tag $1
 cd ../vue
-npm publish
+npm publish --tag $1
 
-if [ $1 = "beta" ] 
+if [ $1 != "latest" ] 
 then
   exit 0
 fi
