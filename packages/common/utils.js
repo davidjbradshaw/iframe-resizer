@@ -9,3 +9,5 @@ export const once = (fn) => {
       : ((done = true), Reflect.apply(fn, this, arguments))
   }
 }
+
+export const id = (x) => x
