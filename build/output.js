@@ -3,6 +3,8 @@ import terser from '@rollup/plugin-terser'
 
 import createBanner from './banner.js'
 
+const { BETA } = process.env
+
 export const output = (file) => (format) => { 
   const settings = {
     banner: createBanner(file, format),
@@ -24,6 +26,7 @@ export const output = (file) => (format) => {
         preamble: createBanner(file, format),
       },
     })
+    settings.sourcemap = BETA || false
   }
 
   return settings

@@ -13,10 +13,11 @@ import { pluginsBase, pluginsProd, injectVersion } from './build/plugins.js'
 import pkg from './package.json' with { type: 'json' }
 import typescript from '@rollup/plugin-typescript'
 
-const { ROLLUP_WATCH, DEBUG, TEST } = process.env
+const { BETA, ROLLUP_WATCH, DEBUG, TEST } = process.env
 
 const debugMode = DEBUG || ROLLUP_WATCH || false
-const sourcemap = debugMode
+const betaMode = BETA || false
+const sourcemap = debugMode || betaMode || false
 const logging = debugMode || TEST
 
 const outputPlugins = (file, format) => ({
