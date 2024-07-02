@@ -1,4 +1,11 @@
-import { BASE, SINGLE, SIZE_ATTR, VERSION } from '../common/consts'
+import {
+  BASE,
+  HEIGHT_EDGE,
+  SINGLE,
+  SIZE_ATTR,
+  VERSION,
+  WIDTH_EDGE,
+} from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
@@ -205,7 +212,7 @@ function setupObserveOverflow() {
   if (calculateHeight === calculateWidth) return
   observeOverflow = overflowObserver({
     onChange: once(initContinue),
-    side: calculateHeight ? 'bottom' : 'right',
+    side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
   })
 }
 
@@ -1071,8 +1078,8 @@ const getHeight = {
   max: () => Math.max(...getAllMeasurements(getHeight)),
   min: () => Math.min(...getAllMeasurements(getHeight)),
   grow: () => getHeight.max(),
-  lowestElement: () => getMaxElement('bottom'),
-  taggedElement: () => getMaxElement('bottom'),
+  lowestElement: () => getMaxElement(HEIGHT_EDGE),
+  taggedElement: () => getMaxElement(HEIGHT_EDGE),
 }
 
 const getWidth = {
@@ -1088,10 +1095,10 @@ const getWidth = {
     document.documentElement.getBoundingClientRect().right,
   max: () => Math.max(...getAllMeasurements(getWidth)),
   min: () => Math.min(...getAllMeasurements(getWidth)),
-  rightMostElement: () => getMaxElement('right'),
+  rightMostElement: () => getMaxElement(WIDTH_EDGE),
   scroll: () =>
     Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-  taggedElement: () => getMaxElement('right'),
+  taggedElement: () => getMaxElement(WIDTH_EDGE),
 }
 
 function sizeIFrame(

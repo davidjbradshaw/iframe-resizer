@@ -1,7 +1,7 @@
+import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
 
-const OVERFLOW = 'data-iframe-overflow'
-let side = 'bottom'
+let side = HEIGHT_EDGE
 
 let onChange = id
 
@@ -20,10 +20,10 @@ const isTarget = (entry) =>
 
 const callback = (entries) => {
   entries.forEach((entry) => {
-    entry.target.toggleAttribute(OVERFLOW, isTarget(entry))
+    entry.target.toggleAttribute(OVERFLOW_ATTR, isTarget(entry))
   })
 
-  overflowedElements = document.querySelectorAll(`[${OVERFLOW}]`)
+  overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
   onChange()
 }
 
