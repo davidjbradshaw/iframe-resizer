@@ -191,7 +191,7 @@ function init() {
 }
 
 // Continue init after intersection observer has been setup
-const initContinue = once(() => {
+const initContinue = () => {
   sendSize('init', 'Init message from host page', undefined, undefined, VERSION)
   sendTitle()
   initEventListeners()
@@ -199,12 +199,12 @@ const initContinue = once(() => {
   isInit = false
   log('Initialization complete')
   log('---')
-})
+}
 
 function setupObserveOverflow() {
   if (calculateHeight === calculateWidth) return
   observeOverflow = overflowObserver({
-    init: initContinue,
+    onChange: once(initContinue),
     side: calculateHeight ? 'bottom' : 'right',
   })
 }
