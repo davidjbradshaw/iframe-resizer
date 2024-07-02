@@ -3,13 +3,15 @@ import terser from '@rollup/plugin-terser'
 
 import createBanner from './banner.js'
 
+const { BETA } = process.env
+
 export const output = (file) => (format) => { 
   const settings = {
     banner: createBanner(file, format),
     file: `dist/${file}/index.${format}.js`,
     generatedCode: 'es2015',
     format,
-    sourcemap: false,
+    sourcemap: BETA || false,
   }
 
   if (
