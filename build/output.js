@@ -11,7 +11,7 @@ export const output = (file) => (format) => {
     file: `dist/${file}/index.${format}.js`,
     generatedCode: 'es2015',
     format,
-    sourcemap: BETA || false,
+    sourcemap: false,
   }
 
   if (
@@ -26,6 +26,7 @@ export const output = (file) => (format) => {
         preamble: createBanner(file, format),
       },
     })
+    settings.sourcemap = BETA || false
   }
 
   return settings
