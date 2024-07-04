@@ -17,6 +17,7 @@ import {
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
+import initSize from './initSize'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -1012,29 +1013,36 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function setDirection() {
-    if (settings[iframeId].direction === 'horizontal') {
-      settings[iframeId].sizeWidth = true
-      settings[iframeId].sizeHeight = false
-      log(iframeId, 'Direction set to "horizontal"')
-      return
-    }
+    switch (settings[iframeId].direction) {
+      case 'horizontal':
+        settings[iframeId].sizeWidth = true
+        settings[iframeId].sizeHeight = false
+        log(iframeId, 'Direction set to "horizontal"')
+        return
 
-    if (settings[iframeId].direction === 'none') {
-      settings[iframeId].sizeWidth = false
-      settings[iframeId].sizeHeight = false
-      settings[iframeId].autoResize = false
-      log(iframeId, 'Direction set to "none"')
-      return
-    }
+      case 'vertical':
+        log(iframeId, 'Direction set to "vertical"')
+        if (!initSize(iframe)) {
+          log(
+            iframeId,
+            `Set initial iframe size: ${settings[iframeId].iframe.style.width} ${settings[iframeId].iframe.style.height}`,
+          )
+        }
+        return
 
-    if (settings[iframeId].direction !== 'vertical') {
-      throw new TypeError(
-        iframeId,
-        `Direction value of "${settings[iframeId].direction}" is not valid`,
-      )
-    }
+      case 'none':
+        settings[iframeId].sizeWidth = false
+        settings[iframeId].sizeHeight = false
+        settings[iframeId].autoResize = false
+        log(iframeId, 'Direction set to "none"')
+        return
 
-    log(iframeId, 'Direction set to "vertical"')
+      default:
+        throw new TypeError(
+          iframeId,
+          `Direction value of "${settings[iframeId].direction}" is not valid`,
+        )
+    }
   }
 
   function setOffset(offset) {
