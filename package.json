@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "4.4.3",
+  "version": "4.4.4",
   "homepage": "https://iframe-resizer.com",
   "authors": [
     "David J. Bradshaw <dave@bradshaw.net>"
@@ -14,7 +14,7 @@
     "test": "grunt travis",
     "upgrade": "npm-check-updates -u && npm install && npm run test"
   },
-  "description": "This package has now been split into two separate packages. Please use '@iframe-resizer/parent' and '@iframe-resizer/child' for new projects. This package will continue to be maintained for existing projects.",
+  "description": "This project has now been split into two separate packages. Please use '@iframe-resizer/parent' and '@iframe-resizer/child'. See https://iframe-resizer.com/upgrade for more details.",
   "repository": {
     "type": "git",
     "url": "https://github.com/davidjbradshaw/iframe-resizer.git"
