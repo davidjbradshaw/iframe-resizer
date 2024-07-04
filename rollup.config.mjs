@@ -8,7 +8,11 @@ import vue from 'rollup-plugin-vue'
 
 import createBanner from './build/banner.js'
 import { output, outputs } from './build/output.js'
-import { pluginsBase, pluginsProd, injectVersion } from './build/plugins.js'
+import {
+  pluginsBase,
+  createPluginsProd,
+  injectVersion,
+} from './build/plugins.js'
 
 import pkg from './package.json' with { type: 'json' }
 import typescript from '@rollup/plugin-typescript'
@@ -18,7 +22,7 @@ const { BETA, ROLLUP_WATCH, DEBUG, TEST } = process.env
 const debugMode = DEBUG || ROLLUP_WATCH || false
 const betaMode = BETA || false
 const sourcemap = debugMode || betaMode || false
-const logging = debugMode || TEST
+const logging = debugMode || betaMode || TEST
 
 const outputPlugins = (file, format) => ({
   plugins: terser({
@@ -38,6 +42,7 @@ const filterDeps = (contents) => {
 }
 
 const pluginsJs = TEST ? injectVersion : pluginsBase(!logging)
+const pluginsProd = createPluginsProd(!logging)
 
 console.log(
   '\nBuilding iframe-resizer version',

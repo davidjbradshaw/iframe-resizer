@@ -38,7 +38,7 @@ const createTransform = (file) => (contents) =>
     .replace(/@@PKG_VERSION@@/g, pkg.version)
     .replace(/@@BUILD_DATE@@/g, today)
 
-export const pluginsProd = (file) => {
+export const createPluginsProd = (stripLog) => (file) => {
   const dest = `dist/${file}`
   const src = `packages`
 
@@ -65,6 +65,6 @@ export const pluginsProd = (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(true)(file),
+    ...pluginsBase(stripLog)(file),
   ]
 }

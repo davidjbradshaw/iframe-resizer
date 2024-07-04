@@ -8,10 +8,18 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-if [[ $VERSION = *"-"* ]] && [ $1 = "latest" ]; then
+if [[ $VERSION = *"-"* ]];then
+  if [ $1 = "latest" ]; then
     echo "Cannot publish a beta version as latest"
     echo
     exit 1
+  fi
+else
+  if [ $1 != "latest" ]; then
+    echo "Cannot publish a non-beta version as $1"
+    echo
+    exit 1
+  fi
 fi
 
 echo
