@@ -1,8 +1,3 @@
-const DEFAULT_IFRAME_SIZE = {
-  width: '100%',
-  height: '100vh',
-}
-
 const slice = Function.call.bind(Array.prototype.slice)
 const matches = Function.call.bind(Element.prototype.matches)
 
@@ -20,26 +15,15 @@ const cssRules = slice(document.styleSheets).reduce(
   [],
 )
 
-function initSize(iframe) {
-  const { width, height } = DEFAULT_IFRAME_SIZE
-  const { style } = iframe
-
+function hasSize(element) {
   // get only the css rules that matches that element
-  const elementRules = cssRules.filter(elementMatchCSSRule.bind(null, iframe))
+  const elementRules = cssRules.filter(elementMatchCSSRule.bind(null, element))
 
   // check if the property "width" is in one of those rules
   const hasWidth = elementRules.some(propertyInCSSRule.bind(null, 'width'))
   const hasHeight = elementRules.some(propertyInCSSRule.bind(null, 'height'))
 
-  if (iframe.width === '' && !hasWidth) {
-    style.setProperty('width', width)
-  }
-
-  if (iframe.height === '' && !hasHeight) {
-    style.setProperty('height', height)
-  }
-
-  return hasWidth || hasHeight
+  return { hasWidth, hasHeight }
 }
 
-export default initSize
+export default hasSize

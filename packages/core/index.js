@@ -17,7 +17,7 @@ import {
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
-import initSize from './initSize'
+import hasSize from './hasSize'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -1012,6 +1012,27 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (mode < 1) advise('Parent', getModeData(3))
   }
 
+  function setSize() {
+    const DEFAULT_IFRAME_SIZE = {
+      width: '100%',
+      height: '100vh',
+    }
+
+    const { width, height } = DEFAULT_IFRAME_SIZE
+    const { style } = iframe
+    const { hasWidth, hasHeight } = hasSize(iframe)
+
+    if (iframe.width === '' && !hasWidth) {
+      style.setProperty('width', width)
+      log(iframeId, `Set width to ${width}`)
+    }
+
+    if (iframe.height === '' && !hasHeight) {
+      style.setProperty('height', height)
+      log(iframeId, `Set height to ${height}`)
+    }
+  }
+
   function setDirection() {
     switch (settings[iframeId].direction) {
       case 'horizontal':
@@ -1022,12 +1043,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
       case 'vertical':
         log(iframeId, 'Direction set to "vertical"')
-        if (!initSize(iframe)) {
-          log(
-            iframeId,
-            `Set initial iframe size: ${settings[iframeId].iframe.style.width} ${settings[iframeId].iframe.style.height}`,
-          )
-        }
+        setSize()
         return
 
       case 'none':
