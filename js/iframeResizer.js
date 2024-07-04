@@ -2,11 +2,24 @@
  * File: iframeResizer.js
  * Desc: Force iframes to size to content.
  * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
- * Doc: https://github.com/davidjbradshaw/iframe-resizer
- * Author: David J. Bradshaw - dave@bradshaw.net
- * Contributor: Jure Mav - jure.mav@gmail.com
- * Contributor: Reed Dadoune - reed@dadoune.com
+ * Doc: https://iframe-resizer.com
+ * Author: David J. Bradshaw - info@iframe-resizer.com
  */
+
+console.info(`
+IFRAME-RESIZER
+
+Iframe-Resizer 5 is now available via the following two packages:
+
+ * @iframe-resizer/parent
+ * @iframe-resizer/child
+
+Additionally their are also new versions of iframe-resizer for React, Vue, and jQuery.
+
+Version 5 of iframe-resizer has been extensively rewritten to use modern browser APIs, which has enabled significantly better performance and greater accuracy in the detection of content resizing events.
+
+Please see https://iframe-resizer.com/upgrade for more details.
+`)
 
 // eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
 ;(function (undefined) {

@@ -22,4 +22,4 @@ const msg = [
   '',
 ]
 
-msg.forEach(m => console.log(m))
+msg.forEach(m => console.warn(m))
