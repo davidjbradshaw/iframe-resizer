@@ -13,6 +13,7 @@ export default (props) => {
     scrolling,
     tolerance,
     warningTimeout,
+    waitForLoad,
     onClosed,
     onReady,
     onMessage,
