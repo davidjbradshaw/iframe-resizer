@@ -1037,7 +1037,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     log(iframeId, 'Direction set to "vertical"')
   }
 
-  function setOffset(offset) {
+  function setOffsetSize(offset) {
     if (!offset) return
     if (settings[iframeId].direction === 'vertical') {
       settings[iframeId].offsetHeight = offset
@@ -1077,7 +1077,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     setDirection()
-    setOffset(options?.offset)
+    setOffsetSize(options?.offsetSize || options?.offset)
     getPostMessageTarget()
 
     settings[iframeId].targetOrigin =
