@@ -29,7 +29,7 @@ export default function createIframeResize() {
     if (typeof window === 'undefined') return [] // don't run for server side render
 
     connectWithOptions = connectResizer(options)
-    iFrames = [] // Only return iFrames past in on this call
+    iFrames = [] // Only return iFrames passed in on this call
 
     switch (typeof target) {
       case 'undefined':
