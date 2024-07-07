@@ -251,6 +251,7 @@ function readDataFromParent() {
 }
 
 function readDataFromPage() {
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   function readData() {
     const data = window.iframeResizer || window.iFrameResizer
 
@@ -260,8 +261,16 @@ function readDataFromPage() {
     onReady = data?.onReady || onReady
 
     if (typeof data?.offset === 'number') {
+      advise(
+        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+      )
       if (calculateHeight) offsetHeight = data?.offset
       if (calculateWidth) offsetWidth = data?.offset
+    }
+
+    if (typeof data?.offsetSize === 'number') {
+      if (calculateHeight) offsetHeight = data?.offsetSize
+      if (calculateWidth) offsetWidth = data?.offsetSize
     }
 
     if (Object.prototype.hasOwnProperty.call(data, 'sizeSelector')) {
