@@ -36,7 +36,7 @@
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
     "upgrade": "time npm-check-updates -i && npm run build"
   },
-  "description": "Keep same and cross domain iFrames sized to their content.",
+  "description": "Keep iFrames sized to their content.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/davidjbradshaw/iframe-resizer.git"
