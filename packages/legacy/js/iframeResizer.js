@@ -1,3 +1,5 @@
 import './notice'
 
-import '../../parent/umd'
+import iframeResize from '../../parent/umd'
+
+export default iframeResize
