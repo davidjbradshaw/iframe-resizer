@@ -1,26 +1,38 @@
+const main = 'index.cjs.js'
+const module = 'index.esm.js'
+
 const customConfig = (file) => {
   const entryPoints = {
-    main: `index.cjs.js`,
-    module: `index.esm.js`,
+    main,
+    module,
     browser: `index.umd.js`,
   }
 
   switch (file) {
     case 'react':
       return {
-        main: 'index.cjs.js',
-        module: 'index.esm.js',
+        main,
+        module,
         types: `iframe-resizer.${file}.d.ts`,
         peerDependencies: {
-          react: '^16.8.0 || ^17.0.0 || ^18.0.0',
-          'react-dom': '^16.8.0 || ^17.0.0 || ^18.0.0',
+          react: '^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0',
+          'react-dom': '^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0',
         },
+      }
+
+    case 'legacy':
+      return {
+        name: 'iframe-resizer',
+        description:
+          "This project has now been split into two separate packages. Please use '@iframe-resizer/parent' and '@iframe-resizer/child'. See https://iframe-resizer.com/upgrade for more details.",
+        main,
+        module,
       }
 
     case 'vue':
       return {
         main: 'index.umd.js',
-        module: 'index.esm.js',
+        module,
         browser: {
           './sfc': 'iframe-resizer.vue',
         },

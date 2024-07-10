@@ -137,6 +137,77 @@ const npm = [
     plugins: [...pluginsProd('jquery'), resolve()],
   },
 
+  //  legacy (ES)
+  {
+    input: 'packages/legacy/index.esm.js',
+    output: [output('legacy')('esm'), output('legacy')('cjs')],
+    external: [
+      '@iframe-resizer/parent',
+      '@iframe-resizer/child',
+      '@iframe-resizer/jquery',
+      '@iframe-resizer/core',
+    ],
+    plugins: pluginsProd('legacy'),
+  },
+
+  // legacy parent (iife)
+  {
+    input: `packages/legacy/js/iframeResizer.js`,
+    output: [
+      {
+        banner: createBanner('legacy parent', 'umd'),
+        file: 'dist/legacy/js/iframeResizer.js',
+        format: 'umd',
+        name: 'iframeResize',
+        sourcemap,
+        ...outputPlugins('legacy (parent)', 'umd'),
+      },
+      {
+        banner: createBanner('legacy parent', 'umd'),
+        file: 'dist/legacy/js/iframeResizer.min.js',
+        format: 'umd',
+        name: 'iframeResize',
+        sourcemap,
+        ...outputPlugins('legacy (parent)', 'umd'),
+      },
+    ],
+    plugins: [pluginsProd('legacy'), resolve()],
+  },
+
+  // legacy child(iife)
+  {
+    input: 'packages/legacy/js/iframeResizer.contentWindow.js',
+    output: [
+      {
+        banner: createBanner('legacy child', 'iife'),
+        file: 'dist/legacy/js/iframeResizer.contentWindow.js',
+        format: 'iife',
+        sourcemap,
+        ...outputPlugins('legacy (child)', 'iife'),
+      },
+      {
+        banner: createBanner('legacy child', 'iife'),
+        file: 'dist/legacy/js/iframeResizer.contentWindow.min.js',
+        format: 'iife',
+        sourcemap,
+        ...outputPlugins('legacy (child)', 'iife'),
+      },
+    ],
+    plugins: [
+      pluginsProd('legacy'),
+      copy({
+        hook: 'closeBundle',
+        targets: [
+          {
+            src: 'packages/legacy/README.md',
+            dest: 'dist/legacy/',
+          },
+        ],
+        verbose: true,
+      }),
+    ],
+  },
+
   // React
   {
     input: 'packages/react/index.jsx',
@@ -178,7 +249,7 @@ const npm = [
         ...output('vue')('umd'),
       },
       output('vue')('esm'),
-      output('vue')('cjs')
+      output('vue')('cjs'),
     ],
     external: ['@iframe-resizer/core', 'vue'],
     plugins: [
