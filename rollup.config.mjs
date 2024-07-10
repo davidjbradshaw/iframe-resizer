@@ -150,25 +150,19 @@ const npm = [
     plugins: pluginsProd('legacy'),
   },
 
-  // legacy parent (iife)
+  // legacy parent (umd)
   {
     input: `packages/legacy/js/iframeResizer.js`,
     output: [
       {
-        banner: createBanner('legacy parent', 'umd'),
-        file: 'dist/legacy/js/iframeResizer.js',
-        format: 'umd',
         name: 'iframeResize',
-        sourcemap,
-        ...outputPlugins('legacy (parent)', 'umd'),
+        ...output('legacy (parent)')('umd'),
+        file: 'dist/legacy/js/iframeResizer.js',
       },
       {
-        banner: createBanner('legacy parent', 'umd'),
-        file: 'dist/legacy/js/iframeResizer.min.js',
-        format: 'umd',
         name: 'iframeResize',
-        sourcemap,
-        ...outputPlugins('legacy (parent)', 'umd'),
+        ...output('legacy (parent)')('umd'),
+        file: 'dist/legacy/js/iframeResizer.min.js',
       },
     ],
     plugins: [pluginsProd('legacy'), resolve()],
