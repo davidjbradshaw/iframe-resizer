@@ -108,7 +108,7 @@
   "engines": {
     "node": ">=0.8.0"
   },
-  "license": "GPL-3.0",
+  "license": "MIT",
   "keywords": [
     "CrossDomain",
     "Cross-Domain",
