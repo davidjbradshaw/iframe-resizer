@@ -28,7 +28,15 @@ export const pluginsBase = (stripLog) => (file) => {
 const fixVersion = (file) =>
   file in { core: 1, child: 1 }
     ? {}
-    : { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+    : file !== 'legacy'
+      ? { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+      : {
+          additionalDependencies: {
+            '@iframe-resizer/child': pkg.version,
+            '@iframe-resizer/jquery': pkg.version,
+            '@iframe-resizer/parent': pkg.version,
+          },
+        }
 
 const today = new Date().toISOString().split('T').join(' - ')
 
