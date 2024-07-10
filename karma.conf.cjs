@@ -26,6 +26,8 @@ module.exports = function (config) {
       { pattern: 'dist/parent/*.js', included: false },
       { pattern: 'dist/child/*.js', included: false },
       { pattern: 'dist/jquery/*.js', included: false },
+      { pattern: 'dist/legacy/*.js', included: false },
+      { pattern: 'dist/legacy/js/*.js', included: false },
       // { pattern: 'packages/*.js', included: false },
       { pattern: 'example/html/*.html', included: false },
       { pattern: 'example/child/*.html', included: false },
