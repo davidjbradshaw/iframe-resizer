@@ -40,6 +40,8 @@ cd ../react
 npm publish --tag $1
 cd ../vue
 npm publish --tag $1
+cd ../legacy
+npm publish --tag $1
 
 if [ $1 != "latest" ] 
 then
@@ -55,7 +57,6 @@ zip iframe-resizer.zip js/**
 cp -v js/** js-dist 
 
 git add .
-
 git commit -am "Release v$VERSION"
 git tag "v$VERSION"
 git pull
