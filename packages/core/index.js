@@ -1087,6 +1087,13 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     setDirection()
     setOffsetSize(options?.offsetSize || options?.offset)
+
+    if (options?.offset) {
+      advise(
+        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+      )
+    }
+
     getPostMessageTarget()
 
     settings[iframeId].targetOrigin =
