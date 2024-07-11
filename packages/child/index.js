@@ -35,7 +35,7 @@ const deprecatedResizeMethods = {
 }
 const eventCancelTimer = 128
 const eventHandlersByName = {}
-const hasCheckVisibility = 'checkVisibility' in window
+const hasCheckVisibility = window && 'checkVisibility' in window
 const heightCalcModeDefault = 'auto'
 // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
@@ -78,7 +78,7 @@ let resizeFrom = 'child'
 let resizeObserver = null
 let sameDomain = false
 let sizeSelector = ''
-let target = window.parent
+let target = window?.parent
 let targetOriginDefault = '*'
 let tolerance = 0
 let triggerLocked = false
