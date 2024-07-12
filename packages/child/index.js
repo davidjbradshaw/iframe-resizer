@@ -1,7 +1,6 @@
 import {
   BASE,
   HEIGHT_EDGE,
-  SINGLE,
   SIZE_ATTR,
   VERSION,
   WIDTH_EDGE,
@@ -15,11 +14,9 @@ import {
   isOverflowed,
   overflowObserver,
 } from './overflow'
+import { PREF_END, PREF_START, setPerfEl } from './perf'
 
 function iframeResizerChild() {
-  const PERF_TIME_LIMIT = 4
-  const PERF_MIN_ELEMENTS = 99
-
   const checkVisibilityOptions = {
     contentVisibilityAuto: true,
     opacityProperty: true,
@@ -80,7 +77,6 @@ function iframeResizerChild() {
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
-  let isInit = true
   let logging = false
   let licenseKey = '' // eslint-disable-line no-unused-vars
   let mode = 0
@@ -114,9 +110,6 @@ function iframeResizerChild() {
 
   const isDef = (value) => `${value}` !== '' && value !== undefined
 
-  const usedTags = new WeakSet()
-  const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
-
   function getElementName(el) {
     switch (true) {
       case !isDef(el):
@@ -136,15 +129,15 @@ function iframeResizerChild() {
     }
   }
 
-  function elementSnippet(el, maxChars = 30) {
-    const outer = el?.outerHTML?.toString()
+  // function elementSnippet(el, maxChars = 30) {
+  //   const outer = el?.outerHTML?.toString()
 
-    if (!outer) return el
+  //   if (!outer) return el
 
-    return outer.length < maxChars
-      ? outer
-      : `${outer.slice(0, maxChars).replaceAll('\n', ' ')}...`
-  }
+  //   return outer.length < maxChars
+  //     ? outer
+  //     : `${outer.slice(0, maxChars).replaceAll('\n', ' ')}...`
+  // }
 
   // TODO: remove .join(' '), requires major test updates
   const formatLogMsg = (...msg) =>
@@ -154,6 +147,7 @@ function iframeResizerChild() {
     // eslint-disable-next-line no-console
     logging && console?.log(formatLogMsg(...msg))
 
+  // eslint-disable-next-line no-unused-vars
   const info = (...msg) =>
     // eslint-disable-next-line no-console
     console?.info(`[iframe-resizer][${myID}]`, ...msg)
@@ -187,9 +181,6 @@ function iframeResizerChild() {
     setupMouseEvents()
     inPageLinks = setupInPageLinks()
 
-    addUsedTag(document.documentElement)
-    addUsedTag(document.body)
-
     setMargin()
     setBodyStyle('background', bodyBackground)
     setBodyStyle('padding', bodyPadding)
@@ -211,7 +202,7 @@ function iframeResizerChild() {
     sendTitle()
     initEventListeners()
     onReady()
-    isInit = false
+
     log('Initialization complete')
     log('---')
   }
@@ -450,12 +441,6 @@ Parent page: ${version} - Child page: ${VERSION}.
       eventType: 'Ready State Change',
       eventName: 'readystatechange',
     })
-
-    //   manageTriggerEvent({
-    //     method: method,
-    //     eventType: 'Orientation Change',
-    //     eventName: 'orientationchange'
-    //   })
   }
 
   function checkDeprecatedAttrs() {
@@ -896,23 +881,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     bodyObserver = setupBodyMutationObserver()
   }
 
-  let lastEl = null
-
-  function usedEl(el, Side, time, len) {
-    if (usedTags.has(el) || lastEl === el || (hasTags && len <= 1)) return
-    // addUsedTag(el)
-    lastEl = el
-
-    info(
-      `\n${Side} position calculated from:\n`,
-      el,
-      `\nParsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${time}ms`, // ${getElementName(el)} (${elementSnippet(el)})
-    )
-  }
-
-  let perfWarned = PERF_TIME_LIMIT
-  let lastTimer = PERF_TIME_LIMIT
-
   function getMaxElement(side) {
     const Side = capitalizeFirstLetter(side)
 
@@ -921,7 +889,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     let maxVal = hasTags
       ? 0
       : document.documentElement.getBoundingClientRect().bottom
-    let timer = performance.now()
+
+    performance.mark(PREF_START)
 
     const targetElements =
       !hasTags && isOverflowed() ? getOverflowedElements() : calcElements
@@ -948,33 +917,16 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       }
     })
 
-    timer = (performance.now() - timer).toPrecision(1)
+    setPerfEl(maxEl)
+    performance.mark(PREF_END, {
+      detail: {
+        Side,
+        len,
+        hasTags,
+        logging,
+      },
+    })
 
-    usedEl(maxEl, Side, timer, len)
-
-    const logMsg = `
-Parsed ${len} element${len === SINGLE ? '' : 's'} in ${timer}ms
-${Side} ${hasTags ? 'tagged ' : ''}element found at: ${maxVal}px
-Position calculated from HTML element: ${getElementName(maxEl)} (${elementSnippet(maxEl, 100)})`
-
-    if (
-      timer < PERF_TIME_LIMIT ||
-      len < PERF_MIN_ELEMENTS ||
-      hasTags ||
-      isInit
-    ) {
-      log(logMsg)
-    } else if (perfWarned < timer && perfWarned < lastTimer) {
-      perfWarned = timer * 1.2
-      advise(
-        `<rb>Performance Warning</>
-
-Calculating the page size took an excessive amount of time. To improve performance add the <b>data-iframe-size</> attribute to the ${side} most element on the page.
-${logMsg}`,
-      )
-    }
-
-    lastTimer = timer
     return maxVal
   }
 
