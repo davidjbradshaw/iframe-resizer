@@ -5,10 +5,20 @@ import {
   VERSION,
   WIDTH_EDGE,
 } from '../common/consts'
-import formatAdvise from '../common/format-advise'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
 import { id, once } from '../common/utils'
+import {
+  advise,
+  adviser,
+  capitalizeFirstLetter,
+  getElementName,
+  // eslint-disable-next-line no-unused-vars
+  info,
+  log,
+  setLogOptions,
+  warn,
+} from './log'
 import {
   getOverflowedElements,
   isOverflowed,
@@ -105,68 +115,13 @@ function iframeResizerChild() {
   let onPageInfo = null
   let onParentInfo = null
 
-  const capitalizeFirstLetter = (string) =>
-    string.charAt(0).toUpperCase() + string.slice(1)
-
-  const isDef = (value) => `${value}` !== '' && value !== undefined
-
-  function getElementName(el) {
-    switch (true) {
-      case !isDef(el):
-        return ''
-
-      case isDef(el.id):
-        return `${el.nodeName.toUpperCase()}#${el.id}`
-
-      case isDef(el.name):
-        return `${el.nodeName.toUpperCase()} (${el.name})`
-
-      default:
-        return (
-          el.nodeName.toUpperCase() +
-          (isDef(el.className) ? `.${el.className}` : '')
-        )
-    }
-  }
-
-  // function elementSnippet(el, maxChars = 30) {
-  //   const outer = el?.outerHTML?.toString()
-
-  //   if (!outer) return el
-
-  //   return outer.length < maxChars
-  //     ? outer
-  //     : `${outer.slice(0, maxChars).replaceAll('\n', ' ')}...`
-  // }
-
-  // TODO: remove .join(' '), requires major test updates
-  const formatLogMsg = (...msg) =>
-    [`[iframe-resizer][${myID}]`, ...msg].join(' ')
-
-  const log = (...msg) =>
-    // eslint-disable-next-line no-console
-    logging && console?.log(formatLogMsg(...msg))
-
-  // eslint-disable-next-line no-unused-vars
-  const info = (...msg) =>
-    // eslint-disable-next-line no-console
-    console?.info(`[iframe-resizer][${myID}]`, ...msg)
-
-  const warn = (...msg) =>
-    // eslint-disable-next-line no-console
-    console?.warn(formatLogMsg(...msg))
-
-  const advise = (...msg) =>
-    // eslint-disable-next-line no-console
-    console?.warn(formatAdvise(formatLogMsg)(...msg))
-
-  const adviser = (msg) => advise(msg)
-
   function init() {
     readDataFromParent()
     readDataFromPage()
 
     log(`Initialising iFrame v${VERSION} (${window.location.href})`)
+
+    setLogOptions({ id: myID, logging })
 
     checkCrossDomain()
     checkMode()
