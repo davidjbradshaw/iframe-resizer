@@ -25,12 +25,15 @@ export const setPerfEl = (el) => {
 
 // { maxEl, Side, len, hasTags }
 function usedEl(detail, duration) {
-  details = detail
+  // eslint-disable-next-line no-unused-vars
   const { Side, len, hasTags, logging } = detail
+
+  details = detail
 
   if (usedTags.has(perfEl) || lastPerfEl === perfEl || (hasTags && len <= 1)) {
     return
   }
+
   if (!logging) addUsedTag(perfEl)
 
   lastPerfEl = perfEl
