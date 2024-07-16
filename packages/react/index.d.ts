@@ -44,7 +44,7 @@ declare module '@iframe-resizer/react' {
     }
 
     type ResizerEvents = {
-      onInit?: (iframe: IFrameComponent) => void
+      onReady?: (iframe: IFrameComponent) => void
       onMessage?: (ev: { iframe: IFrameComponent; message: any }) => void
       onResized?: (ev: {
         iframe: IFrameComponent
