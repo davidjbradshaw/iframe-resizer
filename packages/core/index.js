@@ -1090,6 +1090,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     if (options?.offset) {
       advise(
+        iframeId,
         `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
       )
     }
