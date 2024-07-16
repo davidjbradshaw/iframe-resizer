@@ -1,6 +1,9 @@
+import { advise, info } from './log'
+
+const SECOND = 1000
 const DEC_PLACES = 100_000 // 5 decimal places
-const PERF_CHECK_INTERVAL = 5000
-const THRESHOLD = 0
+const PERF_CHECK_INTERVAL = 5 * SECOND
+const THRESHOLD = 4 // ms
 
 export const PREF_START = '--ifr-start'
 export const PREF_END = '--ifr-end'
@@ -11,8 +14,6 @@ const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 const round = (num) => Math.floor(num * DEC_PLACES) / DEC_PLACES
-
-const advise = console.warn
 
 let lastPerfEl = null
 let perfEl = null
@@ -34,7 +35,7 @@ function usedEl(detail, duration) {
 
   lastPerfEl = perfEl
 
-  console.info(
+  info(
     `\n${Side} position calculated from:\n`,
     perfEl,
     `\nParsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
@@ -69,7 +70,7 @@ const timingCheck = setInterval(() => {
 
 Calculating the page size is taking an excessive amount of time (${round(average)}ms).
 
-To improve performance add the <b>data-iframe-size</> attribute to the ${details.side.toLowercase()} most element on the page.`,
+To improve performance add the <b>data-iframe-size</> attribute to the ${details.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
   )
 }, PERF_CHECK_INTERVAL)
 
