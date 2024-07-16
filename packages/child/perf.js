@@ -23,7 +23,6 @@ export const setPerfEl = (el) => {
   perfEl = el
 }
 
-// { maxEl, Side, len, hasTags }
 function usedEl(detail, duration) {
   // eslint-disable-next-line no-unused-vars
   const { Side, len, hasTags, logging } = detail
