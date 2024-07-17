@@ -1,4 +1,4 @@
-import { advise, info } from './log'
+import { advise, info, log } from './log'
 
 const SECOND = 1000
 const DEC_PLACES = 100_000 // 5 decimal places
@@ -63,6 +63,8 @@ const timingCheck = setInterval(() => {
   // )
   // console.info('Average time:', round(average), average)
 
+  log('Max time:', Math.max(timings))
+
   if (average <= THRESHOLD) return
 
   clearInterval(timingCheck)
@@ -93,7 +95,7 @@ function perfObserver(list) {
 
 function setup() {
   const observer = new PerformanceObserver(perfObserver)
-  observer.observe({ entryTypes: PerformanceObserver.supportedEntryTypes })
+  observer.observe({ entryTypes: ['mark'] })
 
   addUsedTag(document.documentElement)
   addUsedTag(document.body)
