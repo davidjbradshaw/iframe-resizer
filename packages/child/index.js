@@ -79,11 +79,10 @@ function iframeResizerChild() {
   let bodyPadding = ''
   let calculateHeight = true
   let calculateWidth = false
-  let calcElements = null
   let firstRun = true
   let hasTags = false
   let height = 1
-  let heightCalcMode = heightCalcModeDefault // only applys if not provided by host page (V1 compatibility)
+  let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
@@ -99,6 +98,7 @@ function iframeResizerChild() {
   let resizeObserver = null
   let sameDomain = false
   let sizeSelector = ''
+  let taggedElements = []
   let target = window.parent
   let targetOriginDefault = '*'
   let tolerance = 0
@@ -130,11 +130,14 @@ function iframeResizerChild() {
     checkWidthMode()
     checkDeprecatedAttrs()
 
+    checkAndSetupTags()
+
     setupObserveOverflow()
-    setupCalcElements()
     setupPublicMethods()
     setupMouseEvents()
     inPageLinks = setupInPageLinks()
+
+    addOverflowObservers(getAllElements(document)())
 
     setMargin()
     setBodyStyle('background', bodyBackground)
@@ -143,6 +146,8 @@ function iframeResizerChild() {
     injectClearFixIntoBodyElement()
     stopInfiniteResizingOfIFrame()
     applySizeSelector()
+
+    if (hasTags) setTimeout(initContinue)
   }
 
   // Continue init after intersection observer has been setup
@@ -170,13 +175,14 @@ function iframeResizerChild() {
     })
   }
 
-  function setupCalcElements() {
-    const taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
+  function checkAndSetupTags() {
+    taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
     log(`Tagged elements found: ${hasTags}`)
-    calcElements = hasTags ? taggedElements : getAllElements(document)()
-    if (hasTags) setTimeout(initContinue)
-    else observeOverflow(calcElements)
+  }
+
+  function addOverflowObservers(nodeList) {
+    if (!hasTags) observeOverflow(nodeList)
   }
 
   function sendTitle() {
@@ -791,15 +797,38 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   }
 
   function setupBodyMutationObserver() {
-    function mutationObserved(mutations) {
+    const observedMutations = new Set()
+    let pending = false
+
+    const updateMutation = (mutation) => {
+      mutation.addedNodes.forEach((el) => observedMutations.add(el))
+      mutation.removedNodes.forEach((el) => observedMutations.delete(el))
+    }
+
+    function processMutations() {
+      if (observedMutations.size === 0) return
+
       // Look for injected elements that need ResizeObservers
-      mutations.forEach(addResizeObservers)
+      observedMutations.forEach(addResizeObservers)
 
       // apply sizeSelector to new elements
       applySizeSelector()
 
       // Rebuild elements list for size calculation
-      setupCalcElements()
+      checkAndSetupTags()
+      addOverflowObservers(observedMutations)
+
+      observedMutations.clear()
+      pending = false
+    }
+
+    function mutationObserved(mutations) {
+      mutations.forEach(updateMutation)
+
+      if (!pending) {
+        pending = true
+        requestAnimationFrame(processMutations)
+      }
     }
 
     function createMutationObserver() {
@@ -847,8 +876,11 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     performance.mark(PREF_START)
 
-    const targetElements =
-      !hasTags && isOverflowed() ? getOverflowedElements() : calcElements
+    const targetElements = hasTags
+      ? taggedElements
+      : isOverflowed()
+        ? getOverflowedElements()
+        : getAllElements(document)()
 
     let len = targetElements.length
 

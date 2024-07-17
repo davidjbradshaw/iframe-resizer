@@ -1,5 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
+import { log } from './log'
 
 let overflowedElements = []
 
@@ -25,6 +26,7 @@ export const overflowObserver = (options) => {
     })
 
     overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+    log('overflowedElements:', overflowedElements)
     onChange()
   }
 
