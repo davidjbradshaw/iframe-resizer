@@ -24,7 +24,7 @@ const betaMode = BETA || false
 const sourcemap = debugMode || betaMode || false
 const logging = debugMode || betaMode || TEST
 
-const outputPlugins = (file, format) => ({
+const outputPlugins = debugMode ? () => { } : (file, format) => ({
   plugins: terser({
     output: {
       comments: false,
