@@ -146,8 +146,6 @@ function iframeResizerChild() {
     injectClearFixIntoBodyElement()
     stopInfiniteResizingOfIFrame()
     applySizeSelector()
-
-    if (hasTags) setTimeout(initContinue)
   }
 
   // Continue init after intersection observer has been setup
@@ -182,7 +180,8 @@ function iframeResizerChild() {
   }
 
   function addOverflowObservers(nodeList) {
-    if (!hasTags) observeOverflow(nodeList)
+    if (hasTags) setTimeout(initContinue)
+    else observeOverflow(nodeList)
   }
 
   function sendTitle() {
