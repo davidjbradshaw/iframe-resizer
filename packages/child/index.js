@@ -801,15 +801,15 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     function processMutations() {
       if (observedMutations.size === 0) return
 
-      // Look for injected elements that need ResizeObservers
-      observedMutations.forEach(createResizeObservers)
-
       // apply sizeSelector to new elements
       applySizeSelector()
 
-      // Rebuild elements list for size calculation
+      // Rebuild tagged elements list for size calculation
       checkAndSetupTags()
+
+      // Add observers to new elements
       addOverflowObservers(observedMutations)
+      observedMutations.forEach(createResizeObservers)
 
       observedMutations.clear()
       pending = false
