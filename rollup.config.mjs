@@ -178,7 +178,7 @@ const npm = [
         ...output('vue')('umd'),
       },
       output('vue')('esm'),
-      output('vue')('cjs')
+      output('vue')('cjs'),
     ],
     external: ['@iframe-resizer/core', 'vue'],
     plugins: [
