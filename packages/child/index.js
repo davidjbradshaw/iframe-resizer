@@ -785,12 +785,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     ].forEach(setupResizeObservers)
   }
 
-  function addResizeObservers(mutation) {
-    if (mutation.type === 'childList') {
-      createResizeObservers(mutation.target)
-    }
-  }
-
   function setupResizeObserver() {
     resizeObserver = new ResizeObserver(resizeObserved)
     createResizeObservers(window.document)
@@ -809,7 +803,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       if (observedMutations.size === 0) return
 
       // Look for injected elements that need ResizeObservers
-      observedMutations.forEach(addResizeObservers)
+      observedMutations.forEach(createResizeObservers)
 
       // apply sizeSelector to new elements
       applySizeSelector()
@@ -835,10 +829,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       const observer = new window.MutationObserver(mutationObserved)
       const target = document.querySelector('body')
       const config = {
-        // attributes: true,
         attributes: false,
         attributeOldValue: false,
-        // characterData: true,
         characterData: false,
         characterDataOldValue: false,
         childList: true,
@@ -866,6 +858,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   }
 
   function getMaxElement(side) {
+    performance.mark(PREF_START)
+
     const Side = capitalizeFirstLetter(side)
 
     let elVal = 0
