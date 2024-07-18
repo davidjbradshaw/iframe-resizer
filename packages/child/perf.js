@@ -63,7 +63,7 @@ const timingCheck = setInterval(() => {
   // )
   // console.info('Average time:', round(average), average)
 
-  log('Max time:', Math.max(timings))
+  log('Max time:', Math.max(...timings))
 
   if (average <= THRESHOLD) return
 
