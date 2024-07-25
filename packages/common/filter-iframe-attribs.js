@@ -7,6 +7,7 @@ export default (props) => {
     checkOrigin,
     direction,
     inPageLinks,
+    log,
     offset,
     offsetHeight,
     offsetWidth,
