@@ -85,27 +85,22 @@
     <h4>Data returned by parentIFrame.getParentProps()</h4>
     <table id="data"></table>
 
-    <!-- 
-      The data-iframe-size attribute tells iframe-resizer to use this element
-      to calculate the height of the iframe, when the content overflows the
-      <body> element.     
-    -->
-    <div id="abs" data-iframe-size>
+    <div id="abs">
       <p>
         This is an absolute positioned element that will animate to 
         a height of 800px using CSS keyframes. 
       </p>
     </div>
 
-    <!-- script>
-      // Add some content to to show the effect of using data-iframe-size above
-      for (var i = 0; i < 10000; i++) {
-        document.write(
-          '<div style="position: absolute">This is a test to see if the page will grow to accommodate the content.</div>'
-        );
-      }
-      
-    </script -->
+    <script>
+    //   // Add some content to to show the effect of using data-iframe-size above
+    //   for (let i = 0; i < 500; i++) {
+    //     const span = document.createElement('span')
+    //     span.style.setProperty('position', 'relative')
+    //     span.textContent = `. `
+    //     document.getElementById('insert').append(span);
+    //   }
+    // </script>
 
     <script>
       const dataTable = document.getElementById('data')
@@ -126,10 +121,9 @@
         // You should not need to do this with same domain iframes.
         // offsetHeight: -1,
 
+        // sizeSelector: "#abs",
+
         onReady: () => {
-          //   parentIFrame.getPageInfo((pageInfo) => {
-          //     dataTable.innerHTML = Object.entries(pageInfo).map(row).join('\n')
-          //   })
           window.parentIframe.getParentProps((pageInfo) => {
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })

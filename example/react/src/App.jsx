@@ -22,6 +22,7 @@ function App() {
       <h2>@iframe-resizer/react example</h2>
       <IframeResizer
         license="GPLv3"
+        log
         forwardRef={iframeRef}
         inPageLinks
         onMessage={onMessage}
