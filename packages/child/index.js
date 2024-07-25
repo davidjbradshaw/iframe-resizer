@@ -792,14 +792,60 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   function setupBodyMutationObserver() {
     const observedMutations = new Set()
     let pending = false
+    let perfMon = 0
+    let newMutations = []
 
-    const updateMutation = (mutation) => {
-      mutation.addedNodes.forEach((el) => observedMutations.add(el))
-      mutation.removedNodes.forEach((el) => observedMutations.delete(el))
+    const updateMutation = (mutations) => {
+      const { length } = mutations
+
+      for (let i = 0; i < length; i++) {
+        const { addedNodes, removedNodes } = mutations[i]
+
+        const aLen = addedNodes.length
+        const rLen = removedNodes.length
+
+        if (aLen > 2) {
+          log('MutationObserver: addedNodes', addedNodes)
+        }
+
+        if (aLen) {
+          for (let j = 0; j < aLen; j++) {
+            observedMutations.add(addedNodes[j])
+          }
+        }
+
+        if (rLen) {
+          for (let j = 0; j < rLen; j++) {
+            observedMutations.delete(removedNodes[j])
+          }
+        }
+      }
     }
 
+    const DELAY = 18
+    let delayCount = 0
+
     function processMutations() {
-      if (observedMutations.size === 0) return
+      const now = performance.now()
+      const delay = now - perfMon
+
+      // Back off if the callStack is busy with other stuff
+      if (delay > DELAY * ++delayCount) {
+        info(`MutationObserver delay: ${delay}ms`)
+        setTimeout(processMutations, DELAY * delayCount)
+        perfMon = now
+        return
+      }
+
+      delayCount = 0
+
+      newMutations.forEach(updateMutation)
+      newMutations = []
+
+      if (observedMutations.size === 0) {
+        pending = false
+        return
+      }
 
       // apply sizeSelector to new elements
       applySizeSelector()
@@ -812,16 +858,17 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       observedMutations.forEach(createResizeObservers)
 
       observedMutations.clear()
+
       pending = false
     }
 
     function mutationObserved(mutations) {
-      mutations.forEach(updateMutation)
+      newMutations.push(mutations)
+      if (pending) return
 
-      if (!pending) {
-        pending = true
-        requestAnimationFrame(processMutations)
-      }
+      perfMon = performance.now()
+      pending = true
+      requestAnimationFrame(processMutations)
     }
 
     function createMutationObserver() {
@@ -873,7 +920,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       ? taggedElements
       : isOverflowed()
         ? getOverflowedElements()
-        : getAllElements(document)()
+        : getAllElements(document)() // We should never get here, but just in case
 
     let len = targetElements.length
 
