@@ -26,7 +26,7 @@ export const overflowObserver = (options) => {
     })
 
     overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-    log('overflowedElements:', overflowedElements)
+    log('overflowedElements:', overflowedElements.length)
     onChange()
   }
 
