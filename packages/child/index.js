@@ -822,22 +822,26 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       }
     }
 
-    const DELAY = 18
-    let delayCount = 0
+    const DELAY = 16 // Corresponds to 60fps
+    const DELAY_MARGIN = 2
+    const DELAY_MAX = 200
+
+    let delayCount = 1
 
     function processMutations() {
       const now = performance.now()
       const delay = now - perfMon
+      const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
 
       // Back off if the callStack is busy with other stuff
-      if (delay > DELAY * ++delayCount) {
-        info(`MutationObserver delay: ${delay}ms`)
+      if (delay > delayLimit && delay < DELAY_MAX) {
+        log(`MutationObserver delay: ${delay}ms > ${delayLimit}`)
         setTimeout(processMutations, DELAY * delayCount)
         perfMon = now
         return
       }
 
-      delayCount = 0
+      delayCount = 1
 
       newMutations.forEach(updateMutation)
       newMutations = []
