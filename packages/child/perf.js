@@ -38,7 +38,7 @@ function usedEl(detail, duration) {
   lastPerfEl = perfEl
 
   info(
-    `\n${Side} position calculated from:\n`,
+    `\n${Side} position calculated from:`,
     perfEl,
     `\nParsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
   )
