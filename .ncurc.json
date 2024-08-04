@@ -1,3 +1,18 @@
 {
-  "reject": ["grunt-contrib-qunit"]
+  "reject": [
+    "grunt-contrib-quint",
+    "eslint",
+    "eslint-plugin-compat",
+    "eslint-plugin-jest",
+    "eslint-plugin-json",
+    "eslint-plugin-lodash",
+    "eslint-plugin-markdown",
+    "eslint-plugin-no-secrets",
+    "eslint-plugin-no-use-extend-native",
+    "eslint-plugin-promise",
+    "eslint-plugin-security",
+    "eslint-plugin-sonarjs",
+    "eslint-plugin-switch-case",
+    "eslint-plugin-unicorn"
+  ]
 }
