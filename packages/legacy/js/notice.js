@@ -4,6 +4,8 @@ This package has been split into separate packages for Parent and Child pages. A
 
 Version 5 of iframe-resizer has been extensively rewritten to use modern browser APIs, which has enabled significantly better performance and greater accuracy in the detection of content resizing events.
 
+Going forward you are advised to use the separate packages for Parent and Child pages, rather than this combined package.
+
 Please see https://iframe-resizer.com/upgrade for more details.
 `
 
