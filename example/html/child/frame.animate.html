@@ -83,7 +83,7 @@
     </p>
 
     <h4>Data returned by parentIFrame.getParentProps()</h4>
-    <table id="data"></table>
+    <table id="data"><tr></tr></table>
 
     <span id="insert"></span>
 
@@ -133,6 +133,7 @@
 
         onReady: () => {
           parentIFrame.getParentProps((pageInfo) => {
+            dataTable.firstChild.remove() // Prevent memory leak
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })
         },

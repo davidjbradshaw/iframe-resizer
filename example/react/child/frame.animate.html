@@ -125,6 +125,7 @@
 
         onReady: () => {
           window.parentIframe.getParentProps((pageInfo) => {
+            dataTable.firstChild.remove() // Prevent memory leak
             dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
           })
         },
