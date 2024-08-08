@@ -5,15 +5,17 @@
     <title>iFrame message passing test</title>
     <meta name="description" content="iFrame message passing test" />
     <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <style>
       a.toggle {
         float: right;
         margin-left: 8px;
       }
-      /* iframe {
-        border-width: 0;
-      } */
+
+      iframe {
+        height: 300px;
+        /* border-width: 0; */
+      }
+
     </style>
   </head>
 
@@ -24,13 +26,14 @@
       Back to
       <a name="anchorParentTest" href="index.html">vertical iframes</a>.
     </p>
+    
     <div id="iframeContainer" style="margin: 20px">
       <iframe
         src="child/frame.animate-width.html"
-        height="300px"
         scrolling="no"
       ></iframe>
     </div>
+
     <p id="callback"></p>
     <div style="margin: 8px 0; font-size: 13px">
       For details on how this works, see
@@ -46,7 +49,7 @@
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iframeResize({log:true});
+       *   iframeResize({ license: 'YOUR-LICENSE' })
        *
        * Once you have it working, set the log option to false.
        */

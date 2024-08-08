@@ -5,7 +5,13 @@
     <title>iFrame message passing test</title>
     <meta name="description" content="iFrame message passing test" />
     <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      iframe {
+        width: 48%;
+        height: 100vh;
+        /* border-width: 0; */
+      }
+    </style>
   </head>
 
   <body>
@@ -18,13 +24,11 @@
     <div style="margin: 20px; overflow: auto">
       <iframe
         src="child/frame.content.html"
-        width="48%"
         scrolling="no"
         style="float: left; margin-right: 2%"
       ></iframe>
       <iframe
         src="child/frame.content.html"
-        width="48%"
         scrolling="no"
       ></iframe>
     </div>
@@ -44,7 +48,7 @@
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iframeResize({ license: '' });
+       *   iframeResize({ license: 'YOUR-LICENSE' })
        *
        */
 
@@ -53,6 +57,7 @@
       const iframes = iframeResize({
         inPageLinks: true, // Enable in page links
         license: 'GPLv3',
+
         onResized(messageData) {
           // Callback fn when resize is received
           callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
