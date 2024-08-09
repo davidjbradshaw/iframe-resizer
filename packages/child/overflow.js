@@ -34,7 +34,7 @@ export const overflowObserver = (options) => {
 
   return (nodeList) =>
     nodeList.forEach((el) => {
-      if (observedElements.has(el)) return
+      if (!el || observedElements.has(el)) return
       observer.observe(el)
       observedElements.add(el)
     })

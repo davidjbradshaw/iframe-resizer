@@ -578,6 +578,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       default:
         if (messageData.width === 0 && messageData.height === 0) {
           warn(
+            iframeId,
             `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
               `version of iframe-resizer than the parent page`,
           )
@@ -639,7 +640,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   iframeId = messageData.id
 
   if (!iframeId) {
-    warn('iframeResizer received messageData without id, message was: ', msg)
+    warn(
+      '',
+      'iframeResizer received messageData without id, message was: ',
+      msg,
+    )
     return
   }
 
@@ -693,7 +698,7 @@ function closeIFrame(iframe) {
       iframe.remove()
     }
   } catch (error) {
-    warn(error)
+    warn(iframeId, error)
   }
 
   chkEvent(iframeId, 'onClosed', iframeId)
