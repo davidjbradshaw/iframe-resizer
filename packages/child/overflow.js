@@ -32,12 +32,13 @@ export const overflowObserver = (options) => {
 
   const observer = new IntersectionObserver(callback, observerOptions)
 
-  return (nodeList) =>
-    nodeList.forEach((el) => {
-      if (!el || observedElements.has(el)) return
-      observer.observe(el)
-      observedElements.add(el)
-    })
+  function add(el) {
+    if (!el || observedElements.has(el)) return
+    observer.observe(el)
+    observedElements.add(el)
+  }
+
+  return (nodeList) => nodeList.forEach(add)
 }
 
 export const isOverflowed = () => overflowedElements.length > 0
