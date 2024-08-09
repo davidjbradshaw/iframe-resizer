@@ -762,8 +762,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   const resizeSet = new WeakSet()
 
   function setupResizeObservers(el) {
-    if (!el) return
-    if (resizeSet.has(el)) return
+    if (!el || resizeSet.has(el)) return
     resizeObserver.observe(el)
     resizeSet.add(el)
     log(`Attached resizeObserver: ${getElementName(el)}`)
