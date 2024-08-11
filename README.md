@@ -25,6 +25,7 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 * Adds onMouseEnter and onMouseLeave events to the iframe element
 * Simplified message passing between the iframe and the parent page
 * Automatic domain authentication
+* Enhanced Accessibility
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
