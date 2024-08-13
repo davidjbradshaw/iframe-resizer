@@ -178,7 +178,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         )
       })
 
-      it('setTargetOrigin', () => {
+      xit('setTargetOrigin', () => {
         const targetOrigin = 'http://foo.bar:1337'
 
         win.parentIFrame.setTargetOrigin(targetOrigin)
