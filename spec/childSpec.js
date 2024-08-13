@@ -61,20 +61,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.autoResize(true)
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Add event listener: After Print',
-        )
-
-        expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Add event listener: Before Print',
-        )
-        win.parentIFrame.autoResize(false)
-
-        expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Remove event listener: After Print',
-        )
-
-        expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Remove event listener: Before Print',
+          '[iframe-resizer][parentIFrameTests] Trigger event: Auto Resize enabled',
         )
       })
 
@@ -195,13 +182,14 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         const targetOrigin = 'http://foo.bar:1337'
 
         win.parentIFrame.setTargetOrigin(targetOrigin)
-        win.parentIFrame.size(10, 10)
-        win.parentIFrame.setTargetOrigin('*')
+        win.parentIFrame.resize(10, 10)
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
           '[iFrameSizer]parentIFrameTests:10:10:size',
           targetOrigin,
         )
+
+        win.parentIFrame.setTargetOrigin('*')
       })
     })
 
