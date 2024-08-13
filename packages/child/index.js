@@ -1,6 +1,7 @@
 import {
   BASE,
   HEIGHT_EDGE,
+  MANUAL_RESIZE_REQUEST,
   SIZE_ATTR,
   VERSION,
   WIDTH_EDGE,
@@ -470,20 +471,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function initEventListeners() {
-    if (autoResize !== true) {
-      log('Auto Resize disabled')
-      return
-    }
-
     manageEventListeners('add')
     setupMutationObserver()
     setupResizeObserver()
-  }
-
-  function stopEventListeners() {
-    manageEventListeners('remove')
-    resizeObserver?.disconnect()
-    bodyObserver?.disconnect()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -618,10 +608,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       autoResize: (resize) => {
         if (resize === true && autoResize === false) {
           autoResize = true
-          initEventListeners()
+          sendSize('autoResizeEnabled', 'Auto Resize enabled')
         } else if (resize === false && autoResize === true) {
           autoResize = false
-          stopEventListeners()
         }
 
         sendMsg(0, 0, 'autoResize', JSON.stringify(autoResize))
@@ -1172,6 +1161,11 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     customWidth,
     msg,
   ) {
+    if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
+      log('Resizing disabled')
+      return
+    }
+
     if (document.hidden) {
       // Currently only correctly supported in firefox
       // This is checked again on the parent page
@@ -1272,7 +1266,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       },
 
       resize() {
-        sendSize('resizeParent', 'Parent window requested size check')
+        sendSize(MANUAL_RESIZE_REQUEST, 'Parent window requested size check')
       },
 
       moveToAnchor() {

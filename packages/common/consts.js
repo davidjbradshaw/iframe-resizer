@@ -9,6 +9,8 @@ export const OVERFLOW_ATTR = 'data-iframe-overflow'
 export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
 
+export const MANUAL_RESIZE_REQUEST = 'resizeParent'
+
 export const msgHeader = 'message'
 export const msgHeaderLen = msgHeader.length
 export const msgId = '[iFrameSizer]' // Must match iframe msg ID
