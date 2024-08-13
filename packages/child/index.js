@@ -206,7 +206,7 @@ See <u>https://iframe-resizer.com/setup/</> for more details.
 
     if (version !== VERSION) {
       advise(
-        `<rb>Version mismatch</>
+        `<b>Version mismatch</>
 
 The parent and child pages are running different versions of <i>iframe resizer</>.
 
