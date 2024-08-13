@@ -471,6 +471,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function initEventListeners() {
+    if (autoResize !== true) {
+      log('Auto Resize disabled')
+    }
+
     manageEventListeners('add')
     setupMutationObserver()
     setupResizeObserver()
