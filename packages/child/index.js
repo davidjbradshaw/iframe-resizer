@@ -76,7 +76,6 @@ function iframeResizerChild() {
   let bodyBackground = ''
   let bodyMargin = 0
   let bodyMarginStr = ''
-  let bodyObserver = null
   let bodyPadding = ''
   let calculateHeight = true
   let calculateWidth = false
@@ -782,7 +781,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     createResizeObservers(window.document)
   }
 
-  function setupBodyMutationObserver() {
+  function setupMutationObserver() {
     const observedMutations = new Set()
     let pending = false
     let perfMon = 0
@@ -894,10 +893,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         observer.disconnect()
       },
     }
-  }
-
-  function setupMutationObserver() {
-    bodyObserver = setupBodyMutationObserver()
   }
 
   function getMaxElement(side) {
