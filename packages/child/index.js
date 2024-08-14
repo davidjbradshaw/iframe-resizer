@@ -475,7 +475,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     manageEventListeners('add')
     setupMutationObserver()
-    setupResizeObserver()
+    setupResizeObservers()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -763,12 +763,12 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     return [...getAllElements(el)()]
       .filter(checkPositionType)
-      .forEach(setupResizeObservers)
+      .forEach(setupResizeObserver)
   }
 
   const resizeSet = new WeakSet()
 
-  function setupResizeObservers(el) {
+  function setupResizeObserver(el) {
     if (resizeSet.has(el)) return
 
     resizeObserver.observe(el)
@@ -776,9 +776,9 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     log(`Attached resizeObserver: ${getElementName(el)}`)
   }
 
-  function setupResizeObserver() {
+  function setupResizeObservers() {
     resizeObserver = new ResizeObserver(resizeObserved)
-    setupResizeObservers(document.body)
+    setupResizeObserver(document.body)
     attachResizeObserverToNonStaticElements(document.body)
   }
 
