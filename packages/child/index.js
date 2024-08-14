@@ -69,7 +69,6 @@ function iframeResizerChild() {
     bodyScroll: 1,
     documentElementScroll: 1,
   }
-  const resizeObserveTargets = ['body']
   const widthCalcModeDefault = 'scroll'
 
   let autoResize = true
@@ -751,34 +750,36 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     }, 0)
   }
 
-  const checkPositionType = (element) => {
-    const style = getComputedStyle(element)
+  const checkPositionType = (el) => {
+    if (el?.nodeType !== Node.ELEMENT_NODE) return false
+
+    const style = getComputedStyle(el)
+
     return style?.position !== '' && style?.position !== 'static'
   }
 
-  const getAllNonStaticElements = () =>
-    [...getAllElements(document)()].filter(checkPositionType)
+  const attachResizeObserverToNonStaticElements = (el) => {
+    if (el?.nodeType !== Node.ELEMENT_NODE) return null
+
+    return [...getAllElements(el)()]
+      .filter(checkPositionType)
+      .forEach(setupResizeObservers)
+  }
 
   const resizeSet = new WeakSet()
 
   function setupResizeObservers(el) {
-    if (el?.nodeType !== Node.ELEMENT_NODE) return
     if (resizeSet.has(el)) return
+
     resizeObserver.observe(el)
     resizeSet.add(el)
     log(`Attached resizeObserver: ${getElementName(el)}`)
   }
 
-  function createResizeObservers(el) {
-    ;[
-      ...getAllNonStaticElements(),
-      ...resizeObserveTargets.flatMap((target) => el.querySelector(target)),
-    ].forEach(setupResizeObservers)
-  }
-
   function setupResizeObserver() {
     resizeObserver = new ResizeObserver(resizeObserved)
-    createResizeObservers(window.document)
+    setupResizeObservers(document.body)
+    attachResizeObserverToNonStaticElements(document.body)
   }
 
   function setupMutationObserver() {
@@ -851,7 +852,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
       // Add observers to new elements
       addOverflowObservers(observedMutations)
-      observedMutations.forEach(createResizeObservers)
+      observedMutations.forEach(attachResizeObserverToNonStaticElements)
 
       observedMutations.clear()
 
