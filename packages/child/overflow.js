@@ -33,7 +33,9 @@ export const overflowObserver = (options) => {
   const observer = new IntersectionObserver(callback, observerOptions)
 
   function add(el) {
-    if (!el || observedElements.has(el)) return
+    if (el?.nodeType !== Node.ELEMENT_NODE) return
+    if (observedElements.has(el)) return
+
     observer.observe(el)
     observedElements.add(el)
   }
