@@ -712,8 +712,8 @@ The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. 
         const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
 
         sendSize(
-          'size',
-          `parentIFrame.size(${valString})`,
+          MANUAL_RESIZE_REQUEST,
+          `parentIFrame.resize(${valString})`,
           customHeight,
           customWidth,
         )
