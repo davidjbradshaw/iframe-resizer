@@ -131,12 +131,13 @@
     <script>
       document
         .getElementById('heightCalculationMethod')
-        .addEventListener('change', () => {
+        .addEventListener('change', function() {
           if ('parentIFrame' in window) {
             const { parentIFrame } = window
+            console.log('heightCalculationMethod', this)
 
             parentIFrame.setHeightCalculationMethod(this.value)
-            parentIFrame.size()
+            parentIFrame.resize()
           }
         })
     </script>
