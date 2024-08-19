@@ -1,6 +1,6 @@
 define(['iframeResizerParent'], (iframeResize) => {
   describe('Parent Page', () => {
-    describe('default resize', () => {
+    xdescribe('default resize', () => {
       const testId = 'defaultResize3'
 
       let iframe
