@@ -1,5 +1,3 @@
-import { warn } from "../packages/common/log"
-
 define(['iframeResizerParent'], (iframeResize) => {
   describe('Parent Page', () => {
     describe('default resize', () => {
