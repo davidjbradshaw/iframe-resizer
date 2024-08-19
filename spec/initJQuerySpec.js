@@ -1,22 +1,18 @@
 define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
-  xdescribe('iFrame init(jQuery)', () => {
-    let iframe
+  describe('iFrame init(jQuery)', () => {
+    loadIFrame('iframe600.html')
 
-    beforeAll(() => {
-      loadIFrame('iframe600.html')
-
-      const $iframes = $('iframe').iframeResize()
-
-      iframe = $iframes.get(0)
-    })
-
-    afterAll(() => {
-      tearDown(iframe)
-    })
-
-    it('should create iFrameResizer object', () => {
-      expect(iframe.iFrameResizer).toBeDefined()
+    xit('should create iFrameResizer object', (done) => {
+      $('iframe').iframeResize({
+        license: 'GPLv3',
+        log: true,
+        warningTimeout: 1000,
+        onReady: (iframe) => {
+          expect(iframe.iFrameResizer).toBeDefined()
+          tearDown(iframe)
+          done()
+        },
+      })
     })
   })
 })
-it

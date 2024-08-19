@@ -342,6 +342,29 @@ const js = [
     ],
     plugins: injectVersion(),
   },
+  {
+    input: 'packages/parent/umd.js',
+    output: [
+      {
+        banner: createBanner('parent', 'test-js'),
+        file: 'test-js/iframe-resizer.parent.js',
+        format: 'umd',
+        name: 'iframeResize',
+      },
+    ],
+    plugins: [injectVersion(), resolve()],
+  },
+  {
+    input: 'packages/jquery/plugin.js',
+    output: [
+      {
+        banner: createBanner('jquery', 'test-js'),
+        file: 'test-js/iframe-resizer.jquery.js',
+        format: 'umd',
+      },
+    ],
+    plugins: [injectVersion(), resolve()],
+  },
 ]
 
 export default debugMode ? js : npm.concat(js)

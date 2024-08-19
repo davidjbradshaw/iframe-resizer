@@ -1,13 +1,14 @@
-define(['iframeResizerParent'], function (iframeResize) {
+define(['iframeResizerParent'], (iframeResize) => {
   xdescribe('iFrame init', () => {
-    var iframe
-    var id = 'initTest'
+    let iframe
+    const id = 'initTest'
 
-    beforeEach(function (done) {
+    beforeEach((done) => {
       loadIFrame('iframe600.html')
 
       iframe = iframeResize({
-        log,
+        license: 'GPLv3',
+        log: true,
         id: id + '-',
         checkOrigin: false,
         inPageLinks: true,
@@ -23,7 +24,7 @@ define(['iframeResizerParent'], function (iframeResize) {
     })
 
     afterEach(() => {
-      //tearDown(iframe);
+      tearDown(iframe)
     })
 
     it('should add an ID', () => {

@@ -30,7 +30,7 @@ module.exports = function (config) {
       { pattern: 'dist/legacy/js/*.js', included: false },
       // { pattern: 'packages/*.js', included: false },
       { pattern: 'example/html/*.html', included: false },
-      { pattern: 'example/child/*.html', included: false },
+      { pattern: 'example/html/child/*.html', included: false },
       { pattern: 'spec/*Spec.js', included: false },
       { pattern: 'spec/resources/*', included: false },
       { pattern: 'spec/javascripts/fixtures/*.html', included: false },

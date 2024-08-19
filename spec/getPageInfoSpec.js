@@ -1,16 +1,18 @@
 define(['iframeResizerParent'], (iframeResize) => {
   describe('Get Page info', () => {
-    const log = LOG
-    // const testId = 'anchor'
-
     beforeEach(() => {
       loadIFrame('iframe600.html')
     })
 
     it('requested from iFrame', (done) => {
       const iframe1 = iframeResize({
-        log,
+        license: 'GPLv3',
+        log: true,
         id: 'getPageInfo',
+        onReady: (iframe) => {
+          mockMsgFromIFrame(iframe, 'pageInfo')
+          mockMsgFromIFrame(iframe, 'pageInfoStop')
+        },
       })[0]
 
       spyOn(iframe1.contentWindow, 'postMessage').and.callFake((msg) => {
@@ -26,22 +28,18 @@ define(['iframeResizerParent'], (iframeResize) => {
           done()
         }
       })
-
-      mockMsgFromIFrame(iframe1, 'pageInfo')
-      mockMsgFromIFrame(iframe1, 'pageInfoStop')
     })
   })
 
-  describe('Get Page info with multiple frames', () => {
-    const log = LOG
-
+  xdescribe('Get Page info with multiple frames', () => {
     beforeEach(() => {
       loadIFrame('twoIFrame600WithId.html')
     })
 
-    xit('must send pageInfo to second frame', (done) => {
+    it('must send pageInfo to second frame', (done) => {
       const iframes = iframeResize({
-        log,
+        license: 'GPLv3',
+        log: true,
         id: '#frame1,#frame2',
         onReady: (iframe) => {
           iframe.iFrameResizer.sendMessage('getPageInfo')

@@ -20,8 +20,8 @@ require.config({
 
   paths: {
     jquery: 'node_modules/jquery/dist/jquery',
-    iframeResizerParent: 'dist/parent/index.umd',
-    iframeResizerJquery: 'dist/jquery/index.umd',
+    iframeResizerParent: 'test-js/iframe-resizer.parent',
+    iframeResizerJquery: 'test-js/iframe-resizer.jquery',
     iframeResizerChild: 'test-js/iframe-resizer.child',
   },
 
