@@ -1,7 +1,6 @@
-define(['iframeResizerParent'], function (iframeResize) {
+define(['iframeResizerParent'], (iframeResize) => {
   describe('Scroll Page', () => {
-    var iframe
-    const log = LOG
+    let iframe
 
     beforeEach(() => {
       loadIFrame('iframe600.html')
@@ -11,14 +10,11 @@ define(['iframeResizerParent'], function (iframeResize) {
       tearDown(iframe)
     })
 
-    it('mock incoming message', function (done) {
-      iframe = iframeResize({
-        log,
-        id: 'scroll1',
-      })[0]
+    it('mock incoming message (scrollTo)', (done) => {
+      iframe = iframeResize({ license: 'GPLv3', log: true, id: 'scroll1' })[0]
 
       window.parentIFrame = {
-        scrollTo: function (x, y) {
+        scrollTo: (x, y) => {
           expect(x).toBe(0)
           expect(y).toBe(0)
           done()
@@ -28,14 +24,11 @@ define(['iframeResizerParent'], function (iframeResize) {
       mockMsgFromIFrame(iframe, 'scrollTo')
     })
 
-    it('mock incoming message', function (done) {
-      iframe = iframeResize({
-        log,
-        id: 'scroll2',
-      })[0]
+    it('mock incoming message (scrollToOffset)', (done) => {
+      iframe = iframeResize({ license: 'GPLv3', log: true, id: 'scroll2' })[0]
 
       window.parentIFrame = {
-        scrollToOffset: function (x, y) {
+        scrollToOffset: (x, y) => {
           expect(x).toBe(8)
           expect(y).toBe(8)
           done()

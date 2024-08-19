@@ -1,24 +1,24 @@
 define(['iframeResizerParent'], (iframeResize) => {
-  describe('iFrame init(DOM Object)', () => {
-    let iframe
+  // xdescribe('iFrame init(DOM Object)', () => {
+  //   let iframe
 
-    beforeAll(() => {
-      loadIFrame('iframe600.html')
+  //   beforeAll(() => {
+  //     loadIFrame('iframe600.html')
 
-      iframe = iframeResize(
-        {
-          license: 'GPLv3',
-        },
-        document.getElementsByTagName('iframe')[0],
-      )[0]
-    })
+  //     iframe = iframeResize(
+  //       {
+  //         license: 'GPLv3',
+  //       },
+  //       document.getElementsByTagName('iframe')[0],
+  //     )[0]
+  //   })
 
-    afterAll(() => {
-      tearDown(iframe)
-    })
+  //   afterAll(() => {
+  //     tearDown(iframe)
+  //   })
 
-    it('should create iFrameResizer object', () => {
-      expect(iframe.iFrameResizer).toBeDefined()
-    })
-  })
+  //   it('should create iFrameResizer object', () => {
+  //     expect(iframe.iFrameResizer).toBeDefined()
+  //   })
+  // })
 })

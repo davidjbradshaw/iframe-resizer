@@ -1,16 +1,20 @@
+import { warn } from "../packages/common/log"
+
 define(['iframeResizerParent'], (iframeResize) => {
   describe('Parent Page', () => {
-    xdescribe('default resize', () => {
-      let iframe
-      const log = LOG
+    describe('default resize', () => {
       const testId = 'defaultResize3'
+
+      let iframe
       let ready
 
       beforeEach((done) => {
         loadIFrame('iframe600.html')
         iframe = iframeResize({
-          log,
+          license: 'GPLv3',
+          log: true,
           id: testId,
+          warningTimeout: 1000,
           onResized: () => {
             ready = true
             done()
@@ -31,15 +35,12 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     xdescribe('reset Page', () => {
       let iframe
-      const log = LOG
+
       const testId = 'parentPage1'
 
       beforeEach((done) => {
         loadIFrame('iframe600.html')
-        iframe = iframeResize({
-          log,
-          id: testId,
-        })[0]
+        iframe = iframeResize({ license: 'GPLv3', log: true, id: testId })[0]
 
         spyOn(iframe.contentWindow, 'postMessage').and.callFake(done)
         mockMsgFromIFrame(iframe, 'reset')
@@ -59,15 +60,12 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     xdescribe('late load msg received', () => {
       let iframe
-      const log = LOG
+
       const testId = 'parentPage2'
 
       beforeEach((done) => {
         loadIFrame('iframe600.html')
-        iframe = iframeResize({
-          log,
-          id: testId,
-        })[0]
+        iframe = iframeResize({ license: 'GPLv3', log: true, id: testId })[0]
 
         spyOn(iframe.contentWindow, 'postMessage').and.callFake(done)
         window.postMessage('[iFrameResizerChild]Ready', '*')
@@ -79,15 +77,14 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       it('receive message 3', () => {
         expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentPage2:8:false:true:32:true:true:null:bodyOffset:null:null:0:false:parent:scroll:true',
+          '[iFrameSizer]parentPage2:8:false:true:32:true:true::auto:::0:false:child:auto:true:::true:GPLv3:5.2.4:0',
           'http://localhost:9876',
         )
       })
     })
 
-    xdescribe('resize height', () => {
+    describe('resize height', () => {
       let iframe
-      const log = LOG
       const testId = 'parentPage3'
       const HEIGHT = 90
       const extraHeights = [1, 2, 3, 4]
@@ -95,10 +92,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       const setUp = (boxSizing, units) => {
         loadIFrame('iframe.html')
 
-        iframe = iframeResize({
-          log,
-          id: testId,
-        })[0]
+        iframe = iframeResize({ license: 'GPLv3', log: true, id: testId })[0]
 
         iframe.style.boxSizing = boxSizing
         iframe.style.paddingTop = extraHeights[0] + units
@@ -114,7 +108,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             `[iFrameSizer]${testId}:${HEIGHT}:600:mutationObserver`,
             '*',
           )
-        }, 0)
+        })
       }
 
       afterEach(() => {

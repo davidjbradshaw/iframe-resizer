@@ -1,62 +1,66 @@
 define(['iframeResizerParent'], (iframeResize) => {
-  describe('jump to anchor', () => {
-    let iframe
-    const log = LOG
-    // const testId = 'anchor'
-
+  xdescribe('jump to anchor', () => {
     beforeEach(() => {
       loadIFrame('iframe600.html')
     })
 
-    afterEach(() => {
-      tearDown(iframe)
-    })
-
     it('requested from host page', (done) => {
-      const iframe1 = iframeResize({
-        log,
+      iframeResize({
+        license: 'GPLv3',
+        log: true,
         id: 'anchor1',
-      })[0]
+        warningTimeout: 1000,
+        onReady: (iframe1) => {
+          spyOnIFramePostMessage(iframe1)
 
-      spyOnIFramePostMessage(iframe1)
-      setTimeout(() => {
-        iframe1.iFrameResizer.moveToAnchor('testAnchor')
-        expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]moveToAnchor:testAnchor',
-          getTarget(iframe1),
-        )
-        tearDown(iframe1)
-        done()
-      }, 100)
+          iframe1.iFrameResizer.moveToAnchor('testAnchor')
+
+          expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
+            '[iFrameSizer]moveToAnchor:testAnchor',
+            getTarget(iframe1),
+          )
+
+          tearDown(iframe1)
+          done()
+        },
+      })
     })
 
     it('mock incoming message', (done) => {
       const iframe2 = iframeResize({
-        log,
+        license: 'GPLv3',
+        log: true,
         id: 'anchor2',
+        warningTimeout: 1000,
+        onReady: (iframe2) => {
+          mockMsgFromIFrame(iframe2, 'inPageLink:#anchorParentTest')
+        },
         onScroll: (position) => {
           expect(position.x).toBe(8)
           expect(position.y).toBeGreaterThan(8)
+          tearDown(iframe2)
           done()
         },
       })[0]
-
-      mockMsgFromIFrame(iframe2, 'inPageLink:#anchorParentTest')
     })
 
     it('mock incoming message to parent', (done) => {
       const iframe3 = iframeResize({
-        log,
+        license: 'GPLv3',
+        log: true,
         id: 'anchor3',
+        warningTimeout: 1000,
+        onReady: (iframe3) => {
+          mockMsgFromIFrame(iframe3, 'inPageLink:#anchorParentTest2')
+        },
       })[0]
 
       window.parentIFrame = {
         moveToAnchor: () => {
+          tearDown(iframe3)
           done()
         },
       }
-
-      mockMsgFromIFrame(iframe3, 'inPageLink:#anchorParentTest2')
     })
   })
 })

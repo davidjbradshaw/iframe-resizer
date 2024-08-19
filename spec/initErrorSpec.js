@@ -1,30 +1,14 @@
-define(['iframeResizerParent'], function (iframeResize) {
-  describe('Setup error', function () {
-    var iframe
-    const log = LOG
-
-    beforeEach(function () {
+define(['iframeResizerParent'], (iframeResize) => {
+  describe('Setup error', () => {
+    beforeEach(() => {
       loadIFrame('iframe600.html')
     })
 
-    xit('min > max', function () {
-      expect(function () {
-        iframeResize({
-          log,
-          id: 'error1',
-          maxHeight: 100,
-          minHeight: 999,
-        })
-      }).toThrow(
-        new Error('Value for minHeight can not be greater than maxHeight'),
-      )
-    })
-
-    it('Unexpected data type', function () {
-      expect(function () {
+    it('Unexpected data type', () => {
+      expect(() => {
         iframeResize(
           {
-            log,
+            log: true,
             id: 'error2',
           },
           1,
@@ -32,11 +16,11 @@ define(['iframeResizerParent'], function (iframeResize) {
       }).toThrow(new TypeError('[iframeResizer] Unexpected data type (number)'))
     })
 
-    it('Expected <IFRAME> tag', function () {
-      expect(function () {
+    it('Expected <IFRAME> tag', () => {
+      expect(() => {
         iframeResize(
           {
-            log,
+            log: true,
             id: 'error3',
           },
           'div',
@@ -46,11 +30,11 @@ define(['iframeResizerParent'], function (iframeResize) {
       )
     })
 
-    it('Not a valid DOM element', function () {
-      expect(function () {
+    it('Not a valid DOM element', () => {
+      expect(() => {
         iframeResize(
           {
-            log,
+            log: true,
             id: 'error4',
           },
           {},
@@ -58,8 +42,8 @@ define(['iframeResizerParent'], function (iframeResize) {
       }).toThrow(new TypeError('[iframeResizer] Not a valid DOM element'))
     })
 
-    it('Options is not an object', function () {
-      expect(function () {
+    it('Options is not an object', () => {
+      expect(() => {
         iframeResize('ERROR')
       }).toThrow(new TypeError('Options is not an object'))
     })

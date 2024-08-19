@@ -7,7 +7,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000
 jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures'
 
 function tearDown(iframe) {
-  if (iframe) setTimeout(iframe.iFrameResizer.close, 1)
+  if (iframe?.iFrameResizer) setTimeout(iframe.iFrameResizer.close, 1)
   window.parentIFrame = undefined
 }
 

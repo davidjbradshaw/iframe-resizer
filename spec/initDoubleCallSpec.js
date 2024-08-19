@@ -17,12 +17,18 @@ define(['iframeResizerParent'], (iframeResize) => {
       }
 
       iframe = iframeResize({ license: 'GPLv3' }, '#doubleTest')[0]
-      iframeResize({ license: 'GPLv3' }, '#doubleTest')
-
-      expect(iframe.iFrameResizer).toBeDefined()
-      expect(console.warn).toHaveBeenCalled()
-
-      delete window.parentIFrame
+      iframeResize(
+        {
+          license: 'GPLv3',
+          onReady: (done) => {
+            expect(iframe.iFrameResizer).toBeDefined()
+            expect(console.warn).toHaveBeenCalled()
+            delete window.parentIFrame
+            done()
+          },
+        },
+        '#doubleTest',
+      )
     })
   })
 })
