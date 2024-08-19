@@ -62,7 +62,7 @@ function iframeListener(event) {
   function processMsg() {
     const data = msg.slice(msgIdLen).split(':')
     const height = data[1] ? Number(data[1]) : 0
-    const iframe = settings[data[0]]?.iframe
+    const iframe = settings[data[0]]?.ref.deref()
     const compStyle = getComputedStyle(iframe)
 
     return {
@@ -256,7 +256,7 @@ function iframeListener(event) {
         childList: true,
         subtree: true,
       })
-      iframeObserver.observe(settings[id].iframe, {
+      iframeObserver.observe(settings[id].ref.deref(), {
         attributes: true,
         childList: false,
         subtree: false,
@@ -377,7 +377,7 @@ function iframeListener(event) {
 
   function scrollTo(iframeId) {
     const { x, y } = page.position
-    const iframe = settings[iframeId]?.iframe
+    const iframe = settings[iframeId]?.ref.deref()
     if (on('onScroll', { iframe, top: y, left: x, x, y }) === false) {
       unsetPagePosition()
       return
@@ -466,7 +466,7 @@ function iframeListener(event) {
   function checkSameDomain(id) {
     try {
       settings[id].sameDomain =
-        !!settings[id]?.iframe?.contentWindow?.iframeChildListener
+        !!settings[id]?.ref.deref()?.contentWindow?.iframeChildListener
     } catch (error) {
       settings[id].sameDomain = false
     }
@@ -493,7 +493,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   function setTitle(title, iframeId) {
     if (!settings[iframeId]?.syncTitle) return
-    settings[iframeId].iframe.title = title
+    settings[iframeId].ref.deref().title = title
     log(iframeId, `Set title attribute to: ${title}`)
   }
 
@@ -762,7 +762,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
 
     if (settings[id].sameDomain) {
       try {
-        settings[id].iframe.contentWindow.iframeChildListener(msgId + msg)
+        settings[id].ref.deref().contentWindow.iframeChildListener(msgId + msg)
         log(
           id,
           `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
@@ -939,10 +939,11 @@ export default (options) => (iframe) => {
 
   function setupIFrameObject() {
     if (settings[iframeId]) {
+      const iframe = settings[iframeId].ref.deref()
       const resizer = {
-        close: closeIFrame.bind(null, settings[iframeId].iframe),
+        close: closeIFrame.bind(null, iframe),
 
-        disconnect: removeIframeListeners.bind(null, settings[iframeId].iframe),
+        disconnect: removeIframeListeners.bind(null, iframe),
 
         removeListeners() {
           advise(
@@ -959,6 +960,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
         resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
         moveToAnchor(anchor) {
+          log(iframeId, `Move to anchor: ${anchor}`)
           trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
         },
 
@@ -968,8 +970,8 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
         },
       }
 
-      settings[iframeId].iframe.iframeResizer = resizer
-      settings[iframeId].iframe.iFrameResizer = resizer
+      iframe.iframeResizer = resizer
+      console.log(iframeId, 'Resizer >>', iframe.iframeResizer)
     }
   }
 
@@ -1075,13 +1077,14 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function chkTitle(iframeId) {
-    const title = settings[iframeId]?.iframe?.title
+    const title = settings[iframeId]?.ref.deref()?.title
     return title === '' || title === undefined
   }
 
   function processOptions(options) {
     settings[iframeId] = {
       iframe,
+      ref: new WeakRef(iframe),
       firstRun: true,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
       ...defaults,
@@ -1153,5 +1156,7 @@ const setupEventListenersOnce = once(() => {
   addEventListener(window, 'message', iframeListener)
   addEventListener(document, 'visibilitychange', tabVisible)
   window.iframeParentListener = (data) =>
+    // setTimeout to escape call stack from child to parent
+    // setTimeout(() => iframeListener({ data, sameDomain: true }))
     iframeListener({ data, sameDomain: true })
 })
