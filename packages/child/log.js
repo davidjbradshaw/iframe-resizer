@@ -43,7 +43,8 @@ export function getElementName(el) {
 // }
 
 // TODO: remove .join(' '), requires major test updates
-const formatLogMsg = (...msg) => [`[iframe-resizer][${id}]`, ...msg].join(' ')
+const formatLogMsg = (...msg) =>
+  [`[iframe-resizer][${id || 'child'}]`, ...msg].join(' ')
 
 export const log = (...msg) =>
   // eslint-disable-next-line no-console

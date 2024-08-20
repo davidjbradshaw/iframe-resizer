@@ -1366,10 +1366,14 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     }
   }
 
-  window.iframeChildListener = (data) => receiver({ data, sameDomain: true })
-  addEventListener(window, 'message', receiver)
-  addEventListener(window, 'readystatechange', chkLateLoaded)
-  chkLateLoaded()
+  if ('iframeChildListener' in window) {
+    warn('Already setup')
+  } else {
+    window.iframeChildListener = (data) => receiver({ data, sameDomain: true })
+    addEventListener(window, 'message', receiver)
+    addEventListener(window, 'readystatechange', chkLateLoaded)
+    chkLateLoaded()
+  }
 
   /* TEST CODE START */
   function mockMsgListener(msgObject) {
