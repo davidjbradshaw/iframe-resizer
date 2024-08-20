@@ -1009,7 +1009,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         log(`Size unchanged: ${sizes}`)
         return Math.max(boundingSize, scrollSize)
 
-      case boundingSize === 0:
+      case boundingSize === 0 &&
+        document.body.getBoundingClientRect().bottom === 0:
         log(`Page is hidden: ${sizes}`)
         return scrollSize
 
