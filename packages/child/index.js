@@ -148,7 +148,7 @@ function iframeResizerChild() {
   }
 
   // Continue init after intersection observer has been setup
-  const initContinue = () => {
+  const initContinue = once(() => {
     sendSize(
       'init',
       'Init message from host page',
@@ -162,12 +162,12 @@ function iframeResizerChild() {
 
     log('Initialization complete')
     log('---')
-  }
+  })
 
   function setupObserveOverflow() {
     if (calculateHeight === calculateWidth) return
     observeOverflow = overflowObserver({
-      onChange: once(initContinue),
+      onChange: initContinue,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
   }
