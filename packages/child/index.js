@@ -8,7 +8,7 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { id, once } from '../common/utils'
+import { id } from '../common/utils'
 import {
   advise,
   adviser,
