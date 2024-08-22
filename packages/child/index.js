@@ -855,8 +855,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
       observedMutations.clear()
 
-      // sendSize('mutationObserver', 'Mutation Observed')
-
       pending = false
     }
 
