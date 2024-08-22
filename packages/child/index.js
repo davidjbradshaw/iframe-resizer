@@ -1,3 +1,4 @@
+import { send } from 'vite'
 import {
   BASE,
   HEIGHT_EDGE,
@@ -145,10 +146,10 @@ function iframeResizerChild() {
     injectClearFixIntoBodyElement()
     stopInfiniteResizingOfIFrame()
     applySizeSelector()
-  }
+  // }
 
-  // Continue init after intersection observer has been setup
-  const initContinue = () => {
+  // // Continue init after intersection observer has been setup
+  // const initContinue = () => {
     sendSize(
       'init',
       'Init message from host page',
@@ -167,7 +168,8 @@ function iframeResizerChild() {
   function setupObserveOverflow() {
     if (calculateHeight === calculateWidth) return
     observeOverflow = overflowObserver({
-      onChange: once(initContinue),
+      // onChange: once(initContinue),
+      onChange: () => sendSize('overflowChanged', 'Overflow updated'),
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
   }
@@ -179,8 +181,7 @@ function iframeResizerChild() {
   }
 
   function addOverflowObservers(nodeList) {
-    if (hasTags) setTimeout(initContinue)
-    else observeOverflow(nodeList)
+    if (!hasTags) observeOverflow(nodeList)
   }
 
   function sendTitle() {
@@ -822,6 +823,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     let delayCount = 1
 
     function processMutations() {
+      log('MutationObserver: processMutations')
       const now = performance.now()
       const delay = now - perfMon
       const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
@@ -855,6 +857,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       observedMutations.forEach(attachResizeObserverToNonStaticElements)
 
       observedMutations.clear()
+
+      // sendSize('mutationObserver', 'Mutation Observed')
 
       pending = false
     }

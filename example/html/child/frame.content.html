@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>iFrame message passing test</title>
-    <meta name="description" content="iFrame message passing test" />
+    <meta name="description" content="iFrame message patextContentntt" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script
       type="text/javascript"
@@ -27,11 +27,29 @@
         },
       }
     </script>
+    <script>
+      function insertOverflow() {
+        const div = document.createElement('div')
+        const { style } = div
+        style.overflow = 'auto'
+        style.width = '50px'
+        style.height = '50px'
+        style.border = '1px solid #c00'
+        style.background = '#f99'
+        style.opacity = '0.7'
+        style.position = 'absolute'
+        style.top = `${document.body.scrollHeight - 10}px`
+        
+        div.innerContent = 'Overflowing content'
+        document.body.lastChild.append(div)
+        return false
+      }
+    </script>
     <!-- html/body height is set to test that iframe-resier can over ride this value and set it back to 'auto' -->
     <style>
       html,
       body {
-        height: 100vh;
+        /* height: 100vh; */
       }
       *,
       *:before,
@@ -81,6 +99,8 @@
     <a href="frame.textarea.html">TextArea</a>
     &nbsp;
     <a href="frame.absolute.html">Absolute Position</a>
+    &nbsp;
+    <a href="#" onclick="return insertOverflow()">Insert overflow</a>
     &nbsp;
     <a
       href="#"
