@@ -1,4 +1,3 @@
-import { send } from 'vite'
 import {
   BASE,
   HEIGHT_EDGE,
@@ -146,10 +145,7 @@ function iframeResizerChild() {
     injectClearFixIntoBodyElement()
     stopInfiniteResizingOfIFrame()
     applySizeSelector()
-  // }
 
-  // // Continue init after intersection observer has been setup
-  // const initContinue = () => {
     sendSize(
       'init',
       'Init message from host page',
@@ -157,6 +153,7 @@ function iframeResizerChild() {
       undefined,
       VERSION,
     )
+
     sendTitle()
     initEventListeners()
     onReady()
