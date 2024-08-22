@@ -880,8 +880,8 @@ export default (options) => (iframe) => {
     }
 
     if (iframeId === '' || !iframeId) {
-      // eslint-disable-next-line no-multi-assign
-      iframe.id = iframeId = newId()
+      iframeId = newId()
+      iframe.id = iframeId
       setLogEnabled((options || {}).log)
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
