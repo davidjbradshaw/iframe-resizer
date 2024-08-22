@@ -165,7 +165,6 @@ function iframeResizerChild() {
   function setupObserveOverflow() {
     if (calculateHeight === calculateWidth) return
     observeOverflow = overflowObserver({
-      // onChange: once(initContinue),
       onChange: () => sendSize('overflowChanged', 'Overflow updated'),
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
