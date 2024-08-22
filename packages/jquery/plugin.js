@@ -18,8 +18,9 @@ switch (true) {
   default:
     window.jQuery.fn.iframeResize = function (options) {
       const connectWithOptions = connectResizer(options)
+      const init = (i, el) => connectWithOptions(el)
 
-      return this.filter('iframe').each(connectWithOptions).end()
+      return this.filter('iframe').each(init).end()
     }
 
     window.jQuery.fn.iFrameResize = function (options) {
