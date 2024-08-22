@@ -49,7 +49,7 @@ function iframeResizerChild() {
     offset: 1,
     documentElementOffset: 1,
     documentElementScroll: 1,
-    documentElementBoundingClientRect: 1,
+    boundingClientRect: 1,
     max: 1,
     min: 1,
     grow: 1,
@@ -953,7 +953,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     dimension.bodyScroll(),
     dimension.documentElementOffset(),
     dimension.documentElementScroll(),
-    dimension.documentElementBoundingClientRect(),
+    dimension.boundingClientRect(),
   ]
 
   const getAllElements = (element) => () =>
@@ -984,7 +984,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     const hasOverflow = isOverflowed()
     const isHeight = getDimension === getHeight
     const dimension = isHeight ? 'height' : 'width'
-    const boundingSize = getDimension.documentElementBoundingClientRect()
+    const boundingSize = getDimension.boundingClientRect()
     const ceilBoundingSize = Math.ceil(boundingSize)
     const floorBoundingSize = Math.floor(boundingSize)
     const scrollSize = getAdjustedScroll(getDimension)
@@ -1009,8 +1009,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         log(`Size unchanged: ${sizes}`)
         return Math.max(boundingSize, scrollSize)
 
-      case boundingSize === 0 &&
-        document.body.getBoundingClientRect().bottom === 0:
+      case boundingSize === 0:
         log(`Page is hidden: ${sizes}`)
         return scrollSize
 
@@ -1067,8 +1066,11 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     custom: () => customCalcMethods.height(),
     documentElementOffset: () => document.documentElement.offsetHeight,
     documentElementScroll: () => document.documentElement.scrollHeight,
-    documentElementBoundingClientRect: () =>
-      document.documentElement.getBoundingClientRect().bottom,
+    boundingClientRect: () =>
+      Math.max(
+        document.documentElement.getBoundingClientRect().bottom,
+        document.body.getBoundingClientRect().bottom,
+      ),
     max: () => Math.max(...getAllMeasurements(getHeight)),
     min: () => Math.min(...getAllMeasurements(getHeight)),
     grow: () => getHeight.max(),
@@ -1085,8 +1087,11 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     custom: () => customCalcMethods.width(),
     documentElementScroll: () => document.documentElement.scrollWidth,
     documentElementOffset: () => document.documentElement.offsetWidth,
-    documentElementBoundingClientRect: () =>
-      document.documentElement.getBoundingClientRect().right,
+    boundingClientRect: () =>
+      Math.max(
+        document.documentElement.getBoundingClientRect().right,
+        document.body.getBoundingClientRect().right,
+      ),
     max: () => Math.max(...getAllMeasurements(getWidth)),
     min: () => Math.min(...getAllMeasurements(getWidth)),
     rightMostElement: () => getMaxElement(WIDTH_EDGE),
