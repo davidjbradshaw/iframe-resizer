@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "5.2.5-beta.4",
+  "version": "5.2.5",
   "private": true,
   "type": "module",
   "license": "GPL-3.0",
