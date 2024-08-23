@@ -115,11 +115,10 @@ function iframeResizerChild() {
 
   function init() {
     readDataFromParent()
-    readDataFromPage()
-
-    log(`Initialising iFrame v${VERSION} (${window.location.href})`)
 
     setLogOptions({ id: myID, logging })
+    log(`Initialising iFrame v${VERSION} (${window.location.href})`)
+    readDataFromPage()
 
     checkCrossDomain()
     checkMode()
@@ -292,9 +291,15 @@ Parent page: ${version} - Child page: ${VERSION}.
 
     if (mode === 1) return
 
+    log(
+      'Read Data From Page:',
+      'iframeResizer' in window || 'iFrameResizer' in window,
+    )
+
     if (
-      'iFrameResizer' in window &&
-      Object === window.iFrameResizer.constructor
+      ('iFrameResizer' in window &&
+        Object === window.iFrameResizer.constructor) ||
+      ('iframeResizer' in window && Object === window.iframeResizer.constructor)
     ) {
       readData()
       heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
