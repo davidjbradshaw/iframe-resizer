@@ -1153,5 +1153,5 @@ const setupEventListenersOnce = once(() => {
   addEventListener(window, 'message', iframeListener)
   addEventListener(document, 'visibilitychange', tabVisible)
   window.iframeParentListener = (data) =>
-    iframeListener({ data, sameDomain: true })
+    setTimeout(() => iframeListener({ data, sameDomain: true }))
 })
