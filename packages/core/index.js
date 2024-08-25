@@ -677,7 +677,8 @@ function chkEvent(iframeId, funcName, val) {
     func = settings[iframeId][funcName]
 
     if (typeof func === 'function') {
-      retVal = func(val)
+      // isolate called event into own JS stack frame
+      retVal = setTimeout(() => func(val))
     } else {
       throw new TypeError(
         `${funcName} on iFrame[${iframeId}] is not a function`,
