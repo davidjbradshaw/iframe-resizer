@@ -32,8 +32,8 @@ export const overflowObserver = (options) => {
     if (onChangePending) return
     onChangePending = true
     requestAnimationFrame(() => {
-      onChange()
       onChangePending = false
+      onChange()
     })
   }
 
