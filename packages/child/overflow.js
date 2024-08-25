@@ -7,6 +7,7 @@ let overflowedElements = []
 export const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
+  let onChangePending = false
 
   const observerOptions = {
     root: document.documentElement,
@@ -27,7 +28,13 @@ export const overflowObserver = (options) => {
 
     overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
     log('overflowedElements:', overflowedElements.length)
-    onChange()
+
+    if (onChangePending) return
+    onChangePending = true
+    requestAnimationFrame(() => {
+      onChange()
+      onChangePending = false
+    })
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
