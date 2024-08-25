@@ -229,9 +229,18 @@ function iframeListener(event) {
   }
 
   const startInfoMonitor = (sendInfoToIframe, type) => () => {
+    let pending = false
+
     const sendInfo = (requestType) => () => {
       if (settings[id]) {
-        sendInfoToIframe(requestType, id)
+        if (!pending || pending === requestType) {
+          sendInfoToIframe(requestType, id)
+
+          pending = requestType
+          requestAnimationFrame(() => {
+            pending = false
+          })
+        }
       } else {
         stop()
       }
