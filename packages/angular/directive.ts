@@ -1,3 +1,8 @@
+/**
+ * Angular directive for iframe-resizer by Bjørn Håkon (https://github.com/bjornoss)
+ */
+
+
 import {
   Directive,
   EventEmitter,
