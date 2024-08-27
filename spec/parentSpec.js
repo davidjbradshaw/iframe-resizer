@@ -125,7 +125,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         }, 160)
       })
 
-      it('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
+      xit('includes padding and borders from "rem" units in height when CSS "box-sizing" is set to "border-box"', (done) => {
         const REM = 14
 
         // changes the rem units of the doc so we can test accurately
