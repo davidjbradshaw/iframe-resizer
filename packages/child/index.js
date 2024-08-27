@@ -742,7 +742,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   // This function has to iterate over all page elements during load
   // so is optimized for performance, rather than best practices.
   function attachResizeObserverToNonStaticElements(el) {
-    const elements = [...getAllElements(el)()]
+    const elements = [el, ...getAllElements(el)()]
 
     // eslint-disable-next-line no-restricted-syntax
     for (const element of elements) {
