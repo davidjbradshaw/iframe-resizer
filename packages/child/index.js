@@ -60,7 +60,6 @@ function iframeResizerChild() {
   const hasCheckVisibility = 'checkVisibility' in window
   const heightCalcModeDefault = 'auto'
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-  const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
   const resetRequiredMethods = {
@@ -156,7 +155,7 @@ function iframeResizerChild() {
 
     sendTitle()
     initEventListeners()
-    onReady()
+    setTimeout(onReady)
 
     log('Initialization complete')
     log('---')
@@ -730,43 +729,29 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     win.parentIFrame = win.parentIframe
   }
 
-  let dispatchResized
-
   function resizeObserved(entries) {
     if (!Array.isArray(entries) || entries.length === 0) return
 
     const el = entries[0].target
 
-    dispatchResized = () =>
-      sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
-
-    // Throttle event to once per current call stack (Safari issue)
-    setTimeout(() => {
-      if (dispatchResized) dispatchResized()
-      dispatchResized = undefined
-    }, 0)
+    sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
   }
 
   const checkPositionType = (el) => {
-    if (el?.nodeType !== Node.ELEMENT_NODE) return false
+    const position = getComputedStyle(el)?.position
 
-    const style = getComputedStyle(el)
-
-    return style?.position !== '' && style?.position !== 'static'
+    return position !== '' && position !== 'static'
   }
 
-  const attachResizeObserverToNonStaticElements = (el) => {
-    if (el?.nodeType !== Node.ELEMENT_NODE) return null
-
-    return [...getAllElements(el)()]
-      .filter(checkPositionType)
-      .forEach(setupResizeObserver)
-  }
+  const attachResizeObserverToNonStaticElements = (el) =>
+    [...getAllElements(el)()].forEach(setupResizeObserver)
 
   const resizeSet = new WeakSet()
 
   function setupResizeObserver(el) {
     if (resizeSet.has(el)) return
+    if (el?.nodeType !== Node.ELEMENT_NODE) return
+    if (!checkPositionType(el)) return
 
     resizeObserver.observe(el)
     resizeSet.add(el)
@@ -1116,14 +1101,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     function isSizeChangeDetected() {
       const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
-      // currentHeight = Math.ceil(
-      //   undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
-      // )
-
-      // currentWidth = Math.ceil(
-      //  undefined === customWidth ? getWidth[widthCalcMode]() : customWidth,
-      // )
-
       currentHeight =
         undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
       currentWidth =
@@ -1158,6 +1135,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     }
   }
 
+  let sendPending = false
+
   function sendSize(
     triggerEvent,
     triggerEventDesc,
@@ -1177,11 +1156,15 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       return
     }
 
-    if (!(triggerEvent in nonLoggableTriggerEvents)) {
-      log(`Trigger event: ${triggerEventDesc}`)
+    if (!sendPending) {
+      log(`Resize event: ${triggerEventDesc}`)
+      sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+      requestAnimationFrame(() => {
+        sendPending = false
+      })
     }
 
-    sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+    sendPending = true
   }
 
   function lockTrigger() {
@@ -1285,7 +1268,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         const msgBody = getData()
         log(`PageInfo received from parent: ${msgBody}`)
         if (onPageInfo) {
-          onPageInfo(JSON.parse(msgBody))
+          setTimeout(() => onPageInfo(JSON.parse(msgBody)))
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop')
@@ -1295,9 +1278,9 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
       parentInfo() {
         const msgBody = getData()
-        log(`ParentInfo received from parent: ${msgBody}`)
+        log(`ParentInfo invoked from parent: ${msgBody}`)
         if (onParentInfo) {
-          onParentInfo(Object.freeze(JSON.parse(msgBody)))
+          setTimeout(() => onParentInfo(Object.freeze(JSON.parse(msgBody))))
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'parentInfoStop')
@@ -1307,9 +1290,9 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
       message() {
         const msgBody = getData()
-        log(`onMessage called from parent: ${msgBody}`)
+        log(`onMessage invoked from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
-        onMessage(JSON.parse(msgBody))
+        setTimeout(() => onMessage(JSON.parse(msgBody)))
         log(' --')
       },
     }
