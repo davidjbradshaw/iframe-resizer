@@ -58,10 +58,11 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
     describe('ParentIFrame methods', () => {
       it('autoResize', () => {
+        win.parentIframe.autoResize(false)
         win.parentIFrame.autoResize(true)
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Trigger event: Auto Resize enabled',
+          '[iframe-resizer][parentIFrameTests] Sending message to host page (parentIFrameTests:0:0:autoResize:true) via postMessage',
         )
       })
 
@@ -231,7 +232,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Trigger event: Parent window requested size check',
+          '[iframe-resizer][parentIFrameTests] height calculation method set to "max"',
         )
       })
 
@@ -240,7 +241,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Trigger event: Parent window requested size check',
+          '[iframe-resizer][parentIFrameTests] height calculation method set to "lowestElement"',
         )
       })
 
@@ -249,7 +250,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Trigger event: Parent window requested size check',
+          '[iframe-resizer][parentIFrameTests] width calculation method set to "rightMostElement"',
         )
       })
 
