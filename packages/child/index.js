@@ -60,7 +60,6 @@ function iframeResizerChild() {
   const hasCheckVisibility = 'checkVisibility' in window
   const heightCalcModeDefault = 'auto'
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-  const nonLoggableTriggerEvents = { reset: 1, resetPage: 1, init: 1 }
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
   const resetRequiredMethods = {
@@ -730,21 +729,12 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     win.parentIFrame = win.parentIframe
   }
 
-  let dispatchResized
-
   function resizeObserved(entries) {
     if (!Array.isArray(entries) || entries.length === 0) return
 
     const el = entries[0].target
 
-    dispatchResized = () =>
-      sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
-
-    // Throttle event to once per current call stack (Safari issue)
-    setTimeout(() => {
-      if (dispatchResized) dispatchResized()
-      dispatchResized = undefined
-    }, 0)
+    sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
   }
 
   const checkPositionType = (el) => {
@@ -1116,14 +1106,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     function isSizeChangeDetected() {
       const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
-      // currentHeight = Math.ceil(
-      //   undefined === customHeight ? getHeight[heightCalcMode]() : customHeight,
-      // )
-
-      // currentWidth = Math.ceil(
-      //  undefined === customWidth ? getWidth[widthCalcMode]() : customWidth,
-      // )
-
       currentHeight =
         undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
       currentWidth =
@@ -1158,6 +1140,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     }
   }
 
+  let sendPending = false
+
   function sendSize(
     triggerEvent,
     triggerEventDesc,
@@ -1177,11 +1161,15 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       return
     }
 
-    if (!(triggerEvent in nonLoggableTriggerEvents)) {
-      log(`Trigger event: ${triggerEventDesc}`)
+    if (!sendPending) {
+      log(`Resize event: ${triggerEventDesc}`)
+      sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+      requestAnimationFrame(() => {
+        sendPending = false
+      })
     }
 
-    sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+    sendPending = true
   }
 
   function lockTrigger() {
