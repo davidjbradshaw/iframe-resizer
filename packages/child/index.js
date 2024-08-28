@@ -156,7 +156,7 @@ function iframeResizerChild() {
 
     sendTitle()
     initEventListeners()
-    onReady()
+    setTimeout(onReady)
 
     log('Initialization complete')
     log('---')
@@ -1285,7 +1285,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         const msgBody = getData()
         log(`PageInfo received from parent: ${msgBody}`)
         if (onPageInfo) {
-          onPageInfo(JSON.parse(msgBody))
+          setTimeout(() => onPageInfo(JSON.parse(msgBody)))
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop')
@@ -1297,7 +1297,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         const msgBody = getData()
         log(`ParentInfo received from parent: ${msgBody}`)
         if (onParentInfo) {
-          onParentInfo(Object.freeze(JSON.parse(msgBody)))
+          setTimeout(onParentInfo(Object.freeze(JSON.parse(msgBody))))
         } else {
           // not expected, so cancel more messages
           sendMsg(0, 0, 'parentInfoStop')
