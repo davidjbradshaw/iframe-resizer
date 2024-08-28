@@ -676,13 +676,13 @@ function chkEvent(iframeId, funcName, val) {
   if (settings[iframeId]) {
     func = settings[iframeId][funcName]
 
-    if (typeof func === 'function') {
-      retVal = func(val)
-    } else {
+    if (typeof func === 'function')
+      if (funcName === 'onClose' || funcName === 'onScroll') retVal = func(val)
+      else setTimeout(() => func(val))
+    else
       throw new TypeError(
         `${funcName} on iFrame[${iframeId}] is not a function`,
       )
-    }
   }
 
   return retVal
