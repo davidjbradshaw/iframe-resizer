@@ -737,35 +737,30 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
   }
 
-  const checkPositionType = (el) => {
-    if (el?.nodeType !== Node.ELEMENT_NODE) return false
-
-    const style = getComputedStyle(el)
-
-    return style?.position !== '' && style?.position !== 'static'
-  }
-
-  const attachResizeObserverToNonStaticElements = (el) => {
-    if (el?.nodeType !== Node.ELEMENT_NODE) return null
-
-    return [...getAllElements(el)()]
-      .filter(checkPositionType)
-      .forEach(setupResizeObserver)
-  }
-
   const resizeSet = new WeakSet()
 
-  function setupResizeObserver(el) {
-    if (resizeSet.has(el)) return
+  // This function has to iterate over all page elements during load
+  // so is optimized for performance, rather than best practices.
+  function attachResizeObserverToNonStaticElements(el) {
+    const nodeList = getAllElements(el)()
 
-    resizeObserver.observe(el)
-    resizeSet.add(el)
-    log(`Attached resizeObserver: ${getElementName(el)}`)
+    // eslint-disable-next-line no-restricted-syntax
+    for (const node of nodeList) {
+      if (resizeSet.has(node) || node?.nodeType !== Node.ELEMENT_NODE) continue // eslint-disable-line no-continue
+
+      const position = getComputedStyle(node)?.position
+      if (position === '' || position === 'static') continue // eslint-disable-line no-continue
+
+      resizeObserver.observe(node)
+      resizeSet.add(node)
+      log(`Attached resizeObserver: ${getElementName(node)}`)
+    }
   }
 
   function setupResizeObservers() {
     resizeObserver = new ResizeObserver(resizeObserved)
-    setupResizeObserver(document.body)
+    resizeObserver.observe(document.body)
+    resizeSet.add(document.body)
     attachResizeObserverToNonStaticElements(document.body)
   }
 
