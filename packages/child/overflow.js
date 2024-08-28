@@ -7,7 +7,6 @@ let overflowedElements = []
 export const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
-  let onChangePending = false
 
   const observerOptions = {
     root: document.documentElement,
@@ -26,13 +25,11 @@ export const overflowObserver = (options) => {
       entry.target.toggleAttribute(OVERFLOW_ATTR, isTarget(entry))
     })
 
-    overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-    log('overflowedElements:', overflowedElements.length)
-
-    if (onChangePending) return
-    onChangePending = true
+    // Call this on the next frame to allow the DOM to
+    // update and prevent reflowing the page
     requestAnimationFrame(() => {
-      onChangePending = false
+      overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+      log('overflowedElements:', overflowedElements.length)
       onChange()
     })
   }
