@@ -760,7 +760,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   function setupResizeObservers() {
     resizeObserver = new ResizeObserver(resizeObserved)
     resizeObserver.observe(document.body)
-    resizeSet.add(document.body)
     attachResizeObserverToNonStaticElements(document.body)
   }
 
