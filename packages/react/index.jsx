@@ -4,7 +4,7 @@ import warning from 'warning'
 
 import filterIframeAttribs from '../common/filter-iframe-attribs'
 
-// TODO: Add support for React.forwardRef() in next major version
+// TODO: Add support for React.forwardRef() in next major version (Breaking change)
 function IframeResizer(props) {
   // eslint-disable-next-line react/prop-types
   const { forwardRef, ...rest } = props
