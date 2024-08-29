@@ -1,6 +1,5 @@
 import connectResizer from '@iframe-resizer/core'
 import React, { useEffect, useImperativeHandle, useRef } from 'react'
-import warning from 'warning'
 
 import filterIframeAttribs from '../common/filter-iframe-attribs'
 
@@ -12,10 +11,12 @@ function IframeResizer(props) {
   const iframeRef = useRef(null)
 
   const onClose = () => {
-    warning(
-      !iframeRef.current,
-      `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
-    )
+    if (!iframeRef.current)
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
+      )
+
     return !iframeRef.current // Allow React to close this
   }
 
