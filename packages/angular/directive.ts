@@ -50,8 +50,6 @@ export type iframeResizerOptions = {
 export class IframeResizerDirective {
   private resizer?: iframeResizerObjectPrivate
 
-  // @Output() onReadyTest = new EventEmitter<iframeResizerElement>();
-
   @Output() onReady = new EventEmitter<iframeResizerElement>()
   @Output() onClose = new EventEmitter<iframeResizerElement>()
   @Output() onMessage = new EventEmitter<{
