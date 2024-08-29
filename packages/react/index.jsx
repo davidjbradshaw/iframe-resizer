@@ -4,9 +4,10 @@ import warning from 'warning'
 
 import filterIframeAttribs from '../common/filter-iframe-attribs'
 
+// TODO: Add support for React.forwardRef() in next major version
 function IframeResizer(props) {
   // eslint-disable-next-line react/prop-types
-  const { title, forwardRef, ...rest } = props
+  const { forwardRef, ...rest } = props
   const filteredProps = filterIframeAttribs(rest)
   const iframeRef = useRef(null)
 
@@ -37,7 +38,8 @@ function IframeResizer(props) {
     },
   }))
 
-  return <iframe title={title} {...filteredProps} ref={iframeRef} />
+  // eslint-disable-next-line jsx-a11y/iframe-has-title
+  return <iframe {...filteredProps} ref={iframeRef} />
 }
 
 export default IframeResizer
