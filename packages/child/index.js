@@ -249,9 +249,7 @@ Parent page: ${version} - Child page: ${VERSION}.
 
   function readDataFromPage() {
     // eslint-disable-next-line sonarjs/cognitive-complexity
-    function readData() {
-      const data = window.iframeResizer || window.iFrameResizer
-
+    function readData(data) {
       log(`Reading data from page: ${JSON.stringify(data)}`)
 
       onMessage = data?.onMessage || onMessage
@@ -291,20 +289,13 @@ Parent page: ${version} - Child page: ${VERSION}.
 
     if (mode === 1) return
 
-    log(
-      'Read Data From Page:',
-      'iframeResizer' in window || 'iFrameResizer' in window,
-    )
+    const data = window.iframeResizer || window.iFrameResizer
 
-    if (
-      ('iFrameResizer' in window &&
-        Object === window.iFrameResizer.constructor) ||
-      ('iframeResizer' in window && Object === window.iframeResizer.constructor)
-    ) {
-      readData()
-      heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
-      widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
-    }
+    if (typeof data !== 'object') return
+
+    readData(data)
+    heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
+    widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
     log(`TargetOrigin for parent set to: ${targetOriginDefault}`)
   }

@@ -116,7 +116,7 @@
       const rowParent = ([key, info]) =>
   `<tr><th>${key}</th><td><table>${Object.entries(info).map(row).join('\n')}</table></td></tr>`
 
-      window.iFrameResizer = {
+      window.iframeResizer = {
         // We cheat a little here, as the iframe resize can be one
         // frame behind the actual content height in the iframe if
         // we're having to use postMessage due to operating cross
