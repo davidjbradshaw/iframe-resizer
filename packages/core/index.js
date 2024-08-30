@@ -804,7 +804,9 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
   function warnOnNoResponse() {
     function warning() {
       if (settings[id] === undefined) return // iframe has been closed while we where waiting
-      const { waitForLoad } = settings[id]
+      const { iframe, waitForLoad } = settings[id]
+
+      const sandboxed = settings[id].iframe.getAttribute('sandbox')
 
       if (!settings[id].loaded && !settings[id].loadErrorShown) {
         settings[id].loadErrorShown = true
@@ -817,10 +819,20 @@ The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout 
 ${
   waitForLoad
     ? `
-The <b>waitForLoad</> option is currently set to <b>true</>. If the iframe loads before the JavaScript runs, this option will prevent <i>iframe-resizer</> from initialising. To disable this, set the <b>waitForLoad</> option to <b>false</>.  
+The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loads before the JavaScript runs, this option will prevent <i>iframe-resizer</> from initialising. To disable this, set the <b>waitForLoad</> option to <i>'false'</>.  
 `
     : ''
 }
+${
+  sandboxed.length > 0 &&
+  !(
+    iframe.sandbox.contains('allow-scripts') &&
+    iframe.sandbox.contains('allow-same-origin')
+  )
+    ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.`
+    : ''
+}
+
 This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
 `,
         )
