@@ -804,11 +804,11 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
   function warnOnNoResponse() {
     function warning() {
       if (settings[id] === undefined) return // iframe has been closed while we where waiting
-      const { iframe, waitForLoad } = settings[id]
+      const { iframe, loaded, loadErrorShown, waitForLoad } = settings[id]
 
-      const sandboxed = settings[id].iframe.getAttribute('sandbox')
+      const sandbox = iframe.getAttribute('sandbox')
 
-      if (!settings[id].loaded && !settings[id].loadErrorShown) {
+      if (!loaded && !loadErrorShown) {
         settings[id].loadErrorShown = true
         advise(
           id,
@@ -824,11 +824,8 @@ The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loa
     : ''
 }
 ${
-  sandboxed.length > 0 &&
-  !(
-    iframe.sandbox.contains('allow-scripts') &&
-    iframe.sandbox.contains('allow-same-origin')
-  )
+  sandbox?.length > 0 &&
+  !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
     ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.`
     : ''
 }
