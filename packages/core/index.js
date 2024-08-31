@@ -806,7 +806,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
       if (settings[id] === undefined) return // iframe has been closed while we where waiting
       const { iframe, loaded, loadErrorShown, waitForLoad } = settings[id]
 
-      const sandbox = iframe.getAttribute('sandbox')
+      const { sandbox } = iframe
 
       if (!loaded && !loadErrorShown) {
         settings[id].loadErrorShown = true
