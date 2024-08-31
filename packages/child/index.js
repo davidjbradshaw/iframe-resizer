@@ -321,10 +321,10 @@ Parent page: ${version} - Child page: ${VERSION}.
 
     log(`Applying sizeSelector: ${sizeSelector}`)
 
-    document.querySelectorAll(sizeSelector).forEach((el) => {
+    for (const el of document.querySelectorAll(sizeSelector)) {
       log(`Applying data-iframe-size to: ${getElementName(el)}`)
       el.dataset.iframeSize = true
-    })
+    }
   }
 
   function setMargin() {
@@ -531,19 +531,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function bindAnchors() {
-      function setupLink(el) {
-        function linkClicked(e) {
-          e.preventDefault()
-
-          findTarget(this.getAttribute('href'))
-        }
-
-        if (el.getAttribute('href') !== '#') {
-          addEventListener(el, 'click', linkClicked)
+      for (const link of document.querySelectorAll('a[href^="#"]')) {
+        if (link.getAttribute('href') !== '#') {
+          addEventListener(link, 'click', (e) => {
+            e.preventDefault()
+            findTarget(link.getAttribute('href'))
+          })
         }
       }
-
-      document.querySelectorAll('a[href^="#"]').forEach(setupLink)
     }
 
     function bindLocationHash() {
@@ -751,12 +746,11 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     const nodeList = getAllElements(rootElement)()
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const node of nodeList) {
-      if (resizeSet.has(node) || node?.nodeType !== Node.ELEMENT_NODE) continue // eslint-disable-line no-continue
+      if (resizeSet.has(node) || node?.nodeType !== Node.ELEMENT_NODE) continue
 
       const position = getComputedStyle(node)?.position
-      if (position === '' || position === 'static') continue // eslint-disable-line no-continue
+      if (position === '' || position === 'static') continue
 
       resizeObserver.observe(node)
       resizeSet.add(node)
@@ -767,6 +761,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
   function setupResizeObservers() {
     resizeObserver = new ResizeObserver(resizeObserved)
     resizeObserver.observe(document.body)
+        resizeSet.add(document.body)
     attachResizeObserverToNonStaticElements(document.body)
   }
 
@@ -777,28 +772,15 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     let newMutations = []
 
     const updateMutation = (mutations) => {
-      const { length } = mutations
+      for (const mutation of mutations) {
+        const { addedNodes, removedNodes } = mutation
 
-      for (let i = 0; i < length; i++) {
-        const { addedNodes, removedNodes } = mutations[i]
-
-        const aLen = addedNodes.length
-        const rLen = removedNodes.length
-
-        if (aLen > 2) {
-          log('MutationObserver: addedNodes', addedNodes)
+        for (const node of addedNodes) {
+          observedMutations.add(node)
         }
 
-        if (aLen) {
-          for (let j = 0; j < aLen; j++) {
-            observedMutations.add(addedNodes[j])
-          }
-        }
-
-        if (rLen) {
-          for (let j = 0; j < rLen; j++) {
-            observedMutations.delete(removedNodes[j])
-          }
+        for (const node of removedNodes) {
+          observedMutations.delete(node)
         }
       }
     }
@@ -906,14 +888,14 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     let len = targetElements.length
 
-    targetElements.forEach((element) => {
+    for (const element of targetElements) {
       if (
         !hasTags &&
-        hasCheckVisibility && // Safari missing checkVisibility
+        hasCheckVisibility && // Safari was missing checkVisibility until March 2024
         !element.checkVisibility(checkVisibilityOptions)
       ) {
         len -= 1
-        return
+        continue
       }
 
       elVal =
@@ -924,7 +906,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         maxVal = elVal
         maxEl = element
       }
-    })
+    }
 
     setPerfEl(maxEl)
     performance.mark(PREF_END, {
