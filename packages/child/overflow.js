@@ -20,31 +20,33 @@ export const overflowObserver = (options) => {
     entry.boundingClientRect[side] === 0 ||
     entry.boundingClientRect[side] > entry.rootBounds[side]
 
-  const callback = (entries) => {
+  function update() {
+    overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+    log('overflowedElements:', overflowedElements.length)
+    onChange()
+  }
+
+  function callback(entries) {
     entries.forEach((entry) => {
       entry.target.toggleAttribute(OVERFLOW_ATTR, isTarget(entry))
     })
 
     // Call this on the next frame to allow the DOM to
     // update and prevent reflowing the page
-    requestAnimationFrame(() => {
-      overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-      log('overflowedElements:', overflowedElements.length)
-      onChange()
-    })
+    requestAnimationFrame(update)
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
 
-  function add(el) {
-    if (el?.nodeType !== Node.ELEMENT_NODE) return
-    if (observedElements.has(el)) return
+  return function (nodeList) {
+    for (const node of nodeList) {
+      if (node.nodeType !== Node.ELEMENT_NODE || observedElements.has(node))
+        continue
 
-    observer.observe(el)
-    observedElements.add(el)
+      observer.observe(node)
+      observedElements.add(node)
+    }
   }
-
-  return (nodeList) => nodeList.forEach(add)
 }
 
 export const isOverflowed = () => overflowedElements.length > 0
