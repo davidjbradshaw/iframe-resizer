@@ -35,8 +35,8 @@ Please see the **_[iframe-resizer](https://iframe-resizer.com)_** website for se
 
 * **[Vanilla JS](https://iframe-resizer.com/setup)**
 * **[React](https://iframe-resizer.com/frameworks/react)**
-* **[Vue](https://iframe-resizer.com/vue)**
-* **[Angular](https://iframe-resizer.com/angular)**
+* **[Vue](https://iframe-resizer.com/frameworks/vue)**
+* **[Angular](https://iframe-resizer.com/frameworks/angular)**
 * **[jQuery](https://iframe-resizer.com/frameworks/jquery)**
 
 Along with setup guides for:
