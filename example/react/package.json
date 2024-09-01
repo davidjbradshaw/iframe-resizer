@@ -4,15 +4,14 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/child": "^5.2.3",
-    "@iframe-resizer/core": "^5.2.3",
-    "@iframe-resizer/react": "^5.2.3",
+    "@iframe-resizer/child": "^5.3.0-beta.1",
+    "@iframe-resizer/react": "^5.3.0-beta.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

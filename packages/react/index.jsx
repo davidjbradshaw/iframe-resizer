@@ -11,13 +11,11 @@ function IframeResizer(props) {
   const iframeRef = useRef(null)
 
   const onClose = () => {
-    if (!iframeRef.current)
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
-      )
+    console.warn(
+      `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
+    )
 
-    return !iframeRef.current // Allow React to close this
+    return false
   }
 
   // This hook is only run once, as once iframe-resizer is bound, it will
