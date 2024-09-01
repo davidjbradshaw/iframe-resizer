@@ -8,6 +8,7 @@ import './App.css'
 function App() {
   const iframeRef = useRef(null)
   const [messageData, setMessageData] = useState()
+  const [show, setShow] = useState(true)
 
   const onResized = (data) => setMessageData(data)
 
@@ -20,17 +21,23 @@ function App() {
   return (
     <>
       <h2>@iframe-resizer/react example</h2>
-      <IframeResizer
-        license="GPLv3"
-        log
-        forwardRef={iframeRef}
-        inPageLinks
-        onMessage={onMessage}
-        onResized={onResized}
-        src="child/frame.content.html"
-        style={{ width: '100%', height: '100vh'}}
-      />
-      <MessageData data={messageData} />
+      <button onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
+      {show &&
+        <>
+          <IframeResizer
+            license="GPLv3"
+            log
+            forwardRef={iframeRef}
+            inPageLinks
+            onMessage={onMessage}
+            onResized={onResized}
+            src="child/frame.content.html"
+            style={{ width: '100%', height: '100vh' }}
+          />
+      
+          <MessageData data={messageData} />
+        </>
+      }
     </>
   )
 }
