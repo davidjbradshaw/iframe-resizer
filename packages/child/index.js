@@ -117,7 +117,7 @@ function iframeResizerChild() {
     readDataFromParent()
 
     setLogOptions({ id: myID, logging })
-    log(`Initialising iFrame v${VERSION} (${window.location.href})`)
+    log(`Initialising iframe v${VERSION} (${window.location.href})`)
     readDataFromPage()
 
     checkCrossDomain()
@@ -141,7 +141,7 @@ function iframeResizerChild() {
     setBodyStyle('padding', bodyPadding)
 
     injectClearFixIntoBodyElement()
-    stopInfiniteResizingOfIFrame()
+    stopInfiniteResizingOfIframe()
     applySizeSelector()
 
     sendSize(
@@ -336,7 +336,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     setBodyStyle('margin', chkCSS('margin', bodyMarginStr))
   }
 
-  function stopInfiniteResizingOfIFrame() {
+  function stopInfiniteResizingOfIframe() {
     const setAutoHeight = (el) =>
       el.style.setProperty('height', 'auto', 'important')
 
@@ -633,7 +633,7 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       getParentProps(callback) {
         if (typeof callback !== 'function') {
           throw new TypeError(
-            'parentIFrame.getParentProps(callback) callback not a function',
+            'parentIframe.getParentProps(callback) callback not a function',
           )
         }
 
@@ -661,7 +661,7 @@ The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. 
       },
 
       reset() {
-        resetIFrame('parentIFrame.reset')
+        resetIframe('parentIframe.reset')
       },
 
       scrollBy(x, y) {
@@ -700,7 +700,7 @@ The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. 
 
         sendSize(
           MANUAL_RESIZE_REQUEST,
-          `parentIFrame.resize(${valString})`,
+          `parentIframe.resize(${valString})`,
           customHeight,
           customWidth,
         )
@@ -1073,14 +1073,14 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     taggedElement: () => getMaxElement(WIDTH_EDGE),
   }
 
-  function sizeIFrame(
+  function sizeIframe(
     triggerEvent,
     triggerEventDesc,
     customHeight,
     customWidth,
     msg,
   ) {
-    function resizeIFrame() {
+    function resizeIframe() {
       height = currentHeight
       width = currentWidth
       sendMsg(height, width, triggerEvent, msg)
@@ -1108,7 +1108,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     function checkDownSizing() {
       if (isForceResizableEvent() && isForceResizableCalcMode()) {
-        resetIFrame(triggerEventDesc)
+        resetIframe(triggerEventDesc)
       }
     }
 
@@ -1117,7 +1117,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     if (isSizeChangeDetected() || triggerEvent === 'init') {
       lockTrigger()
-      resizeIFrame()
+      resizeIframe()
     } else {
       checkDownSizing()
     }
@@ -1146,7 +1146,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     if (!sendPending) {
       log(`Resize event: ${triggerEventDesc}`)
-      sizeIFrame(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+      sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
       requestAnimationFrame(() => {
         sendPending = false
       })
@@ -1175,7 +1175,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     sendMsg(height, width, triggerEvent)
   }
 
-  function resetIFrame(triggerEventDesc) {
+  function resetIframe(triggerEventDesc) {
     const hcm = heightCalcMode
     heightCalcMode = heightCalcModeDefault
 
