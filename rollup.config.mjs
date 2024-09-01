@@ -206,7 +206,7 @@ const npm = [
   {
     input: 'packages/react/index.jsx',
     output: [output('react')('esm'), output('react')('cjs')],
-    external: ['@iframe-resizer/core', 'react', 'warning', /@babel\/runtime/],
+    external: ['@iframe-resizer/core', 'react', /@babel\/runtime/],
     plugins: [
       ...pluginsProd('react'),
       copy({
