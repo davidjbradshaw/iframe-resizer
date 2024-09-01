@@ -99,6 +99,7 @@ function iframeResizerChild() {
   let taggedElements = []
   let target = window.parent
   let targetOriginDefault = '*'
+  let totalTime
   let tolerance = 0
   let triggerLocked = false
   let version = ''
@@ -1073,6 +1074,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     taggedElement: () => getMaxElement(WIDTH_EDGE),
   }
 
+  const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
+
   function sizeIframe(
     triggerEvent,
     triggerEventDesc,
@@ -1080,31 +1083,15 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     customWidth,
     msg,
   ) {
-    function resizeIframe() {
-      height = currentHeight
-      width = currentWidth
-      sendMsg(height, width, triggerEvent, msg)
-    }
-
-    function isSizeChangeDetected() {
-      const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
-
-      currentHeight =
-        undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
-      currentWidth =
-        undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
-
-      return (
-        (calculateHeight && checkTolerance(height, currentHeight)) ||
-        (calculateWidth && checkTolerance(width, currentWidth))
-      )
-    }
-
     const isForceResizableEvent = () => !(triggerEvent in { init: 1, size: 1 })
 
     const isForceResizableCalcMode = () =>
       (calculateHeight && heightCalcMode in resetRequiredMethods) ||
       (calculateWidth && widthCalcMode in resetRequiredMethods)
+
+    const isSizeChangeDetected = () =>
+      (calculateHeight && checkTolerance(height, newHeight)) ||
+      (calculateWidth && checkTolerance(width, newWidth))
 
     function checkDownSizing() {
       if (isForceResizableEvent() && isForceResizableCalcMode()) {
@@ -1112,12 +1099,16 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       }
     }
 
-    let currentHeight
-    let currentWidth
+    const newHeight =
+      undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
+    const newWidth =
+      undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
 
     if (isSizeChangeDetected() || triggerEvent === 'init') {
       lockTrigger()
-      resizeIframe()
+      height = newHeight
+      width = newWidth
+      sendMsg(height, width, triggerEvent, msg)
     } else {
       checkDownSizing()
     }
@@ -1132,6 +1123,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     customWidth,
     msg,
   ) {
+    totalTime = performance.now()
+
     if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
       log('Resizing disabled')
       return
@@ -1205,6 +1198,12 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       log(
         `Sending message to host page (${message}) via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
       )
+
+      if (totalTime !== 0) {
+        const timer = performance.now() - totalTime
+        log(`Total time taken to process resize: ${timer}ms`)
+        totalTime = 0
+      }
 
       if (sameDomain) {
         window.parent.iframeParentListener(msgID + message)
