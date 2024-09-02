@@ -246,10 +246,13 @@ function iframeListener(event) {
       }
     }
 
+    const sendScroll = sendInfo('scroll')
+    const sendResize = sendInfo('resize window')
+
     function setListener(requestType, listener) {
       log(id, `${requestType} listeners for send${type}`)
-      listener(window, 'scroll', sendInfo('scroll'))
-      listener(window, 'resize', sendInfo('resize window'))
+      listener(window, 'scroll', sendScroll)
+      listener(window, 'resize', sendResize)
     }
 
     function stop() {
