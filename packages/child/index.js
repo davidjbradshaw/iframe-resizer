@@ -8,7 +8,7 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { id } from '../common/utils'
+import { id, round } from '../common/utils'
 import {
   advise,
   adviser,
@@ -99,6 +99,8 @@ function iframeResizerChild() {
   let taggedElements = []
   let target = window.parent
   let targetOriginDefault = '*'
+  let timerActive
+  let totalTime
   let tolerance = 0
   let triggerLocked = false
   let version = ''
@@ -1082,7 +1084,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     customWidth,
     msg,
   ) {
-    const isForceResizableEvent = () => !(triggerEvent in { init: 1, size: 1 })
+    const isForceResizableEvent = () => !triggerEvent !== MANUAL_RESIZE_REQUEST
 
     const isForceResizableCalcMode = () =>
       (calculateHeight && heightCalcMode in resetRequiredMethods) ||
@@ -1091,12 +1093,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     const isSizeChangeDetected = () =>
       (calculateHeight && checkTolerance(height, newHeight)) ||
       (calculateWidth && checkTolerance(width, newWidth))
-
-    function checkDownSizing() {
-      if (isForceResizableEvent() && isForceResizableCalcMode()) {
-        resetIframe(triggerEventDesc)
-      }
-    }
 
     const newHeight =
       undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
@@ -1108,8 +1104,10 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       height = newHeight
       width = newWidth
       sendMsg(height, width, triggerEvent, msg)
+    } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
+      resetIframe(triggerEventDesc)
     } else {
-      checkDownSizing()
+      timerActive = false // We're not resizing, so turn off the timer
     }
   }
 
@@ -1122,6 +1120,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     customWidth,
     msg,
   ) {
+    totalTime = performance.now()
+
     if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
       log('Resizing disabled')
       return
@@ -1136,6 +1136,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     if (!sendPending) {
       log(`Resize event: ${triggerEventDesc}`)
+      timerActive = true
       sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
       requestAnimationFrame(() => {
         sendPending = false
@@ -1188,14 +1189,25 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       log(`Message targetOrigin: ${targetOrigin}`)
     }
 
+    function displayTimeTaken() {
+      const timer = round(performance.now() - totalTime)
+      info(
+        triggerEvent === 'init'
+          ? `Initialised iFrame in ${timer}ms`
+          : `Content size recalculated in ${timer}ms`,
+      )
+      timerActive = false
+    }
+
     function sendToParent() {
       const size = `${height + (offsetHeight || 0)}:${width + (offsetWidth || 0)}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      log(
-        `Sending message to host page (${message}) via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
-      )
+      if (timerActive) displayTimeTaken()
 
+      info(
+        `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'} (${message})`,
+      )
 
       if (sameDomain) {
         window.parent.iframeParentListener(msgID + message)

@@ -1,7 +1,7 @@
+import { round } from '../common/utils'
 import { advise, info, log } from './log'
 
 const SECOND = 1000
-const DEC_PLACES = 100_000 // 5 decimal places
 const PERF_CHECK_INTERVAL = 5 * SECOND
 const THRESHOLD = 4 // ms
 
@@ -13,7 +13,6 @@ const timings = []
 const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
-const round = (num) => Math.floor(num * DEC_PLACES) / DEC_PLACES
 
 let lastPerfEl = null
 let perfEl = null
