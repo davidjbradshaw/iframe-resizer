@@ -11,6 +11,7 @@ function IframeResizer(props) {
   const iframeRef = useRef(null)
 
   const onClose = () => {
+    // eslint-disable-next-line no-console
     console.warn(
       `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
     )
