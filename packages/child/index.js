@@ -1191,23 +1191,29 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     function displayTimeTaken() {
       const timer = round(performance.now() - totalTime)
-      info(
-        triggerEvent === 'init'
-          ? `Initialised iFrame in ${timer}ms`
-          : `Content size recalculated in ${timer}ms`,
-      )
-      timerActive = false
+      return triggerEvent === 'init'
+        ? `Initialised iFrame in %c${timer}ms`
+        : `Content size recalculated in %c${timer}ms`
     }
 
     function sendToParent() {
       const size = `${height + (offsetHeight || 0)}:${width + (offsetWidth || 0)}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      if (timerActive) displayTimeTaken()
+      /* eslint-disable no-console */
+      if (logging) {
+        console.group(`[iframe-resizer][${myID}]`)
+        console.info(
+          `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
+        )
+        console.info(`%c${message}`, 'font-style: italic')
+        if (timerActive)
+          console.info(displayTimeTaken(), 'font-weight:bold;color:#777')
+        console.groupEnd()
+      }
+      /* eslint-enable no-console */
 
-      info(
-        `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'} (${message})`,
-      )
+      timerActive = false
 
       if (sameDomain) {
         window.parent.iframeParentListener(msgID + message)
