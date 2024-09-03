@@ -99,7 +99,6 @@ function iframeResizerChild() {
   let taggedElements = []
   let target = window.parent
   let targetOriginDefault = '*'
-  let totalTime
   let tolerance = 0
   let triggerLocked = false
   let version = ''
@@ -1123,8 +1122,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
     customWidth,
     msg,
   ) {
-    totalTime = performance.now()
-
     if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
       log('Resizing disabled')
       return
@@ -1199,11 +1196,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
         `Sending message to host page (${message}) via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
       )
 
-      if (totalTime !== 0) {
-        const timer = performance.now() - totalTime
-        log(`Total time taken to process resize: ${timer}ms`)
-        totalTime = 0
-      }
 
       if (sameDomain) {
         window.parent.iframeParentListener(msgID + message)
