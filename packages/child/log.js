@@ -53,7 +53,7 @@ export const log = (...msg) =>
 // eslint-disable-next-line no-unused-vars
 export const info = (...msg) =>
   // eslint-disable-next-line no-console
-  console?.info(`[iframe-resizer][${id}]`, ...msg)
+  logging && console?.info(`[iframe-resizer][${id}]`, ...msg)
 
 export const warn = (...msg) =>
   // eslint-disable-next-line no-console
