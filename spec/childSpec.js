@@ -62,7 +62,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.autoResize(true)
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Sending message to host page (parentIFrameTests:0:0:autoResize:true) via postMessage',
+          '[iframe-resizer][parentIFrameTests] Resize event: Auto Resize enabled',
         )
       })
 
