@@ -3,6 +3,7 @@
     "Automagically",
     "compat",
     "consts",
+    "cparent",
     "delog",
     "filesize",
     "iife",
