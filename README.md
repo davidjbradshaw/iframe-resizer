@@ -63,7 +63,7 @@ Along with setup guides for:
 
 Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
 
-### Version 5
+## Version 5
 
 This version of iframe-resizer has been extensively rewritten to use modern browser APIs, this has enabled significantly better performance and greater accuracy in the detection of content resizing events.
 
