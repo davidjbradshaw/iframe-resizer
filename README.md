@@ -23,7 +23,7 @@ To ensure minimal impact on your site, _iframe-resizer_ is highly optimised and
 utilizes [Set Theory](https://en.wikipedia.org/wiki/Set_theory) to ensure it only
 checks the page elements that effect the sizing of your iframes. 
 
-Even on the most complex pages, _iframe-resizer_ aims to detect changes to both HTML 
+Even on the most complex pages, _iframe-resizer_ can detect changes to both HTML 
 and CSS, calculate the revised content dimensions and update the iframe in sub 
 millisecond time.
 
@@ -39,7 +39,7 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 * Scroll the page, relative to the iframe or parent page’s position
 * Get details of the position of the iframe, the scroll position and viewport of the parent page
 * Fixes in page linking in the iframe and allows links to propagate to the parent page
-* Adds onMouseEnter and onMouseLeave events to the iframe element
+* Adds `onMouseEnter` and `onMouseLeave` events to the iframe element
 * Simplified message passing between the iframe and the parent page
 * Automatic domain authentication
 * Enhanced Accessibility
