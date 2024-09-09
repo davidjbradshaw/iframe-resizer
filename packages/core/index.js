@@ -52,6 +52,7 @@ function iframeListener(event) {
     const top = compStyle.borderTopWidth
       ? parseInt(compStyle.borderTopWidth, 10)
       : 0
+
     const bot = compStyle.borderBottomWidth
       ? parseInt(compStyle.borderBottomWidth, 10)
       : 0
@@ -122,12 +123,9 @@ function iframeListener(event) {
     return true
   }
 
-  function isMessageForUs() {
-    return (
-      msgId === `${msg}`.slice(0, msgIdLen) &&
-      msg.slice(msgIdLen).split(':')[0] in settings
-    ) // ''+Protects against non-string msg
-  }
+  const isMessageForUs = () =>
+    msgId === `${msg}`.slice(0, msgIdLen) &&
+    msg.slice(msgIdLen).split(':')[0] in settings
 
   function isMessageFromMetaParent() {
     // Test if this message is from a parent above us. This is an ugly test, however, updating
@@ -141,9 +139,8 @@ function iframeListener(event) {
     return retCode
   }
 
-  function getMsgBody(offset) {
-    return msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
-  }
+  const getMsgBody = (offset) =>
+    msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
 
   function forwardMsgFromIFrame(msgBody) {
     log(
@@ -310,14 +307,12 @@ function iframeListener(event) {
   const stopParentInfoMonitor = stopInfoMonitor('stopParentInfo')
 
   function checkIFrameExists() {
-    let retBool = true
-
     if (messageData.iframe === null) {
       warn(iframeId, `The iframe (${messageData.id}) was not found.`)
-      retBool = false
+      return false
     }
 
-    return retBool
+    return true
   }
 
   function getElementPosition(target) {
@@ -347,21 +342,14 @@ function iframeListener(event) {
     function reposition() {
       page.position = newPosition
       scrollTo(iframeId)
-      log(iframeId, '--')
+      log(iframeId, '---')
     }
 
-    function scrollParent() {
-      if (window.parentIFrame) {
-        window.parentIFrame[`scrollTo${addOffset ? 'Offset' : ''}`](
-          newPosition.x,
-          newPosition.y,
-        )
-      } else {
-        warn(
-          iframeId,
-          'Unable to scroll to requested position, window.parentIFrame not found',
-        )
-      }
+    function scrollParent(target) {
+      target[`scrollTo${addOffset ? 'Offset' : ''}`](
+        newPosition.x,
+        newPosition.y,
+      )
     }
 
     const calcOffset = (messageData, offset) => ({
@@ -373,6 +361,8 @@ function iframeListener(event) {
       ? getElementPosition(messageData.iframe)
       : { x: 0, y: 0 }
 
+    const target = window.parentIframe || window.parentIFrame
+
     let newPosition = calcOffset(messageData, offset)
 
     log(
@@ -380,20 +370,24 @@ function iframeListener(event) {
       `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`,
     )
 
-    if (window.top === window.self) {
-      reposition()
-    } else {
-      scrollParent()
+    // Check for V4 as well
+    if (target) {
+      scrollParent(target)
+      return
     }
+
+    reposition()
   }
 
   function scrollTo(iframeId) {
     const { x, y } = page.position
     const iframe = settings[iframeId]?.iframe
+
     if (on('onScroll', { iframe, top: y, left: x, x, y }) === false) {
       unsetPagePosition()
       return
     }
+
     setPagePosition(iframeId)
   }
 
@@ -720,13 +714,12 @@ function closeIFrame(iframe) {
 }
 
 function getPagePosition(iframeId) {
-  if (page.position === null) {
-    page.position = {
-      x: window.scrollX,
-      y: window.scrollY,
-    }
-    log(iframeId, `Get page position: ${page.position.x}, ${page.position.y}`)
+  if (page.position !== null) return
+  page.position = {
+    x: window.scrollX,
+    y: window.scrollY,
   }
+  log(iframeId, `Get page position: ${page.position.x}, ${page.position.y}`)
 }
 
 function unsetPagePosition() {
@@ -734,11 +727,10 @@ function unsetPagePosition() {
 }
 
 function setPagePosition(iframeId) {
-  if (page.position !== null) {
-    window.scrollTo(page.position.x, page.position.y)
-    log(iframeId, `Set page position: ${page.position.x}, ${page.position.y}`)
-    unsetPagePosition()
-  }
+  if (page.position === null) return
+  window.scrollTo(page.position.x, page.position.y)
+  log(iframeId, `Set page position: ${page.position.x}, ${page.position.y}`)
+  unsetPagePosition()
 }
 
 function resetIFrame(messageData) {
@@ -1084,12 +1076,11 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
-  function getTargetOrigin(remoteHost) {
-    return remoteHost === '' ||
-      remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
+  const getTargetOrigin = (remoteHost) =>
+    remoteHost === '' ||
+    remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
       ? '*'
       : remoteHost
-  }
 
   function getPostMessageTarget() {
     if (settings[iframeId].postMessageTarget === null)
@@ -1130,9 +1121,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  function beenHere() {
-    return iframeId in settings && 'iFrameResizer' in iframe
-  }
+  const beenHere = () => iframeId in settings && 'iFrameResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
 

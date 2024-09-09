@@ -34,6 +34,7 @@
     "test:all": "time npm run rollup:test && npm run test && npm run test:int",
     "test:ci": "time npm run rollup:test:ci && npm run test && npm run test:int",
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
+    "test:int:watch": "karma start --browsers Chrome karma.conf.cjs",
     "upgrade": "time npm-check-updates -i && npm run build"
   },
   "description": "Keep iFrames sized to their content.",

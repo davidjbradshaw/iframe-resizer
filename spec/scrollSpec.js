@@ -13,11 +13,12 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('mock incoming message (scrollTo)', (done) => {
       iframe = iframeResize({ license: 'GPLv3', log: true, id: 'scroll1' })[0]
 
-      window.parentIFrame = {
+      window.parentIframe = {
         scrollTo: (x, y) => {
           expect(x).toBe(0)
           expect(y).toBe(0)
           done()
+          return false
         },
       }
 
@@ -27,11 +28,12 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('mock incoming message (scrollToOffset)', (done) => {
       iframe = iframeResize({ license: 'GPLv3', log: true, id: 'scroll2' })[0]
 
-      window.parentIFrame = {
+      window.parentIframe = {
         scrollToOffset: (x, y) => {
           expect(x).toBe(8)
           expect(y).toBe(8)
           done()
+          return false
         },
       }
 
