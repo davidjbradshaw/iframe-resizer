@@ -24,9 +24,10 @@ export const overflowObserver = (options) => {
 
   function callback(entries) {
     for (const entry of entries) {
-      const edge = entry.boundingClientRect[side]
-      const isTargetNode = edge === 0 || edge > entry.rootBounds[side]
-      entry.target.toggleAttribute(OVERFLOW_ATTR, isTargetNode)
+      const { boundingClientRect, rootBounds, target } = entry
+      const edge = boundingClientRect[side]
+      const isTargetNode = edge === 0 || edge > rootBounds[side]
+      target.toggleAttribute(OVERFLOW_ATTR, isTargetNode)
     }
 
     // Call this on the next frame to allow the DOM to
