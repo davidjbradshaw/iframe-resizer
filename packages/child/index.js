@@ -166,7 +166,7 @@ function iframeResizerChild() {
     overflowedNodeList = nodeList
     hasOverflow = nodeList.length > 0
 
-    requestAnimationFrame(() => sendSize('overflowChanged', 'Overflow updated'))
+    sendSize('overflowChanged', 'Overflow updated')
   }
 
   function setupObserveOverflow() {
