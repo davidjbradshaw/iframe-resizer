@@ -1,8 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
 
-let overflowedNodeList = []
-
 const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
@@ -15,16 +13,20 @@ const overflowObserver = (options) => {
 
   const observed = new WeakSet()
 
+  function emit() {
+    const overflowedNodeList = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+    onChange(overflowedNodeList)
+  }
+
   function callback(entries) {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
-      const isOverflowed = edge === 0 || edge > rootBounds[side]
-      target.toggleAttribute(OVERFLOW_ATTR, isOverflowed)
+      const hasOverflow = edge === 0 || edge > rootBounds[side]
+      target.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
     }
 
-    overflowedNodeList = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-    onChange(overflowedNodeList)
+    requestAnimationFrame(emit)
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
