@@ -20,11 +20,7 @@ import {
   setLogOptions,
   warn,
 } from './log'
-import {
-  getOverflowedElements,
-  isOverflowed,
-  overflowObserver,
-} from './overflow'
+import overflowObserver from './overflow'
 import { PREF_END, PREF_START, setPerfEl } from './perf'
 
 function iframeResizerChild() {
@@ -84,6 +80,7 @@ function iframeResizerChild() {
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
+  let isOverflowed = false
   let logging = false
   let licenseKey = '' // eslint-disable-line no-unused-vars
   let mode = 0
@@ -92,6 +89,7 @@ function iframeResizerChild() {
   let offsetHeight
   let offsetWidth
   let observeOverflow = id
+  let overflowedNodeList = []
   let resizeFrom = 'child'
   let resizeObserver = null
   let sameDomain = false
@@ -162,10 +160,19 @@ function iframeResizerChild() {
     log('---')
   }
 
+  function onOverflowChange(nodeList) {
+    log('Overflowed Elements:', nodeList.length)
+
+    overflowedNodeList = nodeList
+    isOverflowed = nodeList.length > 0
+
+    requestAnimationFrame(() => sendSize('overflowChanged', 'Overflow updated'))
+  }
+
   function setupObserveOverflow() {
     if (calculateHeight === calculateWidth) return
     observeOverflow = overflowObserver({
-      onChange: () => sendSize('overflowChanged', 'Overflow updated'),
+      onChange: onOverflowChange,
       root: document.documentElement,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
@@ -885,8 +892,8 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     const targetElements = hasTags
       ? taggedElements
-      : isOverflowed()
-        ? getOverflowedElements()
+      : isOverflowed
+        ? overflowedNodeList
         : getAllElements(document)() // We should never get here, but just in case
 
     let len = targetElements.length
@@ -957,7 +964,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       return boundingSize
     }
 
-    const hasOverflow = isOverflowed()
+    const hasOverflow = isOverflowed
     const isHeight = getDimension === getHeight
     const dimension = isHeight ? 'height' : 'width'
     const boundingSize = getDimension.boundingClientRect()
