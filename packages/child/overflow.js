@@ -1,10 +1,9 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { log } from './log'
 
-let overflowedElements = []
+let overflowedNodeList = []
 
-export const overflowObserver = (options) => {
+const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
 
@@ -14,39 +13,30 @@ export const overflowObserver = (options) => {
     threshold: 1,
   }
 
-  const observedElements = new WeakSet()
-
-  function update() {
-    overflowedElements = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-    log('overflowedElements:', overflowedElements.length)
-    onChange()
-  }
+  const observed = new WeakSet()
 
   function callback(entries) {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
-      const isTargetNode = edge === 0 || edge > rootBounds[side]
-      target.toggleAttribute(OVERFLOW_ATTR, isTargetNode)
+      const isOverflowed = edge === 0 || edge > rootBounds[side]
+      target.toggleAttribute(OVERFLOW_ATTR, isOverflowed)
     }
 
-    // Call this on the next frame to allow the DOM to
-    // update and prevent reflowing the page
-    requestAnimationFrame(update)
+    overflowedNodeList = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+    onChange(overflowedNodeList)
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
 
   return function (nodeList) {
     for (const node of nodeList) {
-      if (node.nodeType !== Node.ELEMENT_NODE || observedElements.has(node))
-        continue
+      if (node.nodeType !== Node.ELEMENT_NODE || observed.has(node)) continue
 
       observer.observe(node)
-      observedElements.add(node)
+      observed.add(node)
     }
   }
 }
 
-export const isOverflowed = () => overflowedElements.length > 0
-export const getOverflowedElements = () => overflowedElements
+export default overflowObserver
