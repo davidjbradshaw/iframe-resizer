@@ -4,7 +4,7 @@ export const BASE = 10
 export const SINGLE = 1
 
 export const SIZE_ATTR = 'data-iframe-size'
-export const OVERFLOW_ATTR = 'data-iframe-overflow'
+export const OVERFLOW_ATTR = 'data-overflowed'
 
 export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
