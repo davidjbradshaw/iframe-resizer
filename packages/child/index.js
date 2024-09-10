@@ -74,13 +74,13 @@ function iframeResizerChild() {
   let calculateHeight = true
   let calculateWidth = false
   let firstRun = true
+  let hasOverflow = false
   let hasTags = false
   let height = 1
   let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
-  let isOverflowed = false
   let logging = false
   let licenseKey = '' // eslint-disable-line no-unused-vars
   let mode = 0
@@ -164,7 +164,7 @@ function iframeResizerChild() {
     log('Overflowed Elements:', nodeList.length)
 
     overflowedNodeList = nodeList
-    isOverflowed = nodeList.length > 0
+    hasOverflow = nodeList.length > 0
 
     requestAnimationFrame(() => sendSize('overflowChanged', 'Overflow updated'))
   }
@@ -892,7 +892,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
 
     const targetElements = hasTags
       ? taggedElements
-      : isOverflowed
+      : hasOverflow
         ? overflowedNodeList
         : getAllElements(document)() // We should never get here, but just in case
 
@@ -964,7 +964,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       return boundingSize
     }
 
-    const hasOverflow = isOverflowed
     const isHeight = getDimension === getHeight
     const dimension = isHeight ? 'height' : 'width'
     const boundingSize = getDimension.boundingClientRect()
