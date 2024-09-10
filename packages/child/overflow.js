@@ -26,6 +26,7 @@ const overflowObserver = (options) => {
       target.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
     }
 
+    // Wait for next frame to avoid reflow
     requestAnimationFrame(emit)
   }
 
