@@ -11,8 +11,6 @@ const overflowObserver = (options) => {
     threshold: 1,
   }
 
-  const observed = new WeakSet()
-
   function emit() {
     const overflowedNodeList = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
     onChange(overflowedNodeList)
@@ -31,6 +29,7 @@ const overflowObserver = (options) => {
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
+  const observed = new WeakSet()
 
   return function (nodeList) {
     for (const node of nodeList) {
