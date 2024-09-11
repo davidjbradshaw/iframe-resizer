@@ -16,7 +16,7 @@ const overflowObserver = (options) => {
     onChange(overflowedNodeList)
   }
 
-  const emitAfterReflow = requestAnimationFrame(emit)
+  const emitAfterReflow = () => requestAnimationFrame(emit)
 
   function callback(entries) {
     for (const entry of entries) {
