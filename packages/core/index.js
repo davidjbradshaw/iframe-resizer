@@ -13,7 +13,7 @@ import {
   setLogSettings,
   vInfo,
   warn,
-} from '../common/log'
+} from './log'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
