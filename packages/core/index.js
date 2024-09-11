@@ -126,7 +126,9 @@ function iframeListener(event) {
     // the message format would break backwards compatibility.
     const retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
 
-    if (retCode) log(iframeId, 'Ignoring init message from meta parent page')
+    if (retCode) {
+      log(iframeId, 'Ignoring init message from meta parent page')
+    }
 
     return retCode
   }
@@ -743,11 +745,11 @@ function setSize(messageData) {
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
     messageData.iframe.style[dimension] = size
-    log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`)
+    log(id, `IFrame (${id}) ${dimension} set to ${size}`)
   }
 
-  const iframeId = messageData.id
-  const { sizeHeight, sizeWidth } = settings[iframeId]
+  const { id } = messageData
+  const { sizeHeight, sizeWidth } = settings[id]
 
   if (sizeHeight) setDimension('height')
   if (sizeWidth) setDimension('width')
