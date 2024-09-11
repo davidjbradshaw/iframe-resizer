@@ -32,15 +32,8 @@ export function getElementName(el) {
   }
 }
 
-// function elementSnippet(el, maxChars = 30) {
-//   const outer = el?.outerHTML?.toString()
-
-//   if (!outer) return el
-
-//   return outer.length < maxChars
-//     ? outer
-//     : `${outer.slice(0, maxChars).replaceAll('\n', ' ')}...`
-// }
+const BOLD = 'font-weight: bold;'
+const NORMAL = 'font-weight: normal;'
 
 // TODO: remove .join(' '), requires major test updates
 const formatLogMsg = (...msg) =>
@@ -53,7 +46,7 @@ export const log = (...msg) =>
 // eslint-disable-next-line no-unused-vars
 export const info = (...msg) =>
   // eslint-disable-next-line no-console
-  logging && console?.info(`[iframe-resizer][${id}]`, ...msg)
+  logging && console?.info(`%c[iframe-resizer][${id}]%c`, BOLD, NORMAL, ...msg)
 
 export const warn = (...msg) =>
   // eslint-disable-next-line no-console

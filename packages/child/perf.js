@@ -14,7 +14,7 @@ const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
-let lastPerfEl = null
+// let lastPerfEl = null
 let perfEl = null
 let details = {}
 
@@ -28,18 +28,20 @@ function usedEl(detail, duration) {
 
   details = detail
 
-  if (usedTags.has(perfEl) || lastPerfEl === perfEl || (hasTags && len <= 1)) {
+  if (
+    usedTags.has(perfEl) /* || lastPerfEl === perfEl */ ||
+    (hasTags && len <= 1)
+  )
     return
-  }
 
   if (!logging) addUsedTag(perfEl)
 
-  lastPerfEl = perfEl
+  // lastPerfEl = perfEl
 
   info(
-    `\n${Side} position calculated from:`,
+    `\n  ${Side} position calculated from:`,
     perfEl,
-    `\nParsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
+    `\n  Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
   )
 }
 

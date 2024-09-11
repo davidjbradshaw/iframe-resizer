@@ -2,6 +2,9 @@ import formatAdvise from './format-advise'
 
 const msgId = '[iframe-resizer]'
 
+const BOLD = 'font-weight: bold;'
+// const NORMAL = 'font-weight: normal;'
+
 let settings = {}
 let logEnabled = false
 
@@ -41,6 +44,10 @@ export const log = (iframeId, ...msg) =>
   isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null
 
 export const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
+
+export const vInfo = (msg) =>
+  // eslint-disable-next-line no-console
+  console.info(`%c[iframe-resizer] ${msg}`, BOLD)
 
 export const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
 
