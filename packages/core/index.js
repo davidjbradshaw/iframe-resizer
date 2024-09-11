@@ -32,9 +32,7 @@ function iframeListener(event) {
   }
 
   function getPaddingEnds(compStyle) {
-    if (compStyle.boxSizing !== 'border-box') {
-      return 0
-    }
+    if (compStyle.boxSizing !== 'border-box') return 0
 
     const top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
     const bot = compStyle.paddingBottom
@@ -45,9 +43,7 @@ function iframeListener(event) {
   }
 
   function getBorderEnds(compStyle) {
-    if (compStyle.boxSizing !== 'border-box') {
-      return 0
-    }
+    if (compStyle.boxSizing !== 'border-box') return 0
 
     const top = compStyle.borderTopWidth
       ? parseInt(compStyle.borderTopWidth, 10)
@@ -108,9 +104,7 @@ function iframeListener(event) {
 
     const { origin, sameDomain } = event
 
-    if (sameDomain) {
-      return true
-    }
+    if (sameDomain) return true
 
     let checkOrigin = settings[iframeId]?.checkOrigin
 
@@ -132,9 +126,7 @@ function iframeListener(event) {
     // the message format would break backwards compatibility.
     const retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
 
-    if (retCode) {
-      log(iframeId, 'Ignoring init message from meta parent page')
-    }
+    if (retCode) log(iframeId, 'Ignoring init message from meta parent page')
 
     return retCode
   }
@@ -153,7 +145,7 @@ function iframeListener(event) {
       message: JSON.parse(msgBody),
     })
 
-    log(iframeId, '--')
+    log(iframeId, '---')
   }
 
   function getPageInfo() {
@@ -260,11 +252,13 @@ function iframeListener(event) {
 
     function start() {
       setListener('Add ', addEventListener)
+
       pageObserver.observe(document.body, {
         attributes: true,
         childList: true,
         subtree: true,
       })
+
       iframeObserver.observe(settings[id].iframe, {
         attributes: true,
         childList: false,
@@ -688,12 +682,14 @@ function removeIframeListeners(iframe) {
 }
 
 function closeIFrame(iframe) {
-  const iframeId = iframe.id
-  if (chkEvent(iframeId, 'onClose', iframeId) === false) {
-    log(iframeId, 'Close iframe cancelled by onClose event')
+  const { id } = iframe
+
+  if (chkEvent(id, 'onClose', id) === false) {
+    log(id, 'Close iframe cancelled by onClose event')
     return
   }
-  log(iframeId, `Removing iFrame: ${iframeId}`)
+
+  log(id, `Removing iFrame: ${id}`)
 
   try {
     // Catch race condition error with React
@@ -701,11 +697,11 @@ function closeIFrame(iframe) {
       iframe.remove()
     }
   } catch (error) {
-    warn(iframeId, error)
+    warn(id, error)
   }
 
-  chkEvent(iframeId, 'onClosed', iframeId)
-  log(iframeId, '--')
+  chkEvent(id, 'onClosed', id)
+  log(id, '---')
   removeIframeListeners(iframe)
 }
 
