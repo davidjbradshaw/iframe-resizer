@@ -11,10 +11,12 @@ const overflowObserver = (options) => {
     threshold: 1,
   }
 
-  function emitOnNextFrame() {
+  function emit() {
     const overflowedNodeList = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
     onChange(overflowedNodeList)
   }
+
+  const emitAfterReflow = requestAnimationFrame(emit)
 
   function callback(entries) {
     for (const entry of entries) {
@@ -24,8 +26,7 @@ const overflowObserver = (options) => {
       target.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
     }
 
-    // Wait for next frame to avoid reflow
-    requestAnimationFrame(emitOnNextFrame)
+    emitAfterReflow()
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
