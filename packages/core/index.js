@@ -6,17 +6,10 @@ import {
   VERSION,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
-import {
-  advise,
-  log,
-  setLogEnabled,
-  setLogSettings,
-  vInfo,
-  warn,
-} from './log'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
+import { advise, log, setLogEnabled, setLogSettings, vInfo, warn } from './log'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
