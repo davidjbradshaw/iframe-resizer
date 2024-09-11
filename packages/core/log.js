@@ -1,4 +1,4 @@
-import formatAdvise from './format-advise'
+import formatAdvise from '../common/format-advise'
 
 const msgId = '[iframe-resizer]'
 
