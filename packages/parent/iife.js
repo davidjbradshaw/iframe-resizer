@@ -1,4 +1,4 @@
-import { advise } from '../common/log'
+import { advise } from '../core/log'
 import createIframeResize from './factory'
 
 window.iframeResize = createIframeResize()
