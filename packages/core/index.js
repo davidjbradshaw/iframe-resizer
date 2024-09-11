@@ -711,10 +711,12 @@ function closeIFrame(iframe) {
 
 function getPagePosition(iframeId) {
   if (page.position !== null) return
+
   page.position = {
     x: window.scrollX,
     y: window.scrollY,
   }
+
   log(iframeId, `Get page position: ${page.position.x}, ${page.position.y}`)
 }
 
@@ -724,6 +726,7 @@ function unsetPagePosition() {
 
 function setPagePosition(iframeId) {
   if (page.position === null) return
+
   window.scrollTo(page.position.x, page.position.y)
   log(iframeId, `Set page position: ${page.position.x}, ${page.position.y}`)
   unsetPagePosition()
@@ -741,29 +744,26 @@ function resetIFrame(messageData) {
 }
 
 function setSize(messageData) {
-  const iframeId = messageData.id
-
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
     messageData.iframe.style[dimension] = size
     log(iframeId, `IFrame (${iframeId}) ${dimension} set to ${size}`)
   }
 
-  if (settings[iframeId].sizeHeight) {
-    setDimension('height')
-  }
-  if (settings[iframeId].sizeWidth) {
-    setDimension('width')
-  }
+  const iframeId = messageData.id
+  const { sizeHeight, sizeWidth } = settings[iframeId]
+
+  if (sizeHeight) setDimension('height')
+  if (sizeWidth) setDimension('width')
 }
 
 function trigger(calleeMsg, msg, id, noResponseWarning) {
   function postMessageToIFrame() {
-    const { postMessageTarget, targetOrigin } = settings[id]
+    const { iframe, postMessageTarget, sameDomain, targetOrigin } = settings[id]
 
-    if (settings[id].sameDomain) {
+    if (sameDomain) {
       try {
-        settings[id].iframe.contentWindow.iframeChildListener(msgId + msg)
+        iframe.contentWindow.iframeChildListener(msgId + msg)
         log(
           id,
           `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
@@ -778,6 +778,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
       id,
       `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
     )
+
     postMessageTarget.postMessage(msgId + msg, targetOrigin)
   }
 
@@ -790,12 +791,14 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
       iFrameNotFound()
       return
     }
+
     postMessageToIFrame()
   }
 
   function warnOnNoResponse() {
     function warning() {
       if (settings[id] === undefined) return // iframe has been closed while we where waiting
+
       const { iframe, loaded, loadErrorShown, waitForLoad } = settings[id]
 
       const { sandbox } = iframe
@@ -949,10 +952,11 @@ export default (options) => (iframe) => {
 
   function setupIFrameObject() {
     if (settings[iframeId]) {
+      const { iframe } = settings[iframeId]
       const resizer = {
-        close: closeIFrame.bind(null, settings[iframeId].iframe),
+        close: closeIFrame.bind(null, iframe),
 
-        disconnect: removeIframeListeners.bind(null, settings[iframeId].iframe),
+        disconnect: removeIframeListeners.bind(null, iframe),
 
         removeListeners() {
           advise(
@@ -978,8 +982,8 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
         },
       }
 
-      settings[iframeId].iframe.iframeResizer = resizer
-      settings[iframeId].iframe.iFrameResizer = resizer
+      iframe.iframeResizer = resizer
+      iframe.iFrameResizer = resizer
     }
   }
 
@@ -993,13 +997,13 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
     }
 
     const { id } = iframe
+    const { mode, waitForLoad } = settings[id]
 
-    if (settings[id].mode === -1) return // modal()
-    if (settings[id].mode === -2) return
+    if (mode === -1) return // modal()
+    if (mode === -2) return
 
     addEventListener(iframe, 'load', iFrameLoaded)
-    if (settings[id].waitForLoad === false)
-      trigger('init', `${msg}:${setup}`, id, true)
+    if (waitForLoad === false) trigger('init', `${msg}:${setup}`, id, true)
   }
 
   function checkOptions(options) {
@@ -1028,22 +1032,27 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function checkMode() {
     const { mode } = settings[iframeId]
+
     if (mode < 0) advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
     if (vAdvised || mode < 0) return
+
     vAdvised = true
     info(`v${VERSION} (${getModeLabel(mode)})`)
+
     if (mode < 1) advise('Parent', getModeData(3))
   }
 
   function setDirection() {
-    if (settings[iframeId].direction === 'horizontal') {
+    const { direction } = settings[iframeId]
+
+    if (direction === 'horizontal') {
       settings[iframeId].sizeWidth = true
       settings[iframeId].sizeHeight = false
       log(iframeId, 'Direction set to "horizontal"')
       return
     }
 
-    if (settings[iframeId].direction === 'none') {
+    if (direction === 'none') {
       settings[iframeId].sizeWidth = false
       settings[iframeId].sizeHeight = false
       settings[iframeId].autoResize = false
@@ -1051,10 +1060,10 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       return
     }
 
-    if (settings[iframeId].direction !== 'vertical') {
+    if (direction !== 'vertical') {
       throw new TypeError(
         iframeId,
-        `Direction value of "${settings[iframeId].direction}" is not valid`,
+        `Direction value of "${direction}" is not valid`,
       )
     }
 
@@ -1063,6 +1072,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function setOffsetSize(offset) {
     if (!offset) return
+
     if (settings[iframeId].direction === 'vertical') {
       settings[iframeId].offsetHeight = offset
       log(iframeId, `Offset height set to ${offset}`)
