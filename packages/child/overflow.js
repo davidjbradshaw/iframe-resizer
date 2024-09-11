@@ -16,10 +16,9 @@ const overflowObserver = (options) => {
     onChange(overflowedNodeList)
   }
 
-  // const emitAfterReflow = () => requestAnimationFrame(emit)
+  const emitAfterReflow = () => requestAnimationFrame(emit)
 
   function callback(entries) {
-    console.log('callback', entries)
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
@@ -27,7 +26,7 @@ const overflowObserver = (options) => {
       target.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
     }
 
-    emit()
+    emitAfterReflow()
   }
 
   const observer = new IntersectionObserver(callback, observerOptions)
