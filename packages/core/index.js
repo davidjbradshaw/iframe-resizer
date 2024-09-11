@@ -339,13 +339,13 @@ function iframeListener(event) {
 
   function scrollRequestFromChild(addOffset) {
     /* istanbul ignore next */ // Not testable in Karma
-    function reposition() {
+    function reposition(newPosition) {
       page.position = newPosition
       scrollTo(iframeId)
       log(iframeId, '---')
     }
 
-    function scrollParent(target) {
+    function scrollParent(target, newPosition) {
       target[`scrollTo${addOffset ? 'Offset' : ''}`](
         newPosition.x,
         newPosition.y,
@@ -361,22 +361,18 @@ function iframeListener(event) {
       ? getElementPosition(messageData.iframe)
       : { x: 0, y: 0 }
 
-    const target = window.parentIframe || window.parentIFrame
-
-    let newPosition = calcOffset(messageData, offset)
-
     log(
       iframeId,
       `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`,
     )
 
-    // Check for V4 as well
-    if (target) {
-      scrollParent(target)
-      return
-    }
+    const newPosition = calcOffset(messageData, offset)
 
-    reposition()
+    // Check for V4 as well
+    const target = window.parentIframe || window.parentIFrame
+
+    if (target) scrollParent(target, newPosition)
+    else reposition(newPosition)
   }
 
   function scrollTo(iframeId) {
