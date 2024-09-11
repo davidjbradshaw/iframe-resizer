@@ -8,10 +8,10 @@ import {
 import { addEventListener, removeEventListener } from '../common/listeners'
 import {
   advise,
-  info,
   log,
   setLogEnabled,
   setLogSettings,
+  vInfo,
   warn,
 } from '../common/log'
 // import modal from '../common/modal'
@@ -1035,7 +1035,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (vAdvised || mode < 0) return
 
     vAdvised = true
-    info(`v${VERSION} (${getModeLabel(mode)})`)
+    vInfo(`v${VERSION} (${getModeLabel(mode)})`)
 
     if (mode < 1) advise('Parent', getModeData(3))
   }
