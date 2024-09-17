@@ -20,7 +20,7 @@ for your content every time it detects something changed.
 ### High Performance
 
 To ensure minimal impact on your site, _iframe-resizer_ is highly optimised and 
-utilizes [Set Theory](https://en.wikipedia.org/wiki/Set_theory) to ensure it only
+utilizes _[Set Theory](https://en.wikipedia.org/wiki/Set_theory)_ to ensure it only
 checks the page elements that effect the sizing of your iframes. 
 
 Even on the most complex pages, _iframe-resizer_ can detect changes to both HTML 
