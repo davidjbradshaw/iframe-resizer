@@ -89,6 +89,7 @@ function iframeResizerChild() {
   let offsetHeight
   let offsetWidth
   let observeOverflow = id
+  let origin
   let overflowedNodeList = []
   let resizeFrom = 'child'
   let resizeObserver = null
@@ -622,6 +623,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       getId: () => myID,
+
+      getOrigin: () => origin,
 
       getPageInfo(callback) {
         if (typeof callback === 'function') {
@@ -1239,6 +1242,7 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       init: function initFromParent() {
         initMsg = event.data
         target = event.source
+        origin = event.origin
 
         init()
         firstRun = false
