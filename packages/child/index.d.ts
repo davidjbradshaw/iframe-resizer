@@ -53,7 +53,7 @@ declare module '@iframe-resizer/child' {
        *
        * Pass false to disable the callback.
        */
-      getParentProps(callback: (data: ParentProps) => void): void
+      getParentProps(callback: (data: ParentProps) => void): () => void
 
       /**
        * Scroll the parent page by x and y
