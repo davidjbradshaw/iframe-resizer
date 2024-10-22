@@ -1,6 +1,6 @@
 {
   "name": "iframe-resizer",
-  "version": "5.3.2-beta.1",
+  "version": "5.3.2",
   "private": true,
   "type": "module",
   "license": "GPL-3.0",
@@ -37,7 +37,7 @@
     "test:int:watch": "karma start --browsers Chrome karma.conf.cjs",
     "upgrade": "time npm-check-updates -i && npm run build"
   },
-  "description": "Keep iFrames sized to their content.",
+  "description": "Keep iframes sized to their content.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/davidjbradshaw/iframe-resizer.git"
