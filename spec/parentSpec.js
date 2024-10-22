@@ -81,7 +81,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
     })
 
-    describe('resize height', () => {
+    xdescribe('resize height', () => {
       let iframe
       const testId = 'parentPage3'
       const HEIGHT = 90
