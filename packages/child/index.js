@@ -624,7 +624,17 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       getId: () => myID,
 
-      getOrigin: () => origin,
+      getOrigin: () => {
+        advise(
+          `<rb>Deprecated Method</>
+          
+The <b>getOrigin()</> method has been deprecated and replaced with  <b>getParentOrigin()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+`,
+        )
+        return origin
+      },
+
+      getParentOrigin: () => origin,
 
       getPageInfo(callback) {
         if (typeof callback === 'function') {
