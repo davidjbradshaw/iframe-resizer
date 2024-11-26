@@ -65,4 +65,4 @@ git push --tags
 
 echo "Updating iframe-resizer.com"
 cp -v js/* ../docs/public/js
-echo "export default '$VERSION'\n" > ../docs/src/components/version.js
+echo "export default '$VERSION'" > ../docs/src/components/version.js
