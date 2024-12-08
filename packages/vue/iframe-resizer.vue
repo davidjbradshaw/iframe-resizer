@@ -53,11 +53,11 @@ const emit = defineEmits<{
   onResized: [...any[]]
 }>()
 
-const iframeRef = ref<HTMLIFrameElement | null>(null)
+const iframe = ref<HTMLIFrameElement | null>(null)
 const resizer = ref<IFrameObject | null>(null)
 
 onMounted(() => {
-  if (!iframeRef.value)
+  if (!iframe.value)
     return
 
   const options = {
@@ -73,7 +73,7 @@ onMounted(() => {
   }
 
   const connectWithOptions = connectResizer(options)
-  resizer.value = connectWithOptions(iframeRef.value)
+  resizer.value = connectWithOptions(iframe.value)
 })
 
 onBeforeUnmount(() => {
@@ -94,5 +94,5 @@ defineExpose({
 </script>
 
 <template>
-  <iframe ref="iframeRef" v-bind="$attrs" />
+  <iframe ref="iframe" v-bind="$attrs" />
 </template>
