@@ -7,7 +7,7 @@ type IFrameObject = {
   resize: () => void;
   sendMessage: (message: string, targetOrigin?: string) => void;
   disconnect: () => void;
-}
+};
 
 const props = defineProps({
   license: {
