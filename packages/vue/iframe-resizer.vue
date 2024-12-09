@@ -3,10 +3,10 @@ import connectResizer from '@iframe-resizer/core'
 import { defineEmits, defineProps, onBeforeUnmount, onMounted, ref } from 'vue'
 
 type IFrameObject = {
-  moveToAnchor: (anchor: string) => void
-  resize: () => void
-  sendMessage: (message: string, targetOrigin?: string) => void
-  disconnect: () => void
+  moveToAnchor: (anchor: string) => void;
+  resize: () => void;
+  sendMessage: (message: string, targetOrigin?: string) => void;
+  disconnect: () => void;
 }
 
 const props = defineProps({
