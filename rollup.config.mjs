@@ -1,3 +1,4 @@
+import alias from '@rollup/plugin-alias'
 import { babel } from '@rollup/plugin-babel'
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
@@ -15,7 +16,8 @@ import {
 } from './build/plugins.js'
 
 import pkg from './package.json' with { type: 'json' }
-import typescript from '@rollup/plugin-typescript'
+// import typescript from '@rollup/plugin-typescript'
+import typescript from 'rollup-plugin-typescript2' 
 
 const { BETA, ROLLUP_WATCH, DEBUG, TEST } = process.env
 
@@ -24,14 +26,16 @@ const betaMode = BETA || false
 const sourcemap = debugMode || betaMode || false
 const logging = debugMode || betaMode || TEST
 
-const outputPlugins = debugMode ? () => { } : (file, format) => ({
-  plugins: terser({
-    output: {
-      comments: false,
-      preamble: createBanner(file, format),
-    },
-  }),
-})
+const outputPlugins = debugMode
+  ? () => {}
+  : (file, format) => ({
+      plugins: terser({
+        output: {
+          comments: false,
+          preamble: createBanner(file, format),
+        },
+      }),
+    })
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -236,7 +240,7 @@ const npm = [
 
   // Vue
   {
-    input: 'packages/vue/index.js',
+    input: 'packages/vue/index.ts',
     output: [
       {
         name: 'IframeResizer',
@@ -252,6 +256,7 @@ const npm = [
         css: true,
         compileTemplate: true,
       }),
+      alias({ entries: [{ find: /^@\/(.+)/, replacement: './$1' }] }),
       ...pluginsProd('vue'),
       copy({
         hook: 'closeBundle',
@@ -279,7 +284,6 @@ const npm = [
     watch: false,
   },
 ]
-
 
 // JS folder (iife)
 const js = [
