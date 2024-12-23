@@ -3,4 +3,5 @@ js
 **/*.d.js
 coverage
 example/react/src/message-data.jsx
+example-test/react/src/message-data.jsx
 packages/common/mode.js
