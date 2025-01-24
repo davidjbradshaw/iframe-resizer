@@ -1,0 +1,16 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "paths": {
+     "@/*": [
+      "./*"
+     ]
+    },
+    "skipLibCheck": false
+  }
+}
