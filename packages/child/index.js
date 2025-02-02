@@ -901,8 +901,6 @@ The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. U
       ? 0
       : document.documentElement.getBoundingClientRect().bottom
 
-    performance.mark(PREF_START)
-
     const targetElements = hasTags
       ? taggedElements
       : hasOverflow

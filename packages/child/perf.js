@@ -14,8 +14,8 @@ const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
-// let lastPerfEl = null
-let perfEl = null
+// let lastPerfEl
+let perfEl
 let details = {}
 
 export const setPerfEl = (el) => {
