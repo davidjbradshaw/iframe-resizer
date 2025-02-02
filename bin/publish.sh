@@ -26,6 +26,7 @@ echo
 echo "Publishing version $VERSION as $1"
 echo
 
+npm install
 npm run build:$1
 
 cd dist/parent
