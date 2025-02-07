@@ -17,7 +17,7 @@ declare module '@iframe-resizer/parent' {
 
       moveToAnchor(anchor: string): void
 
-      removeListeners(): void
+      disconnect(): void
 
       resize(): void
 
@@ -69,6 +69,10 @@ declare module '@iframe-resizer/parent' {
        * Set iFrame-resizer license.
        */
       license: string
+      /**
+       * Enable/disable logs
+       */
+      log: boolean
       /**
        * Set offset height of iFrame content.
        */
@@ -179,4 +183,5 @@ declare module '@iframe-resizer/parent' {
   ): iframeResizer.IFrameComponent[]
 
   export default iframeResize;
+  export { IFrameComponent, IFrameObject };
 }
