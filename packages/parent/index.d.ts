@@ -61,6 +61,11 @@ declare module '@iframe-resizer/parent' {
       direction?: 'vertical' | 'horizontal' | 'none' | undefined
 
       /**
+       * Custom iframe id
+       */
+      id?: string
+
+      /**
        * When enabled in page linking inside the iFrame and from the iFrame to the parent page will be enabled.
        */
       inPageLinks?: boolean | undefined
@@ -72,7 +77,7 @@ declare module '@iframe-resizer/parent' {
       /**
        * Enable/disable logs
        */
-      log: boolean
+      log?: boolean
       /**
        * Set offset height of iFrame content.
        */
