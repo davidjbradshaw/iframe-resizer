@@ -27,7 +27,7 @@ function usedEl(detail, duration) {
 
   details = detail
 
-  if (usedTags.has(perfEl) || (hasTags && len <= 1)) return
+  if (usedTags.has(perfEl) || (hasTags && len <= 1) || !perfEl) return
 
   if (!logging) addUsedTag(perfEl)
 
