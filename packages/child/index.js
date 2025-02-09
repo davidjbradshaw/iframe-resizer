@@ -127,7 +127,7 @@ function iframeResizerChild() {
     checkHeightMode()
     checkWidthMode()
     checkDeprecatedAttrs()
-
+    checkQuirksMode()
     checkAndSetupTags()
 
     setupObserveOverflow()
@@ -193,6 +193,19 @@ function iframeResizerChild() {
     if (document.title && document.title !== '') {
       sendMsg(0, 0, 'title', document.title)
     }
+  }
+
+  function checkQuirksMode() {
+    if (document.compatMode !== 'BackCompat') return
+
+    advise(
+      `<rb>Quirks Mode Detected</>
+
+The iframe is running in <b>Quirks Mode</>. This can cause issues with the correct operation of <i>iframe-resizer</>. It is recommended that you switch to <b>Standards Mode</>.
+
+For more information see <u>https://iframe-resizer.com/quirks-mode</>.
+`,
+    )
   }
 
   function checkVersion() {
@@ -571,7 +584,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (inPageLinks.enable) {
       if (mode === 1) {
         advise(
-          `In page linking requires a Professional or Business license. Please see https://iframe-resizer.com/pricing for more details.`,
+          `In page linking requires a Professional or Business license. Please see <u>https://iframe-resizer.com/pricing</> for more details.`,
         )
       } else {
         enableInPageLinks()
