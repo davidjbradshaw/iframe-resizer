@@ -23,8 +23,6 @@ const customConfig = (file) => {
     case 'legacy':
       return {
         name: 'iframe-resizer',
-        description:
-          "This project has now been split into two separate packages. Please use '@iframe-resizer/parent' and '@iframe-resizer/child'. See https://iframe-resizer.com/upgrade for more details.",
         main,
         module,
       }
