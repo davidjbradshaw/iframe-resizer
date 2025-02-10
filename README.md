@@ -36,13 +36,13 @@ JS file that is designed to be a zero impact guest on the sites hosting it.
 
 Additionally _iframe-resizer_ provides a range of missing browser API features, that allows you to securely integrate your iframe content with the parent page.
 
-* Scroll the page, relative to the iframe or parent page’s position
-* Get details of the position of the iframe, the scroll position and viewport of the parent page
-* Fixes in page linking in the iframe and allows links to propagate to the parent page
-* Adds `onMouseEnter` and `onMouseLeave` events to the iframe element
-* Simplified message passing between the iframe and the parent page
-* Automatic domain authentication
-* Enhanced Accessibility
+- Scroll the parent page, [relative to the iframe](https://iframe-resizer.com/api/child#scrolltooffsetx-y) or [parent page's position](https://iframe-resizer.com/api/child#scrollbyx-y)
+- Provides details of the [position of the iframe](https://iframe-resizer.com/api/child#getparentpropscallback), the [scroll position](https://iframe-resizer.com/api/child#getparentpropscallback) and [viewport](https://iframe-resizer.com/api/child#getparentpropscallback) of the parent page
+- Fixes [in page linking](https://iframe-resizer.com/api/parent#inpagelinks) in the iframe and allows links to propagate to the parent page
+- Adds [`onMouseEnter`](https://iframe-resizer.com/api/parent#onmouseenter) and [`onMouseLeave`](https://iframe-resizer.com/api/parent#onmouseleave) events to the iframe element
+- Simplified message passing between the [iframe](https://iframe-resizer.com/api/child#onmessage) and the [parent](https://iframe-resizer.com/api/parent#onmessage) page
+- Automatic domain authentication
+- Enhanced [Accessibility](https://iframe-resizer.com/accessibility)
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
