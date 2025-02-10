@@ -13,6 +13,8 @@ import {
   advise,
   adviser,
   capitalizeFirstLetter,
+  deprecateMethod,
+  deprecateOption,
   getElementName,
   // eslint-disable-next-line no-unused-vars
   info,
@@ -64,8 +66,6 @@ function iframeResizerChild() {
     bodyScroll: 1,
     documentElementScroll: 1,
   }
-  const removedInFuture =
-    'Use of this method will be removed in a future version of <i>iframe-resizer</>'
   const widthCalcModeDefault = 'scroll'
 
   let autoResize = true
@@ -282,9 +282,7 @@ Parent page: ${version} - Child page: ${VERSION}.
       onReady = data?.onReady || onReady
 
       if (typeof data?.offset === 'number') {
-        advise(
-          `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
-        )
+        deprecateOption('offset', 'offsetSize')
         if (calculateHeight) offsetHeight = data?.offset
         if (calculateWidth) offsetWidth = data?.offset
       }
@@ -640,12 +638,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       getId: () => myID,
 
       getOrigin: () => {
-        advise(
-          `<rb>Deprecated Method</>
-          
-The <b>getOrigin()</> method has been deprecated and replaced with  <b>getParentOrigin()</>. ${removedInFuture}.
-`,
-        )
+        deprecateMethod('getOrigin()', 'getParentOrigin()')
         return origin
       },
 
@@ -655,12 +648,7 @@ The <b>getOrigin()</> method has been deprecated and replaced with  <b>getParent
         if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
-          advise(
-            `<rb>Deprecated Method</>
-          
-The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentProps()</>. ${removedInFuture}.
-`,
-          )
+          deprecateMethod('getPageInfo()', 'getParentProps()')
           return
         }
 
@@ -685,12 +673,7 @@ The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getPare
       },
 
       getParentProperties(callback) {
-        advise(
-          `<rb>Renamed Method</>
-          
-The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.
-`,
-        )
+        deprecateMethod('getParentProperties()', 'getParentProps()')
         this.getParentProps(callback)
       },
 
@@ -745,12 +728,7 @@ The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. 
       },
 
       size(customHeight, customWidth) {
-        advise(
-          `<rb>Deprecated Method</>
-          
-The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. ${removedInFuture}.
-`,
-        )
+        deprecateMethod('size()', 'resize()')
         this.resize(customHeight, customWidth)
       },
     })

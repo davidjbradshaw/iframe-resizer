@@ -57,3 +57,14 @@ export const advise = (...msg) =>
   console?.warn(formatAdvise(formatLogMsg)(...msg))
 
 export const adviser = (msg) => advise(msg)
+
+const deprecate =
+  (type, change = 'renamed to') =>
+  (old, replacement) =>
+    advise(
+      `<rb>Deprecated ${type}</>\n\nThe <b>${old}</> ${type.toLowerCase()} has been ${change} <b>${replacement}</>. Use of the old ${type.toLowerCase()} will be removed in a future version of <i>iframe-resizer</>.`,
+    )
+
+export const deprecateAttr = deprecate('Attribute')
+export const deprecateMethod = deprecate('Method', 'replaced with')
+export const deprecateOption = deprecate('Option')
