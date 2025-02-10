@@ -47,6 +47,11 @@ declare module '@iframe-resizer/child' {
       getId(): string
 
       /**
+       * Returns the origin of the parent page that the iFrame is contained in.
+       */
+      getParentOrigin(): string
+
+      /**
        * Ask the containing page for its positioning coordinates.
        *
        * Your callback function will be recalled when the parent page is scrolled or resized.
