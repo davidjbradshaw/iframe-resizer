@@ -64,6 +64,8 @@ function iframeResizerChild() {
     bodyScroll: 1,
     documentElementScroll: 1,
   }
+  const removedInFuture =
+    'Use of this method will be removed in a future version of <i>iframe-resizer</>'
   const widthCalcModeDefault = 'scroll'
 
   let autoResize = true
@@ -641,7 +643,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         advise(
           `<rb>Deprecated Method</>
           
-The <b>getOrigin()</> method has been deprecated and replaced with  <b>getParentOrigin()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+The <b>getOrigin()</> method has been deprecated and replaced with  <b>getParentOrigin()</>. ${removedInFuture}.
 `,
         )
         return origin
@@ -656,7 +658,7 @@ The <b>getOrigin()</> method has been deprecated and replaced with  <b>getParent
           advise(
             `<rb>Deprecated Method</>
           
-The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentProps()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+The <b>getPageInfo()</> method has been deprecated and replaced with  <b>getParentProps()</>. ${removedInFuture}.
 `,
           )
           return
@@ -746,7 +748,7 @@ The <b>getParentProperties()</> method has been renamed <b>getParentProps()</>. 
         advise(
           `<rb>Deprecated Method</>
           
-The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. Use of this method will be removed in a future version of <i>iframe-resizer</>.
+The <b>size()</> method has been deprecated and replaced with  <b>resize()</>. ${removedInFuture}.
 `,
         )
         this.resize(customHeight, customWidth)
