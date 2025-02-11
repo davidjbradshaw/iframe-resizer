@@ -198,7 +198,7 @@ function iframeResizerChild() {
   }
 
   function checkQuirksMode() {
-    if (document.compatMode === 'BackCompat') return
+    if (document.compatMode !== 'BackCompat') return
 
     advise(
       `<rb>Quirks Mode Detected</>
