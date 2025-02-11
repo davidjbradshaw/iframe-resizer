@@ -14,6 +14,7 @@ import {
   adviser,
   capitalizeFirstLetter,
   deprecateMethod,
+  deprecateMethodReplace,
   deprecateOption,
   getElementName,
   // eslint-disable-next-line no-unused-vars
@@ -648,7 +649,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         if (typeof callback === 'function') {
           onPageInfo = callback
           sendMsg(0, 0, 'pageInfo')
-          deprecateMethod('getPageInfo()', 'getParentProps()')
+          deprecateMethodReplace(
+            'getPageInfo()',
+            'getParentProps()',
+            'See <u>https://iframe-resizer.com/upgrade</> for details. ',
+          )
           return
         }
 
