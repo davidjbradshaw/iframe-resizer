@@ -35,6 +35,7 @@ declare module '@iframe-resizer/react' {
       checkOrigin?: boolean | string[]
       direction?: 'vertical' | 'horizontal' | 'none'
       forwardRef?: any
+      waitForLoad?: boolean
       inPageLinks?: boolean
       license: string
       offset?: number
