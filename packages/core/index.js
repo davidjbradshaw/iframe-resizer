@@ -660,7 +660,7 @@ function chkEvent(iframeId, funcName, val) {
 
     if (typeof func === 'function')
       if (funcName === 'onClose' || funcName === 'onScroll') retVal = func(val)
-      else setTimeout(() => func(val))
+      else queueMicrotask(() => func(val))
     else
       throw new TypeError(
         `${funcName} on iFrame[${iframeId}] is not a function`,
