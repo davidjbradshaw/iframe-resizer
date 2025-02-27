@@ -659,8 +659,15 @@ function chkEvent(iframeId, funcName, val) {
     func = settings[iframeId][funcName]
 
     if (typeof func === 'function')
-      if (funcName === 'onClose' || funcName === 'onScroll') retVal = func(val)
-      else setTimeout(() => func(val))
+      if (funcName === 'onClose' || funcName === 'onScroll') {
+        try {
+          retVal = func(val)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(error)
+          warn(iframeId, `Error in ${funcName} callback`)
+        }
+      } else queueMicrotask(() => func(val))
     else
       throw new TypeError(
         `${funcName} on iFrame[${iframeId}] is not a function`,

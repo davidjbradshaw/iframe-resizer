@@ -158,7 +158,7 @@ function iframeResizerChild() {
 
     sendTitle()
     initEventListeners()
-    setTimeout(onReady)
+    queueMicrotask(onReady)
 
     log('Initialization complete')
     log('---')
@@ -1244,6 +1244,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function receiver(event) {
+    const { freeze } = Object
+    const { parse } = JSON
+    const parseFrozen = (data) => freeze(parse(data))
+
+    const notExpected = (type) => sendMsg(0, 0, `${type}Stop`)
+
     const processRequestFromParent = {
       init: function initFromParent() {
         initMsg = event.data
@@ -1282,10 +1288,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`PageInfo received from parent: ${msgBody}`)
         if (onPageInfo) {
-          setTimeout(() => onPageInfo(JSON.parse(msgBody)))
+          queueMicrotask(() => onPageInfo(parse(msgBody)))
         } else {
-          // not expected, so cancel more messages
-          sendMsg(0, 0, 'pageInfoStop')
+          notExpected('pageInfo')
         }
         log(' --')
       },
@@ -1294,10 +1299,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`ParentInfo received from parent: ${msgBody}`)
         if (onParentInfo) {
-          setTimeout(onParentInfo(Object.freeze(JSON.parse(msgBody))))
+          queueMicrotask(() => onParentInfo(parseFrozen(msgBody)))
         } else {
-          // not expected, so cancel more messages
-          sendMsg(0, 0, 'parentInfoStop')
+          notExpected('parentInfo')
         }
         log(' --')
       },
@@ -1306,7 +1310,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`onMessage called from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
-        onMessage(JSON.parse(msgBody))
+        queueMicrotask(() => onMessage(parse(msgBody)))
         log(' --')
       },
     }

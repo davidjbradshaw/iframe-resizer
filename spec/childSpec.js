@@ -195,22 +195,28 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('inbound message', () => {
-      it('readyCallack', () => {
+      it('readyCallback', () => {
         expect(window.readyCalled).toEqual(true)
       })
 
-      it('message (String)', () => {
+      it('message (String)', (done) => {
         const msg = 'foo'
         mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
 
-        expect(msgCalled).toBe(msg)
+        setTimeout(() => {
+          expect(msgCalled).toBe(msg)
+          done()
+        })
       })
 
-      it('message (Object)', () => {
+      it('message (Object)', (done) => {
         const msg = { foo: 'bar' }
         mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
 
-        expect(msgCalled.foo).toBe('bar')
+        setTimeout(() => {
+          expect(msgCalled.foo).toBe('bar')
+          done()
+        })
       })
 
       it('reset 2', (done) => {
