@@ -10,6 +10,7 @@
     "eslint-plugin-no-secrets",
     "eslint-plugin-no-use-extend-native",
     "eslint-plugin-promise",
+    "eslint-plugin-react-hooks",
     "eslint-plugin-security",
     "eslint-plugin-sonarjs",
     "eslint-plugin-switch-case",
