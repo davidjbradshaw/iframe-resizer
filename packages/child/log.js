@@ -1,11 +1,12 @@
 import formatAdvise from '../common/format-advise'
+import MicroConsole from '../common/micro-console'
+import { id as identity } from '../common/utils'
 
-let id = ''
-let logging = false
+const childConsole = MicroConsole('child')
 
-export const setLogOptions = (options) => {
-  id = options.id
-  logging = options.logging
+export function setLogOptions(options) {
+  childConsole.setId(options.id)
+  childConsole.setLogging(options.logging)
 }
 
 export const capitalizeFirstLetter = (string) =>
@@ -32,29 +33,10 @@ export function getElementName(el) {
   }
 }
 
-const BOLD = 'font-weight: bold;'
-const NORMAL = 'font-weight: normal;'
-
-// TODO: remove .join(' '), requires major test updates
-const formatLogMsg = (...msg) =>
-  [`[iframe-resizer][${id || 'child'}]`, ...msg].join(' ')
-
-export const log = (...msg) =>
-  // eslint-disable-next-line no-console
-  logging && console?.log(formatLogMsg(...msg))
-
-// eslint-disable-next-line no-unused-vars
-export const info = (...msg) =>
-  // eslint-disable-next-line no-console
-  logging && console?.info(`%c[iframe-resizer][${id}]%c`, BOLD, NORMAL, ...msg)
-
-export const warn = (...msg) =>
-  // eslint-disable-next-line no-console
-  console?.warn(formatLogMsg(...msg))
+export const { log, info, warn } = childConsole
 
 export const advise = (...msg) =>
-  // eslint-disable-next-line no-console
-  console?.warn(formatAdvise(formatLogMsg)(...msg))
+  childConsole.warn(formatAdvise(identity)(...msg))
 
 export const adviser = (msg) => advise(msg)
 
@@ -62,7 +44,7 @@ const deprecate =
   (type, change = 'renamed to') =>
   (old, replacement, info = '') =>
     advise(
-      `<rb>Deprecated ${type}</>\n\nThe <b>${old}</> ${type.toLowerCase()} has been ${change} <b>${replacement}</>. ${info}Use of the old ${type.toLowerCase()} will be removed in a future version of <i>iframe-resizer</>.`,
+      `<rb>Deprecated ${type} (${old})</>\n\nThe <b>${old}</> ${type.toLowerCase()} has been ${change} <b>${replacement}</>. ${info}Use of the old ${type.toLowerCase()} will be removed in a future version of <i>iframe-resizer</>.`,
     )
 
 export const deprecateMethod = deprecate('Method')

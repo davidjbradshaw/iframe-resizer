@@ -9,7 +9,7 @@ import { addEventListener, removeEventListener } from '../common/listeners'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
-import { advise, log, setLogEnabled, setLogSettings, vInfo, warn } from './log'
+import { advise, log, setLogSettings, setupLogging, vInfo, warn } from './log'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -672,8 +672,8 @@ function chkEvent(iframeId, funcName, val) {
 
 function removeIframeListeners(iframe) {
   const { id } = iframe
-  delete settings[id]
   log(id, 'Disconnected from iframe')
+  delete settings[id]
 }
 
 function closeIFrame(iframe) {
@@ -886,7 +886,10 @@ export default (options) => (iframe) => {
     if (iframeId === '' || !iframeId) {
       iframeId = newId()
       iframe.id = iframeId
-      setLogEnabled((options || {}).log)
+      setupLogging({
+        enabled: (options || {}).log,
+        iframeId,
+      })
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
 
@@ -1091,6 +1094,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function processOptions(options) {
     settings[iframeId] = {
+      ...settings[iframeId],
       iframe,
       firstRun: true,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
