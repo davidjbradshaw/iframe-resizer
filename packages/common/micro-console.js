@@ -1,9 +1,9 @@
 import { NORMAL } from './consts'
 import { time } from './utils'
 
-export default function () {
-  let id = 'child'
-  let logging = false
+export default function (newId) {
+  let id = newId
+  let logging = true
   let logQueue = []
 
   function logGroup() {
@@ -15,6 +15,14 @@ export default function () {
     /* eslint-enable no-console */
   }
 
+  const push =
+    (type) =>
+    (...msg) => {
+      if (!logging) return
+      if (logQueue.length === 0) queueMicrotask(logGroup)
+      logQueue.push([type, ...msg])
+    }
+
   return {
     setId(newId) {
       id = newId
@@ -22,10 +30,9 @@ export default function () {
     setLogging(newLogging) {
       logging = newLogging
     },
-    add(type, ...msg) {
-      if (!logging) return
-      if (logQueue.length === 0) queueMicrotask(logGroup)
-      logQueue.push([type, ...msg])
-    },
+    log: push('log'),
+    info: push('info'),
+    warn: push('warn'),
+    error: push('error'),
   }
 }
