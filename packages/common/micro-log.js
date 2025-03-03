@@ -1,3 +1,4 @@
+import { NORMAL } from './consts'
 import { time } from './utils'
 
 export default function () {
@@ -7,7 +8,7 @@ export default function () {
 
   function logGroup() {
     /* eslint-disable no-console */
-    console.group(`[iframe-resizer][${id}] ${time()}`)
+    console.group(`[iframe-resizer][${id}] %c${time()}`, NORMAL)
     logQueue.forEach(([type, ...msg]) => console[type](...msg))
     logQueue = []
     console.groupEnd()

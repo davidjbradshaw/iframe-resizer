@@ -11,6 +11,9 @@ export const WIDTH_EDGE = 'right'
 
 export const MANUAL_RESIZE_REQUEST = 'resizeParent'
 
+export const BOLD = 'font-weight: bold;'
+export const NORMAL = 'font-weight: normal;'
+
 export const msgHeader = 'message'
 export const msgHeaderLen = msgHeader.length
 export const msgId = '[iFrameSizer]' // Must match iframe msg ID
