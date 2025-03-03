@@ -31,10 +31,9 @@ function usedEl(detail, duration) {
 
   if (!logging) addUsedTag(perfEl)
 
+  info(`${Side} position calculated from:`, perfEl)
   info(
-    `\n  ${Side} position calculated from:`,
-    perfEl,
-    `\n  Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
+    `Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
   )
 }
 

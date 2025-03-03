@@ -62,7 +62,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.autoResize(true)
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Resize event: Auto Resize enabled',
+          'Resize event: Auto Resize enabled',
         )
       })
 
@@ -238,7 +238,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] height calculation method set to "max"',
+          'height calculation method set to "max"',
         )
       })
 
@@ -247,7 +247,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] height calculation method set to "lowestElement"',
+          'height calculation method set to "lowestElement"',
         )
       })
 
@@ -256,7 +256,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] width calculation method set to "rightMostElement"',
+          'width calculation method set to "rightMostElement"',
         )
       })
 
@@ -273,7 +273,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('foo'))
 
         expect(console.warn).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] Unexpected message ([iFrameSizer]foo)',
+          'Unexpected message ([iFrameSizer]foo)',
         )
       })
     })
@@ -322,11 +322,11 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setHeightCalculationMethod('foo')
 
         expect(console.warn).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] foo is not a valid option for heightCalculationMethod.',
+          'foo is not a valid option for heightCalculationMethod.',
         )
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] height calculation method set to "auto"',
+          'height calculation method set to "auto"',
         )
         win.parentIFrame.size()
       })
@@ -409,11 +409,11 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setWidthCalculationMethod('foo')
 
         expect(console.warn).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] foo is not a valid option for widthCalculationMethod.',
+          'foo is not a valid option for widthCalculationMethod.',
         )
 
         expect(console.log).toHaveBeenCalledWith(
-          '[iframe-resizer][parentIFrameTests] width calculation method set to "scroll"',
+          'width calculation method set to "scroll"',
         )
         win.parentIFrame.size()
       })
