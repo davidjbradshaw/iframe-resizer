@@ -24,7 +24,7 @@ const isLogEnabled = (iframeId) =>
 function setupMicroConsole(iframeId) {
   settings[iframeId] = {
     microConsole: MicroConsole(getMyId(iframeId)),
-  })
+  }
 }
 
 export function setupLogging({ enabled, iframeId }) {
