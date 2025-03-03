@@ -161,7 +161,6 @@ function iframeResizerChild() {
     queueMicrotask(onReady)
 
     log('Initialization complete')
-    log('---')
   }
 
   function onOverflowChange(nodeList) {
@@ -1172,7 +1171,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     requestAnimationFrame(() => {
       triggerLocked = false
       log('Trigger event lock off')
-      log('--')
     })
   }
 
@@ -1241,7 +1239,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       else target.postMessage(msgID + message, targetOrigin)
 
       if (logging) logSendMsg(message)
+      info(
+        `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
+      )
+      info(`%c${message}`, 'font-style: italic')
 
+      if (timerActive) info(displayTimeTaken(), 'font-weight:bold;color:#777')
       timerActive = false
     }
 
@@ -1298,7 +1301,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         } else {
           notExpected('pageInfo')
         }
-        log(' --')
       },
 
       parentInfo() {
@@ -1309,7 +1311,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         } else {
           notExpected('parentInfo')
         }
-        log(' --')
       },
 
       message() {
@@ -1317,7 +1318,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         log(`onMessage called from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
         queueMicrotask(() => onMessage(parse(msgBody)))
-        log(' --')
       },
     }
 
