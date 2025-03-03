@@ -1,11 +1,12 @@
 import formatAdvise from '../common/format-advise'
-import microLog from '../common/micro-log'
+import MicroConsole from '../common/micro-console'
+import { id as identity } from '../common/utils'
 
-const childLog = microLog()
+const childConsole = MicroConsole('child')
 
 export function setLogOptions(options) {
-  childLog.setId(options.id)
-  childLog.setLogging(options.logging)
+  childConsole.setId(options.id)
+  childConsole.setLogging(options.logging)
 }
 
 export const capitalizeFirstLetter = (string) =>
@@ -32,14 +33,10 @@ export function getElementName(el) {
   }
 }
 
-export const log = (...msg) => childLog.add('log', ...msg)
-
-export const info = (...msg) => childLog.add('info', ...msg)
-
-export const warn = (...msg) => childLog.add('warn', ...msg)
+export const { log, info, warn } = childConsole
 
 export const advise = (...msg) =>
-  childLog.add('warn', formatAdvise((x) => x)(...msg))
+  childConsole.warn(formatAdvise(identity)(...msg))
 
 export const adviser = (msg) => advise(msg)
 
