@@ -1,4 +1,5 @@
 import formatAdvise from '../common/format-advise'
+import microLog from '../common/micro-log'
 
 const msgId = '[iframe-resizer]'
 

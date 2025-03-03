@@ -161,7 +161,6 @@ function iframeResizerChild() {
     setTimeout(onReady)
 
     log('Initialization complete')
-    log('---')
   }
 
   function onOverflowChange(nodeList) {
@@ -1171,7 +1170,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     requestAnimationFrame(() => {
       triggerLocked = false
       log('Trigger event lock off')
-      log('--')
     })
   }
 
@@ -1216,19 +1214,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const size = `${height + (offsetHeight || 0)}:${width + (offsetWidth || 0)}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      /* eslint-disable no-console */
-      if (logging) {
-        console.group(`[iframe-resizer][${myID}]`)
-        console.info(
-          `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
-        )
-        console.info(`%c${message}`, 'font-style: italic')
-        if (timerActive)
-          console.info(displayTimeTaken(), 'font-weight:bold;color:#777')
-        console.groupEnd()
-      }
-      /* eslint-enable no-console */
+      info(
+        `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
+      )
+      info(`%c${message}`, 'font-style: italic')
 
+      if (timerActive) info(displayTimeTaken(), 'font-weight:bold;color:#777')
       timerActive = false
 
       if (sameDomain) {
@@ -1287,7 +1278,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
           // not expected, so cancel more messages
           sendMsg(0, 0, 'pageInfoStop')
         }
-        log(' --')
       },
 
       parentInfo() {
@@ -1299,7 +1289,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
           // not expected, so cancel more messages
           sendMsg(0, 0, 'parentInfoStop')
         }
-        log(' --')
       },
 
       message() {
@@ -1307,7 +1296,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         log(`onMessage called from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
         onMessage(JSON.parse(msgBody))
-        log(' --')
       },
     }
 
