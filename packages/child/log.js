@@ -1,12 +1,14 @@
+import { createGroupConsole } from 'auto-group-console'
+
+import { TITLE } from '../common/consts'
 import formatAdvise from '../common/format-advise'
-import MicroConsole from '../common/micro-console'
 import { id as identity } from '../common/utils'
 
-const childConsole = MicroConsole('child')
+const childConsole = createGroupConsole({ title: 'child' })
 
 export function setLogOptions(options) {
-  childConsole.setId(options.id)
-  childConsole.setLogging(options.logging)
+  childConsole.setTitle(`${TITLE}[${options.id}]`)
+  childConsole.setEnabled(options.logging)
 }
 
 export const capitalizeFirstLetter = (string) =>
