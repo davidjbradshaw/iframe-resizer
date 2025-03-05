@@ -1,5 +1,6 @@
+import { BOLD } from '../common/consts'
 import { round } from '../common/utils'
-import { advise, info, log } from './log'
+import { advise, info } from './log'
 
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
@@ -16,6 +17,7 @@ const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
 let perfEl // = undefined
 let details = {}
+let oldAverage = 0
 
 export const setPerfEl = (el) => {
   perfEl = el
@@ -48,15 +50,17 @@ const timingCheck = setInterval(() => {
     timings[Math.floor(timings.length / 2)],
   )
 
-  // console.info('Timings:', JSON.parse(JSON.stringify(timings)))
-  // console.info('Mean time:', timings[Math.floor(timings.length / 2)])
-  // console.info(
-  //   'Median time:',
-  //   timings.reduce((a, b) => a + b, 0) / timings.length,
-  // )
-  // console.info('Average time:', round(average), average)
+  const roundedAverage = round(average)
 
-  log('Max time:', Math.max(...timings))
+  if (roundedAverage !== oldAverage) {
+    oldAverage = roundedAverage
+    info('%cPage size calculation timings:', BOLD)
+    info('  Mean time:', timings[Math.floor(timings.length / 2)])
+    info('  Median time:', timings.reduce((a, b) => a + b, 0) / timings.length)
+    info('  Average time:', average)
+    info('  Max time:', Math.max(...timings))
+    // info('Timings:', JSON.parse(JSON.stringify(timings)))
+  }
 
   if (average <= THRESHOLD) return
 
