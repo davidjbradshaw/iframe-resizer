@@ -13,6 +13,7 @@ import {
   advise,
   adviser,
   capitalizeFirstLetter,
+  debug,
   deprecateMethod,
   deprecateMethodReplace,
   deprecateOption,
@@ -1165,11 +1166,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (triggerLocked) return
 
     triggerLocked = true
-    log('Trigger event lock on')
+    debug('Trigger event lock on')
 
     requestAnimationFrame(() => {
       triggerLocked = false
-      log('Trigger event lock off')
+      debug('Trigger event lock off')
     })
   }
 
@@ -1259,6 +1260,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
           log('Page reset ignored by init')
           return
         }
+
         log('Page size reset by host page')
         triggerReset('resetPage')
       },

@@ -35,7 +35,7 @@ export function getElementName(el) {
   }
 }
 
-export const { log, info, warn } = childConsole
+export const { assert, debug, log, info, warn } = childConsole
 
 export const advise = (...msg) =>
   childConsole.warn(formatAdvise(identity)(...msg))
