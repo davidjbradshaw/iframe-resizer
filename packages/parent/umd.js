@@ -7,7 +7,7 @@ if (typeof window !== 'undefined') {
   window.iFrameResize =
     window.iFrameResize ||
     function (...args) {
-      advise('', 'Deprecated: iFrameResize(), please use iframeResize()')
+      advise('Parent', 'Deprecated: iFrameResize(), please use iframeResize()')
       iframeResize(...args)
     }
 }
