@@ -42,15 +42,17 @@ const formatLogMsg =
   (...msg) =>
     [`${TITLE}[${iframeId}]`, ...msg].join(' ')
 
-const output = (type, iframeId, ...msg) =>
-  settings[iframeId]?.console[type](...msg)
+const output =
+  (type) =>
+  (iframeId, ...msg) =>
+    settings[iframeId]?.console[type](...msg)
 
 export const log = (iframeId, ...msg) =>
-  isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null
+  isLogEnabled(iframeId) === true ? output('log')(iframeId, ...msg) : null
 
-export const info = (iframeId, ...msg) => output('info', iframeId, ...msg)
-export const warn = (iframeId, ...msg) => output('warn', iframeId, ...msg)
-export const error = (iframeId, ...msg) => output('error', iframeId, ...msg)
+export const info = output('info')
+export const warn = output('warn')
+export const error = output('error')
 
 export const vInfo = (msg) =>
   queueMicrotask(

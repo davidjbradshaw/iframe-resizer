@@ -23,7 +23,7 @@ import {
   log,
   setLogOptions,
   warn,
-} from './log'
+} from './console'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START, setPerfEl } from './perf'
 
