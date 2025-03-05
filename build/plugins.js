@@ -18,7 +18,7 @@ const vi = {
 export const injectVersion = () => [versionInjector(vi)]
 
 export const pluginsBase = (stripLog) => (file) => {
-  const delog = [strip({ functions: ['log'] })]
+  const delog = [strip({ functions: ['log', 'debug'] })]
 
   const base = [versionInjector(vi), commonjs()]
 
