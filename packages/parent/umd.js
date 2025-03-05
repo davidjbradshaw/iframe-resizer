@@ -1,4 +1,4 @@
-import { advise } from '../core/log'
+import { advise } from '../core/console'
 import createIframeResize from './factory'
 
 const iframeResize = createIframeResize()

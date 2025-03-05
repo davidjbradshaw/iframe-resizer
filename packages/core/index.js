@@ -9,7 +9,14 @@ import { addEventListener, removeEventListener } from '../common/listeners'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
-import { advise, log, setLogSettings, setupLogging, vInfo, warn } from './log'
+import {
+  advise,
+  log,
+  setLogSettings,
+  setupLogging,
+  vInfo,
+  warn,
+} from './console'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'

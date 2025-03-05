@@ -1,6 +1,6 @@
 import { BOLD } from '../common/consts'
 import { round } from '../common/utils'
-import { advise, info } from './log'
+import { advise, info } from './console'
 
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
