@@ -7,6 +7,10 @@ import { id as identity } from '../common/utils'
 let settings = {}
 let logEnabled = false
 
+export function setLogSettings(newSettings) {
+  settings = newSettings
+}
+
 function getMyId(iframeId) {
   if (window.top === window.self) {
     return `Parent page: ${iframeId}`
@@ -31,10 +35,6 @@ function setupConsole(iframeId) {
 export function setupLogging({ enabled, iframeId }) {
   logEnabled = enabled
   setupConsole(iframeId)
-}
-
-export function setLogSettings(newSettings) {
-  settings = newSettings
 }
 
 const formatLogMsg =
