@@ -189,6 +189,7 @@ const npm = [
     ],
     plugins: [
       pluginsProd('legacy'),
+      resolve(),
       copy({
         hook: 'closeBundle',
         targets: [
@@ -314,7 +315,7 @@ const js = [
         ...outputPlugins('child', 'iife'),
       },
     ],
-    plugins: [filesize(), ...pluginsJs('child')],
+    plugins: [filesize(), resolve(), ...pluginsJs('child')],
   },
 
   {
@@ -328,7 +329,7 @@ const js = [
         ...outputPlugins('jquery', 'iife'),
       },
     ],
-    plugins: [filesize(), ...pluginsJs('jquery'), resolve()],
+    plugins: [filesize(), resolve(), ...pluginsJs('jquery')],
   },
 
   // test js folder (umd)
@@ -340,7 +341,7 @@ const js = [
         file: 'test-js/iframe-resizer.child.js',
       },
     ],
-    plugins: injectVersion(),
+    plugins: [injectVersion(), resolve()],
   },
   {
     input: 'packages/parent/umd.js',
