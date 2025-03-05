@@ -901,10 +901,6 @@ export default (options) => (iframe) => {
     if (iframeId === '' || !iframeId) {
       iframeId = newId()
       iframe.id = iframeId
-      setupLogging({
-        enabled: (options || {}).log,
-        iframeId,
-      })
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
 
@@ -1140,6 +1136,11 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   const beenHere = () => iframeId in settings && 'iFrameResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
+
+  setupLogging({
+    enabled: (options || {}).log || true,
+    iframeId,
+  })
 
   if (beenHere()) {
     warn(iframeId, 'Ignored iFrame, already setup.')
