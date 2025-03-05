@@ -1,10 +1,8 @@
-import { createGroupConsole } from 'auto-group-console'
+import { createDeferConsole } from 'auto-group-console'
 
 import { BOLD, TITLE } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
-
-const msgId = '[iframe-resizer]'
 
 let settings = {}
 let logEnabled = false
@@ -14,8 +12,8 @@ function getMyId(iframeId) {
     return `Parent page: ${iframeId}`
   }
 
-  return window?.parentIFrame?.getId
-    ? `${window.parentIFrame.getId()}: ${iframeId}`
+  return window?.parentIframe?.getId
+    ? `${window.parentIframe.getId()}: ${iframeId}`
     : `Nested parent page: ${iframeId}`
 }
 
@@ -24,7 +22,7 @@ const isLogEnabled = (iframeId) =>
 
 function setupConsole(iframeId) {
   settings[iframeId] = {
-    console: createGroupConsole({
+    console: createDeferConsole({
       title: `${TITLE}[${getMyId(iframeId)}]`,
     }),
   }
@@ -42,10 +40,10 @@ export function setLogSettings(newSettings) {
 const formatLogMsg =
   (iframeId) =>
   (...msg) =>
-    [`${msgId}[${iframeId}]`, ...msg].join(' ')
+    [`${TITLE}[${iframeId}]`, ...msg].join(' ')
 
 const output = (type, iframeId, ...msg) =>
-  settings[iframeId].console[type](...msg)
+  settings[iframeId]?.console[type](...msg)
 
 export const log = (iframeId, ...msg) =>
   isLogEnabled(iframeId) === true ? output('log', iframeId, ...msg) : null

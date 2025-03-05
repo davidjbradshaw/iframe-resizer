@@ -1,10 +1,10 @@
-import { createGroupConsole } from 'auto-group-console'
+import { createDeferConsole } from 'auto-group-console'
 
 import { TITLE } from '../common/consts'
 import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
 
-const childConsole = createGroupConsole({ title: 'child' })
+const childConsole = createDeferConsole({ title: 'child' })
 
 export function setLogOptions(options) {
   childConsole.setTitle(`${TITLE}[${options.id}]`)
