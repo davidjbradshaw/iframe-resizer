@@ -805,8 +805,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         settings[id].loadErrorShown = true
         advise(
           id,
-          `
-<rb>No response from iFrame</>
+          `<rb>No response from iFrame</>
             
 The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
@@ -825,8 +824,14 @@ The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loa
 The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
 `
               : ''
-          }
-This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this message.
+          } 
+${
+  sandbox?.length > 0 &&
+  !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
+    ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
+`
+    : ''
+}This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
 `,
         )
       }
