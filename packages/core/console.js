@@ -5,7 +5,7 @@ import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
 
 let settings = {}
-let logEnabled = false
+let consoleEnabled = false
 
 export function setConsoleSettings(newSettings) {
   settings = newSettings
@@ -17,10 +17,10 @@ const getMyId = (iframeId) =>
     : `Nested parent page: ${iframeId}`
 
 const isLogEnabled = (iframeId) =>
-  settings[iframeId] ? settings[iframeId].log : logEnabled
+  settings[iframeId] ? settings[iframeId].log : consoleEnabled
 
 export function setupConsole({ enabled, iframeId }) {
-  logEnabled = enabled
+  consoleEnabled = enabled
   settings[iframeId] = {
     console: createDeferConsole({
       title: `${TITLE}[${getMyId(iframeId)}]`,
