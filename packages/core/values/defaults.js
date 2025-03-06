@@ -1,16 +1,9 @@
-import { advise } from '../console'
+import { deprecateOption } from '../console'
 import settings from './settings'
 
 const onReadyDeprecated = (messageData) => {
   if (typeof settings[messageData.id].onInit === 'function') {
-    advise(
-      messageData.id,
-      `
-\u001B[31;1mDeprecated Option\u001B[m
-
-The \u001B[1monInit()\u001B[m function is deprecated and has been replaced with \u001B[1monReady()\u001B[m. It will be removed in a future version of iFrame Resizer.
-      `,
-    )
+    deprecateOption('init()', 'onReady()', '', messageData.id)
     settings[messageData.id].onInit(messageData)
   }
 }
