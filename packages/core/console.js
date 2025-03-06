@@ -66,4 +66,5 @@ export const advise = (iframeId, msg) =>
 
 const deprecateAdvise = deprecate(advise)
 export const deprecateFunction = deprecateAdvise('Function')
+export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateOption = deprecateAdvise('Option')
