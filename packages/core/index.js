@@ -13,7 +13,7 @@ import {
   advise,
   log,
   setConsoleSettings,
-  setupLogging,
+  setupConsole,
   vInfo,
   warn,
 } from './console'
@@ -1144,7 +1144,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   const iframeId = ensureHasId(iframe.id)
 
-  setupLogging({
+  setupConsole({
     enabled: (options || {}).log || true,
     iframeId,
   })
