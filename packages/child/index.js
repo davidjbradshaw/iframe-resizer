@@ -8,7 +8,7 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { id, round } from '../common/utils'
+import { id, once, round } from '../common/utils'
 import {
   advise,
   adviser,
@@ -238,7 +238,7 @@ Parent page: ${version} - Child page: ${VERSION}.
 
   function checkCrossDomain() {
     try {
-      sameDomain = 'iframeParentListener' in window.parent
+      sameDomain = mode === 1 || 'iframeParentListener' in window.parent
     } catch (error) {
       log('Cross domain iframe detected.')
     }
@@ -1128,6 +1128,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   let sendPending = false
+  const sendFailed = once(() => adviser(getModeData(4)))
 
   function sendSize(
     triggerEvent,
@@ -1212,31 +1213,36 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         : `Content size recalculated in %c${timer}ms`
     }
 
+    function logSendMsg(message) {
+      /* eslint-disable no-console */
+      console.group(`[iframe-resizer][${myID}]`)
+      console.info(
+        `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
+      )
+      console.info(`%c${message}`, 'font-style: italic')
+      if (timerActive)
+        console.info(displayTimeTaken(), 'font-weight:bold;color:#777')
+      console.groupEnd()
+      /* eslint-enable no-console */
+    }
+
     function sendToParent() {
       const size = `${height + (offsetHeight || 0)}:${width + (offsetWidth || 0)}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      /* eslint-disable no-console */
-      if (logging) {
-        console.group(`[iframe-resizer][${myID}]`)
-        console.info(
-          `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
-        )
-        console.info(`%c${message}`, 'font-style: italic')
-        if (timerActive)
-          console.info(displayTimeTaken(), 'font-weight:bold;color:#777')
-        console.groupEnd()
-      }
-      /* eslint-enable no-console */
+      if (sameDomain)
+        try {
+          window.parent.iframeParentListener(msgID + message)
+        } catch (error) {
+          if (mode === 1) sendFailed()
+          else throw error
+          return
+        }
+      else target.postMessage(msgID + message, targetOrigin)
+
+      if (logging) logSendMsg(message)
 
       timerActive = false
-
-      if (sameDomain) {
-        window.parent.iframeParentListener(msgID + message)
-        return
-      }
-
-      target.postMessage(msgID + message, targetOrigin)
     }
 
     setTargetOrigin()
