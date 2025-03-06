@@ -11,9 +11,6 @@ export function setLogOptions(options) {
   childConsole.setEnabled(options.logging)
 }
 
-export const capitalizeFirstLetter = (string) =>
-  string.charAt(0).toUpperCase() + string.slice(1)
-
 const isDef = (value) => `${value}` !== '' && value !== undefined
 
 export function getElementName(el) {

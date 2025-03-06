@@ -8,11 +8,10 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { id, once, round } from '../common/utils'
+import { capitalizeFirstLetter, id, once, round } from '../common/utils'
 import {
   advise,
   adviser,
-  capitalizeFirstLetter,
   debug,
   deprecateMethod,
   deprecateMethodReplace,

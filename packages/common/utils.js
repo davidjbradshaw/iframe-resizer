@@ -15,3 +15,6 @@ export const id = (x) => x
 const ROUNDING = 100_000
 
 export const round = (value) => Math.round(value * ROUNDING) / ROUNDING
+
+export const capitalizeFirstLetter = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1)
