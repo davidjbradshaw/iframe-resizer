@@ -8,7 +8,12 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
-import { capitalizeFirstLetter, id, once, round } from '../common/utils'
+import {
+  capitalizeFirstLetter,
+  getElementName,
+  id,
+  round,
+} from '../common/utils'
 import {
   advise,
   adviser,
@@ -16,7 +21,6 @@ import {
   deprecateMethod,
   deprecateMethodReplace,
   deprecateOption,
-  getElementName,
   // eslint-disable-next-line no-unused-vars
   info,
   log,
