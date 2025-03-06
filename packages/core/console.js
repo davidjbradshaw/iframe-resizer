@@ -11,20 +11,16 @@ export function setConsoleSettings(newSettings) {
   settings = newSettings
 }
 
-function getMyId(iframeId) {
-  if (window.top === window.self) {
-    return `Parent page: ${iframeId}`
-  }
-
-  return window?.parentIframe?.getId
-    ? `${window.parentIframe.getId()}: ${iframeId}`
+const getMyId = (iframeId) =>
+  window.top === window.self
+    ? `Parent page: ${iframeId}`
     : `Nested parent page: ${iframeId}`
-}
 
 const isLogEnabled = (iframeId) =>
   settings[iframeId] ? settings[iframeId].log : logEnabled
 
-function setupConsole(iframeId) {
+export function setupConsole({ enabled, iframeId }) {
+  logEnabled = enabled
   settings[iframeId] = {
     console: createDeferConsole({
       title: `${TITLE}[${getMyId(iframeId)}]`,
@@ -32,24 +28,18 @@ function setupConsole(iframeId) {
   }
 }
 
-export function setupLogging({ enabled, iframeId }) {
-  logEnabled = enabled
-  setupConsole(iframeId)
-}
-
-const formatLogMsg =
-  (iframeId) =>
-  (...msg) =>
-    [`${TITLE}[${iframeId}]`, ...msg].join(' ')
-
 const output =
   (type) =>
   (iframeId, ...msg) =>
     settings[iframeId]?.console[type](...msg)
 
-export const log = (iframeId, ...msg) =>
-  isLogEnabled(iframeId) === true ? output('log')(iframeId, ...msg) : null
+export const outputSwitched =
+  (type) =>
+  (iframeId, ...msg) =>
+    isLogEnabled(iframeId) === true ? output(type)(iframeId, ...msg) : null
 
+export const log = outputSwitched('log')
+export const debug = outputSwitched('debug')
 export const info = output('info')
 export const warn = output('warn')
 export const error = output('error')
@@ -59,6 +49,11 @@ export const vInfo = (msg) =>
     // eslint-disable-next-line no-console
     () => console.info(`%c[iframe-resizer] ${msg}`, BOLD),
   )
+
+const formatLogMsg =
+  (iframeId) =>
+  (...msg) =>
+    [`${TITLE}[${iframeId}]`, ...msg].join(' ')
 
 export const advise = (iframeId, msg) =>
   settings[iframeId]
