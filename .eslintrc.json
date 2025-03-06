@@ -44,6 +44,7 @@
     "no-shadow": 0,
     "prefer-rest-params": 0,
     "import/no-amd": 0,
+    "import/no-extraneous-dependencies": 0,
     "import/no-unresolved": 0,
     "lodash/prefer-noop": 0,
     "pii/no-email": 0,
