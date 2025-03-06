@@ -7,7 +7,7 @@ import { id as identity } from '../common/utils'
 
 const childConsole = createDeferConsole({ title: 'child' })
 
-export function setLogOptions(options) {
+export function setConsoleOptions(options) {
   childConsole.setTitle(`${TITLE}[${options.id}]`)
   childConsole.setEnabled(options.logging)
 }

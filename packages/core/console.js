@@ -7,7 +7,7 @@ import { id as identity } from '../common/utils'
 let settings = {}
 let logEnabled = false
 
-export function setLogSettings(newSettings) {
+export function setConsoleSettings(newSettings) {
   settings = newSettings
 }
 
