@@ -12,7 +12,7 @@ import { once } from '../common/utils'
 import {
   advise,
   log,
-  setLogSettings,
+  setConsoleSettings,
   setupLogging,
   vInfo,
   warn,
@@ -21,7 +21,7 @@ import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
 
-setLogSettings(settings)
+setConsoleSettings(settings)
 
 function iframeListener(event) {
   function resizeIFrame() {

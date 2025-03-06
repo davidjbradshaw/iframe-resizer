@@ -24,7 +24,7 @@ import {
   // eslint-disable-next-line no-unused-vars
   info,
   log,
-  setLogOptions,
+  setConsoleOptions,
   warn,
 } from './console'
 import overflowObserver from './overflow'
@@ -124,7 +124,7 @@ function iframeResizerChild() {
   function init() {
     readDataFromParent()
 
-    setLogOptions({ id: myID, logging })
+    setConsoleOptions({ id: myID, logging })
     log(`Initialising iframe v${VERSION} (${window.location.href})`)
     readDataFromPage()
 
