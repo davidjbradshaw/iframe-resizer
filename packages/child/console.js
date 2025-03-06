@@ -19,7 +19,7 @@ export const advise = (...msg) =>
 
 export const adviser = advise
 
-const deprecateAdvise = deprecate(advise)
+const deprecateAdvise = deprecate((id, ...msg) => advise(...msg))
 export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateMethodReplace = deprecateAdvise('Method', 'replaced with')
 export const deprecateOption = deprecateAdvise('Option')

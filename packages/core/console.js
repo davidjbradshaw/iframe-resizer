@@ -1,6 +1,7 @@
 import { createDeferConsole } from 'auto-group-console'
 
 import { BOLD, TITLE } from '../common/consts'
+import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
 
@@ -62,3 +63,7 @@ export const advise = (iframeId, msg) =>
         // eslint-disable-next-line no-console
         () => console?.warn(formatAdvise(formatLogMsg(iframeId))(msg)),
       )
+
+const deprecateAdvise = deprecate(advise)
+export const deprecateFunction = deprecateAdvise('Function')
+export const deprecateOption = deprecateAdvise('Option')
