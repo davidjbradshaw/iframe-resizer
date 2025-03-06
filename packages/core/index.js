@@ -9,12 +9,19 @@ import { addEventListener, removeEventListener } from '../common/listeners'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
-import { advise, log, setLogEnabled, setLogSettings, vInfo, warn } from './log'
+import {
+  advise,
+  log,
+  setConsoleSettings,
+  setupConsole,
+  vInfo,
+  warn,
+} from './console'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
 
-setLogSettings(settings)
+setConsoleSettings(settings)
 
 function iframeListener(event) {
   function resizeIFrame() {
@@ -679,8 +686,8 @@ function chkEvent(iframeId, funcName, val) {
 
 function removeIframeListeners(iframe) {
   const { id } = iframe
-  delete settings[id]
   log(id, 'Disconnected from iframe')
+  delete settings[id]
 }
 
 function closeIFrame(iframe) {
@@ -805,8 +812,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         settings[id].loadErrorShown = true
         advise(
           id,
-          `
-<rb>No response from iFrame</>
+          `<rb>No response from iFrame</>
             
 The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
@@ -819,11 +825,10 @@ The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loa
 ${
   sandbox?.length > 0 &&
   !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
-    ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.`
+    ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
+`
     : ''
-}
-
-This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
+}This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
 `,
         )
       }
@@ -893,7 +898,6 @@ export default (options) => (iframe) => {
     if (iframeId === '' || !iframeId) {
       iframeId = newId()
       iframe.id = iframeId
-      setLogEnabled((options || {}).log)
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
 
@@ -1098,6 +1102,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function processOptions(options) {
     settings[iframeId] = {
+      ...settings[iframeId],
       iframe,
       firstRun: true,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
@@ -1128,6 +1133,11 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   const beenHere = () => iframeId in settings && 'iFrameResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
+
+  setupConsole({
+    enabled: (options || {}).log || true,
+    iframeId,
+  })
 
   if (beenHere()) {
     warn(iframeId, 'Ignored iFrame, already setup.')

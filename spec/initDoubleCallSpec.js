@@ -22,6 +22,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           license: 'GPLv3',
           onReady: (done) => {
             expect(iframe.iFrameResizer).toBeDefined()
+            // eslint-disable-next-line jasmine/prefer-toHaveBeenCalledWith
             expect(console.warn).toHaveBeenCalled()
             delete window.parentIFrame
             done()
