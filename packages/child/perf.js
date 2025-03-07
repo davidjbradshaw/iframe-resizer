@@ -1,6 +1,6 @@
 import { BOLD } from '../common/consts'
 import { round } from '../common/utils'
-import { advise, info } from './console'
+import { advise, info, log } from './console'
 
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
@@ -91,6 +91,7 @@ function perfObserver(list) {
 }
 
 function setup() {
+  log('Setup performanceObserver')
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })
 

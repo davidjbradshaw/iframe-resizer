@@ -1,5 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
+import { log } from './console'
 
 const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
@@ -32,7 +33,8 @@ const overflowObserver = (options) => {
   const observer = new IntersectionObserver(callback, observerOptions)
   const observed = new WeakSet()
 
-  return function (nodeList) {
+  return function observeOverflow(nodeList) {
+    log('Attached overflowObserver')
     for (const node of nodeList) {
       if (node.nodeType !== Node.ELEMENT_NODE || observed.has(node)) continue
 
