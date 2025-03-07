@@ -57,13 +57,16 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('ParentIFrame methods', () => {
-      it('autoResize', () => {
+      it('autoResize', (done) => {
         win.parentIframe.autoResize(false)
         win.parentIFrame.autoResize(true)
 
-        expect(console.log).toHaveBeenCalledWith(
-          'Resize event: Auto Resize enabled',
-        )
+        queueMicrotask(() => {
+          expect(console.log).toHaveBeenCalledWith(
+            'Resize event: Auto Resize enabled',
+          )
+          done()
+        }, 10)
       })
 
       it('Get ID of iFrame is same as iFrame', () => {
@@ -233,31 +236,40 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         }, 200)
       })
 
-      it('resize(max)', () => {
+      it('resize(max)', (done) => {
         win.parentIFrame.setHeightCalculationMethod('max')
         mockMsgListener(createMsg('resize'))
 
-        expect(console.log).toHaveBeenCalledWith(
-          'height calculation method set to "max"',
-        )
+        queueMicrotask(() => {
+          expect(console.log).toHaveBeenCalledWith(
+            'height calculation method set to "max"',
+          )
+          done()
+        })
       })
 
-      it('resize(lowestElement)', () => {
+      it('resize(lowestElement)', (done) => {
         win.parentIFrame.setHeightCalculationMethod('lowestElement')
         mockMsgListener(createMsg('resize'))
 
-        expect(console.log).toHaveBeenCalledWith(
-          'height calculation method set to "lowestElement"',
-        )
+        queueMicrotask(() => {
+          expect(console.log).toHaveBeenCalledWith(
+            'height calculation method set to "lowestElement"',
+          )
+          done()
+        })
       })
 
-      it('resize(rightMostElement)', () => {
+      it('resize(rightMostElement)', (done) => {
         win.parentIFrame.setWidthCalculationMethod('rightMostElement')
         mockMsgListener(createMsg('resize'))
 
-        expect(console.log).toHaveBeenCalledWith(
-          'width calculation method set to "rightMostElement"',
-        )
+        queueMicrotask(() => {
+          expect(console.log).toHaveBeenCalledWith(
+            'width calculation method set to "rightMostElement"',
+          )
+          done()
+        })
       })
 
       it('move to anchor 2', () => {
@@ -269,12 +281,15 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         )
       })
 
-      it('unexpected message', () => {
+      it('unexpected message', (done) => {
         mockMsgListener(createMsg('foo'))
 
-        expect(console.warn).toHaveBeenCalledWith(
-          'Unexpected message ([iFrameSizer]foo)',
-        )
+        queueMicrotask(() => {
+          expect(console.warn).toHaveBeenCalledWith(
+            'Unexpected message ([iFrameSizer]foo)',
+          )
+          done()
+        })
       })
     })
 
@@ -318,16 +333,20 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('height calculation methods', () => {
-      it('invalid', () => {
+      it('invalid', (done) => {
         win.parentIFrame.setHeightCalculationMethod('foo')
 
-        expect(console.warn).toHaveBeenCalledWith(
-          'foo is not a valid option for heightCalculationMethod.',
-        )
+        queueMicrotask(() => {
+          expect(console.warn).toHaveBeenCalledWith(
+            'foo is not a valid option for heightCalculationMethod.',
+          )
 
-        expect(console.log).toHaveBeenCalledWith(
-          'height calculation method set to "auto"',
-        )
+          expect(console.log).toHaveBeenCalledWith(
+            'height calculation method set to "auto"',
+          )
+          done()
+        })
+
         win.parentIFrame.size()
       })
 
@@ -405,16 +424,19 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('width calculation methods', () => {
-      it('invalid 2', () => {
+      it('invalid 2', (done) => {
         win.parentIFrame.setWidthCalculationMethod('foo')
 
-        expect(console.warn).toHaveBeenCalledWith(
-          'foo is not a valid option for widthCalculationMethod.',
-        )
+        queueMicrotask(() => {
+          expect(console.warn).toHaveBeenCalledWith(
+            'foo is not a valid option for widthCalculationMethod.',
+          )
 
-        expect(console.log).toHaveBeenCalledWith(
-          'width calculation method set to "scroll"',
-        )
+          expect(console.log).toHaveBeenCalledWith(
+            'width calculation method set to "scroll"',
+          )
+          done()
+        })
         win.parentIFrame.size()
       })
 
