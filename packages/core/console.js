@@ -14,8 +14,8 @@ export function setConsoleSettings(newSettings) {
 
 const getMyId = (iframeId) =>
   window.top === window.self
-    ? `Parent page: ${iframeId}`
-    : `Nested parent page: ${iframeId}`
+    ? `(parent) ${iframeId}`
+    : `(nested parent) ${iframeId}`
 
 const isLogEnabled = (iframeId) =>
   settings[iframeId] ? settings[iframeId].log : consoleEnabled
@@ -24,7 +24,7 @@ export function setupConsole({ enabled, iframeId }) {
   consoleEnabled = enabled
   settings[iframeId] = {
     console: createDeferConsole({
-      title: `${TITLE}[${getMyId(iframeId)}]`,
+      title: `${TITLE}${getMyId(iframeId)}`,
     }),
   }
 }
@@ -48,13 +48,13 @@ export const error = output('error')
 export const vInfo = (msg) =>
   queueMicrotask(
     // eslint-disable-next-line no-console
-    () => console.info(`%c[iframe-resizer] ${msg}`, BOLD),
+    () => console.info(`%ciframe-resizer ${msg}`, BOLD),
   )
 
 const formatLogMsg =
   (iframeId) =>
   (...msg) =>
-    [`${TITLE}[${iframeId}]`, ...msg].join(' ')
+    [`${TITLE}(${iframeId})`, ...msg].join(' ')
 
 export const advise = (iframeId, msg) =>
   settings[iframeId]

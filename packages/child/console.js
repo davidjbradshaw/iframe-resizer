@@ -5,10 +5,10 @@ import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
 
-const childConsole = createDeferConsole({ title: 'child' })
+const childConsole = createDeferConsole({ title: `${TITLE}(child)` })
 
 export function setConsoleOptions(options) {
-  childConsole.setTitle(`${TITLE}[${options.id}]`)
+  childConsole.setTitle(`${TITLE}(child) ${options.id}`)
   childConsole.setEnabled(options.logging)
 }
 

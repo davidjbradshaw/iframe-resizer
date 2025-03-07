@@ -178,6 +178,7 @@ function iframeResizerChild() {
 
   function setupObserveOverflow() {
     if (calculateHeight === calculateWidth) return
+    log('Setup OverflowObserver')
     observeOverflow = overflowObserver({
       onChange: onOverflowChange,
       root: document.documentElement,
@@ -783,6 +784,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function setupResizeObservers() {
+    log('Setup ResizeObserver')
     resizeObserver = new ResizeObserver(resizeObserved)
     resizeObserver.observe(document.body)
     resizeSet.add(document.body)
@@ -875,7 +877,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         subtree: true,
       }
 
-      log('Create <body/> MutationObserver')
+      log('Setup <body/> MutationObserver')
       observer.observe(target, config)
 
       return observer
@@ -1033,10 +1035,19 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return returnBoundingClientRect()
 
       default:
-        log(`Content overflowing HTML element: ${sizes}`)
     }
 
-    return Math.max(getDimension.taggedElement(), returnBoundingClientRect())
+    const taggedElementSize = getDimension.taggedElement()
+
+    log(
+      `Content overflowing HTML element: Tagged: ${taggedElementSize} ${sizes}`,
+    )
+
+    const contentSize = Math.max(taggedElementSize, returnBoundingClientRect())
+
+    log(`Calculated content ${dimension}: ${contentSize}px`)
+
+    return contentSize
   }
 
   const getBodyOffset = () => {
@@ -1119,13 +1130,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
 
     if (isSizeChangeDetected() || triggerEvent === 'init') {
-      lockTrigger()
+      // lockTrigger()
       height = newHeight
       width = newWidth
       sendMsg(height, width, triggerEvent, msg)
     } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
       resetIframe(triggerEventDesc)
     } else {
+      log(`No change in content size detected`)
       timerActive = false // We're not resizing, so turn off the timer
     }
   }
@@ -1167,8 +1179,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function lockTrigger() {
-    if (triggerLocked) return
-
+    if (triggerLocked) {
+      log('TriggerLock blocked calculation')
+      return
+    }
     triggerLocked = true
     debug('Trigger event lock on')
 
