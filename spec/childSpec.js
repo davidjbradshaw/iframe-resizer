@@ -242,7 +242,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         queueMicrotask(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'height calculation method set to "max"',
+            'Height calculation method set to "max"',
           )
           done()
         })
@@ -254,7 +254,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         queueMicrotask(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'height calculation method set to "lowestElement"',
+            'Height calculation method set to "lowestElement"',
           )
           done()
         })
@@ -266,7 +266,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         queueMicrotask(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'width calculation method set to "rightMostElement"',
+            'Width calculation method set to "rightMostElement"',
           )
           done()
         })
@@ -342,7 +342,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           )
 
           expect(console.log).toHaveBeenCalledWith(
-            'height calculation method set to "auto"',
+            'Height calculation method set to "auto"',
           )
           done()
         })
@@ -433,7 +433,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           )
 
           expect(console.log).toHaveBeenCalledWith(
-            'width calculation method set to "scroll"',
+            'Width calculation method set to "scroll"',
           )
           done()
         })
