@@ -1049,7 +1049,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (vAdvised || mode < 0) return
 
     vAdvised = true
-    vInfo(`v${VERSION} (${getModeLabel(mode)})`)
+    vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
 
     if (mode < 1) advise('Parent', getModeData(3))
   }
@@ -1140,17 +1140,17 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  const beenHere = () => iframeId in settings && 'iFrameResizer' in iframe
+  const beenHere = () => 'iframeResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
 
   setupConsole({
-    enabled: (options || {}).log || true,
+    enabled: Object.hasOwn(options, 'log') ? options.log : defaults.log,
     iframeId,
   })
 
   if (beenHere()) {
-    warn(iframeId, 'Ignored iFrame, already setup.')
+    warn(iframeId, `Ignored iFrame (${iframeId}), already setup.`)
   } else {
     processOptions(options)
     checkMode()

@@ -46,11 +46,14 @@ export const info = output('info')
 export const warn = output('warn')
 export const error = output('error')
 
-export const vInfo = (msg) =>
+export function vInfo(msg, mode) {
+  if (!('iframeResizer' in window)) window.iframeResizer = { version: msg }
+  if (!consoleEnabled && mode > 0) return
   queueMicrotask(
     // eslint-disable-next-line no-console
     () => console.info(`%ciframe-resizer ${msg}`, BOLD),
   )
+}
 
 const formatLogMsg =
   (iframeId) =>

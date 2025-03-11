@@ -9,7 +9,6 @@ const childConsole = createDeferConsole({ title: `${TITLE}(child)` })
 
 export function setConsoleOptions(options) {
   childConsole.setTitle(`${TITLE}(child) ${options.id}`)
-  childConsole.setEnabled(options.logging)
 }
 
 export const { assert, debug, log, info, warn } = childConsole
