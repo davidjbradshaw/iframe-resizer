@@ -12,8 +12,10 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  once,
   round,
 } from '../common/utils'
+
 import {
   advise,
   adviser,
@@ -29,7 +31,6 @@ import {
 } from './console'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START, setPerfEl } from './perf'
-
 
 function iframeResizerChild() {
   const checkVisibilityOptions = {
