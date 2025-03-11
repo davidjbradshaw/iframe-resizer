@@ -14,8 +14,10 @@ export function setConsoleOptions(options) {
   enabled = options.enabled
 }
 
-export const setupConsoleMethod = (method) => (...msg) =>
-  !enabled ? true : childConsole[method](...msg)
+export const setupConsoleMethod =
+  (method) =>
+  (...msg) =>
+    enabled ? childConsole[method](...msg) : true
 
 export const log = setupConsoleMethod('log')
 export const info = setupConsoleMethod('info')
