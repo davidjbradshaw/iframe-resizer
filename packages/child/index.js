@@ -30,6 +30,7 @@ import {
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START, setPerfEl } from './perf'
 
+
 function iframeResizerChild() {
   const checkVisibilityOptions = {
     contentVisibilityAuto: true,
