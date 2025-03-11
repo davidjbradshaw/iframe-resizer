@@ -989,30 +989,35 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const scrollSize = getAdjustedScroll(getDimension)
     const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
 
+    let calculatedSize = 0
+
     switch (true) {
       case !getDimension.enabled():
         return scrollSize
 
       case hasTags:
-        const taggedSize = getDimension.taggedElement()
-        log(`Lowest tagged element: ${taggedSize}`)
-        return getDimension.taggedElement()
+        log(`Found tagged element`)
+        calculatedSize = getDimension.taggedElement()
+        break
 
       case !hasOverflow &&
         prevBoundingSize[dimension] === 0 &&
         prevScrollSize[dimension] === 0:
         log(`Initial page size values: ${sizes}`)
-        return returnBoundingClientRect()
+        calculatedSize = returnBoundingClientRect()
+        break
 
       case triggerLocked &&
         boundingSize === prevBoundingSize[dimension] &&
         scrollSize === prevScrollSize[dimension]:
         log(`Size unchanged: ${sizes}`)
-        return Math.max(boundingSize, scrollSize)
+        calculatedSize = Math.max(boundingSize, scrollSize)
+        break
 
       case boundingSize === 0:
         log(`Page is hidden: ${sizes}`)
-        return scrollSize
+        calculatedSize = scrollSize
+        break
 
       case !hasOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
@@ -1022,33 +1027,39 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
           'Previous bounding size:',
           prevBoundingSize[dimension],
         )
-        return returnBoundingClientRect()
+        calculatedSize = returnBoundingClientRect()
+        break
 
       case !isHeight:
-        return getDimension.taggedElement()
+        calculatedSize = getDimension.taggedElement()
+        break
 
       case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
         log('HTML bounding size decreased:', sizes)
-        return returnBoundingClientRect()
+        calculatedSize = returnBoundingClientRect()
+        break
 
       case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
         log('HTML bounding size equals page size:', sizes)
-        return returnBoundingClientRect()
+        calculatedSize = returnBoundingClientRect()
+        break
 
       case boundingSize > scrollSize:
         log(`Page size < HTML bounding size: ${sizes}`)
-        return returnBoundingClientRect()
+        calculatedSize = returnBoundingClientRect()
+        break
 
       case hasOverflow:
-        const overflowSize = getDimension.taggedElement()
-        log(`Content overflowing HTML element: ${overflowSize}`)
-        return overflowSize
+        log(`Found element overflowing HTML `)
+        calculatedSize = getDimension.taggedElement()
+        break
 
       default:
-       log(`Calculated content ${dimension}: ${boundingSize}px`)
+        calculatedSize = returnBoundingClientRect()
     }
 
-    return returnBoundingClientRect()
+    log(`Calculated content ${dimension}: ${calculatedSize}px`)
+    return calculatedSize
   }
 
   const getBodyOffset = () => {
