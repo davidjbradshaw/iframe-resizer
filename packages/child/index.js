@@ -459,7 +459,9 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
 This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`,
         )
       }
-      log(`${type} calculation method set to "${calcMode}"`)
+      log(
+        `${capitalizeFirstLetter(type)} calculation method set to "${calcMode}"`,
+      )
     }
 
     return calcMode
@@ -992,6 +994,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return scrollSize
 
       case hasTags:
+        const taggedSize = getDimension.taggedElement()
+        log(`Lowest tagged element: ${taggedSize}`)
         return getDimension.taggedElement()
 
       case !hasOverflow &&
@@ -1035,20 +1039,16 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         log(`Page size < HTML bounding size: ${sizes}`)
         return returnBoundingClientRect()
 
+      case hasOverflow:
+        const overflowSize = getDimension.taggedElement()
+        log(`Content overflowing HTML element: ${overflowSize}`)
+        return overflowSize
+
       default:
+       log(`Calculated content ${dimension}: ${boundingSize}px`)
     }
 
-    const taggedElementSize = getDimension.taggedElement()
-
-    log(
-      `Content overflowing HTML element: Tagged: ${taggedElementSize} ${sizes}`,
-    )
-
-    const contentSize = Math.max(taggedElementSize, returnBoundingClientRect())
-
-    log(`Calculated content ${dimension}: ${contentSize}px`)
-
-    return contentSize
+    return returnBoundingClientRect()
   }
 
   const getBodyOffset = () => {
