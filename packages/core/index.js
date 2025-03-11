@@ -1150,7 +1150,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   })
 
   if (beenHere()) {
-    warn(iframeId, `Ignored iFrame (${iframeId}), already setup.`)
+    warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
   } else {
     processOptions(options)
     checkMode()

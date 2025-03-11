@@ -125,7 +125,7 @@ function iframeResizerChild() {
   function init() {
     readDataFromParent()
 
-    setConsoleOptions({ id: myID, logging })
+    setConsoleOptions({ id: myID, enabled: logging })
     log(`Initialising iframe v${VERSION} (${window.location.href})`)
     readDataFromPage()
 
