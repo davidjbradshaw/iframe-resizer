@@ -22,11 +22,12 @@ const isLogEnabled = (iframeId) =>
 
 export function setupConsole({ enabled, iframeId }) {
   consoleEnabled = enabled
-  settings[iframeId] = {
-    console: createDeferConsole({
-      title: `${TITLE}${getMyId(iframeId)}`,
-    }),
-  }
+  if (!settings[iframeId])
+    settings[iframeId] = {
+      console: createDeferConsole({
+        title: `${TITLE}${getMyId(iframeId)}`,
+      }),
+    }
 }
 
 const output =
