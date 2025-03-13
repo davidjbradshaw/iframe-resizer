@@ -11,7 +11,7 @@ function tearDown(iframe) {
     iframe?.iFrameResizer?.close()
   }
 
-  if (iframe?.iFrameResizer) queueMicrotask(removeResizer)
+  if (iframe?.iFrameResizer) setTimeout(removeResizer)
   window.parentIFrame = undefined
 }
 

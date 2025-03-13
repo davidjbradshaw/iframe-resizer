@@ -61,7 +61,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIframe.autoResize(false)
         win.parentIFrame.autoResize(true)
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
             'Resize event: Auto Resize enabled',
           )
@@ -240,7 +240,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setHeightCalculationMethod('max')
         mockMsgListener(createMsg('resize'))
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
             'Height calculation method set to "max"',
           )
@@ -252,7 +252,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setHeightCalculationMethod('lowestElement')
         mockMsgListener(createMsg('resize'))
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
             'Height calculation method set to "lowestElement"',
           )
@@ -264,7 +264,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setWidthCalculationMethod('rightMostElement')
         mockMsgListener(createMsg('resize'))
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
             'Width calculation method set to "rightMostElement"',
           )
@@ -284,7 +284,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       it('unexpected message', (done) => {
         mockMsgListener(createMsg('foo'))
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(
             'Unexpected message ([iFrameSizer]foo)',
           )
@@ -336,7 +336,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       it('invalid', (done) => {
         win.parentIFrame.setHeightCalculationMethod('foo')
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(
             'foo is not a valid option for heightCalculationMethod.',
           )
@@ -427,7 +427,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       it('invalid 2', (done) => {
         win.parentIFrame.setWidthCalculationMethod('foo')
 
-        queueMicrotask(() => {
+        setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(
             'foo is not a valid option for widthCalculationMethod.',
           )
