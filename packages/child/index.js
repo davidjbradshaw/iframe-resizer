@@ -25,6 +25,7 @@ import {
   // eslint-disable-next-line no-unused-vars
   info,
   log,
+  purge,
   setConsoleOptions,
   warn,
 } from './console'
@@ -1149,7 +1150,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
       resetIframe(triggerEventDesc)
     } else {
-      info(`No change in content size detected`)
+      log(`No change in content size detected`)
+      purge()
       timerActive = false // We're not resizing, so turn off the timer
     }
   }

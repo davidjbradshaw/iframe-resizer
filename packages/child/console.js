@@ -24,6 +24,8 @@ export const info = setupConsoleMethod('info')
 
 export const { assert, debug, error, warn } = childConsole
 
+export const purge = () => childConsole.purge()
+
 export const advise = (...msg) =>
   childConsole.warn(formatAdvise(identity)(...msg))
 
