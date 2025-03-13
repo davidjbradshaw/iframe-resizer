@@ -52,14 +52,17 @@ const timingCheck = setInterval(() => {
 
   const roundedAverage = round(average)
 
-  if (roundedAverage !== oldAverage) {
+  if (roundedAverage > oldAverage) {
     oldAverage = roundedAverage
-    info('%cPage size calculation timings:', BOLD)
-    info('  Mean time:', round(timings[Math.floor(timings.length / 2)]))
-    info('  Median time:', round(timings.reduce((a, b) => a + b, 0) / timings.length))
-    info('  Average time:', round(average))
-    info('  Max time:', round(Math.max(...timings)))
-    // info('Timings:', round(JSON.parse(JSON.stringify(timings))))
+    log('%cPage size calculation timings:', BOLD)
+    log('  Mean time:', round(timings[Math.floor(timings.length / 2)]))
+    log(
+      '  Median time:',
+      round(timings.reduce((a, b) => a + b, 0) / timings.length),
+    )
+    log('  Average time:', roundedAverage)
+    log('  Max time:', round(Math.max(...timings)))
+    // log('Timings:', round(JSON.parse(JSON.stringify(timings))))
   }
 
   if (average <= THRESHOLD) return
