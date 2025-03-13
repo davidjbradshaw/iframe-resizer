@@ -54,7 +54,7 @@
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
     "@iframe-resizer/react": "file:./packages/react/",
-    "auto-group-console": "^0.0.3",
+    "auto-group-console": "^0.1.0-beta.1",
     "react": "^19.0.0"
   },
   "devDependencies": {
