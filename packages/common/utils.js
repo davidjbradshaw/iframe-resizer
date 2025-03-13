@@ -27,15 +27,15 @@ export function getElementName(el) {
       return ''
 
     case isDef(el.id):
-      return `${el.nodeName.toUpperCase()}#${el.id}`
+      return `${el.nodeName}#${el.id}`
 
     case isDef(el.name):
-      return `${el.nodeName.toUpperCase()} (${el.name})`
+      return `${el.nodeName} (${el.name}`
+
+    case isDef(el.className):
+      return `${el.nodeName}.${el.className}`
 
     default:
-      return (
-        el.nodeName.toUpperCase() +
-        (isDef(el.className) ? `.${el.className}` : '')
-      )
+      return el.nodeName
   }
 }

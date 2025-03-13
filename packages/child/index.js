@@ -753,7 +753,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     const el = entries[0].target
 
-    sendSize('resizeObserver', `Resize Observed: ${getElementName(el)}`)
+    sendSize('resizeObserver', `Element resized <${getElementName(el)}>`)
   }
 
   const resizeSet = new WeakSet()
@@ -880,7 +880,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         subtree: true,
       }
 
-      log('Setup <body/> MutationObserver')
+      log('Setup <body> MutationObserver')
       observer.observe(target, config)
 
       return observer
@@ -996,33 +996,33 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return scrollSize
 
       case hasTags:
-        log(`Found tagged element`)
+        info(`Found tagged element`)
         calculatedSize = getDimension.taggedElement()
         break
 
       case !hasOverflow &&
         prevBoundingSize[dimension] === 0 &&
         prevScrollSize[dimension] === 0:
-        log(`Initial page size values: ${sizes}`)
+        info(`Initial page size values: ${sizes}`)
         calculatedSize = returnBoundingClientRect()
         break
 
       case triggerLocked &&
         boundingSize === prevBoundingSize[dimension] &&
         scrollSize === prevScrollSize[dimension]:
-        log(`Size unchanged: ${sizes}`)
+        info(`Size unchanged: ${sizes}`)
         calculatedSize = Math.max(boundingSize, scrollSize)
         break
 
       case boundingSize === 0:
-        log(`Page is hidden: ${sizes}`)
+        info(`Page is hidden: ${sizes}`)
         calculatedSize = scrollSize
         break
 
       case !hasOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
-        log(
+        info(
           `New HTML bounding size: ${sizes}`,
           'Previous bounding size:',
           prevBoundingSize[dimension],
@@ -1035,22 +1035,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
-        log('HTML bounding size decreased:', sizes)
+        info('HTML bounding size decreased:', sizes)
         calculatedSize = returnBoundingClientRect()
         break
 
       case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
-        log('HTML bounding size equals page size:', sizes)
+        info('HTML bounding size equals page size:', sizes)
         calculatedSize = returnBoundingClientRect()
         break
 
       case boundingSize > scrollSize:
-        log(`Page size < HTML bounding size: ${sizes}`)
+        info(`Page size < HTML bounding size: ${sizes}`)
         calculatedSize = returnBoundingClientRect()
         break
 
       case hasOverflow:
-        log(`Found element overflowing HTML `)
+        info(`Found element overflowing HTML `)
         calculatedSize = getDimension.taggedElement()
         break
 
@@ -1058,7 +1058,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = returnBoundingClientRect()
     }
 
-    log(`Calculated content ${dimension}: ${calculatedSize}px`)
+    info(`Calculated content ${dimension}: ${calculatedSize}px`)
     return calculatedSize
   }
 
@@ -1149,7 +1149,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
       resetIframe(triggerEventDesc)
     } else {
-      log(`No change in content size detected`)
+      info(`No change in content size detected`)
       timerActive = false // We're not resizing, so turn off the timer
     }
   }
@@ -1179,7 +1179,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     if (!sendPending) {
-      log(`Resize event: ${triggerEventDesc}`)
+      info(`Resize event: ${triggerEventDesc}`)
       timerActive = true
       sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
       requestAnimationFrame(() => {
