@@ -48,8 +48,8 @@
     "url": "https://iframe-resizer.com/pricing/"
   },
   "dependencies": {
-    "@angular/core": "^19.2.1",
-    "@babel/runtime": "^7.26.9",
+    "@angular/core": "^19.2.2",
+    "@babel/runtime": "^7.26.10",
     "@iframe-resizer/child": "file:./packages/child/",
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
@@ -58,13 +58,13 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.26.9",
+    "@babel/plugin-transform-runtime": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
     "@jest/globals": "^29.7.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-strip": "^3.0.4",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
