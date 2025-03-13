@@ -12,7 +12,7 @@ export const once = (fn) => {
 
 export const id = (x) => x
 
-const ROUNDING = 100_000
+const ROUNDING = 1000
 
 export const round = (value) => Math.round(value * ROUNDING) / ROUNDING
 
