@@ -30,7 +30,7 @@ import {
   warn,
 } from './console'
 import overflowObserver from './overflow'
-import { PREF_END, PREF_START, setPerfEl } from './perf'
+import { PREF_END, PREF_START } from './perf'
 
 function iframeResizerChild() {
   const checkVisibilityOptions = {
@@ -936,7 +936,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       }
     }
 
-    setPerfEl(maxEl)
+    info(`${Side} position calculated from:`, maxEl)
+
     performance.mark(PREF_END, {
       detail: {
         Side,

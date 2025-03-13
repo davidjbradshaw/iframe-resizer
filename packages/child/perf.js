@@ -15,28 +15,28 @@ const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
-let perfEl // = undefined
+// let perfEl // = undefined
 let details = {}
 let oldAverage = 0
 
-export const setPerfEl = (el) => {
-  perfEl = el
-}
+// export const setPerfEl = (el) => {
+//   perfEl = el
+// }
 
-function usedEl(detail, duration) {
+function usedEl(detail /* duration */) {
   // eslint-disable-next-line no-unused-vars
-  const { Side, len, hasTags, logging } = detail
+  const { /* Side, */ len, hasTags, logging } = detail
 
   details = detail
 
-  if (usedTags.has(perfEl) || (hasTags && len <= 1) || !perfEl) return
+  // if (usedTags.has(perfEl) || (hasTags && len <= 1) || !perfEl) return
 
-  if (!logging) addUsedTag(perfEl)
+  // if (!logging) addUsedTag(perfEl)
 
-  info(`${Side} position calculated from:`, perfEl)
-  info(
-    `Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
-  )
+  // info(`${Side} position calculated from:`, perfEl)
+  // info(
+  //   `Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
+  // )
 }
 
 const timingCheck = setInterval(() => {
@@ -86,7 +86,7 @@ function perfObserver(list) {
         PREF_START,
         PREF_END,
       )
-      usedEl(entry.detail, duration)
+      usedEl(entry.detail /* duration */)
       timings.push(duration)
       if (timings.length > 100) timings.shift()
     }
