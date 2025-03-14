@@ -1170,7 +1170,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     totalTime = performance.now()
 
     if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
-      log('Resizing disabled')
+      info('Resizing disabled')
       return
     }
 

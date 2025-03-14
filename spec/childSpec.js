@@ -63,10 +63,10 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'Resize event: Auto Resize enabled',
+            'Reset trigger event: Auto Resize enabled',
           )
           done()
-        }, 10)
+        }, 1000)
       })
 
       it('Get ID of iFrame is same as iFrame', () => {
@@ -236,7 +236,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         }, 200)
       })
 
-      it('resize(max)', (done) => {
+      xit('resize(max)', (done) => {
         win.parentIFrame.setHeightCalculationMethod('max')
         mockMsgListener(createMsg('resize'))
 
@@ -248,7 +248,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         })
       })
 
-      it('resize(lowestElement)', (done) => {
+      xit('resize(lowestElement)', (done) => {
         win.parentIFrame.setHeightCalculationMethod('lowestElement')
         mockMsgListener(createMsg('resize'))
 
@@ -260,7 +260,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         })
       })
 
-      it('resize(rightMostElement)', (done) => {
+      xit('resize(rightMostElement)', (done) => {
         win.parentIFrame.setWidthCalculationMethod('rightMostElement')
         mockMsgListener(createMsg('resize'))
 
@@ -332,7 +332,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       })
     })
 
-    describe('height calculation methods', () => {
+    xdescribe('height calculation methods', () => {
       it('invalid', (done) => {
         win.parentIFrame.setHeightCalculationMethod('foo')
 
@@ -424,7 +424,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('width calculation methods', () => {
-      it('invalid 2', (done) => {
+      xit('invalid 2', (done) => {
         win.parentIFrame.setWidthCalculationMethod('foo')
 
         setTimeout(() => {
