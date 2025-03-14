@@ -1,6 +1,6 @@
 import { BOLD } from '../common/consts'
 import { round } from '../common/utils'
-import { advise, info, log } from './console'
+import { advise, log } from './console'
 
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
@@ -15,33 +15,12 @@ const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
-// let perfEl // = undefined
-let details = {}
+let detail = {}
 let oldAverage = 0
-
-// export const setPerfEl = (el) => {
-//   perfEl = el
-// }
-
-function usedEl(detail /* duration */) {
-  // eslint-disable-next-line no-unused-vars
-  const { /* Side, */ len, hasTags, logging } = detail
-
-  details = detail
-
-  // if (usedTags.has(perfEl) || (hasTags && len <= 1) || !perfEl) return
-
-  // if (!logging) addUsedTag(perfEl)
-
-  // info(`${Side} position calculated from:`, perfEl)
-  // info(
-  //   `Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
-  // )
-}
 
 const timingCheck = setInterval(() => {
   if (timings.length < 10) return
-  if (details.hasTags && details.len < 25) return
+  if (detail.hasTags && detail.len < 25) return
 
   timings.sort()
 
@@ -62,7 +41,7 @@ const timingCheck = setInterval(() => {
     )
     log('  Average time:', roundedAverage)
     log('  Max time:', round(Math.max(...timings)))
-    // log('Timings:', round(JSON.parse(JSON.stringify(timings))))
+    // debug('Timings:', JSON.parse(JSON.stringify(timings.map(round))))
   }
 
   if (average <= THRESHOLD) return
@@ -74,7 +53,7 @@ const timingCheck = setInterval(() => {
 
 Calculating the page size is taking an excessive amount of time (${round(average)}ms).
 
-To improve performance add the <b>data-iframe-size</> attribute to the ${details.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
+To improve performance add the <b>data-iframe-size</> attribute to the ${detail.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
   )
 }, PERF_CHECK_INTERVAL)
 
@@ -86,7 +65,7 @@ function perfObserver(list) {
         PREF_START,
         PREF_END,
       )
-      usedEl(entry.detail /* duration */)
+      detail = entry.detail
       timings.push(duration)
       if (timings.length > 100) timings.shift()
     }
