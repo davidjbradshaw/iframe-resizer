@@ -17,7 +17,12 @@ As browsers don't provide a single consistently reliable method to calculate con
 size, _iframe-resizer_ automatically inspects your page and selects the best value
 for your content every time it detects something changed.
 
-### High Performance
+### Cross Domain
+
+Supports both internal (same-domain) and external (cross-domain) iframes via a simple
+JS file that is designed to be a zero impact guest on the sites hosting it.
+
+### Lightening Performance
 
 To ensure minimal impact on your site, _iframe-resizer_ is highly optimised and 
 utilizes _[Set Theory](https://en.wikipedia.org/wiki/Set_theory)_ to ensure it only
@@ -26,11 +31,6 @@ checks the page elements that effect the sizing of your iframes.
 Even on the most complex pages, _iframe-resizer_ can detect changes to both HTML 
 and CSS, calculate the revised content dimensions and update the iframe in sub 
 millisecond time.
-
-### Cross Domain
-
-Supports both internal (same-domain) and external (cross-domain) iframes via a simple
-JS file that is designed to be a zero impact guest on the sites hosting it.
 
 ### Extended API
 
