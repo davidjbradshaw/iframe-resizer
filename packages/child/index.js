@@ -22,6 +22,8 @@ import {
   deprecateMethod,
   deprecateMethodReplace,
   deprecateOption,
+  endAutoGroup,
+  event as consoleEvent,
   // eslint-disable-next-line no-unused-vars
   info,
   log,
@@ -124,6 +126,7 @@ function iframeResizerChild() {
   let onParentInfo = null
 
   function init() {
+    // consoleEvent('init')
     readDataFromParent()
 
     setConsoleOptions({ id: myID, enabled: logging })
@@ -154,6 +157,11 @@ function iframeResizerChild() {
     stopInfiniteResizingOfIframe()
     applySizeSelector()
 
+    initEventListeners()
+    queueMicrotask(onReady)
+
+    log('Initialization complete')
+
     sendSize(
       'init',
       'Init message from host page',
@@ -163,10 +171,6 @@ function iframeResizerChild() {
     )
 
     sendTitle()
-    initEventListeners()
-    queueMicrotask(onReady)
-
-    log('Initialization complete')
   }
 
   function onOverflowChange(nodeList) {
@@ -175,7 +179,7 @@ function iframeResizerChild() {
     overflowedNodeList = nodeList
     hasOverflow = overflowedNodeList.length > 0
 
-    sendSize('overflowChanged', 'Overflow updated')
+    sendSize('overflowObserver', 'Overflow updated')
   }
 
   function setupObserveOverflow() {
@@ -998,7 +1002,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return scrollSize
 
       case hasTags:
-        info(`Found tagged element`)
+        info(`Found element with data-iframe-size attribute`)
         calculatedSize = getDimension.taggedElement()
         break
 
@@ -1025,7 +1029,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
         info(
-          `New HTML bounding size: ${sizes}`,
+          `New <html> bounding size: ${sizes}`,
           'Previous bounding size:',
           prevBoundingSize[dimension],
         )
@@ -1037,22 +1041,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
-        info('HTML bounding size decreased:', sizes)
+        info('<html> bounding size decreased:', sizes)
         calculatedSize = returnBoundingClientRect()
         break
 
       case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
-        info('HTML bounding size equals page size:', sizes)
+        info('<html> bounding size equals page size:', sizes)
         calculatedSize = returnBoundingClientRect()
         break
 
       case boundingSize > scrollSize:
-        info(`Page size < HTML bounding size: ${sizes}`)
+        info(`Page size < <html> bounding size: ${sizes}`)
         calculatedSize = returnBoundingClientRect()
         break
 
       case hasOverflow:
-        info(`Found element overflowing HTML `)
+        info(`Found element overflowing <html> `)
         calculatedSize = getDimension.taggedElement()
         break
 
@@ -1151,8 +1155,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
       resetIframe(triggerEventDesc)
     } else {
-      log(`No change in content size detected`)
       purge()
+      info(`No change in content size detected`)
       timerActive = false // We're not resizing, so turn off the timer
     }
   }
@@ -1169,6 +1173,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   ) {
     totalTime = performance.now()
 
+    consoleEvent(triggerEvent)
+
     if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
       info('Resizing disabled')
       return
@@ -1182,7 +1188,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     if (!sendPending) {
-      info(`Resize event: ${triggerEventDesc}`)
+      log(`Resize event: ${triggerEventDesc}`)
       timerActive = true
       sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
       requestAnimationFrame(() => {
@@ -1267,8 +1273,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       timerActive = false
     }
 
+    consoleEvent(triggerEvent)
     setTargetOrigin()
     sendToParent()
+    endAutoGroup()
   }
 
   function receiver(event) {
@@ -1317,7 +1325,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`PageInfo received from parent: ${msgBody}`)
         if (onPageInfo) {
-          queueMicrotask(() => onPageInfo(parse(msgBody)))
+          setTimeout(() => onPageInfo(parse(msgBody)))
         } else {
           notExpected('pageInfo')
         }
@@ -1327,7 +1335,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`ParentInfo received from parent: ${msgBody}`)
         if (onParentInfo) {
-          queueMicrotask(() => onParentInfo(parseFrozen(msgBody)))
+          setTimeout(() => onParentInfo(parseFrozen(msgBody)))
         } else {
           notExpected('parentInfo')
         }
@@ -1337,7 +1345,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`onMessage called from parent: ${msgBody}`)
         // eslint-disable-next-line sonarjs/no-extra-arguments
-        queueMicrotask(() => onMessage(parse(msgBody)))
+        setTimeout(() => onMessage(parse(msgBody)))
       },
     }
 
@@ -1369,6 +1377,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function processMessage() {
+      consoleEvent(getMessageType())
+
       if (firstRun === false) {
         callFromParent()
         return

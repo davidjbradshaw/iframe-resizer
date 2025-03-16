@@ -10,7 +10,7 @@ let enabled = true
 const childConsole = createDeferConsole({ title: `${TITLE}(child)` })
 
 export function setConsoleOptions(options) {
-  childConsole.setTitle(`${TITLE}(child) ${options.id}`)
+  childConsole.title(`${options.id}`)
   enabled = options.enabled
 }
 
@@ -22,7 +22,7 @@ export const setupConsoleMethod =
 export const log = setupConsoleMethod('log')
 export const info = setupConsoleMethod('info')
 
-export const { assert, debug, error, warn } = childConsole
+export const { event, assert, debug, endAutoGroup, error, warn } = childConsole
 
 export const purge = () => childConsole.purge()
 

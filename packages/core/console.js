@@ -14,8 +14,8 @@ export function setConsoleSettings(newSettings) {
 
 const getMyId = (iframeId) =>
   window.top === window.self
-    ? `(parent) ${iframeId}`
-    : `(nested parent) ${iframeId}`
+    ? `${iframeId}(parent)`
+    : `${iframeId}(nested parent)`
 
 const isLogEnabled = (iframeId) =>
   settings[iframeId] ? settings[iframeId].log : consoleEnabled
@@ -25,7 +25,7 @@ export function setupConsole({ enabled, iframeId }) {
   if (!settings[iframeId])
     settings[iframeId] = {
       console: createDeferConsole({
-        title: `${TITLE}${getMyId(iframeId)}`,
+        title: getMyId(iframeId),
       }),
     }
 }
@@ -41,10 +41,12 @@ export const outputSwitched =
     isLogEnabled(iframeId) === true ? output(type)(iframeId, ...msg) : null
 
 export const log = outputSwitched('log')
-export const debug = outputSwitched('debug')
 export const info = output('info')
 export const warn = output('warn')
 export const error = output('error')
+export const event = output('event')
+export const debug = outputSwitched('debug')
+export const endAutoGroup = output('endAutoGroup')
 
 export function vInfo(msg, mode) {
   if (!('iframeResizer' in window)) window.iframeResizer = { version: msg }
