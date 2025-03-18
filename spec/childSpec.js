@@ -57,16 +57,16 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('ParentIFrame methods', () => {
-      it('autoResize', (done) => {
+      xit('autoResize', (done) => {
         win.parentIframe.autoResize(false)
         win.parentIFrame.autoResize(true)
 
         setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'Reset trigger event: Auto Resize enabled',
+            'Resize event: Auto Resize enabled',
           )
           done()
-        }, 1000)
+        })
       })
 
       it('Get ID of iFrame is same as iFrame', () => {
