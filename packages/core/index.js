@@ -1103,6 +1103,10 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     return title === '' || title === undefined
   }
 
+  const hasMouseEvents = (options) =>
+    Object.hasOwn(options, 'onMouseEnter') ||
+    Object.hasOwn(options, 'onMouseLeave')
+
   function processOptions(options) {
     settings[iframeId] = {
       ...settings[iframeId],
@@ -1111,6 +1115,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
       ...defaults,
       ...checkOptions(options),
+      mouseEvents: hasMouseEvents(options),
       mode: setMode(options),
       syncTitle: chkTitle(iframeId),
     }
