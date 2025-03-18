@@ -9,15 +9,23 @@ import { addEventListener, removeEventListener } from '../common/listeners'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once } from '../common/utils'
-import { advise, log, setLogEnabled, setLogSettings, vInfo, warn } from './log'
+import {
+  advise,
+  event as consoleEvent,
+  log,
+  setConsoleSettings,
+  setupConsole,
+  vInfo,
+  warn,
+} from './console'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
 
-setLogSettings(settings)
+setConsoleSettings(settings)
 
 function iframeListener(event) {
-  function resizeIFrame() {
+  function resizeIframe() {
     setSize(messageData)
     setPagePosition(iframeId)
 
@@ -65,7 +73,7 @@ function iframeListener(event) {
     }
   }
 
-  function isMessageFromIFrame() {
+  function isMessageFromIframe() {
     function checkAllowedOrigin() {
       function checkList() {
         let i = 0
@@ -129,7 +137,7 @@ function iframeListener(event) {
   const getMsgBody = (offset) =>
     msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
 
-  function forwardMsgFromIFrame(msgBody) {
+  function forwardMsgFromIframe(msgBody) {
     log(
       iframeId,
       `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`,
@@ -139,8 +147,6 @@ function iframeListener(event) {
       iframe: messageData.iframe,
       message: JSON.parse(msgBody),
     })
-
-    log(iframeId, '---')
   }
 
   function getPageInfo() {
@@ -202,11 +208,7 @@ function iframeListener(event) {
     }
 
     function gatedTrigger() {
-      trigger(
-        `Send ${type} (${requestType})`,
-        `${type}:${infoFunction()}`,
-        iframeId,
-      )
+      trigger(`${requestType} (${type})`, `${type}:${infoFunction()}`, iframeId)
     }
 
     throttle(gatedTrigger, iframeId)
@@ -263,8 +265,8 @@ function iframeListener(event) {
 
     const id = iframeId // Create locally scoped copy of iFrame ID
 
-    const pageObserver = new ResizeObserver(sendInfo('page observed'))
-    const iframeObserver = new ResizeObserver(sendInfo('iframe observed'))
+    const pageObserver = new ResizeObserver(sendInfo('pageObserver'))
+    const iframeObserver = new ResizeObserver(sendInfo('iframeObserver'))
 
     start()
 
@@ -295,7 +297,7 @@ function iframeListener(event) {
   const stopPageInfoMonitor = stopInfoMonitor('stopPageInfo')
   const stopParentInfoMonitor = stopInfoMonitor('stopParentInfo')
 
-  function checkIFrameExists() {
+  function checkIframeExists() {
     if (messageData.iframe === null) {
       warn(iframeId, `The iframe (${messageData.id}) was not found.`)
       return false
@@ -319,7 +321,8 @@ function iframeListener(event) {
     const x = messageData.width
     const y = messageData.height
 
-    const target = window.parentIframe || window
+    // Check for V4 as well
+    const target = window.parentIframe || window.parentIFrame || window
 
     log(iframeId, `Scroll request received by parent: x: ${x} y: ${y}`)
 
@@ -331,7 +334,6 @@ function iframeListener(event) {
     function reposition(newPosition) {
       page.position = newPosition
       scrollTo(iframeId)
-      log(iframeId, '---')
     }
 
     function scrollParent(target, newPosition) {
@@ -397,14 +399,17 @@ function iframeListener(event) {
     }
 
     function jumpToParent() {
-      if (window.parentIFrame) {
-        window.parentIFrame.moveToAnchor(hash)
+      // Check for V4 as well
+      const target = window.parentIframe || window.parentIFrame
+
+      if (target) {
+        target.moveToAnchor(hash)
         return
       }
 
       log(
         iframeId,
-        `In page link #${hash} not found and window.parentIFrame not found`,
+        `In page link #${hash} not found and window.parentIframe not found`,
       )
     }
 
@@ -492,16 +497,16 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     setup = true
   }
 
-  function actionMsg() {
+  function eventMsg() {
     if (settings[iframeId]?.firstRun) firstRun()
 
     switch (messageData.type) {
       case 'close':
-        closeIFrame(messageData.iframe)
+        closeIframe(messageData.iframe)
         break
 
       case 'message':
-        forwardMsgFromIFrame(getMsgBody(6))
+        forwardMsgFromIframe(getMsgBody(6))
         break
 
       case 'mouseenter':
@@ -555,11 +560,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case 'reset':
-        resetIFrame(messageData)
+        resetIframe(messageData)
         break
 
       case 'init':
-        resizeIFrame()
+        resizeIframe()
         checkSameDomain(iframeId)
         checkVersion(messageData.msg)
         started()
@@ -588,7 +593,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
           return
         }
 
-        resizeIFrame()
+        resizeIframe()
     }
   }
 
@@ -629,6 +634,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   messageData = processMsg()
   iframeId = messageData.id
+  consoleEvent(iframeId, messageData.type)
 
   if (!iframeId) {
     warn(
@@ -645,8 +651,8 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     log(iframeId, `Received: ${msg}`)
     settings[iframeId].loaded = true
 
-    if (checkIFrameExists() && isMessageFromIFrame()) {
-      actionMsg()
+    if (checkIframeExists() && isMessageFromIframe()) {
+      eventMsg()
     }
   }
 }
@@ -667,7 +673,7 @@ function chkEvent(iframeId, funcName, val) {
           console.error(error)
           warn(iframeId, `Error in ${funcName} callback`)
         }
-      } else queueMicrotask(() => func(val))
+      } else setTimeout(() => func(val))
     else
       throw new TypeError(
         `${funcName} on iFrame[${iframeId}] is not a function`,
@@ -679,11 +685,11 @@ function chkEvent(iframeId, funcName, val) {
 
 function removeIframeListeners(iframe) {
   const { id } = iframe
-  delete settings[id]
   log(id, 'Disconnected from iframe')
+  delete settings[id]
 }
 
-function closeIFrame(iframe) {
+function closeIframe(iframe) {
   const { id } = iframe
 
   if (chkEvent(id, 'onClose', id) === false) {
@@ -703,7 +709,6 @@ function closeIFrame(iframe) {
   }
 
   chkEvent(id, 'onClosed', id)
-  log(id, '---')
   removeIframeListeners(iframe)
 }
 
@@ -730,7 +735,7 @@ function setPagePosition(iframeId) {
   unsetPagePosition()
 }
 
-function resetIFrame(messageData) {
+function resetIframe(messageData) {
   log(
     messageData.id,
     `Size reset requested by ${messageData.type === 'init' ? 'parent page' : 'child page'}`,
@@ -745,7 +750,7 @@ function setSize(messageData) {
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
     messageData.iframe.style[dimension] = size
-    log(id, `IFrame (${id}) ${dimension} set to ${size}`)
+    log(id, `Iframe (${id}) ${dimension} set to ${size}`)
   }
 
   const { id } = messageData
@@ -756,16 +761,13 @@ function setSize(messageData) {
 }
 
 function trigger(calleeMsg, msg, id, noResponseWarning) {
-  function postMessageToIFrame() {
+  function postMessageToIframe() {
     const { iframe, postMessageTarget, sameDomain, targetOrigin } = settings[id]
 
     if (sameDomain) {
       try {
         iframe.contentWindow.iframeChildListener(msgId + msg)
-        log(
-          id,
-          `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) via sameDomain`,
-        )
+        log(id, `Sending message to iframe[${id}] (${msg}) via sameDomain`)
         return
       } catch (error) {
         log(id, `Same domain connection failed. Trying cross domain`)
@@ -774,23 +776,19 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
 
     log(
       id,
-      `[${calleeMsg}] Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
+      `Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
     )
 
     postMessageTarget.postMessage(msgId + msg, targetOrigin)
   }
 
-  function iFrameNotFound() {
-    warn(id, `[${calleeMsg}] IFrame(${id}) not found`)
-  }
-
   function chkAndSend() {
     if (!settings[id]?.postMessageTarget) {
-      iFrameNotFound()
+      warn(id, `Iframe(${id}) not found`)
       return
     }
 
-    postMessageToIFrame()
+    postMessageToIframe()
   }
 
   function warnOnNoResponse() {
@@ -805,8 +803,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         settings[id].loadErrorShown = true
         advise(
           id,
-          `
-<rb>No response from iFrame</>
+          `<rb>No response from iFrame</>
             
 The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
@@ -825,8 +822,14 @@ The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loa
 The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
 `
               : ''
-          }
-This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this message.
+          } 
+${
+  sandbox?.length > 0 &&
+  !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
+    ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
+`
+    : ''
+}This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
 `,
         )
       }
@@ -836,6 +839,8 @@ This message can be ignored if everything is working, or you can set the <b>warn
       settings[id].msgTimeout = setTimeout(warning, settings[id].warningTimeout)
     }
   }
+
+  consoleEvent(id, calleeMsg)
 
   if (settings[id]) {
     chkAndSend()
@@ -896,7 +901,6 @@ export default (options) => (iframe) => {
     if (iframeId === '' || !iframeId) {
       iframeId = newId()
       iframe.id = iframeId
-      setLogEnabled((options || {}).log)
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
 
@@ -906,7 +910,7 @@ export default (options) => (iframe) => {
   function setScrolling() {
     log(
       iframeId,
-      `IFrame scrolling ${
+      `Iframe scrolling ${
         settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
       } for ${iframeId}`,
     )
@@ -947,15 +951,15 @@ export default (options) => (iframe) => {
       settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
 
     if (!firstRun && resetRequestMethod) {
-      resetIFrame({ iframe, height: 0, width: 0, type: 'init' })
+      resetIframe({ iframe, height: 0, width: 0, type: 'init' })
     }
   }
 
-  function setupIFrameObject() {
+  function setupIframeObject() {
     if (settings[iframeId]) {
       const { iframe } = settings[iframeId]
       const resizer = {
-        close: closeIFrame.bind(null, iframe),
+        close: closeIframe.bind(null, iframe),
 
         disconnect: removeIframeListeners.bind(null, iframe),
 
@@ -979,7 +983,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
 
         sendMessage(message) {
           message = JSON.stringify(message)
-          trigger('Send Message', `message:${message}`, iframeId)
+          trigger('message', `message:${message}`, iframeId)
         },
       }
 
@@ -1038,7 +1042,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (vAdvised || mode < 0) return
 
     vAdvised = true
-    vInfo(`v${VERSION} (${getModeLabel(mode)})`)
+    vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
 
     if (mode < 1) advise('Parent', getModeData(3))
   }
@@ -1101,6 +1105,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function processOptions(options) {
     settings[iframeId] = {
+      ...settings[iframeId],
       iframe,
       firstRun: true,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
@@ -1110,6 +1115,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       syncTitle: chkTitle(iframeId),
     }
 
+    consoleEvent(iframeId, 'setup')
     setDirection()
     setOffsetSize(options?.offsetSize || options?.offset)
 
@@ -1128,12 +1134,17 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  const beenHere = () => iframeId in settings && 'iFrameResizer' in iframe
+  const beenHere = () => 'iframeResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
 
+  setupConsole({
+    enabled: Object.hasOwn(options, 'log') ? options.log : defaults.log,
+    iframeId,
+  })
+
   if (beenHere()) {
-    warn(iframeId, 'Ignored iFrame, already setup.')
+    warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
   } else {
     processOptions(options)
     checkMode()
@@ -1141,7 +1152,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setScrolling()
     setupBodyMarginValues()
     init(createOutgoingMsg(iframeId))
-    setupIFrameObject()
+    setupIframeObject()
   }
 
   return iframe?.iFrameResizer
@@ -1149,12 +1160,12 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
 function sendTriggerMsg(eventName, event) {
   function triggerEnabledIframe(iframeId) {
-    if (isIFrameResizeEnabled(iframeId)) {
+    if (isIframeResizeEnabled(iframeId)) {
       trigger(eventName, event, iframeId)
     }
   }
 
-  const isIFrameResizeEnabled = (iframeId) =>
+  const isIframeResizeEnabled = (iframeId) =>
     settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
 
   Object.keys(settings).forEach(triggerEnabledIframe)
