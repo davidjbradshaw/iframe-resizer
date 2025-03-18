@@ -5,6 +5,5 @@ global.$ = $
 global.jQuery = $
 
 jest.mock('auto-group-console', () => ({
-  createDeferConsole: () => console,
   createGroupConsole: () => console,
 }))
