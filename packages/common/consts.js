@@ -1,5 +1,5 @@
 export const VERSION = '[VI]{version}[/VI]'
-export const TITLE = 'iframeResizer'
+export const LABEL = 'iframeResizer'
 
 export const BASE = 10
 export const SINGLE = 1

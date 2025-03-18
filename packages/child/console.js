@@ -1,16 +1,16 @@
-import { createDeferConsole } from 'auto-group-console'
+import createGroupConsole from 'auto-group-console'
 
-import { TITLE } from '../common/consts'
+import { LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
 
 let enabled = true
 
-const childConsole = createDeferConsole({ title: `${TITLE}(child)` })
+const childConsole = createGroupConsole({ label: `${LABEL}(child)` })
 
 export function setConsoleOptions(options) {
-  childConsole.title(`${options.id}`)
+  childConsole.label(`${options.id}`)
   enabled = options.enabled
 }
 

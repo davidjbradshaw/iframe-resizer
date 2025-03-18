@@ -1,6 +1,6 @@
-import { createDeferConsole } from 'auto-group-console'
+import createGroupConsole from 'auto-group-console'
 
-import { BOLD, TITLE } from '../common/consts'
+import { BOLD, LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { id as identity } from '../common/utils'
@@ -24,8 +24,8 @@ export function setupConsole({ enabled, iframeId }) {
   consoleEnabled = enabled
   if (!settings[iframeId])
     settings[iframeId] = {
-      console: createDeferConsole({
-        title: getMyId(iframeId),
+      console: createGroupConsole({
+        label: getMyId(iframeId),
       }),
     }
 }
@@ -60,7 +60,7 @@ export function vInfo(msg, mode) {
 const formatLogMsg =
   (iframeId) =>
   (...msg) =>
-    [`${TITLE}(${iframeId})`, ...msg].join(' ')
+    [`${LABEL}(${iframeId})`, ...msg].join(' ')
 
 export const advise = (iframeId, msg) =>
   settings[iframeId]
