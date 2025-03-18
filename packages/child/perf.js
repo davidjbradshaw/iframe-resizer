@@ -73,7 +73,7 @@ function perfObserver(list) {
 }
 
 function setup() {
-  debug('Setup performanceObserver')
+  // debug('Setup performanceObserver')
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })
 
