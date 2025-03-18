@@ -1,4 +1,5 @@
 export const VERSION = '[VI]{version}[/VI]'
+export const LABEL = 'iframeResizer'
 
 export const BASE = 10
 export const SINGLE = 1
@@ -10,6 +11,9 @@ export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
 
 export const MANUAL_RESIZE_REQUEST = 'resizeParent'
+
+export const BOLD = 'font-weight: bold;'
+export const NORMAL = 'font-weight: normal;'
 
 export const msgHeader = 'message'
 export const msgHeaderLen = msgHeader.length

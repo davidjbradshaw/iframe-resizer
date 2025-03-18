@@ -1,5 +1,6 @@
+import { BOLD } from '../common/consts'
 import { round } from '../common/utils'
-import { advise, info, log } from './log'
+import { advise, log } from './console'
 
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
@@ -14,33 +15,12 @@ const usedTags = new WeakSet()
 
 const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
-let perfEl // = undefined
-let details = {}
-
-export const setPerfEl = (el) => {
-  perfEl = el
-}
-
-function usedEl(detail, duration) {
-  // eslint-disable-next-line no-unused-vars
-  const { Side, len, hasTags, logging } = detail
-
-  details = detail
-
-  if (usedTags.has(perfEl) || (hasTags && len <= 1) || !perfEl) return
-
-  if (!logging) addUsedTag(perfEl)
-
-  info(
-    `\n  ${Side} position calculated from:`,
-    perfEl,
-    `\n  Parsed ${len} ${hasTags ? 'tagged' : 'potentially overflowing'} elements in ${round(duration)}ms`,
-  )
-}
+let detail = {}
+let oldAverage = 0
 
 const timingCheck = setInterval(() => {
   if (timings.length < 10) return
-  if (details.hasTags && details.len < 25) return
+  if (detail.hasTags && detail.len < 25) return
 
   timings.sort()
 
@@ -49,15 +29,20 @@ const timingCheck = setInterval(() => {
     timings[Math.floor(timings.length / 2)],
   )
 
-  // console.info('Timings:', JSON.parse(JSON.stringify(timings)))
-  // console.info('Mean time:', timings[Math.floor(timings.length / 2)])
-  // console.info(
-  //   'Median time:',
-  //   timings.reduce((a, b) => a + b, 0) / timings.length,
-  // )
-  // console.info('Average time:', round(average), average)
+  const roundedAverage = round(average)
 
-  log('Max time:', Math.max(...timings))
+  if (roundedAverage > oldAverage) {
+    oldAverage = roundedAverage
+    log('%cPage size calculation timings:', BOLD)
+    log('  Mean time:', round(timings[Math.floor(timings.length / 2)]))
+    log(
+      '  Median time:',
+      round(timings.reduce((a, b) => a + b, 0) / timings.length),
+    )
+    log('  Average time:', roundedAverage)
+    log('  Max time:', round(Math.max(...timings)))
+    // debug('Timings:', JSON.parse(JSON.stringify(timings.map(round))))
+  }
 
   if (average <= THRESHOLD) return
 
@@ -68,7 +53,7 @@ const timingCheck = setInterval(() => {
 
 Calculating the page size is taking an excessive amount of time (${round(average)}ms).
 
-To improve performance add the <b>data-iframe-size</> attribute to the ${details.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
+To improve performance add the <b>data-iframe-size</> attribute to the ${detail.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
   )
 }, PERF_CHECK_INTERVAL)
 
@@ -80,7 +65,7 @@ function perfObserver(list) {
         PREF_START,
         PREF_END,
       )
-      usedEl(entry.detail, duration)
+      detail = entry.detail
       timings.push(duration)
       if (timings.length > 100) timings.shift()
     }
@@ -88,6 +73,7 @@ function perfObserver(list) {
 }
 
 function setup() {
+  // debug('Setup performanceObserver')
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })
 

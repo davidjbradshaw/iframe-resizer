@@ -19,6 +19,7 @@ require.config({
   baseUrl: '/base',
 
   paths: {
+    'auto-group-console': 'node_modules/auto-group-console/dist/index',
     jquery: 'node_modules/jquery/dist/jquery',
     iframeResizerParent: 'test-js/iframe-resizer.parent',
     iframeResizerJquery: 'test-js/iframe-resizer.jquery',
