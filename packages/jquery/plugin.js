@@ -1,6 +1,6 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { warn } from '../core/log'
+import { deprecateMethod, warn } from '../core/console'
 
 switch (true) {
   case window.jQuery === undefined:
@@ -24,10 +24,7 @@ switch (true) {
     }
 
     window.jQuery.fn.iFrameResize = function (options) {
-      warn(
-        '',
-        'Deprecated:  Use the iframeResize method instead of iFrameResize',
-      )
+      deprecateMethod('iFrameResize()', 'iframeResize()', '', 'jQuery')
 
       return this.iframeResize(options)
     }
