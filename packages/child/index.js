@@ -1,7 +1,9 @@
 import {
   BASE,
+  BOLD,
   HEIGHT_EDGE,
   MANUAL_RESIZE_REQUEST,
+  NORMAL,
   SIZE_ATTR,
   VERSION,
   WIDTH_EDGE,
@@ -85,6 +87,7 @@ function iframeResizerChild() {
   let calculateHeight = true
   let calculateWidth = false
   let firstRun = true
+  let hasIgnored = false
   let hasOverflow = false
   let hasTags = false
   let height = 1
@@ -205,6 +208,28 @@ function iframeResizerChild() {
   function sendTitle() {
     if (document.title && document.title !== '') {
       sendMsg(0, 0, 'title', document.title)
+    }
+  }
+
+  function warnIgnored(ignoredElements) {
+    const s = ignoredElements.length === 1 ? '' : 's'
+
+    warn(
+      `%c[data-iframe-ignore]%c found on %c${ignoredElements.length}%c element${s}`,
+      BOLD,
+      NORMAL,
+      BOLD,
+      NORMAL,
+    )
+  }
+
+  let ignoredElementsCount = 0
+  function chkIgnoredElements() {
+    const ignoredElements = document.querySelectorAll('*[data-iframe-ignore]')
+    hasIgnored = ignoredElements.length > 0
+    if (hasIgnored && ignoredElements.length !== ignoredElementsCount) {
+      warnIgnored(ignoredElements)
+      ignoredElementsCount = ignoredElements.length
     }
   }
 
@@ -962,10 +987,33 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     dimension.boundingClientRect(),
   ]
 
-  const getAllElements = (element) => () =>
-    element.querySelectorAll(
-      '* :not(head):not(meta):not(base):not(title):not(script):not(link):not(style):not(map):not(area):not(option):not(optgroup):not(template):not(track):not(wbr):not(nobr)',
-    )
+  const getAllElements = (element) => () => {
+    chkIgnoredElements()
+
+    const selector = [
+      '* ',
+      'not(head)',
+      'not(meta)',
+      'not(base)',
+      'not(title)',
+      'not(script)',
+      'not(link)',
+      'not(style)',
+      'not(map)',
+      'not(area)',
+      'not(option)',
+      'not(optgroup)',
+      'not(template)',
+      'not(track)',
+      'not(wbr)',
+      'not(nobr)',
+    ]
+
+    if (hasIgnored)
+      selector.push('not([data-iframe-ignore])', 'not([data-iframe-ignore] *)')
+
+    return element.querySelectorAll(selector.join(':'))
+  }
 
   const prevScrollSize = {
     height: 0,
