@@ -92,6 +92,7 @@ function iframeResizerChild() {
   let hasTags = false
   let height = 1
   let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
+  let ignoreSelector = ''
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
@@ -136,6 +137,8 @@ function iframeResizerChild() {
     log(`Initialising iframe v${VERSION} (${window.location.href})`)
     readDataFromPage()
 
+    applySelectors()
+
     checkCrossDomain()
     checkMode()
     checkVersion()
@@ -158,7 +161,6 @@ function iframeResizerChild() {
 
     injectClearFixIntoBodyElement()
     stopInfiniteResizingOfIframe()
-    applySizeSelector()
 
     initEventListeners()
     queueMicrotask(onReady)
@@ -332,6 +334,10 @@ Parent page: ${version} - Child page: ${VERSION}.
         sizeSelector = data.sizeSelector
       }
 
+      if (Object.prototype.hasOwnProperty.call(data, 'ignoreSelector')) {
+        ignoreSelector = data.ignoreSelector
+      }
+
       targetOriginDefault = data?.targetOrigin || targetOriginDefault
       heightCalcMode = data?.heightCalculationMethod || heightCalcMode
       widthCalcMode = data?.widthCalculationMethod || widthCalcMode
@@ -385,6 +391,22 @@ Parent page: ${version} - Child page: ${VERSION}.
       log(`Applying data-iframe-size to: ${getElementName(el)}`)
       el.dataset.iframeSize = true
     }
+  }
+
+  function applyIgnoreSelector() {
+    if (ignoreSelector === '') return
+
+    log(`Applying ignoreSelector: ${ignoreSelector}`)
+
+    for (const el of document.querySelectorAll(ignoreSelector)) {
+      log(`Applying data-iframe-ignore to: ${getElementName(el)}`)
+      el.dataset.iframeIgnore = true
+    }
+  }
+
+  function applySelectors() {
+    applySizeSelector()
+    applyIgnoreSelector()
   }
 
   function setMargin() {
@@ -874,8 +896,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      // apply sizeSelector to new elements
-      applySizeSelector()
+      // apply selectors to new elements
+      applySelectors()
 
       // Rebuild tagged elements list for size calculation
       checkAndSetupTags()
