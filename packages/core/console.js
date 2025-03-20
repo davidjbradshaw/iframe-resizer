@@ -32,13 +32,13 @@ export function setupConsole({ enabled, iframeId }) {
 
 const output =
   (type) =>
-  (iframeId, ...msg) =>
-    settings[iframeId]?.console[type](...msg)
+  (iframeId, ...args) =>
+    settings[iframeId]?.console[type](...args)
 
 export const outputSwitched =
   (type) =>
-  (iframeId, ...msg) =>
-    isLogEnabled(iframeId) === true ? output(type)(iframeId, ...msg) : null
+  (iframeId, ...args) =>
+    isLogEnabled(iframeId) === true ? output(type)(iframeId, ...args) : null
 
 export const log = outputSwitched('log')
 export const info = output('info')
@@ -48,26 +48,26 @@ export const event = output('event')
 export const debug = outputSwitched('debug')
 export const endAutoGroup = output('endAutoGroup')
 
-export function vInfo(msg, mode) {
-  if (!('iframeResizer' in window)) window.iframeResizer = { version: msg }
+export function vInfo(ver, mode) {
+  if (!('iframeResizer' in window)) window.iframeResizer = { version: ver }
   if (!consoleEnabled && mode > 0) return
   queueMicrotask(
     // eslint-disable-next-line no-console
-    () => console.info(`%ciframe-resizer ${msg}`, BOLD),
+    () => console.info(`%ciframe-resizer ${ver}`, BOLD),
   )
 }
 
 const formatLogMsg =
   (iframeId) =>
-  (...msg) =>
-    [`${LABEL}(${iframeId})`, ...msg].join(' ')
+  (...args) =>
+    [`${LABEL}(${iframeId})`, ...args].join(' ')
 
-export const advise = (iframeId, msg) =>
+export const advise = (iframeId, ...args) =>
   settings[iframeId]
-    ? settings[iframeId].console.warn(formatAdvise(identity)(msg))
+    ? settings[iframeId].console.warn(formatAdvise(identity)(...args))
     : queueMicrotask(
         // eslint-disable-next-line no-console
-        () => console?.warn(formatAdvise(formatLogMsg(iframeId))(msg)),
+        () => console?.warn(formatAdvise(formatLogMsg(iframeId))(...args)),
       )
 
 const deprecateAdvise = deprecate(advise)

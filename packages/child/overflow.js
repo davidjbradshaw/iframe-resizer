@@ -34,7 +34,7 @@ const overflowObserver = (options) => {
   const observed = new WeakSet()
 
   return function observeOverflow(nodeList) {
-    log('Attached overflowObserver')
+    log('Attached overflowObservers')
     for (const node of nodeList) {
       if (node.nodeType !== Node.ELEMENT_NODE || observed.has(node)) continue
 

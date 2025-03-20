@@ -134,7 +134,7 @@ function iframeResizerChild() {
     readDataFromParent()
 
     setConsoleOptions({ id: myID, enabled: logging })
-    log(`Initialising iframe v${VERSION} (${window.location.href})`)
+    log(`Initialising iframe v${VERSION} ${window.location.href}`)
     readDataFromPage()
 
     applySelectors()
@@ -148,12 +148,9 @@ function iframeResizerChild() {
     checkQuirksMode()
     checkAndSetupTags()
 
-    setupObserveOverflow()
     setupPublicMethods()
     setupMouseEvents()
     inPageLinks = setupInPageLinks()
-
-    addOverflowObservers(getAllElements(document)())
 
     setMargin()
     setBodyStyle('background', bodyBackground)
@@ -552,6 +549,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     manageEventListeners('add')
     setupMutationObserver()
     setupResizeObservers()
+    setupObserveOverflow()
+    addOverflowObservers(getAllElements(document)())
   }
 
   function injectClearFixIntoBodyElement() {

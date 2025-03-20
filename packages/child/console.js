@@ -16,22 +16,21 @@ export function setConsoleOptions(options) {
 
 export const setupConsoleMethod =
   (method) =>
-  (...msg) =>
-    enabled ? childConsole[method](...msg) : true
+  (...args) =>
+    enabled ? childConsole[method](...args) : true
 
 export const log = setupConsoleMethod('log')
 export const info = setupConsoleMethod('info')
 
-export const { event, assert, debug, endAutoGroup, error, warn } = childConsole
+export const { event, assert, debug, endAutoGroup, error, purge, warn } =
+  childConsole
 
-export const purge = () => childConsole.purge()
-
-export const advise = (...msg) =>
-  childConsole.warn(formatAdvise(identity)(...msg))
+export const advise = (...args) =>
+  childConsole.warn(formatAdvise(identity)(...args))
 
 export const adviser = advise
 
-const deprecateAdvise = deprecate((id, ...msg) => advise(...msg))
+const deprecateAdvise = deprecate((id, ...args) => advise(...args))
 export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateMethodReplace = deprecateAdvise('Method', 'replaced with')
 export const deprecateOption = deprecateAdvise('Option')
