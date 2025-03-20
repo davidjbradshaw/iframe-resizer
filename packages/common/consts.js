@@ -19,7 +19,7 @@ export const ITALIC = 'font-style: italic;'
 export const BLUE = `color: #00c;`
 export const BLUE_LIGHT = `color: #A9C7FB;`
 export const BLACK = `color: black;`
-export const WHITE = `color: white;`
+export const WHITE = `color: #E3E3E3;`
 
 export const msgHeader = 'message'
 export const msgHeaderLen = msgHeader.length

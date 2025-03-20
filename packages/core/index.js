@@ -518,7 +518,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   function setTitle(title, iframeId) {
     if (!settings[iframeId]?.syncTitle) return
     settings[iframeId].iframe.title = title
-    info(iframeId, `Set title attribute: %c${title}`, HIGHLIGHT)
+    info(iframeId, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
   }
 
   function started() {

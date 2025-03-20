@@ -2,8 +2,8 @@ import {
   BASE,
   BLACK,
   BLUE,
-  BOLD,
   BLUE_LIGHT,
+  BOLD,
   HEIGHT_EDGE,
   IGNORE_ATTR,
   ITALIC,
@@ -11,8 +11,8 @@ import {
   NORMAL,
   SIZE_ATTR,
   VERSION,
-  WIDTH_EDGE,
   WHITE,
+  WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
@@ -369,7 +369,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
-    info(`TargetOrigin for parent set to: %c${targetOriginDefault}`, HIGHLIGHT)
+    info(`Set TargetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
   }
 
   function chkCSS(attr, value) {
@@ -384,7 +384,7 @@ Parent page: ${version} - Child page: ${VERSION}.
   function setBodyStyle(attr, value) {
     if (undefined !== value && value !== '' && value !== 'null') {
       document.body.style.setProperty(attr, value)
-      info(`Body ${attr} set to %c${value}`, HIGHLIGHT)
+      info(`Set body ${attr}: %c${value}`, HIGHLIGHT)
     }
   }
 
@@ -420,7 +420,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     setAutoHeight(document.documentElement)
     setAutoHeight(document.body)
 
-    log('HTML & body height set to "auto !important"')
+    log('Set HTML & body height: %cauto !important', HIGHLIGHT)
   }
 
   function manageTriggerEvent(options) {
@@ -500,6 +500,7 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
         warn(`${calcMode} is not a valid option for ${type}CalculationMethod.`)
         calcMode = calcModeDefault
       }
+
       if (calcMode in deprecatedResizeMethods) {
         advise(
           `<rb>Deprecated ${type}CalculationMethod (${calcMode})</>
@@ -507,9 +508,8 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
 This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`,
         )
       }
-      log(
-        `${capitalizeFirstLetter(type)} calculation method set to "${calcMode}"`,
-      )
+
+      log(`Set ${type} calculation method: %c${calcMode}`, HIGHLIGHT)
     }
 
     return calcMode
@@ -823,7 +823,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       if (!(position === '' || position === 'static')) {
         resizeObserver.observe(rootElement)
         resizeSet.add(rootElement)
-        log(`Attached resizeObserver: %c${getElementName(rootElement)}`, HIGHLIGHT)
+        log(
+          `Attached resizeObserver: %c${getElementName(rootElement)}`,
+          HIGHLIGHT,
+        )
       }
     }
 
@@ -1104,7 +1107,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
         info(`New <html> bounding size: ${sizes} `, ...BOUNDING_FORMAT)
-        info(`Previous bounding size: %c${prevBoundingSize[dimension]}px`, HIGHLIGHT)
+        info(
+          `Previous bounding size: %c${prevBoundingSize[dimension]}px`,
+          HIGHLIGHT,
+        )
         calculatedSize = returnBoundingClientRect()
         break
 
