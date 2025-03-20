@@ -416,8 +416,6 @@ function iframeListener(event) {
 
       scrollTo(iframeId)
       window.location.hash = hash
-
-      log(iframeId, '--')
     }
 
     function jumpToParent() {
