@@ -5,6 +5,7 @@ import {
   BOLD,
   HEIGHT_EDGE,
   IGNORE_ATTR,
+  ITALIC,
   MANUAL_RESIZE_REQUEST,
   NORMAL,
   SIZE_ATTR,
@@ -199,7 +200,7 @@ function iframeResizerChild() {
   function checkAndSetupTags() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
-    log(`Tagged elements found: ${hasTags}`)
+    log(`Tagged elements found: %c${hasTags}`, hasTags ? BLUE : BLACK)
   }
 
   function addOverflowObservers(nodeList) {
@@ -313,7 +314,7 @@ Parent page: ${version} - Child page: ${VERSION}.
   function readDataFromPage() {
     // eslint-disable-next-line sonarjs/cognitive-complexity
     function readData(data) {
-      log(`Reading data from page: ${JSON.stringify(data)}`)
+      log(`Reading data from page:`, data)
 
       onMessage = data?.onMessage || onMessage
       onReady = data?.onReady || onReady
@@ -438,9 +439,10 @@ Parent page: ${version} - Child page: ${VERSION}.
     listener[options.method](options.eventName)
 
     log(
-      `${capitalizeFirstLetter(options.method)} event listener: ${
+      `${capitalizeFirstLetter(options.method)} event listener: %c${
         options.eventType
       }`,
+      BLUE,
     )
   }
 
@@ -575,7 +577,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const jumpPosition = getElementPosition(target)
 
         log(
-          `Moving to in page link (#${hash}) at x: ${jumpPosition.x}y: ${jumpPosition.y}`,
+          `Moving to in page link (%c#${hash}%c) at x: %c${jumpPosition.x}%c y: %c${jumpPosition.y}`,
+          BLUE,
+          BLACK,
+          BLUE,
+          BLACK,
+          BLUE,
         )
 
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
@@ -656,7 +663,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function addMouseListener(evt, name) {
-      log(`Add event listener: ${name}`)
+      log(`Add event listener: %c${name}`, BLUE)
       addEventListener(window.document, evt, sendMouse)
     }
 
@@ -766,7 +773,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       setTargetOrigin(targetOrigin) {
-        log(`Set targetOrigin: ${targetOrigin}`)
+        log(`Set targetOrigin: %c${targetOrigin}`, BLUE)
         targetOriginDefault = targetOrigin
       },
 
@@ -810,7 +817,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       if (!(position === '' || position === 'static')) {
         resizeObserver.observe(rootElement)
         resizeSet.add(rootElement)
-        log(`Attached resizeObserver: ${getElementName(rootElement)}`)
+        log(`Attached resizeObserver: %c${getElementName(rootElement)}`, BLUE)
       }
     }
 
@@ -824,7 +831,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       resizeObserver.observe(node)
       resizeSet.add(node)
-      log(`Attached resizeObserver: ${getElementName(node)}`)
+      log(`Attached resizeObserver: %c${getElementName(node)}`, BLUE)
     }
   }
 
@@ -870,7 +877,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       // Back off if the callStack is busy with other stuff
       if (delay > delayLimit && delay < DELAY_MAX) {
-        log(`MutationObserver delay: ${delay}ms > ${delayLimit}`)
+        log(`MutationObserver delay: %c${delay}ms > ${delayLimit}ms`, BLUE)
         setTimeout(processMutations, DELAY * delayCount)
         perfMon = now
         return
@@ -1250,7 +1257,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     if (!sendPending) {
-      log(`Resize event: ${triggerEventDesc}`)
+      log(`Resize event: %c${triggerEventDesc}`, BLUE)
       timerActive = true
       sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
       requestAnimationFrame(() => {
@@ -1286,7 +1293,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const hcm = heightCalcMode
     heightCalcMode = heightCalcModeDefault
 
-    log(`Reset trigger event: ${triggerEventDesc}`)
+    log(`Reset trigger event: %c${triggerEventDesc}`, BLUE)
     lockTrigger()
     triggerReset('reset')
 
@@ -1302,7 +1309,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      log(`Message targetOrigin: ${targetOrigin}`)
+      log(`Message targetOrigin: %c${targetOrigin}`, BLUE)
     }
 
     function displayTimeTaken() {
@@ -1329,7 +1336,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       info(
         `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
       )
-      info(`%c${message}`, 'font-style: italic')
+      info(`%c${message}`, ITALIC)
 
       if (timerActive) info(displayTimeTaken(), BLUE)
       timerActive = false

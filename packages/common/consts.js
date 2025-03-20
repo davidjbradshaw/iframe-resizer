@@ -15,8 +15,9 @@ export const MANUAL_RESIZE_REQUEST = 'resizeParent'
 
 export const BOLD = 'font-weight: bold;'
 export const NORMAL = 'font-weight: normal;'
+export const ITALIC = 'font-style: italic;'
 export const BLUE = `color: #00c;`
-export const BLACK = `${NORMAL}color: black;`
+export const BLACK = `color: black;`
 
 export const msgHeader = 'message'
 export const msgHeaderLen = msgHeader.length

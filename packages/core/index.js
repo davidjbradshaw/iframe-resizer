@@ -1,4 +1,7 @@
 import {
+  BLACK,
+  BLUE,
+  ITALIC,
   msgHeaderLen,
   msgId,
   msgIdLen,
@@ -12,6 +15,7 @@ import { once } from '../common/utils'
 import {
   advise,
   event as consoleEvent,
+  info,
   log,
   setConsoleSettings,
   setupConsole,
@@ -81,7 +85,8 @@ function iframeListener(event) {
 
         log(
           iframeId,
-          `Checking connection is from allowed list of origins: ${checkOrigin}`,
+          `Checking connection is from allowed list of origins: %c${checkOrigin}`,
+          BLUE,
         )
 
         for (; i < checkOrigin.length; i++) {
@@ -96,7 +101,7 @@ function iframeListener(event) {
 
       function checkSingle() {
         const remoteHost = settings[iframeId]?.remoteHost
-        log(iframeId, `Checking connection is from: ${remoteHost}`)
+        log(iframeId, `Checking connection is from: %c${remoteHost}`, BLUE)
         return origin === remoteHost
       }
 
@@ -140,7 +145,10 @@ function iframeListener(event) {
   function forwardMsgFromIframe(msgBody) {
     log(
       iframeId,
-      `onMessage passed: {iframe: ${messageData.iframe.id}, message: ${msgBody}}`,
+      `onMessage passed: {iframe: %c${messageData.iframe.id}%c, message: %c${msgBody}}`,
+      BLUE,
+      BLACK,
+      ITALIC,
     )
 
     on('onMessage', {
@@ -324,7 +332,13 @@ function iframeListener(event) {
     // Check for V4 as well
     const target = window.parentIframe || window.parentIFrame || window
 
-    log(iframeId, `Scroll request received by parent: x: ${x} y: ${y}`)
+    log(
+      iframeId,
+      `Scroll request received by parent: x: %c${x}%c y: %c${y}`,
+      BLUE,
+      BLACK,
+      BLUE,
+    )
 
     target.scrollBy(x, y)
   }
@@ -384,7 +398,10 @@ function iframeListener(event) {
 
       log(
         iframeId,
-        `Moving to in page link (#${hash}) at x: ${jumpPosition.x} y: ${jumpPosition.y}`,
+        `Moving to in page link (#${hash}) at x: %c${jumpPosition.x}%c y: %c${jumpPosition.y}`,
+        BLUE,
+        BLACK,
+        BLUE,
       )
 
       page.position = {
@@ -467,7 +484,7 @@ function iframeListener(event) {
       settings[id].sameDomain = false
     }
 
-    log(id, `sameDomain: ${settings[id].sameDomain}`)
+    log(id, `sameDomain: %c${settings[id].sameDomain}`, BLUE)
   }
 
   function checkVersion(version) {
@@ -484,13 +501,19 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       )
       return
     }
-    log(iframeId, `Version mismatch (Child: ${version} !== Parent: ${VERSION})`)
+    log(
+      iframeId,
+      `Version mismatch (Child: %c${version}%c !== Parent: %c${VERSION})`,
+      BLUE,
+      BLACK,
+      BLUE,
+    )
   }
 
   function setTitle(title, iframeId) {
     if (!settings[iframeId]?.syncTitle) return
     settings[iframeId].iframe.title = title
-    log(iframeId, `Set title attribute to: ${title}`)
+    info(iframeId, `Set title attribute: %c${title}`, BLUE)
   }
 
   function started() {
@@ -648,7 +671,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   checkSettings(iframeId)
 
   if (!isMessageFromMetaParent()) {
-    log(iframeId, `Received: ${msg}`)
+    log(iframeId, `Received: %c${msg}`, ITALIC)
     settings[iframeId].loaded = true
 
     if (checkIframeExists() && isMessageFromIframe()) {
@@ -697,7 +720,7 @@ function closeIframe(iframe) {
     return
   }
 
-  log(id, `Removing iFrame: ${id}`)
+  log(id, `Removing iFrame: %c${id}`, ITALIC)
 
   try {
     // Catch race condition error with React
@@ -720,7 +743,13 @@ function getPagePosition(iframeId) {
     y: window.scrollY,
   }
 
-  log(iframeId, `Get page position: ${page.position.x}, ${page.position.y}`)
+  log(
+    iframeId,
+    `Get page position: %c${page.position.x}%c, %c${page.position.y}`,
+    BLUE,
+    BLACK,
+    BLUE,
+  )
 }
 
 function unsetPagePosition() {
@@ -731,7 +760,13 @@ function setPagePosition(iframeId) {
   if (page.position === null) return
 
   window.scrollTo(page.position.x, page.position.y)
-  log(iframeId, `Set page position: ${page.position.x}, ${page.position.y}`)
+  log(
+    iframeId,
+    `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
+    BLUE,
+    BLACK,
+    BLUE,
+  )
   unsetPagePosition()
 }
 
@@ -750,7 +785,7 @@ function setSize(messageData) {
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
     messageData.iframe.style[dimension] = size
-    log(id, `Iframe (${id}) ${dimension} set to ${size}`)
+    log(id, `Iframe (${id}) ${dimension}: %c${size}`, BLUE)
   }
 
   const { id } = messageData
@@ -767,7 +802,13 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
     if (sameDomain) {
       try {
         iframe.contentWindow.iframeChildListener(msgId + msg)
-        log(id, `Sending message to iframe[${id}] (${msg}) via sameDomain`)
+        log(
+          id,
+          `Sending message to iframe %c${id}%c via sameDomain`,
+          BLUE,
+          BLACK,
+        )
+        log(id, `%c${msg}`, ITALIC)
         return
       } catch (error) {
         log(id, `Same domain connection failed. Trying cross domain`)
@@ -776,8 +817,12 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
 
     log(
       id,
-      `Sending message to iframe[${id}] (${msg}) targetOrigin: ${targetOrigin}`,
+      `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
+      BLUE,
+      BLACK,
+      BLUE,
     )
+    log(id, `%c${msg}`, ITALIC)
 
     postMessageTarget.postMessage(msgId + msg, targetOrigin)
   }
@@ -1053,7 +1098,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (direction === 'horizontal') {
       settings[iframeId].sizeWidth = true
       settings[iframeId].sizeHeight = false
-      log(iframeId, 'Direction set to "horizontal"')
+      log(iframeId, 'Direction: %chorizontal', BLUE)
       return
     }
 
@@ -1061,7 +1106,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       settings[iframeId].sizeWidth = false
       settings[iframeId].sizeHeight = false
       settings[iframeId].autoResize = false
-      log(iframeId, 'Direction set to "none"')
+      log(iframeId, 'Direction: %cnone', BLUE)
       return
     }
 
@@ -1072,7 +1117,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       )
     }
 
-    log(iframeId, 'Direction set to "vertical"')
+    log(iframeId, 'Direction: %cvertical', BLUE)
   }
 
   function setOffsetSize(offset) {
@@ -1080,10 +1125,10 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     if (settings[iframeId].direction === 'vertical') {
       settings[iframeId].offsetHeight = offset
-      log(iframeId, `Offset height set to ${offset}`)
+      log(iframeId, `Offset height: %c${offset}`, BLUE)
     } else {
       settings[iframeId].offsetWidth = offset
-      log(iframeId, `Offset width set to ${offset}`)
+      log(iframeId, `Offset width: %c${offset}`, BLUE)
     }
   }
 
