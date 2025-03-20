@@ -1,5 +1,7 @@
 import {
   BASE,
+  BLACK,
+  BLUE,
   BOLD,
   HEIGHT_EDGE,
   IGNORE_ATTR,
@@ -274,7 +276,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     try {
       sameDomain = mode === 1 || 'iframeParentListener' in window.parent
     } catch (error) {
-      log('Cross domain iframe detected.')
+      log('Cross domain iframe detected')
     }
   }
 
@@ -360,7 +362,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
-    log(`TargetOrigin for parent set to: %c${targetOriginDefault}`, BOLD)
+    info(`TargetOrigin for parent set to: %c${targetOriginDefault}`, BLUE)
   }
 
   function chkCSS(attr, value) {
@@ -375,14 +377,14 @@ Parent page: ${version} - Child page: ${VERSION}.
   function setBodyStyle(attr, value) {
     if (undefined !== value && value !== '' && value !== 'null') {
       document.body.style.setProperty(attr, value)
-      log(`Body ${attr} set to "${value}"`)
+      info(`Body ${attr} set to %c${value}`, BLUE)
     }
   }
 
   function applySelector(name, attribute, selector) {
     if (selector === '') return
 
-    log(`${name}: %c${selector}`, BOLD)
+    log(`${name}: %c${selector}`, BLUE)
 
     for (const el of document.querySelectorAll(selector)) {
       log(`Applying ${attribute} to:`, el)
@@ -1038,7 +1040,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   const getAdjustedScroll = (getDimension) =>
     getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
-  const BOUNDING_FORMAT = [BOLD, NORMAL, BOLD]
+  const BOUNDING_FORMAT = [BLUE, BLACK, BLUE]
 
   function getAutoSize(getDimension) {
     function returnBoundingClientRect() {
@@ -1088,12 +1090,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       case !hasOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
-        info(
-          `New <html> bounding size: ${sizes}`,
-          ...BOUNDING_FORMAT,
-          'Previous bounding size:',
-          prevBoundingSize[dimension],
-        )
+        info(`New <html> bounding size: ${sizes} `, ...BOUNDING_FORMAT)
+        info(`Previous bounding size: %c${prevBoundingSize[dimension]}px`, BLUE)
         calculatedSize = returnBoundingClientRect()
         break
 
@@ -1128,7 +1126,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = returnBoundingClientRect()
     }
 
-    info(`Calculated content ${dimension}: %c${calculatedSize}px`, BOLD)
+    info(`Calculated content ${dimension}: %c${calculatedSize}px`, BLUE)
     return calculatedSize
   }
 
@@ -1333,7 +1331,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       )
       info(`%c${message}`, 'font-style: italic')
 
-      if (timerActive) info(displayTimeTaken(), BOLD)
+      if (timerActive) info(displayTimeTaken(), BLUE)
       timerActive = false
     }
 
