@@ -2,6 +2,7 @@ import {
   BASE,
   BOLD,
   HEIGHT_EDGE,
+  IGNORE_ATTR,
   MANUAL_RESIZE_REQUEST,
   NORMAL,
   SIZE_ATTR,
@@ -26,7 +27,6 @@ import {
   deprecateOption,
   endAutoGroup,
   event as consoleEvent,
-  // eslint-disable-next-line no-unused-vars
   info,
   log,
   purge,
@@ -214,7 +214,7 @@ function iframeResizerChild() {
     const s = ignoredElements.length === 1 ? '' : 's'
 
     warn(
-      `%c[data-iframe-ignore]%c found on %c${ignoredElements.length}%c element${s}`,
+      `%c[${IGNORE_ATTR}]%c found on %c${ignoredElements.length}%c element${s}`,
       BOLD,
       NORMAL,
       BOLD,
@@ -224,7 +224,7 @@ function iframeResizerChild() {
 
   let ignoredElementsCount = 0
   function chkIgnoredElements() {
-    const ignoredElements = document.querySelectorAll('*[data-iframe-ignore]')
+    const ignoredElements = document.querySelectorAll(`*[${IGNORE_ATTR}]`)
     hasIgnored = ignoredElements.length > 0
     if (hasIgnored && ignoredElements.length !== ignoredElementsCount) {
       warnIgnored(ignoredElements)
@@ -360,7 +360,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
-    log(`TargetOrigin for parent set to: ${targetOriginDefault}`)
+    log(`TargetOrigin for parent set to: %c${targetOriginDefault}`, BOLD)
   }
 
   function chkCSS(attr, value) {
@@ -379,31 +379,20 @@ Parent page: ${version} - Child page: ${VERSION}.
     }
   }
 
-  function applySizeSelector() {
-    if (sizeSelector === '') return
+  function applySelector(name, attribute, selector) {
+    if (selector === '') return
 
-    log(`Applying sizeSelector: ${sizeSelector}`)
+    log(`${name}: %c${selector}`, BOLD)
 
-    for (const el of document.querySelectorAll(sizeSelector)) {
-      log(`Applying data-iframe-size to: ${getElementName(el)}`)
-      el.dataset.iframeSize = true
-    }
-  }
-
-  function applyIgnoreSelector() {
-    if (ignoreSelector === '') return
-
-    log(`Applying ignoreSelector: ${ignoreSelector}`)
-
-    for (const el of document.querySelectorAll(ignoreSelector)) {
-      log(`Applying data-iframe-ignore to: ${getElementName(el)}`)
-      el.dataset.iframeIgnore = true
+    for (const el of document.querySelectorAll(selector)) {
+      log(`Applying ${attribute} to:`, el)
+      el.toggleAttribute(attribute, true)
     }
   }
 
   function applySelectors() {
-    applySizeSelector()
-    applyIgnoreSelector()
+    applySelector('sizeSelector', SIZE_ATTR, sizeSelector)
+    applySelector('ignoreSelector', IGNORE_ATTR, ignoreSelector)
   }
 
   function setMargin() {
@@ -1031,7 +1020,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     ]
 
     if (hasIgnored)
-      selector.push('not([data-iframe-ignore])', 'not([data-iframe-ignore] *)')
+      selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
 
     return element.querySelectorAll(selector.join(':'))
   }
@@ -1049,6 +1038,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   const getAdjustedScroll = (getDimension) =>
     getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
+  const BOUNDING_FORMAT = [BOLD, NORMAL, BOLD]
+
   function getAutoSize(getDimension) {
     function returnBoundingClientRect() {
       prevBoundingSize[dimension] = boundingSize
@@ -1062,7 +1053,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const ceilBoundingSize = Math.ceil(boundingSize)
     const floorBoundingSize = Math.floor(boundingSize)
     const scrollSize = getAdjustedScroll(getDimension)
-    const sizes = `HTML: ${boundingSize}  Page: ${scrollSize}`
+    const sizes = `HTML: %c${boundingSize}px %cPage: %c${scrollSize}px`
 
     let calculatedSize = 0
 
@@ -1078,19 +1069,19 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       case !hasOverflow &&
         prevBoundingSize[dimension] === 0 &&
         prevScrollSize[dimension] === 0:
-        info(`Initial page size values: ${sizes}`)
+        info(`Initial page size values: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
         break
 
       case triggerLocked &&
         boundingSize === prevBoundingSize[dimension] &&
         scrollSize === prevScrollSize[dimension]:
-        info(`Size unchanged: ${sizes}`)
+        info(`Size unchanged: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = Math.max(boundingSize, scrollSize)
         break
 
       case boundingSize === 0:
-        info(`Page is hidden: ${sizes}`)
+        info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = scrollSize
         break
 
@@ -1099,6 +1090,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         scrollSize <= prevScrollSize[dimension]:
         info(
           `New <html> bounding size: ${sizes}`,
+          ...BOUNDING_FORMAT,
           'Previous bounding size:',
           prevBoundingSize[dimension],
         )
@@ -1110,17 +1102,20 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
-        info('<html> bounding size decreased:', sizes)
+        info(`<html> bounding size decreased: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
         break
 
       case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
-        info('<html> bounding size equals page size:', sizes)
+        info(
+          `<html> bounding size equals page size: ${sizes}`,
+          ...BOUNDING_FORMAT,
+        )
         calculatedSize = returnBoundingClientRect()
         break
 
       case boundingSize > scrollSize:
-        info(`Page size < <html> bounding size: ${sizes}`)
+        info(`Page size < <html> bounding size: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
         break
 
@@ -1133,7 +1128,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = returnBoundingClientRect()
     }
 
-    info(`Calculated content ${dimension}: ${calculatedSize}px`)
+    info(`Calculated content ${dimension}: %c${calculatedSize}px`, BOLD)
     return calculatedSize
   }
 
@@ -1338,7 +1333,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       )
       info(`%c${message}`, 'font-style: italic')
 
-      if (timerActive) info(displayTimeTaken(), 'font-weight:bold;color:#777')
+      if (timerActive) info(displayTimeTaken(), BOLD)
       timerActive = false
     }
 
