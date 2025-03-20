@@ -723,7 +723,7 @@ function closeIframe(iframe) {
     return
   }
 
-  log(id, `Removing iFrame: %c${id}`, ITALIC)
+  log(id, `Removing iFrame: %c${id}`, HIGHLIGHT)
 
   try {
     // Catch race condition error with React
