@@ -1,6 +1,8 @@
 import connectResizer from '@iframe-resizer/core'
 
-const id = '[iframeResizer] '
+import { LABEL } from '../common/consts'
+
+const id = `[${LABEL}] `
 
 export default function createIframeResize() {
   function setup(element) {
