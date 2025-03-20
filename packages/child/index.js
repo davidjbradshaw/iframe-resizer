@@ -3,6 +3,7 @@ import {
   BLACK,
   BLUE,
   BOLD,
+  BLUE_LIGHT,
   HEIGHT_EDGE,
   IGNORE_ATTR,
   ITALIC,
@@ -11,6 +12,7 @@ import {
   SIZE_ATTR,
   VERSION,
   WIDTH_EDGE,
+  WHITE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { getModeData } from '../common/mode'
@@ -18,6 +20,7 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  isDarkModeEnabled,
   once,
   round,
 } from '../common/utils'
@@ -38,6 +41,9 @@ import {
 } from './console'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
+
+const HIGHLIGHT = isDarkModeEnabled() ? BLUE_LIGHT : BLUE
+const FOREGROUND = isDarkModeEnabled() ? WHITE : BLACK
 
 function iframeResizerChild() {
   const checkVisibilityOptions = {
@@ -200,7 +206,7 @@ function iframeResizerChild() {
   function checkAndSetupTags() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
-    log(`Tagged elements found: %c${hasTags}`, hasTags ? BLUE : BLACK)
+    log(`Tagged elements found: %c${hasTags}`, hasTags ? HIGHLIGHT : FOREGROUND)
   }
 
   function addOverflowObservers(nodeList) {
@@ -363,7 +369,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
-    info(`TargetOrigin for parent set to: %c${targetOriginDefault}`, BLUE)
+    info(`TargetOrigin for parent set to: %c${targetOriginDefault}`, HIGHLIGHT)
   }
 
   function chkCSS(attr, value) {
@@ -378,14 +384,14 @@ Parent page: ${version} - Child page: ${VERSION}.
   function setBodyStyle(attr, value) {
     if (undefined !== value && value !== '' && value !== 'null') {
       document.body.style.setProperty(attr, value)
-      info(`Body ${attr} set to %c${value}`, BLUE)
+      info(`Body ${attr} set to %c${value}`, HIGHLIGHT)
     }
   }
 
   function applySelector(name, attribute, selector) {
     if (selector === '') return
 
-    log(`${name}: %c${selector}`, BLUE)
+    log(`${name}: %c${selector}`, HIGHLIGHT)
 
     for (const el of document.querySelectorAll(selector)) {
       log(`Applying ${attribute} to:`, el)
@@ -442,7 +448,7 @@ Parent page: ${version} - Child page: ${VERSION}.
       `${capitalizeFirstLetter(options.method)} event listener: %c${
         options.eventType
       }`,
-      BLUE,
+      HIGHLIGHT,
     )
   }
 
@@ -578,11 +584,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
         log(
           `Moving to in page link (%c#${hash}%c) at x: %c${jumpPosition.x}%c y: %c${jumpPosition.y}`,
-          BLUE,
-          BLACK,
-          BLUE,
-          BLACK,
-          BLUE,
+          HIGHLIGHT,
+          FOREGROUND,
+          HIGHLIGHT,
+          FOREGROUND,
+          HIGHLIGHT,
         )
 
         sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
@@ -663,7 +669,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function addMouseListener(evt, name) {
-      log(`Add event listener: %c${name}`, BLUE)
+      log(`Add event listener: %c${name}`, HIGHLIGHT)
       addEventListener(window.document, evt, sendMouse)
     }
 
@@ -773,7 +779,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       setTargetOrigin(targetOrigin) {
-        log(`Set targetOrigin: %c${targetOrigin}`, BLUE)
+        log(`Set targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
         targetOriginDefault = targetOrigin
       },
 
@@ -817,7 +823,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       if (!(position === '' || position === 'static')) {
         resizeObserver.observe(rootElement)
         resizeSet.add(rootElement)
-        log(`Attached resizeObserver: %c${getElementName(rootElement)}`, BLUE)
+        log(`Attached resizeObserver: %c${getElementName(rootElement)}`, HIGHLIGHT)
       }
     }
 
@@ -831,7 +837,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       resizeObserver.observe(node)
       resizeSet.add(node)
-      log(`Attached resizeObserver: %c${getElementName(node)}`, BLUE)
+      log(`Attached resizeObserver: %c${getElementName(node)}`, HIGHLIGHT)
     }
   }
 
@@ -877,7 +883,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       // Back off if the callStack is busy with other stuff
       if (delay > delayLimit && delay < DELAY_MAX) {
-        log(`MutationObserver delay: %c${delay}ms > ${delayLimit}ms`, BLUE)
+        log(`MutationObserver delay: %c${delay}ms > ${delayLimit}ms`, HIGHLIGHT)
         setTimeout(processMutations, DELAY * delayCount)
         perfMon = now
         return
@@ -1047,7 +1053,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   const getAdjustedScroll = (getDimension) =>
     getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
-  const BOUNDING_FORMAT = [BLUE, BLACK, BLUE]
+  const BOUNDING_FORMAT = [HIGHLIGHT, FOREGROUND, HIGHLIGHT]
 
   function getAutoSize(getDimension) {
     function returnBoundingClientRect() {
@@ -1098,7 +1104,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
         info(`New <html> bounding size: ${sizes} `, ...BOUNDING_FORMAT)
-        info(`Previous bounding size: %c${prevBoundingSize[dimension]}px`, BLUE)
+        info(`Previous bounding size: %c${prevBoundingSize[dimension]}px`, HIGHLIGHT)
         calculatedSize = returnBoundingClientRect()
         break
 
@@ -1133,7 +1139,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = returnBoundingClientRect()
     }
 
-    info(`Calculated content ${dimension}: %c${calculatedSize}px`, BLUE)
+    info(`Calculated content ${dimension}: %c${calculatedSize}px`, HIGHLIGHT)
     return calculatedSize
   }
 
@@ -1257,7 +1263,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     if (!sendPending) {
-      log(`Resize event: %c${triggerEventDesc}`, BLUE)
+      log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
       timerActive = true
       sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
       requestAnimationFrame(() => {
@@ -1293,7 +1299,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const hcm = heightCalcMode
     heightCalcMode = heightCalcModeDefault
 
-    log(`Reset trigger event: %c${triggerEventDesc}`, BLUE)
+    log(`Reset trigger event: %c${triggerEventDesc}`, HIGHLIGHT)
     lockTrigger()
     triggerReset('reset')
 
@@ -1309,7 +1315,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      log(`Message targetOrigin: %c${targetOrigin}`, BLUE)
+      log(`Message targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
     }
 
     function displayTimeTaken() {
@@ -1338,7 +1344,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       )
       info(`%c${message}`, ITALIC)
 
-      if (timerActive) info(displayTimeTaken(), BLUE)
+      if (timerActive) info(displayTimeTaken(), HIGHLIGHT)
       timerActive = false
     }
 

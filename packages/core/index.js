@@ -1,17 +1,19 @@
 import {
   BLACK,
   BLUE,
+  BLUE_LIGHT,
   ITALIC,
   msgHeaderLen,
   msgId,
   msgIdLen,
   resetRequiredMethods,
   VERSION,
+  WHITE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 // import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { once } from '../common/utils'
+import { isDarkModeEnabled, once } from '../common/utils'
 import {
   advise,
   event as consoleEvent,
@@ -25,6 +27,9 @@ import {
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
+
+const HIGHLIGHT = isDarkModeEnabled() ? BLUE_LIGHT : BLUE
+const FOREGROUND = isDarkModeEnabled() ? WHITE : BLACK
 
 setConsoleSettings(settings)
 
@@ -86,7 +91,7 @@ function iframeListener(event) {
         log(
           iframeId,
           `Checking connection is from allowed list of origins: %c${checkOrigin}`,
-          BLUE,
+          HIGHLIGHT,
         )
 
         for (; i < checkOrigin.length; i++) {
@@ -101,7 +106,7 @@ function iframeListener(event) {
 
       function checkSingle() {
         const remoteHost = settings[iframeId]?.remoteHost
-        log(iframeId, `Checking connection is from: %c${remoteHost}`, BLUE)
+        log(iframeId, `Checking connection is from: %c${remoteHost}`, HIGHLIGHT)
         return origin === remoteHost
       }
 
@@ -146,8 +151,8 @@ function iframeListener(event) {
     log(
       iframeId,
       `onMessage passed: {iframe: %c${messageData.iframe.id}%c, message: %c${msgBody}}`,
-      BLUE,
-      BLACK,
+      HIGHLIGHT,
+      FOREGROUND,
       ITALIC,
     )
 
@@ -335,9 +340,9 @@ function iframeListener(event) {
     log(
       iframeId,
       `Scroll request received by parent: x: %c${x}%c y: %c${y}`,
-      BLUE,
-      BLACK,
-      BLUE,
+      HIGHLIGHT,
+      FOREGROUND,
+      HIGHLIGHT,
     )
 
     target.scrollBy(x, y)
@@ -399,9 +404,9 @@ function iframeListener(event) {
       log(
         iframeId,
         `Moving to in page link (#${hash}) at x: %c${jumpPosition.x}%c y: %c${jumpPosition.y}`,
-        BLUE,
-        BLACK,
-        BLUE,
+        HIGHLIGHT,
+        FOREGROUND,
+        HIGHLIGHT,
       )
 
       page.position = {
@@ -484,7 +489,7 @@ function iframeListener(event) {
       settings[id].sameDomain = false
     }
 
-    log(id, `sameDomain: %c${settings[id].sameDomain}`, BLUE)
+    log(id, `sameDomain: %c${settings[id].sameDomain}`, HIGHLIGHT)
   }
 
   function checkVersion(version) {
@@ -504,16 +509,16 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     log(
       iframeId,
       `Version mismatch (Child: %c${version}%c !== Parent: %c${VERSION})`,
-      BLUE,
-      BLACK,
-      BLUE,
+      HIGHLIGHT,
+      FOREGROUND,
+      HIGHLIGHT,
     )
   }
 
   function setTitle(title, iframeId) {
     if (!settings[iframeId]?.syncTitle) return
     settings[iframeId].iframe.title = title
-    info(iframeId, `Set title attribute: %c${title}`, BLUE)
+    info(iframeId, `Set title attribute: %c${title}`, HIGHLIGHT)
   }
 
   function started() {
@@ -746,9 +751,9 @@ function getPagePosition(iframeId) {
   log(
     iframeId,
     `Get page position: %c${page.position.x}%c, %c${page.position.y}`,
-    BLUE,
-    BLACK,
-    BLUE,
+    HIGHLIGHT,
+    FOREGROUND,
+    HIGHLIGHT,
   )
 }
 
@@ -763,9 +768,9 @@ function setPagePosition(iframeId) {
   log(
     iframeId,
     `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
-    BLUE,
-    BLACK,
-    BLUE,
+    HIGHLIGHT,
+    FOREGROUND,
+    HIGHLIGHT,
   )
   unsetPagePosition()
 }
@@ -785,7 +790,7 @@ function setSize(messageData) {
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
     messageData.iframe.style[dimension] = size
-    log(id, `Iframe (${id}) ${dimension}: %c${size}`, BLUE)
+    log(id, `Iframe (${id}) ${dimension}: %c${size}`, HIGHLIGHT)
   }
 
   const { id } = messageData
@@ -805,8 +810,8 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
         log(
           id,
           `Sending message to iframe %c${id}%c via sameDomain`,
-          BLUE,
-          BLACK,
+          HIGHLIGHT,
+          FOREGROUND,
         )
         log(id, `%c${msg}`, ITALIC)
         return
@@ -818,9 +823,9 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
     log(
       id,
       `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
-      BLUE,
-      BLACK,
-      BLUE,
+      HIGHLIGHT,
+      FOREGROUND,
+      HIGHLIGHT,
     )
     log(id, `%c${msg}`, ITALIC)
 
@@ -1098,7 +1103,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (direction === 'horizontal') {
       settings[iframeId].sizeWidth = true
       settings[iframeId].sizeHeight = false
-      log(iframeId, 'Direction: %chorizontal', BLUE)
+      log(iframeId, 'Direction: %chorizontal', HIGHLIGHT)
       return
     }
 
@@ -1106,7 +1111,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       settings[iframeId].sizeWidth = false
       settings[iframeId].sizeHeight = false
       settings[iframeId].autoResize = false
-      log(iframeId, 'Direction: %cnone', BLUE)
+      log(iframeId, 'Direction: %cnone', HIGHLIGHT)
       return
     }
 
@@ -1117,7 +1122,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       )
     }
 
-    log(iframeId, 'Direction: %cvertical', BLUE)
+    log(iframeId, 'Direction: %cvertical', HIGHLIGHT)
   }
 
   function setOffsetSize(offset) {
@@ -1125,10 +1130,10 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     if (settings[iframeId].direction === 'vertical') {
       settings[iframeId].offsetHeight = offset
-      log(iframeId, `Offset height: %c${offset}`, BLUE)
+      log(iframeId, `Offset height: %c${offset}`, HIGHLIGHT)
     } else {
       settings[iframeId].offsetWidth = offset
-      log(iframeId, `Offset width: %c${offset}`, BLUE)
+      log(iframeId, `Offset width: %c${offset}`, HIGHLIGHT)
     }
   }
 

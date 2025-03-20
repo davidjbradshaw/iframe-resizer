@@ -17,7 +17,9 @@ export const BOLD = 'font-weight: bold;'
 export const NORMAL = 'font-weight: normal;'
 export const ITALIC = 'font-style: italic;'
 export const BLUE = `color: #00c;`
+export const BLUE_LIGHT = `color: #A9C7FB;`
 export const BLACK = `color: black;`
+export const WHITE = `color: white;`
 
 export const msgHeader = 'message'
 export const msgHeaderLen = msgHeader.length

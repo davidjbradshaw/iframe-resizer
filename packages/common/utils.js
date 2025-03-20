@@ -10,6 +10,9 @@ export const once = (fn) => {
   }
 }
 
+export const isDarkModeEnabled = () =>
+  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+
 export const id = (x) => x
 
 const ROUNDING = 1000
