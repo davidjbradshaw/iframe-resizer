@@ -48,13 +48,13 @@
     "url": "https://iframe-resizer.com/pricing/"
   },
   "dependencies": {
-    "@angular/core": "^19.2.2",
+    "@angular/core": "^19.2.3",
     "@babel/runtime": "^7.26.10",
     "@iframe-resizer/child": "file:./packages/child/",
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
     "@iframe-resizer/react": "file:./packages/react/",
-    "auto-group-console": "^1.0.0",
+    "auto-group-console": "^1.1.0-beta.1",
     "react": "^19.0.0"
   },
   "devDependencies": {

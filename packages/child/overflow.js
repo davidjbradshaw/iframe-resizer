@@ -17,12 +17,16 @@ const overflowObserver = (options) => {
   const emitOverflownNodes = () =>
     onChange(document.querySelectorAll(`[${OVERFLOW_ATTR}]`))
 
+  const setOverflow = (node, hasOverflow) =>
+    node.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
+
   function observation(entries) {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
       const hasOverflow = edge === 0 || edge > rootBounds[side]
-      target.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
+
+      setOverflow(target, hasOverflow)
     }
 
     afterReflow(emitOverflownNodes)
