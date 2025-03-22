@@ -33,6 +33,7 @@ const overflowObserver = (options) => {
 
   return function observeOverflow(nodeList) {
     log('Attached overflowObservers')
+
     for (const node of nodeList) {
       if (node.nodeType !== Node.ELEMENT_NODE || observedNodes.has(node))
         continue
