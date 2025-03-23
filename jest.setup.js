@@ -4,6 +4,6 @@ import $ from 'jquery'
 global.$ = $
 global.jQuery = $
 
-jest.mock('auto-group-console', () => ({
+jest.mock('auto-console-group', () => ({
   createGroupConsole: () => console,
 }))

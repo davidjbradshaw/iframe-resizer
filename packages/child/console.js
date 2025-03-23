@@ -1,4 +1,4 @@
-import createGroupConsole from 'auto-group-console'
+import createGroupConsole from 'auto-console-group'
 
 import { LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
