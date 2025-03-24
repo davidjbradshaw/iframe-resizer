@@ -1237,7 +1237,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       resetIframe(triggerEventDesc)
     } else {
       purge()
-      info(`No change in content size detected`)
+      // info(`No change in content size detected`)
       timerActive = false // We're not resizing, so turn off the timer
     }
   }

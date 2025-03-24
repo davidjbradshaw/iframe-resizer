@@ -337,9 +337,9 @@ function iframeListener(event) {
     // Check for V4 as well
     const target = window.parentIframe || window.parentIFrame || window
 
-    log(
+    info(
       iframeId,
-      `Scroll request received by parent: x: %c${x}%c y: %c${y}`,
+      `scrollBy: x: %c${x}%c y: %c${y}`,
       HIGHLIGHT,
       FOREGROUND,
       HIGHLIGHT,
@@ -371,9 +371,12 @@ function iframeListener(event) {
       ? getElementPosition(messageData.iframe)
       : { x: 0, y: 0 }
 
-    log(
+    info(
       iframeId,
-      `Reposition requested from iFrame (offset x:${offset.x} y:${offset.y})`,
+      `Reposition requested (offset x:%c${offset.x}%c y:%c${offset.y})`,
+      HIGHLIGHT,
+      FOREGROUND,
+      HIGHLIGHT,
     )
 
     const newPosition = calcOffset(messageData, offset)
@@ -401,13 +404,7 @@ function iframeListener(event) {
     function jumpToTarget() {
       const jumpPosition = getElementPosition(target)
 
-      log(
-        iframeId,
-        `Moving to in page link (#${hash}) at x: %c${jumpPosition.x}%c y: %c${jumpPosition.y}`,
-        HIGHLIGHT,
-        FOREGROUND,
-        HIGHLIGHT,
-      )
+      info(iframeId, `Moving to in page link: %c#${hash}`, HIGHLIGHT)
 
       page.position = {
         x: jumpPosition.x,
@@ -763,7 +760,7 @@ function setPagePosition(iframeId) {
   if (page.position === null) return
 
   window.scrollTo(page.position.x, page.position.y)
-  log(
+  info(
     iframeId,
     `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
     HIGHLIGHT,
@@ -788,7 +785,7 @@ function setSize(messageData) {
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
     messageData.iframe.style[dimension] = size
-    log(id, `Iframe (${id}) ${dimension}: %c${size}`, HIGHLIGHT)
+    info(id, `Set ${dimension}: %c${size}`, HIGHLIGHT)
   }
 
   const { id } = messageData

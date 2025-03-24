@@ -14,8 +14,8 @@ export function setConsoleSettings(newSettings) {
 
 const getMyId = (iframeId) =>
   window.top === window.self
-    ? `${iframeId}(parent)`
-    : `${iframeId}(nested parent)`
+    ? `parent(${iframeId})`
+    : `nested parent(${iframeId})`
 
 const isLogEnabled = (iframeId) =>
   settings[iframeId] ? settings[iframeId].log : consoleEnabled
