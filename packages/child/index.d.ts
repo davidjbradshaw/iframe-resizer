@@ -18,6 +18,12 @@ declare module '@iframe-resizer/child' {
        */
       targetOrigin?: string | undefined
 
+      offsetSize?: number | undefined
+
+      sizeSeparator?: string | undefined
+
+      ignoreSelector?: string | undefined
+
       /**
        * Receive message posted from the parent page with the iframe.iFrameResizer.sendMessage() method.
        */
@@ -61,6 +67,16 @@ declare module '@iframe-resizer/child' {
       getParentProps(callback: (data: ParentProps) => void): () => void
 
       /**
+       * Move to anchor in parent page.
+       */
+      moveToAnchor(hash: string): void
+
+      /**
+       * Set offsetSize.
+       */
+      setOffsetSize(offsetSize: number): void
+
+      /**
        * Scroll the parent page by x and y
        */
       scrollBy(x: number, y: number): void
@@ -91,7 +107,7 @@ declare module '@iframe-resizer/child' {
        * Manually force iFrame to resize. To use passed arguments you need first to disable the `autoResize` option to
        * prevent auto resizing and enable the `sizeWidth` option if you wish to set the width.
        */
-      size(customHeight?: string, customWidth?: string): void
+      resize(customHeight?: string, customWidth?: string): void
     }
 
     interface ParentProps {
