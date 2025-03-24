@@ -9,6 +9,7 @@ import {
   ITALIC,
   MANUAL_RESIZE_REQUEST,
   NORMAL,
+  SET_OFFSET_SIZE,
   SIZE_ATTR,
   VERSION,
   WHITE,
@@ -752,6 +753,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         resetIframe('parentIframe.reset')
       },
 
+      setOffsetSize(newOffset) {
+        offsetHeight = newOffset
+        offsetWidth = newOffset
+        sendSize(SET_OFFSET_SIZE, `parentIframe.setOffsetSize(${newOffset})`)
+      },
+
       scrollBy(x, y) {
         sendMsg(y, x, 'scrollBy') // X&Y reversed at sendMsg uses height/width
       },
@@ -1043,6 +1050,16 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     return element.querySelectorAll(selector.join(':'))
   }
 
+  function offsetSize(dimension) {
+    const offset = dimension.getOffset()
+
+    if (offset !== 0) {
+      info(`Page offsetSize: %c${offset}px`, HIGHLIGHT)
+    }
+
+    return offset
+  }
+
   const prevScrollSize = {
     height: 0,
     width: 0,
@@ -1145,7 +1162,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = returnBoundingClientRect()
     }
 
-    info(`Calculated content ${dimension}: %c${calculatedSize}px`, HIGHLIGHT)
+    info(`Page ${dimension}: %c${calculatedSize}px`, HIGHLIGHT)
+
+    calculatedSize += offsetSize(getDimension)
+
     return calculatedSize
   }
 
@@ -1235,6 +1255,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       sendMsg(height, width, triggerEvent, msg)
     } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
       resetIframe(triggerEventDesc)
+    } else if (triggerEvent === SET_OFFSET_SIZE) {
+      sendMsg(height, width, triggerEvent)
     } else {
       purge()
       // info(`No change in content size detected`)
@@ -1328,11 +1350,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const timer = round(performance.now() - totalTime)
       return triggerEvent === 'init'
         ? `Initialised iFrame in %c${timer}ms`
-        : `Content size recalculated in %c${timer}ms`
+        : `Calculated in %c${timer}ms`
     }
 
     function sendToParent() {
-      const size = `${height + (offsetHeight || 0)}:${width + (offsetWidth || 0)}`
+      const size = `${height}:${width}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
       if (sameDomain)
@@ -1345,13 +1367,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         }
       else target.postMessage(msgID + message, targetOrigin)
 
+      if (timerActive) info(displayTimeTaken(), HIGHLIGHT)
+      timerActive = false
+
       info(
         `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
       )
       info(`%c${message}`, ITALIC)
-
-      if (timerActive) info(displayTimeTaken(), HIGHLIGHT)
-      timerActive = false
     }
 
     consoleEvent(triggerEvent)
