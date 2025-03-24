@@ -12,6 +12,7 @@ export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
 
 export const MANUAL_RESIZE_REQUEST = 'resizeParent'
+export const SET_OFFSET_SIZE = 'setOffsetSize'
 
 export const BOLD = 'font-weight: bold;'
 export const NORMAL = 'font-weight: normal;'
