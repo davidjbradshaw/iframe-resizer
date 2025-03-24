@@ -1050,8 +1050,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     return element.querySelectorAll(selector.join(':'))
   }
 
-  function offsetSize(dimension) {
-    const offset = dimension.getOffset()
+  function getOffsetSize(getDimension) {
+    const offset = getDimension.getOffset()
 
     if (offset !== 0) {
       info(`Page offsetSize: %c${offset}px`, HIGHLIGHT)
@@ -1123,9 +1123,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       case !hasOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
         scrollSize <= prevScrollSize[dimension]:
-        info(`New <html> bounding size: ${sizes} `, ...BOUNDING_FORMAT)
+        info(`New <html> size: ${sizes} `, ...BOUNDING_FORMAT)
         info(
-          `Previous bounding size: %c${prevBoundingSize[dimension]}px`,
+          `Previous <html> size: %c${prevBoundingSize[dimension]}px`,
           HIGHLIGHT,
         )
         calculatedSize = returnBoundingClientRect()
@@ -1136,20 +1136,17 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
-        info(`<html> bounding size decreased: ${sizes}`, ...BOUNDING_FORMAT)
+        info(`<html> size decreased: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
         break
 
       case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
-        info(
-          `<html> bounding size equals page size: ${sizes}`,
-          ...BOUNDING_FORMAT,
-        )
+        info(`<html> size equals page size: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
         break
 
       case boundingSize > scrollSize:
-        info(`Page size < <html> bounding size: ${sizes}`, ...BOUNDING_FORMAT)
+        info(`Page size < <html> size: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
         break
 
@@ -1162,9 +1159,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = returnBoundingClientRect()
     }
 
-    info(`Page ${dimension}: %c${calculatedSize}px`, HIGHLIGHT)
+    info(`Content ${dimension}: %c${calculatedSize}px`, HIGHLIGHT)
 
-    calculatedSize += offsetSize(getDimension)
+    calculatedSize += getOffsetSize(getDimension)
 
     return calculatedSize
   }
@@ -1259,7 +1256,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       sendMsg(height, width, triggerEvent)
     } else {
       purge()
-      // info(`No change in content size detected`)
+      log(`No change in content size detected`)
       timerActive = false // We're not resizing, so turn off the timer
     }
   }
@@ -1350,7 +1347,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const timer = round(performance.now() - totalTime)
       return triggerEvent === 'init'
         ? `Initialised iFrame in %c${timer}ms`
-        : `Calculated in %c${timer}ms`
+        : `Size calculated in %c${timer}ms`
     }
 
     function sendToParent() {
