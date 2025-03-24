@@ -1,18 +1,13 @@
+import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
+
 import {
   BASE,
-  BLACK,
-  BLUE,
-  BLUE_LIGHT,
-  BOLD,
   HEIGHT_EDGE,
   IGNORE_ATTR,
-  ITALIC,
   MANUAL_RESIZE_REQUEST,
-  NORMAL,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
   VERSION,
-  WHITE,
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
@@ -21,7 +16,6 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
-  isDarkModeEnabled,
   once,
   round,
 } from '../common/utils'
@@ -42,9 +36,6 @@ import {
 } from './console'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
-
-const HIGHLIGHT = isDarkModeEnabled() ? BLUE_LIGHT : BLUE
-const FOREGROUND = isDarkModeEnabled() ? WHITE : BLACK
 
 function iframeResizerChild() {
   const checkVisibilityOptions = {
