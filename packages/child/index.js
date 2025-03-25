@@ -177,7 +177,7 @@ function iframeResizerChild() {
   }
 
   function onOverflowChange(nodeList) {
-    log('Overflowed Elements:', nodeList.length)
+    log('Observed Elements:', nodeList.length)
 
     overflowedNodeList = nodeList
     hasOverflow = overflowedNodeList.length > 0
