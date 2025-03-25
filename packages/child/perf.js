@@ -32,7 +32,7 @@ const timingCheck = setInterval(() => {
 
   if (roundedAverage > oldAverage) {
     oldAverage = roundedAverage
-    event('Page size calculation timings')
+    event('page size calculation timings')
     log('Mean time:', round(timings[Math.floor(timings.length / 2)]))
     log(
       'Median time:',
