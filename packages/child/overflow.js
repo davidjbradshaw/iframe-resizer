@@ -4,9 +4,15 @@ import { log } from './console'
 
 const afterReflow = requestAnimationFrame
 
+const isHidden = (node) =>
+  node.hidden || (node.offsetParent === null && node.style.display === 'none')
+
 const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
+
+  const isOverflowed = (edge, rootBounds) =>
+    edge === 0 || edge > rootBounds[side]
 
   const observerOptions = {
     root: options.root,
@@ -14,7 +20,6 @@ const overflowObserver = (options) => {
     threshold: 1,
   }
 
-  
   const emitOverflownNodes = () =>
     onChange(document.querySelectorAll(`[${OVERFLOW_ATTR}]`))
 
@@ -25,7 +30,7 @@ const overflowObserver = (options) => {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
-      const hasOverflow = edge === 0 || edge > rootBounds[side]
+      const hasOverflow = !isHidden(target) && isOverflowed(edge, rootBounds)
 
       setOverflow(target, hasOverflow)
     }
