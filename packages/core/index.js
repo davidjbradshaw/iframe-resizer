@@ -1,19 +1,15 @@
+import { FOREGROUND, HIGHLIGHT, ITALIC } from 'auto-console-group'
+
 import {
-  BLACK,
-  BLUE,
-  BLUE_LIGHT,
-  ITALIC,
   msgHeaderLen,
   msgId,
   msgIdLen,
   resetRequiredMethods,
   VERSION,
-  WHITE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
-// import modal from '../common/modal'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { isDarkModeEnabled, once } from '../common/utils'
+import { once } from '../common/utils'
 import {
   advise,
   event as consoleEvent,
@@ -27,9 +23,6 @@ import {
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
-
-const HIGHLIGHT = isDarkModeEnabled() ? BLUE_LIGHT : BLUE
-const FOREGROUND = isDarkModeEnabled() ? WHITE : BLACK
 
 setConsoleSettings(settings)
 
