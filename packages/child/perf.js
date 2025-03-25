@@ -1,6 +1,5 @@
-import { BOLD } from '../common/consts'
 import { round } from '../common/utils'
-import { advise, log } from './console'
+import { advise, event, log } from './console'
 
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
@@ -33,14 +32,14 @@ const timingCheck = setInterval(() => {
 
   if (roundedAverage > oldAverage) {
     oldAverage = roundedAverage
-    log('%cPage size calculation timings:', BOLD)
-    log('  Mean time:', round(timings[Math.floor(timings.length / 2)]))
+    event('Page size calculation timings')
+    log('Mean time:', round(timings[Math.floor(timings.length / 2)]))
     log(
-      '  Median time:',
+      'Median time:',
       round(timings.reduce((a, b) => a + b, 0) / timings.length),
     )
-    log('  Average time:', roundedAverage)
-    log('  Max time:', round(Math.max(...timings)))
+    log('Average time:', roundedAverage)
+    log('Max time:', round(Math.max(...timings)))
     // debug('Timings:', JSON.parse(JSON.stringify(timings.map(round))))
   }
 

@@ -177,10 +177,13 @@ function iframeResizerChild() {
   }
 
   function onOverflowChange(nodeList) {
-    log('Observed Elements:', nodeList.length)
-
     overflowedNodeList = nodeList
     hasOverflow = overflowedNodeList.length > 0
+
+    consoleEvent('overflowObserver')
+    log('Observed Elements:', nodeList.length)
+
+    if (!hasOverflow) return
 
     sendSize('overflowObserver', 'Overflow updated')
   }
@@ -857,6 +860,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let newMutations = []
 
     const updateMutation = (mutations) => {
+      log('Mutations observed:', mutations.length)
+
       for (const mutation of mutations) {
         const { addedNodes, removedNodes } = mutation
 
@@ -877,7 +882,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let delayCount = 1
 
     function processMutations() {
-      log('MutationObserver: processMutations')
+      consoleEvent('mutationObserver')
       const now = performance.now()
       const delay = now - perfMon
       const delayLimit = DELAY * delayCount++ + DELAY_MARGIN

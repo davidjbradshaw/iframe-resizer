@@ -14,6 +14,7 @@ const overflowObserver = (options) => {
     threshold: 1,
   }
 
+  
   const emitOverflownNodes = () =>
     onChange(document.querySelectorAll(`[${OVERFLOW_ATTR}]`))
 
