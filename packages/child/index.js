@@ -180,11 +180,10 @@ function iframeResizerChild() {
     overflowedNodeList = nodeList
     hasOverflow = overflowedNodeList.length > 0
 
-    consoleEvent('overflowObserver')
-    log('Observed Elements:', nodeList.length)
-
     if (!hasOverflow) return
 
+    consoleEvent('overflowObserver')
+    log('Observed Elements:', nodeList.length)
     sendSize('overflowObserver', 'Overflow updated')
   }
 
