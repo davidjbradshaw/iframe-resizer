@@ -20,7 +20,7 @@ declare module '@iframe-resizer/child' {
 
       offsetSize?: number | undefined
 
-      sizeSeparator?: string | undefined
+      sizeSelector?: string | undefined
 
       ignoreSelector?: string | undefined
 

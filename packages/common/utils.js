@@ -42,3 +42,7 @@ export function getElementName(el) {
       return el.nodeName
   }
 }
+
+export const esModuleInterop = (mod) =>
+  // eslint-disable-next-line no-underscore-dangle
+  mod?.__esModule ? mod.default : mod

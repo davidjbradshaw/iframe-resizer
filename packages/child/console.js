@@ -1,11 +1,14 @@
-import createGroupConsole from 'auto-console-group'
+import acg from 'auto-console-group'
 
 import { LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
-import { id as identity } from '../common/utils'
+import { esModuleInterop, id as identity } from '../common/utils'
 
 let enabled = true
+
+// Deal with UMD not converting default exports to named exports
+const createGroupConsole = esModuleInterop(acg)
 
 const childConsole = createGroupConsole({ label: `${LABEL}(child)` })
 
