@@ -5,7 +5,7 @@ import { log } from './console'
 const afterReflow = requestAnimationFrame
 
 const isHidden = (node) =>
-  node.hidden || (node.offsetParent === null && node.style.display === 'none')
+  node.hidden || node.offsetParent === null || node.style.display === 'none'
 
 const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
