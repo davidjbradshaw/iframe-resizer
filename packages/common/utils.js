@@ -11,7 +11,7 @@ export const once = (fn) => {
 }
 
 export const isDarkModeEnabled = () =>
-  typeof window !== 'undefined' ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches : false
+  typeof window === 'undefined' ? false : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const id = (x) => x
 
