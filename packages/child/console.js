@@ -28,12 +28,11 @@ export const info = setupConsoleMethod('info')
 export const { event, assert, debug, endAutoGroup, error, purge, warn } =
   childConsole
 
-export const advise = (...args) =>
-  childConsole.warn(formatAdvise(identity)(...args))
+export const advise = (msg) => childConsole.warn(formatAdvise(identity)(msg))
 
 export const adviser = advise
 
-const deprecateAdvise = deprecate((id, ...args) => advise(...args))
+const deprecateAdvise = deprecate((id, msg) => advise(msg))
 export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateMethodReplace = deprecateAdvise('Method', 'replaced with')
 export const deprecateOption = deprecateAdvise('Option')
