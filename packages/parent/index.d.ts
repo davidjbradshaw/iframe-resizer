@@ -56,7 +56,7 @@ declare module '@iframe-resizer/parent' {
       checkOrigin?: boolean | string[] | undefined
 
       /**
-       * Set the reszing direction of the iframe.
+       * Set the resizing direction of the iframe.
        */
       direction?: 'vertical' | 'horizontal' | 'none' | undefined
 
