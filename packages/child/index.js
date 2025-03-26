@@ -5,6 +5,8 @@ import {
   HEIGHT_EDGE,
   IGNORE_ATTR,
   MANUAL_RESIZE_REQUEST,
+  OVERFLOW_OBSERVER,
+  RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
   VERSION,
@@ -183,7 +185,7 @@ function iframeResizerChild() {
     if (!hasOverflow) return
 
     log('Observed Elements:', nodeList.length)
-    sendSize('overflowObserver', 'Overflow updated')
+    sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
   function setupObserveOverflow() {
@@ -786,7 +788,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
 
         sendSize(
-          MANUAL_RESIZE_REQUEST,
+          'parentIframe.resize()',
           `parentIframe.resize(${valString})`,
           customHeight,
           customWidth,
@@ -807,7 +809,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     const el = entries[0].target
 
-    sendSize('resizeObserver', `Element resized <${getElementName(el)}>`)
+    sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
   }
 
   const resizeSet = new WeakSet()
@@ -1239,20 +1241,32 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const newWidth =
       undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
 
-    if (isSizeChangeDetected() || triggerEvent === 'init') {
-      // lockTrigger()
-      height = newHeight
-      width = newWidth
-      sendMsg(height, width, triggerEvent, msg)
-    } else if (isForceResizableEvent() && isForceResizableCalcMode()) {
-      resetIframe(triggerEventDesc)
-    } else if (triggerEvent === SET_OFFSET_SIZE) {
-      sendMsg(height, width, triggerEvent)
-    } else {
-      purge()
-      log(`No change in content size detected`)
-      timerActive = false // We're not resizing, so turn off the timer
+    switch (true) {
+      case isSizeChangeDetected() || triggerEvent === 'init':
+        // lockTrigger()
+        height = newHeight
+        width = newWidth
+      // eslint-disable-next-line no-fallthrough
+      case triggerEvent === SET_OFFSET_SIZE:
+        sendMsg(height, width, triggerEvent, msg)
+        break
+
+      case isForceResizableEvent() && isForceResizableCalcMode():
+        resetIframe(triggerEventDesc)
+        break
+
+      case triggerEvent === RESIZE_OBSERVER ||
+        triggerEvent === OVERFLOW_OBSERVER:
+        log(`No change in content size detected`)
+        purge()
+        break
+
+      default:
+        purge()
+        info(`No change in content size detected`)
     }
+
+    timerActive = false // Reset time for next resize
   }
 
   let sendPending = false
@@ -1359,7 +1373,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       else target.postMessage(msgID + message, targetOrigin)
 
       if (timerActive) info(displayTimeTaken(), HIGHLIGHT)
-      timerActive = false
 
       info(
         `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
