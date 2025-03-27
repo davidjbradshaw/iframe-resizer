@@ -1255,11 +1255,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         resetIframe(triggerEventDesc)
         break
 
-      case triggerEvent === RESIZE_OBSERVER ||
-        triggerEvent === OVERFLOW_OBSERVER:
+      // the following case needs {} to prevent a compile error
+      case triggerEvent === RESIZE_OBSERVER:
+      case triggerEvent === OVERFLOW_OBSERVER: {
         log(`No change in content size detected`)
         purge()
         break
+      }
 
       default:
         purge()
