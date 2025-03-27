@@ -14,6 +14,8 @@ const overflowObserver = (options) => {
   const isOverflowed = (edge, rootBounds) =>
     edge === 0 || edge > rootBounds[side]
 
+  const isIgnored = (node) => Object.hasOwn(node.dataset, 'overflowIgnore')
+
   const observerOptions = {
     root: options.root,
     rootMargin: '0px',
@@ -30,7 +32,10 @@ const overflowObserver = (options) => {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
-      const hasOverflow = !isHidden(target) && isOverflowed(edge, rootBounds)
+      const hasOverflow =
+        !isHidden(target) &&
+        !isIgnored(target) &&
+        isOverflowed(edge, rootBounds)
 
       setOverflow(target, hasOverflow)
     }
