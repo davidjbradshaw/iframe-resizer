@@ -29,6 +29,7 @@ import {
   deprecateMethodReplace,
   deprecateOption,
   endAutoGroup,
+  errorBoundary,
   event as consoleEvent,
   info,
   log,
@@ -1274,40 +1275,42 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   let sendPending = false
   const sendFailed = once(() => adviser(getModeData(4)))
 
-  function sendSize(
-    triggerEvent,
-    triggerEventDesc,
-    customHeight,
-    customWidth,
-    msg,
-  ) {
-    totalTime = performance.now()
+  const sendSize = errorBoundary(
+    (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
+      totalTime = performance.now()
 
-    consoleEvent(triggerEvent)
+      consoleEvent(triggerEvent)
 
-    if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
-      info('Resizing disabled')
-      return
-    }
+      if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
+        info('Resizing disabled')
+        return
+      }
 
-    if (document.hidden) {
-      // Currently only correctly supported in firefox
-      // This is checked again on the parent page
-      log('Page hidden - Ignored resize request')
-      return
-    }
+      if (document.hidden) {
+        // Currently only correctly supported in firefox
+        // This is checked again on the parent page
+        log('Page hidden - Ignored resize request')
+        return
+      }
 
-    if (!sendPending) {
-      log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
-      timerActive = true
-      sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
-      requestAnimationFrame(() => {
-        sendPending = false
-      })
-    }
+      if (!sendPending) {
+        log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
+        timerActive = true
+        sizeIframe(
+          triggerEvent,
+          triggerEventDesc,
+          customHeight,
+          customWidth,
+          msg,
+        )
+        requestAnimationFrame(() => {
+          sendPending = false
+        })
+      }
 
-    sendPending = true
-  }
+      sendPending = true
+    },
+  )
 
   function lockTrigger() {
     if (triggerLocked) {
@@ -1341,7 +1344,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     heightCalcMode = hcm
   }
 
-  function sendMsg(height, width, triggerEvent, msg, targetOrigin) {
+  function sendMessage(height, width, triggerEvent, msg, targetOrigin) {
     if (mode < -1) return
 
     function setTargetOrigin() {
@@ -1387,6 +1390,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendToParent()
     endAutoGroup()
   }
+
+  const sendMsg = errorBoundary(sendMessage)
 
   function receiver(event) {
     const { freeze } = Object
@@ -1508,6 +1513,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
   }
 
+  const received = errorBoundary(receiver)
+
   // Normally the parent kicks things off when it detects the iFrame has loaded.
   // If this script is async-loaded, then tell parent page to retry init.
   function chkLateLoaded() {
@@ -1520,9 +1527,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     warn('Already setup')
   } else {
     window.iframeChildListener = (data) =>
-      setTimeout(() => receiver({ data, sameDomain: true }))
+      setTimeout(() => received({ data, sameDomain: true }))
 
-    addEventListener(window, 'message', receiver)
+    addEventListener(window, 'message', received)
     addEventListener(window, 'readystatechange', chkLateLoaded)
 
     chkLateLoaded()
@@ -1530,7 +1537,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   /* TEST CODE START */
   function mockMsgListener(msgObject) {
-    receiver(msgObject)
+    received(msgObject)
     return win
   }
 
@@ -1542,7 +1549,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       // Create test hooks
       window.mockMsgListener = mockMsgListener
 
-      removeEventListener(window, 'message', receiver)
+      removeEventListener(window, 'message', received)
 
       define([], () => mockMsgListener)
     }

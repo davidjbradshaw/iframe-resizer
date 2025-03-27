@@ -6,7 +6,7 @@ import formatAdvise from '../common/format-advise'
 import { esModuleInterop, id as identity } from '../common/utils'
 
 // Deal with UMD not converting default exports to named exports
-const createGroupConsole = esModuleInterop(acg)
+const createConsoleGroup = esModuleInterop(acg)
 
 let settings = {}
 let consoleEnabled = false
@@ -24,12 +24,16 @@ const isLogEnabled = (iframeId) =>
   settings[iframeId] ? settings[iframeId].log : consoleEnabled
 
 export function setupConsole({ enabled, iframeId }) {
+  const consoleGroup = createConsoleGroup({
+    label: getMyId(iframeId),
+  })
+
   consoleEnabled = enabled
+
   if (!settings[iframeId])
     settings[iframeId] = {
-      console: createGroupConsole({
-        label: getMyId(iframeId),
-      }),
+      console: consoleGroup,
+      errorBoundary: consoleGroup.errorBoundary,
     }
 }
 

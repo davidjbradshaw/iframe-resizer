@@ -648,9 +648,21 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
+  function screenMessage() {
+    checkSettings(iframeId)
+
+    if (!isMessageFromMetaParent()) {
+      log(iframeId, `Received: %c${msg}`, ITALIC)
+      settings[iframeId].loaded = true
+
+      if (checkIframeExists() && isMessageFromIframe()) {
+        eventMsg()
+      }
+    }
+  }
+
   messageData = processMsg()
   iframeId = messageData.id
-  consoleEvent(iframeId, messageData.type)
 
   if (!iframeId) {
     warn(
@@ -661,16 +673,8 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
-  checkSettings(iframeId)
-
-  if (!isMessageFromMetaParent()) {
-    log(iframeId, `Received: %c${msg}`, ITALIC)
-    settings[iframeId].loaded = true
-
-    if (checkIframeExists() && isMessageFromIframe()) {
-      eventMsg()
-    }
-  }
+  consoleEvent(iframeId, messageData.type)
+  settings[iframeId].errorBoundary(screenMessage)()
 }
 
 function chkEvent(iframeId, funcName, val) {
@@ -1177,6 +1181,20 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
+  function setupIframe() {
+    if (beenHere()) {
+      warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
+    } else {
+      processOptions(options)
+      checkMode()
+      setupEventListenersOnce()
+      setScrolling()
+      setupBodyMarginValues()
+      init(createOutgoingMsg(iframeId))
+      setupIframeObject()
+    }
+  }
+
   const beenHere = () => 'iframeResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
@@ -1186,17 +1204,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     iframeId,
   })
 
-  if (beenHere()) {
-    warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
-  } else {
-    processOptions(options)
-    checkMode()
-    setupEventListenersOnce()
-    setScrolling()
-    setupBodyMarginValues()
-    init(createOutgoingMsg(iframeId))
-    setupIframeObject()
-  }
+  settings[iframeId].errorBoundary(setupIframe)()
 
   return iframe?.iFrameResizer
 }

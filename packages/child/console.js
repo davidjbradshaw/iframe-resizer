@@ -25,8 +25,16 @@ export const setupConsoleMethod =
 export const log = setupConsoleMethod('log')
 export const info = setupConsoleMethod('info')
 
-export const { event, assert, debug, endAutoGroup, error, purge, warn } =
-  childConsole
+export const {
+  assert,
+  debug,
+  endAutoGroup,
+  error,
+  errorBoundary,
+  event,
+  purge,
+  warn,
+} = childConsole
 
 export const advise = (msg) => childConsole.warn(formatAdvise(identity)(msg))
 
