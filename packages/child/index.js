@@ -179,11 +179,11 @@ function iframeResizerChild() {
     sendTitle()
   }
 
-  function onOverflowChange(nodeList) {
+  function onOverflowChange(nodeList, mutated) {
     overflowedNodeList = nodeList
     hasOverflow = overflowedNodeList.length > 0
 
-    if (!hasOverflow) return
+    if (!hasOverflow && !mutated) return
 
     log('Observed Elements:', nodeList.length)
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
@@ -1153,6 +1153,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       default:
+        info(`Using <html> size: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
     }
 
