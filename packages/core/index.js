@@ -1056,10 +1056,6 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
   function checkOptions(options) {
     if (!options) return {}
 
-    if (typeof options !== 'object') {
-      throw new TypeError('Options is not an object')
-    }
-
     if (
       'sizeWidth' in options ||
       'sizeHeight' in options ||
@@ -1181,7 +1177,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  function setupIframe() {
+  function setupIframe(options) {
     if (beenHere()) {
       warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
     } else {
@@ -1199,12 +1195,16 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   const iframeId = ensureHasId(iframe.id)
 
+  if (typeof options !== 'object') {
+    throw new TypeError('Options is not an object')
+  }
+
   setupConsole({
     enabled: Object.hasOwn(options, 'log') ? options.log : defaults.log,
     iframeId,
   })
 
-  settings[iframeId].errorBoundary(setupIframe)()
+  settings[iframeId].errorBoundary(setupIframe)(options)
 
   return iframe?.iFrameResizer
 }
