@@ -1,4 +1,4 @@
-import acg from 'auto-console-group'
+import acg, { NORMAL } from 'auto-console-group'
 
 import { BOLD, LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
@@ -48,19 +48,22 @@ export const outputSwitched =
     isLogEnabled(iframeId) === true ? output(type)(iframeId, ...args) : null
 
 export const log = outputSwitched('log')
-export const info = output('info')
+export const info = outputSwitched('info')
 export const warn = output('warn')
 export const error = output('error')
 export const event = output('event')
 export const debug = outputSwitched('debug')
 export const endAutoGroup = output('endAutoGroup')
 
-export function vInfo(ver, mode) {
-  if (!('iframeResizer' in window)) window.iframeResizer = { version: ver }
-  if (!consoleEnabled && mode > 0) return
+export function vInfo(version, mode) {
+  if (!('iframeResizer' in window)) window.iframeResizer = { version }
   queueMicrotask(
     // eslint-disable-next-line no-console
-    () => console.info(`%ciframe-resizer ${ver}`, BOLD),
+    () =>
+      console.info(
+        `%ciframe-resizer ${version}`,
+        consoleEnabled || mode < 1 ? BOLD : NORMAL,
+      ),
   )
 }
 

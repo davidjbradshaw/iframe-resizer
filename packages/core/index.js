@@ -1076,13 +1076,13 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function checkMode() {
     const { mode } = settings[iframeId]
 
+    if (!vAdvised && !(mode > 0 && options.vInfoDisable)) {
+      vAdvised = true
+      vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
+    }
+
     if (mode < 0) advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
-    if (vAdvised || mode < 0) return
-
-    vAdvised = true
-    vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-
-    if (mode < 1) advise('Parent', getModeData(3))
+    else if (mode < 1) advise('Parent', getModeData(3))
   }
 
   function setDirection() {
@@ -1191,6 +1191,13 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
+  function enableVInfo(options) {
+    if (options?.log === -1) {
+      options.log = false
+      options.vInfoDisable = true
+    }
+  }
+
   const beenHere = () => 'iframeResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
@@ -1199,6 +1206,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     throw new TypeError('Options is not an object')
   }
 
+  enableVInfo(options)
   setupConsole({
     enabled: Object.hasOwn(options, 'log') ? options.log : defaults.log,
     iframeId,
