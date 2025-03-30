@@ -856,9 +856,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function setupMutationObserver() {
     const observedMutations = new Set()
+    const newMutations = []
     let pending = false
     let perfMon = 0
-    let newMutations = []
 
     const updateMutation = (mutations) => {
       log('Mutations observed:', mutations.length)
@@ -882,6 +882,20 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     let delayCount = 1
 
+    function setupNewElements(observedMutations) {
+      // apply selectors to new elements
+      applySelectors()
+
+      // Rebuild tagged elements list for size calculation
+      checkAndSetupTags()
+
+      // Add observers to new elements
+      addOverflowObservers(observedMutations)
+      observedMutations.forEach(attachResizeObserverToNonStaticElements)
+
+      observedMutations.clear()
+    }
+
     function processMutations() {
       consoleEvent('mutationObserver')
       const now = performance.now()
@@ -899,26 +913,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       delayCount = 1
 
       newMutations.forEach(updateMutation)
-      newMutations = []
+      newMutations.length = 0
 
-      if (observedMutations.size === 0) {
-        pending = false
-        return
-      }
-
-      // apply selectors to new elements
-      applySelectors()
-
-      // Rebuild tagged elements list for size calculation
-      checkAndSetupTags()
-
-      // Add observers to new elements
-      addOverflowObservers(observedMutations)
-      observedMutations.forEach(attachResizeObserverToNonStaticElements)
-
-      observedMutations.clear()
+      if (observedMutations.size > 0) setupNewElements(observedMutations)
 
       pending = false
+
+      sendSize('mutationObserver', 'Mutation Observed')
     }
 
     function mutationObserved(mutations) {
