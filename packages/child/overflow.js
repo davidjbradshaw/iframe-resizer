@@ -1,9 +1,4 @@
-import {
-  HEIGHT_EDGE,
-  IGNORE_ATTR,
-  OVERFLOW_ATTR,
-  SIZE_ATTR,
-} from '../common/consts'
+import { HEIGHT_EDGE, IGNORE_ATTR, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
 import { info, log } from './console'
 
@@ -51,7 +46,7 @@ const overflowObserver = (options) => {
     const target = document.querySelector('body')
     const config = {
       attributes: true,
-      attributeFilter: [IGNORE_ATTR, SIZE_ATTR],
+      attributeFilter: [IGNORE_ATTR],
       subtree: true,
     }
 
