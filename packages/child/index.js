@@ -136,7 +136,6 @@ function iframeResizerChild() {
   let onParentInfo = null
 
   function init() {
-    // consoleEvent('init')
     readDataFromParent()
 
     setConsoleOptions({ id: myID, enabled: logging })
@@ -892,13 +891,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let delayCount = 1
 
     function setupNewElements(observedMutations) {
-      // apply selectors to new elements
       applySelectors()
 
-      // Add observers to new elements
       addOverflowObservers(observedMutations)
       observedMutations.forEach(attachResizeObserverToNonStaticElements)
-
       observedMutations.clear()
     }
 
