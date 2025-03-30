@@ -5,6 +5,7 @@ import {
   HEIGHT_EDGE,
   IGNORE_ATTR,
   MANUAL_RESIZE_REQUEST,
+  OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
@@ -179,13 +180,20 @@ function iframeResizerChild() {
     sendTitle()
   }
 
-  function onOverflowChange(nodeList, mutated) {
-    overflowedNodeList = nodeList
+  function checkOverflow() {
+    overflowedNodeList = document.querySelectorAll(
+      `[${OVERFLOW_ATTR}]:not([${IGNORE_ATTR}]):not([${IGNORE_ATTR}] *)`,
+    )
+
     hasOverflow = overflowedNodeList.length > 0
+  }
+
+  function setOverflow(mutated) {
+    checkOverflow()
 
     if (!hasOverflow && !mutated) return
 
-    log('Observed Elements:', nodeList.length)
+    log('Observed Elements:', overflowedNodeList.length)
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
@@ -193,7 +201,7 @@ function iframeResizerChild() {
     if (calculateHeight === calculateWidth) return
     log('Setup OverflowObserver')
     observeOverflow = overflowObserver({
-      onChange: onOverflowChange,
+      onChange: setOverflow,
       root: document.documentElement,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
@@ -886,9 +894,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       // apply selectors to new elements
       applySelectors()
 
-      // Rebuild tagged elements list for size calculation
-      checkAndSetupTags()
-
       // Add observers to new elements
       addOverflowObservers(observedMutations)
       observedMutations.forEach(attachResizeObserverToNonStaticElements)
@@ -916,6 +921,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       newMutations.length = 0
 
       if (observedMutations.size > 0) setupNewElements(observedMutations)
+
+      // Rebuild elements lists for size calculation
+      checkAndSetupTags()
+      checkOverflow()
 
       pending = false
 
@@ -1149,7 +1158,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case hasOverflow:
-        info(`Found element overflowing <html> `)
+        info(`Found element possibly overflowing <html> `)
         calculatedSize = getDimension.taggedElement()
         break
 
