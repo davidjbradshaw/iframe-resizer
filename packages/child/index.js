@@ -188,7 +188,7 @@ function iframeResizerChild() {
     hasOverflow = overflowedNodeList.length > 0
   }
 
-  function setOverflow(mutated) {
+  function overflowObserved(mutated) {
     checkOverflow()
 
     if (!hasOverflow && !mutated) return
@@ -201,7 +201,7 @@ function iframeResizerChild() {
     if (calculateHeight === calculateWidth) return
     log('Setup OverflowObserver')
     observeOverflow = overflowObserver({
-      onChange: setOverflow,
+      onChange: overflowObserved,
       root: document.documentElement,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
