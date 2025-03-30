@@ -25,13 +25,7 @@ const overflowObserver = (options) => {
     threshold: 1,
   }
 
-  const emitOverflownNodes = (mutated = false) =>
-    onChange(
-      document.querySelectorAll(
-        `[${OVERFLOW_ATTR}]:not([${IGNORE_ATTR}]):not([${IGNORE_ATTR}] *)`,
-      ),
-      mutated,
-    )
+  const emitOverflowDetected = (mutated = false) => onChange(mutated)
 
   const setOverflow = (node, hasOverflow) =>
     node.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
@@ -46,13 +40,13 @@ const overflowObserver = (options) => {
       if (hasOverflow) log('Overflowed:', target)
     }
 
-    afterReflow(emitOverflownNodes)
+    afterReflow(emitOverflowDetected)
   }
 
   function createOverflowMutationObserver() {
     const observer = new window.MutationObserver(() => {
       info('Detected changes in element attributes')
-      emitOverflownNodes(true)
+      emitOverflowDetected(true)
     })
     const target = document.querySelector('body')
     const config = {

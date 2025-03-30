@@ -57,13 +57,12 @@ export const endAutoGroup = output('endAutoGroup')
 
 export function vInfo(version, mode) {
   if (!('iframeResizer' in window)) window.iframeResizer = { version }
-  queueMicrotask(
+  queueMicrotask(() =>
     // eslint-disable-next-line no-console
-    () =>
-      console.info(
-        `%ciframe-resizer ${version}`,
-        consoleEnabled || mode < 1 ? BOLD : NORMAL,
-      ),
+    console.info(
+      `%ciframe-resizer ${version}`,
+      consoleEnabled || mode < 1 ? BOLD : NORMAL,
+    ),
   )
 }
 
