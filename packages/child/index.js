@@ -5,6 +5,7 @@ import {
   HEIGHT_EDGE,
   IGNORE_ATTR,
   MANUAL_RESIZE_REQUEST,
+  MUTATION_OBSERVER,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   RESIZE_OBSERVER,
@@ -928,7 +929,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       pending = false
 
-      sendSize('mutationObserver', 'Mutation Observed')
+      sendSize(MUTATION_OBSERVER, 'Mutation Observed')
     }
 
     function mutationObserved(mutations) {
@@ -1269,7 +1270,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       // the following case needs {} to prevent a compile error
       case triggerEvent === RESIZE_OBSERVER:
-      case triggerEvent === OVERFLOW_OBSERVER: {
+      case triggerEvent === OVERFLOW_OBSERVER:
+      case triggerEvent === MUTATION_OBSERVER: {
         log(`No change in content size detected`)
         purge()
         break
