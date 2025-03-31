@@ -74,4 +74,4 @@ This version of iframe-resizer has been extensively rewritten to use modern brow
 With this release, the opportunity has been taken to refresh and simplify the API, if you are coming from a previous version then their is an [Upgrade Guide](https://iframe-resizer.com/upgrade) to explain the changes.
 
 ---
-Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
+Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
