@@ -1,25 +1,38 @@
-[<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">](https://iframe-resizer.com)
+## Packages
 
-# @@PKG_NAME@@
+For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking. These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
-This package is part of __[iframe-resizer](https://iframe-resizer.com)__, a library that enables the automatic resizing of the height and width of both same and cross domain iframes to fit their contained content. It also provides a range of features to address the most common issues with using iframes.
+### [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
 
-__See [iframe-resizer.com](https://iframe-resizer.com) for details.__
+The parent page package sets up an iframe for automatic content resizing. Their are versions of this package for several popular libraries and frameworks (see below).
 
-## Install
+### [@iframe-resizer/child](https://www.npmjs.com/package/@iframe-resizer/child)
 
-Using npm:
+This package needs loading into the iframe, where it will quietly wait for a message from the parent page before initialising. It is designed to be a good guest on someone else site.
 
-```bash
-npm install @@PKG_NAME@@ --save
-```
 
-or using yarn:
+## Frameworks and Libraries
 
-```bash
-yarn add @@PKG_NAME@@
-```
+In addition to the two main packages, their are versions of the parent package for the following platforms.
+
+### [@iframe-resizer/react](https://www.npmjs.com/package/@iframe-resizer/react)
+
+A **React** component for the parent page.
+
+### [@iframe-resizer/vue](https://www.npmjs.com/package/@iframe-resizer/vue)
+
+A **Vue** component for the parent page.
+
+### [@iframe-resizer/jquery](https://www.npmjs.com/package/@iframe-resizer/jquery)
+
+A simple **jQuery** wrapper for the parent page.
+
+
+## API
+
+### [@iframe-resizer/core](https://www.npmjs.com/package/@iframe-resizer/core)
+
+The core API for the parent page, used by `@iframe-resizer/parent`, plus the framework and library component versions.
 
 ---
-
-_iframe-resizer version @@PKG_VERSION@@ @@BUILD_DATE@@_
+Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)

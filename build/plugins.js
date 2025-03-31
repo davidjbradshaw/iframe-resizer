@@ -55,7 +55,7 @@ export const createPluginsProd = (stripLog) => (file) => {
 
   const targets = [
     { src: ['LICENSE' /* 'FUNDING.md',  'SECURITY.md' */], dest },
-    { src: `${src}/README.md`, dest, transform },
+    { src: `${src}/TEMPLATE.md`, dest, rename: 'README.md', transform },
   ]
 
   return [
