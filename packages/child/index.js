@@ -1155,7 +1155,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case hasOverflow:
-        info(`Found element possibly overflowing <html> `)
+        info(`Found element overflowing <html> `)
         calculatedSize = getDimension.taggedElement()
         break
 
