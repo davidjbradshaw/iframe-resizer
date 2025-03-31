@@ -9,7 +9,9 @@
 
 ## Introduction
 
-The _[iframe-resizer](https://iframe-resizer.com)_ library aims to take away the pain points with using iframes. It will resize your iframe to match the size of your content and then monitor the iframe to ensure that it is always the perfect size.
+The _[iframe-resizer](https://iframe-resizer.com)_ library aims to take away the pain
+points with using iframes. It will resize your iframe to match the size of your content
+and then monitor the iframe to ensure that it is always the perfect size.
 
 ### Reliable Resizing
 
@@ -24,13 +26,32 @@ JS file that is designed to be a zero impact guest on the sites hosting it.
 
 ### Lightening Performance
 
-To ensure minimal impact on your site, _iframe-resizer_ is highly optimised and 
+To ensure minimal impact on your site, _iframe-resizer_ is highly optimised and
 utilizes _[Set Theory](https://en.wikipedia.org/wiki/Set_theory)_ to ensure it only
-checks the page elements that effect the sizing of your iframes. 
+checks the page elements that effect the sizing of your iframes.
 
-Even on the most complex pages, _iframe-resizer_ can detect changes to both HTML 
-and CSS, calculate the revised content dimensions and update the iframe in sub 
+Even on the most complex pages, _iframe-resizer_ can detect changes to both HTML
+and CSS, calculate the revised content dimensions and update the iframe in sub
 millisecond time.
+
+### Setup and API guide
+
+Please see the **_[iframe-resizer](https://iframe-resizer.com)_** website for setup guides
+and API documentation. This includes versions for:
+
+* **[Vanilla JS](https://iframe-resizer.com/setup)**
+* **[React](https://iframe-resizer.com/frameworks/react)**
+* **[Vue](https://iframe-resizer.com/frameworks/vue3)**
+* **[Angular](https://iframe-resizer.com/frameworks/angular)**
+* **[jQuery](https://iframe-resizer.com/frameworks/jquery)**
+
+Along with setup guides for:
+  
+* **[Wordpress](https://iframe-resizer.com/guides/wordpress/)**
+* **[Google Apps Script](https://iframe-resizer.com/guides/google_apps_script)**
+
+Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation
+of additional custom components.
 
 ### Extended API
 
@@ -45,23 +66,6 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 - Enhanced [Accessibility](https://iframe-resizer.com/accessibility)
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
-
-### Setup and API guide
-
-Please see the **_[iframe-resizer](https://iframe-resizer.com)_** website for setup guides and API documentation. This includes versions for:
-
-* **[Vanilla JS](https://iframe-resizer.com/setup)**
-* **[React](https://iframe-resizer.com/frameworks/react)**
-* **[Vue](https://iframe-resizer.com/frameworks/vue3)**
-* **[Angular](https://iframe-resizer.com/frameworks/angular)**
-* **[jQuery](https://iframe-resizer.com/frameworks/jquery)**
-
-Along with setup guides for:
-  
-* **[Wordpress](https://iframe-resizer.com/guides/wordpress/)**
-* **[Google Apps Script](https://iframe-resizer.com/guides/google_apps_script)**
-
-Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation of additional custom components.
 
 ## Version 5
 
@@ -107,4 +111,3 @@ The core API for the parent page, used by `@iframe-resizer/parent`, plus the fra
 
 ---
 Copyright &copy; 2013-24 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
-
