@@ -5,6 +5,8 @@ import {
   HEIGHT_EDGE,
   IGNORE_ATTR,
   MANUAL_RESIZE_REQUEST,
+  MUTATION_OBSERVER,
+  OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
@@ -134,7 +136,6 @@ function iframeResizerChild() {
   let onParentInfo = null
 
   function init() {
-    // consoleEvent('init')
     readDataFromParent()
 
     setConsoleOptions({ id: myID, enabled: logging })
@@ -179,13 +180,20 @@ function iframeResizerChild() {
     sendTitle()
   }
 
-  function onOverflowChange(nodeList) {
-    overflowedNodeList = nodeList
+  function checkOverflow() {
+    overflowedNodeList = document.querySelectorAll(
+      `[${OVERFLOW_ATTR}]:not([${IGNORE_ATTR}]):not([${IGNORE_ATTR}] *)`,
+    )
+
     hasOverflow = overflowedNodeList.length > 0
+  }
 
-    if (!hasOverflow) return
+  function overflowObserved(mutated) {
+    checkOverflow()
 
-    log('Observed Elements:', nodeList.length)
+    if (!hasOverflow && !mutated) return
+
+    log('Observed Elements:', overflowedNodeList.length)
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
@@ -193,7 +201,7 @@ function iframeResizerChild() {
     if (calculateHeight === calculateWidth) return
     log('Setup OverflowObserver')
     observeOverflow = overflowObserver({
-      onChange: onOverflowChange,
+      onChange: overflowObserved,
       root: document.documentElement,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
@@ -856,9 +864,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function setupMutationObserver() {
     const observedMutations = new Set()
+    const newMutations = []
     let pending = false
     let perfMon = 0
-    let newMutations = []
 
     const updateMutation = (mutations) => {
       log('Mutations observed:', mutations.length)
@@ -882,6 +890,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     let delayCount = 1
 
+    function setupNewElements(observedMutations) {
+      applySelectors()
+
+      addOverflowObservers(observedMutations)
+      observedMutations.forEach(attachResizeObserverToNonStaticElements)
+      observedMutations.clear()
+    }
+
     function processMutations() {
       consoleEvent('mutationObserver')
       const now = performance.now()
@@ -899,26 +915,17 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       delayCount = 1
 
       newMutations.forEach(updateMutation)
-      newMutations = []
+      newMutations.length = 0
 
-      if (observedMutations.size === 0) {
-        pending = false
-        return
-      }
+      if (observedMutations.size > 0) setupNewElements(observedMutations)
 
-      // apply selectors to new elements
-      applySelectors()
-
-      // Rebuild tagged elements list for size calculation
+      // Rebuild elements lists for size calculation
       checkAndSetupTags()
-
-      // Add observers to new elements
-      addOverflowObservers(observedMutations)
-      observedMutations.forEach(attachResizeObserverToNonStaticElements)
-
-      observedMutations.clear()
+      checkOverflow()
 
       pending = false
+
+      sendSize(MUTATION_OBSERVER, 'Mutation Observed')
     }
 
     function mutationObserved(mutations) {
@@ -1148,11 +1155,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case hasOverflow:
-        info(`Found element overflowing <html> `)
+        info(`Found element possibly overflowing <html> `)
         calculatedSize = getDimension.taggedElement()
         break
 
       default:
+        info(`Using <html> size: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = returnBoundingClientRect()
     }
 
@@ -1258,7 +1266,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       // the following case needs {} to prevent a compile error
       case triggerEvent === RESIZE_OBSERVER:
-      case triggerEvent === OVERFLOW_OBSERVER: {
+      case triggerEvent === OVERFLOW_OBSERVER:
+      case triggerEvent === MUTATION_OBSERVER: {
         log(`No change in content size detected`)
         purge()
         break
