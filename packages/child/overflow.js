@@ -1,6 +1,6 @@
-import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
+import { HEIGHT_EDGE, IGNORE_ATTR, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { log } from './console'
+import { info, log } from './console'
 
 const afterReflow = requestAnimationFrame
 
@@ -14,16 +14,13 @@ const overflowObserver = (options) => {
   const isOverflowed = (edge, rootBounds) =>
     edge === 0 || edge > rootBounds[side]
 
-  const isIgnored = (node) => Object.hasOwn(node.dataset, 'overflowIgnore')
-
   const observerOptions = {
     root: options.root,
     rootMargin: '0px',
     threshold: 1,
   }
 
-  const emitOverflownNodes = () =>
-    onChange(document.querySelectorAll(`[${OVERFLOW_ATTR}]`))
+  const emitOverflowDetected = (mutated = false) => onChange(mutated)
 
   const setOverflow = (node, hasOverflow) =>
     node.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
@@ -32,19 +29,35 @@ const overflowObserver = (options) => {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
-      const hasOverflow =
-        !isHidden(target) &&
-        !isIgnored(target) &&
-        isOverflowed(edge, rootBounds)
+      const hasOverflow = !isHidden(target) && isOverflowed(edge, rootBounds)
 
       setOverflow(target, hasOverflow)
+      if (hasOverflow) log('Overflowed:', target)
     }
 
-    afterReflow(emitOverflownNodes)
+    afterReflow(emitOverflowDetected)
+  }
+
+  function createOverflowMutationObserver() {
+    const observer = new window.MutationObserver(() => {
+      info('Detected changes in element attributes')
+      emitOverflowDetected(true)
+    })
+    const target = document.querySelector('body')
+    const config = {
+      attributes: true,
+      attributeFilter: [IGNORE_ATTR],
+      subtree: true,
+    }
+
+    log('Setup OverflowMutationObserver')
+    observer.observe(target, config)
   }
 
   const observer = new IntersectionObserver(observation, observerOptions)
   const observedNodes = new WeakSet()
+
+  createOverflowMutationObserver()
 
   return function observeOverflow(nodeList) {
     log('Attached overflowObservers')
