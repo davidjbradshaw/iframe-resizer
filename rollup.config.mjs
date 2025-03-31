@@ -101,12 +101,22 @@ const npm = [
     ],
   },
 
-  // Child
+  //Child ES module (for bundlers) and CommonJS (for Node) build.
   {
     input: 'packages/child/index.js',
-    output: outputs('child'),
+    output: [output('child')('esm'), output('child')('cjs')],
+    external: ['auto-console-group'],
+    plugins: pluginsProd('child'),
+    watch: false,
+  },
+
+  // Child UMD
+  {
+    input: 'packages/child/index.js',
+    output: output('child')('umd'),
     plugins: [
       ...pluginsProd('child'),
+      resolve(),
       copy({
         targets: [
           {

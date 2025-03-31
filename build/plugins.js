@@ -26,18 +26,24 @@ export const pluginsBase = (stripLog) => (file) => {
   return stripLog ? delog.concat(base) : log.concat(base)
 }
 
-const fixVersion = (file) =>
-  file in { core: 1, child: 1 }
-    ? {}
-    : file !== 'legacy'
-      ? { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
-      : {
-          additionalDependencies: {
-            '@iframe-resizer/child': pkg.version,
-            '@iframe-resizer/jquery': pkg.version,
-            '@iframe-resizer/parent': pkg.version,
-          },
+const fixVersion = (file) => {
+  switch (file) {
+    case 'core':
+      return {}
+    case 'child':
+      return { additionalDependencies: { 'auto-console-group': pkg.dependencies['auto-console-group'] } }
+    case 'legacy':
+      return {
+        additionalDependencies: {
+          '@iframe-resizer/child': pkg.version,
+          '@iframe-resizer/jquery': pkg.version,
+          '@iframe-resizer/parent': pkg.version,
         }
+      }
+    default:
+      return { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+  }
+}
 
 const today = new Date().toISOString().split('T').join(' - ')
 
