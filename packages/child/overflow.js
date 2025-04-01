@@ -2,8 +2,6 @@ import { HEIGHT_EDGE, IGNORE_ATTR, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
 import { info, log } from './console'
 
-const afterReflow = requestAnimationFrame
-
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
 
@@ -19,6 +17,8 @@ const overflowObserver = (options) => {
     rootMargin: '0px',
     threshold: 1,
   }
+
+  const afterReflow = window.requestAnimationFrame
 
   const emitOverflowDetected = (mutated = false) => onChange(mutated)
 
