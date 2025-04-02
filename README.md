@@ -34,7 +34,7 @@ Even on the most complex pages, _iframe-resizer_ can detect changes to both HTML
 and CSS, calculate the revised content dimensions and update the iframe in sub
 millisecond time.
 
-### Setup and API guide
+### Setup
 
 Please see the **_[iframe-resizer](https://iframe-resizer.com)_** website for setup guides
 and API documentation. This includes versions for:
