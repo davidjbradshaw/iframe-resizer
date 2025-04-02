@@ -9,7 +9,7 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { once } from '../common/utils'
+import { once, typeAssert } from '../common/utils'
 import {
   advise,
   event as consoleEvent,
@@ -1020,6 +1020,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
         resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
 
         moveToAnchor(anchor) {
+          typeAssert(anchor, 'string', 'moveToAnchor(anchor) anchor')
           trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
         },
 

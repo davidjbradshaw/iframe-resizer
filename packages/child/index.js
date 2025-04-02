@@ -22,6 +22,7 @@ import {
   id,
   once,
   round,
+  typeAssert,
 } from '../common/utils'
 import {
   advise,
@@ -685,11 +686,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (mode === 1) return
 
     win.parentIframe = Object.freeze({
-      autoResize: (resize) => {
-        if (resize === true && autoResize === false) {
+      autoResize: (enable) => {
+        typeAssert(enable, 'bool', 'parentIframe.autoResize(enable) enable')
+
+        if (enable === true && autoResize === false) {
           autoResize = true
           sendSize('autoResizeEnabled', 'Auto Resize enabled')
-        } else if (resize === false && autoResize === true) {
+        } else if (enable === false && autoResize === true) {
           autoResize = false
         }
 
@@ -728,11 +731,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       getParentProps(callback) {
-        if (typeof callback !== 'function') {
-          throw new TypeError(
-            'parentIframe.getParentProps(callback) callback not a function',
-          )
-        }
+        typeAssert(
+          callback,
+          'function',
+          'parentIframe.getParentProps(callback) callback',
+        )
 
         onParentInfo = callback
         sendMsg(0, 0, 'parentInfo')
@@ -748,8 +751,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         this.getParentProps(callback)
       },
 
-      moveToAnchor(hash) {
-        inPageLinks.findTarget(hash)
+      moveToAnchor(anchor) {
+        typeAssert(anchor, 'string', 'parentIframe.moveToAnchor(anchor) anchor')
+        inPageLinks.findTarget(anchor)
       },
 
       reset() {
@@ -757,24 +761,41 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       setOffsetSize(newOffset) {
+        typeAssert(
+          newOffset,
+          'number',
+          'parentIframe.setOffsetSize(offset) offset',
+        )
         offsetHeight = newOffset
         offsetWidth = newOffset
         sendSize(SET_OFFSET_SIZE, `parentIframe.setOffsetSize(${newOffset})`)
       },
 
       scrollBy(x, y) {
+        typeAssert(x, 'number', 'parentIframe.scrollBy(x, y) x')
+        typeAssert(y, 'number', 'parentIframe.scrollBy(x, y) y')
         sendMsg(y, x, 'scrollBy') // X&Y reversed at sendMsg uses height/width
       },
 
       scrollTo(x, y) {
+        typeAssert(x, 'number', 'parentIframe.scrollTo(x, y) x')
+        typeAssert(y, 'number', 'parentIframe.scrollTo(x, y) y')
         sendMsg(y, x, 'scrollTo') // X&Y reversed at sendMsg uses height/width
       },
 
       scrollToOffset(x, y) {
+        typeAssert(x, 'number', 'parentIframe.scrollToOffset(x, y) x')
+        typeAssert(y, 'number', 'parentIframe.scrollToOffset(x, y) y')
         sendMsg(y, x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
       },
 
       sendMessage(msg, targetOrigin) {
+        if (targetOrigin)
+          typeAssert(
+            targetOrigin,
+            'string',
+            'parentIframe.sendMessage(msg, targetOrigin) targetOrigin',
+          )
         sendMsg(0, 0, 'message', JSON.stringify(msg), targetOrigin)
       },
 
@@ -789,11 +810,31 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       setTargetOrigin(targetOrigin) {
+        typeAssert(
+          targetOrigin,
+          'string',
+          'parentIframe.setTargetOrigin(targetOrigin) targetOrigin',
+        )
+
         log(`Set targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
         targetOriginDefault = targetOrigin
       },
 
       resize(customHeight, customWidth) {
+        if (customHeight)
+          typeAssert(
+            customHeight,
+            'number',
+            'parentIframe.resize(customHeight, customWidth) customHeight',
+          )
+
+        if (customWidth)
+          typeAssert(
+            customWidth,
+            'number',
+            'parentIframe.resize(customHeight, customWidth) customWidth',
+          )
+
         const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
 
         sendSize(

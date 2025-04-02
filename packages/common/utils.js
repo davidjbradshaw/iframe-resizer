@@ -46,3 +46,10 @@ export function getElementName(el) {
 export const esModuleInterop = (mod) =>
   // eslint-disable-next-line no-underscore-dangle
   mod?.__esModule ? mod.default : mod
+
+export const typeAssert = (value, type, error) => {
+  // eslint-disable-next-line valid-typeof
+  if (typeof value !== type) {
+    throw new TypeError(`${error} is not a ${capitalizeFirstLetter(type)}`)
+  }
+}
