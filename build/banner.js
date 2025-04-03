@@ -1,9 +1,5 @@
 import pkg from '../package.json' with { type: 'json' }
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
 const date = new Date()
 const year = date.getFullYear()
 const today = date.toISOString().split('T')[0]

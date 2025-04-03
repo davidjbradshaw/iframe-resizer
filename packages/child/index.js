@@ -374,7 +374,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
-    info(`Set TargetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
+    info(`Set targetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
   }
 
   function chkCSS(attr, value) {

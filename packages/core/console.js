@@ -33,7 +33,6 @@ export function setupConsole({ enabled, iframeId }) {
   if (!settings[iframeId])
     settings[iframeId] = {
       console: consoleGroup,
-      errorBoundary: consoleGroup.errorBoundary,
     }
 }
 
@@ -48,12 +47,15 @@ export const outputSwitched =
     isLogEnabled(iframeId) === true ? output(type)(iframeId, ...args) : null
 
 export const log = outputSwitched('log')
-export const info = outputSwitched('info')
+export const info = log // outputSwitched('info')
+export const debug = outputSwitched('debug')
+export const assert = output('assert')
 export const warn = output('warn')
 export const error = output('error')
 export const event = output('event')
-export const debug = outputSwitched('debug')
+export const purge = output('purge')
 export const endAutoGroup = output('endAutoGroup')
+export const errorBoundary = output('errorBoundary')
 
 export function vInfo(ver, mode) {
   queueMicrotask(() =>

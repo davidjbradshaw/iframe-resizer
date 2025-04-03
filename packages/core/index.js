@@ -12,6 +12,7 @@ import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once, typeAssert } from '../common/utils'
 import {
   advise,
+  errorBoundary,
   event as consoleEvent,
   info,
   log,
@@ -674,7 +675,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   consoleEvent(iframeId, messageData.type)
-  settings[iframeId].errorBoundary(screenMessage)()
+  errorBoundary(iframeId, screenMessage)()
 }
 
 function chkEvent(iframeId, funcName, val) {
@@ -1213,7 +1214,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     iframeId,
   })
 
-  settings[iframeId].errorBoundary(setupIframe)(options)
+  errorBoundary(iframeId, setupIframe)(options)
 
   return iframe?.iFrameResizer
 }

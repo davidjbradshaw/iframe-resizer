@@ -23,7 +23,7 @@ export const setupConsoleMethod =
     enabled ? childConsole[method](...args) : true
 
 export const log = setupConsoleMethod('log')
-export const info = setupConsoleMethod('info')
+export const info = log // setupConsoleMethod('info')
 
 export const {
   assert,

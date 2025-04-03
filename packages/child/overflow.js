@@ -1,6 +1,6 @@
 import { HEIGHT_EDGE, IGNORE_ATTR, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { info, log } from './console'
+import { assert, event, info, log } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -8,28 +8,28 @@ const isHidden = (node) =>
 const overflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
-
-  const isOverflowed = (edge, rootBounds) =>
-    edge === 0 || edge > rootBounds[side]
-
   const observerOptions = {
     root: options.root,
     rootMargin: '0px',
     threshold: 1,
   }
 
-  const afterReflow = window.requestAnimationFrame
-
+  const afterReflow = window?.requestAnimationFrame || id
   const emitOverflowDetected = (mutated = false) => onChange(mutated)
+
+  const isOverflowed = (edge, rootBounds) =>
+    edge === 0 || edge > rootBounds[side]
 
   const setOverflow = (node, hasOverflow) =>
     node.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
 
   function observation(entries) {
+    event('observation')
+
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
-      const hasOverflow = !isHidden(target) && isOverflowed(edge, rootBounds)
+      const hasOverflow = isOverflowed(edge, rootBounds) && !isHidden(target)
 
       setOverflow(target, hasOverflow)
       if (hasOverflow) log('Overflowed:', target)
@@ -63,8 +63,13 @@ const overflowObserver = (options) => {
     log('Attached overflowObservers')
 
     for (const node of nodeList) {
-      if (node.nodeType !== Node.ELEMENT_NODE || observedNodes.has(node))
+      const isObservable = node.nodeType === Node.ELEMENT_NODE
+      const isObserved = observedNodes.has(node)
+
+      if (isObserved || !isObservable) {
+        assert(!isObserved, 'Node already observed', node)
         continue
+      }
 
       observer.observe(node)
       observedNodes.add(node)
