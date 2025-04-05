@@ -19,6 +19,7 @@ export default Object.freeze({
   heightCalculationMethod: 'auto',
   id: 'iFrameResizer',
   log: false,
+  logExpand: false,
   license: undefined,
   mouseEvents: true,
   offsetHeight: null,
