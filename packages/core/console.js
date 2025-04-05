@@ -23,8 +23,9 @@ const getMyId = (iframeId) =>
 const isLogEnabled = (iframeId) =>
   settings[iframeId] ? settings[iframeId].log : consoleEnabled
 
-export function setupConsole({ enabled, iframeId }) {
+export function setupConsole({ enabled, expand, iframeId }) {
   const consoleGroup = createConsoleGroup({
+    expand,
     label: getMyId(iframeId),
   })
 
