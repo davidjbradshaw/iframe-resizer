@@ -36,3 +36,19 @@ export const resetRequiredMethods = Object.freeze({
   bodyScroll: 1,
   documentElementScroll: 1,
 })
+
+export const ONLOAD = 'onload'
+export const INIT = 'init'
+
+export const INIT_EVENTS = Object.freeze({
+  [ONLOAD]: 1,
+  [INIT]: 1,
+})
+
+export const EXPAND = 'expanded'
+export const COLLAPSE = 'collapsed'
+
+export const LOG_OPTIONS = Object.freeze({
+  [EXPAND]: 1,
+  [COLLAPSE]: 1,
+})

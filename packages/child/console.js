@@ -14,6 +14,7 @@ const childConsole = createGroupConsole({ label: `${LABEL}(child)` })
 
 export function setConsoleOptions(options) {
   childConsole.label(`${options.id}`)
+  childConsole.expand(options.expand)
   enabled = options.enabled
 }
 

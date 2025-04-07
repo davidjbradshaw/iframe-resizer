@@ -1,9 +1,14 @@
 import { FOREGROUND, HIGHLIGHT, ITALIC } from 'auto-console-group'
 
 import {
+  EXPAND,
+  INIT,
+  INIT_EVENTS,
+  LOG_OPTIONS,
   msgHeaderLen,
   msgId,
   msgIdLen,
+  ONLOAD,
   resetRequiredMethods,
   VERSION,
 } from '../common/consts'
@@ -12,6 +17,8 @@ import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { once, typeAssert } from '../common/utils'
 import {
   advise,
+  // assert,
+  error,
   errorBoundary,
   event as consoleEvent,
   info,
@@ -107,9 +114,9 @@ function iframeListener(event) {
       return checkOrigin.constructor === Array ? checkList() : checkSingle()
     }
 
-    const { origin, sameDomain } = event
+    const { origin, sameOrigin } = event
 
-    if (sameDomain) return true
+    if (sameOrigin) return true
 
     let checkOrigin = settings[iframeId]?.checkOrigin
 
@@ -472,13 +479,13 @@ function iframeListener(event) {
 
   function checkSameDomain(id) {
     try {
-      settings[id].sameDomain =
+      settings[id].sameOrigin =
         !!settings[id]?.iframe?.contentWindow?.iframeChildListener
     } catch (error) {
-      settings[id].sameDomain = false
+      settings[id].sameOrigin = false
     }
 
-    log(id, `sameDomain: %c${settings[id].sameDomain}`, HIGHLIGHT)
+    log(id, `sameOrigin: %c${settings[id].sameOrigin}`, HIGHLIGHT)
   }
 
   function checkVersion(version) {
@@ -793,34 +800,35 @@ function setSize(messageData) {
   if (sizeWidth) setDimension('width')
 }
 
-function trigger(calleeMsg, msg, id, noResponseWarning) {
-  function postMessageToIframe() {
-    const { iframe, postMessageTarget, sameDomain, targetOrigin } = settings[id]
+const filterMsg = (msg) =>
+  msg
+    .split(':')
+    .filter((_, index) => index !== 19)
+    .join(':')
 
-    if (sameDomain) {
+function trigger(calleeMsg, msg, id, noResponseWarning) {
+  function logSent(route) {
+    const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
+    info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
+    info(id, `%c${displayMsg}`, ITALIC)
+  }
+
+  function postMessageToIframe() {
+    const { iframe, postMessageTarget, sameOrigin, targetOrigin } = settings[id]
+
+    if (sameOrigin) {
       try {
         iframe.contentWindow.iframeChildListener(msgId + msg)
-        log(
-          id,
-          `Sending message to iframe %c${id}%c via sameDomain`,
-          HIGHLIGHT,
-          FOREGROUND,
-        )
-        log(id, `%c${msg}`, ITALIC)
+        logSent(`Sending message to iframe %c${id}%c via sameOrigin`)
         return
       } catch (error) {
-        log(id, `Same domain connection failed. Trying cross domain`)
+        log(id, `Same domain connection failed. Trying cross domain%c`)
       }
     }
 
-    log(
-      id,
+    logSent(
       `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
     )
-    log(id, `%c${msg}`, ITALIC)
 
     postMessageTarget.postMessage(msgId + msg, targetOrigin)
   }
@@ -917,7 +925,8 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.license,
     page.version,
     iframeSettings.mode,
-    // iframeSettings.sizeSelector,
+    '', // iframeSettings.sizeSelector,
+    iframeSettings.logExpand,
   ].join(':')
 }
 
@@ -1041,7 +1050,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
     function iFrameLoaded() {
-      trigger('iFrame.onload', `${msg}:${setup}`, id, true)
+      trigger(ONLOAD, `${msg}:${setup}`, id, true)
       checkReset()
     }
 
@@ -1052,7 +1061,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
     if (mode === -2) return
 
     addEventListener(iframe, 'load', iFrameLoaded)
-    if (waitForLoad === false) trigger('init', `${msg}:${setup}`, id, true)
+    if (waitForLoad === false) trigger(INIT, `${msg}:${setup}`, id, true)
   }
 
   function checkOptions(options) {
@@ -1200,6 +1209,34 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
+  function startLogging(iframeId, options) {
+    const isLogEnabled = Object.hasOwn(options, 'log')
+    const isLogString = typeof options.log === 'string'
+    const enabled = isLogEnabled
+      ? isLogString
+        ? true
+        : options.log
+      : defaults.log
+
+    options.logExpand =
+      isLogEnabled && isLogString ? options.log === EXPAND : defaults.logExpand
+
+    enableVInfo(options)
+    setupConsole({
+      enabled,
+      expand: options.logExpand,
+      iframeId,
+    })
+
+    if (isLogString && !(options.log in LOG_OPTIONS))
+      error(
+        iframeId,
+        'Invalid value for options.log: Accepted values are "expanded" and "collapsed"',
+      )
+
+    options.log = enabled
+  }
+
   const beenHere = () => 'iframeResizer' in iframe
 
   const iframeId = ensureHasId(iframe.id)
@@ -1208,12 +1245,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     throw new TypeError('Options is not an object')
   }
 
-  enableVInfo(options)
-  setupConsole({
-    enabled: Object.hasOwn(options, 'log') ? options.log : defaults.log,
-    iframeId,
-  })
-
+  startLogging(iframeId, options)
   errorBoundary(iframeId, setupIframe)(options)
 
   return iframe?.iFrameResizer
@@ -1243,5 +1275,5 @@ const setupEventListenersOnce = once(() => {
   addEventListener(window, 'message', iframeListener)
   addEventListener(document, 'visibilitychange', tabVisible)
   window.iframeParentListener = (data) =>
-    setTimeout(() => iframeListener({ data, sameDomain: true }))
+    setTimeout(() => iframeListener({ data, sameOrigin: true }))
 })

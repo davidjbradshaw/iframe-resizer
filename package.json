@@ -54,7 +54,7 @@
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
     "@iframe-resizer/react": "file:./packages/react/",
-    "auto-console-group": "1.2.1",
+    "auto-console-group": "1.2.5",
     "react": "^19.1.0"
   },
   "devDependencies": {
@@ -99,9 +99,9 @@
     "eslint-plugin-only-error": "^1.0.2",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-pii": "^1.0.2",
-    "eslint-plugin-prettier": "^5.2.5",
+    "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-scanjs-rules": "^0.2.1",
@@ -138,7 +138,7 @@
     "rollup-plugin-strip-code": "^0.2.8",
     "rollup-plugin-version-injector": "^1.3.3",
     "rollup-plugin-vue": "^6.0.0",
-    "vite": "^6.2.4"
+    "vite": "^6.2.5"
   },
   "engines": {
     "node": ">=20.0.0"
