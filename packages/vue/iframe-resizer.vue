@@ -57,7 +57,7 @@
         ),
         waitForLoad: true,
 
-        onClosed: () => false, // Disable close methods, use Vue to remove iframe
+        onClose: () => false, // Disable close methods, use Vue to remove iframe
         onReady: (...args) => self.$emit('onReady', ...args),
         onMessage: (...args) => self.$emit('onMessage', ...args),
         onResized: (...args) => self.$emit('onResized', ...args),
