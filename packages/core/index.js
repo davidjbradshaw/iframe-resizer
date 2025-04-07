@@ -711,10 +711,11 @@ function chkEvent(iframeId, funcName, val) {
   return retVal
 }
 
-function removeIframeListeners(iframe) {
+function removeIframeListeners(iframe) {out 
   const { id } = iframe
   log(id, 'Disconnected from iframe')
   delete settings[id]
+  delete iframe.iframeResizer
 }
 
 function closeIframe(iframe) {
