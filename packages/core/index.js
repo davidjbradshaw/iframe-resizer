@@ -1210,12 +1210,16 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function startLogging(iframeId, options) {
-    const hasLog = Object.hasOwn(options, 'log')
+    const isLogEnabled = Object.hasOwn(options, 'log')
     const isLogString = typeof options.log === 'string'
-    const enabled = hasLog ? (isLogString ? true : options.log) : defaults.log
+    const enabled = isLogEnabled
+      ? isLogString
+        ? true
+        : options.log
+      : defaults.log
 
     options.logExpand =
-      hasLog && isLogString ? options.log === EXPAND : defaults.logExpand
+      isLogEnabled && isLogString ? options.log === EXPAND : defaults.logExpand
 
     enableVInfo(options)
     setupConsole({
