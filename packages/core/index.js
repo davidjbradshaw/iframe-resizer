@@ -851,6 +851,8 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
 
       const { sandbox } = iframe
 
+      const hasSandbox = typeof sandbox === 'object' && sandbox.length > 0
+
       if (!loaded && !loadErrorShown) {
         settings[id].loadErrorShown = true
         advise(
@@ -865,7 +867,7 @@ The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loa
 `
     : ''
 }${
-            sandbox?.length > 0 &&
+            hasSandbox &&
             !(
               sandbox.contains('allow-scripts') &&
               sandbox.contains('allow-same-origin')
@@ -876,7 +878,7 @@ The iframe has the <b>sandbox</> attribute, please ensure it contains both the <
               : ''
           } 
 ${
-  sandbox?.length > 0 &&
+  hasSandbox &&
   !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
     ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
 `
