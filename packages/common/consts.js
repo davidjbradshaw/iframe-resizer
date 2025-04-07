@@ -37,7 +37,7 @@ export const resetRequiredMethods = Object.freeze({
   documentElementScroll: 1,
 })
 
-export const ONLOAD = 'iframeOnload'
+export const ONLOAD = 'onload'
 export const INIT = 'init'
 
 export const INIT_EVENTS = Object.freeze({
