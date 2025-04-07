@@ -10,9 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/child": "^5.4.3",
-    "@iframe-resizer/core": "^5.4.3",
-    "@iframe-resizer/react": "^5.4.4-beta.1",
+    "@iframe-resizer/child": "^5.4.4",
+    "@iframe-resizer/react": "^5.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
