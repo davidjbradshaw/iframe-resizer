@@ -715,7 +715,6 @@ function removeIframeListeners(iframe) {
   const { id } = iframe
   log(id, 'Disconnected from iframe')
   delete settings[id]
-  delete iframe.iframeResizer
 }
 
 function closeIframe(iframe) {
@@ -851,8 +850,6 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
 
       const { sandbox } = iframe
 
-      const hasSandbox = typeof sandbox === 'object' && sandbox?.length > 0
-
       if (!loaded && !loadErrorShown) {
         settings[id].loadErrorShown = true
         advise(
@@ -867,7 +864,7 @@ The <b>waitForLoad</> option is currently set to <i>'true'</>. If the iframe loa
 `
     : ''
 }${
-            hasSandbox &&
+            sandbox?.length > 0 &&
             !(
               sandbox.contains('allow-scripts') &&
               sandbox.contains('allow-same-origin')
@@ -878,7 +875,7 @@ The iframe has the <b>sandbox</> attribute, please ensure it contains both the <
               : ''
           } 
 ${
-  hasSandbox &&
+  sandbox?.length > 0 &&
   !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
     ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
 `
