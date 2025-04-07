@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/child": "^5.3.2",
-    "@iframe-resizer/react": "^5.3.2",
+    "@iframe-resizer/child": "^5.4.3",
+    "@iframe-resizer/core": "^5.4.3",
+    "@iframe-resizer/react": "^5.4.4-beta.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -20,7 +21,7 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "vite": "^6.2.5"
