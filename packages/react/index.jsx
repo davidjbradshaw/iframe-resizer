@@ -1,4 +1,5 @@
 import connectResizer from '@iframe-resizer/core'
+import createAutoConsoleGroup from 'auto-console-group'
 import React, { useEffect, useImperativeHandle, useRef } from 'react'
 
 import filterIframeAttribs from '../common/filter-iframe-attribs'
@@ -9,11 +10,12 @@ function IframeResizer(props) {
   const { forwardRef, ...rest } = props
   const filteredProps = filterIframeAttribs(rest)
   const iframeRef = useRef(null)
+  const consoleGroup = createAutoConsoleGroup()
 
   const onClose = () => {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[iframe-resizer/react][${iframeRef?.current?.id}] Close event ignored, to remove the iframe update your React component.`,
+    consoleGroup.event('onClose')
+    consoleGroup.warn(
+      `Close event ignored, to remove the iframe update your React component.`,
     )
 
     return false
@@ -24,6 +26,7 @@ function IframeResizer(props) {
   useEffect(() => {
     const iframe = iframeRef.current
     const resizer = connectResizer({ ...rest, onClose })(iframe)
+    consoleGroup.label(`react(${iframe.id})`)
     return () => resizer?.disconnect()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
