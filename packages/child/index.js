@@ -103,6 +103,7 @@ function iframeResizerChild() {
   let initLock = true
   let initMsg = ''
   let inPageLinks = {}
+  let logExpand = true
   let logging = false
   let licenseKey = '' // eslint-disable-line no-unused-vars
   let mode = 0
@@ -115,7 +116,7 @@ function iframeResizerChild() {
   let overflowedNodeList = []
   let resizeFrom = 'child'
   let resizeObserver = null
-  let sameDomain = false
+  let sameOrigin = false
   let sizeSelector = ''
   let taggedElements = []
   let target = window.parent
@@ -139,7 +140,7 @@ function iframeResizerChild() {
   function init() {
     readDataFromParent()
 
-    setConsoleOptions({ id: myID, enabled: logging })
+    setConsoleOptions({ id: myID, enabled: logging, expand: logExpand })
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
     readDataFromPage()
 
@@ -286,7 +287,7 @@ Parent page: ${version} - Child page: ${VERSION}.
 
   function checkCrossDomain() {
     try {
-      sameDomain = mode === 1 || 'iframeParentListener' in window.parent
+      sameOrigin = mode === 1 || 'iframeParentListener' in window.parent
     } catch (error) {
       log('Cross domain iframe detected')
     }
@@ -320,6 +321,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     version = data[20] || version
     mode = undefined === data[21] ? mode : Number(data[21])
     // sizeSelector = data[22] || sizeSelector
+    logExpand = undefined === data[23] ? logExpand : strBool(data[23])
   }
 
   function readDataFromPage() {
@@ -1417,7 +1419,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const size = `${height}:${width}`
       const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
-      if (sameDomain)
+      if (sameOrigin)
         try {
           window.parent.iframeParentListener(msgID + message)
         } catch (error) {
@@ -1430,7 +1432,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       if (timerActive) info(displayTimeTaken(), HIGHLIGHT)
 
       info(
-        `Sending message to host page via ${sameDomain ? 'sameDomain' : 'postMessage'}`,
+        `Sending message to host page via ${sameOrigin ? 'sameOrigin' : 'postMessage'}`,
       )
       info(`%c${message}`, ITALIC)
     }
@@ -1577,7 +1579,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     warn('Already setup')
   } else {
     window.iframeChildListener = (data) =>
-      setTimeout(() => received({ data, sameDomain: true }))
+      setTimeout(() => received({ data, sameOrigin: true }))
 
     addEventListener(window, 'message', received)
     addEventListener(window, 'readystatechange', chkLateLoaded)
