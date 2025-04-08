@@ -16,13 +16,14 @@ declare module '@iframe-resizer/child' {
        * This option allows you to restrict the domain of the parent page,
        * to prevent other sites mimicking your parent page.
        */
-      targetOrigin?: string | undefined
+
+      ignoreSelector?: string | undefined
 
       offsetSize?: number | undefined
 
       sizeSelector?: string | undefined
 
-      ignoreSelector?: string | undefined
+      targetOrigin?: string | undefined
 
       /**
        * Receive message posted from the parent page with the iframe.iFrameResizer.sendMessage() method.
@@ -72,11 +73,6 @@ declare module '@iframe-resizer/child' {
       moveToAnchor(hash: string): void
 
       /**
-       * Set offsetSize.
-       */
-      setOffsetSize(offsetSize: number): void
-
-      /**
        * Scroll the parent page by x and y
        */
       scrollBy(x: number, y: number): void
@@ -97,6 +93,11 @@ declare module '@iframe-resizer/child' {
        * See the MDN documentation on postMessage for more details.
        */
       sendMessage(message: any, targetOrigin?: string): void
+
+      /**
+       * Set offsetSize.
+       */
+      setOffsetSize(offsetSize: number): void
 
       /**
        * Set default target origin.
