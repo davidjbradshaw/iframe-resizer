@@ -4,6 +4,7 @@
 
 <script>
   import connectResizer from '@iframe-resizer/core'
+  import autoConsoleGroup from 'auto-console-group'
 
   export default {
     name: 'IframeResizer',
@@ -57,12 +58,17 @@
         ),
         waitForLoad: true,
 
-        onClose: () => false, // Disable close methods, use Vue to remove iframe
+        onClose: () => {
+          consoleGroup.event('onClose')
+          consoleGroup.warn('Close method is disabled, use Vue to remove iframe')
+          return false
+        },
         onReady: (...args) => self.$emit('onReady', ...args),
         onMessage: (...args) => self.$emit('onMessage', ...args),
         onResized: (...args) => self.$emit('onResized', ...args),
       }
 
+      const consoleGroup = autoConsoleGroup({ label: `Vue(${iframe.id})` })
       const connectWithOptions = connectResizer(options)
 
       self.resizer = connectWithOptions(iframe)
