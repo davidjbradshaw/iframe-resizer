@@ -1090,13 +1090,17 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function checkMode() {
     const { mode } = settings[iframeId]
 
+    if (mode < 0) {
+      advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
+      return
+    }
+
     if (!vAdvised && !(mode > 0 && options.vInfoDisable)) {
       vAdvised = true
       vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
     }
 
-    if (mode < 0) advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
-    else if (mode < 1) advise('Parent', getModeData(3))
+    if (mode < 1) advise('Parent', getModeData(3))
   }
 
   function setDirection() {
