@@ -26,6 +26,7 @@ echo
 echo "Publishing version $VERSION as $1"
 echo
 
+git pull
 npm install
 npm run build:$1
 
@@ -60,7 +61,6 @@ cp -v js/** js-dist
 git add .
 git commit -am "Release v$VERSION"
 git tag "v$VERSION"
-git pull
 git push
 git push --tags
 
