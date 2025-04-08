@@ -256,7 +256,7 @@ const npm = [
       output('vue')('esm'),
       output('vue')('cjs'),
     ],
-    external: ['@iframe-resizer/core', 'vue'],
+    external: ['@iframe-resizer/core', 'vue', 'auto-console-group'],
     plugins: [
       typescript(),
       vue({
