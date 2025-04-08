@@ -26,8 +26,12 @@ echo
 echo "Publishing version $VERSION as $1"
 echo
 
+git stash
 git pull
+git stash pop
+
 npm install
+npm test
 npm run build:$1
 
 cd dist/parent
