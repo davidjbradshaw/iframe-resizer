@@ -6,6 +6,8 @@
   import connectResizer from '@iframe-resizer/core'
   import autoConsoleGroup from 'auto-console-group'
 
+  const EXPAND = 'expanded'
+
   export default {
     name: 'IframeResizer',
 
@@ -29,6 +31,10 @@
       },
       direction: {
         type: String,
+      },
+      log: {
+        type: String || Boolean,
+        default: false,
       },
       inPageLinks: {
         type: Boolean,
@@ -68,12 +74,19 @@
         onResized: (...args) => self.$emit('onResized', ...args),
       }
 
+      if (options.log === '') options.log = true
+
       const connectWithOptions = connectResizer(options)
       self.resizer = connectWithOptions(iframe)
 
-      const consoleGroup = autoConsoleGroup({ label: `Vue(${iframe.id})` })
+      const consoleOptions = {
+        label: `Vue(${iframe.id})`,
+        expand: options.logExpand, // set inside connectResizer
+      }
+
+      const consoleGroup = autoConsoleGroup(consoleOptions)
       consoleGroup.event('setup')
-      consoleGroup.log('Created Vue competent')
+      if (options.log) consoleGroup.log('Created Vue competent')
     },
     
     beforeUnmount() {
