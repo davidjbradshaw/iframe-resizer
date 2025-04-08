@@ -74,19 +74,16 @@ declare module '@iframe-resizer/parent' {
        * Set iFrame-resizer license.
        */
       license: string
+
       /**
        * Enable/disable logs
        */
-      log?: boolean
-      /**
-       * Set offset height of iFrame content.
-       */
-      offsetHeight?: number | undefined
+      log?: boolean | 'expanded' | 'collapsed'
 
       /**
-       * Set offset width of iFrame content.
+       * Set offset size of iFrame content.
        */
-      offsetWidth?: number | undefined
+      offsetSize?: number | undefined
 
       /**
        * Enable scroll bars in iFrame.

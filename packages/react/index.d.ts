@@ -37,15 +37,29 @@ declare module '@iframe-resizer/react' {
       forwardRef?: any
       inPageLinks?: boolean
       license: string
-      offset?: number
+      log?: boolean | 'expanded' | 'collapsed'
+      offsetSize?: number
       scrolling?: boolean | 'omit'
       tolerance?: number
       warningTimeout?: number
     }
 
     type ResizerEvents = {
-      onReady?: (iframe: IFrameComponent) => void
+      onCLosed?: (iframeId: string) => void
       onMessage?: (ev: { iframe: IFrameComponent; message: any }) => void
+      onMouseEnter?: (ev: {
+        iframe: IFrameComponent
+        height: number
+        width: number
+        type: string
+      }) => void
+      onMouseLeave?: (ev: {
+        iframe: IFrameComponent
+        height: number
+        width: number
+        type: string
+      }) => void
+      onReady?: (iframe: IFrameComponent) => void
       onResized?: (ev: {
         iframe: IFrameComponent
         height: number
