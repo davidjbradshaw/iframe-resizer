@@ -68,10 +68,12 @@
         onResized: (...args) => self.$emit('onResized', ...args),
       }
 
-      const consoleGroup = autoConsoleGroup({ label: `Vue(${iframe.id})` })
       const connectWithOptions = connectResizer(options)
-
       self.resizer = connectWithOptions(iframe)
+
+      const consoleGroup = autoConsoleGroup({ label: `Vue(${iframe.id})` })
+      consoleGroup.event('setup')
+      consoleGroup.log('Created Vue competent')
     },
     
     beforeUnmount() {
