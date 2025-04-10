@@ -15,7 +15,7 @@ const l = (l) => {
     )
   },
   p = (l) =>
-    l.replaceAll(/[A-Za-z]/g, (l) =>
+    l.replace(/[A-Za-z]/g, (l) =>
       String.fromCodePoint(
         (l <= 'Z' ? 90 : 122) >= (l = l.codePointAt(0) + 19) ? l : l - 26,
       ),
