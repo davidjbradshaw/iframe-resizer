@@ -1210,6 +1210,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setupBodyMarginValues()
     init(createOutgoingMsg(iframeId))
     setupIframeObject()
+    log(iframeId, 'Setup complete')
   }
 
   function enableVInfo(options) {
