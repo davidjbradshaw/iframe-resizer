@@ -23,6 +23,7 @@ import {
   event as consoleEvent,
   info,
   log,
+  purge as consoleClear,
   setConsoleSettings,
   setupConsole,
   vInfo,
@@ -1092,7 +1093,8 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     if (mode < 0) {
       advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
-      return
+      consoleClear(iframeId)
+      throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
     }
 
     if (!vAdvised && !(mode > 0 && options.vInfoDisable)) {
@@ -1198,15 +1200,16 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function setupIframe(options) {
     if (beenHere()) {
       warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
-    } else {
-      processOptions(options)
-      checkMode()
-      setupEventListenersOnce()
-      setScrolling()
-      setupBodyMarginValues()
-      init(createOutgoingMsg(iframeId))
-      setupIframeObject()
+      return
     }
+
+    processOptions(options)
+    checkMode()
+    setupEventListenersOnce()
+    setScrolling()
+    setupBodyMarginValues()
+    init(createOutgoingMsg(iframeId))
+    setupIframeObject()
   }
 
   function enableVInfo(options) {

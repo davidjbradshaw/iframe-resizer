@@ -54,6 +54,7 @@
     "unicorn/consistent-function-scoping": 0,
     "unicorn/no-array-callback-reference": 0,
     "unicorn/no-array-reduce": 0,
+    "unicorn/prefer-string-replace-all": 0,
     "unicorn/switch-case-braces": 0,
     "unicorn/no-this-assignment": 0,
     "unicorn/prefer-module": 0,
