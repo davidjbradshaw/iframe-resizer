@@ -34,7 +34,7 @@ function IframeResizer(props) {
     const resizer = connectResizer(resizerOptions)(iframe)
 
     consoleGroup.expand(resizerOptions.logExpand)
-    if (rest.log) consoleGroup.log('Created React competent')
+    if (rest.log) consoleGroup.log('Created React component')
 
     return () => {
       consoleGroup.endAutoGroup()
