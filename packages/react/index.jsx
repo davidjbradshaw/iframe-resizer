@@ -25,8 +25,14 @@ function IframeResizer(props) {
   // deal with changes to the element and does not need recalling
   useEffect(() => {
     const iframe = iframeRef.current
-    const resizer = connectResizer({ ...rest, onClose })(iframe)
+    const resizerOptions = { ...rest, onClose }
+    const resizer = connectResizer(resizerOptions)(iframe)
+
+    consoleGroup.expand(resizerOptions.logExpand)
     consoleGroup.label(`react(${iframe.id})`)
+    consoleGroup.event('setup')
+    if (rest.log) consoleGroup.log('Created React competent')
+
     return () => resizer?.disconnect()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
