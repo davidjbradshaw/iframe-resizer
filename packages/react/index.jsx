@@ -26,14 +26,20 @@ function IframeResizer(props) {
   useEffect(() => {
     const iframe = iframeRef.current
     const resizerOptions = { ...rest, onClose }
+
+    consoleGroup.touch()
+    consoleGroup.label(`react(${iframe.id})`)
+    consoleGroup.event('setup')
+
     const resizer = connectResizer(resizerOptions)(iframe)
 
     consoleGroup.expand(resizerOptions.logExpand)
-    consoleGroup.label(`react(${iframe.id})`)
-    consoleGroup.event('setup')
     if (rest.log) consoleGroup.log('Created React competent')
 
-    return () => resizer?.disconnect()
+    return () => {
+      consoleGroup.endAutoGroup()
+      resizer?.disconnect()
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useImperativeHandle(forwardRef, () => ({
