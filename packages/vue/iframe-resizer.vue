@@ -80,7 +80,7 @@
       self.resizer = connectWithOptions(iframe)
 
       const consoleOptions = {
-        label: `Vue(${iframe.id})`,
+        label: `vue(${iframe.id})`,
         expand: options.logExpand, // set inside connectResizer
       }
 
