@@ -1220,6 +1220,15 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
+  function chkLocationSearch(options) {
+    const { search } = window.location
+
+    if (search.includes('ifrlog')) {
+      options.log = EXPAND
+      options.logExpand = !search.includes('ifrlog=collapsed')
+    }
+  }
+
   function startLogging(iframeId, options) {
     const isLogEnabled = Object.hasOwn(options, 'log')
     const isLogString = typeof options.log === 'string'
@@ -1229,8 +1238,12 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : options.log
       : defaults.log
 
-    options.logExpand =
-      isLogEnabled && isLogString ? options.log === EXPAND : defaults.logExpand
+    if (!Object.hasOwn(options, 'logExpand')) {
+      options.logExpand =
+        isLogEnabled && isLogString
+          ? options.log === EXPAND
+          : defaults.logExpand
+    }
 
     enableVInfo(options)
     setupConsole({
@@ -1256,6 +1269,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     throw new TypeError('Options is not an object')
   }
 
+  chkLocationSearch(options)
   startLogging(iframeId, options)
   errorBoundary(iframeId, setupIframe)(options)
 
