@@ -812,7 +812,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
   function logSent(route) {
     const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
     info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
-    info(id, `%c${displayMsg}`, ITALIC)
+    info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
   }
 
   function postMessageToIframe() {
