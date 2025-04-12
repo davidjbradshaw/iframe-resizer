@@ -78,7 +78,7 @@ declare module '@iframe-resizer/parent' {
       /**
        * Enable/disable logs
        */
-      log?: boolean | 'expanded' | 'collapsed'
+      log?: boolean | 'expanded' | 'collapsed' | number | undefined
 
       /**
        * Set offset size of iFrame content.
