@@ -27,7 +27,6 @@ function IframeResizer(props) {
     const iframe = iframeRef.current
     const resizerOptions = { ...rest, onClose }
 
-    consoleGroup.touch()
     consoleGroup.label(`react(${iframe.id})`)
     consoleGroup.event('setup')
 

@@ -942,14 +942,20 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function processMutations() {
-      consoleEvent('mutationObserver')
+      consoleEvent(MUTATION_OBSERVER)
       const now = performance.now()
       const delay = now - perfMon
       const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
 
       // Back off if the callStack is busy with other stuff
       if (delay > delayLimit && delay < DELAY_MAX) {
-        log(`MutationObserver delay: %c${delay}ms > ${delayLimit}ms`, HIGHLIGHT)
+        info('backed off due to heavy workload on callStack')
+        log(
+          `%c${delay}ms %c>%c ${delayLimit}ms`,
+          HIGHLIGHT,
+          FOREGROUND,
+          HIGHLIGHT,
+        )
         setTimeout(processMutations, DELAY * delayCount)
         perfMon = now
         return
@@ -1329,9 +1335,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   const sendSize = errorBoundary(
     (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
-      totalTime = performance.now()
-
       consoleEvent(triggerEvent)
+      totalTime = performance.now()
 
       if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
         info('Resizing disabled')
@@ -1429,12 +1434,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         }
       else target.postMessage(msgID + message, targetOrigin)
 
-      if (timerActive) info(displayTimeTaken(), HIGHLIGHT)
+      if (timerActive) log(displayTimeTaken(), HIGHLIGHT)
 
       info(
-        `Sending message to host page via ${sameOrigin ? 'sameOrigin' : 'postMessage'}`,
+        `Sending message to parent page via ${sameOrigin ? 'sameOrigin' : 'postMessage'}: %c%c${message}`,
+        ITALIC,
+        HIGHLIGHT,
       )
-      info(`%c${message}`, ITALIC)
     }
 
     consoleEvent(triggerEvent)
@@ -1446,6 +1452,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   const sendMsg = errorBoundary(sendMessage)
 
   function receiver(event) {
+    consoleEvent('onMessage')
     const { freeze } = Object
     const { parse } = JSON
     const parseFrozen = (data) => freeze(parse(data))
