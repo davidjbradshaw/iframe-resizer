@@ -689,7 +689,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     win.parentIframe = Object.freeze({
       autoResize: (enable) => {
-        typeAssert(enable, 'bool', 'parentIframe.autoResize(enable) enable')
+        typeAssert(enable, 'boolean', 'parentIframe.autoResize(enable) enable')
 
         if (enable === true && autoResize === false) {
           autoResize = true
