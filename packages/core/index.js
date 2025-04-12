@@ -661,7 +661,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     checkSettings(iframeId)
 
     if (!isMessageFromMetaParent()) {
-      log(iframeId, `Received: %c${msg}`, ITALIC)
+      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
       settings[iframeId].loaded = true
 
       if (checkIframeExists() && isMessageFromIframe()) {
