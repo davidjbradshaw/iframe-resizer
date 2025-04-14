@@ -58,21 +58,16 @@ const npm = [
     output: [
       {
         name: 'createResizer',
+        globals: {
+          'auto-console-group': 'createConsoleGroup',
+        },
         ...output('core')('umd'),
       },
       output('core')('esm'),
       output('core')('cjs'),
     ],
+    external: ['auto-console-group'],
     plugins: pluginsProd('core'),
-    watch: false,
-  },
-
-  //  Parent ES module (for bundlers) and CommonJS (for Node) build.
-  {
-    input: 'packages/parent/esm.js',
-    output: [output('parent')('esm'), output('parent')('cjs')],
-    external: ['@iframe-resizer/core'],
-    plugins: pluginsProd('parent'),
     watch: false,
   },
 
@@ -101,12 +96,12 @@ const npm = [
     ],
   },
 
-  //Child ES module (for bundlers) and CommonJS (for Node) build.
+  //  Parent ES module (for bundlers) and CommonJS (for Node) build.
   {
-    input: 'packages/child/index.js',
-    output: [output('child')('esm'), output('child')('cjs')],
-    external: ['auto-console-group'],
-    plugins: pluginsProd('child'),
+    input: 'packages/parent/esm.js',
+    output: [output('parent')('esm'), output('parent')('cjs')],
+    external: ['@iframe-resizer/core', 'auto-console-group'],
+    plugins: pluginsProd('parent'),
     watch: false,
   },
 
@@ -131,11 +126,20 @@ const npm = [
     watch: false,
   },
 
+  //Child ES module (for bundlers) and CommonJS (for Node) build.
+  {
+    input: 'packages/child/index.js',
+    output: [output('child')('esm'), output('child')('cjs')],
+    external: ['auto-console-group'],
+    plugins: pluginsProd('child'),
+    watch: false,
+  },
+
   //  jQuery (ES)
   {
     input: 'packages/jquery/plugin.js',
     output: [output('jquery')('esm'), output('jquery')('cjs')],
-    external: ['@iframe-resizer/core'],
+    external: ['@iframe-resizer/core', 'auto-console-group'],
     plugins: pluginsProd('parent'),
     watch: false,
   },
@@ -217,7 +221,12 @@ const npm = [
   {
     input: 'packages/react/index.jsx',
     output: [output('react')('esm'), output('react')('cjs')],
-    external: ['@iframe-resizer/core', 'react', /@babel\/runtime/],
+    external: [
+      '@iframe-resizer/core',
+      'auto-console-group',
+      'react',
+      /@babel\/runtime/,
+    ],
     plugins: [
       ...pluginsProd('react'),
       copy({
@@ -250,6 +259,11 @@ const npm = [
     input: 'packages/vue/index.js',
     output: [
       {
+        globals: {
+          'auto-console-group': 'createConsoleGroup',
+          '@iframe-resizer/core': 'connectResizer',
+          vue: 'Vue',
+        },
         name: 'IframeResizer',
         ...output('vue')('umd'),
       },
