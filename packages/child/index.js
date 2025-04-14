@@ -1496,7 +1496,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       pageInfo() {
         const msgBody = getData()
-        log(`PageInfo received from parent: ${msgBody}`)
+        log(`PageInfo received from parent:`, parseFrozen(msgBody))
         if (onPageInfo) {
           setTimeout(() => onPageInfo(parse(msgBody)))
         } else {
@@ -1505,10 +1505,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       parentInfo() {
-        const msgBody = getData()
-        log(`ParentInfo received from parent: ${msgBody}`)
+        const msgBody = parseFrozen(getData())
+        log(`ParentInfo received from parent:`, msgBody)
         if (onParentInfo) {
-          setTimeout(() => onParentInfo(parseFrozen(msgBody)))
+          setTimeout(() => onParentInfo(msgBody))
         } else {
           notExpected('parentInfo')
         }
@@ -1516,7 +1516,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       message() {
         const msgBody = getData()
-        log(`onMessage called from parent: ${msgBody}`)
+        log(`onMessage called from parent:%c`, HIGHLIGHT, parseFrozen(msgBody))
         // eslint-disable-next-line sonarjs/no-extra-arguments
         setTimeout(() => onMessage(parse(msgBody)))
       },
