@@ -1,4 +1,4 @@
-import { FOREGROUND, HIGHLIGHT, ITALIC } from 'auto-console-group'
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
   EXPAND,
@@ -152,10 +152,11 @@ function iframeListener(event) {
   function forwardMsgFromIframe(msgBody) {
     log(
       iframeId,
-      `onMessage passed: {iframe: %c${messageData.iframe.id}%c, message: %c${msgBody}}`,
+      `onMessage passed: {iframe: %c${messageData.iframe.id}%c, message: %c${msgBody}%c}`,
       HIGHLIGHT,
       FOREGROUND,
-      ITALIC,
+      HIGHLIGHT,
+      FOREGROUND,
     )
 
     on('onMessage', {
@@ -523,11 +524,12 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function eventMsg() {
+    const { height, iframe, msg, type, width } = messageData
     if (settings[iframeId]?.firstRun) firstRun()
 
-    switch (messageData.type) {
+    switch (type) {
       case 'close':
-        closeIframe(messageData.iframe)
+        closeIframe(iframe)
         break
 
       case 'message':
@@ -581,7 +583,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case 'title':
-        setTitle(messageData.msg, iframeId)
+        setTitle(msg, iframeId)
         break
 
       case 'reset':
@@ -591,22 +593,22 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       case 'init':
         resizeIframe()
         checkSameDomain(iframeId)
-        checkVersion(messageData.msg)
+        checkVersion(msg)
         started()
-        on('onReady', messageData.iframe)
+        on('onReady', iframe)
         break
 
       default:
-        if (messageData.width === 0 && messageData.height === 0) {
+        if (width === 0 && height === 0) {
           warn(
             iframeId,
-            `Unsupported message received (${messageData.type}), this is likely due to the iframe containing a later ` +
+            `Unsupported message received (${type}), this is likely due to the iframe containing a later ` +
               `version of iframe-resizer than the parent page`,
           )
           return
         }
 
-        if (messageData.width === 0 || messageData.height === 0) {
+        if (width === 0 || height === 0) {
           log(iframeId, 'Ignoring message with 0 height or width')
           return
         }
