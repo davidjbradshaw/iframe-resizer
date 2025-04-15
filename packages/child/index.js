@@ -6,6 +6,7 @@ import {
   IGNORE_ATTR,
   MANUAL_RESIZE_REQUEST,
   MUTATION_OBSERVER,
+  NO_CHANGE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   RESIZE_OBSERVER,
@@ -1317,14 +1318,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       case triggerEvent === RESIZE_OBSERVER:
       case triggerEvent === OVERFLOW_OBSERVER:
       case triggerEvent === MUTATION_OBSERVER: {
-        log(`No change in content size detected`)
+        log(NO_CHANGE)
         purge()
         break
       }
 
       default:
         purge()
-        info(`No change in content size detected`)
+        info(NO_CHANGE)
     }
 
     timerActive = false // Reset time for next resize
