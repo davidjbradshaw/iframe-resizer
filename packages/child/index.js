@@ -991,7 +991,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const target = document.querySelector('body')
       const config = {
         attributes: true,
-        attributeFilter: [IGNORE_ATTR, SIZE_ATTR, OVERFLOW_ATTR],
+        attributeFilter: [IGNORE_ATTR, SIZE_ATTR],
         attributeOldValue: false,
         characterData: false,
         characterDataOldValue: false,
