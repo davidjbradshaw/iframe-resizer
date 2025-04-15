@@ -990,9 +990,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const observer = new window.MutationObserver(mutationObserved)
       const target = document.querySelector('body')
       const config = {
-        attributes: false,
+        attributes: true,
         attributeOldValue: false,
-        characterData: false,
+        characterData: true,
         characterDataOldValue: false,
         childList: true,
         subtree: true,
