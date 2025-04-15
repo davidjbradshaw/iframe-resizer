@@ -561,12 +561,12 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case 'pageInfo':
-        sendPageInfoToIframe('start', iframeId)
+        // sendPageInfoToIframe('start', iframeId)
         startPageInfoMonitor()
         break
 
       case 'parentInfo':
-        sendParentInfoToIframe('start', iframeId)
+        // sendParentInfoToIframe('start', iframeId)
         startParentInfoMonitor()
         break
 
