@@ -927,7 +927,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       }
     }
 
-    const DELAY = 16 // Corresponds to 60fps
+    const DELAY = 8 // Corresponds to 120fps
     const DELAY_MARGIN = 2
     const DELAY_MAX = 200
 
