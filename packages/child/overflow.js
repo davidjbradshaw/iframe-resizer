@@ -1,6 +1,6 @@
-import { HEIGHT_EDGE, IGNORE_ATTR, OVERFLOW_ATTR } from '../common/consts'
+import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, event, info, log } from './console'
+import { assert, event, log } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -38,26 +38,8 @@ const overflowObserver = (options) => {
     afterReflow(emitOverflowDetected)
   }
 
-  function createOverflowMutationObserver() {
-    const observer = new window.MutationObserver(() => {
-      info('Detected changes in element attributes')
-      emitOverflowDetected(true)
-    })
-    const target = document.querySelector('body')
-    const config = {
-      attributes: true,
-      attributeFilter: [IGNORE_ATTR],
-      subtree: true,
-    }
-
-    log('Setup OverflowMutationObserver')
-    observer.observe(target, config)
-  }
-
   const observer = new IntersectionObserver(observation, observerOptions)
   const observedNodes = new WeakSet()
-
-  createOverflowMutationObserver()
 
   return function observeOverflow(nodeList) {
     log('Attached overflowObservers')
