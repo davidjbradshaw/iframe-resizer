@@ -913,7 +913,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let perfMon = 0
 
     const updateMutation = (mutations) => {
-      log('Mutations observed:', mutations)
+      info('Mutations observed:', mutations)
 
       for (const mutation of mutations) {
         const { addedNodes, removedNodes } = mutation
