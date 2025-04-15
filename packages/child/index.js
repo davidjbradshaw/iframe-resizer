@@ -212,7 +212,7 @@ function iframeResizerChild() {
   function checkAndSetupTags() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
-    log(`Tagged elements found: %c${hasTags}`, hasTags ? HIGHLIGHT : FOREGROUND)
+    log(`Tagged elements found: %c${hasTags}`, HIGHLIGHT)
   }
 
   function addOverflowObservers(nodeList) {
