@@ -252,15 +252,17 @@ function iframeListener(event) {
     const sendResize = sendInfo('resize window')
 
     function setListener(requestType, listener) {
-      log(id, `${requestType} listeners for send${type}`)
+      log(id, `${requestType}listeners for send${type}`)
       listener(window, 'scroll', sendScroll)
       listener(window, 'resize', sendResize)
     }
 
     function stop() {
+      consoleEvent(id, `stop${type}`)
       setListener('Remove ', removeEventListener)
       pageObserver.disconnect()
       iframeObserver.disconnect()
+      removeEventListener(settings[id].iframe, 'load', stop)
     }
 
     function start() {
@@ -284,10 +286,10 @@ function iframeListener(event) {
     const pageObserver = new ResizeObserver(sendInfo('pageObserver'))
     const iframeObserver = new ResizeObserver(sendInfo('iframeObserver'))
 
-    start()
-
     if (settings[id]) {
       settings[id][`stop${type}`] = stop
+      addEventListener(settings[id].iframe, 'load', stop)
+      start()
     }
   }
 
