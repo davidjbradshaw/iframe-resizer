@@ -59,7 +59,7 @@ const npm = [
       {
         name: 'createResizer',
         globals: {
-          'auto-console-group': 'createConsoleGroup',
+          'auto-console-group': 'acg',
         },
         ...output('core')('umd'),
       },
@@ -260,15 +260,15 @@ const npm = [
     output: [
       {
         globals: {
-          'auto-console-group': 'createConsoleGroup',
+          'auto-console-group': 'acg',
           '@iframe-resizer/core': 'connectResizer',
           vue: 'Vue',
         },
         name: 'IframeResizer',
         ...output('vue')('umd'),
       },
-      output('vue')('esm'),
       output('vue')('cjs'),
+      output('vue')('esm'),
     ],
     external: ['@iframe-resizer/core', 'vue', 'auto-console-group'],
     plugins: [

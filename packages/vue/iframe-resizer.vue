@@ -4,8 +4,13 @@
 
 <script>
   import connectResizer from '@iframe-resizer/core'
-  import autoConsoleGroup from 'auto-console-group'
+  import acg from 'auto-console-group'
 
+  import { esModuleInterop } from '../common/utils'
+
+  // Deal with UMD not converting default exports to named exports
+  const createAutoConsoleGroup = esModuleInterop(acg)
+  
   const EXPAND = 'expanded'
 
   export default {
@@ -84,7 +89,7 @@
         expand: options.logExpand, // set inside connectResizer
       }
 
-      const consoleGroup = autoConsoleGroup(consoleOptions)
+      const consoleGroup = createAutoConsoleGroup(consoleOptions)
       consoleGroup.event('setup')
       if (options.log) consoleGroup.log('Created Vue competent')
     },
