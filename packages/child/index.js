@@ -927,7 +927,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       }
     }
 
-    const DELAY = 8 // Corresponds to 120fps
+    const DELAY = 16 // Corresponds to 60fps
     const DELAY_MARGIN = 2
     const DELAY_MAX = 200
 
@@ -951,7 +951,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       if (delay > delayLimit && delay < DELAY_MAX) {
         info('Backed off due to heavy workload on callStack')
         log(
-          `%c${delay}ms %c>%c ${delayLimit}ms`,
+          `Delay: %c${round(delay)}ms %c> Delay limit: %c${delayLimit}ms`,
           HIGHLIGHT,
           FOREGROUND,
           HIGHLIGHT,
