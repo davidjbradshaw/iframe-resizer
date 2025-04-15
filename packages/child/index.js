@@ -913,7 +913,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let perfMon = 0
 
     const updateMutation = (mutations) => {
-      log('Mutations observed:', mutations.length)
+      log('Mutations observed:', mutations)
 
       for (const mutation of mutations) {
         const { addedNodes, removedNodes } = mutation
@@ -943,7 +943,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function processMutations() {
-      consoleEvent(MUTATION_OBSERVER)
       const now = performance.now()
       const delay = now - perfMon
       const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
@@ -992,8 +991,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       const target = document.querySelector('body')
       const config = {
         attributes: true,
+        attributeFilter: [IGNORE_ATTR, SIZE_ATTR, OVERFLOW_ATTR],
         attributeOldValue: false,
-        characterData: true,
+        characterData: false,
         characterDataOldValue: false,
         childList: true,
         subtree: true,
