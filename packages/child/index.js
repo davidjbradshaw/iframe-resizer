@@ -949,7 +949,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       // Back off if the callStack is busy with other stuff
       if (delay > delayLimit && delay < DELAY_MAX) {
-        info('backed off due to heavy workload on callStack')
+        info('Backed off due to heavy workload on callStack')
         log(
           `%c${delay}ms %c>%c ${delayLimit}ms`,
           HIGHLIGHT,
