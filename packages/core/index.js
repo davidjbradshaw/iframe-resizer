@@ -1106,7 +1106,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     if (!vAdvised && mode < 1) advise('Parent', getModeData(3))
-    
+
     vAdvised = true
   }
 
