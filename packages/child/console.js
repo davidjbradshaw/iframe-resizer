@@ -33,6 +33,7 @@ export const {
   error,
   errorBoundary,
   event,
+  label,
   purge,
   warn,
 } = childConsole
