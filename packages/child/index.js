@@ -1562,7 +1562,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function processMessage() {
-
       if (firstRun === false) {
         callFromParent()
         return

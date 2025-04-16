@@ -1102,11 +1102,12 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     if (!vAdvised && !(mode > 0 && options.vInfoDisable)) {
-      vAdvised = true
       vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
     }
 
-    if (mode < 1) advise('Parent', getModeData(3))
+    if (!vAdvised && mode < 1) advise('Parent', getModeData(3))
+    
+    vAdvised = true
   }
 
   function setDirection() {
