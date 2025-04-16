@@ -1,8 +1,12 @@
 import connectResizer from '@iframe-resizer/core'
-import createAutoConsoleGroup from 'auto-console-group'
+import acg from 'auto-console-group'
 import React, { useEffect, useImperativeHandle, useRef } from 'react'
 
 import filterIframeAttribs from '../common/filter-iframe-attribs'
+import { esModuleInterop } from '../common/utils'
+
+// Deal with UMD not converting default exports to named exports
+const createAutoConsoleGroup = esModuleInterop(acg)
 
 // TODO: Add support for React.forwardRef() in next major version (Breaking change)
 function IframeResizer(props) {
