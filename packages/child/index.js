@@ -28,6 +28,7 @@ import {
 import {
   advise,
   adviser,
+  // assert,
   debug,
   deprecateMethod,
   deprecateMethodReplace,
@@ -36,6 +37,7 @@ import {
   errorBoundary,
   event as consoleEvent,
   info,
+  label,
   log,
   purge,
   setConsoleOptions,
@@ -102,7 +104,6 @@ function iframeResizerChild() {
   let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
   let ignoreSelector = ''
   let initLock = true
-  let initMsg = ''
   let inPageLinks = {}
   let logExpand = true
   let logging = false
@@ -138,8 +139,8 @@ function iframeResizerChild() {
   let onPageInfo = null
   let onParentInfo = null
 
-  function init() {
-    readDataFromParent()
+  function init(data) {
+    readDataFromParent(data)
 
     setConsoleOptions({ id: myID, enabled: logging, expand: logExpand })
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
@@ -295,9 +296,8 @@ Parent page: ${version} - Child page: ${VERSION}.
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  function readDataFromParent() {
+  function readDataFromParent(data) {
     const strBool = (str) => str === 'true'
-    const data = initMsg.slice(msgIdLen).split(':')
 
     myID = data[0] // eslint-disable-line prefer-destructuring
     bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]) // For V1 compatibility
@@ -567,6 +567,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     // Guard against the following having been globally redefined in CSS.
     clearFix.style.display = 'block'
     clearFix.style.height = '0'
+
     document.body.append(clearFix)
   }
 
@@ -1462,12 +1463,20 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     const processRequestFromParent = {
       init: function initFromParent() {
-        initMsg = event.data
+        if (document.readyState === 'loading') {
+          log('Page not ready, ignoring init message')
+          return
+        }
+
+        const data = event.data.slice(msgIdLen).split(':')
+
         target = event.source
         origin = event.origin
 
-        init()
+        init(data)
+
         firstRun = false
+
         setTimeout(() => {
           initLock = false
         }, eventCancelTimer)
@@ -1540,6 +1549,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     function callFromParent() {
       const messageType = getMessageType()
 
+      consoleEvent(messageType)
+
       if (messageType in processRequestFromParent) {
         processRequestFromParent[messageType]()
         return
@@ -1551,7 +1562,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     function processMessage() {
-      consoleEvent(getMessageType())
 
       if (firstRun === false) {
         callFromParent()
@@ -1559,6 +1569,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       }
 
       if (isInitMsg()) {
+        label(getMessageType())
+        consoleEvent('init')
         processRequestFromParent.init()
         return
       }
