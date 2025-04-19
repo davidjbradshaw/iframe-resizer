@@ -111,9 +111,9 @@ function iframeResizerChild() {
   let mode = 0
   let mouseEvents = false
   let myID = ''
+  let observeOverflow = id
   let offsetHeight
   let offsetWidth
-  let observeOverflow = id
   let origin
   let overflowedNodeList = []
   let resizeFrom = 'child'
@@ -132,6 +132,7 @@ function iframeResizerChild() {
   let widthCalcMode = widthCalcModeDefault
   let win = window
 
+  let onBeforeResize = id
   let onMessage = () => {
     warn('onMessage function not defined')
   }
@@ -325,13 +326,21 @@ Parent page: ${version} - Child page: ${VERSION}.
     logExpand = undefined === data[23] ? logExpand : strBool(data[23])
   }
 
+  function readFunction(data, key, defaultValue) {
+    if (!(key in data)) return defaultValue
+    if (typeof data[key] === 'function') return data[key]
+
+    throw new TypeError(`${key} is not a function`)
+  }
+
   function readDataFromPage() {
     // eslint-disable-next-line sonarjs/cognitive-complexity
     function readData(data) {
       log(`Reading data from page:`, data)
 
-      onMessage = data?.onMessage || onMessage
-      onReady = data?.onReady || onReady
+      onBeforeResize = readFunction(data, 'onBeforeResize', onBeforeResize)
+      onMessage = readFunction(data, 'onMessage', onMessage)
+      onReady = readFunction(data, 'onReady', onReady)
 
       if (typeof data?.offset === 'number') {
         deprecateOption('offset', 'offsetSize')
@@ -1279,6 +1288,23 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
+  function calcSize(direction, mode) {
+    if (!direction.enabled()) return direction[mode]()
+
+    let newSize = direction[mode]()
+    newSize = onBeforeResize(newSize) ?? newSize
+
+    if (Number.isNaN(newSize))
+      throw new TypeError(
+        'Invalid size returned from %conBeforeResize()%c:',
+        BOLD,
+        NORMAL,
+        newSize,
+      )
+
+    return newSize
+  }
+
   function sizeIframe(
     triggerEvent,
     triggerEventDesc,
@@ -1296,10 +1322,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       (calculateHeight && checkTolerance(height, newHeight)) ||
       (calculateWidth && checkTolerance(width, newWidth))
 
-    const newHeight =
-      undefined === customHeight ? getHeight[heightCalcMode]() : customHeight
-    const newWidth =
-      undefined === customWidth ? getWidth[widthCalcMode]() : customWidth
+    const newHeight = customHeight ?? calcSize(getHeight, heightCalcMode)
+    const newWidth = customWidth ?? calcSize(getWidth, widthCalcMode)
 
     switch (true) {
       case isSizeChangeDetected() || triggerEvent === 'init':
