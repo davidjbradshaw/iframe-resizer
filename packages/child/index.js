@@ -45,6 +45,7 @@ import {
 } from './console'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
+import { readFunction } from './read'
 
 function iframeResizerChild() {
   const checkVisibilityOptions = {
@@ -324,13 +325,6 @@ Parent page: ${version} - Child page: ${VERSION}.
     mode = undefined === data[21] ? mode : Number(data[21])
     // sizeSelector = data[22] || sizeSelector
     logExpand = undefined === data[23] ? logExpand : strBool(data[23])
-  }
-
-  function readFunction(data, key, defaultValue) {
-    if (!(key in data)) return defaultValue
-    if (typeof data[key] === 'function') return data[key]
-
-    throw new TypeError(`${key} is not a function`)
   }
 
   function readDataFromPage() {
