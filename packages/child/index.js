@@ -1288,8 +1288,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let newSize = direction[mode]()
 
     const returnedSize = onBeforeResize(newSize)
-    if (returnedSize === undefined) newSize = returnedSize
-    else warn('No value returned from %conBeforeResize()', BOLD)
+    if (returnedSize === undefined) {
+      warn('No value returned from %conBeforeResize()', BOLD)
+    } else newSize = returnedSize
 
     if (Number.isNaN(newSize))
       throw new TypeError(
@@ -1321,6 +1322,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     const newHeight = customHeight ?? calcSize(getHeight, heightCalcMode)
     const newWidth = customWidth ?? calcSize(getWidth, widthCalcMode)
+
+    log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
 
     switch (true) {
       case isSizeChangeDetected() || triggerEvent === 'init':
@@ -1358,8 +1361,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   const sendSize = errorBoundary(
     (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
-      consoleEvent(triggerEvent)
       totalTime = performance.now()
+      timerActive = true
+
+      consoleEvent(triggerEvent)
+
+      if (sendPending === true) return // only update once per frame
 
       if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
         info('Resizing disabled')
@@ -1373,22 +1380,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      if (!sendPending) {
-        log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
-        timerActive = true
-        sizeIframe(
-          triggerEvent,
-          triggerEventDesc,
-          customHeight,
-          customWidth,
-          msg,
-        )
-        requestAnimationFrame(() => {
-          sendPending = false
-        })
-      }
-
       sendPending = true
+      requestAnimationFrame(() => {
+        sendPending = false
+      })
+
+      sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
     },
   )
 
