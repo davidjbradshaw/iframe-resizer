@@ -1282,7 +1282,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
-  function getOnBeforeResize(newSize) {
+  function callOnBeforeResize(newSize) {
     const returnedSize = onBeforeResize(newSize)
 
     if (returnedSize === undefined) {
@@ -1302,7 +1302,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     const newSize = direction[mode]()
 
-    return onBeforeResize === undefined ? newSize : getOnBeforeResize(newSize)
+    return onBeforeResize === undefined ? newSize : callOnBeforeResize(newSize)
   }
 
   function sizeIframe(
