@@ -133,7 +133,7 @@ function iframeResizerChild() {
   let widthCalcMode = widthCalcModeDefault
   let win = window
 
-  let onBeforeResize = id
+  let onBeforeResize
   let onMessage = () => {
     warn('onMessage function not defined')
   }
@@ -1282,22 +1282,27 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
 
+  function getOnBeforeResize(newSize) {
+    const returnedSize = onBeforeResize(newSize)
+
+    if (returnedSize === undefined) {
+      throw new TypeError('No value returned from onBeforeResize()')
+    }
+
+    if (Number.isNaN(returnedSize))
+      throw new TypeError(
+        `Invalid value returned from onBeforeResize(): ${returnedSize}, expected Number`,
+      )
+
+    return returnedSize
+  }
+
   function calcSize(direction, mode) {
     if (!direction.enabled()) return direction[mode]()
 
-    let newSize = direction[mode]()
+    const newSize = direction[mode]()
 
-    const returnedSize = onBeforeResize(newSize)
-    if (returnedSize === undefined) {
-      warn('No value returned from %conBeforeResize()', BOLD)
-    } else newSize = returnedSize
-
-    if (Number.isNaN(newSize))
-      throw new TypeError(
-        `Invalid size returned from onBeforeResize(): ${newSize}`,
-      )
-
-    return newSize
+    return onBeforeResize === undefined ? newSize : getOnBeforeResize(newSize)
   }
 
   function sizeIframe(
