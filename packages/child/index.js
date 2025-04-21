@@ -45,7 +45,7 @@ import {
 } from './console'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
-import { readFunction } from './read'
+import { readFunction, readNumber, readString } from './read'
 
 function iframeResizerChild() {
   const checkVisibilityOptions = {
@@ -338,24 +338,28 @@ Parent page: ${version} - Child page: ${VERSION}.
 
       if (typeof data?.offset === 'number') {
         deprecateOption('offset', 'offsetSize')
-        if (calculateHeight) offsetHeight = data?.offset
-        if (calculateWidth) offsetWidth = data?.offset
+        if (calculateHeight)
+          offsetHeight = readNumber(data, 'offset', offsetHeight)
+        if (calculateWidth)
+          offsetWidth = readNumber(data, 'offset', offsetWidth)
       }
 
       if (typeof data?.offsetSize === 'number') {
-        if (calculateHeight) offsetHeight = data?.offsetSize
-        if (calculateWidth) offsetWidth = data?.offsetSize
+        if (calculateHeight)
+          offsetHeight = readNumber(data, 'offsetSize', offsetHeight)
+        if (calculateWidth)
+          offsetWidth = readNumber(data, 'offsetSize', offsetWidth)
       }
 
-      if (Object.prototype.hasOwnProperty.call(data, 'sizeSelector')) {
-        sizeSelector = data.sizeSelector
-      }
+      ignoreSelector = readString(data, 'ignoreSelector', ignoreSelector)
+      sizeSelector = readString(data, 'sizeSelector', sizeSelector)
+      targetOriginDefault = readString(
+        data,
+        'targetOrigin',
+        targetOriginDefault,
+      )
 
-      if (Object.prototype.hasOwnProperty.call(data, 'ignoreSelector')) {
-        ignoreSelector = data.ignoreSelector
-      }
-
-      targetOriginDefault = data?.targetOrigin || targetOriginDefault
+      // String or Number
       heightCalcMode = data?.heightCalculationMethod || heightCalcMode
       widthCalcMode = data?.widthCalculationMethod || widthCalcMode
     }
