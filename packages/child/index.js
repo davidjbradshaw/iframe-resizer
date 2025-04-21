@@ -1294,10 +1294,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     if (Number.isNaN(newSize))
       throw new TypeError(
-        'Invalid size returned from %conBeforeResize()%c:',
-        BOLD,
-        NORMAL,
-        newSize,
+        `Invalid size returned from onBeforeResize(): ${newSize}`,
       )
 
     return newSize
