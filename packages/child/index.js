@@ -1286,7 +1286,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (!direction.enabled()) return direction[mode]()
 
     let newSize = direction[mode]()
-    newSize = onBeforeResize(newSize) ?? newSize
+
+    const returnedSize = onBeforeResize(newSize)
+    if (returnedSize === undefined) newSize = returnedSize
+    else warn('No value returned from %conBeforeResize()', BOLD)
 
     if (Number.isNaN(newSize))
       throw new TypeError(
