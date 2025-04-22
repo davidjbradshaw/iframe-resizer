@@ -26,7 +26,7 @@ declare module '@iframe-resizer/child' {
       targetOrigin?: string | undefined
 
       /**
-       * Called before new size is set. Return a number modify the new size.
+       * Called before new size is set. Return a number to modify the new size.
        */
       onBeforeResize?(newSize: number): number
 
