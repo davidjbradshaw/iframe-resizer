@@ -1285,7 +1285,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const returnedSize = onBeforeResize(newSize)
 
     if (returnedSize === undefined) {
-      throw new TypeError('No value returned from onBeforeResize(), expected a numeric value')
+      throw new TypeError(
+        'No value returned from onBeforeResize(), expected a numeric value',
+      )
     }
 
     if (Number.isNaN(returnedSize))
