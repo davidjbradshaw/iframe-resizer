@@ -354,7 +354,7 @@ Parent page: ${version} - Child page: ${VERSION}.
       targetOriginDefault =
         readString(data, 'targetOrigin') ?? targetOriginDefault
 
-      // String or Number
+      // String or Function
       heightCalcMode = data?.heightCalculationMethod || heightCalcMode
       widthCalcMode = data?.widthCalculationMethod || widthCalcMode
     }
