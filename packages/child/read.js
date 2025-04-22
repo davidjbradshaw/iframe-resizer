@@ -1,6 +1,6 @@
-const read = (type) => (data, key, defaultValue) => {
-  if (!(key in data)) return defaultValue
-  // eslint-disable-next-line valid-typeof
+const read = (type) => (data, key) => {
+  if (!(key in data)) return
+  // eslint-disable-next-line valid-typeof, consistent-return
   if (typeof data[key] === type) return data[key]
 
   throw new TypeError(`${key} is not a ${type}.`)

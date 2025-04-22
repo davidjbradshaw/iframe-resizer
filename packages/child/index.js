@@ -43,6 +43,7 @@ import {
   setConsoleOptions,
   warn,
 } from './console'
+import { getBoolean, getNumber, getString } from './destructure'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
@@ -299,32 +300,29 @@ Parent page: ${version} - Child page: ${VERSION}.
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   function readDataFromParent(data) {
-    const strBool = (str) => str === 'true'
-
-    myID = data[0] // eslint-disable-line prefer-destructuring
-    bodyMargin = undefined === data[1] ? bodyMargin : Number(data[1]) // For V1 compatibility
-    calculateWidth = undefined === data[2] ? calculateWidth : strBool(data[2])
-    logging = undefined === data[3] ? logging : strBool(data[3])
+    myID = getString(data[0])
+    bodyMargin = getNumber(data[1]) ?? bodyMargin // For V1 compatibility
+    calculateWidth = getBoolean(data[2]) ?? calculateWidth
+    logging = getBoolean(data[3]) ?? logging
     // data[4] no longer used (was intervalTimer)
-    autoResize = undefined === data[6] ? autoResize : strBool(data[6])
-    bodyMarginStr = data[7] // eslint-disable-line prefer-destructuring
-    heightCalcMode = undefined === data[8] ? heightCalcMode : data[8]
-    bodyBackground = data[9] // eslint-disable-line prefer-destructuring
-    bodyPadding = data[10] // eslint-disable-line prefer-destructuring
-    tolerance = undefined === data[11] ? tolerance : Number(data[11])
-    inPageLinks.enable = undefined === data[12] ? false : strBool(data[12])
-    resizeFrom = undefined === data[13] ? resizeFrom : data[13]
-    widthCalcMode = undefined === data[14] ? widthCalcMode : data[14]
-    mouseEvents = undefined === data[15] ? mouseEvents : strBool(data[15])
-    offsetHeight = undefined === data[16] ? offsetHeight : Number(data[16])
-    offsetWidth = undefined === data[17] ? offsetWidth : Number(data[17])
-    calculateHeight =
-      undefined === data[18] ? calculateHeight : strBool(data[18])
-    licenseKey = data[19] // eslint-disable-line prefer-destructuring
-    version = data[20] || version
-    mode = undefined === data[21] ? mode : Number(data[21])
+    autoResize = getBoolean(data[6]) ?? autoResize
+    bodyMarginStr = getString(data[7]) ?? bodyMarginStr
+    heightCalcMode = getString(data[8]) ?? heightCalcMode
+    bodyBackground = getString(data[9]) ?? bodyBackground
+    bodyPadding = getString(data[10]) ?? bodyPadding
+    tolerance = getNumber(data[11]) ?? tolerance
+    inPageLinks.enable = getBoolean(data[12]) ?? false
+    resizeFrom = getString(data[13]) ?? resizeFrom
+    widthCalcMode = getString(data[14]) ?? widthCalcMode
+    mouseEvents = getBoolean(data[15]) ?? mouseEvents
+    offsetHeight = getNumber(data[16]) ?? offsetHeight
+    offsetWidth = getNumber(data[17]) ?? offsetWidth
+    calculateHeight = getBoolean(data[18]) ?? calculateHeight
+    licenseKey = getString(data[19])
+    version = data[20] ?? version
+    mode = getNumber(data[21]) ?? mode
     // sizeSelector = data[22] || sizeSelector
-    logExpand = undefined === data[23] ? logExpand : strBool(data[23])
+    logExpand = getBoolean(data[23]) ?? logExpand
   }
 
   function readDataFromPage() {
@@ -332,32 +330,29 @@ Parent page: ${version} - Child page: ${VERSION}.
     function readData(data) {
       log(`Reading data from page:`, data)
 
-      onBeforeResize = readFunction(data, 'onBeforeResize', onBeforeResize)
-      onMessage = readFunction(data, 'onMessage', onMessage)
-      onReady = readFunction(data, 'onReady', onReady)
+      onBeforeResize = readFunction(data, 'onBeforeResize') ?? onBeforeResize
+      onMessage = readFunction(data, 'onMessage') ?? onMessage
+      onReady = readFunction(data, 'onReady') ?? onReady
 
       if (typeof data?.offset === 'number') {
         deprecateOption('offset', 'offsetSize')
         if (calculateHeight)
-          offsetHeight = readNumber(data, 'offset', offsetHeight)
+          offsetHeight = readNumber(data, 'offset') ?? offsetHeight
         if (calculateWidth)
-          offsetWidth = readNumber(data, 'offset', offsetWidth)
+          offsetWidth = readNumber(data, 'offset') ?? offsetWidth
       }
 
       if (typeof data?.offsetSize === 'number') {
         if (calculateHeight)
-          offsetHeight = readNumber(data, 'offsetSize', offsetHeight)
+          offsetHeight = readNumber(data, 'offsetSize') ?? offsetHeight
         if (calculateWidth)
-          offsetWidth = readNumber(data, 'offsetSize', offsetWidth)
+          offsetWidth = readNumber(data, 'offsetSize') ?? offsetWidth
       }
 
-      ignoreSelector = readString(data, 'ignoreSelector', ignoreSelector)
-      sizeSelector = readString(data, 'sizeSelector', sizeSelector)
-      targetOriginDefault = readString(
-        data,
-        'targetOrigin',
-        targetOriginDefault,
-      )
+      ignoreSelector = readString(data, 'ignoreSelector') ?? ignoreSelector
+      sizeSelector = readString(data, 'sizeSelector') ?? sizeSelector
+      targetOriginDefault =
+        readString(data, 'targetOrigin') ?? targetOriginDefault
 
       // String or Number
       heightCalcMode = data?.heightCalculationMethod || heightCalcMode
