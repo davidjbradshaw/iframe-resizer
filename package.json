@@ -29,10 +29,10 @@
     "rollup:test": "npm run eslint:fix && rollup -c --environment TEST",
     "rollup:test:ci": "rollup -c --environment TEST",
     "rollup:prod": "npm run eslint:fix && rollup -c",
-    "test:jest": "node --trace-deprecation --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:jest": "node --trace-deprecation node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-    "test": "time npm run rollup:test && npm run test:int",
-    "test:ci": "time npm run rollup:test:ci && npm run test:int",
+    "test": "time npm run rollup:test && npm run test:jest && npm run test:int",
+    "test:ci": "time npm run rollup:test:ci && npm run test:jest && npm run test:int",
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
     "test:int:watch": "karma start --browsers Chrome karma.conf.cjs && karma run",
     "upgrade": "time npm-check-updates -i && npm run build"
