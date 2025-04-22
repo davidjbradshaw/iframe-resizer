@@ -45,14 +45,4 @@ describe('deprecate', () => {
       `<rb>Deprecated Method(oldMethod)</>\n\nThe <b>oldMethod()</> method has been renamed to <b>newMethod()</>. Use of the old method will be removed in a future version of <i>iframe-resizer</>.`,
     )
   })
-
-  // test('should handle cases where no iframeId is provided', () => {
-  //   const deprecateOption = deprecate('Option', 'replaced by')
-  //   deprecateOption('oldOption', 'newOption', 'Additional info.')
-
-  //   expect(mockAdvise).toHaveBeenCalledWith(
-  //     '',
-  //     `<rb>Deprecated Option(oldOption)</>\n\nThe <b>oldOption</> option has been replaced by <b>newOption</>. Additional info. Use of the old option will be removed in a future version of <i>iframe-resizer</>.`
-  //   )
-  // })
 })

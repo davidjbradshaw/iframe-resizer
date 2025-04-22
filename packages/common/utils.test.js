@@ -1,12 +1,12 @@
 import {
+  capitalizeFirstLetter,
+  esModuleInterop,
+  getElementName,
+  id,
+  isDarkModeEnabled,
   isNumber,
   once,
-  isDarkModeEnabled,
-  id,
   round,
-  capitalizeFirstLetter,
-  getElementName,
-  esModuleInterop,
   typeAssert,
 } from './utils'
 
@@ -40,6 +40,7 @@ describe('utils.js', () => {
       window.matchMedia = jest.fn().mockImplementation((query) => ({
         matches: query === '(prefers-color-scheme: dark)',
       }))
+
       expect(isDarkModeEnabled()).toBe(true)
     })
 
@@ -47,6 +48,7 @@ describe('utils.js', () => {
       window.matchMedia = jest.fn().mockImplementation(() => ({
         matches: false,
       }))
+
       expect(isDarkModeEnabled()).toBe(false)
     })
   })
@@ -60,8 +62,8 @@ describe('utils.js', () => {
 
   describe('round', () => {
     test('should round numbers to three decimal places', () => {
-      expect(round(3.14159)).toBe(3.142)
-      expect(round(2.71828)).toBe(2.718)
+      expect(round(3.141_59)).toBe(3.142)
+      expect(round(2.718_28)).toBe(2.718)
     })
   })
 
@@ -80,15 +82,19 @@ describe('utils.js', () => {
         name: 'test-name',
         className: 'test-class',
       }
+
       expect(getElementName(mockElement)).toBe('DIV#test-id')
 
       delete mockElement.id
+
       expect(getElementName(mockElement)).toBe('DIV (test-name')
 
       delete mockElement.name
+
       expect(getElementName(mockElement)).toBe('DIV.test-class')
 
       delete mockElement.className
+
       expect(getElementName(mockElement)).toBe('DIV')
     })
   })
@@ -96,11 +102,13 @@ describe('utils.js', () => {
   describe('esModuleInterop', () => {
     test('should return the default export if __esModule is true', () => {
       const mockModule = { __esModule: true, default: 'default-export' }
+
       expect(esModuleInterop(mockModule)).toBe('default-export')
     })
 
     test('should return the module itself if __esModule is false', () => {
       const mockModule = { __esModule: false, default: 'default-export' }
+
       expect(esModuleInterop(mockModule)).toBe(mockModule)
     })
   })
@@ -113,10 +121,11 @@ describe('utils.js', () => {
 
     test('should throw a TypeError for invalid types', () => {
       expect(() => typeAssert(42, 'string', 'Value')).toThrow(
-        'Value is not a String'
+        'Value is not a String',
       )
+
       expect(() => typeAssert('test', 'number', 'Value')).toThrow(
-        'Value is not a Number'
+        'Value is not a Number',
       )
     })
   })
