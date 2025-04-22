@@ -43,7 +43,7 @@ import {
   setConsoleOptions,
   warn,
 } from './console'
-import { getBoolean, getNumber, getString } from './destructure'
+import { getBoolean, getNumber } from './from-string'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
@@ -300,25 +300,25 @@ Parent page: ${version} - Child page: ${VERSION}.
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   function readDataFromParent(data) {
-    myID = getString(data[0])
+    myID = data[0] ?? myID
     bodyMargin = getNumber(data[1]) ?? bodyMargin // For V1 compatibility
     calculateWidth = getBoolean(data[2]) ?? calculateWidth
     logging = getBoolean(data[3]) ?? logging
     // data[4] no longer used (was intervalTimer)
     autoResize = getBoolean(data[6]) ?? autoResize
-    bodyMarginStr = getString(data[7]) ?? bodyMarginStr
-    heightCalcMode = getString(data[8]) ?? heightCalcMode
-    bodyBackground = getString(data[9]) ?? bodyBackground
-    bodyPadding = getString(data[10]) ?? bodyPadding
+    bodyMarginStr = data[7] ?? bodyMarginStr
+    heightCalcMode = data[8] ?? heightCalcMode
+    bodyBackground = data[9] ?? bodyBackground
+    bodyPadding = data[10] ?? bodyPadding
     tolerance = getNumber(data[11]) ?? tolerance
     inPageLinks.enable = getBoolean(data[12]) ?? false
-    resizeFrom = getString(data[13]) ?? resizeFrom
-    widthCalcMode = getString(data[14]) ?? widthCalcMode
+    resizeFrom = data[13] ?? resizeFrom
+    widthCalcMode = data[14] ?? widthCalcMode
     mouseEvents = getBoolean(data[15]) ?? mouseEvents
     offsetHeight = getNumber(data[16]) ?? offsetHeight
     offsetWidth = getNumber(data[17]) ?? offsetWidth
     calculateHeight = getBoolean(data[18]) ?? calculateHeight
-    licenseKey = getString(data[19])
+    licenseKey = data[19] ?? licenseKey
     version = data[20] ?? version
     mode = getNumber(data[21]) ?? mode
     // sizeSelector = data[22] || sizeSelector
