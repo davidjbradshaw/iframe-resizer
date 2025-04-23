@@ -11,7 +11,7 @@ export const IGNORE_ATTR = 'data-iframe-ignore'
 export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
 
-export const SIZE_CHANGE_DETECTED = 'sizeChanged'
+export const SIZE_CHANGE_DETECTED = Symbol('sizeChanged')
 export const MANUAL_RESIZE_REQUEST = 'manualResize'
 export const PARENT_RESIZE_REQUEST = 'parentResize'
 export const IGNORE_DISABLE_RESIZE = {
