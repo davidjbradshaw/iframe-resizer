@@ -87,12 +87,6 @@ function iframeResizerChild() {
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
-  const resetRequiredMethods = {
-    max: 1,
-    min: 1,
-    bodyScroll: 1,
-    documentElementScroll: 1,
-  }
   const widthCalcModeDefault = 'scroll'
 
   let autoResize = true
@@ -180,13 +174,7 @@ function iframeResizerChild() {
 
     log('Initialization complete')
 
-    sendSize(
-      INIT,
-      'Init message from host page',
-      undefined,
-      undefined,
-      VERSION,
-    )
+    sendSize(INIT, 'Init message from host page', undefined, undefined, VERSION)
 
     sendTitle()
   }
