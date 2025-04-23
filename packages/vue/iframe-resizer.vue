@@ -6,7 +6,9 @@
   import connectResizer from '@iframe-resizer/core'
   import acg from 'auto-console-group'
 
-  import { esModuleInterop } from '../common/utils'
+  const esModuleInterop = (mod) =>
+    // eslint-disable-next-line no-underscore-dangle
+    mod?.__esModule ? mod.default : mod
 
   // Deal with UMD not converting default exports to named exports
   const createAutoConsoleGroup = esModuleInterop(acg)
