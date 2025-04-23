@@ -1304,12 +1304,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     return returnedSize
   }
 
-  function calcSize(direction, mode) {
-    if (!direction.enabled()) return direction[mode]()
-
+  function getNewSize(direction, mode) {
     const newSize = direction[mode]()
-
-    return onBeforeResize === undefined ? newSize : callOnBeforeResize(newSize)
+    return direction.enabled() && onBeforeResize !== undefined
+      ? callOnBeforeResize(newSize)
+      : newSize
   }
 
   function sizeIframe(
@@ -1329,8 +1328,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       (calculateHeight && checkTolerance(height, newHeight)) ||
       (calculateWidth && checkTolerance(width, newWidth))
 
-    const newHeight = customHeight ?? calcSize(getHeight, heightCalcMode)
-    const newWidth = customWidth ?? calcSize(getWidth, widthCalcMode)
+    const newHeight = customHeight ?? getNewSize(getHeight, heightCalcMode)
+    const newWidth = customWidth ?? getNewSize(getWidth, widthCalcMode)
 
     log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
 
