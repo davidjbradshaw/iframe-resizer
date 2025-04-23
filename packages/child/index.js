@@ -1510,6 +1510,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       resize() {
+        log('Resize requested by host page')
+
+        if (heightCalcMode === 'auto' && widthCalcMode === 'auto')
+          advise(
+            `<rb>Deprecated Method</>
+        
+Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As the size detection no longer requires a trigger event from the parent page.`,
+          )
         sendSize(PARENT_RESIZE_REQUEST, 'Parent window requested size check')
       },
 
