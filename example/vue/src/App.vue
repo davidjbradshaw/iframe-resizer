@@ -6,7 +6,8 @@
   <h1>Vue 3 + Iframe Resizer</h1>
   <IframeResizer
     src="https://iframe-resizer.com/examples/animate/" 
-    license="GPLv3" 
+    license="GPLv3"
+    log="collapsed"
     bodyBackground="green" 
     @on-ready="() => console.log('onReady')"
   />
