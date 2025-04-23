@@ -10,19 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/child": "^5.4.4-beta.3",
-    "@iframe-resizer/react": "^5.4.4-beta.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@iframe-resizer/child": "^5.4.5",
+    "@iframe-resizer/react": "^5.4.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "vite": "^6.2.6"
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "vite": "^6.3.2"
   }
 }
