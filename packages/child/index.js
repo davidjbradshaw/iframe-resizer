@@ -127,7 +127,7 @@ function iframeResizerChild() {
   let totalTime
   let tolerance = 0
   let triggerLocked = false
-  let version = ''
+  let version
   let width = 1
   let widthCalcMode = widthCalcModeDefault
   let win = window
@@ -510,10 +510,14 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
       }
 
       if (calcMode in deprecatedResizeMethods) {
+        const actionMsg = version
+          ? 'remove this option.'
+          : "set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page."
+
         advise(
           `<rb>Deprecated ${type}CalculationMethod (${calcMode})</>
 
-This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`,
+This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you ${actionMsg}`,
         )
       }
     }
@@ -542,7 +546,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function checkMode() {
     if (mode < 0) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
-    if (version.codePointAt(0) > 4) return mode
+    if (version?.codePointAt(0) > 4) return mode
     if (mode < 2) return adviser(getModeData(3))
     return mode
   }
