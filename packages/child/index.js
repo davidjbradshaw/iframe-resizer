@@ -15,6 +15,7 @@ import {
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
+  SIZE_CHANGE_DETECTED,
   VERSION,
   WIDTH_EDGE,
 } from '../common/consts'
@@ -1320,8 +1321,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     customWidth,
     msg,
   ) {
-    const isForceResizableEvent = () => !triggerEvent !== PARENT_RESIZE_REQUEST
-
     const isForceResizableCalcMode = () =>
       (calculateHeight && heightCalcMode in resetRequiredMethods) ||
       (calculateWidth && widthCalcMode in resetRequiredMethods)
@@ -1333,27 +1332,32 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const newHeight = customHeight ?? getNewSize(getHeight, heightCalcMode)
     const newWidth = customWidth ?? getNewSize(getWidth, widthCalcMode)
 
+    const updateEvent = isSizeChangeDetected()
+      ? SIZE_CHANGE_DETECTED
+      : triggerEvent
+
     log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
 
-    switch (true) {
-      case triggerEvent === INIT:
-      case isSizeChangeDetected():
+    switch (updateEvent) {
+      case INIT:
+      case SIZE_CHANGE_DETECTED:
         // lockTrigger()
         height = newHeight
         width = newWidth
       // eslint-disable-next-line no-fallthrough
-      case triggerEvent === SET_OFFSET_SIZE:
+      case SET_OFFSET_SIZE:
         sendMsg(height, width, triggerEvent, msg)
         break
 
-      case isForceResizableEvent() && isForceResizableCalcMode():
-        resetIframe(triggerEventDesc)
+      case PARENT_RESIZE_REQUEST:
+        if (isForceResizableCalcMode()) resetIframe(triggerEventDesc)
+        else log('Ignored parent resize request')
         break
 
       // the following case needs {} to prevent a compile error
-      case triggerEvent === RESIZE_OBSERVER:
-      case triggerEvent === OVERFLOW_OBSERVER:
-      case triggerEvent === MUTATION_OBSERVER: {
+      case RESIZE_OBSERVER:
+      case OVERFLOW_OBSERVER:
+      case MUTATION_OBSERVER: {
         log(NO_CHANGE)
         purge()
         break
