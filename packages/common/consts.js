@@ -11,7 +11,13 @@ export const IGNORE_ATTR = 'data-iframe-ignore'
 export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
 
-export const MANUAL_RESIZE_REQUEST = 'resizeParent'
+export const MANUAL_RESIZE_REQUEST = 'manualResize'
+export const PARENT_RESIZE_REQUEST = 'parentResize'
+export const IGNORE_DISABLE_RESIZE = {
+  [MANUAL_RESIZE_REQUEST]: 1,
+  [PARENT_RESIZE_REQUEST]: 1,
+}
+
 export const SET_OFFSET_SIZE = 'setOffsetSize'
 
 export const RESIZE_OBSERVER = 'resizeObserver'

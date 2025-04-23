@@ -4,11 +4,14 @@ import {
   BASE,
   HEIGHT_EDGE,
   IGNORE_ATTR,
+  IGNORE_DISABLE_RESIZE,
+  INIT,
   MANUAL_RESIZE_REQUEST,
   MUTATION_OBSERVER,
   NO_CHANGE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
+  PARENT_RESIZE_REQUEST,
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
@@ -177,7 +180,7 @@ function iframeResizerChild() {
     log('Initialization complete')
 
     sendSize(
-      'init',
+      INIT,
       'Init message from host page',
       undefined,
       undefined,
@@ -524,10 +527,9 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
 This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you remove this option.`,
         )
       }
-
-      log(`Set ${type} calculation method: %c${calcMode}`, HIGHLIGHT)
     }
 
+    log(`Set ${type} calculation method: %c${calcMode}`, HIGHLIGHT)
     return calcMode
   }
 
@@ -850,7 +852,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
 
         sendSize(
-          'parentIframe.resize()',
+          MANUAL_RESIZE_REQUEST,
           `parentIframe.resize(${valString})`,
           customHeight,
           customWidth,
@@ -1318,7 +1320,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     customWidth,
     msg,
   ) {
-    const isForceResizableEvent = () => !triggerEvent !== MANUAL_RESIZE_REQUEST
+    const isForceResizableEvent = () => !triggerEvent !== PARENT_RESIZE_REQUEST
 
     const isForceResizableCalcMode = () =>
       (calculateHeight && heightCalcMode in resetRequiredMethods) ||
@@ -1334,7 +1336,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
 
     switch (true) {
-      case isSizeChangeDetected() || triggerEvent === 'init':
+      case triggerEvent === INIT:
+      case isSizeChangeDetected():
         // lockTrigger()
         height = newHeight
         width = newWidth
@@ -1376,8 +1379,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       if (sendPending === true) return // only update once per frame
 
-      if (!autoResize && triggerEvent !== MANUAL_RESIZE_REQUEST) {
+      if (!autoResize && !(triggerEvent in IGNORE_DISABLE_RESIZE)) {
         info('Resizing disabled')
+        endAutoGroup()
         return
       }
 
@@ -1443,7 +1447,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     function displayTimeTaken() {
       const timer = round(performance.now() - totalTime)
-      return triggerEvent === 'init'
+      return triggerEvent === INIT
         ? `Initialised iFrame in %c${timer}ms`
         : `Size calculated in %c${timer}ms`
     }
@@ -1519,7 +1523,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       resize() {
-        sendSize(MANUAL_RESIZE_REQUEST, 'Parent window requested size check')
+        sendSize(PARENT_RESIZE_REQUEST, 'Parent window requested size check')
       },
 
       moveToAnchor() {
@@ -1595,7 +1599,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       if (isInitMsg()) {
         label(getMessageType())
-        consoleEvent('init')
+        consoleEvent(INIT)
         processRequestFromParent.init()
         return
       }
