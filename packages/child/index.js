@@ -2,6 +2,7 @@ import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
 
 import {
   BASE,
+  ENABLE,
   HEIGHT_EDGE,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
@@ -696,9 +697,17 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       autoResize: (enable) => {
         typeAssert(enable, 'boolean', 'parentIframe.autoResize(enable) enable')
 
+        if (calculateWidth === false && calculateHeight === false) {
+          consoleEvent(ENABLE)
+          advise(
+            "Auto Resize can not be changed when <b>direction</> is set to 'none'.",
+          )
+          return false
+        }
+
         if (enable === true && autoResize === false) {
           autoResize = true
-          sendSize('autoResizeEnabled', 'Auto Resize enabled')
+          queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled'))
         } else if (enable === false && autoResize === true) {
           autoResize = false
         }
@@ -1328,6 +1337,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     switch (updateEvent) {
       case INIT:
+      case ENABLE:
       case SIZE_CHANGE_DETECTED:
         // lockTrigger()
         height = newHeight
