@@ -40,7 +40,7 @@
         type: String,
       },
       log: {
-        type: String || Boolean,
+        type: [String, Boolean],
         default: false,
       },
       inPageLinks: {
