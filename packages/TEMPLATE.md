@@ -11,7 +11,7 @@ __See [iframe-resizer.com](https://iframe-resizer.com) for details.__
 Using npm:
 
 ```bash
-npm install @@PKG_NAME@@ --save
+npm install @@PKG_NAME@@
 ```
 
 or using yarn:
