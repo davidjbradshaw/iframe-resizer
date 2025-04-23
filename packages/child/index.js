@@ -1321,10 +1321,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     customWidth,
     msg,
   ) {
-    const isForceResizableCalcMode = () =>
-      (calculateHeight && heightCalcMode in resetRequiredMethods) ||
-      (calculateWidth && widthCalcMode in resetRequiredMethods)
-
     const isSizeChangeDetected = () =>
       (calculateHeight && checkTolerance(height, newHeight)) ||
       (calculateWidth && checkTolerance(width, newWidth))
@@ -1347,11 +1343,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       // eslint-disable-next-line no-fallthrough
       case SET_OFFSET_SIZE:
         sendMsg(height, width, triggerEvent, msg)
-        break
-
-      case PARENT_RESIZE_REQUEST:
-        if (isForceResizableCalcMode()) resetIframe(triggerEventDesc)
-        else log('Ignored parent resize request')
         break
 
       // the following case needs {} to prevent a compile error
