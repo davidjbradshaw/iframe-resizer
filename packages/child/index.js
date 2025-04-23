@@ -361,7 +361,13 @@ Parent page: ${version} - Child page: ${VERSION}.
 
     function setupCustomCalcMethods(calcMode, calcFunc) {
       if (typeof calcMode === 'function') {
-        log(`Setup custom ${calcFunc}CalcMethod`)
+        advise(
+          `<rb>Deprecated Option(${calcFunc}CalculationMethod)</>
+
+The use of <b>${calcFunc}CalculationMethod</> as a function is deprecated and will be removed in a future version of <i>iframe-resizer</>. Please use the new <b>onBeforeResize</> event handler instead.
+
+See <u>https://iframe-resizer.com/api/child</> for more details.`,
+        )
         customCalcMethods[calcFunc] = calcMode
         calcMode = 'custom'
       }
