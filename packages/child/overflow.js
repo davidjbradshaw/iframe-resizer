@@ -1,6 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, event, log, warn } from './console'
+import { assert, log } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
