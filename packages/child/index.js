@@ -193,7 +193,7 @@ function iframeResizerChild() {
 
     if (!hasOverflow && !mutated) return
 
-    log('Observed Elements:', overflowedNodeList.length)
+    info('Overflowed Elements:', ...overflowedNodeList)
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
