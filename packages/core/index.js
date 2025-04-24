@@ -1035,7 +1035,14 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
           this.disconnect()
         },
 
-        resize: trigger.bind(null, 'Window resize', 'resize', iframeId),
+        resize() {
+          advise(
+            `<rb>Deprecated Method</>
+        
+Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As the size detection no longer requires a manual trigger event from the parent page.`,
+          )
+          trigger.bind(null, 'Window resize', 'resize', iframeId)
+        },
 
         moveToAnchor(anchor) {
           typeAssert(anchor, 'string', 'moveToAnchor(anchor) anchor')
