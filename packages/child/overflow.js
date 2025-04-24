@@ -1,6 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, event, log } from './console'
+import { assert, event, log, warn } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -24,15 +24,12 @@ const overflowObserver = (options) => {
     node.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
 
   function observation(entries) {
-    event('observation')
-
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
       const edge = boundingClientRect[side]
       const hasOverflow = isOverflowed(edge, rootBounds) && !isHidden(target)
 
       setOverflow(target, hasOverflow)
-      if (hasOverflow) log('Overflowed:', target)
     }
 
     afterReflow(emitOverflowDetected)
