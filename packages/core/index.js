@@ -1026,8 +1026,7 @@ export default (options) => (iframe) => {
         removeListeners() {
           advise(
             iframeId,
-            `
-<rb>Deprecated Method Name</>
+            `<rb>Deprecated Method Name</>
 
 The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</>.
 `,
@@ -1037,9 +1036,10 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
 
         resize() {
           advise(
+            iframeId,
             `<rb>Deprecated Method</>
         
-Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As the size detection no longer requires a manual trigger event from the parent page.`,
+Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As the size detection now never requires a manual trigger event from the parent page.`,
           )
           trigger.bind(null, 'Window resize', 'resize', iframeId)
         },
