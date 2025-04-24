@@ -1039,7 +1039,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
             iframeId,
             `<rb>Deprecated Method</>
         
-Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As the size detection now never requires a manual trigger event from the parent page.`,
+Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As their are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`,
           )
           trigger.bind(null, 'Window resize', 'resize', iframeId)
         },
