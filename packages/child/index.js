@@ -2,14 +2,17 @@ import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
 
 import {
   BASE,
+  BOTH,
   ENABLE,
   HEIGHT_EDGE,
+  HORIZONTAL,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
   INIT,
   MANUAL_RESIZE_REQUEST,
   MUTATION_OBSERVER,
   NO_CHANGE,
+  NONE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   PARENT_RESIZE_REQUEST,
@@ -18,6 +21,7 @@ import {
   SIZE_ATTR,
   SIZE_CHANGE_DETECTED,
   VERSION,
+  VERTICAL,
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
@@ -176,8 +180,9 @@ function iframeResizerChild() {
     log('Initialization complete')
 
     sendSize(INIT, 'Init message from host page', undefined, undefined, VERSION)
-
     sendTitle()
+
+    chkBothSides()
   }
 
   function checkOverflow() {
@@ -380,6 +385,24 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
 
     info(`Set targetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
+  }
+
+  function chkBothSides() {
+    if (calculateWidth === calculateHeight) {
+      autoResize = false
+      consoleEvent('autoResize')
+      info(
+        `Auto Resize disabled due to direction being set to: %c${calculateHeight ? BOTH : NONE}`,
+        HIGHLIGHT,
+      )
+      info(
+        `Please set direction to either %c"${VERTICAL}"%c or %c"${HORIZONTAL}"%c to enable auto resizing`,
+        BOLD,
+        NORMAL,
+        BOLD,
+        NORMAL,
+      )
+    }
   }
 
   function chkCSS(attr, value) {
@@ -698,10 +721,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       autoResize: (enable) => {
         typeAssert(enable, 'boolean', 'parentIframe.autoResize(enable) enable')
 
-        if (calculateWidth === false && calculateHeight === false) {
+        if (calculateWidth === calculateHeight) {
           consoleEvent(ENABLE)
           advise(
-            "Auto Resize can not be changed when <b>direction</> is set to 'none'.",
+            `Auto Resize can not be changed when <b>direction</> is set to '${NONE}' or '${BOTH}'.`,
           )
           return false
         }

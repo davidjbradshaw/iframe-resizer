@@ -1095,7 +1095,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         iframeId,
         `<rb>Deprecated Option</>
 
-The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <i>"vertical"</>, <i>"horizontal"</> or <i>"horizontal"</>.
+The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <i>"${VERTICAL}"</>, <i>"${HORIZONTAL}"</> or <i>"${NONE}"</>.
 `,
       )
     }
