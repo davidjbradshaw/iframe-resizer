@@ -1,16 +1,20 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
+  BOTH,
   EXPAND,
+  HORIZONTAL,
   INIT,
   INIT_EVENTS,
   LOG_OPTIONS,
   msgHeaderLen,
   msgId,
   msgIdLen,
+  NONE,
   ONLOAD,
   resetRequiredMethods,
   VERSION,
+  VERTICAL,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
@@ -1120,35 +1124,37 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function setDirection() {
     const { direction } = settings[iframeId]
 
-    if (direction === 'horizontal') {
-      settings[iframeId].sizeWidth = true
-      settings[iframeId].sizeHeight = false
-      log(iframeId, 'Direction: %chorizontal', HIGHLIGHT)
-      return
+    switch (direction) {
+      case VERTICAL:
+        break
+
+      case HORIZONTAL:
+        settings[iframeId].sizeHeight = false
+      // eslint-disable-next-line no-fallthrough
+      case BOTH:
+        settings[iframeId].sizeWidth = true
+        break
+
+      case NONE:
+        settings[iframeId].sizeWidth = false
+        settings[iframeId].sizeHeight = false
+        settings[iframeId].autoResize = false
+        break
+
+      default:
+        throw new TypeError(
+          iframeId,
+          `Direction value of "${direction}" is not valid`,
+        )
     }
 
-    if (direction === 'none') {
-      settings[iframeId].sizeWidth = false
-      settings[iframeId].sizeHeight = false
-      settings[iframeId].autoResize = false
-      log(iframeId, 'Direction: %cnone', HIGHLIGHT)
-      return
-    }
-
-    if (direction !== 'vertical') {
-      throw new TypeError(
-        iframeId,
-        `Direction value of "${direction}" is not valid`,
-      )
-    }
-
-    log(iframeId, 'Direction: %cvertical', HIGHLIGHT)
+    log(iframeId, `Direction: %c${direction}`, HIGHLIGHT)
   }
 
   function setOffsetSize(offset) {
     if (!offset) return
 
-    if (settings[iframeId].direction === 'vertical') {
+    if (settings[iframeId].direction === VERTICAL) {
       settings[iframeId].offsetHeight = offset
       log(iframeId, `Offset height: %c${offset}`, HIGHLIGHT)
     } else {

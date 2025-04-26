@@ -1,3 +1,4 @@
+import { VERTICAL } from '../../common/consts'
 import { deprecateOption } from '../console'
 import settings from './settings'
 
@@ -14,7 +15,7 @@ export default Object.freeze({
   bodyMargin: null,
   bodyPadding: null,
   checkOrigin: true,
-  direction: 'vertical',
+  direction: VERTICAL,
   inPageLinks: false,
   heightCalculationMethod: 'auto',
   id: 'iFrameResizer',
