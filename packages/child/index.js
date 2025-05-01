@@ -54,11 +54,6 @@ import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
 
 function iframeResizerChild() {
-  const checkVisibilityOptions = {
-    contentVisibilityAuto: true,
-    opacityProperty: true,
-    visibilityProperty: true,
-  }
   const customCalcMethods = {
     height: () => {
       warn('Custom height calculation function not defined')
@@ -83,7 +78,6 @@ function iframeResizerChild() {
   }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
-  const hasCheckVisibility = 'checkVisibility' in window
   const heightCalcModeDefault = 'auto'
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   const msgID = '[iFrameSizer]' // Must match host page msg ID
@@ -1046,18 +1040,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         ? overflowedNodeList
         : getAllElements(document)() // We should never get here, but just in case
 
-    let len = targetElements.length
-
     for (const element of targetElements) {
-      if (
-        !hasTags &&
-        hasCheckVisibility && // Safari was missing checkVisibility until March 2024
-        !element.checkVisibility(checkVisibilityOptions)
-      ) {
-        len -= 1
-        continue
-      }
-
       elVal =
         element.getBoundingClientRect()[side] +
         parseFloat(getComputedStyle(element).getPropertyValue(`margin-${side}`))
@@ -1072,10 +1055,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     performance.mark(PREF_END, {
       detail: {
-        Side,
-        len,
         hasTags,
+        len: targetElements.length,
         logging,
+        Side,
       },
     })
 
