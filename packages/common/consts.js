@@ -34,6 +34,11 @@ export const BLUE_LIGHT = 'color: #A9C7FB;'
 export const BLACK = 'color: black;'
 export const WHITE = 'color: #E3E3E3;'
 
+export const NONE = 'none'
+export const BOTH = 'both'
+export const VERTICAL = 'vertical'
+export const HORIZONTAL = 'horizontal'
+
 export const NO_CHANGE = 'No change in content size detected'
 
 export const msgHeader = 'message'
