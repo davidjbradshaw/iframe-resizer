@@ -48,8 +48,8 @@
     "url": "https://iframe-resizer.com/pricing/"
   },
   "dependencies": {
-    "@angular/core": "^19.2.8",
-    "@babel/runtime": "^7.27.0",
+    "@angular/core": "^19.2.9",
+    "@babel/runtime": "^7.27.1",
     "@iframe-resizer/child": "file:./packages/child/",
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
