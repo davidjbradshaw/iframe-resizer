@@ -126,7 +126,6 @@
     "karma-logcapture-reporter": "0.0.1",
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
-    "karma-verbose-summary-reporter": "0.0.1",
     "prettier": "^3.5.3",
     "requirejs": "^2.3.7",
     "rollup": "^4.40.0",
