@@ -178,7 +178,6 @@ function iframeResizerChild() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
     // Filter out elements that are descendants of elements with IGNORE_ATTR
-    // eslint-disable-next-line unicorn/prefer-spread
     overflowedNodeList = Array.from(allOverflowedNodes).filter(
       (node) => !node.closest(`[${IGNORE_ATTR}]`),
     )
