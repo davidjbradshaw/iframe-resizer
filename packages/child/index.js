@@ -175,8 +175,12 @@ function iframeResizerChild() {
   }
 
   function checkOverflow() {
-    overflowedNodeList = document.querySelectorAll(
-      `[${OVERFLOW_ATTR}]:not([${IGNORE_ATTR}]):not([${IGNORE_ATTR}] *)`,
+    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+
+    // Filter out elements that are descendants of elements with IGNORE_ATTR
+    // eslint-disable-next-line unicorn/prefer-spread
+    overflowedNodeList = Array.from(allOverflowedNodes).filter(
+      (node) => !node.closest(`[${IGNORE_ATTR}]`),
     )
 
     hasOverflow = overflowedNodeList.length > 0
