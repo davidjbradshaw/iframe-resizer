@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@angular/core": "^20.0.2",
-    "@babel/runtime": "^7.27.4",
+    "@babel/runtime": "^7.27.6",
     "@iframe-resizer/child": "file:./packages/child/",
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
