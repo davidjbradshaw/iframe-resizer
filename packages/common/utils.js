@@ -1,5 +1,8 @@
 export const isNumber = (value) => !Number.isNaN(value)
 
+export const isolateUserCode = (func, ...val) =>
+  setTimeout(() => func(...val), 0)
+
 export const once = (fn) => {
   let done = false
 
