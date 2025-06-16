@@ -26,6 +26,7 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  isolateUserCode,
   once,
   round,
   typeAssert,
@@ -165,13 +166,21 @@ function iframeResizerChild() {
     stopInfiniteResizingOfIframe()
 
     initEventListeners()
-    queueMicrotask(onReady)
+    chkReadyYet(once(onReady))
 
     log('Initialization complete')
 
     sendSize(INIT, 'Init message from host page', undefined, undefined, VERSION)
 
     sendTitle()
+  }
+
+  function chkReadyYet(readyCallback) {
+    if (document.readyState === 'complete') isolateUserCode(readyCallback)
+    else
+      addEventListener(document, 'readystatechange', () =>
+        chkReadyYet(readyCallback),
+      )
   }
 
   function checkOverflow() {
@@ -1524,7 +1533,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`PageInfo received from parent:`, parseFrozen(msgBody))
         if (onPageInfo) {
-          setTimeout(() => onPageInfo(parse(msgBody)))
+          isolateUserCode(onPageInfo, parse(msgBody))
         } else {
           notExpected('pageInfo')
         }
@@ -1534,7 +1543,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = parseFrozen(getData())
         log(`ParentInfo received from parent:`, msgBody)
         if (onParentInfo) {
-          setTimeout(() => onParentInfo(msgBody))
+          isolateUserCode(onParentInfo, msgBody)
         } else {
           notExpected('parentInfo')
         }
@@ -1544,7 +1553,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`onMessage called from parent:%c`, HIGHLIGHT, parseFrozen(msgBody))
         // eslint-disable-next-line sonarjs/no-extra-arguments
-        setTimeout(() => onMessage(parse(msgBody)))
+        isolateUserCode(onMessage, parse(msgBody))
       },
     }
 

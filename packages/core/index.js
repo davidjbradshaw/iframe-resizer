@@ -14,7 +14,7 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { once, typeAssert } from '../common/utils'
+import { isolateUserCode, once, typeAssert } from '../common/utils'
 import {
   advise,
   // assert,
@@ -706,7 +706,7 @@ function chkEvent(iframeId, funcName, val) {
           console.error(error)
           warn(iframeId, `Error in ${funcName} callback`)
         }
-      } else setTimeout(() => func(val))
+      } else isolateUserCode(func, val)
     else
       throw new TypeError(
         `${funcName} on iFrame[${iframeId}] is not a function`,
