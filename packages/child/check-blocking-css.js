@@ -10,7 +10,7 @@ const getElementName = (node) =>
   node.tagName ? node.tagName.toLowerCase() : 'unknown'
 
 const getComputedStyle = (node, property) =>
-  window.getComputedStyle(node)?.getPropertyValue(property)
+  window.getComputedStyle(node).getPropertyValue(property)
 
 const hasBlockingCSS = (node, property) =>
   hasCssValue(getComputedStyle(node, property))
