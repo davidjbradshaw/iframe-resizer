@@ -20,7 +20,7 @@ const blockedStyleSheets = new Set()
 function getInlineStyleValue(node, property) {
   const inlineValue = node.style[property]
   return inlineValue
-    ? { source: 'inline style attribute', value: inlineValue }
+    ? { source: 'an inline style attribute', value: inlineValue }
     : null
 }
 
@@ -70,7 +70,7 @@ const showCssWarning = (node, property) => {
   const nodeName = getElementName(node)
 
   advise(
-    `The <b>${property}</> CSS property is set to <b>${value}</> on the <b><${nodeName}></> element via ${source}. This may cause issues with the correct operation of <i>iframe-resizer</>.`,
+    `The <b>${property}</> CSS property is set to <b>${value}</> on the <b><${nodeName}></> element via ${source}. This may cause issues with the correct operation of <i>iframe-resizer</>.\n\nIf you wish to restrict the size of the iframe, then you should set this property on the iframe element itself, not the content inside it.`,
   )
 }
 
