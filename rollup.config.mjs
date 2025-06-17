@@ -67,7 +67,10 @@ const npm = [
       output('core')('cjs'),
     ],
     external: ['auto-console-group'],
-    plugins: pluginsProd('core'),
+    plugins: [
+      filesize(),
+      pluginsProd('core'),
+    ],
     watch: false,
   },
 
@@ -131,7 +134,10 @@ const npm = [
     input: 'packages/child/index.js',
     output: [output('child')('esm'), output('child')('cjs')],
     external: ['auto-console-group'],
-    plugins: pluginsProd('child'),
+    plugins: [
+      filesize(),
+      pluginsProd('child'),
+    ],
     watch: false,
   },
 
