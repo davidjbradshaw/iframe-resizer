@@ -30,6 +30,7 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  isolateUserCode,
   once,
   round,
   typeAssert,
@@ -58,11 +59,6 @@ import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
 
 function iframeResizerChild() {
-  const checkVisibilityOptions = {
-    contentVisibilityAuto: true,
-    opacityProperty: true,
-    visibilityProperty: true,
-  }
   const customCalcMethods = {
     height: () => {
       warn('Custom height calculation function not defined')
@@ -87,7 +83,6 @@ function iframeResizerChild() {
   }
   const eventCancelTimer = 128
   const eventHandlersByName = {}
-  const hasCheckVisibility = 'checkVisibility' in window
   const heightCalcModeDefault = 'auto'
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   const msgID = '[iFrameSizer]' // Must match host page msg ID
@@ -175,7 +170,7 @@ function iframeResizerChild() {
     stopInfiniteResizingOfIframe()
 
     initEventListeners()
-    queueMicrotask(onReady)
+    chkReadyYet(once(onReady))
 
     log('Initialization complete')
 
@@ -185,9 +180,20 @@ function iframeResizerChild() {
     chkBothSides()
   }
 
+  function chkReadyYet(readyCallback) {
+    if (document.readyState === 'complete') isolateUserCode(readyCallback)
+    else
+      addEventListener(document, 'readystatechange', () =>
+        chkReadyYet(readyCallback),
+      )
+  }
+
   function checkOverflow() {
-    overflowedNodeList = document.querySelectorAll(
-      `[${OVERFLOW_ATTR}]:not([${IGNORE_ATTR}]):not([${IGNORE_ATTR}] *)`,
+    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+
+    // Filter out elements that are descendants of elements with IGNORE_ATTR
+    overflowedNodeList = Array.from(allOverflowedNodes).filter(
+      (node) => !node.closest(`[${IGNORE_ATTR}]`),
     )
 
     hasOverflow = overflowedNodeList.length > 0
@@ -1069,18 +1075,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         ? overflowedNodeList
         : getAllElements(document)() // We should never get here, but just in case
 
-    let len = targetElements.length
-
     for (const element of targetElements) {
-      if (
-        !hasTags &&
-        hasCheckVisibility && // Safari was missing checkVisibility until March 2024
-        !element.checkVisibility(checkVisibilityOptions)
-      ) {
-        len -= 1
-        continue
-      }
-
       elVal =
         element.getBoundingClientRect()[side] +
         parseFloat(getComputedStyle(element).getPropertyValue(`margin-${side}`))
@@ -1095,10 +1090,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     performance.mark(PREF_END, {
       detail: {
-        Side,
-        len,
         hasTags,
+        len: targetElements.length,
         logging,
+        Side,
       },
     })
 
@@ -1561,7 +1556,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`PageInfo received from parent:`, parseFrozen(msgBody))
         if (onPageInfo) {
-          setTimeout(() => onPageInfo(parse(msgBody)))
+          isolateUserCode(onPageInfo, parse(msgBody))
         } else {
           notExpected('pageInfo')
         }
@@ -1571,7 +1566,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = parseFrozen(getData())
         log(`ParentInfo received from parent:`, msgBody)
         if (onParentInfo) {
-          setTimeout(() => onParentInfo(msgBody))
+          isolateUserCode(onParentInfo, msgBody)
         } else {
           notExpected('parentInfo')
         }
@@ -1581,7 +1576,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const msgBody = getData()
         log(`onMessage called from parent:%c`, HIGHLIGHT, parseFrozen(msgBody))
         // eslint-disable-next-line sonarjs/no-extra-arguments
-        setTimeout(() => onMessage(parse(msgBody)))
+        isolateUserCode(onMessage, parse(msgBody))
       },
     }
 
