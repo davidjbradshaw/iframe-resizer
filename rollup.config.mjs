@@ -68,8 +68,8 @@ const npm = [
     ],
     external: ['auto-console-group'],
     plugins: [
-      filesize(),
       pluginsProd('core'),
+      filesize(),
     ],
     watch: false,
   },
