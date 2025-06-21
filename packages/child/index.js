@@ -31,6 +31,7 @@ import {
   round,
   typeAssert,
 } from '../common/utils'
+import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
   adviser,
@@ -153,6 +154,7 @@ function iframeResizerChild() {
     checkDeprecatedAttrs()
     checkQuirksMode()
     checkAndSetupTags()
+    checkBlockingCSS()
 
     setupPublicMethods()
     setupMouseEvents()
