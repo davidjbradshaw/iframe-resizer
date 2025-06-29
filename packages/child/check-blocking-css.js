@@ -3,6 +3,8 @@ import { advise, log } from './console'
 const nodes = () => [document.documentElement, document.body]
 const properties = ['min-height', 'min-width', 'max-height', 'max-width']
 
+const blockedStyleSheets = new Set()
+
 const hasCssValue = (value) =>
   value && value !== '0px' && value !== 'auto' && value !== 'none'
 
@@ -14,8 +16,6 @@ const getComputedStyle = (node, property) =>
 
 const hasBlockingCSS = (node, property) =>
   hasCssValue(getComputedStyle(node, property))
-
-const blockedStyleSheets = new Set()
 
 function getInlineStyleValue(node, property) {
   const inlineValue = node.style[property]
