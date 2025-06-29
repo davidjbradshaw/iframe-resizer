@@ -174,7 +174,7 @@ function iframeResizerChild() {
     if (!bothDirections) stopInfiniteResizingOfIframe()
 
     initEventListeners()
-    chkReadyYet(once(onReady))
+    checkReadyYet(once(onReady))
 
     log('Initialization complete')
 
@@ -182,11 +182,11 @@ function iframeResizerChild() {
     sendTitle()
   }
 
-  function chkReadyYet(readyCallback) {
+  function checkReadyYet(readyCallback) {
     if (document.readyState === 'complete') isolateUserCode(readyCallback)
     else
       addEventListener(document, 'readystatechange', () =>
-        chkReadyYet(readyCallback),
+        checkReadyYet(readyCallback),
       )
   }
 
