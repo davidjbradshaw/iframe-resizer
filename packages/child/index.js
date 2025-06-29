@@ -2,10 +2,10 @@ import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
 
 import {
   BASE,
-  BOTH,
+  // BOTH,
   ENABLE,
   HEIGHT_EDGE,
-  HORIZONTAL,
+  // HORIZONTAL,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
   INIT,
@@ -21,7 +21,7 @@ import {
   SIZE_ATTR,
   SIZE_CHANGE_DETECTED,
   VERSION,
-  VERTICAL,
+  // VERTICAL,
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
@@ -95,6 +95,7 @@ function iframeResizerChild() {
   let bodyMargin = 0
   let bodyMarginStr = ''
   let bodyPadding = ''
+  let bothDirections = false
   let calculateHeight = true
   let calculateWidth = false
   let firstRun = true
@@ -151,6 +152,7 @@ function iframeResizerChild() {
     applySelectors()
 
     checkCrossDomain()
+    checkBoth()
     checkMode()
     checkVersion()
     checkHeightMode()
@@ -158,7 +160,7 @@ function iframeResizerChild() {
     checkDeprecatedAttrs()
     checkQuirksMode()
     checkAndSetupTags()
-    checkBlockingCSS()
+    if (!bothDirections) checkBlockingCSS()
 
     setupPublicMethods()
     setupMouseEvents()
@@ -169,7 +171,7 @@ function iframeResizerChild() {
     setBodyStyle('padding', bodyPadding)
 
     injectClearFixIntoBodyElement()
-    stopInfiniteResizingOfIframe()
+    if (!bothDirections) stopInfiniteResizingOfIframe()
 
     initEventListeners()
     chkReadyYet(once(onReady))
@@ -178,8 +180,6 @@ function iframeResizerChild() {
 
     sendSize(INIT, 'Init message from host page', undefined, undefined, VERSION)
     sendTitle()
-
-    chkBothSides()
   }
 
   function chkReadyYet(readyCallback) {
@@ -395,21 +395,22 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     info(`Set targetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
   }
 
-  function chkBothSides() {
+  function checkBoth() {
     if (calculateWidth === calculateHeight) {
-      autoResize = false
-      consoleEvent('autoResize')
-      info(
-        `Auto Resize disabled due to direction being set to: %c${calculateHeight ? BOTH : NONE}`,
-        HIGHLIGHT,
-      )
-      info(
-        `Please set direction to either %c"${VERTICAL}"%c or %c"${HORIZONTAL}"%c to enable auto resizing`,
-        BOLD,
-        NORMAL,
-        BOLD,
-        NORMAL,
-      )
+      bothDirections = true
+      // autoResize = false
+      // consoleEvent('autoResize')
+      // info(
+      //   `Auto Resize disabled due to direction being set to: %c${calculateHeight ? BOTH : NONE}`,
+      //   HIGHLIGHT,
+      // )
+      // info(
+      //   `Please set direction to either %c"${VERTICAL}"%c or %c"${HORIZONTAL}"%c to enable auto resizing`,
+      //   BOLD,
+      //   NORMAL,
+      //   BOLD,
+      //   NORMAL,
+      // )
     }
   }
 
@@ -729,10 +730,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       autoResize: (enable) => {
         typeAssert(enable, 'boolean', 'parentIframe.autoResize(enable) enable')
 
-        if (calculateWidth === calculateHeight) {
+        // if (calculateWidth === calculateHeight) {
+        if (calculateWidth === false && calculateHeight === false) {
           consoleEvent(ENABLE)
           advise(
-            `Auto Resize can not be changed when <b>direction</> is set to '${NONE}' or '${BOTH}'.`,
+            `Auto Resize can not be changed when <b>direction</> is set to '${NONE}'.`, //  or '${BOTH}'
           )
           return false
         }
