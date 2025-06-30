@@ -147,16 +147,11 @@
     "Resizing",
     "Resizer",
     "resize",
-    "cross",
-    "same",
-    "domain",
+    "cross-origin",
+    "cross-domain",
     "width",
     "height",
-    "postMessage",
-    "mutationObserver",
-    "resizeObserver",
     "RWD",
-    "CrossDomain",
     "responsive"
   ]
 }
