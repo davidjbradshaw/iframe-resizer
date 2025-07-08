@@ -33,7 +33,7 @@ declare module '@iframe-resizer/react' {
       bodyMargin?: string | number | null
       bodyPadding?: string | number | null
       checkOrigin?: boolean | string[]
-      direction?: 'vertical' | 'horizontal' | 'none'
+      direction?: 'vertical' | 'horizontal' | 'none' | 'both'
       forwardRef?: any
       inPageLinks?: boolean
       license: string
