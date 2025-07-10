@@ -71,8 +71,8 @@
         ),
         waitForLoad: true,
 
-        onClose: () => {
-          consoleGroup.event('onClose')
+        onBeforeClose: () => {
+          consoleGroup.event('Blocked Close Event')
           consoleGroup.warn('Close method is disabled, use Vue to remove iframe')
           return false
         },

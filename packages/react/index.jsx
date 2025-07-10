@@ -16,8 +16,8 @@ function IframeResizer(props) {
   const iframeRef = useRef(null)
   const consoleGroup = createAutoConsoleGroup()
 
-  const onClose = () => {
-    consoleGroup.event('onClose')
+  const onBeforeClose = () => {
+    consoleGroup.event('Blocked Close Event')
     consoleGroup.warn(
       `Close event ignored, to remove the iframe update your React component.`,
     )
@@ -29,7 +29,7 @@ function IframeResizer(props) {
   // deal with changes to the element and does not need recalling
   useEffect(() => {
     const iframe = iframeRef.current
-    const resizerOptions = { ...rest, onClose }
+    const resizerOptions = { ...rest, onBeforeClose }
 
     consoleGroup.label(`react(${iframe.id})`)
     consoleGroup.event('setup')

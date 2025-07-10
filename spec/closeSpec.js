@@ -11,7 +11,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       iframe = iframeResize({
         license: 'GPLv3',
         id: 'close2',
-        onClosed: () => {
+        onAfterClose: () => {
           setTimeout(done)
         },
         onReady: (iframe) => {
