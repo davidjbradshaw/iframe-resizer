@@ -18,7 +18,7 @@ describe('filterIframeAttribs', () => {
       tolerance: 5,
       warningTimeout: 3000,
       waitForLoad: true,
-      onClosed: jest.fn(),
+      onAfterClose: jest.fn(),
       onReady: jest.fn(),
       onMessage: jest.fn(),
       onResized: jest.fn(),

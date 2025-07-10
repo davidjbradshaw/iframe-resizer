@@ -483,7 +483,7 @@ function iframeListener(event) {
     })
   }
 
-  const on = (funcName, val) => chkEvent(iframeId, funcName, val)
+  const on = (funcName, val) => checkEvent(iframeId, funcName, val)
 
   function checkSameDomain(id) {
     try {
@@ -694,7 +694,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   errorBoundary(iframeId, screenMessage)()
 }
 
-function chkEvent(iframeId, funcName, val) {
+function checkEvent(iframeId, funcName, val) {
   let func = null
   let retVal = null
 
@@ -702,7 +702,7 @@ function chkEvent(iframeId, funcName, val) {
     func = settings[iframeId][funcName]
 
     if (typeof func === 'function')
-      if (funcName === 'onClose' || funcName === 'onScroll') {
+      if (funcName === 'onBeforeClose' || funcName === 'onScroll') {
         try {
           retVal = func(val)
         } catch (error) {
@@ -730,8 +730,8 @@ function removeIframeListeners(iframe) {
 function closeIframe(iframe) {
   const { id } = iframe
 
-  if (chkEvent(id, 'onClose', id) === false) {
-    log(id, 'Close iframe cancelled by onClose event')
+  if (checkEvent(id, 'onBeforeClose', id) === false) {
+    log(id, 'Close iframe cancelled by onBeforeClose')
     return
   }
 
@@ -746,7 +746,7 @@ function closeIframe(iframe) {
     warn(id, error)
   }
 
-  chkEvent(id, 'onClosed', id)
+  checkEvent(id, 'onAfterClose', id)
   removeIframeListeners(iframe)
 }
 
@@ -843,7 +843,7 @@ function trigger(calleeMsg, msg, id, noResponseWarning) {
     postMessageTarget.postMessage(msgId + msg, targetOrigin)
   }
 
-  function chkAndSend() {
+  function checkAndSend() {
     if (!settings[id]?.postMessageTarget) {
       warn(id, `Iframe(${id}) not found`)
       return
@@ -906,7 +906,7 @@ ${
   consoleEvent(id, calleeMsg)
 
   if (settings[id]) {
-    chkAndSend()
+    checkAndSend()
     warnOnNoResponse()
   }
 }
@@ -1174,9 +1174,20 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       settings[iframeId].postMessageTarget = iframe.contentWindow
   }
 
-  function chkTitle(iframeId) {
+  function checkTitle(iframeId) {
     const title = settings[iframeId]?.iframe?.title
     return title === '' || title === undefined
+  }
+
+  function updateOptionName(oldName, newName) {
+    if (Object.hasOwn(settings[iframeId], oldName)) {
+      advise(
+        iframeId,
+        `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+      )
+      settings[iframeId][newName] = settings[iframeId][oldName]
+      delete settings[iframeId][oldName]
+    }
   }
 
   const hasMouseEvents = (options) =>
@@ -1193,8 +1204,12 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       ...checkOptions(options),
       mouseEvents: hasMouseEvents(options),
       mode: setMode(options),
-      syncTitle: chkTitle(iframeId),
+      syncTitle: checkTitle(iframeId),
     }
+
+    updateOptionName('offset', 'offsetSize')
+    updateOptionName('onClose', 'onBeforeClose')
+    updateOptionName('onClosed', 'onAfterClose')
 
     consoleEvent(iframeId, 'setup')
     setDirection()
@@ -1238,7 +1253,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
-  function chkLocationSearch(options) {
+  function checkLocationSearch(options) {
     const { search } = window.location
 
     if (search.includes('ifrlog')) {
@@ -1287,7 +1302,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     throw new TypeError('Options is not an object')
   }
 
-  chkLocationSearch(options)
+  checkLocationSearch(options)
   startLogging(iframeId, options)
   errorBoundary(iframeId, setupIframe)(options)
 

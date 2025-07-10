@@ -51,7 +51,7 @@ export class IframeResizerDirective {
   private resizer?: iframeResizerObjectPrivate
 
   @Output() onReady = new EventEmitter<iframeResizerElement>()
-  @Output() onClose = new EventEmitter<iframeResizerElement>()
+  @Output() onBeforeClose = new EventEmitter<iframeResizerElement>()
   @Output() onMessage = new EventEmitter<{
     iframe: iframeResizerElement
     message: string
@@ -101,7 +101,7 @@ export class IframeResizerDirective {
       ...this.options,
       waitForLoad: true,
 
-      onClose: (iframeID: any) => {
+      onBeforeClose: (iframeID: any) => {
         console.warn(
           `[iframe-resizer/angular][${this.elementRef.nativeElement?.id}] Close event ignored, to remove the iframe update your Angular component.`,
         )

@@ -67,7 +67,7 @@
           callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Message:</b> ${messageData.message}`
           alert(`${messageData.message} (${messageData.iframe.id})`)
         },
-        onClosed(id) {
+        onAfterClose(id) {
           // Callback fn when iFrame is closed
           callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
         },

@@ -102,12 +102,14 @@ declare module '@iframe-resizer/parent' {
       /**
        * Called before iFrame is closed via parentIFrame.close() or iframe.iFrameResizer.close() methods. Returning false will prevent the iFrame from closing.
        */
-      onClose?(iframeId: string): void
+      onClose?(iframeId: string): void // Remove in v6
+      onBeforeClose?(iframeId: string): void
 
       /**
        * Called when iFrame is closed via parentIFrame.close() or iframe.iframeResizer.close() methods.
        */
-      onClosed?(iframeId: string): void
+      onClosed?(iframeId: string): void // Remove in v6
+      onAfterClose?(iframeId: string): void
 
       /**
        * Called when pointer enters the iFrame.

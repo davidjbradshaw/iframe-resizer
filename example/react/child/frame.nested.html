@@ -76,7 +76,7 @@
         },
 
         // Callback fn when iFrame is closed
-        onClosed(id) {
+        onAfterClose(id) {
           callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
         },
       })
