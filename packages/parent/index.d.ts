@@ -187,5 +187,4 @@ declare module '@iframe-resizer/parent' {
   ): iframeResizer.IFrameComponent[]
 
   export default iframeResize;
-  export { IFrameComponent, IFrameObject };
 }
