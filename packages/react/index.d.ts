@@ -45,7 +45,8 @@ declare module '@iframe-resizer/react' {
     }
 
     type ResizerEvents = {
-      onCLosed?: (iframeId: string) => void
+      onCLosed?: (iframeId: string) => void // Remove in v6
+      onAfterClose?: (iframeId: string) => void
       onMessage?: (ev: { iframe: IFrameComponent; message: any }) => void
       onMouseEnter?: (ev: {
         iframe: IFrameComponent
