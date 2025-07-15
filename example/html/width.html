@@ -84,7 +84,7 @@
             'Hello back from parent page',
           )
         },
-        onClosed(id) {
+        onAfterClose(id) {
           // Callback fn when iFrame is closed
           callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
         },

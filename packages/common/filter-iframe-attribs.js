@@ -15,7 +15,7 @@ export default (props) => {
     tolerance,
     warningTimeout,
     waitForLoad,
-    onClosed,
+    onAfterClose,
     onReady,
     onMessage,
     onResized,
