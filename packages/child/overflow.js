@@ -1,6 +1,8 @@
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, log } from './console'
+import { assert, info } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -38,8 +40,36 @@ const overflowObserver = (options) => {
   const observer = new IntersectionObserver(observation, observerOptions)
   const observedNodes = new WeakSet()
 
+  // MutationObserver to detect removed nodes and stop observing them
+  const mutationObserver = new MutationObserver((mutations) => {
+    let removedNodeCount = 0
+
+    const handleRemovedNode = (node) => {
+      if (observedNodes.has(node)) {
+        observer.unobserve(node)
+        observedNodes.delete(node)
+        removedNodeCount++
+      }
+    }
+
+    for (const mutation of mutations) {
+      mutation.removedNodes.forEach(handleRemovedNode)
+    }
+
+    if (removedNodeCount > 0) {
+      info(
+        `Detached %c${removedNodeCount}%c overflowObserver${removedNodeCount > 1 ? 's' : ''}`,
+        HIGHLIGHT,
+        FOREGROUND,
+      )
+    }
+  })
+
+  mutationObserver.observe(document.body, { childList: true, subtree: true })
+
+  // Function to observe new nodes
   return function observeOverflow(nodeList) {
-    log('Attached overflowObservers')
+    let addedNodeCount = 0
 
     for (const node of nodeList) {
       const isObservable = node.nodeType === Node.ELEMENT_NODE
@@ -52,6 +82,15 @@ const overflowObserver = (options) => {
 
       observer.observe(node)
       observedNodes.add(node)
+      addedNodeCount++
+    }
+
+    if (addedNodeCount > 0) {
+      info(
+        `Attached %c${addedNodeCount}%c overflowObserver${addedNodeCount > 1 ? 's' : ''}`,
+        HIGHLIGHT,
+        FOREGROUND,
+      )
     }
   }
 }
