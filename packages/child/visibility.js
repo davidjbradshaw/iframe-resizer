@@ -1,10 +1,6 @@
 export default function visibilityObserver(callback) {
   const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        callback(entry.isIntersecting)
-      }
-    },
+    (entries) => callback(entries[0].isIntersecting),
     {
       threshold: 0,
     },
