@@ -1421,7 +1421,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      if (isHidden) {
+      if (isHidden || document.hidden) {
         if (hiddenMessageShown === true) return
         log('Iframe hidden - Ignored resize request')
         hiddenMessageShown = true
