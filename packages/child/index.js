@@ -22,6 +22,7 @@ import {
   SIZE_CHANGE_DETECTED,
   VERSION,
   // VERTICAL,
+  VISIBILITY_OBSERVER,
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
@@ -58,6 +59,7 @@ import { getBoolean, getNumber } from './from-string'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
+import visibilityObserver from './visibility'
 
 function iframeResizerChild() {
   const customCalcMethods = {
@@ -592,9 +594,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     manageEventListeners('add')
     setupMutationObserver()
-    setupResizeObservers()
     setupObserveOverflow()
     addOverflowObservers(getAllElements(document)())
+    setupResizeObservers()
+    setupVisibilityObserver()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -943,6 +946,15 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       resizeSet.add(node)
       log(`Attached resizeObserver: %c${getElementName(node)}`, HIGHLIGHT)
     }
+  }
+
+  function setupVisibilityObserver() {
+    // this is needed for Safari, but applies to all browsers in case the issue exists elsewhere.
+
+    log('Setup VisibilityObserver')
+    visibilityObserver(() =>
+      sendSize(VISIBILITY_OBSERVER, 'VisibilityObserver triggered'),
+    )
   }
 
   function setupResizeObservers() {
@@ -1543,7 +1555,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       resize() {
-        // This method is used by the tabVisible event on the parent page
+        // This method is used by the tabVisibility event on the parent page
         log('Resize requested by host page')
         sendSize(PARENT_RESIZE_REQUEST, 'Parent window requested size check')
       },
