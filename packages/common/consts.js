@@ -25,6 +25,7 @@ export const SET_OFFSET_SIZE = 'setOffsetSize'
 export const RESIZE_OBSERVER = 'resizeObserver'
 export const OVERFLOW_OBSERVER = 'overflowObserver'
 export const MUTATION_OBSERVER = 'mutationObserver'
+export const VISIBILITY_OBSERVER = 'visibilityObserver'
 
 export const BOLD = 'font-weight: bold;'
 export const NORMAL = 'font-weight: normal;'

@@ -22,6 +22,7 @@ import {
   SIZE_CHANGE_DETECTED,
   VERSION,
   // VERTICAL,
+  VISIBILITY_OBSERVER,
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
@@ -58,6 +59,7 @@ import { getBoolean, getNumber } from './from-string'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
+import visibilityObserver from './visibility'
 
 function iframeResizerChild() {
   const customCalcMethods = {
@@ -107,6 +109,7 @@ function iframeResizerChild() {
   let ignoreSelector = ''
   let initLock = true
   let inPageLinks = {}
+  let isHidden = false
   let logExpand = true
   let logging = false
   let licenseKey = '' // eslint-disable-line no-unused-vars
@@ -592,9 +595,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     manageEventListeners('add')
     setupMutationObserver()
-    setupResizeObservers()
     setupObserveOverflow()
     addOverflowObservers(getAllElements(document)())
+    setupResizeObservers()
+    setupVisibilityObserver()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -943,6 +947,17 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       resizeSet.add(node)
       log(`Attached resizeObserver: %c${getElementName(node)}`, HIGHLIGHT)
     }
+  }
+
+  function visibilityChange(isVisible) {
+    log(`Visible: %c${isVisible}`, HIGHLIGHT)
+    isHidden = !isVisible
+    sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
+  }
+
+  function setupVisibilityObserver() {
+    log('Setup VisibilityObserver')
+    visibilityObserver(visibilityChange)
   }
 
   function setupResizeObservers() {
@@ -1371,9 +1386,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       // the following case needs {} to prevent a compile error
-      case RESIZE_OBSERVER:
       case OVERFLOW_OBSERVER:
-      case MUTATION_OBSERVER: {
+      case MUTATION_OBSERVER:
+      case RESIZE_OBSERVER:
+      case VISIBILITY_OBSERVER: {
         log(NO_CHANGE)
         purge()
         break
@@ -1389,6 +1405,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   let sendPending = false
   const sendFailed = once(() => adviser(getModeData(4)))
+  let hiddenMessageShown = false
 
   const sendSize = errorBoundary(
     (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
@@ -1405,13 +1422,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      if (document.hidden) {
-        // Currently only correctly supported in firefox
-        // This is checked again on the parent page
-        log('Page hidden - Ignored resize request')
+      if (isHidden) {
+        if (hiddenMessageShown === true) return
+        log('Iframe hidden - Ignored resize request')
+        hiddenMessageShown = true
         return
       }
 
+      hiddenMessageShown = false
       sendPending = true
       requestAnimationFrame(() => {
         sendPending = false
