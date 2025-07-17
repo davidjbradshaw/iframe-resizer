@@ -950,7 +950,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function visibilityChange(isVisible) {
-    info(`Visibility changed: %c${isVisible}`, HIGHLIGHT)
+    info(`Visible: %c${isVisible}`, HIGHLIGHT)
     isHidden = !isVisible
     sendSize(VISIBILITY_OBSERVER, 'VisibilityObserver triggered')
   }
