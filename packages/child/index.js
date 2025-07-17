@@ -950,8 +950,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function setupVisibilityObserver() {
-    // this is needed for Safari, but applies to all browsers in case the issue exists elsewhere.
-
     log('Setup VisibilityObserver')
     visibilityObserver((isVisible) => {
       info(`Visibility changed: %c${isVisible}`, HIGHLIGHT)
