@@ -1404,6 +1404,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   let sendPending = false
   const sendFailed = once(() => adviser(getModeData(4)))
+  let hiddenMessageShown = false
 
   const sendSize = errorBoundary(
     (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
@@ -1421,10 +1422,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       }
 
       if (isHidden) {
-        log('Page hidden - Ignored resize request')
+        if (hiddenMessageShown === true) return
+        log('Iframe hidden - Ignored resize request')
+        hiddenMessageShown = true
         return
       }
 
+      hiddenMessageShown = false
       sendPending = true
       requestAnimationFrame(() => {
         sendPending = false
