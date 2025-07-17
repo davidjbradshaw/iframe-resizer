@@ -12,9 +12,4 @@ export default function visibilityObserver(callback) {
 
   const target = document.documentElement
   observer.observe(target)
-
-  return () => {
-    observer.unobserve(target);
-    observer.disconnect();
-  }
 }
