@@ -2,14 +2,16 @@ export default function visibilityObserver(callback) {
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        if (entry.isIntersecting) {
-          callback()
-        }
+        callback(entry.isIntersecting)
       }
     },
-    { threshold: 0 },
+    {
+      threshold: 0,
+    },
   )
 
-  // Observe the root element of the iframe's document
-  observer.observe(document.body || document.documentElement)
+  const target = document.documentElement
+  observer.observe(target)
+
+  return () => observer.unobserve(target)
 }

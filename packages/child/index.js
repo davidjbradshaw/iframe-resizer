@@ -109,6 +109,7 @@ function iframeResizerChild() {
   let ignoreSelector = ''
   let initLock = true
   let inPageLinks = {}
+  let isHidden = false
   let logExpand = true
   let logging = false
   let licenseKey = '' // eslint-disable-line no-unused-vars
@@ -952,9 +953,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     // this is needed for Safari, but applies to all browsers in case the issue exists elsewhere.
 
     log('Setup VisibilityObserver')
-    visibilityObserver(() =>
-      sendSize(VISIBILITY_OBSERVER, 'VisibilityObserver triggered'),
-    )
+    visibilityObserver((isVisible) => {
+      info(`Visibility changed: %c${isVisible}`, HIGHLIGHT)
+      isHidden = !isVisible
+      sendSize(VISIBILITY_OBSERVER, 'VisibilityObserver triggered')
+    })
   }
 
   function setupResizeObservers() {
@@ -1217,10 +1220,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = Math.max(boundingSize, scrollSize)
         break
 
-      case boundingSize === 0:
-        info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = scrollSize
-        break
+      // case boundingSize === 0:
+      //   info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
+      //   calculatedSize = scrollSize
+      //   break
 
       case !hasOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
@@ -1417,9 +1420,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         return
       }
 
-      if (document.hidden) {
-        // Currently only correctly supported in firefox
-        // This is checked again on the parent page
+      if (isHidden) {
         log('Page hidden - Ignored resize request')
         return
       }
