@@ -949,13 +949,15 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
   }
 
+  function visibilityChange(isVisible) {
+    info(`Visibility changed: %c${isVisible}`, HIGHLIGHT)
+    isHidden = !isVisible
+    sendSize(VISIBILITY_OBSERVER, 'VisibilityObserver triggered')
+  }
+
   function setupVisibilityObserver() {
     log('Setup VisibilityObserver')
-    visibilityObserver((isVisible) => {
-      info(`Visibility changed: %c${isVisible}`, HIGHLIGHT)
-      isHidden = !isVisible
-      sendSize(VISIBILITY_OBSERVER, 'VisibilityObserver triggered')
-    })
+    visibilityObserver(visibilityChange)
   }
 
   function setupResizeObservers() {
@@ -1558,7 +1560,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       },
 
       resize() {
-        // This method is used by the tabVisibility event on the parent page
+        // This method is used by the tabVisible event on the parent page
         log('Resize requested by host page')
         sendSize(PARENT_RESIZE_REQUEST, 'Parent window requested size check')
       },
