@@ -1220,10 +1220,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = Math.max(boundingSize, scrollSize)
         break
 
-      // case boundingSize === 0:
-      //   info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
-      //   calculatedSize = scrollSize
-      //   break
+      case boundingSize === 0:
+        info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
+        calculatedSize = scrollSize
+        break
 
       case !hasOverflow &&
         boundingSize !== prevBoundingSize[dimension] &&
