@@ -1386,9 +1386,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       // the following case needs {} to prevent a compile error
-      case RESIZE_OBSERVER:
       case OVERFLOW_OBSERVER:
       case MUTATION_OBSERVER:
+      case RESIZE_OBSERVER:
       case VISIBILITY_OBSERVER: {
         log(NO_CHANGE)
         purge()
