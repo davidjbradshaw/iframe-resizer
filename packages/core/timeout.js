@@ -26,14 +26,7 @@ The <b>waitForLoad</> option is currently set to <b>'true'</>. If the iframe loa
 The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
 `
         : ''
-    } 
-${
-  hasSandbox &&
-  !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
-    ? `The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
-`
-    : ''
-}This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
+    }This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
 `,
   )
 }
