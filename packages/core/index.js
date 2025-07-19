@@ -568,12 +568,10 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case 'pageInfo':
-        // sendPageInfoToIframe('start', iframeId)
         startPageInfoMonitor()
         break
 
       case 'parentInfo':
-        // sendParentInfoToIframe('start', iframeId)
         startParentInfoMonitor()
         break
 
@@ -855,10 +853,7 @@ function trigger(calleeMsg, msg, id) {
 
   consoleEvent(id, calleeMsg)
 
-  if (settings[id]) {
-    checkAndSend()
-    // if (noResponseWarning) warnOnNoResponse()
-  }
+  if (settings[id]) checkAndSend()
 }
 
 function createOutgoingMsg(iframeId) {
