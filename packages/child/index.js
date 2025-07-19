@@ -971,6 +971,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
         for (const node of removedNodes) {
           observedMutations.delete(node)
+
+          if (resizeSet.has(node)) {
+            resizeObserver.unobserve(node)
+            resizeSet.delete(node)
+            log(`Detached resizeObserver: %c${getElementName(node)}`, HIGHLIGHT)
+          }
         }
       }
     }
