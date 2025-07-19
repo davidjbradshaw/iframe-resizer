@@ -7,7 +7,7 @@ function showWarning(id, settings) {
 
   advise(
     id,
-    `<rb>No response from iFrame</>
+    `<rb>No response from iframe</>
           
 The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
