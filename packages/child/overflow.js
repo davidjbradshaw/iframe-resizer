@@ -2,7 +2,7 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, info } from './console'
+import { assert, event, info } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -44,19 +44,18 @@ const overflowObserver = (options) => {
   const mutationObserver = new MutationObserver((mutations) => {
     let removedNodeCount = 0
 
-    const handleRemovedNode = (node) => {
-      if (observedNodes.has(node)) {
+    for (const mutation of mutations) {
+      for (const node of mutation.removedNodes) {
+        if (!observedNodes.has(node)) continue
+
         observer.unobserve(node)
         observedNodes.delete(node)
         removedNodeCount++
       }
     }
 
-    for (const mutation of mutations) {
-      mutation.removedNodes.forEach(handleRemovedNode)
-    }
-
     if (removedNodeCount > 0) {
+      event('overflowObserver')
       info(
         `Detached %c${removedNodeCount}%c overflowObserver${removedNodeCount > 1 ? 's' : ''}`,
         HIGHLIGHT,
