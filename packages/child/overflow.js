@@ -1,6 +1,8 @@
+import { HIGHLIGHT, NORMAL } from 'auto-console-group'
+
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, log } from './console'
+import { assert, info } from './console'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -36,22 +38,29 @@ const overflowObserver = (options) => {
   }
 
   const observer = new IntersectionObserver(observation, observerOptions)
-  const observedNodes = new WeakSet()
+  const observed = new WeakSet()
 
   return function observeOverflow(nodeList) {
-    log('Attached overflowObservers')
+    let counter = 0
 
     for (const node of nodeList) {
       const isObservable = node.nodeType === Node.ELEMENT_NODE
-      const isObserved = observedNodes.has(node)
+      const isObserved = observed.has(node)
 
-      if (isObserved || !isObservable) {
-        assert(!isObserved, 'Node already observed', node)
-        continue
-      }
+      if (!isObservable) continue
+      assert(!isObserved, 'Node already observed for overflow', node)
 
       observer.observe(node)
-      observedNodes.add(node)
+      observed.add(node)
+      counter += 1
+    }
+
+    if (counter > 0) {
+      info(
+        `Attached OverflowObserver to %c${counter}%c element${counter === 1 ? '' : 's'}`,
+        HIGHLIGHT,
+        NORMAL,
+      )
     }
   }
 }
