@@ -1,10 +1,10 @@
+<br><p>
 [<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">](https://iframe-resizer.com)
-
-[![npm version](https://badge.fury.io/js/@iframe-resizer%2Fcore.svg)](https://badge.fury.io/js/@iframe-resizer%2Fparent)
+</p>
  <!--
+[![npm version](https://badge.fury.io/js/@iframe-resizer%2Fcore.svg)](https://badge.fury.io/js/@iframe-resizer%2Fparent)
 [![NPM Downloads](https://img.shields.io/npm/dm/iframe-resizer.svg)](https://npm-stat.com/charts.html?package=iframe-resizer&from=2014-12-31)
 [![](https://data.jsdelivr.com/v1/package/npm/iframe-resizer/badge?style=rounded)](https://www.jsdelivr.com/package/npm/iframe-resizer) 
-
 -->
 
 ## Introduction
@@ -15,9 +15,10 @@ and then monitors the iframe to ensure that it is always the perfect size.
 
 ### Reliable Resizing
 
-As browsers don't provide a single consistently reliable method to calculate content
-size, _iframe-resizer_ inspects your page and automatically selects the best 
-value for your content every time your content changes.
+Modern browsers are still unable to provide a single consistently reliable method to calculate
+content size, therefore _iframe-resizer_ automatically inspects your page and selects the best
+value for your content every time your page updates from a range DOM values and its own custom
+content size calculation algorithm.
 
 ### Cross Domain
 
@@ -74,4 +75,5 @@ This version of iframe-resizer has been extensively rewritten to use modern brow
 With this release, the opportunity has been taken to refresh and simplify the API, if you are coming from a previous version then their is an [Upgrade Guide](https://iframe-resizer.com/upgrade) to explain the changes.
 
 ---
-Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw) - Licensed under the [GPL V3](LICENSE)
+[<img align="right" src="https://badge.fury.io/js/@iframe-resizer%2Fcore.svg" alt="NPM" />](https://badge.fury.io/js/@iframe-resizer%2Fparent)
+Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw)

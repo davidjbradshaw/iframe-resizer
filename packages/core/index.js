@@ -79,7 +79,7 @@ function iframeListener(event) {
     const iframe = settings[data[0]]?.iframe
     const compStyle = getComputedStyle(iframe)
 
-    return {
+    const messageData = {
       iframe,
       id: data[0],
       height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
@@ -87,6 +87,11 @@ function iframeListener(event) {
       type: data[3],
       msg: data[4],
     }
+
+    // eslint-disable-next-line prefer-destructuring
+    if (data[5]) messageData.mode = data[5]
+
+    return messageData
   }
 
   function isMessageFromIframe() {
@@ -639,15 +644,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   function iFrameReadyMsgReceived() {
     Object.keys(settings).forEach((iframeId) => {
-      if (settings[iframeId].mode >= 0)
-        trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
+      trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
     })
   }
 
   function firstRun() {
-    if (settings[iframeId]) {
-      settings[iframeId].firstRun = false
-    }
+    if (!settings[iframeId]) return
+
+    checkMode(iframeId, messageData.mode)
+    settings[iframeId].firstRun = false
   }
 
   let msg = event.data
@@ -890,6 +895,25 @@ function createOutgoingMsg(iframeId) {
 let count = 0
 let setup = false
 let vAdvised = false
+let vInfoDisable = false
+
+function checkMode(iframeId, childMode = -3) {
+  if (vAdvised) return
+  const mode = Math.max(settings[iframeId].mode, childMode)
+  if (mode > settings[iframeId]) settings[iframeId].mode = mode
+  if (mode < 0) {
+    consoleClear(iframeId)
+    if (!settings[iframeId].vAdvised)
+      advise(iframeId || 'Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
+    settings[iframeId].vAdvised = true
+    throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
+  }
+  if (!(mode > -1 && vInfoDisable)) {
+    vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
+  }
+  if (mode < 1) advise('Parent', getModeData(3))
+  vAdvised = true
+}
 
 export default (options) => (iframe) => {
   function newId() {
@@ -1019,12 +1043,9 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     }
 
     const { id } = iframe
-    const { mode, waitForLoad } = settings[id]
+    const { waitForLoad } = settings[id]
 
     warnOnNoResponse(id, settings)
-
-    if (mode === -1) return // modal()
-    if (mode === -2) return
 
     addEventListener(iframe, 'load', iFrameLoaded)
     if (waitForLoad === false) trigger(INIT, `${msg}:${setup}`, id)
@@ -1048,24 +1069,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     return options
-  }
-
-  function checkMode() {
-    const { mode } = settings[iframeId]
-
-    if (mode < 0) {
-      advise('Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
-      consoleClear(iframeId)
-      throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
-    }
-
-    if (!vAdvised && !(mode > 0 && options.vInfoDisable)) {
-      vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-    }
-
-    if (!vAdvised && mode < 1) advise('Parent', getModeData(3))
-
-    vAdvised = true
   }
 
   function setDirection() {
@@ -1119,6 +1122,12 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function getPostMessageTarget() {
     if (settings[iframeId].postMessageTarget === null)
       settings[iframeId].postMessageTarget = iframe.contentWindow
+  }
+
+  function preModeCheck() {
+    if (vAdvised) return
+    const { mode } = settings[iframeId]
+    if (mode !== -1) checkMode(iframeId, mode)
   }
 
   function checkTitle(iframeId) {
@@ -1184,7 +1193,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     processOptions(options)
-    checkMode()
+    preModeCheck()
     setupEventListenersOnce()
     setScrolling()
     setupBodyMarginValues()
@@ -1196,7 +1205,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function enableVInfo(options) {
     if (options?.log === -1) {
       options.log = false
-      options.vInfoDisable = true
+      vInfoDisable = true
     }
   }
 

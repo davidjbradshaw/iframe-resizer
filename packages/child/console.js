@@ -1,6 +1,6 @@
-import acg from 'auto-console-group'
+import acg, { NORMAL } from 'auto-console-group'
 
-import { LABEL } from '../common/consts'
+import { BOLD, LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { esModuleInterop, id as identity } from '../common/utils'
@@ -25,6 +25,13 @@ export const setupConsoleMethod =
 
 export const log = setupConsoleMethod('log')
 export const info = log // setupConsoleMethod('info')
+
+export function vInfo(ver, mode) {
+  childConsole.info(
+    `%ciframe-resizer ${ver}`,
+    enabled || mode < 1 ? BOLD : NORMAL,
+  )
+}
 
 export const {
   assert,

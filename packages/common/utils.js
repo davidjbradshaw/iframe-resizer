@@ -25,7 +25,7 @@ export const round = (value) => Math.round(value * ROUNDING) / ROUNDING
 export const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1)
 
-const isDef = (value) => `${value}` !== '' && value !== undefined
+export const isDef = (value) => `${value}` !== '' && value !== undefined
 
 export function getElementName(el) {
   switch (true) {

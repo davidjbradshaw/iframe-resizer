@@ -26,11 +26,12 @@ import {
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
-import { getModeData } from '../common/mode'
+import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  isDef,
   isolateUserCode,
   once,
   round,
@@ -53,6 +54,7 @@ import {
   log,
   purge,
   setConsoleOptions,
+  vInfo,
   warn,
 } from './console'
 import { getBoolean, getNumber } from './from-string'
@@ -112,10 +114,11 @@ function iframeResizerChild() {
   let isHidden = false
   let logExpand = true
   let logging = false
-  let licenseKey = '' // eslint-disable-line no-unused-vars
+  let key
+  let key2
   let mode = 0
   let mouseEvents = false
-  let myID = ''
+  let parentId = ''
   let observeOverflow = id
   let offsetHeight
   let offsetWidth
@@ -148,7 +151,7 @@ function iframeResizerChild() {
   function init(data) {
     readDataFromParent(data)
 
-    setConsoleOptions({ id: myID, enabled: logging, expand: logExpand })
+    setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
     readDataFromPage()
 
@@ -181,7 +184,13 @@ function iframeResizerChild() {
 
     log('Initialization complete')
 
-    sendSize(INIT, 'Init message from host page', undefined, undefined, VERSION)
+    sendSize(
+      INIT,
+      'Init message from host page',
+      undefined,
+      undefined,
+      `${VERSION}:${mode}`,
+    )
     sendTitle()
   }
 
@@ -310,7 +319,7 @@ Parent page: ${version} - Child page: ${VERSION}.
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   function readDataFromParent(data) {
-    myID = data[0] ?? myID
+    parentId = data[0] ?? parentId
     bodyMargin = getNumber(data[1]) ?? bodyMargin // For V1 compatibility
     calculateWidth = getBoolean(data[2]) ?? calculateWidth
     logging = getBoolean(data[3]) ?? logging
@@ -328,7 +337,7 @@ Parent page: ${version} - Child page: ${VERSION}.
     offsetHeight = getNumber(data[16]) ?? offsetHeight
     offsetWidth = getNumber(data[17]) ?? offsetWidth
     calculateHeight = getBoolean(data[18]) ?? calculateHeight
-    licenseKey = data[19] ?? licenseKey
+    key = data[19] ?? key
     version = data[20] ?? version
     mode = getNumber(data[21]) ?? mode
     // sizeSelector = data[22] || sizeSelector
@@ -359,6 +368,7 @@ Parent page: ${version} - Child page: ${VERSION}.
           offsetWidth = readNumber(data, 'offsetSize') ?? offsetWidth
       }
 
+      key2 = readString(data, getKey(0)) ?? key2
       ignoreSelector = readString(data, 'ignoreSelector') ?? ignoreSelector
       sizeSelector = readString(data, 'sizeSelector') ?? sizeSelector
       targetOriginDefault =
@@ -401,19 +411,6 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
   function checkBoth() {
     if (calculateWidth === calculateHeight) {
       bothDirections = true
-      // autoResize = false
-      // consoleEvent('autoResize')
-      // info(
-      //   `Auto Resize disabled due to direction being set to: %c${calculateHeight ? BOTH : NONE}`,
-      //   HIGHLIGHT,
-      // )
-      // info(
-      //   `Please set direction to either %c"${VERTICAL}"%c or %c"${HORIZONTAL}"%c to enable auto resizing`,
-      //   BOLD,
-      //   NORMAL,
-      //   BOLD,
-      //   NORMAL,
-      // )
     }
   }
 
@@ -582,10 +579,23 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function checkMode() {
-    if (mode < 0) return adviser(`${getModeData(mode + 2)}${getModeData(2)}`)
-    if (version?.codePointAt(0) > 4) return mode
-    if (mode < 2) return adviser(getModeData(3))
-    return mode
+    const oMode = mode
+    const pMode = setMode({ key })
+    const cMode = setMode({ key: key2 })
+    mode = Math.max(pMode, cMode)
+    if (mode < 0) {
+      mode = Math.min(pMode, cMode)
+      purge()
+      advise(`${getModeData(mode + 2)}${getModeData(2)}`)
+      if (isDef(version))
+        throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
+    }
+    if (!isDef(version) || (oMode > -1 && mode > oMode)) {
+      if (sessionStorage.getItem('ifr') !== VERSION)
+        vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
+      if (mode < 2) adviser(getModeData(3))
+      sessionStorage.setItem('ifr', VERSION)
+    }
   }
 
   function initEventListeners() {
@@ -759,7 +769,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         sendMsg(0, 0, 'close')
       },
 
-      getId: () => myID,
+      getId: () => parentId,
 
       getOrigin: () => {
         deprecateMethod('getOrigin()', 'getParentOrigin()')
@@ -1492,7 +1502,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     function sendToParent() {
       const size = `${height}:${width}`
-      const message = `${myID}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
+      const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
       if (sameOrigin)
         try {
