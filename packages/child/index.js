@@ -61,6 +61,9 @@ import { getBoolean, getNumber } from './from-string'
 import overflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
+import createResizeObserver, {
+  attachResizeObserverToNonStaticElements,
+} from './resize'
 import visibilityObserver from './visibility'
 
 function iframeResizerChild() {
@@ -125,7 +128,6 @@ function iframeResizerChild() {
   let origin
   let overflowedNodeList = []
   let resizeFrom = 'child'
-  let resizeObserver = null
   let sameOrigin = false
   let sizeSelector = ''
   let taggedElements = []
@@ -347,7 +349,7 @@ Parent page: ${version} - Child page: ${VERSION}.
   function readDataFromPage() {
     // eslint-disable-next-line sonarjs/cognitive-complexity
     function readData(data) {
-      log(`Reading data from page:`, data)
+      log(`Reading data from page:`, Object.keys(data))
 
       onBeforeResize = readFunction(data, 'onBeforeResize') ?? onBeforeResize
       onMessage = readFunction(data, 'onMessage') ?? onMessage
@@ -602,11 +604,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       log('Auto Resize disabled')
     }
 
+    const nodeList = getAllElements(document)()
     manageEventListeners('add')
     setupMutationObserver()
     setupObserveOverflow()
-    addOverflowObservers(getAllElements(document)())
-    setupResizeObservers()
+    addOverflowObservers(nodeList)
+    setupResizeObservers(nodeList)
     setupVisibilityObserver()
   }
 
@@ -919,43 +922,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function resizeObserved(entries) {
     if (!Array.isArray(entries) || entries.length === 0) return
-
     const el = entries[0].target
-
     sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
   }
 
-  const resizeSet = new WeakSet()
-
-  // This function has to iterate over all page elements during load
-  // so is optimized for performance, rather than best practices.
-  function attachResizeObserverToNonStaticElements(rootElement) {
-    if (rootElement.nodeType !== Node.ELEMENT_NODE) return
-
-    if (!resizeSet.has(rootElement)) {
-      const position = getComputedStyle(rootElement)?.position
-      if (!(position === '' || position === 'static')) {
-        resizeObserver.observe(rootElement)
-        resizeSet.add(rootElement)
-        log(
-          `Attached resizeObserver: %c${getElementName(rootElement)}`,
-          HIGHLIGHT,
-        )
-      }
-    }
-
-    const nodeList = getAllElements(rootElement)()
-
-    for (const node of nodeList) {
-      if (resizeSet.has(node) || node?.nodeType !== Node.ELEMENT_NODE) continue
-
-      const position = getComputedStyle(node)?.position
-      if (position === '' || position === 'static') continue
-
-      resizeObserver.observe(node)
-      resizeSet.add(node)
-      log(`Attached resizeObserver: %c${getElementName(node)}`, HIGHLIGHT)
-    }
+  function setupResizeObservers(nodeList) {
+    log('Setup ResizeObserver')
+    createResizeObserver(resizeObserved)(nodeList)
   }
 
   function visibilityChange(isVisible) {
@@ -967,14 +940,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   function setupVisibilityObserver() {
     log('Setup VisibilityObserver')
     visibilityObserver(visibilityChange)
-  }
-
-  function setupResizeObservers() {
-    log('Setup ResizeObserver')
-    resizeObserver = new ResizeObserver(resizeObserved)
-    resizeObserver.observe(document.body)
-    resizeSet.add(document.body)
-    attachResizeObserverToNonStaticElements(document.body)
   }
 
   function setupMutationObserver() {
@@ -1008,8 +973,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     function setupNewElements(observedMutations) {
       applySelectors()
 
-      addOverflowObservers(observedMutations)
-      observedMutations.forEach(attachResizeObserverToNonStaticElements)
+      for (const mutation of observedMutations) {
+        const elements = getAllElements(mutation)()
+        addOverflowObservers(elements)
+        attachResizeObserverToNonStaticElements(elements)
+      }
+
       observedMutations.clear()
     }
 
@@ -1137,8 +1106,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   ]
 
   const getAllElements = (element) => () => {
-    chkIgnoredElements()
-
     const selector = [
       '* ',
       'not(head)',
@@ -1158,10 +1125,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       'not(nobr)',
     ]
 
+    chkIgnoredElements()
     if (hasIgnored)
       selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
 
-    return element.querySelectorAll(selector.join(':'))
+    log([element, ...element.querySelectorAll(selector.join(':'))])
+
+    return [element, ...element.querySelectorAll(selector.join(':'))]
   }
 
   function getOffsetSize(getDimension) {
