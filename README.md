@@ -16,9 +16,9 @@ and then monitors the iframe to ensure that it is always the perfect size.
 ### Reliable Resizing
 
 Modern browsers are still unable to provide a single consistently reliable method to calculate
-content size, therefore _iframe-resizer_ automatically inspects your page and selects the best
-value for your content every time your page updates from a range DOM values and its own custom
-content size calculation algorithm.
+page content size. Therefore _iframe-resizer_ automatically inspects your page and selects the
+best value for your page size from a range DOM values and_iframe-resizer's_ own custom content
+size calculation algorithm.
 
 ### Cross Domain
 
