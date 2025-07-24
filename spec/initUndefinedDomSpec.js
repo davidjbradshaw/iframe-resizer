@@ -17,8 +17,8 @@ define(['iframeResizerParent'], (iframeResize) => {
   //     tearDown(iframe)
   //   })
 
-  //   it('should create iFrameResizer object', () => {
-  //     expect(iframe.iFrameResizer).toBeDefined()
+  //   it('should create iframeResizer object', () => {
+  //     expect(iframe.iframeResizer).toBeDefined()
   //   })
   // })
 })

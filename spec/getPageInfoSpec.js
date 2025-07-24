@@ -42,7 +42,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         log: true,
         id: '#frame1,#frame2',
         onReady: (iframe) => {
-          iframe.iFrameResizer.sendMessage('getPageInfo')
+          iframe.iframeResizer.sendMessage('getPageInfo')
         },
       })
 

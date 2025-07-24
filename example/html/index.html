@@ -85,7 +85,7 @@
           // Callback fn when message is received
           callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Message:</b> ${messageData.message}`
           alert(messageData.message)
-          messageData.iframe.iFrameResizer.sendMessage(
+          messageData.iframe.iframeResizer.sendMessage(
             'Hello back from parent page',
           )
         },

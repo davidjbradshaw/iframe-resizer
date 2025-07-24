@@ -16,7 +16,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         },
         onReady: (iframe) => {
           console.log('>>> close from parent')
-          iframe.iFrameResizer.sendMessage('close')
+          iframe.iframeResizer.sendMessage('close')
         },
       })[0]
 

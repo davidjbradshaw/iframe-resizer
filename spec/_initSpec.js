@@ -32,24 +32,24 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     describe('methods', () => {
-      it('should create iFrameResizer object', () => {
-        expect(iframe.iFrameResizer).toBeDefined()
+      it('should create iframeResizer object', () => {
+        expect(iframe.iframeResizer).toBeDefined()
       })
 
       it('should create a close method', () => {
-        expect(iframe.iFrameResizer.close).toBeDefined()
+        expect(iframe.iframeResizer.close).toBeDefined()
       })
 
       it('should create a resize method', () => {
-        expect(iframe.iFrameResizer.resize).toBeDefined()
+        expect(iframe.iframeResizer.resize).toBeDefined()
       })
 
       it('should create a moveToAnchor method', () => {
-        expect(iframe.iFrameResizer.moveToAnchor).toBeDefined()
+        expect(iframe.iframeResizer.moveToAnchor).toBeDefined()
       })
 
       it('should create a sendMessage method', () => {
-        expect(iframe.iFrameResizer.sendMessage).toBeDefined()
+        expect(iframe.iframeResizer.sendMessage).toBeDefined()
       })
     })
   })

@@ -18,8 +18,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         id: 'sendMessage1',
         warningTimeout: 1000,
         onReady: (iframe1) => {
-          console.log('>>>', iframe1, iframe1.iFrameResizer)
-          iframe1.iFrameResizer.sendMessage('chkSendMsg:test')
+          console.log('>>>', iframe1, iframe1.iframeResizer)
+          iframe1.iframeResizer.sendMessage('chkSendMsg:test')
 
           expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
             '[iFrameSizer]message:"chkSendMsg:test"',
@@ -56,7 +56,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         id: 'sendMessage3',
         warningTimeout: 1000,
         onReady: (iframe) => {
-          iframe.iFrameResizer.sendMessage('chkSendMsg')
+          iframe.iframeResizer.sendMessage('chkSendMsg')
           console.log('>>> send message and get response')
         },
         onMessage: (messageData) => {

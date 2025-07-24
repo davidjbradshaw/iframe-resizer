@@ -12,13 +12,13 @@ define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
       tearDown(iframe)
     })
 
-    xit('should create iFrameResizer object', (done) => {
+    xit('should create iframeResizer object', (done) => {
       $('iframe').iframeResize({
         license: 'GPLv3',
         log: true,
         warningTimeout: 1000,
         onReady: (iframe) => {
-          expect(iframe.iFrameResizer).toBeDefined()
+          expect(iframe.iframeResizer).toBeDefined()
           tearDown(iframe)
           done()
         },

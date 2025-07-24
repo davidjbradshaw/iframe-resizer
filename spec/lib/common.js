@@ -8,10 +8,10 @@ jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures'
 
 function tearDown(iframe) {
   function removeResizer() {
-    iframe?.iFrameResizer?.close()
+    iframe?.iframeResizer?.close()
   }
 
-  if (iframe?.iFrameResizer) setTimeout(removeResizer)
+  if (iframe?.iframeResizer) setTimeout(removeResizer)
   window.parentIFrame = undefined
 }
 

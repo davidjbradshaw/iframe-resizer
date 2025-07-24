@@ -13,7 +13,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         onReady: (iframe1) => {
           spyOnIFramePostMessage(iframe1)
 
-          iframe1.iFrameResizer.moveToAnchor('testAnchor')
+          iframe1.iframeResizer.moveToAnchor('testAnchor')
 
           expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
             '[iFrameSizer]moveToAnchor:testAnchor',

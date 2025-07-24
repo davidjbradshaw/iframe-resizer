@@ -13,7 +13,8 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       }
     }
 
-    window.iFrameResizer = {
+    window.iframeResizer = {
+      license: 'GPLv3',
       onMessage(msg) {
         msgCalled = msg
       },
@@ -46,8 +47,8 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
     beforeEach(() => {
       spyOn(msgObject.source, 'postMessage')
-      spyOn(window.iFrameResizer, 'onMessage')
-      spyOn(window.iFrameResizer, 'onReady')
+      spyOn(window.iframeResizer, 'onMessage')
+      spyOn(window.iframeResizer, 'onReady')
       spyOn(console, 'log')
       spyOn(console, 'warn')
     })

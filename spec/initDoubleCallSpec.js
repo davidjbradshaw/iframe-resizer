@@ -11,7 +11,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    it('should create iFrameResizer object', () => {
+    it('should create iframeResizer object', () => {
       window.parentIFrame = {
         getId: () => 'getIdTest',
       }
@@ -21,7 +21,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         {
           license: 'GPLv3',
           onReady: (done) => {
-            expect(iframe.iFrameResizer).toBeDefined()
+            expect(iframe.iframeResizer).toBeDefined()
             // eslint-disable-next-line jasmine/prefer-toHaveBeenCalledWith
             expect(console.warn).toHaveBeenCalled()
             delete window.parentIFrame

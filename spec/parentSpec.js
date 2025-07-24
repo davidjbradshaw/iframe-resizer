@@ -66,7 +66,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         iframe = iframeResize({ license: 'GPLv3', log: true, id: testId })[0]
 
         spyOn(iframe.contentWindow, 'postMessage').and.callFake(done)
-        window.postMessage('[iFrameResizerChild]Ready', '*')
+        window.postMessage('[iframeResizerChild]Ready', '*')
       })
 
       afterEach(() => {

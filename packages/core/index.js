@@ -1262,7 +1262,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   startLogging(iframeId, options)
   errorBoundary(iframeId, setupIframe)(options)
 
-  return iframe?.iFrameResizer
+  return iframe?.iframeResizer
 }
 
 function sendTriggerMsg(eventName, event) {

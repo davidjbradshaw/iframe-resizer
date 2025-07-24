@@ -31,7 +31,7 @@ declare module '@iframe-resizer/child' {
       onBeforeResize?(newSize: number): number
 
       /**
-       * Receive message posted from the parent page with the iframe.iFrameResizer.sendMessage() method.
+       * Receive message posted from the parent page with the iframe.iframeResizer.sendMessage() method.
        */
       onMessage?(message: any): void
 

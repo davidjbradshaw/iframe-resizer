@@ -84,10 +84,10 @@
       })
 
       // Forward messages from parent page to nested iFrames
-      window.iFrameResizer = {
+      window.iframeResizer = {
         onMessage: (message) =>
           iframes.forEach((iframe) =>
-            iframe.iFrameResizer?.sendMessage(`${message} (via parent ${id} )`),
+            iframe.iframeResizer?.sendMessage(`${message} (via parent ${id} )`),
           ),
       }
     </script>

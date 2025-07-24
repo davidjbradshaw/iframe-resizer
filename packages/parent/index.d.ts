@@ -100,7 +100,7 @@ declare module '@iframe-resizer/parent' {
       warningTimeout?: number | undefined
 
       /**
-       * Called before iFrame is closed via parentIFrame.close() or iframe.iFrameResizer.close() methods. Returning false will prevent the iFrame from closing.
+       * Called before iFrame is closed via parentIFrame.close() or iframe.iframeResizer.close() methods. Returning false will prevent the iFrame from closing.
        */
       onClose?(iframeId: string): void // Remove in v6
       onBeforeClose?(iframeId: string): void
