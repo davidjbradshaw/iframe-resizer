@@ -241,7 +241,7 @@ function iframeResizerChild() {
     log(`Tagged elements found: %c${hasTags}`, HIGHLIGHT)
   }
 
-  function addOverflowObservers(nodeList) {
+  function attachOverflowObservers(nodeList) {
     if (!hasTags) observeOverflow(nodeList)
   }
 
@@ -608,7 +608,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     manageEventListeners('add')
     setupMutationObserver()
     setupObserveOverflow()
-    addOverflowObservers(nodeList)
+    attachOverflowObservers(nodeList)
     setupResizeObservers(nodeList)
     setupVisibilityObserver()
   }
@@ -975,7 +975,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       for (const mutation of observedMutations) {
         const elements = getAllElements(mutation)()
-        addOverflowObservers(elements)
+        attachOverflowObservers(elements)
         attachResizeObserverToNonStaticElements(elements)
       }
 
@@ -1128,8 +1128,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     chkIgnoredElements()
     if (hasIgnored)
       selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
-
-    log([element, ...element.querySelectorAll(selector.join(':'))])
 
     return [element, ...element.querySelectorAll(selector.join(':'))]
   }
