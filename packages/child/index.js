@@ -589,8 +589,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       advise(`${getModeData(mode + 2)}${getModeData(2)}`)
       if (isDef(version))
         throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
-    }
-    if (!isDef(version) || (oMode > -1 && mode > oMode)) {
+    } else if (!isDef(version) || (oMode > -1 && mode > oMode)) {
       if (sessionStorage.getItem('ifr') !== VERSION)
         vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
       if (mode < 2) adviser(getModeData(3))
