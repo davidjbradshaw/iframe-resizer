@@ -231,7 +231,7 @@ function iframeResizerChild() {
       root: document.documentElement,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
-    if (!hasTags) overflowObserver.attachObservers(nodeList)
+    overflowObserver.attachObservers(nodeList)
   }
 
   function checkAndSetupTags() {
@@ -975,7 +975,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       for (const mutation of addedMutations) {
         const elements = getAllElements(mutation)()
-        if (!hasTags) overflowObserver.attachObservers(elements)
+        overflowObserver.attachObservers(elements)
         resizeObserver.attachObserverToNonStaticElements(elements)
       }
 
