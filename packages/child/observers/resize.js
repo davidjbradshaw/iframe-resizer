@@ -18,6 +18,7 @@ export function attachObserverToNonStaticElements(nodeList) {
     if (position === '' || position === 'static') continue
 
     assert(!isObserved, 'Node already observed for resize', node)
+    if (isObserved) continue
 
     observer.observe(node)
     observed.add(node)
