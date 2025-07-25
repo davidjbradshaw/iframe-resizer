@@ -14,7 +14,7 @@ let pending = false
 let perfMon = 0
 
 const updateMutation = (mutations) => {
-  info('Mutations observed:', mutations)
+  info('Mutations:', mutations)
 
   for (const mutation of mutations) {
     const { addedNodes, removedNodes } = mutation

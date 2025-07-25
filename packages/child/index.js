@@ -897,8 +897,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     if (!hasOverflow && !mutated) return
 
-    if (hasOverflow) info('Overflowed Elements:', ...overflowedNodeList)
-    else info('Overflow removed')
+    if (overflowedNodeList.length > 1)
+      info('Overflowed Elements:', ...overflowedNodeList)
+    else if (!hasOverflow) info('Overflow removed')
+
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
@@ -955,8 +957,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function mutationObserved(mutations) {
-    sendSize(MUTATION_OBSERVER, 'Mutation Observed')
     contentMutated(mutations)
+    sendSize(MUTATION_OBSERVER, 'Mutation Observed')
   }
 
   function attachObservers() {
