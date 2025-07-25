@@ -1,13 +1,14 @@
-import { HIGHLIGHT, NORMAL } from 'auto-console-group'
-
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
 import { id } from '../common/utils'
-import { assert, info } from './console'
+import { assert } from './console'
+import { createDetachObservers, createLogCounter } from './observer-util'
+
+const logCounter = createLogCounter('Overflow', 'At')
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
 
-const overflowObserver = (options) => {
+const createOverflowObserver = (options) => {
   const side = options.side || HEIGHT_EDGE
   const onChange = options.onChange || id
   const observerOptions = {
@@ -40,7 +41,7 @@ const overflowObserver = (options) => {
   const observer = new IntersectionObserver(observation, observerOptions)
   const observed = new WeakSet()
 
-  return function observeOverflow(nodeList) {
+  function attachObservers(nodeList) {
     let counter = 0
 
     for (const node of nodeList) {
@@ -55,14 +56,13 @@ const overflowObserver = (options) => {
       counter += 1
     }
 
-    if (counter > 0) {
-      info(
-        `Attached OverflowObserver to %c${counter}%c element${counter === 1 ? '' : 's'}`,
-        HIGHLIGHT,
-        NORMAL,
-      )
-    }
+    logCounter(counter)
+  }
+
+  return {
+    attachObservers,
+    detachObservers: createDetachObservers('Overflow', observer, observed),
   }
 }
 
-export default overflowObserver
+export default createOverflowObserver

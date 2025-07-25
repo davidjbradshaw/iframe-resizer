@@ -30,7 +30,6 @@ import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
-  id,
   isDef,
   isolateUserCode,
   once,
@@ -58,12 +57,10 @@ import {
   warn,
 } from './console'
 import { getBoolean, getNumber } from './from-string'
-import overflowObserver from './overflow'
+import createOverflowObserver from './overflow'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
-import createResizeObserver, {
-  attachResizeObserverToNonStaticElements,
-} from './resize'
+import createResizeObserver from './resize'
 import visibilityObserver from './visibility'
 
 function iframeResizerChild() {
@@ -122,11 +119,12 @@ function iframeResizerChild() {
   let mode = 0
   let mouseEvents = false
   let parentId = ''
-  let observeOverflow = id
+  let resizeObserver = null
   let offsetHeight
   let offsetWidth
   let origin
   let overflowedNodeList = []
+  let overflowObserver
   let resizeFrom = 'child'
   let sameOrigin = false
   let sizeSelector = ''
@@ -225,24 +223,21 @@ function iframeResizerChild() {
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
-  function setupObserveOverflow() {
+  function setupObserveOverflow(nodeList) {
     if (calculateHeight === calculateWidth) return
     log('Setup OverflowObserver')
-    observeOverflow = overflowObserver({
+    overflowObserver = createOverflowObserver({
       onChange: overflowObserved,
       root: document.documentElement,
       side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     })
+    if (!hasTags) overflowObserver.attachObservers(nodeList)
   }
 
   function checkAndSetupTags() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
     log(`Tagged elements found: %c${hasTags}`, HIGHLIGHT)
-  }
-
-  function attachOverflowObservers(nodeList) {
-    if (!hasTags) observeOverflow(nodeList)
   }
 
   function sendTitle() {
@@ -607,8 +602,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const nodeList = getAllElements(document)()
     manageEventListeners('add')
     setupMutationObserver()
-    setupObserveOverflow()
-    attachOverflowObservers(nodeList)
+    setupObserveOverflow(nodeList)
     setupResizeObservers(nodeList)
     setupVisibilityObserver()
   }
@@ -928,7 +922,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function setupResizeObservers(nodeList) {
     log('Setup ResizeObserver')
-    createResizeObserver(resizeObserved)(nodeList)
+    resizeObserver = createResizeObserver(resizeObserved)(nodeList)
   }
 
   function visibilityChange(isVisible) {
@@ -975,8 +969,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       for (const mutation of observedMutations) {
         const elements = getAllElements(mutation)()
-        attachOverflowObservers(elements)
-        attachResizeObserverToNonStaticElements(elements)
+        if (!hasTags) overflowObserver.attachObservers(elements)
+        resizeObserver.attachObserverToNonStaticElements(elements)
       }
 
       observedMutations.clear()
