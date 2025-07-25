@@ -1,12 +1,12 @@
-import { HIGHLIGHT, NORMAL } from 'auto-console-group'
+import { assert } from './console'
+import { createDetachObservers, createLogCounter } from './observer-util'
 
-import { assert, info } from './console'
-
+const logCounter = createLogCounter('Resize', 'At')
 const observed = new WeakSet()
 
 let observer
 
-export function attachResizeObserverToNonStaticElements(nodeList) {
+export function attachObserverToNonStaticElements(nodeList) {
   let counter = 0
 
   for (const node of nodeList) {
@@ -25,18 +25,17 @@ export function attachResizeObserverToNonStaticElements(nodeList) {
     counter += 1
   }
 
-  if (counter > 0) {
-    info(
-      `Attached ResizeObserver to %c${counter}%c element${counter === 1 ? '' : 's'}'`,
-      HIGHLIGHT,
-      NORMAL,
-    )
-  }
+  logCounter(counter)
 }
 
 export default (callback) => (nodeList) => {
   observer = new ResizeObserver(callback)
   observer.observe(document.body)
   observed.add(document.body)
-  attachResizeObserverToNonStaticElements(nodeList)
+  attachObserverToNonStaticElements(nodeList)
+
+  return {
+    attachObserverToNonStaticElements,
+    detachObservers: createDetachObservers('Resize', observer, observed),
+  }
 }
