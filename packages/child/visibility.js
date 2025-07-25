@@ -1,3 +1,5 @@
+import { info } from './console'
+
 export default function visibilityObserver(callback) {
   const observer = new IntersectionObserver(
     (entries) => callback(entries[0].isIntersecting),
@@ -8,4 +10,6 @@ export default function visibilityObserver(callback) {
 
   const target = document.documentElement
   observer.observe(target)
+
+  info('Attached VisibilityObserver to page')
 }
