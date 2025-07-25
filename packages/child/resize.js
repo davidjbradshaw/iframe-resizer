@@ -4,11 +4,10 @@ import { createDetachObservers, createLogCounter } from './observer-util'
 const logCounter = createLogCounter('Resize', 'At')
 const observed = new WeakSet()
 
+let counter = 0
 let observer
 
 export function attachObserverToNonStaticElements(nodeList) {
-  let counter = 0
-
   for (const node of nodeList) {
     const isObservable = node.nodeType === Node.ELEMENT_NODE
     const isObserved = observed.has(node)
@@ -26,6 +25,7 @@ export function attachObserverToNonStaticElements(nodeList) {
   }
 
   logCounter(counter)
+  counter = 0
 }
 
 export default (callback) => (nodeList) => {
@@ -33,6 +33,7 @@ export default (callback) => (nodeList) => {
   observer.observe(document.body)
   observed.add(document.body)
   attachObserverToNonStaticElements(nodeList)
+  counter += 1
 
   return {
     attachObserverToNonStaticElements,

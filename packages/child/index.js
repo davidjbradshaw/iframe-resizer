@@ -937,7 +937,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function setupMutationObserver() {
-    const observedMutations = new Set()
+    const addedMutations = new Set()
+    const removedMutations = new Set()
     const newMutations = []
     let pending = false
     let perfMon = 0
@@ -949,11 +950,15 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         const { addedNodes, removedNodes } = mutation
 
         for (const node of addedNodes) {
-          observedMutations.add(node)
+          addedMutations.add(node)
         }
 
         for (const node of removedNodes) {
-          observedMutations.delete(node)
+          if (addedMutations.has(node)) {
+            addedMutations.delete(node)
+          } else {
+            removedMutations.add(node)
+          }
         }
       }
     }
@@ -964,16 +969,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     let delayCount = 1
 
-    function setupNewElements(observedMutations) {
+    function setupNewElements(addedMutations, removedMutations) {
+      consoleEvent('updatePage')
       applySelectors()
 
-      for (const mutation of observedMutations) {
+      for (const mutation of addedMutations) {
         const elements = getAllElements(mutation)()
         if (!hasTags) overflowObserver.attachObservers(elements)
         resizeObserver.attachObserverToNonStaticElements(elements)
       }
 
-      observedMutations.clear()
+      for (const mutation of removedMutations) {
+        const elements = getAllElements(mutation)()
+        overflowObserver.detachObservers(elements)
+        resizeObserver.detachObservers(elements)
+      }
+      endAutoGroup()
     }
 
     function processMutations() {
@@ -1000,13 +1011,15 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       newMutations.forEach(updateMutation)
       newMutations.length = 0
 
-      if (observedMutations.size > 0) setupNewElements(observedMutations)
+      setupNewElements(addedMutations, removedMutations)
 
       // Rebuild elements lists for size calculation
       checkAndSetupTags()
       checkOverflow()
 
       pending = false
+      addedMutations.clear()
+      removedMutations.clear()
 
       sendSize(MUTATION_OBSERVER, 'Mutation Observed')
     }
