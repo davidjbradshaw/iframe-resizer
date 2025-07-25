@@ -119,7 +119,7 @@ function iframeResizerChild() {
   let mode = 0
   let mouseEvents = false
   let parentId = ''
-  let resizeObserver = null
+  let resizeObserver
   let offsetHeight
   let offsetWidth
   let origin
@@ -969,7 +969,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     let delayCount = 1
 
-    function setupNewElements(addedMutations, removedMutations) {
+    function updatePage(addedMutations, removedMutations) {
       consoleEvent('updatePage')
       applySelectors()
 
@@ -1011,7 +1011,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       newMutations.forEach(updateMutation)
       newMutations.length = 0
 
-      setupNewElements(addedMutations, removedMutations)
+      updatePage(addedMutations, removedMutations)
 
       // Rebuild elements lists for size calculation
       checkAndSetupTags()
