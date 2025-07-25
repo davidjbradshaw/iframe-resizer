@@ -96,5 +96,7 @@ export default function createMutationObserver(callback) {
 
   observer.observe(target, config)
 
+  info('Attached MutationObserver to body')
+
   return observer
 }

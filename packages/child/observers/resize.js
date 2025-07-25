@@ -1,4 +1,4 @@
-import { assert } from '../console'
+import { assert, info } from '../console'
 import { createDetachObservers, createLogCounter } from './utils'
 
 const logCounter = createLogCounter('Resize', 'At')
@@ -31,6 +31,7 @@ export default (callback) => {
   observer = new ResizeObserver(callback)
   observer.observe(document.body)
   observed.add(document.body)
+  info('Attached ResizeObserver to body')
 
   return {
     attachObserverToNonStaticElements,
