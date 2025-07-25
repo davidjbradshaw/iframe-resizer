@@ -57,12 +57,12 @@ import {
   warn,
 } from './console'
 import { getBoolean, getNumber } from './from-string'
-import createMutationObserver from './mutation'
-import createOverflowObserver from './overflow'
+import createMutationObserver from './observers/mutation'
+import createOverflowObserver from './observers/overflow'
+import createResizeObserver from './observers/resize'
+import createVisibilityObserver from './observers/visibility'
 import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
-import createResizeObserver from './resize'
-import createVisibilityObserver from './visibility'
 
 function iframeResizerChild() {
   const customCalcMethods = {

@@ -1,8 +1,8 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { IGNORE_ATTR, SIZE_ATTR } from '../common/consts'
-import { round } from '../common/utils'
-import { info, log } from './console'
+import { IGNORE_ATTR, SIZE_ATTR } from '../../common/consts'
+import { round } from '../../common/utils'
+import { info, log } from '../console'
 
 const addedMutations = new Set()
 const removedMutations = new Set()

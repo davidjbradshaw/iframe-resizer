@@ -1,7 +1,7 @@
-import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
-import { id } from '../common/utils'
-import { assert } from './console'
-import { createDetachObservers, createLogCounter } from './observer-util'
+import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
+import { id } from '../../common/utils'
+import { assert } from '../console'
+import { createDetachObservers, createLogCounter } from './utils'
 
 const logCounter = createLogCounter('Overflow', 'At')
 

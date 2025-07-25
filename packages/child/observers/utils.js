@@ -1,6 +1,6 @@
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
-import { info } from './console'
+import { info } from '../console'
 
 export const createLogCounter = (type, prefix) => (counter) => {
   if (counter > 0) {

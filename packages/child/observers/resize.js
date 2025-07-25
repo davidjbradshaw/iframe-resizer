@@ -1,5 +1,5 @@
-import { assert } from './console'
-import { createDetachObservers, createLogCounter } from './observer-util'
+import { assert } from '../console'
+import { createDetachObservers, createLogCounter } from './utils'
 
 const logCounter = createLogCounter('Resize', 'At')
 const observed = new WeakSet()
