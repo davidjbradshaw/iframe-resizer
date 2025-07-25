@@ -30,7 +30,6 @@ import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
-  id,
   isDef,
   isolateUserCode,
   once,
@@ -58,10 +57,15 @@ import {
   warn,
 } from './console'
 import { getBoolean, getNumber } from './from-string'
-import overflowObserver from './overflow'
-import { PREF_END, PREF_START } from './perf'
+import createMutationObserver from './observers/mutation'
+import createOverflowObserver from './observers/overflow'
+import createPerformanceObserver, {
+  PREF_END,
+  PREF_START,
+} from './observers/perf'
+import createResizeObserver from './observers/resize'
+import createVisibilityObserver from './observers/visibility'
 import { readFunction, readNumber, readString } from './read'
-import visibilityObserver from './visibility'
 
 function iframeResizerChild() {
   const customCalcMethods = {
@@ -119,13 +123,13 @@ function iframeResizerChild() {
   let mode = 0
   let mouseEvents = false
   let parentId = ''
-  let observeOverflow = id
+  let resizeObserver
   let offsetHeight
   let offsetWidth
   let origin
   let overflowedNodeList = []
+  let overflowObserver
   let resizeFrom = 'child'
-  let resizeObserver = null
   let sameOrigin = false
   let sizeSelector = ''
   let taggedElements = []
@@ -180,6 +184,7 @@ function iframeResizerChild() {
     if (!bothDirections) stopInfiniteResizingOfIframe()
 
     initEventListeners()
+    attachObservers()
     checkReadyYet(once(onReady))
 
     log('Initialization complete')
@@ -202,45 +207,10 @@ function iframeResizerChild() {
       )
   }
 
-  function checkOverflow() {
-    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-
-    // Filter out elements that are descendants of elements with IGNORE_ATTR
-    overflowedNodeList = Array.from(allOverflowedNodes).filter(
-      (node) => !node.closest(`[${IGNORE_ATTR}]`),
-    )
-
-    hasOverflow = overflowedNodeList.length > 0
-  }
-
-  function overflowObserved(mutated) {
-    checkOverflow()
-
-    if (!hasOverflow && !mutated) return
-
-    if (hasOverflow) info('Overflowed Elements:', ...overflowedNodeList)
-    else info('Overflow removed')
-    sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
-  }
-
-  function setupObserveOverflow() {
-    if (calculateHeight === calculateWidth) return
-    log('Setup OverflowObserver')
-    observeOverflow = overflowObserver({
-      onChange: overflowObserved,
-      root: document.documentElement,
-      side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
-    })
-  }
-
   function checkAndSetupTags() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
     log(`Tagged elements found: %c${hasTags}`, HIGHLIGHT)
-  }
-
-  function addOverflowObservers(nodeList) {
-    if (!hasTags) observeOverflow(nodeList)
   }
 
   function sendTitle() {
@@ -347,7 +317,7 @@ Parent page: ${version} - Child page: ${VERSION}.
   function readDataFromPage() {
     // eslint-disable-next-line sonarjs/cognitive-complexity
     function readData(data) {
-      log(`Reading data from page:`, data)
+      log(`Reading data from page:`, Object.keys(data))
 
       onBeforeResize = readFunction(data, 'onBeforeResize') ?? onBeforeResize
       onMessage = readFunction(data, 'onMessage') ?? onMessage
@@ -601,13 +571,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (autoResize !== true) {
       log('Auto Resize disabled')
     }
-
     manageEventListeners('add')
-    setupMutationObserver()
-    setupObserveOverflow()
-    addOverflowObservers(getAllElements(document)())
-    setupResizeObservers()
-    setupVisibilityObserver()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -917,45 +881,52 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     win.parentIFrame = win.parentIframe
   }
 
+  function checkOverflow() {
+    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+
+    // Filter out elements that are descendants of elements with IGNORE_ATTR
+    overflowedNodeList = Array.from(allOverflowedNodes).filter(
+      (node) => !node.closest(`[${IGNORE_ATTR}]`),
+    )
+
+    hasOverflow = overflowedNodeList.length > 0
+  }
+
+  function overflowObserved(mutated) {
+    checkOverflow()
+
+    if (!hasOverflow && !mutated) return
+
+    if (overflowedNodeList.length > 1)
+      info('Overflowed Elements:', ...overflowedNodeList)
+    else if (!hasOverflow) info('Overflow removed')
+
+    sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
+  }
+
+  function createOverflowObservers(nodeList) {
+    const overflowObserverOptions = {
+      root: document.documentElement,
+      side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
+    }
+
+    overflowObserver = createOverflowObserver(
+      overflowObserved,
+      overflowObserverOptions,
+    )
+
+    overflowObserver.attachObservers(nodeList)
+  }
+
   function resizeObserved(entries) {
     if (!Array.isArray(entries) || entries.length === 0) return
-
     const el = entries[0].target
-
     sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
   }
 
-  const resizeSet = new WeakSet()
-
-  // This function has to iterate over all page elements during load
-  // so is optimized for performance, rather than best practices.
-  function attachResizeObserverToNonStaticElements(rootElement) {
-    if (rootElement.nodeType !== Node.ELEMENT_NODE) return
-
-    if (!resizeSet.has(rootElement)) {
-      const position = getComputedStyle(rootElement)?.position
-      if (!(position === '' || position === 'static')) {
-        resizeObserver.observe(rootElement)
-        resizeSet.add(rootElement)
-        log(
-          `Attached resizeObserver: %c${getElementName(rootElement)}`,
-          HIGHLIGHT,
-        )
-      }
-    }
-
-    const nodeList = getAllElements(rootElement)()
-
-    for (const node of nodeList) {
-      if (resizeSet.has(node) || node?.nodeType !== Node.ELEMENT_NODE) continue
-
-      const position = getComputedStyle(node)?.position
-      if (position === '' || position === 'static') continue
-
-      resizeObserver.observe(node)
-      resizeSet.add(node)
-      log(`Attached resizeObserver: %c${getElementName(node)}`, HIGHLIGHT)
-    }
+  function createResizeObservers(nodeList) {
+    resizeObserver = createResizeObserver(resizeObserved)
+    resizeObserver.attachObserverToNonStaticElements(nodeList)
   }
 
   function visibilityChange(isVisible) {
@@ -964,126 +935,41 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
-  function setupVisibilityObserver() {
-    log('Setup VisibilityObserver')
-    visibilityObserver(visibilityChange)
+  function contentMutated({ addedMutations, removedMutations }) {
+    consoleEvent('contentMutated')
+    applySelectors()
+    checkAndSetupTags()
+    checkOverflow()
+
+    for (const mutation of addedMutations) {
+      const elements = getAllElements(mutation)()
+      overflowObserver.attachObservers(elements)
+      resizeObserver.attachObserverToNonStaticElements(elements)
+    }
+
+    for (const mutation of removedMutations) {
+      const elements = getAllElements(mutation)()
+      overflowObserver.detachObservers(elements)
+      resizeObserver.detachObservers(elements)
+    }
+
+    endAutoGroup()
   }
 
-  function setupResizeObservers() {
-    log('Setup ResizeObserver')
-    resizeObserver = new ResizeObserver(resizeObserved)
-    resizeObserver.observe(document.body)
-    resizeSet.add(document.body)
-    attachResizeObserverToNonStaticElements(document.body)
+  function mutationObserved(mutations) {
+    contentMutated(mutations)
+    sendSize(MUTATION_OBSERVER, 'Mutation Observed')
   }
 
-  function setupMutationObserver() {
-    const observedMutations = new Set()
-    const newMutations = []
-    let pending = false
-    let perfMon = 0
+  function attachObservers() {
+    const nodeList = getAllElements(document)()
 
-    const updateMutation = (mutations) => {
-      info('Mutations observed:', mutations)
-
-      for (const mutation of mutations) {
-        const { addedNodes, removedNodes } = mutation
-
-        for (const node of addedNodes) {
-          observedMutations.add(node)
-        }
-
-        for (const node of removedNodes) {
-          observedMutations.delete(node)
-        }
-      }
-    }
-
-    const DELAY = 16 // Corresponds to 60fps
-    const DELAY_MARGIN = 2
-    const DELAY_MAX = 200
-
-    let delayCount = 1
-
-    function setupNewElements(observedMutations) {
-      applySelectors()
-
-      addOverflowObservers(observedMutations)
-      observedMutations.forEach(attachResizeObserverToNonStaticElements)
-      observedMutations.clear()
-    }
-
-    function processMutations() {
-      const now = performance.now()
-      const delay = now - perfMon
-      const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
-
-      // Back off if the callStack is busy with other stuff
-      if (delay > delayLimit && delay < DELAY_MAX) {
-        info('Backed off due to heavy workload on callStack')
-        log(
-          `Delay: %c${round(delay)}ms %c> Delay limit: %c${delayLimit}ms`,
-          HIGHLIGHT,
-          FOREGROUND,
-          HIGHLIGHT,
-        )
-        setTimeout(processMutations, DELAY * delayCount)
-        perfMon = now
-        return
-      }
-
-      delayCount = 1
-
-      newMutations.forEach(updateMutation)
-      newMutations.length = 0
-
-      if (observedMutations.size > 0) setupNewElements(observedMutations)
-
-      // Rebuild elements lists for size calculation
-      checkAndSetupTags()
-      checkOverflow()
-
-      pending = false
-
-      sendSize(MUTATION_OBSERVER, 'Mutation Observed')
-    }
-
-    function mutationObserved(mutations) {
-      newMutations.push(mutations)
-      if (pending) return
-
-      perfMon = performance.now()
-      pending = true
-      requestAnimationFrame(processMutations)
-    }
-
-    function createMutationObserver() {
-      const observer = new window.MutationObserver(mutationObserved)
-      const target = document.querySelector('body')
-      const config = {
-        attributes: true,
-        attributeFilter: [IGNORE_ATTR, SIZE_ATTR],
-        attributeOldValue: false,
-        characterData: false,
-        characterDataOldValue: false,
-        childList: true,
-        subtree: true,
-      }
-
-      log('Setup <body> MutationObserver')
-      observer.observe(target, config)
-
-      return observer
-    }
-
-    const observer = createMutationObserver()
-
-    return {
-      disconnect() {
-        log('Disconnect MutationObserver')
-        observer.disconnect()
-      },
-    }
+    log('Attaching Observers')
+    createMutationObserver(mutationObserved)
+    createOverflowObservers(nodeList)
+    createPerformanceObserver()
+    createResizeObservers(nodeList)
+    createVisibilityObserver(visibilityChange)
   }
 
   function getMaxElement(side) {
@@ -1137,8 +1023,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   ]
 
   const getAllElements = (element) => () => {
-    chkIgnoredElements()
-
     const selector = [
       '* ',
       'not(head)',
@@ -1158,10 +1042,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       'not(nobr)',
     ]
 
+    chkIgnoredElements()
     if (hasIgnored)
       selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
 
-    return element.querySelectorAll(selector.join(':'))
+    return [element, ...element.querySelectorAll(selector.join(':'))]
   }
 
   function getOffsetSize(getDimension) {

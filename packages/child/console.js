@@ -6,6 +6,7 @@ import formatAdvise from '../common/format-advise'
 import { esModuleInterop, id as identity } from '../common/utils'
 
 let enabled = true
+let id = LABEL
 
 // Deal with UMD not converting default exports to named exports
 const createGroupConsole = esModuleInterop(acg)
@@ -13,7 +14,8 @@ const createGroupConsole = esModuleInterop(acg)
 const childConsole = createGroupConsole({ label: `${LABEL}(child)` })
 
 export function setConsoleOptions(options) {
-  childConsole.label(`${options.id}`)
+  id = options.id || LABEL
+  childConsole.label(`${id}`)
   childConsole.expand(options.expand)
   enabled = options.enabled
 }
@@ -27,8 +29,9 @@ export const log = setupConsoleMethod('log')
 export const info = log // setupConsoleMethod('info')
 
 export function vInfo(ver, mode) {
-  childConsole.info(
-    `%ciframe-resizer ${ver}`,
+  // eslint-disable-next-line no-console
+  console.info(
+    `${id} %ciframe-resizer ${ver}`,
     enabled || mode < 1 ? BOLD : NORMAL,
   )
 }

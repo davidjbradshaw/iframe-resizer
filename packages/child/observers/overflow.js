@@ -1,13 +1,15 @@
-import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../common/consts'
-import { id } from '../common/utils'
-import { assert, log } from './console'
+import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
+import { id } from '../../common/utils'
+import { assert } from '../console'
+import { createDetachObservers, createLogCounter } from './utils'
+
+const logCounter = createLogCounter('Overflow', 'At')
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
 
-const overflowObserver = (options) => {
+const createOverflowObserver = (callback, options) => {
   const side = options.side || HEIGHT_EDGE
-  const onChange = options.onChange || id
   const observerOptions = {
     root: options.root,
     rootMargin: '0px',
@@ -15,7 +17,7 @@ const overflowObserver = (options) => {
   }
 
   const afterReflow = window?.requestAnimationFrame || id
-  const emitOverflowDetected = (mutated = false) => onChange(mutated)
+  const emitOverflowDetected = (mutated = false) => callback(mutated)
 
   const isOverflowed = (edge, rootBounds) =>
     edge === 0 || edge > rootBounds[side]
@@ -36,24 +38,31 @@ const overflowObserver = (options) => {
   }
 
   const observer = new IntersectionObserver(observation, observerOptions)
-  const observedNodes = new WeakSet()
+  const observed = new WeakSet()
 
-  return function observeOverflow(nodeList) {
-    log('Attached overflowObservers')
+  function attachObservers(nodeList) {
+    let counter = 0
 
     for (const node of nodeList) {
       const isObservable = node.nodeType === Node.ELEMENT_NODE
-      const isObserved = observedNodes.has(node)
+      const isObserved = observed.has(node)
 
-      if (isObserved || !isObservable) {
-        assert(!isObserved, 'Node already observed', node)
-        continue
-      }
+      if (!isObservable) continue
+      assert(!isObserved, 'Node already observed for overflow', node)
+      if (isObserved) continue
 
       observer.observe(node)
-      observedNodes.add(node)
+      observed.add(node)
+      counter += 1
     }
+
+    logCounter(counter)
+  }
+
+  return {
+    attachObservers,
+    detachObservers: createDetachObservers('Overflow', observer, observed),
   }
 }
 
-export default overflowObserver
+export default createOverflowObserver
