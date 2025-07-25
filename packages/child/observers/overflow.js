@@ -49,6 +49,7 @@ const createOverflowObserver = (callback, options) => {
 
       if (!isObservable) continue
       assert(!isObserved, 'Node already observed for overflow', node)
+      if (isObserved) continue
 
       observer.observe(node)
       observed.add(node)
