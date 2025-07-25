@@ -27,11 +27,10 @@ export function attachObserverToNonStaticElements(nodeList) {
   logCounter(counter)
 }
 
-export default (callback) => (nodeList) => {
+export default (callback) => {
   observer = new ResizeObserver(callback)
   observer.observe(document.body)
   observed.add(document.body)
-  attachObserverToNonStaticElements(nodeList)
 
   return {
     attachObserverToNonStaticElements,
