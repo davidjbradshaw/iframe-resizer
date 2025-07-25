@@ -8,9 +8,8 @@ const logCounter = createLogCounter('Overflow', 'At')
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
 
-const createOverflowObserver = (options) => {
+const createOverflowObserver = (callback, options) => {
   const side = options.side || HEIGHT_EDGE
-  const onChange = options.onChange || id
   const observerOptions = {
     root: options.root,
     rootMargin: '0px',
@@ -18,7 +17,7 @@ const createOverflowObserver = (options) => {
   }
 
   const afterReflow = window?.requestAnimationFrame || id
-  const emitOverflowDetected = (mutated = false) => onChange(mutated)
+  const emitOverflowDetected = (mutated = false) => callback(mutated)
 
   const isOverflowed = (edge, rootBounds) =>
     edge === 0 || edge > rootBounds[side]

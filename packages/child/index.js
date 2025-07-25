@@ -181,6 +181,7 @@ function iframeResizerChild() {
     if (!bothDirections) stopInfiniteResizingOfIframe()
 
     initEventListeners()
+    attachObservers()
     checkReadyYet(once(onReady))
 
     log('Initialization complete')
@@ -201,38 +202,6 @@ function iframeResizerChild() {
       addEventListener(document, 'readystatechange', () =>
         checkReadyYet(readyCallback),
       )
-  }
-
-  function checkOverflow() {
-    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-
-    // Filter out elements that are descendants of elements with IGNORE_ATTR
-    overflowedNodeList = Array.from(allOverflowedNodes).filter(
-      (node) => !node.closest(`[${IGNORE_ATTR}]`),
-    )
-
-    hasOverflow = overflowedNodeList.length > 0
-  }
-
-  function overflowObserved(mutated) {
-    checkOverflow()
-
-    if (!hasOverflow && !mutated) return
-
-    if (hasOverflow) info('Overflowed Elements:', ...overflowedNodeList)
-    else info('Overflow removed')
-    sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
-  }
-
-  function setupObserveOverflow(nodeList) {
-    if (calculateHeight === calculateWidth) return
-    log('Setup OverflowObserver')
-    overflowObserver = createOverflowObserver({
-      onChange: overflowObserved,
-      root: document.documentElement,
-      side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
-    })
-    overflowObserver.attachObservers(nodeList)
   }
 
   function checkAndSetupTags() {
@@ -599,13 +568,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (autoResize !== true) {
       log('Auto Resize disabled')
     }
-
-    const nodeList = getAllElements(document)()
     manageEventListeners('add')
-    setupMutationObserver()
-    setupObserveOverflow(nodeList)
-    setupResizeObservers(nodeList)
-    setupVisibilityObserver()
   }
 
   function injectClearFixIntoBodyElement() {
@@ -915,15 +878,50 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     win.parentIFrame = win.parentIframe
   }
 
+  function checkOverflow() {
+    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
+
+    // Filter out elements that are descendants of elements with IGNORE_ATTR
+    overflowedNodeList = Array.from(allOverflowedNodes).filter(
+      (node) => !node.closest(`[${IGNORE_ATTR}]`),
+    )
+
+    hasOverflow = overflowedNodeList.length > 0
+  }
+
+  function overflowObserved(mutated) {
+    checkOverflow()
+
+    if (!hasOverflow && !mutated) return
+
+    if (hasOverflow) info('Overflowed Elements:', ...overflowedNodeList)
+    else info('Overflow removed')
+    sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
+  }
+
+  function createOverflowObservers(nodeList) {
+    const overflowObserverOptions = {
+      root: document.documentElement,
+      side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
+    }
+
+    overflowObserver = createOverflowObserver(
+      overflowObserved,
+      overflowObserverOptions,
+    )
+
+    overflowObserver.attachObservers(nodeList)
+  }
+
   function resizeObserved(entries) {
     if (!Array.isArray(entries) || entries.length === 0) return
     const el = entries[0].target
     sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
   }
 
-  function setupResizeObservers(nodeList) {
-    log('Setup ResizeObserver')
-    resizeObserver = createResizeObserver(resizeObserved)(nodeList)
+  function createResizeObservers(nodeList) {
+    resizeObserver = createResizeObserver(resizeObserved)
+    resizeObserver.attachObserverToNonStaticElements(nodeList)
   }
 
   function visibilityChange(isVisible) {
@@ -932,13 +930,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
-  function setupVisibilityObserver() {
-    log('Setup VisibilityObserver')
-    createVisibilityObserver(visibilityChange)
-  }
-
-  function updatePage(addedMutations, removedMutations) {
-    consoleEvent('updatePage')
+  function contentMutated({ addedMutations, removedMutations }) {
+    consoleEvent('contentMutated')
     applySelectors()
     checkAndSetupTags()
     checkOverflow()
@@ -958,14 +951,19 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     endAutoGroup()
   }
 
-  function mutationObserved({ addedMutations, removedMutations }) {
-    updatePage(addedMutations, removedMutations)
+  function mutationObserved(mutations) {
     sendSize(MUTATION_OBSERVER, 'Mutation Observed')
+    contentMutated(mutations)
   }
 
-  function setupMutationObserver() {
-    log('Setup <body> MutationObserver')
+  function attachObservers() {
+    const nodeList = getAllElements(document)()
+
+    log('Attaching Observers')
     createMutationObserver(mutationObserved)
+    createOverflowObservers(nodeList)
+    createResizeObservers(nodeList)
+    createVisibilityObserver(visibilityChange)
   }
 
   function getMaxElement(side) {
