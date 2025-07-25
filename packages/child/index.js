@@ -59,9 +59,12 @@ import {
 import { getBoolean, getNumber } from './from-string'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
+import createPerformanceObserver, {
+  PREF_END,
+  PREF_START,
+} from './observers/perf'
 import createResizeObserver from './observers/resize'
 import createVisibilityObserver from './observers/visibility'
-import { PREF_END, PREF_START } from './perf'
 import { readFunction, readNumber, readString } from './read'
 
 function iframeResizerChild() {
@@ -962,6 +965,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     log('Attaching Observers')
     createMutationObserver(mutationObserved)
     createOverflowObservers(nodeList)
+    createPerformanceObserver()
     createResizeObservers(nodeList)
     createVisibilityObserver(visibilityChange)
   }
