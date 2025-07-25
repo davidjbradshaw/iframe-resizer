@@ -1,6 +1,6 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { IGNORE_ATTR, MUTATION_OBSERVER, SIZE_ATTR } from '../common/consts'
+import { IGNORE_ATTR, SIZE_ATTR } from '../common/consts'
 import { round } from '../common/utils'
 import { info, log } from './console'
 
@@ -39,7 +39,7 @@ const DELAY_MAX = 200
 
 let delayCount = 1
 
-const createProcessMutations = (updatePage, sendSize) => () => {
+const createProcessMutations = (callback) => () => {
   const now = performance.now()
   const delay = now - perfMon
   const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
@@ -63,13 +63,11 @@ const createProcessMutations = (updatePage, sendSize) => () => {
   newMutations.forEach(updateMutation)
   newMutations.length = 0
 
-  updatePage(addedMutations, removedMutations)
+  callback({ addedMutations, removedMutations })
 
   pending = false
   addedMutations.clear()
   removedMutations.clear()
-
-  sendSize(MUTATION_OBSERVER, 'Mutation Observed')
 }
 
 function mutationObserved(mutations) {
@@ -81,7 +79,7 @@ function mutationObserved(mutations) {
   requestAnimationFrame(processMutations)
 }
 
-export default function createMutationObserver(updatePage, sendSize) {
+export default function createMutationObserver(callback) {
   const observer = new window.MutationObserver(mutationObserved)
   const target = document.querySelector('body')
   const config = {
@@ -94,9 +92,8 @@ export default function createMutationObserver(updatePage, sendSize) {
     subtree: true,
   }
 
-  processMutations = createProcessMutations(updatePage, sendSize)
+  processMutations = createProcessMutations(callback)
 
-  log('Setup <body> MutationObserver')
   observer.observe(target, config)
 
   return observer

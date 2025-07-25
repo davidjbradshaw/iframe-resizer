@@ -958,8 +958,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     endAutoGroup()
   }
 
+  function mutationObserved({ addedMutations, removedMutations }) {
+    updatePage(addedMutations, removedMutations)
+    sendSize(MUTATION_OBSERVER, 'Mutation Observed')
+  }
+
   function setupMutationObserver() {
-    createMutationObserver(updatePage, sendSize)
+    log('Setup <body> MutationObserver')
+    createMutationObserver(mutationObserved)
   }
 
   function getMaxElement(side) {
