@@ -9,12 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/core": "^5.4.5",
-    "@iframe-resizer/vue": "^5.4.6-beta.2",
-    "vue": "^3.5.13"
+    "@iframe-resizer/core": "^5.4.7",
+    "@iframe-resizer/vue": "^5.4.7",
+    "vue": "^3.5.18"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
-    "vite": "^6.3.4"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.0.6"
   }
 }
