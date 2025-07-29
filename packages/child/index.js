@@ -129,8 +129,8 @@ function iframeResizerChild() {
   let overflowedNodeList = []
   let overflowObserver
   let parentId = ''
-  let resizeObserver
   let resizeFrom = 'child'
+  let resizeObserver
   let sameOrigin = false
   let sizeSelector = ''
   let taggedElements = []
