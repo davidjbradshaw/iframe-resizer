@@ -2,7 +2,7 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { IGNORE_ATTR, SIZE_ATTR } from '../../common/consts'
 import { round } from '../../common/utils'
-import { info, log } from '../console'
+import { event, info, log } from '../console'
 
 const DELAY = 16 // Corresponds to 60fps
 const DELAY_MARGIN = 2
@@ -44,9 +44,10 @@ const createProcessMutations = (callback) => () => {
 
   // Back off if the callStack is busy with other stuff
   if (delay > delayLimit && delay < DELAY_MAX) {
-    info('Backed off due to heavy workload on callStack')
-    log(
-      `Delay: %c${round(delay)}ms %c> Delay limit: %c${delayLimit}ms`,
+    event('MutationDelay')
+    info('Update delayed due to heavy workload on the callStack')
+    info(
+      `EventLoop busy time: %c${round(delay)}ms %c> Max wait: %c${delayLimit - 2}ms`,
       HIGHLIGHT,
       FOREGROUND,
       HIGHLIGHT,
