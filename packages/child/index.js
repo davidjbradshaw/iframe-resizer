@@ -945,12 +945,17 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     consoleEvent('contentMutated')
     applySelectors()
     checkAndSetupTags()
-    checkOverflow()
 
     let addOverflowCount = 0
     let removeOverflowCount = 0
     let addResizeCount = 0
     let removeResizeCount = 0
+
+    for (const mutation of removedMutations) {
+      const elements = getAllElements(mutation)()
+      removeOverflowCount += overflowObserver.detachObservers(elements)
+      removeResizeCount += resizeObserver.detachObservers(elements)
+    }
 
     for (const mutation of addedMutations) {
       const elements = getAllElements(mutation)()
@@ -959,16 +964,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         resizeObserver.attachObserverToNonStaticElements(elements)
     }
 
-    for (const mutation of removedMutations) {
-      const elements = getAllElements(mutation)()
-      removeOverflowCount += overflowObserver.detachObservers(elements)
-      removeResizeCount += resizeObserver.detachObservers(elements)
-    }
-
-    logAddOverflow(addOverflowCount)
     logRemoveOverflow(removeOverflowCount)
-    logAddResize(addResizeCount)
     logRemoveResize(removeResizeCount)
+    logAddOverflow(addOverflowCount)
+    logAddResize(addResizeCount)
 
     endAutoGroup()
   }
