@@ -2,19 +2,20 @@ import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
 import { info } from '../console'
 
-export const createLogCounter = (type, prefix) => (counter) => {
-  if (counter > 0) {
-    info(
-      `${prefix}tached ${type}Observer to %c${counter}%c element${counter === 1 ? '' : 's'}`,
-      HIGHLIGHT,
-      NORMAL,
-    )
+export const createLogCounter =
+  (type, isAttach = true) =>
+  (counter) => {
+    if (counter > 0) {
+      info(
+        `${isAttach ? 'At' : 'De'}tached ${type}Observer ${isAttach ? 'to' : 'from'} %c${counter}%c element${counter === 1 ? '' : 's'}`,
+        HIGHLIGHT,
+        NORMAL,
+      )
+    }
   }
-}
 
-export const createDetachObservers = (type, observer, observed) => {
-  const logCounter = createLogCounter(type, 'De')
-  return (nodeList) => {
+export const createDetachObservers =
+  (type, observer, observed) => (nodeList) => {
     let counter = 0
 
     for (const node of nodeList) {
@@ -24,6 +25,5 @@ export const createDetachObservers = (type, observer, observed) => {
       counter += 1
     }
 
-    logCounter(counter)
+    return counter
   }
-}

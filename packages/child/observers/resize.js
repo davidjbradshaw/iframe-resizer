@@ -1,7 +1,7 @@
 import { assert, info } from '../console'
 import { createDetachObservers, createLogCounter } from './utils'
 
-const logCounter = createLogCounter('Resize', 'At')
+const logCounter = createLogCounter('Resize')
 const observed = new WeakSet()
 
 let observer

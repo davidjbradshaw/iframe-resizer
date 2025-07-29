@@ -64,6 +64,7 @@ import createPerformanceObserver, {
   PREF_START,
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
+import { createLogCounter } from './observers/utils'
 import createVisibilityObserver from './observers/visibility'
 import { readFunction, readNumber, readString } from './read'
 
@@ -122,13 +123,13 @@ function iframeResizerChild() {
   let key2
   let mode = 0
   let mouseEvents = false
-  let parentId = ''
-  let resizeObserver
   let offsetHeight
   let offsetWidth
   let origin
   let overflowedNodeList = []
   let overflowObserver
+  let parentId = ''
+  let resizeObserver
   let resizeFrom = 'child'
   let sameOrigin = false
   let sizeSelector = ''
@@ -935,23 +936,39 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
+  const logAddOverflow = createLogCounter('Overflow')
+  const logRemoveOverflow = createLogCounter('Overflow', false)
+  const logAddResize = createLogCounter('Resize')
+  const logRemoveResize = createLogCounter('Resize', false)
+
   function contentMutated({ addedMutations, removedMutations }) {
     consoleEvent('contentMutated')
     applySelectors()
     checkAndSetupTags()
     checkOverflow()
 
+    let addOverflowCount = 0
+    let removeOverflowCount = 0
+    let addResizeCount = 0
+    let removeResizeCount = 0
+
     for (const mutation of addedMutations) {
       const elements = getAllElements(mutation)()
-      overflowObserver.attachObservers(elements)
-      resizeObserver.attachObserverToNonStaticElements(elements)
+      addOverflowCount += overflowObserver.attachObservers(elements)
+      addResizeCount +=
+        resizeObserver.attachObserverToNonStaticElements(elements)
     }
 
     for (const mutation of removedMutations) {
       const elements = getAllElements(mutation)()
-      overflowObserver.detachObservers(elements)
-      resizeObserver.detachObservers(elements)
+      removeOverflowCount += overflowObserver.detachObservers(elements)
+      removeResizeCount += resizeObserver.detachObservers(elements)
     }
+
+    logAddOverflow(addOverflowCount)
+    logRemoveOverflow(removeOverflowCount)
+    logAddResize(addResizeCount)
+    logRemoveResize(removeResizeCount)
 
     endAutoGroup()
   }

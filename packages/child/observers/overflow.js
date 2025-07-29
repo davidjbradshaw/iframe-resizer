@@ -1,9 +1,7 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
 import { assert } from '../console'
-import { createDetachObservers, createLogCounter } from './utils'
-
-const logCounter = createLogCounter('Overflow', 'At')
+import { createDetachObservers } from './utils'
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -56,7 +54,7 @@ const createOverflowObserver = (callback, options) => {
       counter += 1
     }
 
-    logCounter(counter)
+    return counter
   }
 
   return {
