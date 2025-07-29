@@ -4,12 +4,16 @@ import { IGNORE_ATTR, SIZE_ATTR } from '../../common/consts'
 import { round } from '../../common/utils'
 import { info, log } from '../console'
 
+const DELAY = 16 // Corresponds to 60fps
+const DELAY_MARGIN = 2
+const DELAY_MAX = 200
+
 const addedMutations = new Set()
 const removedMutations = new Set()
 const newMutations = []
 
+let delayCount = 1
 let processMutations
-
 let pending = false
 let perfMon = 0
 
@@ -32,12 +36,6 @@ const updateMutation = (mutations) => {
     }
   }
 }
-
-const DELAY = 16 // Corresponds to 60fps
-const DELAY_MARGIN = 2
-const DELAY_MAX = 200
-
-let delayCount = 1
 
 const createProcessMutations = (callback) => () => {
   const now = performance.now()
