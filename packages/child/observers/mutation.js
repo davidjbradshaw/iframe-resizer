@@ -47,7 +47,7 @@ const createProcessMutations = (callback) => () => {
     event('MutationDelay')
     info('Update delayed due to heavy workload on the callStack')
     info(
-      `EventLoop busy time: %c${round(delay)}ms %c> Max wait: %c${delayLimit - 2}ms`,
+      `EventLoop busy time: %c${round(delay)}ms %c> Max wait: %c${delayLimit - DELAY_MARGIN}ms`,
       HIGHLIGHT,
       FOREGROUND,
       HIGHLIGHT,
