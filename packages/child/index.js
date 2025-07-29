@@ -233,7 +233,7 @@ function iframeResizerChild() {
   }
 
   let ignoredElementsCount = 0
-  function chkIgnoredElements() {
+  function checkIgnoredElements() {
     const ignoredElements = document.querySelectorAll(`*[${IGNORE_ATTR}]`)
     hasIgnored = ignoredElements.length > 0
     if (hasIgnored && ignoredElements.length !== ignoredElementsCount) {
@@ -1058,7 +1058,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       'not(nobr)',
     ]
 
-    chkIgnoredElements()
+    checkIgnoredElements()
     if (hasIgnored)
       selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
 
