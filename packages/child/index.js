@@ -178,10 +178,10 @@ function iframeResizerChild() {
     readDataFromPage()
 
     const setup = [
+      checkVersion,
+      checkBoth,
       checkMode,
       checkCrossDomain,
-      checkBoth,
-      checkVersion,
       checkHeightMode,
       checkWidthMode,
       checkDeprecatedAttrs,
