@@ -161,6 +161,10 @@ function iframeResizerChild() {
       try {
         func()
       } catch (error_) {
+        if (mode < 0) throw error_
+        advise(
+          `<rb>Error in setup function</>\n<i>iframe-resizer</> detected an error during setup.\n\nPlease report the following error message at <u>https://github.com/davidjbradshaw/iframe-resizer/issues</>`,
+        )
         error(error_)
       }
     })
@@ -174,11 +178,9 @@ function iframeResizerChild() {
     readDataFromPage()
 
     const setup = [
-      applySelectors,
-
+      checkMode,
       checkCrossDomain,
       checkBoth,
-      checkMode,
       checkVersion,
       checkHeightMode,
       checkWidthMode,
@@ -187,6 +189,7 @@ function iframeResizerChild() {
       checkAndSetupTags,
       bothDirections ? id : checkBlockingCSS,
 
+      applySelectors,
       setupPublicMethods,
       setupMouseEvents,
       setupInPageLinks,
@@ -1402,7 +1405,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function sendMessage(height, width, triggerEvent, msg, targetOrigin) {
-    if (mode < -1) return
+    if (mode < 0) return
 
     function setTargetOrigin() {
       if (undefined === targetOrigin) {
