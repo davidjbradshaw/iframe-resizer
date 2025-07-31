@@ -156,25 +156,10 @@ function iframeResizerChild() {
 
   function isolate(funcs) {
     funcs.forEach((func) => {
-      switch (typeof func) {
-        case 'function':
-          try {
-            func()
-          } catch (error_) {
-            error(error_)
-          }
-          break
-
-        case 'object':
-          try {
-            func[0].apply(func.shift())
-          } catch (error_) {
-            error(error_)
-          }
-          break
-
-        default:
-          throw new Error(`Function expected, but got: ${typeof func}`)
+      try {
+        func()
+      } catch (error_) {
+        error(error_)
       }
     })
   }
@@ -201,10 +186,10 @@ function iframeResizerChild() {
 
       setupPublicMethods,
       setupMouseEvents,
-
+      setupInPageLinks,
       setMargin,
-      [setBodyStyle, 'background', bodyBackground],
-      [setBodyStyle, 'padding', bodyPadding],
+      () => setBodyStyle('background', bodyBackground),
+      () => setBodyStyle('padding', bodyPadding),
 
       injectClearFixIntoBodyElement,
 
@@ -217,7 +202,6 @@ function iframeResizerChild() {
 
     isolate(setup)
 
-    inPageLinks = setupInPageLinks()
     checkReadyYet(once(onReady))
     log('Initialization complete')
 
@@ -228,6 +212,7 @@ function iframeResizerChild() {
       undefined,
       `${VERSION}:${mode}`,
     )
+
     sendTitle()
   }
 
@@ -711,7 +696,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       log('In page linking not enabled')
     }
 
-    return {
+    inPageLinks = {
       findTarget,
     }
   }
