@@ -31,6 +31,7 @@ import {
   capitalizeFirstLetter,
   getElementName,
   isDef,
+  isElement,
   isolateUserCode,
   once,
   round,
@@ -979,7 +980,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function attachObservers() {
-    const nodeList = getAllElements(document)()
+    const nodeList = getAllElements(document.documentElement)()
 
     log('Attaching Observers')
     createMutationObserver(mutationObserved)
@@ -1039,7 +1040,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     dimension.boundingClientRect(),
   ]
 
-  const getAllElements = (element) => () => {
+  const getAllElements = (node) => () => {
+    log('node:', node)
+    log('node type:', node?.nodeType)
+    if (!isElement(node)) return [node]
+
     const selector = [
       '* ',
       'not(head)',
@@ -1063,7 +1068,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     if (hasIgnored)
       selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
 
-    return [element, ...element.querySelectorAll(selector.join(':'))]
+    return [node, ...node.querySelectorAll(selector.join(':'))]
   }
 
   function getOffsetSize(getDimension) {
