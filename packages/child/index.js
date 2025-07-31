@@ -1041,8 +1041,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   ]
 
   const getAllElements = (node) => () => {
-    log('node:', node)
-    log('node type:', node?.nodeType)
     if (!isElement(node)) return [node]
 
     const selector = [
