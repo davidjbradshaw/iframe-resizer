@@ -47,6 +47,7 @@ import {
   deprecateMethodReplace,
   deprecateOption,
   endAutoGroup,
+  error,
   errorBoundary,
   event as consoleEvent,
   info,
@@ -154,6 +155,31 @@ function iframeResizerChild() {
   let onPageInfo = null
   let onParentInfo = null
 
+  function isolate(funcs) {
+    funcs.forEach((func) => {
+      switch (typeof func) {
+        case 'function':
+          try {
+            func()
+          } catch (error_) {
+            error(error_)
+          }
+          break
+
+        case 'object':
+          try {
+            func[0].apply(func.shift())
+          } catch (error_) {
+            error(error_)
+          }
+          break
+
+        default:
+          throw new Error(`Function expected, but got: ${typeof func}`)
+      }
+    })
+  }
+
   function init(data) {
     readDataFromParent(data)
 
@@ -161,34 +187,39 @@ function iframeResizerChild() {
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
     readDataFromPage()
 
-    applySelectors()
+    const setup = [
+      applySelectors,
 
-    checkCrossDomain()
-    checkBoth()
-    checkMode()
-    checkVersion()
-    checkHeightMode()
-    checkWidthMode()
-    checkDeprecatedAttrs()
-    checkQuirksMode()
-    checkAndSetupTags()
-    if (!bothDirections) checkBlockingCSS()
+      checkCrossDomain,
+      checkBoth,
+      checkMode,
+      checkVersion,
+      checkHeightMode,
+      checkWidthMode,
+      checkDeprecatedAttrs,
+      checkQuirksMode,
+      checkAndSetupTags,
 
-    setupPublicMethods()
-    setupMouseEvents()
+      setupPublicMethods,
+      setupMouseEvents,
+
+      setMargin,
+      [setBodyStyle, 'background', bodyBackground],
+      [setBodyStyle, 'padding', bodyPadding],
+
+      injectClearFixIntoBodyElement,
+
+      initEventListeners,
+      attachObservers,
+    ]
+
+    if (!bothDirections)
+      setup.push(checkBlockingCSS, stopInfiniteResizingOfIframe)
+
+    isolate(setup)
+
     inPageLinks = setupInPageLinks()
-
-    setMargin()
-    setBodyStyle('background', bodyBackground)
-    setBodyStyle('padding', bodyPadding)
-
-    injectClearFixIntoBodyElement()
-    if (!bothDirections) stopInfiniteResizingOfIframe()
-
-    initEventListeners()
-    attachObservers()
     checkReadyYet(once(onReady))
-
     log('Initialization complete')
 
     sendSize(
