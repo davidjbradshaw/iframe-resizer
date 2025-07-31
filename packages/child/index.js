@@ -30,6 +30,7 @@ import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
+  id,
   isDef,
   isElement,
   isolateUserCode,
@@ -184,6 +185,7 @@ function iframeResizerChild() {
       checkDeprecatedAttrs,
       checkQuirksMode,
       checkAndSetupTags,
+      bothDirections ? id : checkBlockingCSS,
 
       setupPublicMethods,
       setupMouseEvents,
@@ -192,14 +194,12 @@ function iframeResizerChild() {
       () => setBodyStyle('background', bodyBackground),
       () => setBodyStyle('padding', bodyPadding),
 
+      bothDirections ? id : stopInfiniteResizingOfIframe,
       injectClearFixIntoBodyElement,
 
       initEventListeners,
       attachObservers,
     ]
-
-    if (!bothDirections)
-      setup.push(checkBlockingCSS, stopInfiniteResizingOfIframe)
 
     isolate(setup)
 
