@@ -30,6 +30,7 @@ import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
+  id,
   isDef,
   isElement,
   isolateUserCode,
@@ -47,6 +48,7 @@ import {
   deprecateMethodReplace,
   deprecateOption,
   endAutoGroup,
+  error,
   errorBoundary,
   event as consoleEvent,
   info,
@@ -154,6 +156,20 @@ function iframeResizerChild() {
   let onPageInfo = null
   let onParentInfo = null
 
+  function isolate(funcs) {
+    funcs.forEach((func) => {
+      try {
+        func()
+      } catch (error_) {
+        if (mode < 0) throw error_
+        advise(
+          `<rb>Error in setup function</>\n<i>iframe-resizer</> detected an error during setup.\n\nPlease report the following error message at <u>https://github.com/davidjbradshaw/iframe-resizer/issues</>`,
+        )
+        error(error_)
+      }
+    })
+  }
+
   function init(data) {
     readDataFromParent(data)
 
@@ -161,34 +177,36 @@ function iframeResizerChild() {
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
     readDataFromPage()
 
-    applySelectors()
+    const setup = [
+      checkVersion,
+      checkBoth,
+      checkMode,
+      checkCrossDomain,
+      checkHeightMode,
+      checkWidthMode,
+      checkDeprecatedAttrs,
+      checkQuirksMode,
+      checkAndSetupTags,
+      bothDirections ? id : checkBlockingCSS,
 
-    checkCrossDomain()
-    checkBoth()
-    checkMode()
-    checkVersion()
-    checkHeightMode()
-    checkWidthMode()
-    checkDeprecatedAttrs()
-    checkQuirksMode()
-    checkAndSetupTags()
-    if (!bothDirections) checkBlockingCSS()
+      applySelectors,
+      setupPublicMethods,
+      setupMouseEvents,
+      setupInPageLinks,
+      setMargin,
+      () => setBodyStyle('background', bodyBackground),
+      () => setBodyStyle('padding', bodyPadding),
 
-    setupPublicMethods()
-    setupMouseEvents()
-    inPageLinks = setupInPageLinks()
+      bothDirections ? id : stopInfiniteResizingOfIframe,
+      injectClearFixIntoBodyElement,
 
-    setMargin()
-    setBodyStyle('background', bodyBackground)
-    setBodyStyle('padding', bodyPadding)
+      initEventListeners,
+      attachObservers,
+    ]
 
-    injectClearFixIntoBodyElement()
-    if (!bothDirections) stopInfiniteResizingOfIframe()
+    isolate(setup)
 
-    initEventListeners()
-    attachObservers()
     checkReadyYet(once(onReady))
-
     log('Initialization complete')
 
     sendSize(
@@ -198,6 +216,7 @@ function iframeResizerChild() {
       undefined,
       `${VERSION}:${mode}`,
     )
+
     sendTitle()
   }
 
@@ -681,7 +700,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       log('In page linking not enabled')
     }
 
-    return {
+    inPageLinks = {
       findTarget,
     }
   }
@@ -1386,7 +1405,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function sendMessage(height, width, triggerEvent, msg, targetOrigin) {
-    if (mode < -1) return
+    if (mode < 0) return
 
     function setTargetOrigin() {
       if (undefined === targetOrigin) {
