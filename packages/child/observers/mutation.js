@@ -1,7 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { IGNORE_ATTR, SIZE_ATTR } from '../../common/consts'
-import { round } from '../../common/utils'
+import { IGNORE_ATTR, IGNORE_TAGS, SIZE_ATTR } from '../../common/consts'
+import { isElement, round } from '../../common/utils'
 import { event, info, log } from '../console'
 
 const DELAY = 16 // Corresponds to 60fps
@@ -12,28 +12,59 @@ const addedMutations = new Set()
 const removedMutations = new Set()
 const newMutations = []
 
+const config = {
+  attributes: true,
+  attributeFilter: [IGNORE_ATTR, SIZE_ATTR],
+  attributeOldValue: false,
+  characterData: false,
+  characterDataOldValue: false,
+  childList: true,
+  subtree: true,
+}
+
 let delayCount = 1
 let processMutations
 let pending = false
 let perfMon = 0
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const updateMutation = (mutations) => {
-  log('Mutations:', mutations)
+  info('Mutations:', mutations)
 
   for (const mutation of mutations) {
     const { addedNodes, removedNodes } = mutation
 
     for (const node of addedNodes) {
+      if (!isElement(node)) continue
+      if (IGNORE_TAGS.has(node.tagName.toLowerCase())) continue
       addedMutations.add(node)
     }
 
     for (const node of removedNodes) {
+      if (!isElement(node)) continue
+      if (IGNORE_TAGS.has(node.tagName.toLowerCase())) continue
       if (addedMutations.has(node)) {
         addedMutations.delete(node)
       } else {
         removedMutations.add(node)
       }
     }
+  }
+
+  if (removedMutations.size > 0) {
+    log(
+      `Detected %c${removedMutations.size} %cremoved element${removedMutations.size > 1 ? 's' : ''}`,
+      HIGHLIGHT,
+      FOREGROUND,
+    )
+  }
+
+  if (addedMutations.size > 0) {
+    log(
+      `Found %c${addedMutations.size} %cnew element${addedMutations.size > 1 ? 's' : ''}`,
+      HIGHLIGHT,
+      FOREGROUND,
+    )
   }
 }
 
@@ -44,7 +75,7 @@ const createProcessMutations = (callback) => () => {
 
   // Back off if the callStack is busy with other stuff
   if (delay > delayLimit && delay < DELAY_MAX) {
-    event('MutationDelay')
+    event('mutationThrottled')
     info('Update delayed due to heavy workload on the callStack')
     info(
       `EventLoop busy time: %c${round(delay)}ms %c> Max wait: %c${delayLimit - DELAY_MARGIN}ms`,
@@ -80,16 +111,7 @@ function mutationObserved(mutations) {
 
 export default function createMutationObserver(callback) {
   const observer = new window.MutationObserver(mutationObserved)
-  const target = document.querySelector('body')
-  const config = {
-    attributes: true,
-    attributeFilter: [IGNORE_ATTR, SIZE_ATTR],
-    attributeOldValue: false,
-    characterData: false,
-    characterDataOldValue: false,
-    childList: true,
-    subtree: true,
-  }
+  const target = document.body || document.documentElement
 
   processMutations = createProcessMutations(callback)
 

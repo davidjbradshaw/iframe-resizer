@@ -68,3 +68,21 @@ export const LOG_OPTIONS = Object.freeze({
   [EXPAND]: 1,
   [COLLAPSE]: 1,
 })
+
+export const IGNORE_TAGS = new Set([
+  'head',
+  'meta',
+  'base',
+  'title',
+  'script',
+  'link',
+  'style',
+  'map',
+  'area',
+  'option',
+  'optgroup',
+  'template',
+  'track',
+  'wbr',
+  'nobr',
+])
