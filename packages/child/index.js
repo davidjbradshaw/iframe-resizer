@@ -947,6 +947,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     applySelectors()
     checkAndSetupTags()
     checkOverflow()
+    checkIgnoredElements()
 
     let addOverflowCount = 0
     let removeOverflowCount = 0
