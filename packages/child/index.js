@@ -966,7 +966,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
-  function contentMutated({ addedMutations, removedMutations }) {
+  function contentMutated({ addedNodes, removedNodes }) {
     consoleEvent('contentMutated')
     applySelectors()
     checkAndSetupTags()
@@ -977,14 +977,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     let addResizeCount = 0
     let removeResizeCount = 0
 
-    for (const mutation of removedMutations) {
-      const elements = getAllElements(mutation)()
+    for (const node of removedNodes) {
+      const elements = getAllElements(node)()
       removeOverflowCount += overflowObserver.detachObservers(elements)
       removeResizeCount += resizeObserver.detachObservers(elements)
     }
 
-    for (const mutation of addedMutations) {
-      const elements = getAllElements(mutation)()
+    for (const node of addedNodes) {
+      const elements = getAllElements(node)()
       addOverflowCount += overflowObserver.attachObservers(elements)
       addResizeCount +=
         resizeObserver.attachObserverToNonStaticElements(elements)

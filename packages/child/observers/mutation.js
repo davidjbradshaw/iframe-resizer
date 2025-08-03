@@ -8,8 +8,8 @@ const DELAY = 16 // Corresponds to 60fps
 const DELAY_MARGIN = 2
 const DELAY_MAX = 200
 
-const addedMutations = new Set()
-const removedMutations = new Set()
+const addedNodes = new Set()
+const removedNodes = new Set()
 const newMutations = []
 
 const config = {
@@ -32,54 +32,52 @@ const shouldSkip = (node) =>
   IGNORE_TAGS.has(node.tagName.toLowerCase())
 
 function addedMutation(mutation) {
-  const { addedNodes } = mutation
+  const added = mutation.addedNodes
 
-  for (const node of addedNodes) {
+  for (const node of added) {
     if (shouldSkip(node)) continue
-    addedMutations.add(node)
+    addedNodes.add(node)
   }
 }
 
 function removedMutation(mutation) {
-  const { removedNodes } = mutation
+  const removed = mutation.removedNodes
 
-  for (const node of removedNodes) {
+  for (const node of removed) {
     if (shouldSkip(node)) continue
-    if (addedMutations.has(node)) {
-      addedMutations.delete(node)
+    if (addedNodes.has(node)) {
+      addedNodes.delete(node)
     } else {
-      removedMutations.add(node)
+      removedNodes.add(node)
     }
   }
 }
 
-function logMutations() {
-  if (removedMutations.size > 0) {
-    log(
-      `Detected %c${removedMutations.size} %cremoved element${removedMutations.size > 1 ? 's' : ''}`,
-      HIGHLIGHT,
-      FOREGROUND,
-    )
-  }
-
-  if (addedMutations.size > 0) {
-    log(
-      `Found %c${addedMutations.size} %cnew element${addedMutations.size > 1 ? 's' : ''}`,
-      HIGHLIGHT,
-      FOREGROUND,
-    )
-  }
-}
-
-const updateMutation = (mutations) => {
+const flatFilterMutations = (mutations) => {
   info('Mutations:', mutations)
 
   for (const mutation of mutations) {
     addedMutation(mutation)
     removedMutation(mutation)
   }
+}
 
-  logMutations()
+function logMutations() {
+  if (removedNodes.size > 0) {
+    log(
+      `Detected %c${removedNodes.size} %cremoved element${removedNodes.size > 1 ? 's' : ''}`,
+      HIGHLIGHT,
+      FOREGROUND,
+    )
+  }
+
+  if (addedNodes.size > 0) {
+    log(
+      `Found %c${addedNodes.size} %cnew element${addedNodes.size > 1 ? 's' : ''}`,
+      HIGHLIGHT,
+      FOREGROUND,
+    )
+  }
 }
 
 const createProcessMutations = (callback) => () => {
@@ -104,14 +102,15 @@ const createProcessMutations = (callback) => () => {
 
   delayCount = 1
 
-  newMutations.forEach(updateMutation)
+  newMutations.forEach(flatFilterMutations)
   newMutations.length = 0
-
-  callback({ addedMutations, removedMutations })
-
   pending = false
-  addedMutations.clear()
-  removedMutations.clear()
+
+  logMutations()
+  callback({ addedNodes, removedNodes })
+
+  addedNodes.clear()
+  removedNodes.clear()
 }
 
 function mutationObserved(mutations) {
