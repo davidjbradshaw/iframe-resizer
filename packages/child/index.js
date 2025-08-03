@@ -33,7 +33,7 @@ import {
   getElementName,
   id,
   isDef,
-  isElement,
+  // isElement,
   isolateUserCode,
   once,
   round,
@@ -43,7 +43,6 @@ import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
   adviser,
-  assert,
   // assert,
   debug,
   deprecateMethod,
@@ -183,6 +182,7 @@ function iframeResizerChild() {
       checkVersion,
       checkBoth,
       checkMode,
+      checkIgnoredElements,
       checkCrossDomain,
       checkHeightMode,
       checkWidthMode,
@@ -1064,16 +1064,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     dimension.boundingClientRect(),
   ]
 
-  const getAllElements = (node) => () => {
-    assert(isElement(node), 'getAllElements() requires a DOM element')
+  const addNot = (tag) => `:not(${tag})`
 
-    const selector = ['* ', ...[...IGNORE_TAGS].map((tag) => `not(${tag})`)]
-
-    if (checkIgnoredElements())
-      selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
-
-    return [node, ...node.querySelectorAll(selector.join(':'))]
-  }
+  const getAllElements = (node) => () => [
+    node,
+    ...node.querySelectorAll(`* ${[...IGNORE_TAGS].map(addNot).join('')}`),
+  ]
 
   function getOffsetSize(getDimension) {
     const offset = getDimension.getOffset()
