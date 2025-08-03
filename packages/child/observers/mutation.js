@@ -27,30 +27,32 @@ let processMutations
 let pending = false
 let perfMon = 0
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-const updateMutation = (mutations) => {
-  info('Mutations:', mutations)
+const shouldSkip = (node) =>
+  !isElement(node) || IGNORE_TAGS.has(node.tagName.toLowerCase())
 
-  for (const mutation of mutations) {
-    const { addedNodes, removedNodes } = mutation
+function addedMutation(mutation) {
+  const { addedNodes } = mutation
 
-    for (const node of addedNodes) {
-      if (!isElement(node)) continue
-      if (IGNORE_TAGS.has(node.tagName.toLowerCase())) continue
-      addedMutations.add(node)
-    }
+  for (const node of addedNodes) {
+    if (shouldSkip(node)) continue
+    addedMutations.add(node)
+  }
+}
 
-    for (const node of removedNodes) {
-      if (!isElement(node)) continue
-      if (IGNORE_TAGS.has(node.tagName.toLowerCase())) continue
-      if (addedMutations.has(node)) {
-        addedMutations.delete(node)
-      } else {
-        removedMutations.add(node)
-      }
+function removedMutation(mutation) {
+  const { removedNodes } = mutation
+
+  for (const node of removedNodes) {
+    if (shouldSkip(node)) continue
+    if (addedMutations.has(node)) {
+      addedMutations.delete(node)
+    } else {
+      removedMutations.add(node)
     }
   }
+}
 
+function logMutations() {
   if (removedMutations.size > 0) {
     log(
       `Detected %c${removedMutations.size} %cremoved element${removedMutations.size > 1 ? 's' : ''}`,
@@ -66,6 +68,17 @@ const updateMutation = (mutations) => {
       FOREGROUND,
     )
   }
+}
+
+const updateMutation = (mutations) => {
+  info('Mutations:', mutations)
+
+  for (const mutation of mutations) {
+    addedMutation(mutation)
+    removedMutation(mutation)
+  }
+
+  logMutations()
 }
 
 const createProcessMutations = (callback) => () => {
