@@ -1,7 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { IGNORE_ATTR, IGNORE_TAGS, SIZE_ATTR } from '../../common/consts'
-import { isElement, round } from '../../common/utils'
+import { round } from '../../common/utils'
 import { event, info, log } from '../console'
 
 const DELAY = 16 // Corresponds to 60fps
@@ -28,7 +28,8 @@ let pending = false
 let perfMon = 0
 
 const shouldSkip = (node) =>
-  !isElement(node) || IGNORE_TAGS.has(node.tagName.toLowerCase())
+  node.nodeType !== Node.ELEMENT_NODE ||
+  IGNORE_TAGS.has(node.tagName.toLowerCase())
 
 function addedMutation(mutation) {
   const { addedNodes } = mutation
