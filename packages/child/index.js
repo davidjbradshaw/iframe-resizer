@@ -8,6 +8,7 @@ import {
   // HORIZONTAL,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
+  IGNORE_TAGS,
   INIT,
   MANUAL_RESIZE_REQUEST,
   MUTATION_OBSERVER,
@@ -42,6 +43,7 @@ import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
   adviser,
+  assert,
   // assert,
   debug,
   deprecateMethod,
@@ -260,6 +262,7 @@ function iframeResizerChild() {
       warnIgnored(ignoredElements)
       ignoredElementsCount = ignoredElements.length
     }
+    return hasIgnored
   }
 
   function checkQuirksMode() {
@@ -902,6 +905,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     win.parentIFrame = win.parentIframe
   }
 
+  const logAddOverflow = createLogCounter('Overflow')
+  const logRemoveOverflow = createLogCounter('Overflow', false)
+  const logAddResize = createLogCounter('Resize')
+  const logRemoveResize = createLogCounter('Resize', false)
+
   function checkOverflow() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
@@ -936,7 +944,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       overflowObserverOptions,
     )
 
-    overflowObserver.attachObservers(nodeList)
+    const count = overflowObserver.attachObservers(nodeList)
+    logAddOverflow(count)
   }
 
   function resizeObserved(entries) {
@@ -947,7 +956,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function createResizeObservers(nodeList) {
     resizeObserver = createResizeObserver(resizeObserved)
-    resizeObserver.attachObserverToNonStaticElements(nodeList)
+    const count = resizeObserver.attachObserverToNonStaticElements(nodeList)
+    logAddResize(count)
   }
 
   function visibilityChange(isVisible) {
@@ -955,11 +965,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     isHidden = !isVisible
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
-
-  const logAddOverflow = createLogCounter('Overflow')
-  const logRemoveOverflow = createLogCounter('Overflow', false)
-  const logAddResize = createLogCounter('Resize')
-  const logRemoveResize = createLogCounter('Resize', false)
 
   function contentMutated({ addedMutations, removedMutations }) {
     consoleEvent('contentMutated')
@@ -1060,29 +1065,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   ]
 
   const getAllElements = (node) => () => {
-    if (!isElement(node)) return [node]
+    assert(isElement(node), 'getAllElements() requires a DOM element')
 
-    const selector = [
-      '* ',
-      'not(head)',
-      'not(meta)',
-      'not(base)',
-      'not(title)',
-      'not(script)',
-      'not(link)',
-      'not(style)',
-      'not(map)',
-      'not(area)',
-      'not(option)',
-      'not(optgroup)',
-      'not(template)',
-      'not(track)',
-      'not(wbr)',
-      'not(nobr)',
-    ]
+    const selector = ['* ', ...[...IGNORE_TAGS].map((tag) => `not(${tag})`)]
 
-    checkIgnoredElements()
-    if (hasIgnored)
+    if (checkIgnoredElements())
       selector.push(`not([${IGNORE_ATTR}])`, `not([${IGNORE_ATTR}] *)`)
 
     return [node, ...node.querySelectorAll(selector.join(':'))]

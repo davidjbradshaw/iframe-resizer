@@ -25,7 +25,7 @@ export function attachObserverToNonStaticElements(nodeList) {
     counter += 1
   }
 
-  logCounter(counter)
+  return counter
 }
 
 export default (callback) => {
