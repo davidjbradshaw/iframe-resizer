@@ -2,7 +2,7 @@ import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
 import { debug, error, info } from '../console'
 
-const metaCreateLogObserved =
+export const metaCreateLogObserved =
   (consoleType, text = '') =>
   (type) =>
   (observed) => {
@@ -12,14 +12,13 @@ const metaCreateLogObserved =
         ...Array.from(observed).flatMap((node) => ['\n', node]),
       )
     }
-
-    observed.clear()
   }
 
 export const createLogNewlyObserved = metaCreateLogObserved(
   debug,
   'attached to',
 )
+
 export const createWarnAlreadyObserved = metaCreateLogObserved(
   error,
   'already attached',

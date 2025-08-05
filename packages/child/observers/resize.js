@@ -40,6 +40,9 @@ export function attachObserverToNonStaticElements(nodeList) {
   warnAlreadyObserved(alreadyObserved)
   logNewlyObserved(newlyObserved)
   logAddResize(counter)
+
+  newlyObserved.clear()
+  alreadyObserved.clear()
 }
 
 export default (callback) => {

@@ -69,6 +69,9 @@ const createOverflowObserver = (callback, options) => {
     warnAlreadyObserved(alreadyObserved)
     logNewlyObserved(newlyObserved)
     logAddOverflow(counter)
+
+    newlyObserved.clear()
+    alreadyObserved.clear()
   }
 
   return {
