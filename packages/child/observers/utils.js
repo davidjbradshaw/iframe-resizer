@@ -54,4 +54,5 @@ export const createDetachObservers =
 
     logNewlyRemoved(newlyRemoved)
     logCounter(counter)
+    newlyRemoved.clear()
   }
