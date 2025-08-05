@@ -68,7 +68,6 @@ import createPerformanceObserver, {
   PREF_START,
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
-import { createLogCounter } from './observers/utils'
 import createVisibilityObserver from './observers/visibility'
 import { readFunction, readNumber, readString } from './read'
 
@@ -905,11 +904,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     win.parentIFrame = win.parentIframe
   }
 
-  const logAddOverflow = createLogCounter('Overflow')
-  const logRemoveOverflow = createLogCounter('Overflow', false)
-  const logAddResize = createLogCounter('Resize')
-  const logRemoveResize = createLogCounter('Resize', false)
-
   function checkOverflow() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
@@ -944,8 +938,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       overflowObserverOptions,
     )
 
-    const count = overflowObserver.attachObservers(nodeList)
-    logAddOverflow(count)
+    overflowObserver.attachObservers(nodeList)
   }
 
   function resizeObserved(entries) {
@@ -956,8 +949,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function createResizeObservers(nodeList) {
     resizeObserver = createResizeObserver(resizeObserved)
-    const count = resizeObserver.attachObserverToNonStaticElements(nodeList)
-    logAddResize(count)
+    resizeObserver.attachObserverToNonStaticElements(nodeList)
   }
 
   function visibilityChange(isVisible) {
@@ -966,45 +958,39 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
-  const addObservers = (addedNodes) => () => {
-    if (addedNodes.size === 0) return
+  const getCombinedElementLists = (nodeList) => {
+    const elements = new Set()
 
-    let addOverflowCount = 0
-    let addResizeCount = 0
-
-    consoleEvent('addObservers')
-    log(addedNodes)
-
-    for (const node of addedNodes) {
-      const elements = getAllElements(node)()
-      addOverflowCount += overflowObserver.attachObservers(elements)
-      addResizeCount +=
-        resizeObserver.attachObserverToNonStaticElements(elements)
+    for (const node of nodeList) {
+      for (const element of getAllElements(node)) elements.add(element)
     }
 
-    logAddOverflow(addOverflowCount)
-    logAddResize(addResizeCount)
+    info(`Inspecting:\n`, elements)
+    return elements
+  }
+
+  const addObservers = (nodeList) => {
+    if (nodeList.size === 0) return
+
+    consoleEvent('addObservers')
+
+    const elements = getCombinedElementLists(nodeList)
+
+    overflowObserver.attachObservers(elements)
+    resizeObserver.attachObserverToNonStaticElements(elements)
 
     endAutoGroup()
   }
 
-  const removeObservers = (removedNodes) => () => {
-    if (removedNodes.size === 0) return
-
-    let removeOverflowCount = 0
-    let removeResizeCount = 0
+  const removeObservers = (nodeList) => {
+    if (nodeList.size === 0) return
 
     consoleEvent('removeObservers')
-    log(removedNodes)
 
-    for (const node of removedNodes) {
-      const elements = getAllElements(node)()
-      removeOverflowCount += overflowObserver.detachObservers(elements)
-      removeResizeCount += resizeObserver.detachObservers(elements)
-    }
+    const elements = getCombinedElementLists(nodeList)
 
-    logRemoveOverflow(removeOverflowCount)
-    logRemoveResize(removeResizeCount)
+    overflowObserver.detachObservers(elements)
+    resizeObserver.detachObservers(elements)
 
     endAutoGroup()
   }
@@ -1016,8 +1002,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     checkOverflow()
     endAutoGroup()
 
-    setTimeout(removeObservers(new Set(removedNodes.values())))
-    setTimeout(addObservers(new Set(addedNodes.values())))
+    removeObservers(removedNodes)
+    addObservers(addedNodes)
   }
 
   function mutationObserved(mutations) {
@@ -1026,7 +1012,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   function attachObservers() {
-    const nodeList = getAllElements(document.documentElement)()
+    const nodeList = getAllElements(document.documentElement)
 
     log('Attaching Observers')
     createMutationObserver(mutationObserved)
@@ -1051,7 +1037,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       ? taggedElements
       : hasOverflow
         ? overflowedNodeList
-        : getAllElements(document)() // We should never get here, but just in case
+        : getAllElements(document) // We should never get here, but just in case
 
     for (const element of targetElements) {
       elVal =
@@ -1088,7 +1074,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   const addNot = (tag) => `:not(${tag})`
 
-  const getAllElements = (node) => () => [
+  const getAllElements = (node) => [
     node,
     ...node.querySelectorAll(`* ${[...IGNORE_TAGS].map(addNot).join('')}`),
   ]

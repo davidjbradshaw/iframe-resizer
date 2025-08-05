@@ -1,37 +1,48 @@
-import { debug, info } from '../console'
-import { createDetachObservers, createWarnAlreadyObserved } from './utils'
+import { info } from '../console'
+import {
+  createDetachObservers,
+  createLogCounter,
+  createLogNewlyObserved,
+  createWarnAlreadyObserved,
+} from './utils'
 
-const warningAlreadyObserved = createWarnAlreadyObserved('ResizeObserver')
+const RESIZE = 'Resize'
+const logAddResize = createLogCounter(RESIZE)
+const logRemoveResize = createLogCounter(RESIZE, false)
+const logNewlyObserved = createLogNewlyObserved(RESIZE)
+const warnAlreadyObserved = createWarnAlreadyObserved(RESIZE)
 const observed = new WeakSet()
 
 let observer
 
 export function attachObserverToNonStaticElements(nodeList) {
   const alreadyObserved = new Set()
+  const newlyObserved = new Set()
   let counter = 0
 
   for (const node of nodeList) {
-    const isObservable = node.nodeType === Node.ELEMENT_NODE
-    const isObserved = observed.has(node)
-
-    if (!isObservable) continue
+    if (node.nodeType !== Node.ELEMENT_NODE) continue
 
     const position = getComputedStyle(node)?.position
     if (position === '' || position === 'static') continue
 
-    if (isObserved) {
+    if (observed.has(node)) {
       alreadyObserved.add(node)
       continue
     }
-    debug(`Observing resize on:`, node)
+
     observer.observe(node)
     observed.add(node)
+    newlyObserved.add(node)
     counter += 1
   }
 
-  warningAlreadyObserved(alreadyObserved)
+  warnAlreadyObserved(alreadyObserved)
+  logNewlyObserved(newlyObserved)
+  logAddResize(counter)
 
-  return counter
+  newlyObserved.clear()
+  alreadyObserved.clear()
 }
 
 export default (callback) => {
@@ -42,6 +53,11 @@ export default (callback) => {
 
   return {
     attachObserverToNonStaticElements,
-    detachObservers: createDetachObservers('Resize', observer, observed),
+    detachObservers: createDetachObservers(
+      RESIZE,
+      observer,
+      observed,
+      logRemoveResize,
+    ),
   }
 }

@@ -1,9 +1,17 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
-import { debug } from '../console'
-import { createDetachObservers, createWarnAlreadyObserved } from './utils'
+import {
+  createDetachObservers,
+  createLogCounter,
+  createLogNewlyObserved,
+  createWarnAlreadyObserved,
+} from './utils'
 
-const warningAlreadyObserved = createWarnAlreadyObserved('OverflowObserver')
+const OVERFLOW = 'Overflow'
+const logAddOverflow = createLogCounter(OVERFLOW)
+const logRemoveOverflow = createLogCounter(OVERFLOW, false)
+const logNewlyObserved = createLogNewlyObserved(OVERFLOW)
+const warnAlreadyObserved = createWarnAlreadyObserved(OVERFLOW)
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -42,31 +50,38 @@ const createOverflowObserver = (callback, options) => {
 
   function attachObservers(nodeList) {
     const alreadyObserved = new Set()
+    const newlyObserved = new Set()
     let counter = 0
 
     for (const node of nodeList) {
-      const isObservable = node.nodeType === Node.ELEMENT_NODE
-      const isObserved = observed.has(node)
-
-      if (!isObservable) continue
-      if (isObserved) {
+      if (node.nodeType !== Node.ELEMENT_NODE) continue
+      if (observed.has(node)) {
         alreadyObserved.add(node)
         continue
       }
 
-      debug(`Observing overflow on:`, node)
       observer.observe(node)
       observed.add(node)
+      newlyObserved.add(node)
       counter += 1
     }
 
-    warningAlreadyObserved(alreadyObserved)
-    return counter
+    warnAlreadyObserved(alreadyObserved)
+    logNewlyObserved(newlyObserved)
+    logAddOverflow(counter)
+
+    newlyObserved.clear()
+    alreadyObserved.clear()
   }
 
   return {
     attachObservers,
-    detachObservers: createDetachObservers('Overflow', observer, observed),
+    detachObservers: createDetachObservers(
+      OVERFLOW,
+      observer,
+      observed,
+      logRemoveOverflow,
+    ),
   }
 }
 
