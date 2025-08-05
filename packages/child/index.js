@@ -966,7 +966,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     }
 
     info(`Inspecting:\n`, elements)
-    return Array.from(elements)
+    return elements
   }
 
   const addObservers = (nodeList) => {
