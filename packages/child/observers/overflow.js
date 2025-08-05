@@ -3,7 +3,7 @@ import { id } from '../../common/utils'
 import { debug } from '../console'
 import { createDetachObservers, createWarnAlreadyObserved } from './utils'
 
-const warningAlreadyObserved = createWarnAlreadyObserved('OverflowObserver')
+const warnAlreadyObserved = createWarnAlreadyObserved('OverflowObserver')
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -45,11 +45,8 @@ const createOverflowObserver = (callback, options) => {
     let counter = 0
 
     for (const node of nodeList) {
-      const isObservable = node.nodeType === Node.ELEMENT_NODE
-      const isObserved = observed.has(node)
-
-      if (!isObservable) continue
-      if (isObserved) {
+      if (node.nodeType !== Node.ELEMENT_NODE) continue
+      if (observed.has(node)) {
         alreadyObserved.add(node)
         continue
       }
@@ -60,7 +57,7 @@ const createOverflowObserver = (callback, options) => {
       counter += 1
     }
 
-    warningAlreadyObserved(alreadyObserved)
+    warnAlreadyObserved(alreadyObserved)
     return counter
   }
 

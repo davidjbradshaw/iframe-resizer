@@ -1,6 +1,6 @@
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
-import { debug, info, warn } from '../console'
+import { debug, error, info } from '../console'
 
 export const createLogCounter =
   (type, isAttach = true) =>
@@ -31,8 +31,8 @@ export const createDetachObservers =
 
 export const createWarnAlreadyObserved = (type) => (alreadyObserved) => {
   if (alreadyObserved.size > 0) {
-    warn(
-      `${type} already attached to the following elements, skipping:\n\n`,
+    error(
+      `${type} already attached to the following elements:\n`,
       Array.from(alreadyObserved).flatMap((node) => ['\n', node]),
     )
   }
