@@ -2,7 +2,7 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { IGNORE_ATTR, IGNORE_TAGS, SIZE_ATTR } from '../../common/consts'
 import { round } from '../../common/utils'
-import { event, info, log } from '../console'
+import { debug, event, info, log } from '../console'
 
 const DELAY = 16 // Corresponds to 60fps
 const DELAY_MARGIN = 2
@@ -37,6 +37,7 @@ function addedMutation(mutation) {
   for (const node of added) {
     if (shouldSkip(node)) continue
     addedNodes.add(node)
+    debug(`Added:`, node)
   }
 }
 
@@ -47,8 +48,10 @@ function removedMutation(mutation) {
     if (shouldSkip(node)) continue
     if (addedNodes.has(node)) {
       addedNodes.delete(node)
+      debug(`Removed (Added):`, node)
     } else {
       removedNodes.add(node)
+      debug(`Removed (Page):`, node)
     }
   }
 }
@@ -107,6 +110,7 @@ const createProcessMutations = (callback) => () => {
   pending = false
 
   logMutations()
+
   callback({ addedNodes, removedNodes })
 
   addedNodes.clear()
