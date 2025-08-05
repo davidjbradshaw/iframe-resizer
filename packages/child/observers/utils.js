@@ -38,9 +38,10 @@ export const createLogCounter =
     }
   }
 
-export const createDetachObservers =
-  (type, observer, observed, logCounter) => (nodeList) => {
-    const logNewlyRemoved = createLogNewlyRemoved(type)
+export const createDetachObservers = (type, observer, observed, logCounter) => {
+  const logNewlyRemoved = createLogNewlyRemoved(type)
+
+  return (nodeList) => {
     const newlyRemoved = new Set()
     let counter = 0
 
@@ -56,3 +57,4 @@ export const createDetachObservers =
     logCounter(counter)
     newlyRemoved.clear()
   }
+}
