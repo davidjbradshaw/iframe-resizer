@@ -2,6 +2,30 @@ import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
 import { debug, error, info } from '../console'
 
+export const metaCreateLogObserved =
+  (consoleType, text = '') =>
+  (type) =>
+  (observed) => {
+    if (observed.size > 0) {
+      consoleType(
+        `${type}Observer ${text}:`,
+        ...Array.from(observed).flatMap((node) => ['\n', node]),
+      )
+    }
+  }
+
+export const createLogNewlyObserved = metaCreateLogObserved(
+  debug,
+  'attached to',
+)
+
+export const createWarnAlreadyObserved = metaCreateLogObserved(
+  error,
+  'already attached',
+)
+
+const createLogNewlyRemoved = metaCreateLogObserved(info, 'detached from')
+
 export const createLogCounter =
   (type, isAttach = true) =>
   (counter) => {
@@ -15,27 +39,20 @@ export const createLogCounter =
   }
 
 export const createDetachObservers =
-  (type, observer, observed) => (nodeList) => {
+  (type, observer, observed, logCounter) => (nodeList) => {
+    const logNewlyRemoved = createLogNewlyRemoved(type)
+    const newlyRemoved = new Set()
     let counter = 0
 
     for (const node of nodeList) {
       if (!observed.has(node)) continue
-      debug(`Detaching ${type}Observer from:`, node)
       observer.unobserve(node)
       observed.delete(node)
+      newlyRemoved.add(node)
       counter += 1
     }
 
-    return counter
+    logNewlyRemoved(newlyRemoved)
+    logCounter(counter)
+    newlyRemoved.clear()
   }
-
-export const createWarnAlreadyObserved = (type) => (alreadyObserved) => {
-  if (alreadyObserved.size > 0) {
-    error(
-      `${type} already attached to the following elements:\n`,
-      Array.from(alreadyObserved).flatMap((node) => ['\n', node]),
-    )
-  }
-
-  alreadyObserved.clear()
-}

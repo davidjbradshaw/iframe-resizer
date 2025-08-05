@@ -3,13 +3,16 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 import { IGNORE_ATTR, IGNORE_TAGS, SIZE_ATTR } from '../../common/consts'
 import { round } from '../../common/utils'
 import { debug, event, info, log } from '../console'
+import { metaCreateLogObserved } from './utils'
 
 const DELAY = 16 // Corresponds to 60fps
 const DELAY_MARGIN = 2
 const DELAY_MAX = 200
+const MUTATION = 'Mutation'
 
 const addedNodes = new Set()
 const removedNodes = new Set()
+const removedAddedNodes = new Set()
 const newMutations = []
 
 const config = {
@@ -27,6 +30,13 @@ let processMutations
 let pending = false
 let perfMon = 0
 
+const logAdded = metaCreateLogObserved(debug, 'added')(MUTATION)
+const logRemovedPage = metaCreateLogObserved(debug, 'removed (page)')(MUTATION)
+const logRemovedAdded = metaCreateLogObserved(
+  debug,
+  'removed (added)',
+)(MUTATION)
+
 const shouldSkip = (node) =>
   node.nodeType !== Node.ELEMENT_NODE ||
   IGNORE_TAGS.has(node.tagName.toLowerCase())
@@ -37,7 +47,6 @@ function addedMutation(mutation) {
   for (const node of added) {
     if (shouldSkip(node)) continue
     addedNodes.add(node)
-    debug(`Added:`, node)
   }
 }
 
@@ -48,10 +57,9 @@ function removedMutation(mutation) {
     if (shouldSkip(node)) continue
     if (addedNodes.has(node)) {
       addedNodes.delete(node)
-      debug(`Removed (Added):`, node)
+      removedAddedNodes.add(node)
     } else {
       removedNodes.add(node)
-      debug(`Removed (Page):`, node)
     }
   }
 }
@@ -63,6 +71,11 @@ const flatFilterMutations = (mutations) => {
     addedMutation(mutation)
     removedMutation(mutation)
   }
+
+  logAdded(addedNodes)
+  logRemovedPage(removedNodes)
+  logRemovedAdded(removedAddedNodes)
+  removedAddedNodes.clear()
 }
 
 function logMutations() {
