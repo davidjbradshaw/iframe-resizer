@@ -958,23 +958,23 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
-  const getCombinedElementLists = (nodeLists) => {
+  const getCombinedElementLists = (nodeList) => {
     const elements = new Set()
 
-    for (const nodeList of nodeLists) {
-      for (const element of getAllElements(nodeList)) elements.add(element)
+    for (const node of nodeList) {
+      for (const element of getAllElements(node)) elements.add(element)
     }
 
     info(`Inspecting:\n`, elements)
     return Array.from(elements)
   }
 
-  const addObservers = (nodeLists) => {
-    if (nodeLists.size === 0) return
+  const addObservers = (nodeList) => {
+    if (nodeList.size === 0) return
 
     consoleEvent('addObservers')
 
-    const elements = getCombinedElementLists(nodeLists)
+    const elements = getCombinedElementLists(nodeList)
 
     overflowObserver.attachObservers(elements)
     resizeObserver.attachObserverToNonStaticElements(elements)
@@ -982,12 +982,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     endAutoGroup()
   }
 
-  const removeObservers = (nodeLists) => {
-    if (nodeLists.size === 0) return
+  const removeObservers = (nodeList) => {
+    if (nodeList.size === 0) return
 
     consoleEvent('removeObservers')
 
-    const elements = getCombinedElementLists(nodeLists)
+    const elements = getCombinedElementLists(nodeList)
 
     overflowObserver.detachObservers(elements)
     resizeObserver.detachObservers(elements)
