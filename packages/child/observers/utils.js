@@ -1,6 +1,6 @@
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
-import { info } from '../console'
+import { debug, info, warn } from '../console'
 
 export const createLogCounter =
   (type, isAttach = true) =>
@@ -20,6 +20,7 @@ export const createDetachObservers =
 
     for (const node of nodeList) {
       if (!observed.has(node)) continue
+      debug(`Detaching ${type}Observer from:`, node)
       observer.unobserve(node)
       observed.delete(node)
       counter += 1
@@ -27,3 +28,14 @@ export const createDetachObservers =
 
     return counter
   }
+
+export const createWarnAlreadyObserved = (type) => (alreadyObserved) => {
+  if (alreadyObserved.size > 0) {
+    warn(
+      `${type} already attached to the following elements, skipping:\n\n`,
+      Array.from(alreadyObserved).flatMap((node) => ['\n', node]),
+    )
+  }
+
+  alreadyObserved.clear()
+}

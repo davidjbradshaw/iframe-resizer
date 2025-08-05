@@ -928,7 +928,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     if (overflowedNodeList.length > 1)
       info('Overflowed Elements:', ...overflowedNodeList)
-    else if (!hasOverflow) info('Overflow removed')
+    else if (!hasOverflow) info('No overflow detected')
 
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
@@ -966,22 +966,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
-  function contentMutated({ addedNodes, removedNodes }) {
-    consoleEvent('contentMutated')
-    applySelectors()
-    checkAndSetupTags()
-    checkOverflow()
+  const addObservers = (addedNodes) => () => {
+    if (addedNodes.size === 0) return
 
     let addOverflowCount = 0
-    let removeOverflowCount = 0
     let addResizeCount = 0
-    let removeResizeCount = 0
 
-    for (const node of removedNodes) {
-      const elements = getAllElements(node)()
-      removeOverflowCount += overflowObserver.detachObservers(elements)
-      removeResizeCount += resizeObserver.detachObservers(elements)
-    }
+    consoleEvent('addObservers')
+    log(addedNodes)
 
     for (const node of addedNodes) {
       const elements = getAllElements(node)()
@@ -990,12 +982,42 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         resizeObserver.attachObserverToNonStaticElements(elements)
     }
 
-    logRemoveOverflow(removeOverflowCount)
-    logRemoveResize(removeResizeCount)
     logAddOverflow(addOverflowCount)
     logAddResize(addResizeCount)
 
     endAutoGroup()
+  }
+
+  const removeObservers = (removedNodes) => () => {
+    if (removedNodes.size === 0) return
+
+    let removeOverflowCount = 0
+    let removeResizeCount = 0
+
+    consoleEvent('removeObservers')
+    log(removedNodes)
+
+    for (const node of removedNodes) {
+      const elements = getAllElements(node)()
+      removeOverflowCount += overflowObserver.detachObservers(elements)
+      removeResizeCount += resizeObserver.detachObservers(elements)
+    }
+
+    logRemoveOverflow(removeOverflowCount)
+    logRemoveResize(removeResizeCount)
+
+    endAutoGroup()
+  }
+
+  function contentMutated({ addedNodes, removedNodes }) {
+    consoleEvent('contentMutated')
+    applySelectors()
+    checkAndSetupTags()
+    checkOverflow()
+    endAutoGroup()
+
+    setTimeout(removeObservers(new Set(removedNodes.values())))
+    setTimeout(addObservers(new Set(addedNodes.values())))
   }
 
   function mutationObserved(mutations) {

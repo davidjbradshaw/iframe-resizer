@@ -1,7 +1,9 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
-import { assert } from '../console'
-import { createDetachObservers } from './utils'
+import { debug } from '../console'
+import { createDetachObservers, createWarnAlreadyObserved } from './utils'
+
+const warningAlreadyObserved = createWarnAlreadyObserved('OverflowObserver')
 
 const isHidden = (node) =>
   node.hidden || node.offsetParent === null || node.style.display === 'none'
@@ -39,6 +41,7 @@ const createOverflowObserver = (callback, options) => {
   const observed = new WeakSet()
 
   function attachObservers(nodeList) {
+    const alreadyObserved = new Set()
     let counter = 0
 
     for (const node of nodeList) {
@@ -46,14 +49,18 @@ const createOverflowObserver = (callback, options) => {
       const isObserved = observed.has(node)
 
       if (!isObservable) continue
-      assert(!isObserved, 'Node already observed for overflow', node)
-      if (isObserved) continue
+      if (isObserved) {
+        alreadyObserved.add(node)
+        continue
+      }
 
+      debug(`Observing overflow on:`, node)
       observer.observe(node)
       observed.add(node)
       counter += 1
     }
 
+    warningAlreadyObserved(alreadyObserved)
     return counter
   }
 

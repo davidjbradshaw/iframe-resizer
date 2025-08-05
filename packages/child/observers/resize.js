@@ -1,12 +1,15 @@
-import { assert, info } from '../console'
-import { createDetachObservers } from './utils'
+import { debug, info } from '../console'
+import { createDetachObservers, createWarnAlreadyObserved } from './utils'
 
+const warningAlreadyObserved = createWarnAlreadyObserved('ResizeObserver')
 const observed = new WeakSet()
 
 let observer
 
 export function attachObserverToNonStaticElements(nodeList) {
+  const alreadyObserved = new Set()
   let counter = 0
+
   for (const node of nodeList) {
     const isObservable = node.nodeType === Node.ELEMENT_NODE
     const isObserved = observed.has(node)
@@ -16,13 +19,17 @@ export function attachObserverToNonStaticElements(nodeList) {
     const position = getComputedStyle(node)?.position
     if (position === '' || position === 'static') continue
 
-    assert(!isObserved, 'Node already observed for resize', node)
-    if (isObserved) continue
-
+    if (isObserved) {
+      alreadyObserved.add(node)
+      continue
+    }
+    debug(`Observing resize on:`, node)
     observer.observe(node)
     observed.add(node)
     counter += 1
   }
+
+  warningAlreadyObserved(alreadyObserved)
 
   return counter
 }
