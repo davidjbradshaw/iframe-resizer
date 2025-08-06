@@ -2,29 +2,36 @@ import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
 import { debug, error, info } from '../console'
 
-export const metaCreateLogObserved =
-  (consoleType, text = '') =>
+export const metaCreateDebugObserved =
+  (text = '') =>
   (type) =>
   (observed) => {
     if (observed.size > 0) {
-      consoleType(
+      debug(
         `${type}Observer ${text}:`,
         ...Array.from(observed).flatMap((node) => ['\n', node]),
       )
     }
   }
 
-export const createLogNewlyObserved = metaCreateLogObserved(
-  debug,
-  'attached to',
-)
+export const metaCreateErrorObserved =
+  (text = '') =>
+  (type) =>
+  (observed) => {
+    if (observed.size > 0) {
+      error(
+        `${type}Observer ${text}:`,
+        ...Array.from(observed).flatMap((node) => ['\n', node]),
+      )
+    }
+  }
 
-export const createWarnAlreadyObserved = metaCreateLogObserved(
-  error,
-  'already attached',
-)
+export const createLogNewlyObserved = metaCreateDebugObserved('attached to')
 
-const createLogNewlyRemoved = metaCreateLogObserved(info, 'detached from')
+export const createWarnAlreadyObserved =
+  metaCreateErrorObserved('already attached')
+
+const createLogNewlyRemoved = metaCreateDebugObserved('detached from')
 
 export const createLogCounter =
   (type, isAttach = true) =>

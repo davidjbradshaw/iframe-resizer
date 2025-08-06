@@ -2,8 +2,8 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { IGNORE_ATTR, IGNORE_TAGS, SIZE_ATTR } from '../../common/consts'
 import { round } from '../../common/utils'
-import { debug, event, info, log } from '../console'
-import { metaCreateLogObserved } from './utils'
+import { event, info, log } from '../console'
+import { metaCreateDebugObserved } from './utils'
 
 const DELAY = 16 // Corresponds to 60fps
 const DELAY_MARGIN = 2
@@ -30,12 +30,9 @@ let processMutations
 let pending = false
 let perfMon = 0
 
-const logAdded = metaCreateLogObserved(debug, 'added')(MUTATION)
-const logRemovedPage = metaCreateLogObserved(debug, 'removed (page)')(MUTATION)
-const logRemovedAdded = metaCreateLogObserved(
-  debug,
-  'removed (added)',
-)(MUTATION)
+const logAdded = metaCreateDebugObserved('added')(MUTATION)
+const logRemovedPage = metaCreateDebugObserved('removed (page)')(MUTATION)
+const logRemovedAdded = metaCreateDebugObserved('removed (added)')(MUTATION)
 
 const shouldSkip = (node) =>
   node.nodeType !== Node.ELEMENT_NODE ||
