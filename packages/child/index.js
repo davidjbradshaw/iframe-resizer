@@ -1037,7 +1037,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       ? taggedElements
       : hasOverflow
         ? overflowedNodeList
-        : getAllElements(document) // We should never get here, but just in case
+        : getAllElements(document.documentElement) // Width resizing may need to check all elements
 
     for (const element of targetElements) {
       elVal =
