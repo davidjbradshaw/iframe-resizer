@@ -1,5 +1,5 @@
-<br><p>
-[<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">](https://iframe-resizer.com)
+<br><p align="center">
+[<img src="https://iframe-resizer.com/logo-full.svg" alt="iframe-reizer" title="" width="90%" style="max-width:90%;margin-bottom: -20px">](https://iframe-resizer.com)
 </p><br>
  <!--
 [![npm version](https://badge.fury.io/js/@iframe-resizer%2Fcore.svg)](https://badge.fury.io/js/@iframe-resizer%2Fparent)
