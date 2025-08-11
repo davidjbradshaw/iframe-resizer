@@ -1,6 +1,7 @@
 #! /bin/bash
 
 VERSION=`node bin/getVersion.js  2>/dev/null`
+YEAR=`date +%Y`
 
 if [ -z "$1" ]; then
     echo "Build type not specified"
@@ -71,3 +72,4 @@ git push --tags
 echo "Updating iframe-resizer.com"
 cp -v js/* ../docs/public/js
 echo "export default '$VERSION'" > ../docs/src/components/version.js
+echo "export default '$YEAR'" > ../docs/src/components/year.js
