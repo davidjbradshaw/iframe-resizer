@@ -1,7 +1,7 @@
 #! /bin/bash
 
 VERSION=`node bin/getVersion.js  2>/dev/null`
-YEAR=`date +%Y`
+YEAR=`date +%y`
 
 if [ -z "$1" ]; then
     echo "Build type not specified"
