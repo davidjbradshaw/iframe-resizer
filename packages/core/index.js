@@ -643,7 +643,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function initFromIframe(iframeId) {
-    if (settings[iframeId].loaded ) return
+    if (settings[iframeId].loaded) return
     trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
