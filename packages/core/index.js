@@ -643,7 +643,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function initFromIframe(iframeId) {
-    if (settings[iframeId].loaded) return
+    if (settings[iframeId].loaded ) return
     trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
@@ -678,6 +678,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
     if (!isMessageFromMetaParent()) {
       log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
+      settings[iframeId].loaded = true
       settings[iframeId].ready = true
 
       if (checkIframeExists() && isMessageFromIframe()) {
@@ -1055,10 +1056,8 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
     if (waitForLoad === true) return
 
-    // setTimeout(() => {
     trigger(INIT, `${msg}:${setup}`, id)
     warnOnNoResponse(id, settings)
-    // })
   }
 
   function checkOptions(options) {
