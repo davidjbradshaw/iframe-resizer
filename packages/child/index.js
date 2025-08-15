@@ -1073,10 +1073,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     dimension.boundingClientRect(),
   ]
 
-  const addNot = (tag) => `:not(${tag})`
-
-  const getAllElements = (node) =>
-    node.querySelectorAll(`* ${[...IGNORE_TAGS].map(addNot).join('')}`)
+  const addNot = (tagName) => `:not(${tagName})`
+  const selector = `* ${[...IGNORE_TAGS].map(addNot).join('')}`
+  const getAllElements = (node) => node.querySelectorAll(selector)
 
   function getOffsetSize(getDimension) {
     const offset = getDimension.getOffset()
