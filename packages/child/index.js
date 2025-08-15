@@ -1580,9 +1580,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   // Normally the parent kicks things off when it detects the iFrame has loaded.
   // If this script is async-loaded, then tell parent page to retry init.
-  function chkLateLoaded() {
-    if (document.readyState !== 'loading') {
-      window.parent.postMessage('[iFrameResizerChild]Ready', '*')
+  function checkLateLoaded() {
+    if (document.readyState !== 'loading' && !firstRun) {
+      log('[iFrameResizerChild]Ready')
+      window.parent.postMessage(`[iFrameResizerChild]Ready`, '*')
     }
   }
 
@@ -1593,9 +1594,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       setTimeout(() => received({ data, sameOrigin: true }))
 
     addEventListener(window, 'message', received)
-    addEventListener(window, 'readystatechange', chkLateLoaded)
+    addEventListener(window, 'readystatechange', checkLateLoaded)
 
-    chkLateLoaded()
+    setTimeout(checkLateLoaded)
   }
 
   /* TEST CODE START */
