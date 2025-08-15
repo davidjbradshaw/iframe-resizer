@@ -71,6 +71,7 @@ export const LOG_OPTIONS = Object.freeze({
 
 export const IGNORE_TAGS = new Set([
   'head',
+  'body',
   'meta',
   'base',
   'title',
