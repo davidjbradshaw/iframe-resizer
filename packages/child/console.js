@@ -27,6 +27,7 @@ export const setupConsoleMethod =
 
 export const log = setupConsoleMethod('log')
 export const info = log // setupConsoleMethod('info')
+export const debug = setupConsoleMethod('debug')
 
 export function vInfo(ver, mode) {
   // eslint-disable-next-line no-console
@@ -38,7 +39,6 @@ export function vInfo(ver, mode) {
 
 export const {
   assert,
-  debug,
   endAutoGroup,
   error,
   errorBoundary,
