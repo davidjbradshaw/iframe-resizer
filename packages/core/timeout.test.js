@@ -1,10 +1,11 @@
 import { jest } from '@jest/globals'
 
-import { advise } from './console'
+import { advise, event } from './console'
 import warnOnNoResponse from './timeout'
 
 jest.mock('./console', () => ({
   advise: jest.fn(),
+  event: jest.fn(),
 }))
 
 describe('warnOnNoResponse', () => {
@@ -41,9 +42,11 @@ describe('warnOnNoResponse', () => {
     warnOnNoResponse('iframe1', settings)
     jest.runAllTimers() // Fast-forward all timers
 
+    expect(event).toHaveBeenCalledWith('iframe1', 'noResponse')
+
     expect(advise).toHaveBeenCalledWith(
       'iframe1',
-      expect.stringContaining('No response from iframe'), // Updated to match actual string
+      expect.stringContaining('No response from iframe'),
     )
 
     expect(advise).toHaveBeenCalledWith(
