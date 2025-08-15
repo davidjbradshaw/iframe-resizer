@@ -50,7 +50,8 @@ export default function warnOnNoResponse(id, settings) {
 
   const { msgTimeout, warningTimeout } = settings[id]
 
-  if (msgTimeout || !warningTimeout) return
+  if (!warningTimeout) return
+  if (msgTimeout) clearTimeout(msgTimeout)
 
   settings[id].msgTimeout = setTimeout(warning, warningTimeout)
 }
