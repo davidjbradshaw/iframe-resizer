@@ -70,7 +70,6 @@ export const LOG_OPTIONS = Object.freeze({
 })
 
 export const IGNORE_TAGS = new Set([
-  'html',
   'head',
   'body',
   'meta',
