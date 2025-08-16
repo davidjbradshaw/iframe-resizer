@@ -11,6 +11,7 @@ import {
   IGNORE_TAGS,
   INIT,
   MANUAL_RESIZE_REQUEST,
+  MIN_SIZE,
   MUTATION_OBSERVER,
   NO_CHANGE,
   NONE,
@@ -1272,7 +1273,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     const newSize = direction[mode]()
     return direction.enabled() && onBeforeResize !== undefined
       ? callOnBeforeResize(newSize)
-      : newSize
+      : newSize || MIN_SIZE
   }
 
   function sizeIframe(
@@ -1297,7 +1298,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     switch (updateEvent) {
       case INIT:
-        if (newHeight === 0 && newWidth === 0) return // hidden
+        if (newHeight === MIN_SIZE && newWidth === MIN_SIZE) {
+          info('Iframe hidden - Ignored initial resize request')
+          endAutoGroup()
+          return
+        }
       // eslint-disable-next-line no-fallthrough
       case ENABLE:
       case SIZE_CHANGE_DETECTED:
