@@ -1366,7 +1366,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       rafId = requestAnimationFrame(() => {
         sendPending = false
         consoleEvent('requestAnimationFrame')
-        debug('Send pending reset:', triggerEvent)
+        debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
       })
 
       sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
