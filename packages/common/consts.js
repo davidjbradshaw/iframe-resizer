@@ -3,6 +3,7 @@ export const LABEL = 'iframeResizer'
 
 export const BASE = 10
 export const SINGLE = 1
+export const MIN_SIZE = 1
 
 export const SIZE_ATTR = 'data-iframe-size'
 export const OVERFLOW_ATTR = 'data-iframe-overflowed'

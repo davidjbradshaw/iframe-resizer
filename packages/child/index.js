@@ -11,6 +11,7 @@ import {
   IGNORE_TAGS,
   INIT,
   MANUAL_RESIZE_REQUEST,
+  MIN_SIZE,
   MUTATION_OBSERVER,
   NO_CHANGE,
   NONE,
@@ -1270,9 +1271,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function getNewSize(direction, mode) {
     const newSize = direction[mode]()
-    return direction.enabled() && onBeforeResize !== undefined
-      ? callOnBeforeResize(newSize)
-      : newSize
+    return Math.max(
+      direction.enabled() && onBeforeResize !== undefined
+        ? callOnBeforeResize(newSize)
+        : newSize,
+      MIN_SIZE,
+    )
   }
 
   function sizeIframe(
