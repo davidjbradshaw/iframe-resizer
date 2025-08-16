@@ -1271,11 +1271,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
   function getNewSize(direction, mode) {
     const newSize = direction[mode]()
-    return Math.min(
-      (direction.enabled() && onBeforeResize !== undefined
+    return Math.max(
+      direction.enabled() && onBeforeResize !== undefined
         ? callOnBeforeResize(newSize)
         : newSize,
-      MIN_SIZE),
+      MIN_SIZE,
     )
   }
 
