@@ -18,6 +18,7 @@ import {
   OVERFLOW_OBSERVER,
   PARENT_RESIZE_REQUEST,
   RESIZE_OBSERVER,
+  RESUME_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
   SIZE_CHANGE_DETECTED,
@@ -68,6 +69,7 @@ import createPerformanceObserver, {
   PREF_START,
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
+import createResumeObserver from './observers/resume'
 import createVisibilityObserver from './observers/visibility'
 import { readFunction, readNumber, readString } from './read'
 
@@ -1297,6 +1299,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     switch (updateEvent) {
       case INIT:
+        if (newHeight === 0 && newWidth === 0) return // hidden
+      // eslint-disable-next-line no-fallthrough
       case ENABLE:
       case SIZE_CHANGE_DETECTED:
         // lockTrigger()
