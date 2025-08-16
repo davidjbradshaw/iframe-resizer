@@ -642,10 +642,14 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
+  function initFromIframe(iframeId) {
+    if (settings[iframeId].loaded) return
+    trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
+    warnOnNoResponse(iframeId, settings)
+  }
+
   function iFrameReadyMsgReceived() {
-    Object.keys(settings).forEach((iframeId) => {
-      trigger('iFrame requested init', createOutgoingMsg(iframeId), iframeId)
-    })
+    Object.keys(settings).forEach(initFromIframe)
   }
 
   function firstRun() {
@@ -675,6 +679,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     if (!isMessageFromMetaParent()) {
       log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
       settings[iframeId].loaded = true
+      settings[iframeId].ready = true
 
       if (checkIframeExists() && isMessageFromIframe()) {
         eventMsg()
@@ -1039,16 +1044,20 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   function init(msg) {
     function iFrameLoaded() {
       trigger(ONLOAD, `${msg}:${setup}`, id)
+      settings[id].loaded = true
+      warnOnNoResponse(id, settings)
       checkReset()
     }
 
     const { id } = iframe
     const { waitForLoad } = settings[id]
 
-    warnOnNoResponse(id, settings)
-
     addEventListener(iframe, 'load', iFrameLoaded)
-    if (waitForLoad === false) trigger(INIT, `${msg}:${setup}`, id)
+
+    if (waitForLoad === true) return
+
+    trigger(INIT, `${msg}:${setup}`, id)
+    warnOnNoResponse(id, settings)
   }
 
   function checkOptions(options) {
@@ -1098,7 +1107,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         )
     }
 
-    log(iframeId, `Direction: %c${direction}`, HIGHLIGHT)
+    log(iframeId, `direction: %c${direction}`, HIGHLIGHT)
   }
 
   function setOffsetSize(offset) {
@@ -1146,9 +1155,31 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
+  function checkWarningTimeout() {
+    if (!settings[iframeId].warningTimeout) {
+      info(iframeId, 'warningTimeout:%c disabled', HIGHLIGHT)
+    }
+  }
+
   const hasMouseEvents = (options) =>
     Object.hasOwn(options, 'onMouseEnter') ||
     Object.hasOwn(options, 'onMouseLeave')
+
+  function setTargetOrigin() {
+    settings[iframeId].targetOrigin =
+      settings[iframeId].checkOrigin === true
+        ? getTargetOrigin(settings[iframeId].remoteHost)
+        : '*'
+  }
+
+  function checkOffset(options) {
+    if (options?.offset) {
+      advise(
+        iframeId,
+        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+      )
+    }
+  }
 
   function processOptions(options) {
     settings[iframeId] = {
@@ -1170,20 +1201,10 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     consoleEvent(iframeId, 'setup')
     setDirection()
     setOffsetSize(options?.offsetSize || options?.offset)
-
-    if (options?.offset) {
-      advise(
-        iframeId,
-        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
-      )
-    }
-
+    checkOffset(options)
+    checkWarningTimeout()
     getPostMessageTarget()
-
-    settings[iframeId].targetOrigin =
-      settings[iframeId].checkOrigin === true
-        ? getTargetOrigin(settings[iframeId].remoteHost)
-        : '*'
+    setTargetOrigin()
   }
 
   function setupIframe(options) {

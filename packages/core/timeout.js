@@ -1,4 +1,4 @@
-import { advise } from './console'
+import { advise, event } from './console'
 
 function showWarning(id, settings) {
   const { iframe, waitForLoad } = settings[id]
@@ -10,6 +10,7 @@ function showWarning(id, settings) {
       sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin')
     )
 
+  event(id, 'noResponse')
   advise(
     id,
     `<rb>No response from iframe</>
@@ -37,18 +38,20 @@ export default function warnOnNoResponse(id, settings) {
   function warning() {
     if (settings[id] === undefined) return // iframe has been closed while we where waiting
 
-    const { loaded, loadErrorShown } = settings[id]
+    const { ready, loadErrorShown } = settings[id]
 
-    if (loaded) return
-    if (loadErrorShown) return
+    settings[id].msgTimeout = undefined
+
+    if (ready || loadErrorShown) return
 
     settings[id].loadErrorShown = true
     showWarning(id, settings)
   }
 
-  const { warningTimeout } = settings[id]
+  const { msgTimeout, warningTimeout } = settings[id]
 
-  if (warningTimeout === 0) return
+  if (!warningTimeout) return
+  if (msgTimeout) clearTimeout(msgTimeout)
 
   settings[id].msgTimeout = setTimeout(warning, warningTimeout)
 }
