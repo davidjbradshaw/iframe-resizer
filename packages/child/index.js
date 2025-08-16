@@ -18,7 +18,6 @@ import {
   OVERFLOW_OBSERVER,
   PARENT_RESIZE_REQUEST,
   RESIZE_OBSERVER,
-  RESUME_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
   SIZE_CHANGE_DETECTED,
@@ -69,7 +68,6 @@ import createPerformanceObserver, {
   PREF_START,
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
-import createResumeObserver from './observers/resume'
 import createVisibilityObserver from './observers/visibility'
 import { readFunction, readNumber, readString } from './read'
 
