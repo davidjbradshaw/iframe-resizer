@@ -1341,35 +1341,49 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
       consoleEvent(triggerEvent)
 
-      if (isHidden) {
-        if (hiddenMessageShown === true) return
-        log('Iframe hidden - Ignored resize request')
-        hiddenMessageShown = true
-        sendPending = false
-        cancelAnimationFrame(rafId)
-        return
+      switch (true) {
+        case isHidden === true: {
+          if (hiddenMessageShown === true) break
+          log('Iframe hidden - Ignored resize request')
+          hiddenMessageShown = true
+          sendPending = false
+          cancelAnimationFrame(rafId)
+          break
+        }
+
+        case sendPending === true: {
+          purge()
+          break // only update once per frame
+        }
+
+        case !autoResize && !(triggerEvent in IGNORE_DISABLE_RESIZE): {
+          info('Resizing disabled')
+          break
+        }
+
+        default: {
+          hiddenMessageShown = false
+          sendPending = true
+
+          rafId = requestAnimationFrame(() => {
+            sendPending = false
+            consoleEvent('requestAnimationFrame')
+            debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
+          })
+
+          sizeIframe(
+            triggerEvent,
+            triggerEventDesc,
+            customHeight,
+            customWidth,
+            msg,
+          )
+
+          return
+        }
       }
 
-      if (sendPending === true) {
-        purge()
-        return // only update once per frame
-      }
-
-      if (!autoResize && !(triggerEvent in IGNORE_DISABLE_RESIZE)) {
-        info('Resizing disabled')
-        endAutoGroup()
-        return
-      }
-
-      hiddenMessageShown = false
-      sendPending = true
-      rafId = requestAnimationFrame(() => {
-        sendPending = false
-        consoleEvent('requestAnimationFrame')
-        debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
-      })
-
-      sizeIframe(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+      endAutoGroup()
     },
   )
 
