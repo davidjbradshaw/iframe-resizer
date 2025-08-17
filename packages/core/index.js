@@ -1302,7 +1302,7 @@ function sendTriggerMsg(eventName, event) {
 function tabVisible() {
   if (document.hidden === false) {
     log('document', 'Trigger event: Visibility change')
-    sendTriggerMsg('Tab Visible', 'resize')
+    sendTriggerMsg('tabVisible', 'resize')
   }
 }
 
