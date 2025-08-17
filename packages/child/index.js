@@ -943,7 +943,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       case !hasOverflowUpdated:
         return
 
-      case overflowedNodeList.length > 1:
+      case overflowedNodeList.size > 1:
         info('Overflowed Elements:', ...overflowedNodeList)
         break
 
