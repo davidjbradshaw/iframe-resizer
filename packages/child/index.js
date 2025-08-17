@@ -1082,7 +1082,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   ]
 
   const addNot = (tagName) => `:not(${tagName})`
-  const selector = `* ${IGNORE_TAGS.map(addNot).join('')}`
+  const selector = `* ${Array.from(IGNORE_TAGS).map(addNot).join('')}`
   const getAllElements = (node) => node.querySelectorAll(selector)
 
   function getOffsetSize(getDimension) {
