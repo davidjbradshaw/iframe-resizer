@@ -1278,7 +1278,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
     if (returnedSize < MIN_SIZE) {
       throw new RangeError(
-        `Invalid value returned from onBeforeResize(): ${returnedSize}, must be at least ${MIN_SIZE}`,
+        `Out of range value returned from onBeforeResize(): ${returnedSize}, must be at least ${MIN_SIZE}`,
       )
     }
 
