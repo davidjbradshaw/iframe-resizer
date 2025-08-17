@@ -930,6 +930,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     overflowedNodeList = filterIgnoredElements(allOverflowedNodes)
 
     hasOverflow = overflowedNodeList.size > 0
+
     hasOverflowUpdated =
       overflowedNodeList.symmetricDifference(prevOverflowedNodeList).size > 0
 
