@@ -114,6 +114,7 @@ function iframeResizerChild() {
   let firstRun = true
   let hasIgnored = false
   let hasOverflow = false
+  let hasOverflowUpdated = false
   let hasTags = false
   let height = 1
   let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
@@ -901,24 +902,29 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     win.parentIFrame = win.parentIframe
   }
 
+  let prevOverflowedNodeList = new Set()
   function checkOverflow() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
     // Filter out elements that are descendants of elements with IGNORE_ATTR
-    overflowedNodeList = Array.from(allOverflowedNodes).filter(
-      (node) => !node.closest(`[${IGNORE_ATTR}]`),
+    overflowedNodeList = new Set(
+      Array.from(allOverflowedNodes).filter(
+        (node) => !node.closest(`[${IGNORE_ATTR}]`),
+      ),
     )
 
-    hasOverflow = overflowedNodeList.length > 0
+    hasOverflow = overflowedNodeList.size > 0
+    hasOverflowUpdated =
+      overflowedNodeList.symmetricDifference(prevOverflowedNodeList).size > 0
+
+    prevOverflowedNodeList = overflowedNodeList
   }
 
   function overflowObserved() {
-    const hadOverflow = hasOverflow
     checkOverflow()
-    const falsePositive = !hasOverflow && !hadOverflow
 
     switch (true) {
-      case falsePositive:
+      case !hasOverflowUpdated:
         return
 
       case overflowedNodeList.length > 1:
