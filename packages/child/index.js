@@ -44,7 +44,7 @@ import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
   adviser,
-  // assert,
+  assert,
   debug,
   deprecateMethod,
   deprecateMethodReplace,
@@ -530,10 +530,12 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
     }
   }
 
-  function checkCalcMode(calcMode, calcModeDefault, modes, type) {
+  function checkCalcMode(calcMode, calcModeDefault, modes) {
+    const { label } = modes
+
     if (calcModeDefault !== calcMode) {
       if (!(calcMode in modes)) {
-        warn(`${calcMode} is not a valid option for ${type}CalculationMethod.`)
+        warn(`${calcMode} is not a valid option for ${label}CalculationMethod.`)
         calcMode = calcModeDefault
       }
 
@@ -543,14 +545,14 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
           : "set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page."
 
         advise(
-          `<rb>Deprecated ${type}CalculationMethod (${calcMode})</>
+          `<rb>Deprecated ${label}CalculationMethod (${calcMode})</>
 
-This version of <i>iframe-resizer</> can auto detect the most suitable ${type} calculation method. It is recommended that you ${actionMsg}`,
+This version of <i>iframe-resizer</> can auto detect the most suitable ${label} calculation method. It is recommended that you ${actionMsg}`,
         )
       }
     }
 
-    log(`Set ${type} calculation method: %c${calcMode}`, HIGHLIGHT)
+    log(`Set ${label} calculation method: %c${calcMode}`, HIGHLIGHT)
     return calcMode
   }
 
@@ -559,17 +561,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       heightCalcMode,
       heightCalcModeDefault,
       getHeight,
-      'height',
     )
   }
 
   function checkWidthMode() {
-    widthCalcMode = checkCalcMode(
-      widthCalcMode,
-      widthCalcModeDefault,
-      getWidth,
-      'width',
-    )
+    widthCalcMode = checkCalcMode(widthCalcMode, widthCalcModeDefault, getWidth)
   }
 
   function checkMode() {
@@ -1040,7 +1036,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     const Side = capitalizeFirstLetter(side)
 
-    let elVal = 0
+    let elVal = MIN_SIZE
     let maxEl = document.documentElement
     let maxVal = hasTags
       ? 0
@@ -1118,11 +1114,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     function returnBoundingClientRect() {
       prevBoundingSize[dimension] = boundingSize
       prevScrollSize[dimension] = scrollSize
-      return boundingSize
+      return Math.max(boundingSize, MIN_SIZE)
     }
 
     const isHeight = getDimension === getHeight
-    const dimension = isHeight ? 'height' : 'width'
+    const dimension = getDimension.label
     const boundingSize = getDimension.boundingClientRect()
     const ceilBoundingSize = Math.ceil(boundingSize)
     const floorBoundingSize = Math.floor(boundingSize)
@@ -1133,7 +1129,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
 
     switch (true) {
       case !getDimension.enabled():
-        return scrollSize
+        return Math.max(scrollSize, MIN_SIZE)
 
       case hasTags:
         info(`Found element with data-iframe-size attribute`)
@@ -1141,6 +1137,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         break
 
       case !hasOverflow &&
+        firstRun &&
         prevBoundingSize[dimension] === 0 &&
         prevScrollSize[dimension] === 0:
         info(`Initial page size values: ${sizes}`, ...BOUNDING_FORMAT)
@@ -1154,7 +1151,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         calculatedSize = Math.max(boundingSize, scrollSize)
         break
 
-      case boundingSize === 0:
+      case boundingSize === 0 && scrollSize !== 0:
         info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
         calculatedSize = scrollSize
         break
@@ -1218,6 +1215,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   const getHeight = {
+    label: 'height',
     enabled: () => calculateHeight,
     getOffset: () => offsetHeight,
     auto: () => getAutoSize(getHeight),
@@ -1240,6 +1238,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
   }
 
   const getWidth = {
+    label: 'width',
     enabled: () => calculateWidth,
     getOffset: () => offsetWidth,
     auto: () => getAutoSize(getWidth),
@@ -1277,17 +1276,28 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
         `Invalid value returned from onBeforeResize(): ${returnedSize}, expected Number`,
       )
 
+    if (returnedSize < MIN_SIZE) {
+      throw new RangeError(
+        `Invalid value returned from onBeforeResize(): ${returnedSize}, must be at least ${MIN_SIZE}`,
+      )
+    }
+
     return returnedSize
   }
 
   function getNewSize(direction, mode) {
-    const newSize = direction[mode]()
-    return Math.max(
+    const calculatedSize = direction[mode]()
+    const newSize =
       direction.enabled() && onBeforeResize !== undefined
-        ? callOnBeforeResize(newSize)
-        : newSize,
-      MIN_SIZE,
+        ? callOnBeforeResize(calculatedSize)
+        : calculatedSize
+
+    assert(
+      newSize >= MIN_SIZE,
+      `New iframe ${direction.label} is too small: ${newSize}, must be at least ${MIN_SIZE}`,
     )
+
+    return newSize
   }
 
   function sizeIframe(
