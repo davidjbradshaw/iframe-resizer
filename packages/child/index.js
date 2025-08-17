@@ -924,14 +924,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
       case overflowedNodeList.length > 1:
         info('Overflowed Elements:', ...overflowedNodeList)
         break
-      
+
       case !hasOverflow && !hadOverflow:
         return
-      
+
       default:
         info('No overflow detected')
     }
-    
+
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
