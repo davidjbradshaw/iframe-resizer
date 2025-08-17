@@ -916,7 +916,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
     if (ignoredNodeList.size > 0) {
       consoleEvent('overflowIgnored')
-      info(`Ignoring overflowed elements:\n`, ignoredNodeList)
+      info(
+        `Ignoring elements with [data-iframe-ignore] > *:\n`,
+        ignoredNodeList,
+      )
       endAutoGroup()
     }
 
