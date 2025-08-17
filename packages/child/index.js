@@ -916,15 +916,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     hasOverflow = overflowedNodeList.length > 0
   }
 
-  function overflowObserved(mutated) {
+  function overflowObserved() {
+    const hadOverflow = hasOverflow
     checkOverflow()
 
-    if (!hasOverflow && !mutated) return
-
-    if (overflowedNodeList.length > 1)
-      info('Overflowed Elements:', ...overflowedNodeList)
-    else if (!hasOverflow) info('No overflow detected')
-
+    switch (true) {
+      case overflowedNodeList.length > 1:
+        info('Overflowed Elements:', ...overflowedNodeList)
+        break
+      
+      case !hasOverflow && !hadOverflow:
+        return
+      
+      default:
+        info('No overflow detected')
+    }
+    
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
   }
 
