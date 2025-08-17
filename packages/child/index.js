@@ -924,11 +924,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${type} c
     switch (true) {
       case falsePositive:
         return
-      
+
       case overflowedNodeList.length > 1:
         info('Overflowed Elements:', ...overflowedNodeList)
         break
-      
+
       case hasOverflow:
         break
 
