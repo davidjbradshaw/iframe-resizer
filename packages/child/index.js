@@ -902,16 +902,32 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     win.parentIFrame = win.parentIframe
   }
 
+  function filterIgnoredElements(nodeList) {
+    const filteredNodeList = new Set()
+    const ignoredNodeList = new Set()
+
+    for (const node of nodeList) {
+      if (node.closest(`[${IGNORE_ATTR}]`)) {
+        ignoredNodeList.add(node)
+      } else {
+        filteredNodeList.add(node)
+      }
+    }
+
+    if (ignoredNodeList.size > 0) {
+      consoleEvent('overflowIgnored')
+      info(`Ignoring elements:\n`, ignoredNodeList)
+      endAutoGroup()
+    }
+
+    return filteredNodeList
+  }
+
   let prevOverflowedNodeList = new Set()
   function checkOverflow() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
-    // Filter out elements that are descendants of elements with IGNORE_ATTR
-    overflowedNodeList = new Set(
-      Array.from(allOverflowedNodes).filter(
-        (node) => !node.closest(`[${IGNORE_ATTR}]`),
-      ),
-    )
+    overflowedNodeList = filterIgnoredElements(allOverflowedNodes)
 
     hasOverflow = overflowedNodeList.size > 0
     hasOverflowUpdated =
