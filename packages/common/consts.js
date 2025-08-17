@@ -70,7 +70,7 @@ export const LOG_OPTIONS = Object.freeze({
   [COLLAPSE]: 1,
 })
 
-export const IGNORE_TAGS = [
+export const IGNORE_TAGS = new Set([
   'head',
   'body',
   'meta',
@@ -87,4 +87,4 @@ export const IGNORE_TAGS = [
   'track',
   'wbr',
   'nobr',
-]
+])
