@@ -131,7 +131,7 @@ function iframeResizerChild() {
   let offsetHeight
   let offsetWidth
   let origin
-  let overflowedNodeList = []
+  let overflowedNodeSet = new Set()
   let overflowObserver
   let parentId = ''
   let resizeFrom = 'child'
@@ -926,18 +926,18 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     return filteredNodeList
   }
 
-  let prevOverflowedNodeList = new Set()
+  let prevOverflowedNodeSet = new Set()
   function checkOverflow() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
-    overflowedNodeList = filterIgnoredElements(allOverflowedNodes)
+    overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
 
-    hasOverflow = overflowedNodeList.size > 0
+    hasOverflow = overflowedNodeSet.size > 0
 
     hasOverflowUpdated =
-      overflowedNodeList.symmetricDifference(prevOverflowedNodeList).size > 0
+      overflowedNodeSet.symmetricDifference(prevOverflowedNodeSet).size > 0
 
-    prevOverflowedNodeList = overflowedNodeList
+    prevOverflowedNodeSet = overflowedNodeSet
   }
 
   function overflowObserved() {
@@ -947,8 +947,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       case !hasOverflowUpdated:
         return
 
-      case overflowedNodeList.size > 1:
-        info('Overflowed Elements:', ...overflowedNodeList)
+      case overflowedNodeSet.size > 1:
+        info('Overflowed Elements:', overflowedNodeSet)
         break
 
       case hasOverflow:
@@ -1071,7 +1071,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     const targetElements = hasTags
       ? taggedElements
       : hasOverflow
-        ? overflowedNodeList
+        ? Array.from(overflowedNodeSet)
         : getAllElements(document.documentElement) // Width resizing may need to check all elements
 
     for (const element of targetElements) {
