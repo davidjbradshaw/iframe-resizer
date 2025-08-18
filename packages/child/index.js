@@ -1355,7 +1355,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         width = newWidth
       // eslint-disable-next-line no-fallthrough
       case SET_OFFSET_SIZE:
-        sendMsg(height, width, triggerEvent, msg)
+        dispatchMessage(height, width, triggerEvent, msg)
         break
 
       // the following case needs {} to prevent a compile error
@@ -1425,8 +1425,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
             customWidth,
             msg,
           )
-
-          return
         }
       }
 
@@ -1467,6 +1465,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function sendMessage(height, width, triggerEvent, msg, targetOrigin) {
+    consoleEvent(triggerEvent)
+    dispatchMessage(height, width, triggerEvent, msg, targetOrigin)
+    endAutoGroup()
+  }
+
+  function dispatchMessage(height, width, triggerEvent, msg, targetOrigin) {
     if (mode < 0) return
 
     function setTargetOrigin() {
@@ -1485,7 +1489,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         : `Size calculated in %c${timer}ms`
     }
 
-    function sendToParent() {
+    function dispatchToParent() {
       const size = `${height}:${width}`
       const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
@@ -1508,10 +1512,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       )
     }
 
-    consoleEvent(triggerEvent)
     setTargetOrigin()
-    sendToParent()
-    endAutoGroup()
+    dispatchToParent()
   }
 
   const sendMsg = errorBoundary(sendMessage)
