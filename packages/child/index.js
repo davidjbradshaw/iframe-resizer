@@ -114,7 +114,7 @@ function iframeResizerChild() {
   let firstRun = true
   let hasIgnored = false
   let hasOverflow = false
-  let hasOverflowUpdated = false
+  let hasOverflowUpdated = true
   let hasTags = false
   let height = 1
   let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
@@ -931,8 +931,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
     hasOverflow = overflowedNodeSet.size > 0
 
-    hasOverflowUpdated =
-      overflowedNodeSet.symmetricDifference(prevOverflowedNodeSet).size > 0
+    // Not supported in Safari 16 (or esLint!!!)
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native
+    if (typeof Set.prototype.symmetricDifference === 'function')
+      hasOverflowUpdated =
+        overflowedNodeSet.symmetricDifference(prevOverflowedNodeSet).size > 0
 
     prevOverflowedNodeSet = overflowedNodeSet
   }
