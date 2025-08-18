@@ -903,27 +903,27 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function filterIgnoredElements(nodeList) {
-    const filteredNodeList = new Set()
-    const ignoredNodeList = new Set()
+    const filteredNodeSet = new Set()
+    const ignoredNodeSet = new Set()
 
     for (const node of nodeList) {
       if (node.closest(`[${IGNORE_ATTR}]`)) {
-        ignoredNodeList.add(node)
+        ignoredNodeSet.add(node)
       } else {
         filteredNodeList.add(node)
       }
     }
 
-    if (ignoredNodeList.size > 0) {
+    if (ignoredNodeSet.size > 0) {
       consoleEvent('overflowIgnored')
       info(
         `Ignoring elements with [data-iframe-ignore] > *:\n`,
-        ignoredNodeList,
+        ignoredNodeSet,
       )
       endAutoGroup()
     }
 
-    return filteredNodeList
+    return filteredNodeSet
   }
 
   let prevOverflowedNodeSet = new Set()
