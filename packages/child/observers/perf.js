@@ -44,6 +44,8 @@ function startTimingCheck() {
       // debug('Timings:', JSON.parse(JSON.stringify(timings.map(round))))
     }
 
+    performance.clearMarks()
+
     if (average <= THRESHOLD) return
 
     clearInterval(timingCheck)
