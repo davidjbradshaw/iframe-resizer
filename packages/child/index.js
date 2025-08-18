@@ -869,14 +869,14 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       },
 
       resize(customHeight, customWidth) {
-        if (customHeight)
+        if (customHeight !== undefined)
           typeAssert(
             customHeight,
             'number',
             'parentIframe.resize(customHeight, customWidth) customHeight',
           )
 
-        if (customWidth)
+        if (customWidth !== undefined)
           typeAssert(
             customWidth,
             'number',
