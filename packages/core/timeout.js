@@ -36,7 +36,7 @@ This message can be ignored if everything is working, or you can set the <b>warn
 
 export default function warnOnNoResponse(id, settings) {
   function warning() {
-    if (settings[id] === undefined) return // iframe has been closed while we where waiting
+    if (settings[id] === undefined) return // iframe has been closed while we were waiting
 
     const { ready, loadErrorShown } = settings[id]
 
