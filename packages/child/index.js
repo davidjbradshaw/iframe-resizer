@@ -910,7 +910,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       if (node.closest(`[${IGNORE_ATTR}]`)) {
         ignoredNodeSet.add(node)
       } else {
-        filteredNodeList.add(node)
+        filteredNodeSet.add(node)
       }
     }
 
