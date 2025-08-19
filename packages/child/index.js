@@ -545,7 +545,7 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
           ? 'remove this option.'
           : `set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page. This can be done on the child page by adding the following code:
           
-window,iframeResizer = {
+window.iframeResizer = {
   license: 'xxxx',
   ${label}CalculationMethod: 'auto',
 }
