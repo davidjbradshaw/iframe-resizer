@@ -1093,6 +1093,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     }
 
     info(`${Side} position calculated from:`, maxEl)
+    info(`Checked %c${targetElements.length}%c elements`, HIGHLIGHT, FOREGROUND)
 
     performance.mark(PREF_END, {
       detail: {
@@ -1220,7 +1221,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         break
 
       case hasOverflow:
-        info(`Found element overflowing <html> `)
+        info(`Found elements possibly overflowing <html> `)
         calculatedSize = getDimension.taggedElement()
         break
 
