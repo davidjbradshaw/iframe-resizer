@@ -18,7 +18,7 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { isolateUserCode, once, typeAssert } from '../common/utils'
+import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
 import {
   advise,
   // assert,
@@ -905,7 +905,7 @@ let vInfoDisable = false
 function checkMode(iframeId, childMode = -3) {
   if (vAdvised) return
   const mode = Math.max(settings[iframeId].mode, childMode)
-  if (mode > settings[iframeId]) settings[iframeId].mode = mode
+  if (mode > settings[iframeId].mode) settings[iframeId].mode = mode
   if (mode < 0) {
     consoleClear(iframeId)
     if (!settings[iframeId].vAdvised)
@@ -1111,7 +1111,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function setOffsetSize(offset) {
-    if (!offset) return
+    if (!offset) return // No offset set or offset is zero
 
     if (settings[iframeId].direction === VERTICAL) {
       settings[iframeId].offsetHeight = offset
@@ -1145,7 +1145,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function updateOptionName(oldName, newName) {
-    if (Object.hasOwn(settings[iframeId], oldName)) {
+    if (hasOwn(settings[iframeId], oldName)) {
       advise(
         iframeId,
         `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
@@ -1162,8 +1162,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   const hasMouseEvents = (options) =>
-    Object.hasOwn(options, 'onMouseEnter') ||
-    Object.hasOwn(options, 'onMouseLeave')
+    hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
 
   function setTargetOrigin() {
     settings[iframeId].targetOrigin =
@@ -1200,7 +1199,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     consoleEvent(iframeId, 'setup')
     setDirection()
-    setOffsetSize(options?.offsetSize || options?.offset)
+    setOffsetSize(options?.offsetSize || options?.offset) // ignore zero offset
     checkOffset(options)
     checkWarningTimeout()
     getPostMessageTarget()
@@ -1240,7 +1239,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   }
 
   function startLogging(iframeId, options) {
-    const isLogEnabled = Object.hasOwn(options, 'log')
+    const isLogEnabled = hasOwn(options, 'log')
     const isLogString = typeof options.log === 'string'
     const enabled = isLogEnabled
       ? isLogString
@@ -1248,7 +1247,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : options.log
       : defaults.log
 
-    if (!Object.hasOwn(options, 'logExpand')) {
+    if (!hasOwn(options, 'logExpand')) {
       options.logExpand =
         isLogEnabled && isLogString
           ? options.log === EXPAND
