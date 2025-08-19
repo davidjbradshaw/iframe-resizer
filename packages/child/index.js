@@ -122,14 +122,14 @@ function iframeResizerChild() {
   let initLock = true
   let inPageLinks = {}
   let isHidden = false
-  let logExpand = true
+  let logExpand = false
   let logging = false
   let key
   let key2
   let mode = 0
   let mouseEvents = false
-  let offsetHeight
-  let offsetWidth
+  let offsetHeight = 0
+  let offsetWidth = 0
   let origin
   let overflowedNodeSet = new Set()
   let overflowObserver
@@ -543,12 +543,19 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
       if (calcMode in deprecatedResizeMethods) {
         const actionMsg = version
           ? 'remove this option.'
-          : "set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page."
+          : `set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page. This can be done on the child page by adding the following code:
+          
+window.iframeResizer = {
+  license: 'xxxx',
+  ${label}CalculationMethod: 'auto',
+}
+`
 
         advise(
           `<rb>Deprecated ${label}CalculationMethod (${calcMode})</>
 
-This version of <i>iframe-resizer</> can auto detect the most suitable ${label} calculation method. It is recommended that you ${actionMsg}`,
+This version of <i>iframe-resizer</> can auto detect the most suitable ${label} calculation method. It is recommended that you ${actionMsg}
+`,
         )
       }
     }
