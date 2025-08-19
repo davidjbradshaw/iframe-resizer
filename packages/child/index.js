@@ -1471,7 +1471,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function dispatchMessage(height, width, triggerEvent, msg, targetOrigin) {
-    if (mode < 0) return
+    if (mode < -1) return
 
     function setTargetOrigin() {
       if (undefined === targetOrigin) {
