@@ -37,6 +37,7 @@ const createOverflowObserver = (callback, options) => {
   function observation(entries) {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
+      if (!rootBounds) continue // guard
       const edge = boundingClientRect[side]
       const hasOverflow = isOverflowed(edge, rootBounds) && !isHidden(target)
 
