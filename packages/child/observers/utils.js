@@ -33,9 +33,6 @@ export const createWarnAlreadyObserved =
 
 const createLogNewlyRemoved = metaCreateDebugObserved('detached from')
 
-export const watchUnload = (observer) =>
-  window.addEventListener('beforeunload', () => observer.disconnect())
-
 export const createLogCounter =
   (type, isAttach = true) =>
   (counter) => {
