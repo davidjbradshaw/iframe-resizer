@@ -228,7 +228,6 @@ function iframeResizerChild() {
   function beforeUnload() {
     addEventListener(window, 'beforeunload', () => {
       tearDown.forEach((func) => func())
-      manageEventListeners('remove')
       sendMsg(0, 0, 'beforeUnload')
     })
   }
@@ -609,7 +608,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     if (autoResize !== true) {
       log('Auto Resize disabled')
     }
+
     manageEventListeners('add')
+    tearDown.push(() => manageEventListeners('remove'))
   }
 
   function injectClearFixIntoBodyElement() {
