@@ -1418,9 +1418,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
   const sendSize = errorBoundary(
     (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
-      totalTime = performance.now()
-      timerActive = true
-
       consoleEvent(triggerEvent)
 
       switch (true) {
@@ -1446,6 +1443,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         default: {
           hiddenMessageShown = false
           sendPending = true
+          totalTime = performance.now()
+          timerActive = true
 
           rafId = requestAnimationFrame(() => {
             sendPending = false
