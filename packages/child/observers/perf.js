@@ -4,15 +4,17 @@ import { advise, event, info, log } from '../console'
 const SECOND = 1000
 const PERF_CHECK_INTERVAL = 5 * SECOND
 const THRESHOLD = 4 // ms
+const MIN_SAMPLES = 10
+const MAX_SAMPLES = 100
 
 export const PREF_START = '--ifr-start'
 export const PREF_END = '--ifr-end'
 const PREF_MEASURE = '--ifr-measure'
 
 const timings = []
-const usedTags = new WeakSet()
+// const usedTags = new WeakSet()
 
-const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
+// const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
 let detail = {}
 let oldAverage = 0
@@ -30,7 +32,7 @@ function clearPerfMarks() {
 
 function startTimingCheck() {
   timingCheckId = setInterval(() => {
-    if (timings.length < 10) return
+    if (timings.length < MIN_SAMPLES) return
     if (detail.hasTags && detail.len < 25) return
 
     timings.sort()
@@ -82,7 +84,7 @@ function perfObserver(list) {
       )
       detail = entry.detail
       timings.push(duration)
-      if (timings.length > 100) timings.shift()
+      if (timings.length > MAX_SAMPLES) timings.shift()
     } catch {
       // Missing marks; ignore
     }
@@ -94,8 +96,8 @@ export default function createPerformanceObserver() {
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })
 
-  addUsedTag(document.documentElement)
-  addUsedTag(document.body)
+  // addUsedTag(document.documentElement)
+  // addUsedTag(document.body)
 
   startTimingCheck()
 
