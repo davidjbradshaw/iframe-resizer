@@ -101,6 +101,7 @@ function iframeResizerChild() {
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
+  const tearDown = []
   const widthCalcModeDefault = 'scroll'
 
   let autoResize = true
@@ -205,6 +206,7 @@ function iframeResizerChild() {
 
       initEventListeners,
       attachObservers,
+      beforeUnload,
     ]
 
     isolate(setup)
@@ -221,6 +223,13 @@ function iframeResizerChild() {
     )
 
     sendTitle()
+  }
+
+  function beforeUnload() {
+    addEventListener(window, 'beforeunload', () => {
+      tearDown.forEach((func) => func())
+      sendMsg(0, 0, 'beforeUnload')
+    })
   }
 
   function checkReadyYet(readyCallback) {
@@ -599,7 +608,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     if (autoResize !== true) {
       log('Auto Resize disabled')
     }
+
     manageEventListeners('add')
+    tearDown.push(() => manageEventListeners('remove'))
   }
 
   function injectClearFixIntoBodyElement() {
@@ -985,6 +996,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     )
 
     overflowObserver.attachObservers(nodeList)
+
+    return overflowObserver
   }
 
   function resizeObserved(entries) {
@@ -996,6 +1009,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   function createResizeObservers(nodeList) {
     resizeObserver = createResizeObserver(resizeObserved)
     resizeObserver.attachObserverToNonStaticElements(nodeList)
+    return resizeObserver
   }
 
   function visibilityChange(isVisible) {
@@ -1058,15 +1072,23 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     sendSize(MUTATION_OBSERVER, 'Mutation Observed')
   }
 
+  function pushDisconnectsOnToTearDown(observers) {
+    tearDown.push(...observers.map((observer) => observer.disconnect))
+  }
+
   function attachObservers() {
     const nodeList = getAllElements(document.documentElement)
 
     log('Attaching Observers')
-    createMutationObserver(mutationObserved)
-    createOverflowObservers(nodeList)
-    createPerformanceObserver()
-    createResizeObservers(nodeList)
-    createVisibilityObserver(visibilityChange)
+    const observers = [
+      createMutationObserver(mutationObserved),
+      createOverflowObservers(nodeList),
+      createPerformanceObserver(),
+      createResizeObservers(nodeList),
+      createVisibilityObserver(visibilityChange),
+    ]
+
+    pushDisconnectsOnToTearDown(observers)
   }
 
   function getMaxElement(side) {

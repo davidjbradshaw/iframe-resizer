@@ -12,12 +12,12 @@ const logRemoveResize = createLogCounter(RESIZE, false)
 const logNewlyObserved = createLogNewlyObserved(RESIZE)
 const warnAlreadyObserved = createWarnAlreadyObserved(RESIZE)
 const observed = new WeakSet()
+const alreadyObserved = new Set()
+const newlyObserved = new Set()
 
 let observer
 
 export function attachObserverToNonStaticElements(nodeList) {
-  const alreadyObserved = new Set()
-  const newlyObserved = new Set()
   let counter = 0
 
   for (const node of nodeList) {
@@ -59,5 +59,9 @@ export default (callback) => {
       observed,
       logRemoveResize,
     ),
+    disconnect: () => {
+      observer.disconnect()
+      info('Detached ResizeObserver')
+    },
   }
 }

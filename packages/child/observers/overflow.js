@@ -1,5 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
+import { info } from '../console'
 import {
   createDetachObservers,
   createLogCounter,
@@ -36,6 +37,7 @@ const createOverflowObserver = (callback, options) => {
   function observation(entries) {
     for (const entry of entries) {
       const { boundingClientRect, rootBounds, target } = entry
+      if (!rootBounds) continue // guard
       const edge = boundingClientRect[side]
       const hasOverflow = isOverflowed(edge, rootBounds) && !isHidden(target)
 
@@ -82,6 +84,10 @@ const createOverflowObserver = (callback, options) => {
       observed,
       logRemoveOverflow,
     ),
+    disconnect: () => {
+      observer.disconnect()
+      info('Detached OverflowObserver')
+    },
   }
 }
 
