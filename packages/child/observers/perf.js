@@ -45,9 +45,9 @@ function startTimingCheck() {
     if (roundedAverage > oldAverage) {
       oldAverage = roundedAverage
       event('performanceObserver')
-      log('Median time:', round(timings[Math.floor(timings.length / 2)]))
+      log('Mean time:', round(timings[Math.floor(timings.length / 2)]))
       log(
-        'Mean time:',
+        'Median time:',
         round(timings.reduce((a, b) => a + b, 0) / timings.length),
       )
       log('Average time:', roundedAverage)
