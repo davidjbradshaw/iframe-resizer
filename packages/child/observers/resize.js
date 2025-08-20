@@ -59,5 +59,9 @@ export default (callback) => {
       observed,
       logRemoveResize,
     ),
+    disconnect: () => {
+      observer.disconnect()
+      info('Detached ResizeObserver')
+    },
   }
 }

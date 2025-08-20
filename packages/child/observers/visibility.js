@@ -12,4 +12,11 @@ export default function visibilityObserver(callback) {
   observer.observe(target)
 
   info('Attached VisibilityObserver to page')
+
+  return {
+    disconnect: () => {
+      observer.disconnect()
+      info('Detached VisibilityObserver')
+    },
+  }
 }

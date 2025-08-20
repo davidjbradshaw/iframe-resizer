@@ -1,5 +1,6 @@
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
+import { info } from '../console'
 import {
   createDetachObservers,
   createLogCounter,
@@ -82,6 +83,10 @@ const createOverflowObserver = (callback, options) => {
       observed,
       logRemoveOverflow,
     ),
+    disconnect: () => {
+      observer.disconnect()
+      info('Detached OverflowObserver')
+    },
   }
 }
 

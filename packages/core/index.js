@@ -556,6 +556,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         onMouse('onMouseLeave')
         break
 
+      case 'beforeUnload':
+        info(iframeId, 'Ready state reset')
+        settings[iframeId].ready = false
+        break
+
       case 'autoResize':
         settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
         break
@@ -643,7 +648,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function initFromIframe(iframeId) {
-    if (settings[iframeId].loaded) return
+    if (settings[iframeId].ready) return
     trigger('iframe requested init', createOutgoingMsg(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
@@ -678,7 +683,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
     if (!isMessageFromMetaParent()) {
       log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
-      settings[iframeId].loaded = true
       settings[iframeId].ready = true
 
       if (checkIframeExists() && isMessageFromIframe()) {
@@ -1042,9 +1046,8 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   // iframes have completed loading when this code runs. The
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
-    function iFrameLoaded() {
+    const iFrameLoaded = () => {
       trigger(ONLOAD, `${msg}:${setup}`, id)
-      settings[id].loaded = true
       warnOnNoResponse(id, settings)
       checkReset()
     }
