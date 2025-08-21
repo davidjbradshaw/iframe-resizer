@@ -11,7 +11,7 @@
 
 The _[iframe-resizer](https://iframe-resizer.com)_ library aims to take away the pain
 points with using iframes. It will resize your iframe to match the size of your content
-and then monitors the iframe to ensure that it is always the perfect size.
+and then monitors the iframe to ensure that it is remains the perfect size.
 
 ### Reliable Resizing
 
