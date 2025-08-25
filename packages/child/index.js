@@ -228,7 +228,7 @@ function iframeResizerChild() {
   function beforeUnload() {
     addEventListener(window, 'beforeunload', () => {
       tearDown.forEach((func) => func())
-      sendMsg(0, 0, 'beforeUnload')
+      sendMessage(0, 0, 'beforeUnload')
     })
   }
 
@@ -248,7 +248,7 @@ function iframeResizerChild() {
 
   function sendTitle() {
     if (document.title && document.title !== '') {
-      sendMsg(0, 0, 'title', document.title)
+      sendMessage(0, 0, 'title', document.title)
     }
   }
 
@@ -653,7 +653,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           HIGHLIGHT,
         )
 
-        sendMsg(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
+        sendMessage(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMessage uses height/width
       }
 
       const hash = location.split('#')[1] || location // Remove # if present
@@ -668,7 +668,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       }
 
       log(`In page link (#${hash}) not found in iFrame, so sending to parent`)
-      sendMsg(0, 0, 'inPageLink', `#${hash}`)
+      sendMessage(0, 0, 'inPageLink', `#${hash}`)
     }
 
     function checkLocationHash() {
@@ -727,7 +727,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     if (mouseEvents !== true) return
 
     function sendMouse(e) {
-      sendMsg(0, 0, e.type, `${e.screenY}:${e.screenX}`)
+      sendMessage(0, 0, e.type, `${e.screenY}:${e.screenX}`)
     }
 
     function addMouseListener(evt, name) {
@@ -762,13 +762,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           autoResize = false
         }
 
-        sendMsg(0, 0, 'autoResize', JSON.stringify(autoResize))
+        sendMessage(0, 0, 'autoResize', JSON.stringify(autoResize))
 
         return autoResize
       },
 
       close() {
-        sendMsg(0, 0, 'close')
+        sendMessage(0, 0, 'close')
       },
 
       getId: () => parentId,
@@ -783,7 +783,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       getPageInfo(callback) {
         if (typeof callback === 'function') {
           onPageInfo = callback
-          sendMsg(0, 0, 'pageInfo')
+          sendMessage(0, 0, 'pageInfo')
           deprecateMethodReplace(
             'getPageInfo()',
             'getParentProps()',
@@ -793,7 +793,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         }
 
         onPageInfo = null
-        sendMsg(0, 0, 'pageInfoStop')
+        sendMessage(0, 0, 'pageInfoStop')
       },
 
       getParentProps(callback) {
@@ -804,11 +804,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         )
 
         onParentInfo = callback
-        sendMsg(0, 0, 'parentInfo')
+        sendMessage(0, 0, 'parentInfo')
 
         return () => {
           onParentInfo = null
-          sendMsg(0, 0, 'parentInfoStop')
+          sendMessage(0, 0, 'parentInfoStop')
         }
       },
 
@@ -840,19 +840,19 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       scrollBy(x, y) {
         typeAssert(x, 'number', 'parentIframe.scrollBy(x, y) x')
         typeAssert(y, 'number', 'parentIframe.scrollBy(x, y) y')
-        sendMsg(y, x, 'scrollBy') // X&Y reversed at sendMsg uses height/width
+        sendMessage(y, x, 'scrollBy') // X&Y reversed at sendMessage uses height/width
       },
 
       scrollTo(x, y) {
         typeAssert(x, 'number', 'parentIframe.scrollTo(x, y) x')
         typeAssert(y, 'number', 'parentIframe.scrollTo(x, y) y')
-        sendMsg(y, x, 'scrollTo') // X&Y reversed at sendMsg uses height/width
+        sendMessage(y, x, 'scrollTo') // X&Y reversed at sendMessage uses height/width
       },
 
       scrollToOffset(x, y) {
         typeAssert(x, 'number', 'parentIframe.scrollToOffset(x, y) x')
         typeAssert(y, 'number', 'parentIframe.scrollToOffset(x, y) y')
-        sendMsg(y, x, 'scrollToOffset') // X&Y reversed at sendMsg uses height/width
+        sendMessage(y, x, 'scrollToOffset') // X&Y reversed at sendMessage uses height/width
       },
 
       sendMessage(msg, targetOrigin) {
@@ -862,7 +862,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
             'string',
             'parentIframe.sendMessage(msg, targetOrigin) targetOrigin',
           )
-        sendMsg(0, 0, 'message', JSON.stringify(msg), targetOrigin)
+        sendMessage(0, 0, 'message', JSON.stringify(msg), targetOrigin)
       },
 
       setHeightCalculationMethod(heightCalculationMethod) {
@@ -1484,7 +1484,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     height = getHeight[heightCalcMode]()
     width = getWidth[widthCalcMode]()
 
-    sendMsg(height, width, triggerEvent)
+    sendMessage(height, width, triggerEvent)
   }
 
   function resetIframe(triggerEventDesc) {
@@ -1496,12 +1496,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     triggerReset('reset')
 
     heightCalcMode = hcm
-  }
-
-  function sendMessage(height, width, triggerEvent, msg, targetOrigin) {
-    consoleEvent(triggerEvent)
-    dispatchMessage(height, width, triggerEvent, msg, targetOrigin)
-    endAutoGroup()
   }
 
   function dispatchMessage(height, width, triggerEvent, msg, targetOrigin) {
@@ -1550,7 +1544,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     dispatchToParent()
   }
 
-  const sendMsg = errorBoundary(sendMessage)
+  const sendMessage = errorBoundary(
+    (height, width, triggerEvent, message, targetOrigin) => {
+      consoleEvent(triggerEvent)
+      dispatchMessage(height, width, triggerEvent, message, targetOrigin)
+      endAutoGroup()
+    },
+  )
 
   function receiver(event) {
     consoleEvent('onMessage')
@@ -1558,7 +1558,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     const { parse } = JSON
     const parseFrozen = (data) => freeze(parse(data))
 
-    const notExpected = (type) => sendMsg(0, 0, `${type}Stop`)
+    const notExpected = (type) => sendMessage(0, 0, `${type}Stop`)
 
     const processRequestFromParent = {
       init: function initFromParent() {
