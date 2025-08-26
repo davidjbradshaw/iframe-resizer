@@ -1689,11 +1689,21 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
   // Normally the parent kicks things off when it detects the iFrame has loaded.
   // If this script is async-loaded, then tell parent page to retry init.
+  let sent = false
+  const sendReady = (target) =>
+    target.postMessage('[iFrameResizerChild]Ready', '*')
+
   function checkLateLoaded() {
-    if (document.readyState !== 'loading' && !firstRun) {
-      log('[iFrameResizerChild]Ready')
-      window.parent.postMessage(`[iFrameResizerChild]Ready`, '*')
-    }
+    if (document.readyState === 'loading' || firstRun || sent) return
+
+    const { parent, top } = window
+
+    log('[iFrameResizerChild]Ready')
+
+    sendReady(parent)
+    if (parent !== top) sendReady(top)
+
+    sent = true
   }
 
   if ('iframeChildListener' in window) {
