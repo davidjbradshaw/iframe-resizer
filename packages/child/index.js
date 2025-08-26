@@ -1703,7 +1703,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       setTimeout(() => received({ data, sameOrigin: true }))
 
     addEventListener(window, 'message', received)
-    addEventListener(window, 'readystatechange', checkLateLoaded)
+    addEventListener(document, 'readystatechange', checkLateLoaded)
 
     setTimeout(checkLateLoaded)
   }
