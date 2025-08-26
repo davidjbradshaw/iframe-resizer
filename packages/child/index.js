@@ -1694,7 +1694,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     target.postMessage('[iFrameResizerChild]Ready', '*')
 
   function checkLateLoaded() {
-    if (document.readyState === 'loading' || firstRun || sent) return
+    if (document.readyState === 'loading' || !firstRun || sent) return
 
     const { parent, top } = window
 
