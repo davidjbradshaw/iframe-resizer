@@ -2,6 +2,7 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
   BOTH,
+  COLLAPSE,
   EXPAND,
   HORIZONTAL,
   INIT,
@@ -1236,8 +1237,8 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     const { search } = window.location
 
     if (search.includes('ifrlog')) {
-      options.log = EXPAND
-      options.logExpand = !search.includes('ifrlog=collapsed')
+      options.log = COLLAPSE
+      options.logExpand = search.includes('ifrlog=expanded')
     }
   }
 

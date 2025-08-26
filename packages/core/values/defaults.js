@@ -18,7 +18,7 @@ export default Object.freeze({
   direction: VERTICAL,
   inPageLinks: false,
   heightCalculationMethod: 'auto',
-  id: 'iFrameResizer',
+  id: 'iFrameResizer', // TODO: v6 change to 'iframeResizer'
   log: false,
   logExpand: false,
   license: undefined,
