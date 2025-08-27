@@ -648,14 +648,20 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  function initFromIframe(iframeId) {
-    if (settings[iframeId].ready) return
-    trigger('iframe requested init', createOutgoingMsg(iframeId), iframeId)
+  const initFromIframe = (source) => (iframeId) => {
+    const { ready, postMessageTarget } = settings[iframeId]
+    if (ready || source !== postMessageTarget) return
+    trigger(
+      'iframe requested init',
+      createOutgoingMsg(iframeId),
+      iframeId,
+      source,
+    )
     warnOnNoResponse(iframeId, settings)
   }
 
-  function iFrameReadyMsgReceived() {
-    Object.keys(settings).forEach(initFromIframe)
+  function iFrameReadyMsgReceived(source) {
+    Object.keys(settings).forEach(initFromIframe(source))
   }
 
   function firstRun() {
@@ -670,7 +676,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   let iframeId = null
 
   if (msg === '[iFrameResizerChild]Ready') {
-    iFrameReadyMsgReceived()
+    iFrameReadyMsgReceived(event.source)
     return
   }
 
