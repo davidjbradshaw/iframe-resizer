@@ -665,20 +665,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     settings[iframeId].firstRun = false
   }
 
-  let msg = event.data
-  let messageData = {}
-  let iframeId = null
-
-  if (msg === '[iFrameResizerChild]Ready') {
-    iFrameReadyMsgReceived(event.source)
-    return
-  }
-
-  if (!isMessageForUs()) {
-    if (iframeId !== null) log(iframeId, 'Ignored:', msg)
-    return
-  }
-
   function screenMessage() {
     checkSettings(iframeId)
 
@@ -692,8 +678,20 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  messageData = processMsg()
-  iframeId = messageData.id
+  let msg = event.data
+
+  if (msg === '[iFrameResizerChild]Ready') {
+    iFrameReadyMsgReceived(event.source)
+    return
+  }
+
+  if (!isMessageForUs()) {
+    if (iframeId !== null) log(iframeId, 'Ignored:', msg)
+    return
+  }
+
+  const messageData = processMsg()
+  const iframeId = messageData.id
 
   if (!iframeId) {
     warn(
