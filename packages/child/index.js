@@ -774,6 +774,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       getId: () => parentId,
 
       getOrigin: () => {
+        consoleEvent('getOrigin')
         deprecateMethod('getOrigin()', 'getParentOrigin()')
         return origin
       },
@@ -1691,7 +1692,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   // If this script is async-loaded, then tell parent page to retry init.
   let sent = false
   const sendReady = (target) =>
-    target.postMessage('[iFrameResizerChild]Ready', '*')
+    target.postMessage(
+      '[iFrameResizerChild]Ready',
+      window?.iframeResizer?.targetOrigin || '*',
+    )
 
   function checkLateLoaded() {
     if (document.readyState === 'loading' || !firstRun || sent) return
