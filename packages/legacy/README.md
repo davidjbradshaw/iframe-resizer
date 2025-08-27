@@ -1,6 +1,8 @@
-[<img src="https://iframe-resizer.com/logo-full.svg" alt="" title="" style="margin-bottom: -20px">](https://iframe-resizer.com)
+<p align="center"><br>
+  <img src="https://iframe-resizer.com/logo-full.svg" alt="iframe-resizer - keep iframes sized to their content" title="" width="90%"  style="width: 90%">
+<p>
 
-This package is a legacy version of __[iframe-resizer](https://iframe-resizer.com)__. This project has now been split in to separate packages for the _parent_ and _child_ pages.
+This package is a legacy version of __[iframe-resizer](https://iframe-resizer.com)__. This project has now been split into separate packages for the _parent_ and _child_ pages.
 
 * [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
 * [@iframe-resizer/child](https://www.npmjs.com/package/@iframe-resizer/child)
@@ -15,4 +17,4 @@ Their are now also versions of _iframe-resizer_ for React, Vue, Angular and jQue
 __For more details please see: [https://iframe-resizer.com/upgrade](https://iframe-resizer.com/upgrade).__
 
 ---
-Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw).
