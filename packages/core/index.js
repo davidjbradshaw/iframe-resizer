@@ -655,9 +655,8 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     warnOnNoResponse(iframeId, settings)
   }
 
-  function iFrameReadyMsgReceived(source) {
+  const iFrameReadyMsgReceived = (source) =>
     Object.keys(settings).forEach(initFromIframe(source))
-  }
 
   function firstRun() {
     if (!settings[iframeId]) return
