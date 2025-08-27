@@ -651,12 +651,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   const initFromIframe = (source) => (iframeId) => {
     const { ready, postMessageTarget } = settings[iframeId]
     if (ready || source !== postMessageTarget) return
-    trigger(
-      'iframe requested init',
-      createOutgoingMsg(iframeId),
-      iframeId,
-      source,
-    )
+    trigger('iframe requested init', createOutgoingMsg(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
 
