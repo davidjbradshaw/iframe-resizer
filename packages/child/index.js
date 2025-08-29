@@ -15,6 +15,8 @@ import {
   INIT,
   MANUAL_RESIZE_REQUEST,
   MESSAGE,
+  MESSAGE_ID,
+  MESSAGE_ID_LENGTH,
   MIN_SIZE,
   MOUSE_ENTER,
   MOUSE_LEAVE,
@@ -115,8 +117,6 @@ function iframeResizerChild() {
   const eventHandlersByName = {}
   const heightCalcModeDefault = 'auto'
   // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-  const msgID = '[iFrameSizer]' // Must match host page msg ID
-  const msgIdLen = msgID.length
   const tearDown = []
   const widthCalcModeDefault = SCROLL
 
@@ -1540,13 +1540,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
       if (sameOrigin)
         try {
-          window.parent.iframeParentListener(msgID + message)
+          window.parent.iframeParentListener(MESSAGE_ID + message)
         } catch (error) {
           if (mode === 1) sendFailed()
           else throw error
           return
         }
-      else target.postMessage(msgID + message, targetOrigin)
+      else target.postMessage(MESSAGE_ID + message, targetOrigin)
 
       if (timerActive) log(displayTimeTaken(), HIGHLIGHT)
 
@@ -1584,7 +1584,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           return
         }
 
-        const data = event.data.slice(msgIdLen).split(':')
+        const data = event.data.slice(MESSAGE_ID_LENGTH).split(':')
 
         target = event.source
         origin = event.origin
@@ -1650,7 +1650,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       },
     }
 
-    const isMessageForUs = () => msgID === `${event.data}`.slice(0, msgIdLen)
+    const isMessageForUs = () => MESSAGE_ID === `${event.data}`.slice(0, MESSAGE_ID_LENGTH)
 
     const getMessageType = () => event.data.split(']')[1].split(':')[0]
 
