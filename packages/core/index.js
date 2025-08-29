@@ -869,7 +869,7 @@ function trigger(calleeMsg, msg, id) {
       } catch (error) {
         if (calleeMsg in INIT_EVENTS) {
           settings[id].sameOrigin = false
-          info(id, "New iframe, does not support same origin")
+          info(id, 'New iframe does not support same origin')
         } else {
           warn(id, `Same origin messaging failed, falling back to postMessage`)
         }
