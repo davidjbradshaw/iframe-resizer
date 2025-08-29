@@ -1,30 +1,45 @@
 import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
 
 import {
+  AUTO_RESIZE,
   BASE,
-  // BOTH,
+  BEFORE_UNLOAD,
+  CLOSE,
   ENABLE,
+  HEIGHT,
   HEIGHT_EDGE,
-  // HORIZONTAL,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
   IGNORE_TAGS,
+  IN_PAGE_LINK,
   INIT,
   MANUAL_RESIZE_REQUEST,
+  MESSAGE,
   MIN_SIZE,
+  MOUSE_ENTER,
+  MOUSE_LEAVE,
   MUTATION_OBSERVER,
   NO_CHANGE,
   NONE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
+  PAGE_INFO,
+  PAGE_INFO_STOP,
+  PARENT_INFO,
+  PARENT_INFO_STOP,
   PARENT_RESIZE_REQUEST,
   RESIZE_OBSERVER,
+  SCROLL,
+  SCROLL_BY,
+  SCROLL_TO,
+  SCROLL_TO_OFFSET,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
   SIZE_CHANGE_DETECTED,
+  TITLE,
   VERSION,
-  // VERTICAL,
   VISIBILITY_OBSERVER,
+  WIDTH,
   WIDTH_EDGE,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
@@ -102,7 +117,7 @@ function iframeResizerChild() {
   const msgID = '[iFrameSizer]' // Must match host page msg ID
   const msgIdLen = msgID.length
   const tearDown = []
-  const widthCalcModeDefault = 'scroll'
+  const widthCalcModeDefault = SCROLL
 
   let autoResize = true
   let bodyBackground = ''
@@ -226,9 +241,9 @@ function iframeResizerChild() {
   }
 
   function beforeUnload() {
-    addEventListener(window, 'beforeunload', () => {
+    addEventListener(window, BEFORE_UNLOAD, () => {
       tearDown.forEach((func) => func())
-      sendMessage(0, 0, 'beforeUnload')
+      sendMessage(0, 0, BEFORE_UNLOAD)
     })
   }
 
@@ -248,7 +263,7 @@ function iframeResizerChild() {
 
   function sendTitle() {
     if (document.title && document.title !== '') {
-      sendMessage(0, 0, 'title', document.title)
+      sendMessage(0, 0, TITLE, document.title)
     }
   }
 
@@ -406,8 +421,8 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     if (typeof data !== 'object') return
 
     readData(data)
-    heightCalcMode = setupCustomCalcMethods(heightCalcMode, 'height')
-    widthCalcMode = setupCustomCalcMethods(widthCalcMode, 'width')
+    heightCalcMode = setupCustomCalcMethods(heightCalcMode, HEIGHT)
+    widthCalcMode = setupCustomCalcMethods(widthCalcMode, WIDTH)
 
     info(`Set targetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
   }
@@ -461,7 +476,7 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
 
   function stopInfiniteResizingOfIframe() {
     const setAutoHeight = (el) =>
-      el.style.setProperty('height', 'auto', 'important')
+      el.style.setProperty(HEIGHT, 'auto', 'important')
 
     setAutoHeight(document.documentElement)
     setAutoHeight(document.body)
@@ -653,7 +668,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           HIGHLIGHT,
         )
 
-        sendMessage(jumpPosition.y, jumpPosition.x, 'scrollToOffset') // X&Y reversed at sendMessage uses height/width
+        sendMessage(jumpPosition.y, jumpPosition.x, SCROLL_TO_OFFSET) // X&Y reversed at sendMessage uses height/width
       }
 
       const hash = location.split('#')[1] || location // Remove # if present
@@ -667,8 +682,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         return
       }
 
-      log(`In page link (#${hash}) not found in iFrame, so sending to parent`)
-      sendMessage(0, 0, 'inPageLink', `#${hash}`)
+      log(`In page link (#${hash}) not found in iframe, so sending to parent`)
+      sendMessage(0, 0, IN_PAGE_LINK, `#${hash}`)
     }
 
     function checkLocationHash() {
@@ -735,8 +750,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       addEventListener(window.document, evt, sendMouse)
     }
 
-    addMouseListener('mouseenter', 'Mouse Enter')
-    addMouseListener('mouseleave', 'Mouse Leave')
+    addMouseListener(MOUSE_ENTER, 'Mouse Enter')
+    addMouseListener(MOUSE_LEAVE, 'Mouse Leave')
   }
 
   function setupPublicMethods() {
@@ -762,13 +777,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           autoResize = false
         }
 
-        sendMessage(0, 0, 'autoResize', JSON.stringify(autoResize))
+        sendMessage(0, 0, AUTO_RESIZE, JSON.stringify(autoResize))
 
         return autoResize
       },
 
       close() {
-        sendMessage(0, 0, 'close')
+        sendMessage(0, 0, CLOSE)
       },
 
       getId: () => parentId,
@@ -784,7 +799,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       getPageInfo(callback) {
         if (typeof callback === 'function') {
           onPageInfo = callback
-          sendMessage(0, 0, 'pageInfo')
+          sendMessage(0, 0, PAGE_INFO)
           deprecateMethodReplace(
             'getPageInfo()',
             'getParentProps()',
@@ -794,7 +809,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         }
 
         onPageInfo = null
-        sendMessage(0, 0, 'pageInfoStop')
+        sendMessage(0, 0, PAGE_INFO_STOP)
       },
 
       getParentProps(callback) {
@@ -805,11 +820,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         )
 
         onParentInfo = callback
-        sendMessage(0, 0, 'parentInfo')
+        sendMessage(0, 0, PARENT_INFO)
 
         return () => {
           onParentInfo = null
-          sendMessage(0, 0, 'parentInfoStop')
+          sendMessage(0, 0, PARENT_INFO_STOP)
         }
       },
 
@@ -841,19 +856,19 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       scrollBy(x, y) {
         typeAssert(x, 'number', 'parentIframe.scrollBy(x, y) x')
         typeAssert(y, 'number', 'parentIframe.scrollBy(x, y) y')
-        sendMessage(y, x, 'scrollBy') // X&Y reversed at sendMessage uses height/width
+        sendMessage(y, x, SCROLL_BY) // X&Y reversed at sendMessage uses height/width
       },
 
       scrollTo(x, y) {
         typeAssert(x, 'number', 'parentIframe.scrollTo(x, y) x')
         typeAssert(y, 'number', 'parentIframe.scrollTo(x, y) y')
-        sendMessage(y, x, 'scrollTo') // X&Y reversed at sendMessage uses height/width
+        sendMessage(y, x, SCROLL_TO) // X&Y reversed at sendMessage uses height/width
       },
 
       scrollToOffset(x, y) {
         typeAssert(x, 'number', 'parentIframe.scrollToOffset(x, y) x')
         typeAssert(y, 'number', 'parentIframe.scrollToOffset(x, y) y')
-        sendMessage(y, x, 'scrollToOffset') // X&Y reversed at sendMessage uses height/width
+        sendMessage(y, x, SCROLL_TO_OFFSET) // X&Y reversed at sendMessage uses height/width
       },
 
       sendMessage(msg, targetOrigin) {
@@ -863,7 +878,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
             'string',
             'parentIframe.sendMessage(msg, targetOrigin) targetOrigin',
           )
-        sendMessage(0, 0, 'message', JSON.stringify(msg), targetOrigin)
+        sendMessage(0, 0, MESSAGE, JSON.stringify(msg), targetOrigin)
       },
 
       setHeightCalculationMethod(heightCalculationMethod) {
@@ -1277,7 +1292,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   const getHeight = {
-    label: 'height',
+    label: HEIGHT,
     enabled: () => calculateHeight,
     getOffset: () => offsetHeight,
     auto: () => getAutoSize(getHeight),
@@ -1300,7 +1315,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   const getWidth = {
-    label: 'width',
+    label: WIDTH,
     enabled: () => calculateWidth,
     getOffset: () => offsetWidth,
     auto: () => getAutoSize(getWidth),
@@ -1612,7 +1627,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         if (onPageInfo) {
           isolateUserCode(onPageInfo, parse(msgBody))
         } else {
-          notExpected('pageInfo')
+          notExpected(PAGE_INFO)
         }
       },
 
@@ -1622,7 +1637,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         if (onParentInfo) {
           isolateUserCode(onParentInfo, msgBody)
         } else {
-          notExpected('parentInfo')
+          notExpected(PARENT_INFO)
         }
       },
 
@@ -1722,7 +1737,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     window.iframeChildListener = (data) =>
       setTimeout(() => received({ data, sameOrigin: true }))
 
-    addEventListener(window, 'message', received)
+    addEventListener(window, MESSAGE, received)
     addEventListener(document, 'readystatechange', checkLateLoaded)
 
     setTimeout(checkLateLoaded)
@@ -1742,7 +1757,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       // Create test hooks
       window.mockMsgListener = mockMsgListener
 
-      removeEventListener(window, 'message', received)
+      removeEventListener(window, MESSAGE, received)
 
       define([], () => mockMsgListener)
     }
