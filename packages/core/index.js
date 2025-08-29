@@ -871,7 +871,7 @@ function trigger(calleeMsg, msg, id) {
           settings[id].sameOrigin = false
           info(id, 'New iframe does not support same origin')
         } else {
-          warn(id, `Same origin messaging failed, falling back to postMessage`)
+          warn(id, 'Same origin messaging failed, falling back to postMessage')
         }
       }
     }
