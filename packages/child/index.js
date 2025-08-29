@@ -1530,7 +1530,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     function displayTimeTaken() {
       const timer = round(performance.now() - totalTime)
       return triggerEvent === INIT
-        ? `Initialised iFrame in %c${timer}ms`
+        ? `Initialised iframe in %c${timer}ms`
         : `Size calculated in %c${timer}ms`
     }
 
@@ -1704,7 +1704,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
   const received = errorBoundary(receiver)
 
-  // Normally the parent kicks things off when it detects the iFrame has loaded.
+  // Normally the parent kicks things off when it detects the iframe has loaded.
   // If this script is async-loaded, then tell parent page to retry init.
   let sent = false
   const sendReady = (target) =>
