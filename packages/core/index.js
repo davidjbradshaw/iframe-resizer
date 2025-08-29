@@ -1,21 +1,43 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
+  AUTO_RESIZE,
+  BEFORE_UNLOAD,
   BOTH,
+  CLOSE,
   COLLAPSE,
   EXPAND,
+  HEIGHT,
   HORIZONTAL,
+  IN_PAGE_LINK,
   INIT,
   INIT_EVENTS,
+  INIT_FROM_IFRAME,
+  LOAD,
   LOG_OPTIONS,
+  MESSAGE,
+  MOUSE_ENTER,
+  MOUSE_LEAVE,
   msgHeaderLen,
   msgId,
   msgIdLen,
   NONE,
   ONLOAD,
+  PAGE_INFO,
+  PAGE_INFO_STOP,
+  PARENT_INFO,
+  PARENT_INFO_STOP,
+  RESET,
   resetRequiredMethods,
+  RESIZE,
+  SCROLL,
+  SCROLL_BY,
+  SCROLL_TO,
+  SCROLL_TO_OFFSET,
+  TITLE,
   VERSION,
   VERTICAL,
+  WIDTH,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
@@ -259,13 +281,13 @@ function iframeListener(event) {
       }
     }
 
-    const sendScroll = sendInfo('scroll')
+    const sendScroll = sendInfo(SCROLL)
     const sendResize = sendInfo('resize window')
 
     function setListener(requestType, listener) {
       log(id, `${requestType}listeners for send${type}`)
-      listener(window, 'scroll', sendScroll)
-      listener(window, 'resize', sendResize)
+      listener(window, SCROLL, sendScroll)
+      listener(window, RESIZE, sendResize)
     }
 
     function stop() {
@@ -273,7 +295,7 @@ function iframeListener(event) {
       setListener('Remove ', removeEventListener)
       pageObserver.disconnect()
       iframeObserver.disconnect()
-      removeEventListener(settings[id].iframe, 'load', stop)
+      removeEventListener(settings[id].iframe, LOAD, stop)
     }
 
     function start() {
@@ -299,7 +321,7 @@ function iframeListener(event) {
 
     if (settings[id]) {
       settings[id][`stop${type}`] = stop
-      addEventListener(settings[id].iframe, 'load', stop)
+      addEventListener(settings[id].iframe, LOAD, stop)
       start()
     }
   }
@@ -311,8 +333,8 @@ function iframeListener(event) {
     }
   }
 
-  const sendPageInfoToIframe = sendInfoToIframe('pageInfo', getPageInfo)
-  const sendParentInfoToIframe = sendInfoToIframe('parentInfo', getParentProps)
+  const sendPageInfoToIframe = sendInfoToIframe(PAGE_INFO, getPageInfo)
+  const sendParentInfoToIframe = sendInfoToIframe(PARENT_INFO, getParentProps)
 
   const startPageInfoMonitor = startInfoMonitor(
     sendPageInfoToIframe,
@@ -541,72 +563,72 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     if (settings[iframeId]?.firstRun) firstRun()
 
     switch (type) {
-      case 'close':
+      case CLOSE:
         closeIframe(iframe)
         break
 
-      case 'message':
+      case MESSAGE:
         forwardMsgFromIframe(getMsgBody(6))
         break
 
-      case 'mouseenter':
+      case MOUSE_ENTER:
         onMouse('onMouseEnter')
         break
 
-      case 'mouseleave':
+      case MOUSE_LEAVE:
         onMouse('onMouseLeave')
         break
 
-      case 'beforeUnload':
+      case BEFORE_UNLOAD:
         info(iframeId, 'Ready state reset')
         settings[iframeId].ready = false
         break
 
-      case 'autoResize':
+      case AUTO_RESIZE:
         settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
         break
 
-      case 'scrollBy':
+      case SCROLL_BY:
         scrollBy()
         break
 
-      case 'scrollTo':
+      case SCROLL_TO:
         scrollRequestFromChild(false)
         break
 
-      case 'scrollToOffset':
+      case SCROLL_TO_OFFSET:
         scrollRequestFromChild(true)
         break
 
-      case 'pageInfo':
+      case PAGE_INFO:
         startPageInfoMonitor()
         break
 
-      case 'parentInfo':
+      case PARENT_INFO:
         startParentInfoMonitor()
         break
 
-      case 'pageInfoStop':
+      case PAGE_INFO_STOP:
         stopPageInfoMonitor()
         break
 
-      case 'parentInfoStop':
+      case PARENT_INFO_STOP:
         stopParentInfoMonitor()
         break
 
-      case 'inPageLink':
+      case IN_PAGE_LINK:
         findTarget(getMsgBody(9))
         break
 
-      case 'title':
+      case TITLE:
         setTitle(msg, iframeId)
         break
 
-      case 'reset':
+      case RESET:
         resetIframe(messageData)
         break
 
-      case 'init':
+      case INIT:
         resizeIframe()
         checkSameDomain(iframeId)
         checkVersion(msg)
@@ -651,7 +673,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   const initFromIframe = (source) => (iframeId) => {
     const { ready, postMessageTarget } = settings[iframeId]
     if (ready || source !== postMessageTarget) return
-    trigger('iframe requested init', createOutgoingMsg(iframeId), iframeId)
+    trigger(INIT_FROM_IFRAME, createOutgoingMsg(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
 
@@ -801,12 +823,12 @@ function setPagePosition(iframeId) {
 function resetIframe(messageData) {
   log(
     messageData.id,
-    `Size reset requested by ${messageData.type === 'init' ? 'parent page' : 'child page'}`,
+    `Size reset requested by ${messageData.type === INIT ? 'parent page' : 'child page'}`,
   )
 
   getPagePosition(messageData.id)
   setSize(messageData)
-  trigger('reset', 'reset', messageData.id)
+  trigger(RESET, RESET, messageData.id)
 }
 
 function setSize(messageData) {
@@ -819,8 +841,8 @@ function setSize(messageData) {
   const { id } = messageData
   const { sizeHeight, sizeWidth } = settings[id]
 
-  if (sizeHeight) setDimension('height')
-  if (sizeWidth) setDimension('width')
+  if (sizeHeight) setDimension(HEIGHT)
+  if (sizeWidth) setDimension(WIDTH)
 }
 
 const filterMsg = (msg) =>
@@ -993,7 +1015,7 @@ export default (options) => (iframe) => {
       settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
 
     if (!firstRun && resetRequestMethod) {
-      resetIframe({ iframe, height: 0, width: 0, type: 'init' })
+      resetIframe({ iframe, height: 0, width: 0, type: INIT })
     }
   }
 
@@ -1023,7 +1045,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
         
 Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As their are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`,
           )
-          trigger.bind(null, 'Window resize', 'resize', iframeId)
+          trigger.bind(null, 'Window resize', RESIZE, iframeId)
         },
 
         moveToAnchor(anchor) {
@@ -1033,7 +1055,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
         sendMessage(message) {
           message = JSON.stringify(message)
-          trigger('message', `message:${message}`, iframeId)
+          trigger(MESSAGE, `${MESSAGE}:${message}`, iframeId)
         },
       }
 
@@ -1055,7 +1077,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     const { id } = iframe
     const { waitForLoad } = settings[id]
 
-    addEventListener(iframe, 'load', iFrameLoaded)
+    addEventListener(iframe, LOAD, iFrameLoaded)
 
     if (waitForLoad === true) return
 
@@ -1069,7 +1091,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     if (
       'sizeWidth' in options ||
       'sizeHeight' in options ||
-      'autoResize' in options
+      AUTO_RESIZE in options
     ) {
       advise(
         iframeId,
@@ -1304,12 +1326,12 @@ function sendTriggerMsg(eventName, event) {
 function tabVisible() {
   if (document.hidden === false) {
     log('document', 'Trigger event: Visibility change')
-    sendTriggerMsg('tabVisible', 'resize')
+    sendTriggerMsg('tabVisible', RESIZE)
   }
 }
 
 const setupEventListenersOnce = once(() => {
-  addEventListener(window, 'message', iframeListener)
+  addEventListener(window, MESSAGE, iframeListener)
   addEventListener(document, 'visibilitychange', tabVisible)
   window.iframeParentListener = (data) =>
     setTimeout(() => iframeListener({ data, sameOrigin: true }))

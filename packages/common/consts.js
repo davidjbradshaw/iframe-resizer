@@ -1,6 +1,28 @@
 export const VERSION = '[VI]{version}[/VI]'
 export const LABEL = 'iframeResizer'
 
+export const AUTO_RESIZE = 'autoResize'
+export const BEFORE_UNLOAD = 'beforeunload'
+export const CLOSE = 'close'
+export const IN_PAGE_LINK = 'inPageLink'
+export const INIT = 'init'
+export const INIT_FROM_IFRAME = 'iframe requested init'
+export const LOAD = 'load'
+export const MESSAGE = 'message'
+export const MOUSE_ENTER = 'mouseenter'
+export const MOUSE_LEAVE = 'mouseleave'
+export const ONLOAD = 'onload'
+export const PAGE_INFO = 'pageInfo'
+export const PARENT_INFO = 'parentInfo'
+export const PAGE_INFO_STOP = 'pageInfoStop'
+export const PARENT_INFO_STOP = 'parentInfoStop'
+export const RESET = 'reset'
+export const RESIZE = RESIZE
+export const SCROLL_BY = 'scrollBy'
+export const SCROLL_TO = 'scrollTo'
+export const SCROLL_TO_OFFSET = 'scrollToOffset'
+export const TITLE = 'title'
+
 export const BASE = 10
 export const SINGLE = 1
 export const MIN_SIZE = 1
@@ -8,6 +30,10 @@ export const MIN_SIZE = 1
 export const SIZE_ATTR = 'data-iframe-size'
 export const OVERFLOW_ATTR = 'data-iframe-overflowed'
 export const IGNORE_ATTR = 'data-iframe-ignore'
+
+export const HEIGHT = 'height'
+export const WIDTH = 'width'
+ecport const SCROLL = 'scroll'
 
 export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
@@ -43,8 +69,7 @@ export const HORIZONTAL = 'horizontal'
 
 export const NO_CHANGE = 'No change in content size detected'
 
-export const msgHeader = 'message'
-export const msgHeaderLen = msgHeader.length
+export const msgHeaderLen = MESSAGE.length
 export const msgId = '[iFrameSizer]' // Must match iframe msg ID
 export const msgIdLen = msgId.length
 export const resetRequiredMethods = Object.freeze({
@@ -54,12 +79,10 @@ export const resetRequiredMethods = Object.freeze({
   documentElementScroll: 1,
 })
 
-export const ONLOAD = 'onload'
-export const INIT = 'init'
-
 export const INIT_EVENTS = Object.freeze({
   [ONLOAD]: 1,
   [INIT]: 1,
+  [INIT_FROM_IFRAME]: 1,
 })
 
 export const EXPAND = 'expanded'
