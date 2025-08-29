@@ -16,11 +16,11 @@ import {
   LOAD,
   LOG_OPTIONS,
   MESSAGE,
-  MOUSE_ENTER,
-  MOUSE_LEAVE,
   MESSAGE_HEADER_LENGTH,
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
+  MOUSE_ENTER,
+  MOUSE_LEAVE,
   NONE,
   ONLOAD,
   PAGE_INFO,
@@ -723,7 +723,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
     return
   }
-debugger
+
   consoleEvent(iframeId, type)
   errorBoundary(iframeId, screenMessage)(msg)
 }

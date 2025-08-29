@@ -1650,7 +1650,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       },
     }
 
-    const isMessageForUs = () => MESSAGE_ID === `${event.data}`.slice(0, MESSAGE_ID_LENGTH)
+    const isMessageForUs = () =>
+      MESSAGE_ID === `${event.data}`.slice(0, MESSAGE_ID_LENGTH)
 
     const getMessageType = () => event.data.split(']')[1].split(':')[0]
 
