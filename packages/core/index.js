@@ -141,7 +141,7 @@ function iframeListener(event) {
     return true
   }
 
-  const isMessageForUs = () =>
+  const isMessageForUs = (msg) =>
     msgId === `${msg}`.slice(0, msgIdLen) &&
     msg.slice(msgIdLen).split(':')[0] in settings
 
@@ -685,8 +685,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
-  if (!isMessageForUs()) {
-    if (iframeId !== null) log(iframeId, 'Ignored:', msg)
+  if (!isMessageForUs(msg)) {
+    consoleEvent('parent', 'ignoredMessage')
+    log('parent', event)
     return
   }
 

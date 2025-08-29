@@ -11,7 +11,10 @@ let id = LABEL
 // Deal with UMD not converting default exports to named exports
 const createGroupConsole = esModuleInterop(acg)
 
-const childConsole = createGroupConsole({ label: `${LABEL}(child)` })
+const childConsole = createGroupConsole({
+  label: `${LABEL}(child)`,
+  expand: false,
+})
 
 export function setConsoleOptions(options) {
   id = options.id || LABEL
