@@ -1702,7 +1702,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
     const { parent, top } = window
 
-    log('[iFrameResizerChild]Ready')
+    consoleEvent('ready')
+    log(
+      'Sending%c ready%c to parent from',
+      HIGHLIGHT,
+      FOREGROUND,
+      location.href,
+    )
 
     sendReady(parent)
     if (parent !== top) sendReady(top)

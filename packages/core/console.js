@@ -9,7 +9,7 @@ import { esModuleInterop, id as identity } from '../common/utils'
 const createConsoleGroup = esModuleInterop(acg)
 
 let settings = {}
-let consoleEnabled = false
+let consoleEnabled = true
 
 export function setConsoleSettings(newSettings) {
   settings = newSettings
