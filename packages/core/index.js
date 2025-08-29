@@ -18,9 +18,9 @@ import {
   MESSAGE,
   MOUSE_ENTER,
   MOUSE_LEAVE,
-  msgHeaderLen,
-  msgId,
-  msgIdLen,
+  MESSAGE_HEADER_LENGTH,
+  MESSAGE_ID,
+  MESSAGE_ID_LENGTH,
   NONE,
   ONLOAD,
   PAGE_INFO,
@@ -28,7 +28,7 @@ import {
   PARENT_INFO,
   PARENT_INFO_STOP,
   RESET,
-  resetRequiredMethods,
+  RESET_REQUIRED_METHODS,
   RESIZE,
   SCROLL,
   SCROLL_BY,
@@ -44,14 +44,13 @@ import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
 import {
   advise,
-  // assert,
+  debug,
   error,
   errorBoundary,
   event as consoleEvent,
   info,
   log,
   purge as consoleClear,
-  setConsoleSettings,
   setupConsole,
   vInfo,
   warn,
@@ -60,8 +59,6 @@ import warnOnNoResponse from './timeout'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
-
-setConsoleSettings(settings)
 
 function iframeListener(event) {
   function resizeIframe() {
@@ -96,8 +93,8 @@ function iframeListener(event) {
     return top + bot
   }
 
-  function processMsg() {
-    const data = msg.slice(msgIdLen).split(':')
+  function processMessage(msg) {
+    const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
     const height = data[1] ? Number(data[1]) : 0
     const iframe = settings[data[0]]?.iframe
     const compStyle = getComputedStyle(iframe)
@@ -164,8 +161,8 @@ function iframeListener(event) {
   }
 
   const isMessageForUs = (msg) =>
-    msgId === `${msg}`.slice(0, msgIdLen) &&
-    msg.slice(msgIdLen).split(':')[0] in settings
+    MESSAGE_ID === `${msg}`.slice(0, MESSAGE_ID_LENGTH) &&
+    msg.slice(MESSAGE_ID_LENGTH).split(':')[0] in settings
 
   function isMessageFromMetaParent() {
     // Test if this message is from a parent above us. This is an ugly test, however, updating
@@ -180,7 +177,7 @@ function iframeListener(event) {
   }
 
   const getMsgBody = (offset) =>
-    msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
+    msg.slice(msg.indexOf(':') + MESSAGE_HEADER_LENGTH + offset)
 
   function forwardMsgFromIframe(msgBody) {
     log(
@@ -492,10 +489,10 @@ function iframeListener(event) {
     let mousePos = {}
 
     if (messageData.width === 0 && messageData.height === 0) {
-      const data = getMsgBody(9).split(':')
+      const coords = getMsgBody(9).split(':')
       mousePos = {
-        x: data[1],
-        y: data[0],
+        x: coords[1],
+        y: coords[0],
       }
     } else {
       mousePos = {
@@ -687,7 +684,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     settings[iframeId].firstRun = false
   }
 
-  function screenMessage() {
+  function screenMessage(msg) {
     checkSettings(iframeId)
 
     if (!isMessageFromMetaParent()) {
@@ -708,13 +705,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   if (!isMessageForUs(msg)) {
+    if (typeof msg !== 'string') return
     consoleEvent('parent', 'ignoredMessage')
-    log('parent', event)
+    debug('parent', msg)
     return
   }
 
-  const messageData = processMsg()
-  const iframeId = messageData.id
+  const messageData = processMessage(msg)
+  const { id, type } = messageData
+  const iframeId = id
 
   if (!iframeId) {
     warn(
@@ -724,9 +723,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
     return
   }
-
-  consoleEvent(iframeId, messageData.type)
-  errorBoundary(iframeId, screenMessage)()
+debugger
+  consoleEvent(iframeId, type)
+  errorBoundary(iframeId, screenMessage)(msg)
 }
 
 function checkEvent(iframeId, funcName, val) {
@@ -863,7 +862,7 @@ function trigger(calleeMsg, msg, id) {
 
     if (sameOrigin) {
       try {
-        iframe.contentWindow.iframeChildListener(msgId + msg)
+        iframe.contentWindow.iframeChildListener(MESSAGE_ID + msg)
         logSent(`Sending message to iframe %c${id}%c via same origin%c`)
         return
       } catch (error) {
@@ -880,7 +879,7 @@ function trigger(calleeMsg, msg, id) {
       `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
     )
 
-    postMessageTarget.postMessage(msgId + msg, targetOrigin)
+    postMessageTarget.postMessage(MESSAGE_ID + msg, targetOrigin)
   }
 
   function checkAndSend() {
@@ -1017,7 +1016,7 @@ export default (options) => (iframe) => {
   function checkReset() {
     const firstRun = settings[iframeId]?.firstRun
     const resetRequestMethod =
-      settings[iframeId]?.heightCalculationMethod in resetRequiredMethods
+      settings[iframeId]?.heightCalculationMethod in RESET_REQUIRED_METHODS
 
     if (!firstRun && resetRequestMethod) {
       resetIframe({ iframe, height: 0, width: 0, type: INIT })
@@ -1250,6 +1249,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     init(createOutgoingMsg(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
+    // endAutoGroup(iframeId)
   }
 
   function enableVInfo(options) {
