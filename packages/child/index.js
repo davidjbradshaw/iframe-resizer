@@ -1707,7 +1707,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       'Sending%c ready%c to parent from',
       HIGHLIGHT,
       FOREGROUND,
-      location.href,
+      window.location.href,
     )
 
     sendReady(parent)
