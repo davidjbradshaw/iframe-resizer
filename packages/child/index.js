@@ -28,6 +28,7 @@ import {
   PARENT_INFO,
   PARENT_INFO_STOP,
   PARENT_RESIZE_REQUEST,
+  READY_STATE_CHANGE,
   RESIZE_OBSERVER,
   SCROLL,
   SCROLL_BY,
@@ -250,7 +251,7 @@ function iframeResizerChild() {
   function checkReadyYet(readyCallback) {
     if (document.readyState === 'complete') isolateUserCode(readyCallback)
     else
-      addEventListener(document, 'readystatechange', () =>
+      addEventListener(document, READY_STATE_CHANGE, () =>
         checkReadyYet(readyCallback),
       )
   }
@@ -529,7 +530,7 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     manageTriggerEvent({
       method,
       eventType: 'Ready State Change',
-      eventName: 'readystatechange',
+      eventName: READY_STATE_CHANGE,
     })
   }
 
@@ -1738,7 +1739,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       setTimeout(() => received({ data, sameOrigin: true }))
 
     addEventListener(window, MESSAGE, received)
-    addEventListener(document, 'readystatechange', checkLateLoaded)
+    addEventListener(document, READY_STATE_CHANGE, checkLateLoaded)
 
     setTimeout(checkLateLoaded)
   }

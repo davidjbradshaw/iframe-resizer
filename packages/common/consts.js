@@ -33,7 +33,9 @@ export const IGNORE_ATTR = 'data-iframe-ignore'
 
 export const HEIGHT = 'height'
 export const WIDTH = 'width'
-ecport const SCROLL = 'scroll'
+export const SCROLL = 'scroll'
+
+export const READY_STATE_CHANGE = 'readystatechange'
 
 export const HEIGHT_EDGE = 'bottom'
 export const WIDTH_EDGE = 'right'
