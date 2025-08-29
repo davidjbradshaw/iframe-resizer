@@ -71,10 +71,10 @@ export const HORIZONTAL = 'horizontal'
 
 export const NO_CHANGE = 'No change in content size detected'
 
-export const msgHeaderLen = MESSAGE.length
-export const msgId = '[iFrameSizer]' // Must match iframe msg ID
-export const msgIdLen = msgId.length
-export const resetRequiredMethods = Object.freeze({
+export const MESSAGE_HEADER_LENGTH = MESSAGE.length
+export const MESSAGE_ID = '[iFrameSizer]' // Must match iframe msg ID
+export const MESSAGE_ID_LENGTH = MESSAGE_ID.length
+export const RESET_REQUIRED_METHODS = Object.freeze({
   max: 1,
   scroll: 1,
   bodyScroll: 1,

@@ -4,16 +4,17 @@ import { BOLD, LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { esModuleInterop, id as identity } from '../common/utils'
+import settings from './values/settings'
 
 // Deal with UMD not converting default exports to named exports
 const createConsoleGroup = esModuleInterop(acg)
 
-let settings = {}
 let consoleEnabled = true
 
-export function setConsoleSettings(newSettings) {
-  settings = newSettings
-}
+const parent = createConsoleGroup({
+  expand: false,
+  label: 'parent',
+})
 
 const getMyId = (iframeId) =>
   window.top === window.self
@@ -40,7 +41,9 @@ export function setupConsole({ enabled, expand, iframeId }) {
 const output =
   (type) =>
   (iframeId, ...args) =>
-    settings[iframeId]?.console[type](...args)
+    settings[iframeId]
+      ? settings[iframeId].console[type](...args)
+      : parent[type](...args)
 
 export const outputSwitched =
   (type) =>
