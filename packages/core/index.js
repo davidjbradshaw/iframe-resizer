@@ -864,10 +864,15 @@ function trigger(calleeMsg, msg, id) {
     if (sameOrigin) {
       try {
         iframe.contentWindow.iframeChildListener(msgId + msg)
-        logSent(`Sending message to iframe %c${id}%c via sameOrigin`)
+        logSent(`Sending message to iframe %c${id}%c via same origin%c`)
         return
       } catch (error) {
-        log(id, `Same domain connection failed. Trying cross domain%c`)
+        if (calleeMsg in INIT_EVENTS) {
+          settings[id].sameOrigin = false
+          info(id, "New iframe, does not support same origin")
+        } else {
+          warn(id, `Same origin messaging failed, falling back to postMessage`)
+        }
       }
     }
 
