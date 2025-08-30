@@ -1249,7 +1249,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     init(createOutgoingMsg(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
-    // endAutoGroup(iframeId)
   }
 
   function enableVInfo(options) {
