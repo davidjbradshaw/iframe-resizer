@@ -58,7 +58,7 @@ declare module '@iframe-resizer/parent' {
       /**
        * Set the resizing direction of the iframe.
        */
-      direction?: 'vertical' | 'horizontal' | 'none' | 'both' | undefined
+      direction?: 'vertical' | 'horizontal' | NONE | 'both' | undefined
 
       /**
        * Custom iframe id

@@ -31,9 +31,17 @@ export const SIZE_ATTR = 'data-iframe-size'
 export const OVERFLOW_ATTR = 'data-iframe-overflowed'
 export const IGNORE_ATTR = 'data-iframe-ignore'
 
+export const AUTO = 'auto'
 export const HEIGHT = 'height'
 export const WIDTH = 'width'
 export const SCROLL = 'scroll'
+
+export const BOOLEAN = 'boolean'
+export const NUMBER = 'number'
+export const STRING = 'string'
+export const FUNCTION = 'function'
+export const OBJECT = 'object'
+export const UNDEFINED = 'undefined'
 
 export const READY_STATE_CHANGE = 'readystatechange'
 

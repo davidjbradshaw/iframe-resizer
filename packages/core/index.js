@@ -1,6 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
+  AUTO,
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
@@ -22,6 +23,8 @@ import {
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
+  NUMBER,
+  OBJECT,
   ONLOAD,
   PAGE_INFO,
   PAGE_INFO_STOP,
@@ -34,6 +37,7 @@ import {
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
+  STRING,
   TITLE,
   VERSION,
   VERTICAL,
@@ -41,7 +45,8 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
+import { hasOwn, once, typeAssert } from '../common/utils'
+import checkEvent from './checkEvent'
 import {
   advise,
   debug,
@@ -704,7 +709,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   if (!isMessageForUs(msg)) {
-    if (typeof msg !== 'string') return
+    if (typeof msg !== STRING) return
     consoleEvent('parent', 'ignoredMessage')
     debug('parent', msg)
     return
@@ -725,32 +730,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   consoleEvent(iframeId, type)
   errorBoundary(iframeId, screenMessage)(msg)
-}
-
-function checkEvent(iframeId, funcName, val) {
-  let func = null
-  let retVal = null
-
-  if (settings[iframeId]) {
-    func = settings[iframeId][funcName]
-
-    if (typeof func === 'function')
-      if (funcName === 'onBeforeClose' || funcName === 'onScroll') {
-        try {
-          retVal = func(val)
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(error)
-          warn(iframeId, `Error in ${funcName} callback`)
-        }
-      } else isolateUserCode(func, val)
-    else
-      throw new TypeError(
-        `${funcName} on iFrame[${iframeId}] is not a function`,
-      )
-  }
-
-  return retVal
 }
 
 function removeIframeListeners(iframe) {
@@ -961,7 +940,7 @@ export default (options) => (iframe) => {
   }
 
   function ensureHasId(iframeId) {
-    if (iframeId && typeof iframeId !== 'string') {
+    if (iframeId && typeof iframeId !== STRING) {
       throw new TypeError('Invalid id for iFrame. Expected String')
     }
 
@@ -984,7 +963,7 @@ export default (options) => (iframe) => {
     )
 
     iframe.style.overflow =
-      settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
+      settings[iframeId]?.scrolling === false ? 'hidden' : AUTO
 
     switch (settings[iframeId]?.scrolling) {
       case 'omit':
@@ -1008,7 +987,7 @@ export default (options) => (iframe) => {
   function setupBodyMarginValues() {
     const { bodyMargin } = settings[iframeId]
 
-    if (typeof bodyMargin === 'number' || bodyMargin === '0') {
+    if (typeof bodyMargin === NUMBER || bodyMargin === '0') {
       settings[iframeId].bodyMargin = `${bodyMargin}px`
     }
   }
@@ -1053,7 +1032,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         },
 
         moveToAnchor(anchor) {
-          typeAssert(anchor, 'string', 'moveToAnchor(anchor) anchor')
+          typeAssert(anchor, STRING, 'moveToAnchor(anchor) anchor')
           trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
         },
 
@@ -1269,7 +1248,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function startLogging(iframeId, options) {
     const isLogEnabled = hasOwn(options, 'log')
-    const isLogString = typeof options.log === 'string'
+    const isLogString = typeof options.log === STRING
     const enabled = isLogEnabled
       ? isLogString
         ? true
@@ -1303,7 +1282,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   const iframeId = ensureHasId(iframe.id)
 
-  if (typeof options !== 'object') {
+  if (typeof options !== OBJECT) {
     throw new TypeError('Options is not an object')
   }
 

@@ -1,6 +1,6 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { LABEL } from '../common/consts'
+import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts'
 
 const id = `[${LABEL}] `
 
@@ -28,18 +28,18 @@ export default function createIframeResize() {
   let iFrames
 
   return function (options, target) {
-    if (typeof window === 'undefined') return [] // don't run for server side render
+    if (typeof window === UNDEFINED) return [] // don't run for server side render
 
     connectWithOptions = connectResizer(options)
     iFrames = [] // Only return iFrames passed in on this call
 
     switch (typeof target) {
-      case 'undefined':
-      case 'string':
+      case UNDEFINED:
+      case STRING:
         document.querySelectorAll(target || 'iframe').forEach(setup)
         break
 
-      case 'object':
+      case OBJECT:
         setup(target)
         break
 

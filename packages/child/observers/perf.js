@@ -12,9 +12,6 @@ export const PREF_END = '--ifr-end'
 const PREF_MEASURE = '--ifr-measure'
 
 const timings = []
-// const usedTags = new WeakSet()
-
-// const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
 
 let detail = {}
 let oldAverage = 0
@@ -95,9 +92,6 @@ export default function createPerformanceObserver() {
   info('Attached PerformanceObserver to page')
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })
-
-  // addUsedTag(document.documentElement)
-  // addUsedTag(document.body)
 
   startTimingCheck()
 
