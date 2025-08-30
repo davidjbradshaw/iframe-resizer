@@ -493,7 +493,7 @@ function iframeListener(event) {
     jumpToParent()
   }
 
-  function onMouse(event) {
+  function onMouse(event, messageData) {
     let mousePos = {}
 
     if (messageData.width === 0 && messageData.height === 0) {
@@ -576,11 +576,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case MOUSE_ENTER:
-        onMouse('onMouseEnter')
+        onMouse('onMouseEnter', messageData)
         break
 
       case MOUSE_LEAVE:
-        onMouse('onMouseLeave')
+        onMouse('onMouseLeave', messageData)
         break
 
       case BEFORE_UNLOAD:
