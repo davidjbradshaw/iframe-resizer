@@ -13,7 +13,6 @@ import {
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
-  INIT_FROM_IFRAME,
   LOAD,
   LOG_OPTIONS,
   MESSAGE,
@@ -28,6 +27,7 @@ import {
   ONLOAD,
   PAGE_INFO,
   PAGE_INFO_STOP,
+  PARENT,
   PARENT_INFO,
   PARENT_INFO_STOP,
   RESET,
@@ -61,6 +61,7 @@ import {
   warn,
 } from './console'
 import createOutgoingMessage from './outgoing'
+import iframeReady from './ready'
 import warnOnNoResponse from './timeout'
 import trigger from './trigger'
 import defaults from './values/defaults'
@@ -673,16 +674,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  const initFromIframe = (source) => (iframeId) => {
-    const { ready, postMessageTarget } = settings[iframeId]
-    if (ready || source !== postMessageTarget) return
-    trigger(INIT_FROM_IFRAME, createOutgoingMessage(iframeId), iframeId)
-    warnOnNoResponse(iframeId, settings)
-  }
-
-  const iFrameReadyMsgReceived = (source) =>
-    Object.keys(settings).forEach(initFromIframe(source))
-
   function firstRun() {
     if (!settings[iframeId]) return
 
@@ -708,7 +699,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   if (typeof msg !== STRING) return
 
   if (msg === CHILD_READY) {
-    iFrameReadyMsgReceived(event.source)
+    iframeReady(event.source)
     return
   }
 
