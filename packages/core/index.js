@@ -59,6 +59,7 @@ import {
   vInfo,
   warn,
 } from './console'
+import createOutgoingMessage from './outgoing'
 import warnOnNoResponse from './timeout'
 import trigger from './trigger'
 import defaults from './values/defaults'
@@ -674,7 +675,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   const initFromIframe = (source) => (iframeId) => {
     const { ready, postMessageTarget } = settings[iframeId]
     if (ready || source !== postMessageTarget) return
-    trigger(INIT_FROM_IFRAME, createOutgoingMsg(iframeId), iframeId)
+    trigger(INIT_FROM_IFRAME, createOutgoingMessage(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
 
@@ -703,13 +704,14 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   let msg = event.data
 
+  if (typeof msg !== STRING) return
+
   if (msg === '[iFrameResizerChild]Ready') {
     iFrameReadyMsgReceived(event.source)
     return
   }
 
   if (!isMessageForUs(msg)) {
-    if (typeof msg !== STRING) return
     consoleEvent('parent', 'ignoredMessage')
     debug('parent', msg)
     return
@@ -811,37 +813,6 @@ function setSize(messageData) {
 
   if (sizeHeight) setDimension(HEIGHT)
   if (sizeWidth) setDimension(WIDTH)
-}
-
-function createOutgoingMsg(iframeId) {
-  const iframeSettings = settings[iframeId]
-
-  return [
-    iframeId,
-    '8', // Backwards compatibility (PaddingV1)
-    iframeSettings.sizeWidth,
-    iframeSettings.log,
-    '32', // Backwards compatibility (Interval)
-    true, // Backwards compatibility (EnablePublicMethods)
-    iframeSettings.autoResize,
-    iframeSettings.bodyMargin,
-    iframeSettings.heightCalculationMethod,
-    iframeSettings.bodyBackground,
-    iframeSettings.bodyPadding,
-    iframeSettings.tolerance,
-    iframeSettings.inPageLinks,
-    'child', // Backwards compatibility (resizeFrom)
-    iframeSettings.widthCalculationMethod,
-    iframeSettings.mouseEvents,
-    iframeSettings.offsetHeight,
-    iframeSettings.offsetWidth,
-    iframeSettings.sizeHeight,
-    iframeSettings.license,
-    page.version,
-    iframeSettings.mode,
-    '', // iframeSettings.sizeSelector,
-    iframeSettings.logExpand,
-  ].join(':')
 }
 
 let count = 0
@@ -1164,7 +1135,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setupEventListenersOnce()
     setScrolling()
     setupBodyMarginValues()
-    init(createOutgoingMsg(iframeId))
+    init(createOutgoingMessage(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
   }
