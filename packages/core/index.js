@@ -355,7 +355,8 @@ function iframeListener(event) {
 
   function checkIframeExists() {
     if (messageData.iframe === null) {
-      warn(iframeId, `The iframe (${messageData.id}) was not found.`)
+      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
+      warn(iframeId, `The target iframe was not found.`)
       return false
     }
 
@@ -552,15 +553,18 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
   }
 
-  function setTitle(title, iframeId) {
-    if (!settings[iframeId]?.syncTitle) return
-    settings[iframeId].iframe.title = title
-    info(iframeId, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
+  function setTitle(id, title) {
+    if (!settings[id]?.syncTitle) return
+    settings[id].iframe.title = title
+    info(id, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
   }
 
   function receivedMessage(messageData) {
-    const { height, iframe, msg, type, width } = messageData
-    if (settings[iframeId]?.firstRun) firstRun()
+    const { height, id, iframe, lastMessage, msg, type, width } = messageData
+    if (settings[id]?.firstRun) firstRun(messageData)
+    settings[id].ready = true
+
+    log(id, `Received: %c${lastMessage}`, HIGHLIGHT)
 
     switch (type) {
       case CLOSE:
@@ -580,12 +584,12 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case BEFORE_UNLOAD:
-        info(iframeId, 'Ready state reset')
-        settings[iframeId].ready = false
+        info(id, 'Ready state reset')
+        settings[id].ready = false
         break
 
       case AUTO_RESIZE:
-        settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+        settings[id].autoResize = JSON.parse(getMsgBody(9))
         break
 
       case SCROLL_BY:
@@ -621,7 +625,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case TITLE:
-        setTitle(msg, iframeId)
+        setTitle(id, msg)
         break
 
       case RESET:
@@ -630,16 +634,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
       case INIT:
         resizeIframe()
-        checkSameDomain(iframeId)
+        checkSameDomain(id)
         checkVersion(msg)
-        setup = true
         on('onReady', iframe)
         break
 
       default:
         if (width === 0 && height === 0) {
           warn(
-            iframeId,
+            id,
             `Unsupported message received (${type}), this is likely due to the iframe containing a later ` +
               `version of iframe-resizer than the parent page`,
           )
@@ -647,14 +650,14 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         }
 
         if (width === 0 || height === 0) {
-          log(iframeId, 'Ignoring message with 0 height or width')
+          log(id, 'Ignoring message with 0 height or width')
           return
         }
 
         // Recheck document.hidden here, as only Firefox
         // correctly supports this in the iframe
         if (document.hidden) {
-          log(iframeId, 'Page hidden - ignored resize request')
+          log(id, 'Page hidden - ignored resize request')
           return
         }
 
@@ -662,35 +665,13 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  function firstRun() {
-    if (!settings[iframeId]) return
+  function firstRun({ id, mode }) {
+    if (!settings[id]) return
 
-    checkMode(iframeId, messageData.mode)
-    settings[iframeId].firstRun = false
+    checkMode(id, mode)
+    settings[id].firstRun = false
   }
 
-  function screenMessage(msg) {
-    messageData = decodeMessage(msg)
-    const { id, type } = messageData
-    iframeId = id
-
-    consoleEvent(id, type)
-
-    if (!settings[id])
-      throw new Error(`${type} No settings for ${id}. Message was: ${msg}`)
-
-    if (isMessageFromMetaParent()) return
-
-    log(id, `Received: %c${msg}`, HIGHLIGHT)
-    settings[id].ready = true
-
-    if (!checkIframeExists() || !isMessageFromIframe()) return
-
-    receivedMessage(messageData)
-  }
-
-  let iframeId
-  let messageData = {}
   const msg = event.data
 
   if (typeof msg !== STRING) return
@@ -706,7 +687,25 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
-  errorBoundary(iframeId, screenMessage)(msg)
+  const messageData = decodeMessage(msg)
+  const { id, type } = messageData
+  const iframeId = id
+
+  consoleEvent(id, type)
+  settings[id].lastMessage = msg
+
+  switch (true) {
+    case !settings[id]:
+      throw new Error(`${type} No settings for ${id}. Message was: ${msg}`)
+
+    case isMessageFromMetaParent():
+    case !checkIframeExists():
+    case !isMessageFromIframe():
+      return
+
+    default:
+      errorBoundary(id, receivedMessage)(messageData)
+  }
 }
 
 function removeIframeListeners(iframe) {
@@ -800,7 +799,6 @@ function setSize(messageData) {
 }
 
 let count = 0
-let setup = false
 let vAdvised = false
 let vInfoDisable = false
 
@@ -946,7 +944,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
     const iFrameLoaded = () => {
-      trigger(ONLOAD, `${msg}:${setup}`, id)
+      trigger(ONLOAD, msg, id)
       warnOnNoResponse(id, settings)
       checkReset()
     }
@@ -958,7 +956,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
     if (waitForLoad === true) return
 
-    trigger(INIT, `${msg}:${setup}`, id)
+    trigger(INIT, msg, id)
     warnOnNoResponse(id, settings)
   }
 
