@@ -1,3 +1,4 @@
+import { CHILD } from '../common/consts'
 import page from './values/page'
 import settings from './values/settings'
 
@@ -36,7 +37,7 @@ export default function (iframeId) {
     bodyPadding,
     tolerance,
     inPageLinks,
-    'child', // Backwards compatibility (resizeFrom)
+    CHILD, // Backwards compatibility (resizeFrom)
     widthCalculationMethod,
     mouseEvents,
     offsetHeight,

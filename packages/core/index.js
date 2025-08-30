@@ -5,6 +5,7 @@ import {
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
+  CHILD_READY,
   CLOSE,
   COLLAPSE,
   EXPAND,
@@ -706,14 +707,14 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   if (typeof msg !== STRING) return
 
-  if (msg === '[iFrameResizerChild]Ready') {
+  if (msg === CHILD_READY) {
     iFrameReadyMsgReceived(event.source)
     return
   }
 
   if (!isMessageForUs(msg)) {
-    consoleEvent('parent', 'ignoredMessage')
-    debug('parent', msg)
+    consoleEvent(PARENT, 'ignoredMessage')
+    debug(PARENT, msg)
     return
   }
 

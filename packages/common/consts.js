@@ -1,5 +1,8 @@
 export const VERSION = '[VI]{version}[/VI]'
 export const LABEL = 'iframeResizer'
+export const CHILD_READY = '[iFrameResizerChild]Ready'
+export const PARENT = 'parent'
+export const CHILD = 'child'
 
 export const AUTO_RESIZE = 'autoResize'
 export const BEFORE_UNLOAD = 'beforeUnload'

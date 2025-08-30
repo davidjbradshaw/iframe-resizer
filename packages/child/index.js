@@ -6,6 +6,8 @@ import {
   BASE,
   BEFORE_UNLOAD,
   BOOLEAN,
+  CHILD,
+  CHILD_READY,
   CLOSE,
   ENABLE,
   FUNCTION,
@@ -158,7 +160,7 @@ function iframeResizerChild() {
   let overflowedNodeSet = new Set()
   let overflowObserver
   let parentId = ''
-  let resizeFrom = 'child'
+  let resizeFrom = CHILD
   let resizeObserver
   let sameOrigin = false
   let sizeSelector = ''
@@ -1720,7 +1722,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   let sent = false
   const sendReady = (target) =>
     target.postMessage(
-      '[iFrameResizerChild]Ready',
+      CHILD_READY,
       window?.iframeResizer?.targetOrigin || '*',
     )
 

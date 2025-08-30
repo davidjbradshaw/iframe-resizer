@@ -1,4 +1,4 @@
-import { UNDEFINED } from '../common/consts'
+import { PARENT, UNDEFINED } from '../common/consts'
 import { deprecateFunction } from '../core/console'
 import createIframeResize from './factory'
 
@@ -8,7 +8,7 @@ if (typeof window !== UNDEFINED) {
   window.iFrameResize =
     window.iFrameResize ||
     function (...args) {
-      deprecateFunction('iFrameResize()', 'iframeResize()', '', 'parent')
+      deprecateFunction('iFrameResize()', 'iframeResize()', '', PARENT)
       iframeResize(...args)
     }
 }
