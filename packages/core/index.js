@@ -1,9 +1,11 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
+  AUTO,
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
+  CHILD_READY,
   CLOSE,
   COLLAPSE,
   EXPAND,
@@ -11,8 +13,6 @@ import {
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
-  INIT_EVENTS,
-  INIT_FROM_IFRAME,
   LOAD,
   LOG_OPTIONS,
   MESSAGE,
@@ -22,9 +22,12 @@ import {
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
+  NUMBER,
+  OBJECT,
   ONLOAD,
   PAGE_INFO,
   PAGE_INFO_STOP,
+  PARENT,
   PARENT_INFO,
   PARENT_INFO_STOP,
   RESET,
@@ -34,6 +37,7 @@ import {
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
+  STRING,
   TITLE,
   VERSION,
   VERTICAL,
@@ -41,7 +45,8 @@ import {
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
+import { hasOwn, once, typeAssert } from '../common/utils'
+import checkEvent from './checkEvent'
 import {
   advise,
   debug,
@@ -55,7 +60,10 @@ import {
   vInfo,
   warn,
 } from './console'
+import createOutgoingMessage from './outgoing'
+import iframeReady from './ready'
 import warnOnNoResponse from './timeout'
+import trigger from './trigger'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -93,7 +101,7 @@ function iframeListener(event) {
     return top + bot
   }
 
-  function processMessage(msg) {
+  function decodeMessage(msg) {
     const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
     const height = data[1] ? Number(data[1]) : 0
     const iframe = settings[data[0]]?.iframe
@@ -347,7 +355,8 @@ function iframeListener(event) {
 
   function checkIframeExists() {
     if (messageData.iframe === null) {
-      warn(iframeId, `The iframe (${messageData.id}) was not found.`)
+      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
+      warn(iframeId, `The target iframe was not found.`)
       return false
     }
 
@@ -485,7 +494,7 @@ function iframeListener(event) {
     jumpToParent()
   }
 
-  function onMouse(event) {
+  function onMouse(event, messageData) {
     let mousePos = {}
 
     if (messageData.width === 0 && messageData.height === 0) {
@@ -545,19 +554,18 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
   }
 
-  function setTitle(title, iframeId) {
-    if (!settings[iframeId]?.syncTitle) return
-    settings[iframeId].iframe.title = title
-    info(iframeId, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
+  function setTitle(id, title) {
+    if (!settings[id]?.syncTitle) return
+    settings[id].iframe.title = title
+    info(id, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
   }
 
-  function started() {
-    setup = true
-  }
+  function receivedMessage(messageData) {
+    const { height, id, iframe, lastMessage, msg, type, width } = messageData
+    if (settings[id]?.firstRun) firstRun(messageData)
+    settings[id].ready = true
 
-  function eventMsg() {
-    const { height, iframe, msg, type, width } = messageData
-    if (settings[iframeId]?.firstRun) firstRun()
+    log(id, `Received: %c${lastMessage}`, HIGHLIGHT)
 
     switch (type) {
       case CLOSE:
@@ -569,20 +577,20 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case MOUSE_ENTER:
-        onMouse('onMouseEnter')
+        onMouse('onMouseEnter', messageData)
         break
 
       case MOUSE_LEAVE:
-        onMouse('onMouseLeave')
+        onMouse('onMouseLeave', messageData)
         break
 
       case BEFORE_UNLOAD:
-        info(iframeId, 'Ready state reset')
-        settings[iframeId].ready = false
+        info(id, 'Ready state reset')
+        settings[id].ready = false
         break
 
       case AUTO_RESIZE:
-        settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+        settings[id].autoResize = JSON.parse(getMsgBody(9))
         break
 
       case SCROLL_BY:
@@ -618,7 +626,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case TITLE:
-        setTitle(msg, iframeId)
+        setTitle(id, msg)
         break
 
       case RESET:
@@ -627,16 +635,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
       case INIT:
         resizeIframe()
-        checkSameDomain(iframeId)
+        checkSameDomain(id)
         checkVersion(msg)
-        started()
         on('onReady', iframe)
         break
 
       default:
         if (width === 0 && height === 0) {
           warn(
-            iframeId,
+            id,
             `Unsupported message received (${type}), this is likely due to the iframe containing a later ` +
               `version of iframe-resizer than the parent page`,
           )
@@ -644,14 +651,14 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         }
 
         if (width === 0 || height === 0) {
-          log(iframeId, 'Ignoring message with 0 height or width')
+          log(id, 'Ignoring message with 0 height or width')
           return
         }
 
         // Recheck document.hidden here, as only Firefox
         // correctly supports this in the iframe
         if (document.hidden) {
-          log(iframeId, 'Page hidden - ignored resize request')
+          log(id, 'Page hidden - ignored resize request')
           return
         }
 
@@ -659,99 +666,47 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  function checkSettings(iframeId) {
-    if (!settings[iframeId]) {
-      throw new Error(
-        `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`,
-      )
-    }
+  function firstRun({ id, mode }) {
+    if (!settings[id]) return
+
+    checkMode(id, mode)
+    settings[id].firstRun = false
   }
 
-  const initFromIframe = (source) => (iframeId) => {
-    const { ready, postMessageTarget } = settings[iframeId]
-    if (ready || source !== postMessageTarget) return
-    trigger(INIT_FROM_IFRAME, createOutgoingMsg(iframeId), iframeId)
-    warnOnNoResponse(iframeId, settings)
-  }
+  const msg = event.data
 
-  const iFrameReadyMsgReceived = (source) =>
-    Object.keys(settings).forEach(initFromIframe(source))
+  if (typeof msg !== STRING) return
 
-  function firstRun() {
-    if (!settings[iframeId]) return
-
-    checkMode(iframeId, messageData.mode)
-    settings[iframeId].firstRun = false
-  }
-
-  function screenMessage(msg) {
-    checkSettings(iframeId)
-
-    if (!isMessageFromMetaParent()) {
-      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
-      settings[iframeId].ready = true
-
-      if (checkIframeExists() && isMessageFromIframe()) {
-        eventMsg()
-      }
-    }
-  }
-
-  let msg = event.data
-
-  if (msg === '[iFrameResizerChild]Ready') {
-    iFrameReadyMsgReceived(event.source)
+  if (msg === CHILD_READY) {
+    iframeReady(event.source)
     return
   }
 
   if (!isMessageForUs(msg)) {
-    if (typeof msg !== 'string') return
-    consoleEvent('parent', 'ignoredMessage')
-    debug('parent', msg)
+    consoleEvent(PARENT, 'ignoredMessage')
+    debug(PARENT, msg)
     return
   }
 
-  const messageData = processMessage(msg)
+  const messageData = decodeMessage(msg)
   const { id, type } = messageData
   const iframeId = id
 
-  if (!iframeId) {
-    warn(
-      '',
-      'iframeResizer received messageData without id, message was: ',
-      msg,
-    )
-    return
+  consoleEvent(id, type)
+  settings[id].lastMessage = msg
+
+  switch (true) {
+    case !settings[id]:
+      throw new Error(`${type} No settings for ${id}. Message was: ${msg}`)
+
+    case isMessageFromMetaParent():
+    case !checkIframeExists():
+    case !isMessageFromIframe():
+      return
+
+    default:
+      errorBoundary(id, receivedMessage)(messageData)
   }
-
-  consoleEvent(iframeId, type)
-  errorBoundary(iframeId, screenMessage)(msg)
-}
-
-function checkEvent(iframeId, funcName, val) {
-  let func = null
-  let retVal = null
-
-  if (settings[iframeId]) {
-    func = settings[iframeId][funcName]
-
-    if (typeof func === 'function')
-      if (funcName === 'onBeforeClose' || funcName === 'onScroll') {
-        try {
-          retVal = func(val)
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(error)
-          warn(iframeId, `Error in ${funcName} callback`)
-        }
-      } else isolateUserCode(func, val)
-    else
-      throw new TypeError(
-        `${funcName} on iFrame[${iframeId}] is not a function`,
-      )
-  }
-
-  return retVal
 }
 
 function removeIframeListeners(iframe) {
@@ -844,91 +799,7 @@ function setSize(messageData) {
   if (sizeWidth) setDimension(WIDTH)
 }
 
-const filterMsg = (msg) =>
-  msg
-    .split(':')
-    .filter((_, index) => index !== 19)
-    .join(':')
-
-function trigger(calleeMsg, msg, id) {
-  function logSent(route) {
-    const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
-    info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
-    info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
-  }
-
-  function postMessageToIframe() {
-    const { iframe, postMessageTarget, sameOrigin, targetOrigin } = settings[id]
-
-    if (sameOrigin) {
-      try {
-        iframe.contentWindow.iframeChildListener(MESSAGE_ID + msg)
-        logSent(`Sending message to iframe %c${id}%c via same origin%c`)
-        return
-      } catch (error) {
-        if (calleeMsg in INIT_EVENTS) {
-          settings[id].sameOrigin = false
-          log(id, 'New iframe does not support same origin')
-        } else {
-          warn(id, 'Same origin messaging failed, falling back to postMessage')
-        }
-      }
-    }
-
-    logSent(
-      `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
-    )
-
-    postMessageTarget.postMessage(MESSAGE_ID + msg, targetOrigin)
-  }
-
-  function checkAndSend() {
-    if (!settings[id]?.postMessageTarget) {
-      warn(id, `Iframe(${id}) not found`)
-      return
-    }
-
-    postMessageToIframe()
-  }
-
-  consoleEvent(id, calleeMsg)
-
-  if (settings[id]) checkAndSend()
-}
-
-function createOutgoingMsg(iframeId) {
-  const iframeSettings = settings[iframeId]
-
-  return [
-    iframeId,
-    '8', // Backwards compatibility (PaddingV1)
-    iframeSettings.sizeWidth,
-    iframeSettings.log,
-    '32', // Backwards compatibility (Interval)
-    true, // Backwards compatibility (EnablePublicMethods)
-    iframeSettings.autoResize,
-    iframeSettings.bodyMargin,
-    iframeSettings.heightCalculationMethod,
-    iframeSettings.bodyBackground,
-    iframeSettings.bodyPadding,
-    iframeSettings.tolerance,
-    iframeSettings.inPageLinks,
-    'child', // Backwards compatibility (resizeFrom)
-    iframeSettings.widthCalculationMethod,
-    iframeSettings.mouseEvents,
-    iframeSettings.offsetHeight,
-    iframeSettings.offsetWidth,
-    iframeSettings.sizeHeight,
-    iframeSettings.license,
-    page.version,
-    iframeSettings.mode,
-    '', // iframeSettings.sizeSelector,
-    iframeSettings.logExpand,
-  ].join(':')
-}
-
 let count = 0
-let setup = false
 let vAdvised = false
 let vInfoDisable = false
 
@@ -962,7 +833,7 @@ export default (options) => (iframe) => {
   }
 
   function ensureHasId(iframeId) {
-    if (iframeId && typeof iframeId !== 'string') {
+    if (iframeId && typeof iframeId !== STRING) {
       throw new TypeError('Invalid id for iFrame. Expected String')
     }
 
@@ -984,7 +855,7 @@ export default (options) => (iframe) => {
     )
 
     iframe.style.overflow =
-      settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
+      settings[iframeId]?.scrolling === false ? 'hidden' : AUTO
 
     switch (settings[iframeId]?.scrolling) {
       case 'omit':
@@ -1008,7 +879,7 @@ export default (options) => (iframe) => {
   function setupBodyMarginValues() {
     const { bodyMargin } = settings[iframeId]
 
-    if (typeof bodyMargin === 'number' || bodyMargin === '0') {
+    if (typeof bodyMargin === NUMBER || bodyMargin === '0') {
       settings[iframeId].bodyMargin = `${bodyMargin}px`
     }
   }
@@ -1053,7 +924,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         },
 
         moveToAnchor(anchor) {
-          typeAssert(anchor, 'string', 'moveToAnchor(anchor) anchor')
+          typeAssert(anchor, STRING, 'moveToAnchor(anchor) anchor')
           trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
         },
 
@@ -1073,7 +944,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
     const iFrameLoaded = () => {
-      trigger(ONLOAD, `${msg}:${setup}`, id)
+      trigger(ONLOAD, msg, id)
       warnOnNoResponse(id, settings)
       checkReset()
     }
@@ -1085,7 +956,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
     if (waitForLoad === true) return
 
-    trigger(INIT, `${msg}:${setup}`, id)
+    trigger(INIT, msg, id)
     warnOnNoResponse(id, settings)
   }
 
@@ -1246,7 +1117,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setupEventListenersOnce()
     setScrolling()
     setupBodyMarginValues()
-    init(createOutgoingMsg(iframeId))
+    init(createOutgoingMessage(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
   }
@@ -1269,7 +1140,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function startLogging(iframeId, options) {
     const isLogEnabled = hasOwn(options, 'log')
-    const isLogString = typeof options.log === 'string'
+    const isLogString = typeof options.log === STRING
     const enabled = isLogEnabled
       ? isLogString
         ? true
@@ -1303,7 +1174,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   const iframeId = ensureHasId(iframe.id)
 
-  if (typeof options !== 'object') {
+  if (typeof options !== OBJECT) {
     throw new TypeError('Options is not an object')
   }
 

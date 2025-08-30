@@ -1,3 +1,4 @@
+import { AUTO } from './consts'
 import filterIframeAttribs from './filter-iframe-attribs'
 
 describe('filterIframeAttribs', () => {
@@ -14,7 +15,7 @@ describe('filterIframeAttribs', () => {
       offset: 10,
       offsetHeight: 100,
       offsetWidth: 200,
-      scrolling: 'auto',
+      scrolling: AUTO,
       tolerance: 5,
       warningTimeout: 3000,
       waitForLoad: true,

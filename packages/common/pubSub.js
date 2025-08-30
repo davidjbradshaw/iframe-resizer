@@ -1,8 +1,10 @@
+import { OBJECT } from './consts'
+
 export default {
   events: {},
 
   has(event) {
-    return typeof this.events[event] === 'object'
+    return typeof this.events[event] === OBJECT
   },
 
   addListener(event, listener) {

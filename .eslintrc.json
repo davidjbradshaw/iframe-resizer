@@ -43,6 +43,7 @@
     "no-use-before-define": 0,
     "no-shadow": 0,
     "prefer-rest-params": 0,
+    "valid-typeof": 0,
     "import/no-amd": 0,
     "import/no-extraneous-dependencies": 0,
     "import/no-unresolved": 0,

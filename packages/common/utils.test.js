@@ -1,3 +1,4 @@
+import { NUMBER, STRING } from './consts'
 import {
   capitalizeFirstLetter,
   esModuleInterop,
@@ -115,16 +116,16 @@ describe('utils.js', () => {
 
   describe('typeAssert', () => {
     test('should not throw an error for valid types', () => {
-      expect(() => typeAssert(42, 'number', 'Value')).not.toThrow()
-      expect(() => typeAssert('test', 'string', 'Value')).not.toThrow()
+      expect(() => typeAssert(42, NUMBER, 'Value')).not.toThrow()
+      expect(() => typeAssert('test', STRING, 'Value')).not.toThrow()
     })
 
     test('should throw a TypeError for invalid types', () => {
-      expect(() => typeAssert(42, 'string', 'Value')).toThrow(
+      expect(() => typeAssert(42, STRING, 'Value')).toThrow(
         'Value is not a String',
       )
 
-      expect(() => typeAssert('test', 'number', 'Value')).toThrow(
+      expect(() => typeAssert('test', NUMBER, 'Value')).toThrow(
         'Value is not a Number',
       )
     })
