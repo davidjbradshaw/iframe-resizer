@@ -558,11 +558,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     info(iframeId, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
   }
 
-  function started() {
-    setup = true
-  }
-
-  function eventMsg() {
+  function receivedMessage(messageData) {
     const { height, iframe, msg, type, width } = messageData
     if (settings[iframeId]?.firstRun) firstRun()
 
@@ -636,7 +632,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         resizeIframe()
         checkSameDomain(iframeId)
         checkVersion(msg)
-        started()
+        setup = true
         on('onReady', iframe)
         break
 
@@ -666,14 +662,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  function checkSettings(iframeId) {
-    if (!settings[iframeId]) {
-      throw new Error(
-        `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`,
-      )
-    }
-  }
-
   function firstRun() {
     if (!settings[iframeId]) return
 
@@ -682,19 +670,28 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function screenMessage(msg) {
-    checkSettings(iframeId)
+    messageData = decodeMessage(msg)
+    const { id, type } = messageData
+    iframeId = id
 
-    if (!isMessageFromMetaParent()) {
-      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
-      settings[iframeId].ready = true
+    consoleEvent(id, type)
 
-      if (checkIframeExists() && isMessageFromIframe()) {
-        eventMsg()
-      }
-    }
+    if (!settings[id])
+      throw new Error(`${type} No settings for ${id}. Message was: ${msg}`)
+
+    if (isMessageFromMetaParent()) return
+
+    log(id, `Received: %c${msg}`, HIGHLIGHT)
+    settings[id].ready = true
+
+    if (!checkIframeExists() || !isMessageFromIframe()) return
+
+    receivedMessage(messageData)
   }
 
-  let msg = event.data
+  let iframeId
+  let messageData = {}
+  const msg = event.data
 
   if (typeof msg !== STRING) return
 
@@ -709,11 +706,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
-  const messageData = decodeMessage(msg)
-  const { id, type } = messageData
-  const iframeId = id
-
-  consoleEvent(iframeId, type)
   errorBoundary(iframeId, screenMessage)(msg)
 }
 
