@@ -34,7 +34,7 @@ export type iframeResizerOptions = {
   bodyMargin?: string | number | null
   bodyPadding?: string | number | null
   checkOrigin?: boolean | string[]
-  direction?: 'vertical' | 'horizontal' | 'none'
+  direction?: 'vertical' | 'horizontal' | 'none' | 'both'
   inPageLinks?: boolean
   license: string
   offsetSize?: number
