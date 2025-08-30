@@ -5,7 +5,7 @@ export const PARENT = 'parent'
 export const CHILD = 'child'
 
 export const AUTO_RESIZE = 'autoResize'
-export const BEFORE_UNLOAD = 'beforeunload'
+export const BEFORE_UNLOAD = 'beforeUnload'
 export const CLOSE = 'close'
 export const IN_PAGE_LINK = 'inPageLink'
 export const INIT = 'init'
