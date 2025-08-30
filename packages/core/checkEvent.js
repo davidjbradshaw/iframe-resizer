@@ -8,18 +8,20 @@ function checkEvent(iframeId, funcName, val) {
 
   const func = settings[iframeId][funcName]
 
-  if (typeof func === FUNCTION)
-    if (funcName === 'onBeforeClose' || funcName === 'onScroll') {
-      try {
-        return func(val)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error)
-        warn(iframeId, `Error in ${funcName} callback`)
-      }
-    } else return isolateUserCode(func, val)
+  if (typeof func !== FUNCTION)
+    throw new TypeError(`${funcName} on iframe[${iframeId}] is not a function`)
 
-  throw new TypeError(`${funcName} on iFrame[${iframeId}] is not a function`)
+  if (funcName !== 'onBeforeClose' && funcName !== 'onScroll')
+    return isolateUserCode(func, val)
+
+  try {
+    return func(val)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error)
+    warn(iframeId, `Error in ${funcName} callback`)
+    return null
+  }
 }
 
 export default checkEvent
