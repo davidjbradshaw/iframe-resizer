@@ -35,7 +35,7 @@ test('calls isolateUserCode for non-special handlers', () => {
   settings[iframeId] = { onLoad: fn }
 
   const val = { a: 1 }
-  const ret = checkEvent(iframeId, 'onLoad', val)
+  checkEvent(iframeId, 'onLoad', val)
 
   expect(isolateUserCode).toHaveBeenCalledTimes(1)
   expect(isolateUserCode).toHaveBeenCalledWith(fn, val)
