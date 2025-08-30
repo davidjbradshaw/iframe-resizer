@@ -1,6 +1,6 @@
 import acg, { NORMAL } from 'auto-console-group'
 
-import { BOLD, LABEL } from '../common/consts'
+import { BOLD, LABEL, PARENT } from '../common/consts'
 import deprecate from '../common/deprecate'
 import formatAdvise from '../common/format-advise'
 import { esModuleInterop, id as identity } from '../common/utils'
@@ -13,7 +13,7 @@ let consoleEnabled = true
 
 const parent = createConsoleGroup({
   expand: false,
-  label: 'parent',
+  label: PARENT,
 })
 
 const getMyId = (iframeId) =>
