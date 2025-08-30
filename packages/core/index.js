@@ -12,7 +12,6 @@ import {
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
-  INIT_EVENTS,
   INIT_FROM_IFRAME,
   LOAD,
   LOG_OPTIONS,
@@ -61,6 +60,7 @@ import {
   warn,
 } from './console'
 import warnOnNoResponse from './timeout'
+import trigger from './trigger'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -98,7 +98,7 @@ function iframeListener(event) {
     return top + bot
   }
 
-  function processMessage(msg) {
+  function decodeMessage(msg) {
     const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
     const height = data[1] ? Number(data[1]) : 0
     const iframe = settings[data[0]]?.iframe
@@ -715,18 +715,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
-  const messageData = processMessage(msg)
+  const messageData = decodeMessage(msg)
   const { id, type } = messageData
   const iframeId = id
-
-  if (!iframeId) {
-    warn(
-      '',
-      'iframeResizer received messageData without id, message was: ',
-      msg,
-    )
-    return
-  }
 
   consoleEvent(iframeId, type)
   errorBoundary(iframeId, screenMessage)(msg)
@@ -820,58 +811,6 @@ function setSize(messageData) {
 
   if (sizeHeight) setDimension(HEIGHT)
   if (sizeWidth) setDimension(WIDTH)
-}
-
-const filterMsg = (msg) =>
-  msg
-    .split(':')
-    .filter((_, index) => index !== 19)
-    .join(':')
-
-function trigger(calleeMsg, msg, id) {
-  function logSent(route) {
-    const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
-    info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
-    info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
-  }
-
-  function postMessageToIframe() {
-    const { iframe, postMessageTarget, sameOrigin, targetOrigin } = settings[id]
-
-    if (sameOrigin) {
-      try {
-        iframe.contentWindow.iframeChildListener(MESSAGE_ID + msg)
-        logSent(`Sending message to iframe %c${id}%c via same origin%c`)
-        return
-      } catch (error) {
-        if (calleeMsg in INIT_EVENTS) {
-          settings[id].sameOrigin = false
-          log(id, 'New iframe does not support same origin')
-        } else {
-          warn(id, 'Same origin messaging failed, falling back to postMessage')
-        }
-      }
-    }
-
-    logSent(
-      `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
-    )
-
-    postMessageTarget.postMessage(MESSAGE_ID + msg, targetOrigin)
-  }
-
-  function checkAndSend() {
-    if (!settings[id]?.postMessageTarget) {
-      warn(id, `Iframe(${id}) not found`)
-      return
-    }
-
-    postMessageToIframe()
-  }
-
-  consoleEvent(id, calleeMsg)
-
-  if (settings[id]) checkAndSend()
 }
 
 function createOutgoingMsg(iframeId) {
