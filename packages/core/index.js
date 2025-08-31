@@ -56,6 +56,7 @@ import {
 } from './console'
 import decodeMessage from './decode'
 import checkEvent from './event'
+import { onMessage } from './message'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor-page-info'
 import {
   startParentInfoMonitor,
@@ -87,24 +88,6 @@ import settings from './values/settings'
 function iframeListener(event) {
   const getMsgBody = (offset) =>
     msg.slice(msg.indexOf(':') + MESSAGE_HEADER_LENGTH + offset)
-
-  function forwardMessageFromIframe(messageBody) {
-    const { id } = messageData
-
-    log(
-      id,
-      `onMessage passed: {iframe: %c${id}%c, message: %c${messageBody}%c}`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
-      FOREGROUND,
-    )
-
-    on('onMessage', {
-      iframe: messageData.iframe,
-      message: JSON.parse(messageBody),
-    })
-  }
 
   // scroll
   function getElementPosition(target) {
@@ -190,7 +173,7 @@ function iframeListener(event) {
     setPagePosition(iframeId)
   }
 
-  function findTarget(location) {
+  function inPageLink(location) {
     function jumpToTarget() {
       const jumpPosition = getElementPosition(target)
 
@@ -287,7 +270,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case MESSAGE:
-        forwardMessageFromIframe(getMsgBody(6))
+        onMessage(messageData, getMsgBody(6))
         break
 
       case MOUSE_ENTER:
@@ -336,7 +319,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case IN_PAGE_LINK:
-        findTarget(getMsgBody(9))
+        inPageLink(getMsgBody(9))
         break
 
       case TITLE:
