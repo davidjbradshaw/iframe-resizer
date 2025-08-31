@@ -2,9 +2,10 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import { HEIGHT, WIDTH } from '../common/consts'
 import { info } from './console'
+import checkEvent from './event'
+import { setPagePosition } from './page-position'
 import settings from './values/settings'
 
-// eslint-disable-next-line import/prefer-default-export
 export function setSize(messageData) {
   function setDimension(dimension) {
     const size = `${messageData[dimension]}px`
@@ -17,4 +18,11 @@ export function setSize(messageData) {
 
   if (sizeHeight) setDimension(HEIGHT)
   if (sizeWidth) setDimension(WIDTH)
+}
+
+export function resizeIframe(messageData) {
+  const { id } = messageData
+  setSize(messageData)
+  setPagePosition(id)
+  checkEvent(id, 'onResized', messageData)
 }

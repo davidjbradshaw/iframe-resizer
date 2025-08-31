@@ -1,7 +1,7 @@
 // Mock modules without referencing out-of-scope variables
 import { isolateUserCode } from '../common/utils'
-import checkEvent from './checkEvent'
 import { warn } from './console'
+import checkEvent from './event'
 import settings from './values/settings'
 
 jest.mock('./values/settings', () => ({

@@ -44,7 +44,6 @@ import {
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { hasOwn, once, typeAssert } from '../common/utils'
-import checkEvent from './checkEvent'
 import {
   advise,
   debug,
@@ -59,6 +58,7 @@ import {
   warn,
 } from './console'
 import decodeMessage from './decode'
+import checkEvent from './event'
 import { setOffsetSize } from './offset'
 import createOutgoingMessage from './outgoing'
 import {
@@ -67,7 +67,7 @@ import {
   unsetPagePosition,
 } from './page-position'
 import iframeReady from './ready'
-import { setSize } from './size'
+import { resizeIframe, setSize } from './size'
 import warnOnNoResponse from './timeout'
 import { checkTitle, setTitle } from './title'
 import trigger from './trigger'
@@ -76,13 +76,6 @@ import page from './values/page'
 import settings from './values/settings'
 
 function iframeListener(event) {
-  function resizeIframe() {
-    setSize(messageData)
-    setPagePosition(iframeId)
-
-    on('onResized', messageData)
-  }
-
   function isMessageFromIframe() {
     function checkAllowedOrigin() {
       function checkList() {
@@ -588,7 +581,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case INIT:
-        resizeIframe()
+        resizeIframe(messageData)
         checkSameDomain(id)
         checkVersion(msg)
         on('onReady', iframe)
@@ -616,7 +609,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
           return
         }
 
-        resizeIframe()
+        resizeIframe(messageData)
     }
   }
 
