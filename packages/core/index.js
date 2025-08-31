@@ -16,8 +16,6 @@ import {
   LOG_OPTIONS,
   MESSAGE,
   MESSAGE_HEADER_LENGTH,
-  MESSAGE_ID,
-  MESSAGE_ID_LENGTH,
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
@@ -70,6 +68,12 @@ import {
   setPagePosition,
   unsetPagePosition,
 } from './page-position'
+import {
+  checkIframeExists,
+  isMessageForUs,
+  isMessageFromIframe,
+  isMessageFromMetaParent,
+} from './preflight'
 import iframeReady from './ready'
 import { resizeIframe, setSize } from './size'
 import warnOnNoResponse from './timeout'
@@ -80,75 +84,15 @@ import page from './values/page'
 import settings from './values/settings'
 
 function iframeListener(event) {
-  function isMessageFromIframe() {
-    function checkAllowedOrigin() {
-      function checkList() {
-        let i = 0
-        let retCode = false
-
-        log(
-          iframeId,
-          `Checking connection is from allowed list of origins: %c${checkOrigin}`,
-          HIGHLIGHT,
-        )
-
-        for (; i < checkOrigin.length; i++) {
-          if (checkOrigin[i] === origin) {
-            retCode = true
-            break
-          }
-        }
-
-        return retCode
-      }
-
-      function checkSingle() {
-        const remoteHost = settings[iframeId]?.remoteHost
-        log(iframeId, `Checking connection is from: %c${remoteHost}`, HIGHLIGHT)
-        return origin === remoteHost
-      }
-
-      return checkOrigin.constructor === Array ? checkList() : checkSingle()
-    }
-
-    const { origin, sameOrigin } = event
-
-    if (sameOrigin) return true
-
-    let checkOrigin = settings[iframeId]?.checkOrigin
-
-    if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
-      throw new Error(
-        `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`,
-      )
-    }
-
-    return true
-  }
-
-  const isMessageForUs = (msg) =>
-    MESSAGE_ID === `${msg}`.slice(0, MESSAGE_ID_LENGTH) &&
-    msg.slice(MESSAGE_ID_LENGTH).split(':')[0] in settings
-
-  function isMessageFromMetaParent() {
-    // Test if this message is from a parent above us. This is an ugly test, however, updating
-    // the message format would break backwards compatibility.
-    const retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
-
-    if (retCode) {
-      log(iframeId, 'Ignoring init message from meta parent page')
-    }
-
-    return retCode
-  }
-
   const getMsgBody = (offset) =>
     msg.slice(msg.indexOf(':') + MESSAGE_HEADER_LENGTH + offset)
 
-  function forwardMsgFromIframe(msgBody) {
+  function forwardMessageFromIframe(messageBody) {
+    const { id } = messageData
+
     log(
-      iframeId,
-      `onMessage passed: {iframe: %c${messageData.iframe.id}%c, message: %c${msgBody}%c}`,
+      id,
+      `onMessage passed: {iframe: %c${id}%c, message: %c${messageBody}%c}`,
       HIGHLIGHT,
       FOREGROUND,
       HIGHLIGHT,
@@ -157,20 +101,11 @@ function iframeListener(event) {
 
     on('onMessage', {
       iframe: messageData.iframe,
-      message: JSON.parse(msgBody),
+      message: JSON.parse(messageBody),
     })
   }
 
-  function checkIframeExists() {
-    if (messageData.iframe === null) {
-      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
-      warn(iframeId, `The target iframe was not found.`)
-      return false
-    }
-
-    return true
-  }
-
+  // scroll
   function getElementPosition(target) {
     const iFramePosition = target.getBoundingClientRect()
 
@@ -374,7 +309,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case MESSAGE:
-        forwardMsgFromIframe(getMsgBody(6))
+        forwardMessageFromIframe(getMsgBody(6))
         break
 
       case MOUSE_ENTER:
@@ -499,9 +434,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     case !settings[id]:
       throw new Error(`${type} No settings for ${id}. Message was: ${msg}`)
 
-    case isMessageFromMetaParent():
-    case !checkIframeExists():
-    case !isMessageFromIframe():
+    case !checkIframeExists(messageData):
+    case isMessageFromMetaParent(messageData):
+    case !isMessageFromIframe(messageData, event):
       return
 
     default:
