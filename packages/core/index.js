@@ -9,7 +9,6 @@ import {
   CLOSE,
   COLLAPSE,
   EXPAND,
-  HEIGHT,
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
@@ -41,7 +40,6 @@ import {
   TITLE,
   VERSION,
   VERTICAL,
-  WIDTH,
 } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
@@ -61,6 +59,7 @@ import {
   warn,
 } from './console'
 import decodeMessage from './decode'
+import { setOffsetSize } from './offset'
 import createOutgoingMessage from './outgoing'
 import {
   getPagePosition,
@@ -68,6 +67,7 @@ import {
   unsetPagePosition,
 } from './page-position'
 import iframeReady from './ready'
+import { setSize } from './size'
 import warnOnNoResponse from './timeout'
 import { checkTitle, setTitle } from './title'
 import trigger from './trigger'
@@ -704,20 +704,6 @@ function resetIframe(messageData) {
   trigger(RESET, RESET, messageData.id)
 }
 
-function setSize(messageData) {
-  function setDimension(dimension) {
-    const size = `${messageData[dimension]}px`
-    messageData.iframe.style[dimension] = size
-    info(id, `Set ${dimension}: %c${size}`, HIGHLIGHT)
-  }
-
-  const { id } = messageData
-  const { sizeHeight, sizeWidth } = settings[id]
-
-  if (sizeHeight) setDimension(HEIGHT)
-  if (sizeWidth) setDimension(WIDTH)
-}
-
 let count = 0
 let vAdvised = false
 let vInfoDisable = false
@@ -930,18 +916,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     log(iframeId, `direction: %c${direction}`, HIGHLIGHT)
   }
 
-  function setOffsetSize(offset) {
-    if (!offset) return // No offset set or offset is zero
-
-    if (settings[iframeId].direction === VERTICAL) {
-      settings[iframeId].offsetHeight = offset
-      log(iframeId, `Offset height: %c${offset}`, HIGHLIGHT)
-    } else {
-      settings[iframeId].offsetWidth = offset
-      log(iframeId, `Offset width: %c${offset}`, HIGHLIGHT)
-    }
-  }
-
   const getTargetOrigin = (remoteHost) =>
     remoteHost === '' ||
     remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
@@ -986,15 +960,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  function checkOffset(options) {
-    if (options?.offset) {
-      advise(
-        iframeId,
-        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
-      )
-    }
-  }
-
   function processOptions(options) {
     settings[iframeId] = {
       ...settings[iframeId],
@@ -1014,8 +979,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     consoleEvent(iframeId, 'setup')
     setDirection()
-    setOffsetSize(options?.offsetSize || options?.offset) // ignore zero offset
-    checkOffset(options)
+    setOffsetSize(iframeId, options) // ignore zero offset
     checkWarningTimeout()
     getPostMessageTarget()
     setTargetOrigin()
