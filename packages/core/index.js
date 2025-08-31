@@ -32,7 +32,6 @@ import {
   RESET,
   RESET_REQUIRED_METHODS,
   RESIZE,
-  SCROLL,
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
@@ -41,7 +40,7 @@ import {
   VERSION,
   VERTICAL,
 } from '../common/consts'
-import { addEventListener, removeEventListener } from '../common/listeners'
+import { addEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
 import { hasOwn, once, typeAssert } from '../common/utils'
 import {
@@ -59,6 +58,11 @@ import {
 } from './console'
 import decodeMessage from './decode'
 import checkEvent from './event'
+import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor-page-info'
+import {
+  startParentInfoMonitor,
+  stopParentInfoMonitor,
+} from './monitor-parent-props'
 import { setOffsetSize } from './offset'
 import createOutgoingMessage from './outgoing'
 import {
@@ -156,156 +160,6 @@ function iframeListener(event) {
       message: JSON.parse(msgBody),
     })
   }
-
-  function getPageInfo() {
-    const bodyPosition = document.body.getBoundingClientRect()
-    const iFramePosition = messageData.iframe.getBoundingClientRect()
-    const { scrollY, scrollX, innerHeight, innerWidth } = window
-    const { clientHeight, clientWidth } = document.documentElement
-
-    return JSON.stringify({
-      iframeHeight: iFramePosition.height,
-      iframeWidth: iFramePosition.width,
-      clientHeight: Math.max(clientHeight, innerHeight || 0),
-      clientWidth: Math.max(clientWidth, innerWidth || 0),
-      offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
-      offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
-      scrollTop: scrollY,
-      scrollLeft: scrollX,
-      documentHeight: clientHeight,
-      documentWidth: clientWidth,
-      windowHeight: innerHeight,
-      windowWidth: innerWidth,
-    })
-  }
-
-  function getParentProps() {
-    const { iframe } = messageData
-    const { scrollWidth, scrollHeight } = document.documentElement
-    const { width, height, offsetLeft, offsetTop, pageLeft, pageTop, scale } =
-      window.visualViewport
-
-    return JSON.stringify({
-      iframe: iframe.getBoundingClientRect(),
-      document: {
-        scrollWidth,
-        scrollHeight,
-      },
-      viewport: {
-        width,
-        height,
-        offsetLeft,
-        offsetTop,
-        pageLeft,
-        pageTop,
-        scale,
-      },
-    })
-  }
-
-  const sendInfoToIframe = (type, infoFunction) => (requestType, iframeId) => {
-    const gate = {}
-
-    function throttle(func, frameId) {
-      if (!gate[frameId]) {
-        func()
-        gate[frameId] = requestAnimationFrame(() => {
-          gate[frameId] = null
-        })
-      }
-    }
-
-    function gatedTrigger() {
-      trigger(`${requestType} (${type})`, `${type}:${infoFunction()}`, iframeId)
-    }
-
-    throttle(gatedTrigger, iframeId)
-  }
-
-  const startInfoMonitor = (sendInfoToIframe, type) => () => {
-    let pending = false
-
-    const sendInfo = (requestType) => () => {
-      if (settings[id]) {
-        if (!pending || pending === requestType) {
-          sendInfoToIframe(requestType, id)
-
-          pending = requestType
-          requestAnimationFrame(() => {
-            pending = false
-          })
-        }
-      } else {
-        stop()
-      }
-    }
-
-    const sendScroll = sendInfo(SCROLL)
-    const sendResize = sendInfo('resize window')
-
-    function setListener(requestType, listener) {
-      log(id, `${requestType}listeners for send${type}`)
-      listener(window, SCROLL, sendScroll)
-      listener(window, RESIZE, sendResize)
-    }
-
-    function stop() {
-      consoleEvent(id, `stop${type}`)
-      setListener('Remove ', removeEventListener)
-      pageObserver.disconnect()
-      iframeObserver.disconnect()
-      removeEventListener(settings[id].iframe, LOAD, stop)
-    }
-
-    function start() {
-      setListener('Add ', addEventListener)
-
-      pageObserver.observe(document.body, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      })
-
-      iframeObserver.observe(settings[id].iframe, {
-        attributes: true,
-        childList: false,
-        subtree: false,
-      })
-    }
-
-    const id = iframeId // Create locally scoped copy of iFrame ID
-
-    const pageObserver = new ResizeObserver(sendInfo('pageObserver'))
-    const iframeObserver = new ResizeObserver(sendInfo('iframeObserver'))
-
-    if (settings[id]) {
-      settings[id][`stop${type}`] = stop
-      addEventListener(settings[id].iframe, LOAD, stop)
-      start()
-    }
-  }
-
-  const stopInfoMonitor = (stopFunction) => () => {
-    if (stopFunction in settings[iframeId]) {
-      settings[iframeId][stopFunction]()
-      delete settings[iframeId][stopFunction]
-    }
-  }
-
-  const sendPageInfoToIframe = sendInfoToIframe(PAGE_INFO, getPageInfo)
-  const sendParentInfoToIframe = sendInfoToIframe(PARENT_INFO, getParentProps)
-
-  const startPageInfoMonitor = startInfoMonitor(
-    sendPageInfoToIframe,
-    'PageInfo',
-  )
-  const startParentInfoMonitor = startInfoMonitor(
-    sendParentInfoToIframe,
-    'ParentInfo',
-  )
-
-  const stopPageInfoMonitor = stopInfoMonitor('stopPageInfo')
-  const stopParentInfoMonitor = stopInfoMonitor('stopParentInfo')
 
   function checkIframeExists() {
     if (messageData.iframe === null) {
@@ -509,7 +363,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   function receivedMessage(messageData) {
     const { height, id, iframe, lastMessage, msg, type, width } = messageData
-    if (settings[id]?.firstRun) firstRun(messageData)
+    if (settings[id].firstRun) firstRun(messageData)
     settings[id].ready = true
 
     log(id, `Received: %c${lastMessage}`, HIGHLIGHT)
@@ -553,19 +407,19 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case PAGE_INFO:
-        startPageInfoMonitor()
+        startPageInfoMonitor(id)
         break
 
       case PARENT_INFO:
-        startParentInfoMonitor()
+        startParentInfoMonitor(id)
         break
 
       case PAGE_INFO_STOP:
-        stopPageInfoMonitor()
+        stopPageInfoMonitor(id)
         break
 
       case PARENT_INFO_STOP:
-        stopParentInfoMonitor()
+        stopParentInfoMonitor(id)
         break
 
       case IN_PAGE_LINK:
@@ -640,7 +494,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   const iframeId = id
 
   consoleEvent(id, type)
-  settings[id].lastMessage = msg
 
   switch (true) {
     case !settings[id]:
@@ -652,6 +505,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       return
 
     default:
+      settings[id].lastMessage = msg
       errorBoundary(id, receivedMessage)(messageData)
   }
 }

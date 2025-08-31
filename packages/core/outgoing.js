@@ -2,7 +2,7 @@ import { CHILD } from '../common/consts'
 import page from './values/page'
 import settings from './values/settings'
 
-export default function (iframeId) {
+export default function (id) {
   const {
     sizeWidth,
     log,
@@ -21,10 +21,10 @@ export default function (iframeId) {
     license,
     mode,
     logExpand,
-  } = settings[iframeId]
+  } = settings[id]
 
   return [
-    iframeId,
+    id,
     '8', // Backwards compatibility (PaddingV1)
     sizeWidth,
     log,
