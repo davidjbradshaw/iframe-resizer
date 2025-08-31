@@ -69,6 +69,7 @@ import {
 } from './page-position'
 import iframeReady from './ready'
 import warnOnNoResponse from './timeout'
+import { checkTitle, setTitle } from './title'
 import trigger from './trigger'
 import defaults from './values/defaults'
 import page from './values/page'
@@ -513,12 +514,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
   }
 
-  function setTitle(id, title) {
-    if (!settings[id]?.syncTitle) return
-    settings[id].iframe.title = title
-    info(id, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
-  }
-
   function receivedMessage(messageData) {
     const { height, id, iframe, lastMessage, msg, type, width } = messageData
     if (settings[id]?.firstRun) firstRun(messageData)
@@ -801,11 +796,11 @@ export default (options) => (iframe) => {
     }
   }
 
-  function setupBodyMarginValues() {
-    const { bodyMargin } = settings[iframeId]
+  function setupBodyMarginValues(id) {
+    const { bodyMargin } = settings[id]
 
     if (typeof bodyMargin === NUMBER || bodyMargin === '0') {
-      settings[iframeId].bodyMargin = `${bodyMargin}px`
+      settings[id].bodyMargin = `${bodyMargin}px`
     }
   }
 
@@ -964,11 +959,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (mode !== -1) checkMode(iframeId, mode)
   }
 
-  function checkTitle(iframeId) {
-    const title = settings[iframeId]?.iframe?.title
-    return title === '' || title === undefined
-  }
-
   function updateOptionName(oldName, newName) {
     if (hasOwn(settings[iframeId], oldName)) {
       advise(
@@ -1041,7 +1031,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     preModeCheck()
     setupEventListenersOnce()
     setScrolling()
-    setupBodyMarginValues()
+    setupBodyMarginValues(iframeId)
     init(createOutgoingMessage(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
