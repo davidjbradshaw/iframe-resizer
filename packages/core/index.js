@@ -61,6 +61,11 @@ import {
   warn,
 } from './console'
 import createOutgoingMessage from './outgoing'
+import {
+  getPagePosition,
+  setPagePosition,
+  unsetPagePosition,
+} from './page-position'
 import iframeReady from './ready'
 import warnOnNoResponse from './timeout'
 import trigger from './trigger'
@@ -736,41 +741,6 @@ function closeIframe(iframe) {
 
   checkEvent(id, 'onAfterClose', id)
   removeIframeListeners(iframe)
-}
-
-function getPagePosition(iframeId) {
-  if (page.position !== null) return
-
-  page.position = {
-    x: window.scrollX,
-    y: window.scrollY,
-  }
-
-  log(
-    iframeId,
-    `Get page position: %c${page.position.x}%c, %c${page.position.y}`,
-    HIGHLIGHT,
-    FOREGROUND,
-    HIGHLIGHT,
-  )
-}
-
-function unsetPagePosition() {
-  page.position = null
-}
-
-function setPagePosition(iframeId) {
-  if (page.position === null) return
-
-  window.scrollTo(page.position.x, page.position.y)
-  info(
-    iframeId,
-    `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
-    HIGHLIGHT,
-    FOREGROUND,
-    HIGHLIGHT,
-  )
-  unsetPagePosition()
 }
 
 function resetIframe(messageData) {
