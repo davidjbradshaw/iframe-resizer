@@ -61,6 +61,7 @@ import {
   startParentInfoMonitor,
   stopParentInfoMonitor,
 } from './monitor-parent-props'
+import onMouse from './mouse'
 import { setOffsetSize } from './offset'
 import createOutgoingMessage from './outgoing'
 import {
@@ -236,30 +237,6 @@ function iframeListener(event) {
     jumpToParent()
   }
 
-  function onMouse(event, messageData) {
-    let mousePos = {}
-
-    if (messageData.width === 0 && messageData.height === 0) {
-      const coords = getMsgBody(9).split(':')
-      mousePos = {
-        x: coords[1],
-        y: coords[0],
-      }
-    } else {
-      mousePos = {
-        x: messageData.width,
-        y: messageData.height,
-      }
-    }
-
-    on(event, {
-      iframe: messageData.iframe,
-      screenX: Number(mousePos.x),
-      screenY: Number(mousePos.y),
-      type: messageData.type,
-    })
-  }
-
   const on = (funcName, val) => checkEvent(iframeId, funcName, val)
 
   function checkSameDomain(id) {
@@ -297,7 +274,8 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   function receivedMessage(messageData) {
-    const { height, id, iframe, lastMessage, msg, type, width } = messageData
+    const { height, id, iframe, msg, type, width } = messageData
+    const { lastMessage } = settings[id]
     if (settings[id].firstRun) firstRun(messageData)
     settings[id].ready = true
 
@@ -440,7 +418,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       return
 
     default:
-      settings[id].lastMessage = msg
+      settings[id].lastMessage = event.data
       errorBoundary(id, receivedMessage)(messageData)
   }
 }
