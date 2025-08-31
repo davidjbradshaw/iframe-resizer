@@ -242,7 +242,7 @@ function iframeResizerChild() {
   }
 
   function beforeUnload() {
-    addEventListener(window, BEFORE_UNLOAD, () => {
+    addEventListener(window, BEFORE_UNLOAD.toLowerCase(), () => {
       tearDown.forEach((func) => func())
       sendMessage(0, 0, BEFORE_UNLOAD)
     })
