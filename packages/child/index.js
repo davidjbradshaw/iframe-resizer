@@ -1447,8 +1447,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           break
         }
 
-        case sendPending === true: {
+        case sendPending === true && triggerEvent !== OVERFLOW_OBSERVER: {
           purge()
+          log('Resize already pending - Ignored resize request')
           break // only update once per frame
         }
 
