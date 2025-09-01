@@ -1,17 +1,17 @@
 // Mocks must be declared before imports
-import { INIT_FROM_IFRAME } from '../common/consts'
+import { INIT_FROM_IFRAME } from '../../common/consts'
+import settings from '../values/settings'
 import createOutgoingMessage from './outgoing'
 import ready, { sendInit } from './ready'
 import warnOnNoResponse from './timeout'
 import trigger from './trigger'
-import settings from './values/settings'
 
-jest.mock('./values/settings', () => ({
+jest.mock('../values/settings', () => ({
   __esModule: true,
   default: {},
 }))
 
-jest.mock('../common/consts', () => ({
+jest.mock('../../common/consts', () => ({
   __esModule: true,
   INIT_FROM_IFRAME: 'init-from-iframe',
 }))

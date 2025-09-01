@@ -1,5 +1,5 @@
-import { OBJECT } from '../common/consts'
-import { advise, event } from './console'
+import { OBJECT } from '../../common/consts'
+import { advise, event } from '../console'
 
 function showWarning(id, settings) {
   const { iframe, waitForLoad } = settings[id]

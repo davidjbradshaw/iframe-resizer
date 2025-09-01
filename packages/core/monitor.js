@@ -1,7 +1,7 @@
 import { LOAD, RESIZE, SCROLL } from '../common/consts'
 import { addEventListener, removeEventListener } from '../common/listeners'
 import { event, log } from './console'
-import trigger from './trigger'
+import trigger from './send/trigger'
 import settings from './values/settings'
 
 export const sendInfoToIframe = (type, infoFunction) => (requestType, id) => {

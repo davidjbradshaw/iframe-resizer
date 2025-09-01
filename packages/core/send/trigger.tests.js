@@ -1,10 +1,10 @@
 // Mock console wrapper used by trigger (must come before imports)
-import { MESSAGE_ID } from '../common/consts'
-import { event as consoleEvent, info, log, warn } from './console'
+import { MESSAGE_ID } from '../../common/consts'
+import { event as consoleEvent, info, log, warn } from '../console'
+import settings from '../values/settings'
 import trigger, { filterMsg, postMessageToIframe } from './trigger'
-import settings from './values/settings'
 
-jest.mock('./console', () => ({
+jest.mock('../console', () => ({
   __esModule: true,
   event: jest.fn(),
   info: jest.fn(),
@@ -13,7 +13,7 @@ jest.mock('./console', () => ({
 }))
 
 // Control consts used by trigger
-jest.mock('../common/consts', () => ({
+jest.mock('../../common/consts', () => ({
   __esModule: true,
   INIT_EVENTS: { init: true }, // "init" is treated as an init event
   MESSAGE_ID: '[[MSG]]:',

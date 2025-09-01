@@ -1,5 +1,5 @@
 import checkEvent from './event'
-import { getMessageBody } from './message'
+import { getMessageBody } from './receive/message'
 import settings from './values/settings'
 
 export default function onMouse(event, messageData) {

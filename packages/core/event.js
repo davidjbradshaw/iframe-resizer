@@ -3,7 +3,7 @@ import { isolateUserCode } from '../common/utils'
 import { warn } from './console'
 import settings from './values/settings'
 
-function checkEvent(iframeId, funcName, val) {
+function on(iframeId, funcName, val) {
   if (!settings[iframeId]) return null
 
   const func = settings[iframeId][funcName]
@@ -24,4 +24,4 @@ function checkEvent(iframeId, funcName, val) {
   }
 }
 
-export default checkEvent
+export default on

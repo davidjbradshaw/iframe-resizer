@@ -1,8 +1,8 @@
-import { INIT_FROM_IFRAME } from '../common/consts'
+import { INIT_FROM_IFRAME } from '../../common/consts'
+import settings from '../values/settings'
 import createOutgoingMessage from './outgoing'
 import warnOnNoResponse from './timeout'
 import trigger from './trigger'
-import settings from './values/settings'
 
 export const sendInit = (source) => (iframeId) => {
   const { ready, postMessageTarget } = settings[iframeId]

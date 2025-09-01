@@ -54,33 +54,36 @@ import {
   vInfo,
   warn,
 } from './console'
-import decodeMessage from './decode'
 import checkEvent from './event'
-import { onMessage } from './message'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor-page-info'
 import {
   startParentInfoMonitor,
   stopParentInfoMonitor,
 } from './monitor-parent-props'
 import onMouse from './mouse'
-import { setOffsetSize } from './offset'
-import createOutgoingMessage from './outgoing'
-import {
-  getPagePosition,
-  setPagePosition,
-  unsetPagePosition,
-} from './page-position'
+import { getPagePosition } from './page-position'
+import decodeMessage from './receive/decode'
+import { onMessage } from './receive/message'
 import {
   checkIframeExists,
   isMessageForUs,
   isMessageFromIframe,
   isMessageFromMetaParent,
-} from './preflight'
-import iframeReady from './ready'
+} from './receive/preflight'
+import {
+  getElementPosition,
+  scrollBy,
+  scrollTo,
+  scrollToLink,
+  scrollToOffset,
+} from './scroll'
+import { setOffsetSize } from './send/offset'
+import createOutgoingMessage from './send/outgoing'
+import iframeReady from './send/ready'
+import warnOnNoResponse from './send/timeout'
+import trigger from './send/trigger'
 import { resizeIframe, setSize } from './size'
-import warnOnNoResponse from './timeout'
 import { checkTitle, setTitle } from './title'
-import trigger from './trigger'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -88,90 +91,6 @@ import settings from './values/settings'
 function iframeListener(event) {
   const getMsgBody = (offset) =>
     msg.slice(msg.indexOf(':') + MESSAGE_HEADER_LENGTH + offset)
-
-  // scroll
-  function getElementPosition(target) {
-    const iFramePosition = target.getBoundingClientRect()
-
-    getPagePosition(iframeId)
-
-    return {
-      x: Number(iFramePosition.left) + Number(page.position.x),
-      y: Number(iFramePosition.top) + Number(page.position.y),
-    }
-  }
-
-  function scrollBy() {
-    const x = messageData.width
-    const y = messageData.height
-
-    // Check for V4 as well
-    const target = window.parentIframe || window.parentIFrame || window
-
-    info(
-      iframeId,
-      `scrollBy: x: %c${x}%c y: %c${y}`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
-    )
-
-    target.scrollBy(x, y)
-  }
-
-  function scrollRequestFromChild(addOffset) {
-    /* istanbul ignore next */ // Not testable in Karma
-    function reposition(newPosition) {
-      page.position = newPosition
-      scrollTo(iframeId)
-    }
-
-    function scrollParent(target, newPosition) {
-      setTimeout(() =>
-        target[`scrollTo${addOffset ? 'Offset' : ''}`](
-          newPosition.x,
-          newPosition.y,
-        ),
-      )
-    }
-
-    const calcOffset = (messageData, offset) => ({
-      x: messageData.width + offset.x,
-      y: messageData.height + offset.y,
-    })
-
-    const offset = addOffset
-      ? getElementPosition(messageData.iframe)
-      : { x: 0, y: 0 }
-
-    info(
-      iframeId,
-      `Reposition requested (offset x:%c${offset.x}%c y:%c${offset.y})`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
-    )
-
-    const newPosition = calcOffset(messageData, offset)
-
-    // Check for V4 as well
-    const target = window.parentIframe || window.parentIFrame
-
-    if (target) scrollParent(target, newPosition)
-    else reposition(newPosition)
-  }
-
-  function scrollTo(iframeId) {
-    const { x, y } = page.position
-    const iframe = settings[iframeId]?.iframe
-
-    if (on('onScroll', { iframe, top: y, left: x, x, y }) === false) {
-      unsetPagePosition()
-      return
-    }
-
-    setPagePosition(iframeId)
-  }
 
   function inPageLink(location) {
     function jumpToTarget() {
@@ -184,7 +103,7 @@ function iframeListener(event) {
         y: jumpPosition.y,
       }
 
-      scrollTo(iframeId)
+      scrollToLink(iframeId)
       window.location.hash = hash
     }
 
@@ -291,15 +210,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case SCROLL_BY:
-        scrollBy()
+        scrollBy(messageData)
         break
 
       case SCROLL_TO:
-        scrollRequestFromChild(false)
+        scrollTo(messageData)
         break
 
       case SCROLL_TO_OFFSET:
-        scrollRequestFromChild(true)
+        scrollToOffset(messageData)
         break
 
       case PAGE_INFO:
@@ -442,7 +361,7 @@ function resetIframe(messageData) {
     `Size reset requested by ${messageData.type === INIT ? 'parent page' : 'child page'}`,
   )
 
-  getPagePosition(messageData.id)
+  page.position = getPagePosition(messageData.id)
   setSize(messageData)
   trigger(RESET, RESET, messageData.id)
 }

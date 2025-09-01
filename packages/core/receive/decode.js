@@ -1,5 +1,5 @@
-import { MESSAGE_ID_LENGTH } from '../common/consts'
-import settings from './values/settings'
+import { MESSAGE_ID_LENGTH } from '../../common/consts'
+import settings from '../values/settings'
 
 export function getPaddingEnds(compStyle) {
   if (compStyle.boxSizing !== 'border-box') return 0

@@ -1,6 +1,6 @@
-import { CHILD } from '../common/consts'
-import page from './values/page'
-import settings from './values/settings'
+import { CHILD } from '../../common/consts'
+import page from '../values/page'
+import settings from '../values/settings'
 
 export default function (id) {
   const {

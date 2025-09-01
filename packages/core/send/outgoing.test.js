@@ -1,14 +1,14 @@
 // Mock dependencies before importing the module under test
+import page from '../values/page'
+import settings from '../values/settings'
 import buildOutgoing from './outgoing'
-import page from './values/page'
-import settings from './values/settings'
 
-jest.mock('./values/settings', () => ({
+jest.mock('../values/settings', () => ({
   __esModule: true,
   default: {},
 }))
 
-jest.mock('./values/page', () => ({
+jest.mock('../values/page', () => ({
   __esModule: true,
   default: { version: '9.9.9' },
 }))

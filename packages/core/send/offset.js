@@ -1,8 +1,8 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { VERTICAL } from '../common/consts'
-import { log } from './console'
-import settings from './values/settings'
+import { VERTICAL } from '../../common/consts'
+import { log } from '../console'
+import settings from '../values/settings'
 
 // eslint-disable-next-line import/prefer-default-export
 export function setOffsetSize(id, options) {

@@ -1,8 +1,8 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '../common/consts'
-import { log, warn } from './console'
-import settings from './values/settings'
+import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '../../common/consts'
+import { log, warn } from '../console'
+import settings from '../values/settings'
 
 export function checkIframeExists(messageData) {
   const { id, msg, iframe } = messageData

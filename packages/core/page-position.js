@@ -7,8 +7,14 @@ export function unsetPagePosition() {
   page.position = null
 }
 
+export const getStoredPagePosition = () => page.position
+
+export function setStoredPagePosition(position) {
+  page.position = position
+}
+
 export function getPagePosition(id) {
-  if (page.position !== null) return
+  if (page.position !== null) return page.position
 
   page.position = {
     x: window.scrollX,
@@ -22,6 +28,8 @@ export function getPagePosition(id) {
     FOREGROUND,
     HIGHLIGHT,
   )
+
+  return page.position
 }
 
 export function setPagePosition(id) {

@@ -1,7 +1,7 @@
 // Mock modules without referencing out-of-scope variables
 import { isolateUserCode } from '../common/utils'
 import { warn } from './console'
-import checkEvent from './event'
+import on from './event'
 import settings from './values/settings'
 
 jest.mock('./values/settings', () => ({
@@ -26,7 +26,7 @@ beforeEach(() => {
 })
 
 test('returns null when iframeId settings are missing', () => {
-  expect(checkEvent('nope', 'onLoad', 123)).toBeNull()
+  expect(on('nope', 'onLoad', 123)).toBeNull()
 })
 
 test('calls isolateUserCode for non-special handlers', () => {
@@ -35,7 +35,7 @@ test('calls isolateUserCode for non-special handlers', () => {
   settings[iframeId] = { onLoad: fn }
 
   const val = { a: 1 }
-  checkEvent(iframeId, 'onLoad', val)
+  on(iframeId, 'onLoad', val)
 
   expect(isolateUserCode).toHaveBeenCalledTimes(1)
   expect(isolateUserCode).toHaveBeenCalledWith(fn, val)
@@ -48,7 +48,7 @@ test('onBeforeClose: executes handler directly and returns its value', () => {
   settings[iframeId] = { onBeforeClose: handler }
 
   const val = { reason: 'test' }
-  const ret = checkEvent(iframeId, 'onBeforeClose', val)
+  const ret = on(iframeId, 'onBeforeClose', val)
 
   expect(handler).toHaveBeenCalledWith(val)
   expect(isolateUserCode).not.toHaveBeenCalled()
@@ -61,7 +61,7 @@ test('onScroll: executes handler directly', () => {
   settings[iframeId] = { onScroll: handler }
 
   const val = { x: 1, y: 2 }
-  const ret = checkEvent(iframeId, 'onScroll', val)
+  const ret = on(iframeId, 'onScroll', val)
 
   expect(handler).toHaveBeenCalledWith(val)
   expect(isolateUserCode).not.toHaveBeenCalled()
@@ -80,7 +80,7 @@ test('onBeforeClose: errors are caught, console.error and warn are called', () =
     .spyOn(console, 'error')
     .mockImplementation(() => {})
 
-  const ret = checkEvent(iframeId, 'onBeforeClose', { foo: 'bar' })
+  const ret = on(iframeId, 'onBeforeClose', { foo: 'bar' })
 
   expect(consoleErrorSpy).toHaveBeenCalledWith(error)
   expect(warn).toHaveBeenCalledWith(iframeId, 'Error in onBeforeClose callback')
@@ -93,7 +93,7 @@ test('throws TypeError when handler is not a function', () => {
   const iframeId = 'ifr5'
   settings[iframeId] = { onResize: 'not-a-function' }
 
-  expect(() => checkEvent(iframeId, 'onResize', {})).toThrow(
+  expect(() => on(iframeId, 'onResize', {})).toThrow(
     new TypeError('onResize on iframe[ifr5] is not a function'),
   )
 })
