@@ -461,10 +461,7 @@ function iframeListener(event) {
         return
       }
 
-      log(
-        iframeId,
-        `In page link #${hash} not found`,
-      )
+      log(iframeId, `In page link #${hash} not found`)
     }
 
     const hash = location.split('#')[1] || ''
