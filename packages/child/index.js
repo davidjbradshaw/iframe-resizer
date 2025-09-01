@@ -1447,6 +1447,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           break
         }
 
+        // Ignore overflowObserver here, as more efficient than using
+        // mutationObserver to detect OVERFLOW_ATTR changes
         case sendPending === true && triggerEvent !== OVERFLOW_OBSERVER: {
           purge()
           log('Resize already pending - Ignored resize request')
