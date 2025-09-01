@@ -391,9 +391,11 @@ function iframeListener(event) {
     }
 
     function scrollParent(target, newPosition) {
-      target[`scrollTo${addOffset ? 'Offset' : ''}`](
-        newPosition.x,
-        newPosition.y,
+      setTimeout(() =>
+        target[`scrollTo${addOffset ? 'Offset' : ''}`](
+          newPosition.x,
+          newPosition.y,
+        ),
       )
     }
 
@@ -461,7 +463,7 @@ function iframeListener(event) {
 
       log(
         iframeId,
-        `In page link #${hash} not found and window.parentIframe not found`,
+        `In page link #${hash} not found`,
       )
     }
 
