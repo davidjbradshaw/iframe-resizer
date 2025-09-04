@@ -942,7 +942,7 @@ function checkMode(iframeId, childMode = -3) {
     settings[iframeId].vAdvised = true
     throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
   }
-  if (!(mode > -1 && vInfoDisable)) {
+  if (!(mode > 0 && vInfoDisable)) {
     vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
   }
   if (mode < 1) advise('Parent', getModeData(3))
@@ -968,6 +968,7 @@ export default (options) => (iframe) => {
     if (iframeId === '' || !iframeId) {
       iframeId = newId()
       iframe.id = iframeId
+      consoleEvent(iframeId, 'assignId')
       log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
     }
 
@@ -1328,7 +1329,8 @@ function sendTriggerMsg(eventName, event) {
 
 function tabVisible() {
   if (document.hidden === false) {
-    log('document', 'Trigger event: Visibility change')
+    consoleEvent('document', 'visibilityChange')
+    log('document', 'Visibility Change:', document.hidden ? 'hidden' : 'visible')
     sendTriggerMsg('tabVisible', RESIZE)
   }
 }
