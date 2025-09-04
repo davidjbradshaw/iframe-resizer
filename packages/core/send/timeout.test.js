@@ -1,9 +1,9 @@
 import { jest } from '@jest/globals'
 
-import { advise, event } from './console'
+import { advise, event } from '../console'
 import warnOnNoResponse from './timeout'
 
-jest.mock('./console', () => ({
+jest.mock('../console', () => ({
   advise: jest.fn(),
   event: jest.fn(),
 }))
