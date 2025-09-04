@@ -1330,7 +1330,11 @@ function sendTriggerMsg(eventName, event) {
 function tabVisible() {
   if (document.hidden === false) {
     consoleEvent('document', 'visibilityChange')
-    log('document', 'Visibility Change:', document.hidden ? 'hidden' : 'visible')
+    log(
+      'document',
+      'Visibility Change:',
+      document.hidden ? 'hidden' : 'visible',
+    )
     sendTriggerMsg('tabVisible', RESIZE)
   }
 }
