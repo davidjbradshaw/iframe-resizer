@@ -216,6 +216,8 @@ function iframeResizerChild() {
       setMargin,
       () => setBodyStyle('background', bodyBackground),
       () => setBodyStyle('padding', bodyPadding),
+      () => setBodyStyle('min-height', '1px'),
+      () => setBodyStyle('min-width', '1px'),
 
       bothDirections ? id : stopInfiniteResizingOfIframe,
       injectClearFixIntoBodyElement,
@@ -444,10 +446,10 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
   }
 
   function setBodyStyle(attr, value) {
-    if (undefined !== value && value !== '' && value !== 'null') {
-      document.body.style.setProperty(attr, value)
-      info(`Set body ${attr}: %c${value}`, HIGHLIGHT)
-    }
+    if (undefined === value || value === '' || value === 'null') return
+
+    document.body.style.setProperty(attr, value)
+    info(`Set body ${attr}: %c${value}`, HIGHLIGHT)
   }
 
   function applySelector(name, attribute, selector) {
