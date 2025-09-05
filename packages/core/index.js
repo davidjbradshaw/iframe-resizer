@@ -550,10 +550,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     info(iframeId, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
   }
 
-  function started() {
-    setup = true
-  }
-
   function eventMsg() {
     const { height, iframe, msg, type, width } = messageData
     if (settings[iframeId]?.firstRun) firstRun()
@@ -577,7 +573,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
       case BEFORE_UNLOAD:
         info(iframeId, 'Ready state reset')
-        settings[iframeId].ready = false
+        settings[iframeId].initialised = false
         break
 
       case AUTO_RESIZE:
@@ -628,7 +624,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         resizeIframe()
         checkSameDomain(iframeId)
         checkVersion(msg)
-        started()
+        settings[iframeId].initialised = true
         on('onReady', iframe)
         break
 
@@ -667,8 +663,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   }
 
   const initFromIframe = (source) => (iframeId) => {
-    const { ready, postMessageTarget } = settings[iframeId]
-    if (ready || source !== postMessageTarget) return
+    const { initialised, postMessageTarget } = settings[iframeId]
+    if (initialised || source !== postMessageTarget) return
+    log(iframeId, 'iframe requested init')
     trigger(INIT_FROM_IFRAME, createOutgoingMsg(iframeId), iframeId)
     warnOnNoResponse(iframeId, settings)
   }
@@ -678,7 +675,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   function firstRun() {
     if (!settings[iframeId]) return
-
+    log(iframeId, `First run for ${iframeId}`)
     checkMode(iframeId, messageData.mode)
     settings[iframeId].firstRun = false
   }
@@ -688,7 +685,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
     if (!isMessageFromMetaParent()) {
       log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
-      settings[iframeId].ready = true
 
       if (checkIframeExists() && isMessageFromIframe()) {
         eventMsg()
@@ -927,7 +923,6 @@ function createOutgoingMsg(iframeId) {
 }
 
 let count = 0
-let setup = false
 let vAdvised = false
 let vInfoDisable = false
 
@@ -1014,13 +1009,12 @@ export default (options) => (iframe) => {
   }
 
   function checkReset() {
-    const firstRun = settings[iframeId]?.firstRun
-    const resetRequestMethod =
-      settings[iframeId]?.heightCalculationMethod in RESET_REQUIRED_METHODS
+    if (
+      !(settings[iframeId]?.heightCalculationMethod in RESET_REQUIRED_METHODS)
+    )
+      return
 
-    if (!firstRun && resetRequestMethod) {
-      resetIframe({ iframe, height: 0, width: 0, type: INIT })
-    }
+    resetIframe({ iframe, height: 0, width: 0, type: INIT })
   }
 
   function setupIframeObject() {
@@ -1072,21 +1066,22 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   // iframes have completed loading when this code runs. The
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
-    const iFrameLoaded = () => {
-      trigger(ONLOAD, `${msg}:${setup}`, id)
-      warnOnNoResponse(id, settings)
-      checkReset()
-    }
+    const iframeLoaded = () =>
+      setTimeout(() => {
+        if (settings[id].initialised === true) return
+        trigger(ONLOAD, msg, id)
+        warnOnNoResponse(id, settings)
+        if (!settings[id]?.firstRun) checkReset()
+      })
 
     const { id } = iframe
     const { waitForLoad } = settings[id]
 
-    addEventListener(iframe, LOAD, iFrameLoaded)
+    addEventListener(iframe, LOAD, iframeLoaded)
 
     if (waitForLoad === true) return
 
-    trigger(INIT, `${msg}:${setup}`, id)
-    warnOnNoResponse(id, settings)
+    iframeLoaded()
   }
 
   function checkOptions(options) {
@@ -1213,7 +1208,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     settings[iframeId] = {
       ...settings[iframeId],
       iframe,
-      firstRun: true,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
       ...defaults,
       ...checkOptions(options),
@@ -1330,7 +1324,11 @@ function sendTriggerMsg(eventName, event) {
 function tabVisible() {
   if (document.hidden === false) {
     consoleEvent('document', 'visibilityChange')
-    log('document', 'Visibility Change:', document.hidden ? 'hidden' : 'visible')
+    log(
+      'document',
+      'Visibility Change:',
+      document.hidden ? 'hidden' : 'visible',
+    )
     sendTriggerMsg('tabVisible', RESIZE)
   }
 }
