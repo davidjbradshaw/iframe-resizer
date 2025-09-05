@@ -1071,7 +1071,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         if (settings[id].initialised === true) return
         trigger(ONLOAD, msg, id)
         warnOnNoResponse(id, settings)
-        if (!settings[iframeId]?.firstRun) checkReset()
+        if (!settings[id]?.firstRun) checkReset()
       })
 
     const { id } = iframe
