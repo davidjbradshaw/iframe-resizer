@@ -1083,7 +1083,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     if (waitForLoad === true) return
 
     const { src, srcdoc } = iframe
-    
+
     if (!srcdoc && (src === '' || src === 'about:blank')) return
 
     createIframeLoaded(INIT)()
