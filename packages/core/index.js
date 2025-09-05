@@ -1009,10 +1009,7 @@ export default (options) => (iframe) => {
   }
 
   function checkReset() {
-    const resetRequestMethod =
-      settings[iframeId]?.heightCalculationMethod in RESET_REQUIRED_METHODS
-
-    if (!resetRequestMethod) return
+    if (!settings[iframeId]?.heightCalculationMethod in RESET_REQUIRED_METHODS) return
 
     resetIframe({ iframe, height: 0, width: 0, type: INIT })
   }
