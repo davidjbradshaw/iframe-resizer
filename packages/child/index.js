@@ -1717,7 +1717,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       window?.iframeResizer?.targetOrigin || '*',
     )
 
-  function checkLateLoaded() {
+  function ready() {
     if (document.readyState === 'loading' || !firstRun || sent) return
 
     const { parent, top } = window
@@ -1743,9 +1743,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       setTimeout(() => received({ data, sameOrigin: true }))
 
     addEventListener(window, MESSAGE, received)
-    addEventListener(document, READY_STATE_CHANGE, checkLateLoaded)
+    addEventListener(document, READY_STATE_CHANGE, ready)
 
-    setTimeout(checkLateLoaded)
+    ready()
   }
 
   /* TEST CODE START */

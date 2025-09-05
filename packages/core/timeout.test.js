@@ -28,7 +28,7 @@ describe('warnOnNoResponse', () => {
         iframe: { sandbox: mockSandbox },
         waitForLoad: false,
         warningTimeout: 1000, // 1 second
-        ready: false,
+        initialised: false,
         loadErrorShown: false,
       },
     }
