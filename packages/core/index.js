@@ -1066,27 +1066,27 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   // We have to call trigger twice, as we can not be sure if all
   // iframes have completed loading when this code runs. The
   // event listener also catches the page changing in the iFrame.
-  function init(msg) {
-    const iframeLoaded = (event) => () =>
+  function init(id, message) {
+    const createIframeLoaded = (event) => () =>
       setTimeout(() => {
+        if (!settings[id]) return
         if (settings[id].initialised === true) return
-        trigger(event, msg, id)
+        trigger(event, message, id)
         warnOnNoResponse(id, settings)
-        if (!settings[id]?.firstRun) checkReset()
+        if (!settings[id].firstRun) checkReset()
       })
 
-    const { id } = iframe
     const { waitForLoad } = settings[id]
 
-    addEventListener(iframe, LOAD, iframeLoaded(ONLOAD))
+    addEventListener(iframe, LOAD, createIframeLoaded(ONLOAD))
 
     if (waitForLoad === true) return
 
-    const { src, srcdoc } = settings[id].iframe
-
+    const { src, srcdoc } = iframe
+    
     if (!srcdoc && (src === '' || src === 'about:blank')) return
 
-    iframeLoaded(INIT)()
+    createIframeLoaded(INIT)()
   }
 
   function checkOptions(options) {
@@ -1245,7 +1245,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setupEventListenersOnce()
     setScrolling()
     setupBodyMarginValues()
-    init(createOutgoingMsg(iframeId))
+    init(iframeId, createOutgoingMsg(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
   }
