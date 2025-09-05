@@ -1067,10 +1067,10 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   // iframes have completed loading when this code runs. The
   // event listener also catches the page changing in the iFrame.
   function init(msg) {
-    const iframeLoaded = () =>
+    const iframeLoaded = (event) => () =>
       setTimeout(() => {
         if (settings[id].initialised === true) return
-        trigger(ONLOAD, msg, id)
+        trigger(event, msg, id)
         warnOnNoResponse(id, settings)
         if (!settings[id]?.firstRun) checkReset()
       })
@@ -1078,11 +1078,15 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     const { id } = iframe
     const { waitForLoad } = settings[id]
 
-    addEventListener(iframe, LOAD, iframeLoaded)
+    addEventListener(iframe, LOAD, iframeLoaded(ONLOAD))
 
     if (waitForLoad === true) return
 
-    iframeLoaded()
+    const { src, srcdoc } = settings[id].iframe
+
+    if (!srcdoc && (src === '' || src === 'about:blank')) return
+
+    iframeLoaded(INIT)()
   }
 
   function checkOptions(options) {
