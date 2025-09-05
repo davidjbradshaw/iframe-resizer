@@ -216,8 +216,6 @@ function iframeResizerChild() {
       setMargin,
       () => setBodyStyle('background', bodyBackground),
       () => setBodyStyle('padding', bodyPadding),
-      () => setBodyStyle('min-height', '1px'),
-      () => setBodyStyle('min-width', '1px'),
 
       bothDirections ? id : stopInfiniteResizingOfIframe,
       injectClearFixIntoBodyElement,
@@ -1205,7 +1203,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     const scrollSize = getAdjustedScroll(getDimension)
     const sizes = `HTML: %c${boundingSize}px %cPage: %c${scrollSize}px`
 
-    let calculatedSize = 0
+    let calculatedSize = MIN_SIZE
 
     switch (true) {
       case !getDimension.enabled():
@@ -1280,7 +1278,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
     calculatedSize += getOffsetSize(getDimension)
 
-    return calculatedSize
+    return Math.max(calculatedSize, MIN_SIZE)
   }
 
   const getBodyOffset = () => {
