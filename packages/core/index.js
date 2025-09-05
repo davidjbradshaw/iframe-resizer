@@ -19,6 +19,7 @@ import {
   MESSAGE_HEADER_LENGTH,
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
+  MIN_SIZE,
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
@@ -1014,7 +1015,7 @@ export default (options) => (iframe) => {
     )
       return
 
-    resetIframe({ iframe, height: 0, width: 0, type: INIT })
+    resetIframe({ iframe, height: MIN_SIZE, width: MIN_SIZE, type: INIT })
   }
 
   function setupIframeObject() {
