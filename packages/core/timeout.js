@@ -38,11 +38,11 @@ export default function warnOnNoResponse(id, settings) {
   function warning() {
     if (settings[id] === undefined) return // iframe has been closed while we were waiting
 
-    const { ready, loadErrorShown } = settings[id]
+    const { initialised, loadErrorShown } = settings[id]
 
     settings[id].msgTimeout = undefined
 
-    if (ready || loadErrorShown) return
+    if (initialised || loadErrorShown) return
 
     settings[id].loadErrorShown = true
     showWarning(id, settings)
