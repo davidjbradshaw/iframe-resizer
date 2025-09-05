@@ -1084,7 +1084,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
     const { src, srcdoc } = iframe
 
-    if (!srcdoc && (src === '' || src === 'about:blank')) return
+    if (!srcdoc && (src == null || src === '' || src === 'about:blank')) return
 
     createIframeLoaded(INIT)()
   }
