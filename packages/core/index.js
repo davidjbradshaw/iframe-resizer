@@ -663,12 +663,10 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  const initFromIframe = (source) => (iframeId) => {
-    const { initialised, postMessageTarget } = settings[iframeId]
+  const initFromIframe = (source) => (id) => {
+    const { initialised, postMessageTarget } = settings[id]
     if (initialised || source !== postMessageTarget) return
-    log(iframeId, 'iframe requested init')
-    trigger(INIT_FROM_IFRAME, createOutgoingMsg(iframeId), iframeId)
-    warnOnNoResponse(iframeId, settings)
+    settings[id].initChild()
   }
 
   const iFrameReadyMsgReceived = (source) =>
@@ -1063,30 +1061,34 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     }
   }
 
+  const noContent = (iframe) => {
+    const { src, srcdoc } = iframe
+    return !srcdoc && (src == null || src === '' || src === 'about:blank')
+  }
+
   // We have to call trigger twice, as we can not be sure if all
   // iframes have completed loading when this code runs. The
   // event listener also catches the page changing in the iFrame.
   function init(id, message) {
-    const createIframeLoaded = (event) => () =>
-      setTimeout(() => {
-        if (!settings[id]) return
-        if (settings[id].initialised === true) return
-        trigger(event, message, id)
-        warnOnNoResponse(id, settings)
-        if (!settings[id].firstRun) checkReset()
-      })
-
     const { waitForLoad } = settings[id]
 
-    addEventListener(iframe, LOAD, createIframeLoaded(ONLOAD))
+    const createInitChild = (eventType) => () => {
+      if (!settings[id]) return
+      if (settings[id].initialised === true) return
+
+      trigger(eventType, message, id)
+      warnOnNoResponse(id, settings)
+
+      if (!settings[id].firstRun) checkReset()
+    }
+
+    addEventListener(iframe, LOAD, createInitChild(ONLOAD))
+    settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
 
     if (waitForLoad === true) return
+    if (noContent(iframe)) return
 
-    const { src, srcdoc } = iframe
-
-    if (!srcdoc && (src == null || src === '' || src === 'about:blank')) return
-
-    createIframeLoaded(INIT)()
+    setTimeout(createInitChild(INIT))
   }
 
   function checkOptions(options) {
@@ -1241,6 +1243,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     processOptions(options)
+    log(iframeId, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
     preModeCheck()
     setupEventListenersOnce()
     setScrolling()
