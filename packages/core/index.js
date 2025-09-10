@@ -1082,11 +1082,19 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
       if (!settings[id].firstRun) checkReset()
     }
 
-    addEventListener(iframe, LOAD, createInitChild(ONLOAD))
+    const onLoad = createInitChild(ONLOAD)
+
+    addEventListener(iframe, LOAD, () => setTimeout(onLoad, 1)) // allow concurrent events to go first
     settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
 
     if (waitForLoad === true) return
-    if (noContent(iframe)) return
+    if (noContent(iframe)) {
+      setTimeout(() => {
+        consoleEvent(id, 'noContent')
+        info(id, 'No content detected in the iframe, delaying initialisation')
+      })
+      return
+    }
 
     setTimeout(createInitChild(INIT))
   }
