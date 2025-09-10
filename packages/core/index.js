@@ -13,6 +13,7 @@ import {
   INIT,
   INIT_EVENTS,
   INIT_FROM_IFRAME,
+  LABEL,
   LOAD,
   LOG_OPTIONS,
   MESSAGE,
@@ -1310,7 +1311,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     options.log = enabled
   }
 
-  const beenHere = () => 'iframeResizer' in iframe
+  const beenHere = () => LABEL in iframe
 
   const iframeId = ensureHasId(iframe.id)
 
