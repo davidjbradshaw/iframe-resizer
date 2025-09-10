@@ -1325,29 +1325,14 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   return iframe?.iframeResizer
 }
 
-function sendTriggerMsg(eventName, event) {
-  function triggerEnabledIframe(id) {
-    if (isIframeResizeEnabled(id)) {
-      trigger(eventName, event, id)
-    }
-  }
-
-  const isIframeResizeEnabled = (id) =>
-    settings[id]?.autoResize && !settings[id]?.firstRun
-
-  Object.keys(settings).forEach(triggerEnabledIframe)
-}
+const sendTriggerMsg = (eventName, event) =>
+  Object.values(settings)
+    .filter(({ autoResize, firstRun }) => autoResize && !firstRun)
+    .forEach(({ iframe }) => trigger(eventName, event, iframe.id))
 
 function tabVisible() {
-  if (document.hidden === false) {
-    consoleEvent('document', 'visibilityChange')
-    log(
-      'document',
-      'Visibility Change:',
-      document.hidden ? 'hidden' : 'visible',
-    )
-    sendTriggerMsg('tabVisible', RESIZE)
-  }
+  if (document.hidden === true) return
+  sendTriggerMsg('tabVisible', RESIZE)
 }
 
 const setupEventListenersOnce = once(() => {
