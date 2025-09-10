@@ -663,14 +663,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  const initFromIframe = (source) => (id) => {
-    const { initChild, initialised, postMessageTarget } = settings[id]
-    if (initialised || source !== postMessageTarget) return
-    initChild()
-  }
+  const iframeReady =
+    (source) =>
+    ({ initChild, initialised, postMessageTarget }) => {
+      if (initialised || source !== postMessageTarget) return
+      initChild()
+    }
 
   const iFrameReadyMsgReceived = (source) =>
-    Object.keys(settings).forEach(initFromIframe(source))
+    Object.values(settings).forEach(iframeReady(source))
 
   function firstRun() {
     if (!settings[iframeId]) return
@@ -1084,7 +1085,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
     const onLoad = createInitChild(ONLOAD)
 
-    addEventListener(iframe, LOAD, () => setTimeout(onLoad, 1)) // allow concurrent events to go first
+    addEventListener(iframe, LOAD, () => setTimeout(onLoad, 1)) // allow concurrent events to
     settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
 
     if (waitForLoad === true) return
@@ -1325,14 +1326,14 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 }
 
 function sendTriggerMsg(eventName, event) {
-  function triggerEnabledIframe(iframeId) {
-    if (isIframeResizeEnabled(iframeId)) {
-      trigger(eventName, event, iframeId)
+  function triggerEnabledIframe(id) {
+    if (isIframeResizeEnabled(id)) {
+      trigger(eventName, event, id)
     }
   }
 
-  const isIframeResizeEnabled = (iframeId) =>
-    settings[iframeId]?.autoResize && !settings[iframeId]?.firstRun
+  const isIframeResizeEnabled = (id) =>
+    settings[id]?.autoResize && !settings[id]?.firstRun
 
   Object.keys(settings).forEach(triggerEnabledIframe)
 }
