@@ -1063,31 +1063,22 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     }
   }
 
+  function addLoadListener(iframe, func) {
+    // allow other concurrent events to go first
+    const onload = () => setTimeout(func, 1)
+    addEventListener(iframe, LOAD, onload)
+  }
+
   const noContent = (iframe) => {
     const { src, srcdoc } = iframe
     return !srcdoc && (src == null || src === '' || src === 'about:blank')
   }
 
-  // We have to call trigger twice, as we can not be sure if all
-  // iframes have completed loading when this code runs. The
-  // event listener also catches the page changing in the iFrame.
-  function init(id, message) {
-    const { waitForLoad } = settings[id]
+  const isLazy = (iframe) => iframe.loading === 'lazy'
+  const isInit = (eventType) => eventType === INIT
 
-    const createInitChild = (eventType) => () => {
-      if (!settings[id]) return
-      if (settings[id].initialised === true) return
-
-      trigger(eventType, message, id)
-      warnOnNoResponse(id, settings)
-
-      if (!settings[id].firstRun) checkReset()
-    }
-
-    const onLoad = createInitChild(ONLOAD)
-
-    addEventListener(iframe, LOAD, () => setTimeout(onLoad, 1)) // allow concurrent events to
-    settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
+  function sendInit(id, func) {
+    const { iframe, waitForLoad } = settings[id]
 
     if (waitForLoad === true) return
     if (noContent(iframe)) {
@@ -1098,7 +1089,34 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
       return
     }
 
-    setTimeout(createInitChild(INIT))
+    setTimeout(func)
+  }
+
+  // We have to call trigger twice, as we can not be sure if all
+  // iframes have completed loading when this code runs. The
+  // event listener also catches the page changing in the iFrame.
+  function init(id, message) {
+    const createInitChild = (eventType) => () => {
+      if (!settings[id]) return // iframe removed before load event
+
+      const { firstRun, iframe, initialised } = settings[id]
+
+      if (initialised) return
+
+      trigger(eventType, message, id)
+
+      if (!firstRun) checkReset()
+
+      if (isInit(eventType) && isLazy(iframe)) return
+
+      warnOnNoResponse(id, settings)
+    }
+
+    const { iframe } = settings[id]
+
+    settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
+    addLoadListener(iframe, createInitChild(ONLOAD))
+    sendInit(id, createInitChild(INIT))
   }
 
   function checkOptions(options) {
