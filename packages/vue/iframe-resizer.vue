@@ -5,6 +5,7 @@
 <script>
   import connectResizer from '@iframe-resizer/core'
   import acg from 'auto-console-group'
+  import { EXPAND, COLLAPSE } from '../common/consts'
 
   const esModuleInterop = (mod) =>
     // eslint-disable-next-line no-underscore-dangle
@@ -12,9 +13,6 @@
 
   // Deal with UMD not converting default exports to named exports
   const createAutoConsoleGroup = esModuleInterop(acg)
-  
-  const EXPAND = 'expanded'
-  const COLLAPSE = 'collapsed'
 
   export default {
     name: 'IframeResizer',
@@ -43,19 +41,16 @@
       log: {
         type: [String, Boolean, Number],
         validator: (value) => {
-          if (typeof value === 'boolean') {
-            return true;
+          switch (value) {
+            case COLLAPSE:
+            case EXPAND:
+            case false:
+            case true:
+            case -1:
+              return true
+            default:
+              return false
           }
-          
-          if (typeof value === 'string') {
-            return [COLLAPSE, EXPAND].includes(value);
-          }
-
-          if (typeof value === 'number') {
-            return value === -1;
-          }
-
-          return false
         },
         default: undefined,
       },
