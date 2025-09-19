@@ -1,5 +1,7 @@
 export const VERSION = '[VI]{version}[/VI]'
 export const LABEL = 'iframeResizer'
+export const SEPARATOR = ':'
+export const CHILD_READY_MESSAGE = '[iFrameResizerChild]Ready'
 
 export const AFTER_EVENT_STACK = 1
 
@@ -36,7 +38,30 @@ export const IGNORE_ATTR = 'data-iframe-ignore'
 
 export const HEIGHT = 'height'
 export const WIDTH = 'width'
+export const OFFSET = 'offset'
+export const OFFSET_HEIGHT = 'offsetHeight'
+export const OFFSET_SIZE = 'offsetSize'
 export const SCROLL = 'scroll'
+
+export const HIDDEN = 'hidden'
+export const VISIBLE = 'visible'
+
+export const CHILD = 'child'
+export const PARENT = 'parent'
+
+export const STRING = 'string'
+export const NUMBER = 'number'
+export const BOOLEAN = 'boolean'
+export const OBJECT = 'object'
+export const FUNCTION = 'function'
+export const SYMBOL = 'symbol'
+export const UNDEFINED = 'undefined'
+
+export const TRUE = 'true'
+export const FALSE = 'false'
+
+export const NULL = 'null'
+export const AUTO = 'auto'
 
 export const READY_STATE_CHANGE = 'readystatechange'
 

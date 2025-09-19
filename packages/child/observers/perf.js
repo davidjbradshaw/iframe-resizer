@@ -14,7 +14,7 @@ const PREF_MEASURE = '--ifr-measure'
 const timings = []
 // const usedTags = new WeakSet()
 
-// const addUsedTag = (el) => typeof el === 'object' && usedTags.add(el)
+// const addUsedTag = (el) => typeof el === OBJECT && usedTags.add(el)
 
 let detail = {}
 let oldAverage = 0

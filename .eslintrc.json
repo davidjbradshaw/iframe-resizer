@@ -51,6 +51,7 @@
     "react/prop-types": 0,
     "sonarjs/no-nested-template-literals": 0,
     "switch-case/no-case-curly": 0,
+    "valid-typeof": 0,
     "unicorn/consistent-function-scoping": 0,
     "unicorn/no-array-callback-reference": 0,
     "unicorn/no-array-reduce": 0,

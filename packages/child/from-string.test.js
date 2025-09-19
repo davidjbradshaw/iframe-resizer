@@ -1,3 +1,4 @@
+import { FALSE } from '../common/consts'
 import { getBoolean, getNumber } from './from-string'
 
 describe('from-string utility functions', () => {
@@ -7,7 +8,7 @@ describe('from-string utility functions', () => {
     })
 
     test('should return false for the string "false"', () => {
-      expect(getBoolean('false')).toBe(false)
+      expect(getBoolean(FALSE)).toBe(false)
     })
 
     test('should return undefined for undefined input', () => {

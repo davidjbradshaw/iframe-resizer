@@ -2,13 +2,18 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
   AFTER_EVENT_STACK,
+  AUTO,
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
+  CHILD,
+  CHILD_READY_MESSAGE,
   CLOSE,
   COLLAPSE,
   EXPAND,
+  FUNCTION,
   HEIGHT,
+  HIDDEN,
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
@@ -26,9 +31,15 @@ import {
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
+  NULL,
+  NUMBER,
+  OBJECT,
+  OFFSET,
+  OFFSET_SIZE,
   ONLOAD,
   PAGE_INFO,
   PAGE_INFO_STOP,
+  PARENT,
   PARENT_INFO,
   PARENT_INFO_STOP,
   RESET,
@@ -38,6 +49,8 @@ import {
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
+  SEPARATOR,
+  STRING,
   TITLE,
   VERSION,
   VERTICAL,
@@ -98,7 +111,7 @@ function iframeListener(event) {
   }
 
   function processMessage(msg) {
-    const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
+    const data = msg.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
     const height = data[1] ? Number(data[1]) : 0
     const iframe = settings[data[0]]?.iframe
     const compStyle = getComputedStyle(iframe)
@@ -155,7 +168,7 @@ function iframeListener(event) {
 
     let checkOrigin = settings[iframeId]?.checkOrigin
 
-    if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
+    if (checkOrigin && `${origin}` !== NULL && !checkAllowedOrigin()) {
       throw new Error(
         `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`,
       )
@@ -166,7 +179,7 @@ function iframeListener(event) {
 
   const isMessageForUs = (msg) =>
     MESSAGE_ID === `${msg}`.slice(0, MESSAGE_ID_LENGTH) &&
-    msg.slice(MESSAGE_ID_LENGTH).split(':')[0] in settings
+    msg.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)[0] in settings
 
   function isMessageFromMetaParent() {
     // Test if this message is from a parent above us. This is an ugly test, however, updating
@@ -181,7 +194,7 @@ function iframeListener(event) {
   }
 
   const getMsgBody = (offset) =>
-    msg.slice(msg.indexOf(':') + MESSAGE_HEADER_LENGTH + offset)
+    msg.slice(msg.indexOf(SEPARATOR) + MESSAGE_HEADER_LENGTH + offset)
 
   function forwardMsgFromIframe(msgBody) {
     log(
@@ -492,7 +505,7 @@ function iframeListener(event) {
     let mousePos = {}
 
     if (messageData.width === 0 && messageData.height === 0) {
-      const coords = getMsgBody(9).split(':')
+      const coords = getMsgBody(9).split(SEPARATOR)
       mousePos = {
         x: coords[1],
         y: coords[0],
@@ -697,15 +710,15 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   let msg = event.data
 
-  if (msg === '[iFrameResizerChild]Ready') {
+  if (msg === CHILD_READY_MESSAGE) {
     iFrameReadyMsgReceived(event.source)
     return
   }
 
   if (!isMessageForUs(msg)) {
-    if (typeof msg !== 'string') return
-    consoleEvent('parent', 'ignoredMessage')
-    debug('parent', msg)
+    if (typeof msg !== STRING) return
+    consoleEvent(PARENT, 'ignoredMessage')
+    debug(PARENT, msg)
     return
   }
 
@@ -733,7 +746,7 @@ function checkEvent(iframeId, funcName, val) {
   if (settings[iframeId]) {
     func = settings[iframeId][funcName]
 
-    if (typeof func === 'function')
+    if (typeof func === FUNCTION)
       if (funcName === 'onBeforeClose' || funcName === 'onScroll') {
         try {
           retVal = func(val)
@@ -844,9 +857,9 @@ function setSize(messageData) {
 
 const filterMsg = (msg) =>
   msg
-    .split(':')
+    .split(SEPARATOR)
     .filter((_, index) => index !== 19)
-    .join(':')
+    .join(SEPARATOR)
 
 function trigger(calleeMsg, msg, id) {
   function logSent(route) {
@@ -911,7 +924,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.bodyPadding,
     iframeSettings.tolerance,
     iframeSettings.inPageLinks,
-    'child', // Backwards compatibility (resizeFrom)
+    CHILD, // Backwards compatibility (resizeFrom)
     iframeSettings.widthCalculationMethod,
     iframeSettings.mouseEvents,
     iframeSettings.offsetHeight,
@@ -922,7 +935,7 @@ function createOutgoingMsg(iframeId) {
     iframeSettings.mode,
     '', // iframeSettings.sizeSelector,
     iframeSettings.logExpand,
-  ].join(':')
+  ].join(SEPARATOR)
 }
 
 let count = 0
@@ -959,7 +972,7 @@ export default (options) => (iframe) => {
   }
 
   function ensureHasId(iframeId) {
-    if (iframeId && typeof iframeId !== 'string') {
+    if (iframeId && typeof iframeId !== STRING) {
       throw new TypeError('Invalid id for iFrame. Expected String')
     }
 
@@ -982,7 +995,7 @@ export default (options) => (iframe) => {
     )
 
     iframe.style.overflow =
-      settings[iframeId]?.scrolling === false ? 'hidden' : 'auto'
+      settings[iframeId]?.scrolling === false ? HIDDEN : AUTO
 
     switch (settings[iframeId]?.scrolling) {
       case 'omit':
@@ -1006,7 +1019,7 @@ export default (options) => (iframe) => {
   function setupBodyMarginValues() {
     const { bodyMargin } = settings[iframeId]
 
-    if (typeof bodyMargin === 'number' || bodyMargin === '0') {
+    if (typeof bodyMargin === NUMBER || bodyMargin === '0') {
       settings[iframeId].bodyMargin = `${bodyMargin}px`
     }
   }
@@ -1050,7 +1063,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         },
 
         moveToAnchor(anchor) {
-          typeAssert(anchor, 'string', 'moveToAnchor(anchor) anchor')
+          typeAssert(anchor, STRING, 'moveToAnchor(anchor) anchor')
           trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
         },
 
@@ -1253,7 +1266,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       syncTitle: checkTitle(iframeId),
     }
 
-    updateOptionName('offset', 'offsetSize')
+    updateOptionName(OFFSET, OFFSET_SIZE)
     updateOptionName('onClose', 'onBeforeClose')
     updateOptionName('onClosed', 'onAfterClose')
 
@@ -1301,7 +1314,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   function startLogging(iframeId, options) {
     const isLogEnabled = hasOwn(options, 'log')
-    const isLogString = typeof options.log === 'string'
+    const isLogString = typeof options.log === STRING
     const enabled = isLogEnabled
       ? isLogString
         ? true
@@ -1335,7 +1348,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   const iframeId = ensureHasId(iframe.id)
 
-  if (typeof options !== 'object') {
+  if (typeof options !== OBJECT) {
     throw new TypeError('Options is not an object')
   }
 
