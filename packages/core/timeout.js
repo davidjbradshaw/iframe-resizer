@@ -1,10 +1,11 @@
+import { OBJECT } from '../common/consts'
 import { advise, event } from './console'
 
 function showWarning(id, settings) {
   const { iframe, waitForLoad } = settings[id]
   const { sandbox } = iframe
   const hasSandbox =
-    typeof sandbox === 'object' &&
+    typeof sandbox === OBJECT &&
     sandbox.length > 0 &&
     !(
       sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin')
