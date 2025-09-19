@@ -14,6 +14,7 @@
   const createAutoConsoleGroup = esModuleInterop(acg)
   
   const EXPAND = 'expanded'
+  const COLLAPSE = 'collapsed'
 
   export default {
     name: 'IframeResizer',
@@ -40,8 +41,9 @@
         type: String,
       },
       log: {
-        type: [String, Boolean],
-        default: false,
+        type: [String, Number],
+        validator: value => value === COLLAPSE || value === EXPAND || value === -1,
+        default: undefined,
       },
       inPageLinks: {
         type: Boolean,
@@ -81,8 +83,6 @@
         onResized: (...args) => self.$emit('onResized', ...args),
       }
 
-      if (options.log === '') options.log = true
-
       const connectWithOptions = connectResizer(options)
       self.resizer = connectWithOptions(iframe)
 
@@ -93,7 +93,10 @@
 
       const consoleGroup = createAutoConsoleGroup(consoleOptions)
       consoleGroup.event('setup')
-      if (options.log) consoleGroup.log('Created Vue competent')
+
+      if ([COLLAPSE, EXPAND].includes(options.log)) {
+        consoleGroup.log('Created Vue competent')
+      }
     },
     
     beforeUnmount() {
