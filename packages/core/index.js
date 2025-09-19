@@ -15,6 +15,7 @@ import {
   INIT_EVENTS,
   INIT_FROM_IFRAME,
   LABEL,
+  LAZY,
   LOAD,
   LOG_OPTIONS,
   MESSAGE,
@@ -1075,7 +1076,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     return !srcdoc && (src == null || src === '' || src === 'about:blank')
   }
 
-  const isLazy = (iframe) => iframe.loading === 'lazy'
+  const isLazy = (iframe) => iframe.loading === LAZY
   const isInit = (eventType) => eventType === INIT
 
   function sendInit(id, initChild) {
