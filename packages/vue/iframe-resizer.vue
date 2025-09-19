@@ -41,8 +41,22 @@
         type: String,
       },
       log: {
-        type: [String, Number],
-        validator: value => value === COLLAPSE || value === EXPAND || value === -1,
+        type: [String, Boolean, Number],
+        validator: (value) => {
+          if (typeof value === 'boolean') {
+            return true;
+          }
+          
+          if (typeof value === 'string') {
+            return [COLLAPSE, EXPAND].includes(value);
+          }
+
+          if (typeof value === 'number') {
+            return value === -1;
+          }
+
+          return false
+        },
         default: undefined,
       },
       inPageLinks: {
@@ -94,8 +108,8 @@
       const consoleGroup = createAutoConsoleGroup(consoleOptions)
       consoleGroup.event('setup')
 
-      if ([COLLAPSE, EXPAND].includes(options.log)) {
-        consoleGroup.log('Created Vue competent')
+      if ([COLLAPSE, EXPAND, true].includes(options.log)) {
+        consoleGroup.log('Created Vue component')
       }
     },
     
