@@ -1063,9 +1063,9 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     }
   }
 
-  function addLoadListener(iframe, func) {
+  function addLoadListener(iframe, initChild) {
     // allow other concurrent events to go first
-    const onload = () => setTimeout(func, 1)
+    const onload = () => setTimeout(initChild, 1)
     addEventListener(iframe, LOAD, onload)
   }
 
@@ -1077,7 +1077,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
   const isLazy = (iframe) => iframe.loading === 'lazy'
   const isInit = (eventType) => eventType === INIT
 
-  function sendInit(id, func) {
+  function sendInit(id, initChild) {
     const { iframe, waitForLoad } = settings[id]
 
     if (waitForLoad === true) return
@@ -1089,7 +1089,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
       return
     }
 
-    setTimeout(func)
+    setTimeout(initChild)
   }
 
   // We have to call trigger twice, as we can not be sure if all
