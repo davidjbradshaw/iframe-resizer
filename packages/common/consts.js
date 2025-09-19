@@ -1,6 +1,8 @@
 export const VERSION = '[VI]{version}[/VI]'
 export const LABEL = 'iframeResizer'
 
+export const AFTER_EVENT_STACK = 1
+
 export const AUTO_RESIZE = 'autoResize'
 export const BEFORE_UNLOAD = 'beforeUnload'
 export const CLOSE = 'close'

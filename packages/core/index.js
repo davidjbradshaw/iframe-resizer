@@ -1,6 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
+  AFTER_EVENT_STACK,
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
@@ -1065,7 +1066,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
 
   function addLoadListener(iframe, initChild) {
     // allow other concurrent events to go first
-    const onload = () => setTimeout(initChild, 1)
+    const onload = () => setTimeout(initChild, AFTER_EVENT_STACK)
     addEventListener(iframe, LOAD, onload)
   }
 
