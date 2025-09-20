@@ -681,10 +681,8 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   const iframeReady =
     (source) =>
-    ({ initChild, initialised, postMessageTarget }) => {
-      if (initialised || source !== postMessageTarget) return
-      initChild()
-    }
+    ({ initChild, postMessageTarget }) =>
+      source === postMessageTarget && initChild()
 
   const iFrameReadyMsgReceived = (source) =>
     Object.values(settings).forEach(iframeReady(source))
@@ -1114,17 +1112,12 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     const createInitChild = (eventType) => () => {
       if (!settings[id]) return // iframe removed before load event
 
-      const { firstRun, iframe, initialised } = settings[id]
-
-      if (initialised) return
+      const { firstRun, iframe } = settings[id]
 
       trigger(eventType, message, id)
+      if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
       if (!firstRun) checkReset()
-
-      if (isInit(eventType) && isLazy(iframe)) return
-
-      warnOnNoResponse(id, settings)
     }
 
     const { iframe } = settings[id]
