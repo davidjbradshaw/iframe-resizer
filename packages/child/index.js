@@ -258,7 +258,7 @@ function iframeResizerChild() {
 
   function pageHide() {
     addEventListener(window, 'pagehide', ({ persisted }) => {
-      resetNoResponseTimer()
+      if (!persisted) resetNoResponseTimer()
       consoleEvent('pagehide')
       info('Page persisted:', persisted)
       if (persisted) return
