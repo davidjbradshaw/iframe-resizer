@@ -11,3 +11,4 @@ js/*
 dist
 test-js
 example-test
+.rollup.cache/

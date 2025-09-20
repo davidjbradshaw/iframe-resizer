@@ -30,12 +30,13 @@ const customConfig = (file) => {
     case 'vue':
       return {
         main: 'index.umd.js',
+        types: 'index.d.ts',
         module,
         browser: {
           './sfc': 'iframe-resizer.vue',
         },
         peerDependencies: {
-          vue: '^2.6.0 || ^3.0.0',
+          vue: '^3.0.0',
         },
       }
 
@@ -44,6 +45,12 @@ const customConfig = (file) => {
       return {
         ...entryPoints,
         types: `iframe-resizer.${file}.d.ts`,
+      }
+
+    case 'core':
+      return {
+        ...entryPoints,
+        types: `index.d.ts`,
       }
 
     default:

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "../../dist/vue",
+    "jsx": "preserve"
+  },
+  "include": ["./**/*.ts", "./**/*.vue"],
+  "exclude": ["node_modules", "dist", "../core/types.ts"]
+}
