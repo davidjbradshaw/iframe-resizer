@@ -70,6 +70,7 @@ import {
   isDef,
   // isElement,
   isolateUserCode,
+  lower,
   once,
   round,
   typeAssert,
@@ -260,7 +261,7 @@ function iframeResizerChild() {
   const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
   function setupOnPageHide() {
-    addEventListener(window, PAGE_HIDE.toLowerCase(), ({ persisted }) => {
+    addEventListener(window, lower(PAGE_HIDE), ({ persisted }) => {
       if (!persisted) resetNoResponseTimer()
       consoleEvent(PAGE_HIDE)
       info('Page persisted:', persisted)
