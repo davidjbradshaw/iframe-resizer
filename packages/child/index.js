@@ -75,7 +75,6 @@ import {
 import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
-  adviser,
   assert,
   debug,
   deprecateMethod,
@@ -629,7 +628,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     } else if (!isDef(version) || (oMode > -1 && mode > oMode)) {
       if (sessionStorage.getItem('ifr') !== VERSION)
         vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-      if (mode < 2) adviser(getModeData(3))
+      if (mode < 2) advise(getModeData(3))
       sessionStorage.setItem('ifr', VERSION)
     }
   }
@@ -736,11 +735,11 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       initCheck()
     }
 
-    if (inPageLinks.enable) {
+    const { enable } = inPageLinks
+
+    if (enable) {
       if (mode === 1) {
-        advise(
-          `In page linking requires a Professional or Business license. Please see <u>https://iframe-resizer.com/pricing</> for more details.`,
-        )
+        advise(getModeData(5))
       } else {
         enableInPageLinks()
       }
@@ -749,6 +748,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     }
 
     inPageLinks = {
+      ...inPageLinks,
       findTarget,
     }
   }
@@ -1443,7 +1443,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   let sendPending = false
-  const sendFailed = once(() => adviser(getModeData(4)))
+  const sendFailed = once(() => advise(getModeData(4)))
   let hiddenMessageShown = false
   let rafId
 

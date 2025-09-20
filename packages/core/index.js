@@ -906,34 +906,53 @@ function trigger(calleeMsg, msg, id) {
   if (settings[id]) checkAndSend()
 }
 
-function createOutgoingMsg(iframeId) {
-  const iframeSettings = settings[iframeId]
+function createOutgoingMsg(id) {
+  const {
+    autoResize,
+    bodyBackground,
+    bodyMargin,
+    bodyPadding,
+    heightCalculationMethod,
+    inPageLinks,
+    license,
+    log,
+    logExpand,
+    mouseEvents,
+    offsetHeight,
+    offsetWidth,
+    mode,
+    sizeHeight,
+    // sizeSelector,
+    sizeWidth,
+    tolerance,
+    widthCalculationMethod,
+  } = settings[id]
 
   return [
-    iframeId,
+    id,
     '8', // Backwards compatibility (PaddingV1)
-    iframeSettings.sizeWidth,
-    iframeSettings.log,
+    sizeWidth,
+    log,
     '32', // Backwards compatibility (Interval)
     true, // Backwards compatibility (EnablePublicMethods)
-    iframeSettings.autoResize,
-    iframeSettings.bodyMargin,
-    iframeSettings.heightCalculationMethod,
-    iframeSettings.bodyBackground,
-    iframeSettings.bodyPadding,
-    iframeSettings.tolerance,
-    iframeSettings.inPageLinks,
+    autoResize,
+    bodyMargin,
+    heightCalculationMethod,
+    bodyBackground,
+    bodyPadding,
+    tolerance,
+    inPageLinks,
     CHILD, // Backwards compatibility (resizeFrom)
-    iframeSettings.widthCalculationMethod,
-    iframeSettings.mouseEvents,
-    iframeSettings.offsetHeight,
-    iframeSettings.offsetWidth,
-    iframeSettings.sizeHeight,
-    iframeSettings.license,
+    widthCalculationMethod,
+    mouseEvents,
+    offsetHeight,
+    offsetWidth,
+    sizeHeight,
+    license,
     page.version,
-    iframeSettings.mode,
-    '', // iframeSettings.sizeSelector,
-    iframeSettings.logExpand,
+    mode,
+    '', // sizeSelector,
+    logExpand,
   ].join(SEPARATOR)
 }
 

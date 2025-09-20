@@ -53,8 +53,6 @@ export const {
 
 export const advise = (msg) => childConsole.warn(formatAdvise(identity)(msg))
 
-export const adviser = advise
-
 const deprecateAdvise = deprecate((id, msg) => advise(msg))
 export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateMethodReplace = deprecateAdvise('Method', 'replaced with')
