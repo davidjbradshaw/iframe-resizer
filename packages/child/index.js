@@ -255,23 +255,11 @@ function iframeResizerChild() {
     sendTitle()
   }
 
-  function mockBeforeUnloadEvent() {
-    // backwards compatibility v5.5.2 -> v5.5.6
-    const [major, minor, patch] = VERSION.split('.').map((n) => parseInt(n, 10))
-    switch (true) {
-      case major !== 5:
-      case minor !== 5:
-      case patch < 2 || patch > 6:
-        return
-
-      default:
-        sendMessage(0, 0, BEFORE_UNLOAD)
-    }
-  }
+  const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
   function pageHide() {
     addEventListener(window, 'pagehide', ({ persisted }) => {
-      mockBeforeUnloadEvent()
+      resetNoResponseTimer()
       consoleEvent('pagehide')
       info('Page persisted:', persisted)
       if (persisted) return
