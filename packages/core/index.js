@@ -1096,7 +1096,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
       const { firstRun, iframe } = settings[id]
 
       trigger(eventType, message, id)
-      if (!isInit(eventType) && !isLazy(iframe)) warnOnNoResponse(id, settings)
+      if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
       if (!firstRun) checkReset()
     }
