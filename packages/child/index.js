@@ -36,6 +36,7 @@ import {
   OFFSET_SIZE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
+  PAGE_HIDE,
   PAGE_INFO,
   PAGE_INFO_STOP,
   PARENT_INFO,
@@ -257,9 +258,9 @@ function iframeResizerChild() {
   const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
   function setupOnPageHide() {
-    addEventListener(window, 'pagehide', ({ persisted }) => {
+    addEventListener(window, PAGE_HIDE.toLowerCase(), ({ persisted }) => {
       if (!persisted) resetNoResponseTimer()
-      consoleEvent('pagehide')
+      consoleEvent(PAGE_HIDE)
       info('Page persisted:', persisted)
       if (persisted) return
       tearDown.forEach((func) => func())
