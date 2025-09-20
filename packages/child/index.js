@@ -259,17 +259,16 @@ function iframeResizerChild() {
 
   const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
-  function setupOnPageHide() {
-    const onPageHide = ({ persisted }) => {
-      if (!persisted) resetNoResponseTimer()
-      consoleEvent(PAGE_HIDE)
-      info('Page persisted:', persisted)
-      if (persisted) return
-      tearDown.forEach(invoke)
-    }
-
-    addEventListener(window, lower(PAGE_HIDE), onPageHide)
+  const onPageHide = ({ persisted }) => {
+    if (!persisted) resetNoResponseTimer()
+    consoleEvent(PAGE_HIDE)
+    info('Page persisted:', persisted)
+    if (persisted) return
+    tearDown.forEach(invoke)
   }
+
+  const setupOnPageHide = () =>
+    addEventListener(window, lower(PAGE_HIDE), onPageHide)
 
   function checkReadyYet(readyCallback) {
     if (document.readyState === 'complete') isolateUserCode(readyCallback)
