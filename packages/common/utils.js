@@ -32,6 +32,8 @@ export const capitalizeFirstLetter = (string) =>
 
 export const isDef = (value) => `${value}` !== '' && value !== undefined
 
+export const invoke = (fn) => fn()
+
 export function getElementName(el) {
   switch (true) {
     case !isDef(el):
