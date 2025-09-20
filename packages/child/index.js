@@ -260,13 +260,15 @@ function iframeResizerChild() {
   const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
   function setupOnPageHide() {
-    addEventListener(window, lower(PAGE_HIDE), ({ persisted }) => {
+    const onPageHide = ({ persisted }) => {
       if (!persisted) resetNoResponseTimer()
       consoleEvent(PAGE_HIDE)
       info('Page persisted:', persisted)
       if (persisted) return
       tearDown.forEach(invoke)
-    })
+    }
+
+    addEventListener(window, lower(PAGE_HIDE), onPageHide)
   }
 
   function checkReadyYet(readyCallback) {
