@@ -34,6 +34,8 @@ export const isDef = (value) => `${value}` !== '' && value !== undefined
 
 export const invoke = (fn) => fn()
 
+export const lower = (str) => str.toLowerCase()
+
 export function getElementName(el) {
   switch (true) {
     case !isDef(el):
