@@ -235,7 +235,7 @@ function iframeResizerChild() {
 
       initEventListeners,
       attachObservers,
-      pageHide,
+      setupOnPageHide,
     ]
 
     isolate(setup)
@@ -256,7 +256,7 @@ function iframeResizerChild() {
 
   const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
-  function pageHide() {
+  function setupOnPageHide() {
     addEventListener(window, 'pagehide', ({ persisted }) => {
       if (!persisted) resetNoResponseTimer()
       consoleEvent('pagehide')
