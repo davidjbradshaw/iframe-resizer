@@ -36,6 +36,7 @@ import {
   OFFSET_SIZE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
+  PAGE_HIDE,
   PAGE_INFO,
   PAGE_INFO_STOP,
   PARENT_INFO,
@@ -65,9 +66,11 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  invoke,
   isDef,
   // isElement,
   isolateUserCode,
+  lower,
   once,
   round,
   typeAssert,
@@ -235,7 +238,7 @@ function iframeResizerChild() {
 
       initEventListeners,
       attachObservers,
-      beforeUnload,
+      setupOnPageHide,
     ]
 
     isolate(setup)
@@ -254,12 +257,18 @@ function iframeResizerChild() {
     sendTitle()
   }
 
-  function beforeUnload() {
-    addEventListener(window, BEFORE_UNLOAD.toLowerCase(), () => {
-      tearDown.forEach((func) => func())
-      sendMessage(0, 0, BEFORE_UNLOAD)
-    })
+  const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
+
+  function onPageHide({ persisted }) {
+    if (!persisted) resetNoResponseTimer()
+    consoleEvent(PAGE_HIDE)
+    info('Page persisted:', persisted)
+    if (persisted) return
+    tearDown.forEach(invoke)
   }
+
+  const setupOnPageHide = () =>
+    addEventListener(window, lower(PAGE_HIDE), onPageHide)
 
   function checkReadyYet(readyCallback) {
     if (document.readyState === 'complete') isolateUserCode(readyCallback)
