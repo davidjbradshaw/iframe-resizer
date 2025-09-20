@@ -259,7 +259,7 @@ function iframeResizerChild() {
 
   const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
 
-  const onPageHide = ({ persisted }) => {
+  function onPageHide({ persisted }) {
     if (!persisted) resetNoResponseTimer()
     consoleEvent(PAGE_HIDE)
     info('Page persisted:', persisted)
