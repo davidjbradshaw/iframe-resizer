@@ -681,8 +681,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   const iframeReady =
     (source) =>
-    ({ initChild, postMessageTarget }) =>
-      source === postMessageTarget && initChild()
+    ({ initChild, postMessageTarget }) => {
+      if (source === postMessageTarget) initChild()
+    }
 
   const iFrameReadyMsgReceived = (source) =>
     Object.values(settings).forEach(iframeReady(source))
