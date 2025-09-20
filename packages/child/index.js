@@ -66,6 +66,7 @@ import {
   capitalizeFirstLetter,
   getElementName,
   id,
+  invoke,
   isDef,
   // isElement,
   isolateUserCode,
@@ -264,7 +265,7 @@ function iframeResizerChild() {
       consoleEvent(PAGE_HIDE)
       info('Page persisted:', persisted)
       if (persisted) return
-      tearDown.forEach((func) => func())
+      tearDown.forEach(invoke)
     })
   }
 
