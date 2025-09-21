@@ -15,7 +15,14 @@ import {
 } from './build/plugins.js'
 
 import pkg from './package.json' with { type: 'json' }
-import typescript from '@rollup/plugin-typescript'
+import esbuild from 'rollup-plugin-esbuild'
+import dts from 'rollup-plugin-dts'
+import { registerTS } from '@vue/compiler-sfc'
+import ts from 'typescript'
+import { execSync } from 'child_process'
+
+// Ensure vue compiler can read the types
+registerTS(() => ts)
 
 const { BETA, ROLLUP_WATCH, DEBUG, TEST } = process.env
 
@@ -69,9 +76,30 @@ const npm = [
     external: ['auto-console-group'],
     plugins: [
       pluginsProd('core'),
+      copy({
+        hook: 'closeBundle',
+        targets: [
+          {
+            src: 'packages/core/index.d.ts',
+            dest: 'dist/core/',
+          },
+        ],
+        verbose: true,
+      }),
       filesize(),
     ],
     watch: false,
+  },
+  // Core - Declaration of types.ts
+  {
+    input: 'packages/core/types.ts',
+    output: [
+      {
+        file: 'dist/core/types.d.ts',
+        format: 'es',
+      },
+    ],
+    plugins: [dts()],
   },
 
   // Parent browser-friendly UMD build
@@ -262,7 +290,7 @@ const npm = [
 
   // Vue
   {
-    input: 'packages/vue/index.js',
+    input: 'packages/vue/index.ts',
     output: [
       {
         globals: {
@@ -278,10 +306,12 @@ const npm = [
     ],
     external: ['@iframe-resizer/core', 'vue', 'auto-console-group'],
     plugins: [
-      typescript(),
       vue({
         css: true,
         compileTemplate: true,
+      }),
+      esbuild({
+        tsconfig: './packages/vue/tsconfig.json',
       }),
       ...pluginsProd('vue'),
       copy({
@@ -305,6 +335,16 @@ const npm = [
         ],
         verbose: true,
       }),
+      {
+        name: 'vue-tsc-types',
+        closeBundle() {
+          console.log('Generating Vue types with vue-tsc...')
+          execSync(
+            'vue-tsc -p packages/vue/tsconfig.json --declaration --emitDeclarationOnly --declarationMap false',
+            { stdio: 'inherit' },
+          )
+        },
+      },
       filesize(),
     ],
     watch: false,

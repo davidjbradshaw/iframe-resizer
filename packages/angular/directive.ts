@@ -11,44 +11,18 @@ import {
   ElementRef,
 } from '@angular/core'
 
-import connectResizer from '@iframe-resizer/core'
-
-export type iframeResizerObject = {
-  moveToAnchor: (anchor: string) => void
-  resize: () => void
-  sendMessage: (message: string, targetOrigin?: string) => void
-}
-
-type iframeResizerObjectPrivateMethods = {
-  disconnect: () => void
-}
-type iframeResizerObjectPrivate = iframeResizerObject &
-  iframeResizerObjectPrivateMethods
-
-export interface iframeResizerElement extends HTMLIFrameElement {
-  iFrameResizer: iframeResizerObject
-}
-
-export type iframeResizerOptions = {
-  bodyBackground?: string | null
-  bodyMargin?: string | number | null
-  bodyPadding?: string | number | null
-  checkOrigin?: boolean | string[]
-  direction?: 'vertical' | 'horizontal' | 'none'
-  inPageLinks?: boolean
-  license: string
-  offsetSize?: number
-  scrolling?: boolean | 'omit'
-  tolerance?: number
-  warningTimeout?: number
-}
+import connectResizer, {
+  type IFrameObject as iframeResizerObject,
+  type ResizerOptions as iframeResizerOptions,
+  type IFrameComponent as iframeResizerElement,
+} from '@iframe-resizer/core'
 
 @Directive({
   selector: '[iframe-resizer]',
   standalone: true,
 })
 export class IframeResizerDirective {
-  private resizer?: iframeResizerObjectPrivate
+  private resizer?: iframeResizerObject
 
   @Output() onReady = new EventEmitter<iframeResizerElement>()
   @Output() onBeforeClose = new EventEmitter<iframeResizerElement>()
@@ -138,7 +112,10 @@ export class IframeResizerDirective {
         iframe: iframeResizerElement
         top: number
         left: number
-      }) => this.onScroll.next(event),
+      }) => {
+        this.onScroll.next(event)
+        return true
+      },
     })(this.elementRef.nativeElement)
   }
 

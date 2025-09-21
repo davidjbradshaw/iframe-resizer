@@ -1,128 +1,55 @@
 <template>
-  <iframe ref="iframe" v-bind="$attrs"></iframe>
+  <iframe ref="iframe" v-bind="$attrs" />
 </template>
 
-<script>
-  import connectResizer from '@iframe-resizer/core'
-  import acg from 'auto-console-group'
-  import { EXPAND, COLLAPSE } from '../common/consts'
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import connectResizer, { type IFrameObject, type ResizerOptions } from '@iframe-resizer/core';
 
-  const esModuleInterop = (mod) =>
-    // eslint-disable-next-line no-underscore-dangle
-    mod?.__esModule ? mod.default : mod
+const props = defineProps<ResizerOptions>()
 
-  // Deal with UMD not converting default exports to named exports
-  const createAutoConsoleGroup = esModuleInterop(acg)
+const emit = defineEmits<{
+  onReady: [...any[]]
+  onMessage: [...any[]]
+  onResized: [...any[]]
+}>()
 
-  export default {
-    name: 'IframeResizer',
+const iframe = ref<HTMLIFrameElement | null>(null)
+const resizer = ref<IFrameObject | null>(null)
 
-    props: {
-      license: {
-        type: String,
-        required: true
-      },
-      bodyBackground: {
-        type: String,
-      },
-      bodyMargin: {
-        type: String,
-      },
-      bodyPadding: {
-        type: String,
-      },
-      checkOrigin: {
-        type: Boolean,
-        default: true,
-      },
-      direction: {
-        type: String,
-      },
-      log: {
-        type: [String, Boolean, Number],
-        validator: (value) => {
-          switch (value) {
-            case COLLAPSE:
-            case EXPAND:
-            case false:
-            case true:
-            case -1:
-              return true
-            default:
-              return false
-          }
-        },
-        default: undefined,
-      },
-      inPageLinks: {
-        type: Boolean,
-      },
-      offset: {
-        type: Number,
-      },
-      scrolling: {
-        type: Boolean,
-      },
-      tolerance: {
-        type: Number,
-      },
-      warningTimeout: {
-        type: Number,
-      },
-    },
-    
-    mounted() {
-      const self = this
-      const { iframe } = this.$refs
-      const options = {
-        ...Object.fromEntries(
-          Object
-            .entries(this.$props)
-            .filter(([key, value]) => value !== undefined)
-        ),
-        waitForLoad: true,
+onMounted(() => {
+  if (!iframe.value)
+    return
 
-        onBeforeClose: () => {
-          consoleGroup.event('Blocked Close Event')
-          consoleGroup.warn('Close method is disabled, use Vue to remove iframe')
-          return false
-        },
-        onReady: (...args) => self.$emit('onReady', ...args),
-        onMessage: (...args) => self.$emit('onMessage', ...args),
-        onResized: (...args) => self.$emit('onResized', ...args),
-      }
-
-      const connectWithOptions = connectResizer(options)
-      self.resizer = connectWithOptions(iframe)
-
-      const consoleOptions = {
-        label: `vue(${iframe.id})`,
-        expand: options.logExpand, // set inside connectResizer
-      }
-
-      const consoleGroup = createAutoConsoleGroup(consoleOptions)
-      consoleGroup.event('setup')
-
-      if ([COLLAPSE, EXPAND, true].includes(options.log)) {
-        consoleGroup.log('Created Vue component')
-      }
-    },
-    
-    beforeUnmount() {
-      this.resizer?.disconnect()
-    },
-
-    methods: {
-      moveToAnchor(anchor) {
-        this.resizer.moveToAnchor(anchor)
-      },
-      resize() {
-        this.resizer.resize()
-      },
-      sendMessage(msg, target) {
-        this.resizer.sendMessage(msg, target)
-      },
-    },
+  const options = {
+    ...Object.fromEntries(
+      Object.entries(props)
+        .filter(([_, value]) => value !== undefined),
+    ),
+    waitForLoad: true,
+    onClosed: () => false, // Disable close methods, use Vue to remove iframe
+    onReady: (...args: any[]) => emit('onReady', ...args),
+    onMessage: (...args: any[]) => emit('onMessage', ...args),
+    onResized: (...args: any[]) => emit('onResized', ...args),
   }
 
+  const connectWithOptions = connectResizer(options)
+  resizer.value = connectWithOptions(iframe.value)
+})
+
+onBeforeUnmount(() => {
+  resizer.value?.disconnect()
+})
+
+defineExpose({
+  moveToAnchor: (anchor: string) => {
+    resizer.value?.moveToAnchor(anchor)
+  },
+  resize: () => {
+    resizer.value?.resize()
+  },
+  sendMessage: (message: string, targetOrigin?: string) => {
+    resizer.value?.sendMessage(message, targetOrigin)
+  },
+})
 </script>
