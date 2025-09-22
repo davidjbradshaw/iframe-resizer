@@ -1,3 +1,5 @@
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+
 import { round } from '../../common/utils'
 import { advise, event, info, log } from '../console'
 
@@ -92,7 +94,7 @@ function perfObserver(list) {
 }
 
 export default function createPerformanceObserver() {
-  info('Attached PerformanceObserver to page')
+  info('Attached%c PerformanceObserver%c to page', HIGHLIGHT, FOREGROUND)
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })
 
@@ -106,7 +108,7 @@ export default function createPerformanceObserver() {
       clearPerfMarks()
       clearInterval(timingCheckId)
       observer.disconnect()
-      info('Detached PerformanceObserver')
+      info('Detached%c PerformanceObserver', HIGHLIGHT)
     },
   }
 }

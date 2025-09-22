@@ -144,7 +144,7 @@ export default function createMutationObserver(callback) {
 
   observer.observe(target, config)
 
-  info('Attached MutationObserver to body')
+  info('Attached%c MutationObserver%c to body', HIGHLIGHT, FOREGROUND)
 
   return {
     ...observer,
@@ -153,7 +153,7 @@ export default function createMutationObserver(callback) {
       removedNodes.clear()
       newMutations.length = 0
       observer.disconnect()
-      info('Detached MutationObserver')
+      info('Detached%c MutationObserver', HIGHLIGHT)
     },
   }
 }

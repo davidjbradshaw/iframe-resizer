@@ -1,3 +1,5 @@
+import { HIGHLIGHT } from 'auto-console-group'
+
 import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
 import { info } from '../console'
@@ -86,7 +88,7 @@ const createOverflowObserver = (callback, options) => {
     ),
     disconnect: () => {
       observer.disconnect()
-      info('Detached OverflowObserver')
+      info('Detached%c OverflowObserver', HIGHLIGHT)
     },
   }
 }
