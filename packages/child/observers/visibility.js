@@ -1,3 +1,5 @@
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+
 import { info } from '../console'
 
 export default function visibilityObserver(callback) {
@@ -11,12 +13,12 @@ export default function visibilityObserver(callback) {
   const target = document.documentElement
   observer.observe(target)
 
-  info('Attached VisibilityObserver to page')
+  info('Attached%c VisibilityObserver%c to page', HIGHLIGHT, FOREGROUND)
 
   return {
     disconnect: () => {
       observer.disconnect()
-      info('Detached VisibilityObserver')
+      info('Detached%c VisibilityObserver', HIGHLIGHT)
     },
   }
 }

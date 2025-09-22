@@ -39,7 +39,9 @@ export const createLogCounter =
   (counter) => {
     if (counter > 0) {
       info(
-        `${isAttach ? 'At' : 'De'}tached ${type}Observer ${isAttach ? 'to' : 'from'} %c${counter}%c element${counter === 1 ? '' : 's'}`,
+        `${isAttach ? 'At' : 'De'}tached %c${type}Observer%c ${isAttach ? 'to' : 'from'} %c${counter}%c element${counter === 1 ? '' : 's'}`,
+        HIGHLIGHT,
+        NORMAL,
         HIGHLIGHT,
         NORMAL,
       )

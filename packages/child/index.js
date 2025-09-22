@@ -60,7 +60,6 @@ import {
   WIDTH,
   WIDTH_EDGE,
 } from '../common/consts'
-import { addEventListener, removeEventListener } from '../common/listeners'
 import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
@@ -96,6 +95,7 @@ import {
   warn,
 } from './console'
 import { getBoolean, getNumber } from './from-string'
+import { addEventListener, removeEventListener, tearDown } from './listeners'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
 import createPerformanceObserver, {
@@ -235,8 +235,8 @@ function iframeResizerChild() {
       bothDirections ? id : stopInfiniteResizingOfIframe,
       injectClearFixIntoBodyElement,
 
-      initEventListeners,
       attachObservers,
+      initEventListeners,
       setupOnPageHide,
     ]
 
@@ -272,9 +272,10 @@ function iframeResizerChild() {
   function checkReadyYet(readyCallback) {
     if (document.readyState === 'complete') isolateUserCode(readyCallback)
     else
-      addEventListener(document, READY_STATE_CHANGE, () =>
-        checkReadyYet(readyCallback),
-      )
+      addEventListener(document, READY_STATE_CHANGE, () => {
+        sendSize(READY_STATE_CHANGE, 'Ready state change')
+        checkReadyYet(readyCallback)
+      })
   }
 
   function checkAndSetupTags() {
@@ -526,13 +527,6 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     }
 
     listener[options.method](options.eventName)
-
-    log(
-      `${capitalizeFirstLetter(options.method)} event listener: %c${
-        options.eventType
-      }`,
-      HIGHLIGHT,
-    )
   }
 
   function manageEventListeners(method) {
@@ -546,12 +540,6 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
       method,
       eventType: 'Before Print',
       eventName: 'beforeprint',
-    })
-
-    manageTriggerEvent({
-      method,
-      eventType: 'Ready State Change',
-      eventName: READY_STATE_CHANGE,
     })
   }
 
@@ -647,7 +635,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     }
 
     manageEventListeners('add')
-    tearDown.push(() => manageEventListeners('remove'))
   }
 
   function injectClearFixIntoBodyElement() {
@@ -1118,7 +1105,6 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   function attachObservers() {
     const nodeList = getAllElements(document.documentElement)
 
-    log('Attaching Observers')
     const observers = [
       createMutationObserver(mutationObserved),
       createOverflowObservers(nodeList),
@@ -1765,6 +1751,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     window.iframeChildListener = (data) =>
       setTimeout(() => received({ data, sameOrigin: true }))
 
+    consoleEvent('setup')
     addEventListener(window, MESSAGE, received)
     addEventListener(document, READY_STATE_CHANGE, ready)
 
