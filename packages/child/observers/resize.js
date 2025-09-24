@@ -1,3 +1,5 @@
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+
 import { info } from '../console'
 import {
   createDetachObservers,
@@ -49,7 +51,7 @@ export default (callback) => {
   observer = new ResizeObserver(callback)
   observer.observe(document.body)
   observed.add(document.body)
-  info('Attached ResizeObserver to body')
+  info('Attached%c ResizeObserver%c to body', HIGHLIGHT, FOREGROUND)
 
   return {
     attachObserverToNonStaticElements,
@@ -61,7 +63,7 @@ export default (callback) => {
     ),
     disconnect: () => {
       observer.disconnect()
-      info('Detached ResizeObserver')
+      info('Detached%c ResizeObserver', HIGHLIGHT)
     },
   }
 }
