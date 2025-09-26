@@ -1,13 +1,10 @@
 import { OBJECT } from '../common/consts'
 import { advise, event } from './console'
 
-const getOrigin = (url) => {
-  const target = new URL(url)
-  return target.origin
-}
+const getOrigin = (url) => new URL(url).origin
 
 function showWarning(id, settings) {
-  const { checkOrigin, iframe, loadedFirstPage, waitForLoad } = settings[id]
+  const { checkOrigin, iframe, initialisedFirstPage, waitForLoad } = settings[id]
   const { src, sandbox } = iframe
   const targetOrigin = getOrigin(src)
   const hasSandbox =
@@ -30,7 +27,7 @@ The <b>checkOrigin</> option is currently enabled. If the iframe redirects away 
 `
     : ''
 }${
-      waitForLoad && !loadedFirstPage
+      waitForLoad && !initialisedFirstPage
         ? `
 The <b>waitForLoad</> option is currently set to <b>'true'</>. If the iframe loads before <i>iframe-resizer</> runs, this option will prevent <i>iframe-resizer</> initialising. To disable this option, set <b>waitForLoad</> to <b>'false'</>.  
 `
@@ -56,7 +53,7 @@ export default function warnOnNoResponse(id, settings) {
     settings[id].msgTimeout = undefined
 
     if (initialised) {
-      settings[id].loadedFirstPage = true
+      settings[id].initialisedFirstPage = true
       return
     }
 
