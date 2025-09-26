@@ -1,116 +1,184 @@
-import { jest } from '@jest/globals'
-
 import { advise, event } from './console'
 import warnOnNoResponse from './timeout'
 
+// Mock console integration used by showWarning
 jest.mock('./console', () => ({
   advise: jest.fn(),
   event: jest.fn(),
 }))
 
 describe('warnOnNoResponse', () => {
-  let settings
-
   beforeEach(() => {
     jest.useFakeTimers()
+    jest.spyOn(global, 'setTimeout')
+    jest.spyOn(global, 'clearTimeout')
     jest.clearAllMocks()
-
-    // Mocking iframe.sandbox as a DOMTokenList-like object
-    const mockSandbox = {
-      contains: jest.fn((value) =>
-        ['allow-scripts', 'allow-same-origin'].includes(value),
-      ),
-      length: 2, // Add a length property to simulate a valid sandbox
-    }
-
-    settings = {
-      iframe1: {
-        iframe: { sandbox: mockSandbox },
-        waitForLoad: false,
-        warningTimeout: 1000, // 1 second
-        initialised: false,
-        loadErrorShown: false,
-      },
-    }
   })
 
   afterEach(() => {
+    jest.runOnlyPendingTimers()
     jest.useRealTimers()
+    jest.restoreAllMocks()
   })
 
-  test('should call advise with correct message when no sandbox issues', async () => {
-    warnOnNoResponse('iframe1', settings)
-    jest.runAllTimers() // Fast-forward all timers
-
-    expect(event).toHaveBeenCalledWith('iframe1', 'noResponse')
-
-    expect(advise).toHaveBeenCalledWith(
-      'iframe1',
-      expect.stringContaining('No response from iframe'),
-    )
-
-    expect(advise).toHaveBeenCalledWith(
-      'iframe1',
-      expect.not.stringContaining('The iframe has the <b>sandbox</> attribute'),
-    )
+  const makeSettings = ({
+    id = 'frame1',
+    src = 'https://example.com/path',
+    sandbox,
+    checkOrigin = true,
+    waitForLoad = false,
+    initialised = false,
+    initialisedFirstPage = false,
+    loadErrorShown = false,
+    warningTimeout = 50,
+    msgTimeout,
+  } = {}) => ({
+    [id]: {
+      iframe: { src, sandbox },
+      checkOrigin,
+      waitForLoad,
+      initialised,
+      initialisedFirstPage,
+      loadErrorShown,
+      warningTimeout,
+      msgTimeout,
+    },
   })
 
-  test('should include sandbox warning when sandbox is missing required attributes', async () => {
-    // Update the mock to simulate missing 'allow-same-origin'
-    settings.iframe1.iframe.sandbox.contains = jest.fn(
-      (value) => value === 'allow-scripts',
-    )
+  it('schedules a warning and includes origin when checkOrigin is true', () => {
+    const id = 'f1'
+    const settings = makeSettings({
+      id,
+      src: 'https://foo.example:8443/a/b',
+      checkOrigin: true,
+    })
 
-    warnOnNoResponse('iframe1', settings)
-    jest.runAllTimers()
+    warnOnNoResponse(id, settings)
 
-    const expectedMessage = `
-      <rb>No response from iframe</> The iframe (<i>iframe1</>) has not responded within 1 seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
-      The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
-      This message can be ignored if everything is working, or you can set the <b>warningTimeout</> option to a higher value or zero to suppress this warning.
-    `
-      .replace(/\s+/g, ' ')
-      .trim()
+    expect(setTimeout).toHaveBeenCalled()
 
-    const receivedMessage = advise.mock.calls[0][1].replace(/\s+/g, ' ').trim()
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
-    expect(receivedMessage).toBe(expectedMessage)
+    expect(event).toHaveBeenCalledWith(id, 'noResponse')
+    expect(advise).toHaveBeenCalledTimes(1)
+    const [, message] = advise.mock.calls[0]
+
+    expect(message).toMatch(/No response from iframe/)
+    expect(message).toContain('https://foo.example:8443')
+    expect(settings[id].loadErrorShown).toBe(true)
   })
 
-  test('should include waitForLoad warning when waitForLoad is true', async () => {
-    settings.iframe1.waitForLoad = true
-    warnOnNoResponse('iframe1', settings)
-    jest.runAllTimers()
+  it('omits checkOrigin advice when checkOrigin is false', () => {
+    const id = 'f2'
+    const settings = makeSettings({ id, checkOrigin: false })
 
-    expect(advise).toHaveBeenCalledWith(
-      'iframe1',
-      expect.stringContaining(
-        "The <b>waitForLoad</> option is currently set to <b>'true'</>.",
-      ),
-    )
+    warnOnNoResponse(id, settings)
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    const [, message] = advise.mock.calls[0]
+
+    expect(message).not.toMatch(/checkOrigin/)
   })
 
-  test('should not include waitForLoad warning when waitForLoad is false', async () => {
-    settings.iframe1.waitForLoad = false
-    warnOnNoResponse('iframe1', settings)
-    jest.runAllTimers()
+  it('adds sandbox advice when sandbox is present but missing required tokens', () => {
+    const id = 'f3'
+    const sandbox = {
+      length: 1,
+      contains(token) {
+        // only allow-scripts present; missing allow-same-origin
+        return token === 'allow-scripts'
+      },
+    }
+    const settings = makeSettings({ id, sandbox })
 
-    expect(advise).toHaveBeenCalledWith(
-      'iframe1',
-      expect.not.stringContaining(
-        "The <b>waitForLoad</> option is currently set to <b>'true'</>.",
-      ),
-    )
+    warnOnNoResponse(id, settings)
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    const [, message] = advise.mock.calls[0]
+
+    expect(message).toMatch(/sandbox/)
+    expect(message).toMatch(/allow-same-origin/)
+    expect(message).toMatch(/allow-scripts/)
   })
 
-  test('should calculate warningTimeout correctly in the message', async () => {
-    settings.iframe1.warningTimeout = 10_000 // 10 seconds
-    warnOnNoResponse('iframe1', settings)
-    jest.runAllTimers()
+  it('includes waitForLoad advice when enabled and first page not initialised', () => {
+    const id = 'f4'
+    const settings = makeSettings({
+      id,
+      waitForLoad: true,
+      initialisedFirstPage: false,
+    })
 
-    expect(advise).toHaveBeenCalledWith(
-      'iframe1',
-      expect.stringContaining('has not responded within 10 seconds'),
-    )
+    warnOnNoResponse(id, settings)
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    const [, message] = advise.mock.calls[0]
+
+    expect(message).toMatch(/waitForLoad/)
+  })
+
+  it('when already initialised: sets initialisedFirstPage and does not warn', () => {
+    const id = 'f5'
+    const settings = makeSettings({
+      id,
+      initialised: true,
+      initialisedFirstPage: false,
+    })
+
+    warnOnNoResponse(id, settings)
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    expect(settings[id].initialisedFirstPage).toBe(true)
+    expect(advise).not.toHaveBeenCalled()
+  })
+
+  it('does nothing if loadErrorShown is already true', () => {
+    const id = 'f6'
+    const settings = makeSettings({ id, loadErrorShown: true })
+
+    warnOnNoResponse(id, settings)
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    expect(advise).not.toHaveBeenCalled()
+  })
+
+  it('does not schedule when warningTimeout is 0', () => {
+    const id = 'f7'
+    const settings = makeSettings({ id, warningTimeout: 0 })
+
+    warnOnNoResponse(id, settings)
+
+    expect(setTimeout).not.toHaveBeenCalled()
+    expect(settings[id].msgTimeout).toBeUndefined()
+    expect(advise).not.toHaveBeenCalled()
+  })
+
+  it('replaces an existing timeout if called again', () => {
+    const id = 'f8'
+    const settings = makeSettings({ id, warningTimeout: 100 })
+
+    warnOnNoResponse(id, settings)
+    const first = settings[id].msgTimeout
+
+    expect(first).toBeDefined()
+
+    warnOnNoResponse(id, settings)
+    const second = settings[id].msgTimeout
+
+    expect(clearTimeout).toHaveBeenCalledWith(first)
+    expect(second).toBeDefined()
+    expect(second).not.toBe(first)
+  })
+
+  it('does not include origin when URL parsing fails', () => {
+    const id = 'f9'
+    const settings = makeSettings({ id, src: '::::not-a-url' })
+
+    warnOnNoResponse(id, settings)
+    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    const [, message] = advise.mock.calls[0]
+
+    expect(message).not.toMatch(/checkOrigin/)
   })
 })
