@@ -1,10 +1,17 @@
 import { OBJECT } from '../common/consts'
 import { advise, event } from './console'
 
-const getOrigin = (url) => new URL(url).origin
+const getOrigin = (url) => {
+  try {
+    return new URL(url).origin
+  } catch (error) {
+    return null
+  }
+}
 
 function showWarning(id, settings) {
-  const { checkOrigin, iframe, initialisedFirstPage, waitForLoad } = settings[id]
+  const { checkOrigin, iframe, initialisedFirstPage, waitForLoad } =
+    settings[id]
   const { src, sandbox } = iframe
   const targetOrigin = getOrigin(src)
   const hasSandbox =
