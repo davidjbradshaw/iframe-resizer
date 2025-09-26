@@ -9,17 +9,19 @@ const getOrigin = (url) => {
   }
 }
 
+const allowsScriptsAndOrigin = (sandbox) =>
+  typeof sandbox === OBJECT &&
+  sandbox.length > 0 &&
+  !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
+
 function showWarning(id, settings) {
-  const { checkOrigin, iframe, initialisedFirstPage, waitForLoad } =
-    settings[id]
-  const { src, sandbox } = iframe
+  const {
+    checkOrigin,
+    iframe: { src, sandbox },
+    initialisedFirstPage,
+    waitForLoad,
+  } = settings[id]
   const targetOrigin = getOrigin(src)
-  const hasSandbox =
-    typeof sandbox === OBJECT &&
-    sandbox.length > 0 &&
-    !(
-      sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin')
-    )
 
   event(id, 'noResponse')
   advise(
@@ -40,7 +42,7 @@ The <b>waitForLoad</> option is currently set to <b>'true'</>. If the iframe loa
 `
         : ''
     }${
-      hasSandbox
+      allowsScriptsAndOrigin(sandbox)
         ? `
 The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
 `
