@@ -55,16 +55,25 @@ describe('warnOnNoResponse', () => {
 
     warnOnNoResponse(id, settings)
 
-    expect(setTimeout).toHaveBeenCalled()
+    expect(setTimeout).toHaveBeenCalledWith(
+      expect.any(Function),
+      settings[id].warningTimeout,
+    )
 
     jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(event).toHaveBeenCalledWith(id, 'noResponse')
     expect(advise).toHaveBeenCalledTimes(1)
-    const [, message] = advise.mock.calls[0]
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.stringMatching(/No response from iframe/),
+    )
 
-    expect(message).toMatch(/No response from iframe/)
-    expect(message).toContain('https://foo.example:8443')
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.stringContaining('https://foo.example:8443'),
+    )
+
     expect(settings[id].loadErrorShown).toBe(true)
   })
 
@@ -75,9 +84,10 @@ describe('warnOnNoResponse', () => {
     warnOnNoResponse(id, settings)
     jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
-    const [, message] = advise.mock.calls[0]
-
-    expect(message).not.toMatch(/checkOrigin/)
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.not.stringMatching(/checkOrigin/),
+    )
   })
 
   it('adds sandbox advice when sandbox is present but missing required tokens', () => {
@@ -94,11 +104,16 @@ describe('warnOnNoResponse', () => {
     warnOnNoResponse(id, settings)
     jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
-    const [, message] = advise.mock.calls[0]
+    expect(advise).toHaveBeenCalledWith(id, expect.stringMatching(/sandbox/))
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.stringMatching(/allow-same-origin/),
+    )
 
-    expect(message).toMatch(/sandbox/)
-    expect(message).toMatch(/allow-same-origin/)
-    expect(message).toMatch(/allow-scripts/)
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.stringMatching(/allow-scripts/),
+    )
   })
 
   it('includes waitForLoad advice when enabled and first page not initialised', () => {
@@ -112,9 +127,10 @@ describe('warnOnNoResponse', () => {
     warnOnNoResponse(id, settings)
     jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
-    const [, message] = advise.mock.calls[0]
-
-    expect(message).toMatch(/waitForLoad/)
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.stringMatching(/waitForLoad/),
+    )
   })
 
   it('when already initialised: sets initialisedFirstPage and does not warn', () => {
@@ -177,8 +193,9 @@ describe('warnOnNoResponse', () => {
     warnOnNoResponse(id, settings)
     jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
-    const [, message] = advise.mock.calls[0]
-
-    expect(message).not.toMatch(/checkOrigin/)
+    expect(advise).toHaveBeenCalledWith(
+      id,
+      expect.not.stringMatching(/checkOrigin/),
+    )
   })
 })
