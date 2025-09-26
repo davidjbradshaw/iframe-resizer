@@ -1,9 +1,15 @@
 import { OBJECT } from '../common/consts'
 import { advise, event } from './console'
 
+const getOrigin = (url) => {
+  const target = new URL(url)
+  return target.origin
+}
+
 function showWarning(id, settings) {
-  const { iframe, waitForLoad } = settings[id]
-  const { sandbox } = iframe
+  const { checkOrigin, iframe, loadedFirstPage, waitForLoad } = settings[id]
+  const { src, sandbox } = iframe
+  const targetOrigin = getOrigin(src)
   const hasSandbox =
     typeof sandbox === OBJECT &&
     sandbox.length > 0 &&
@@ -18,12 +24,18 @@ function showWarning(id, settings) {
           
 The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
-  waitForLoad
+  checkOrigin && targetOrigin
     ? `
-The <b>waitForLoad</> option is currently set to <b>'true'</>. If the iframe loads before <i>iframe-resizer</> runs, this option will prevent <i>iframe-resizer</> initialising. To disable this option, set <b>waitForLoad</> to <b>'false'</>.  
+The <b>checkOrigin</> option is currently enabled. If the iframe redirects away from <i>${targetOrigin}</>, then the connection to the iframe may be blocked by the browser. To disable this option, set <b>checkOrigin</> to <b>'false'</> or an array of allowed origins. See <u>https://iframe-resizer.com/checkorigin</> for more information.  
 `
     : ''
 }${
+      waitForLoad && !loadedFirstPage
+        ? `
+The <b>waitForLoad</> option is currently set to <b>'true'</>. If the iframe loads before <i>iframe-resizer</> runs, this option will prevent <i>iframe-resizer</> initialising. To disable this option, set <b>waitForLoad</> to <b>'false'</>.  
+`
+        : ''
+    }${
       hasSandbox
         ? `
 The iframe has the <b>sandbox</> attribute, please ensure it contains both the <i>'allow-same-origin'</> and <i>'allow-scripts'</> values.
@@ -43,7 +55,12 @@ export default function warnOnNoResponse(id, settings) {
 
     settings[id].msgTimeout = undefined
 
-    if (initialised || loadErrorShown) return
+    if (initialised) {
+      settings[id].loadedFirstPage = true
+      return
+    }
+
+    if (loadErrorShown) return
 
     settings[id].loadErrorShown = true
     showWarning(id, settings)
