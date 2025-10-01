@@ -76,9 +76,9 @@ const formatLogMsg =
   (...args) =>
     [`${LABEL}(${iframeId})`, ...args].join(' ')
 
-export const advise = (iframeId, ...args) =>
+export const advise = (iframeId, msg, ...args) =>
   settings[iframeId]
-    ? settings[iframeId].console.warn(formatAdvise(identity)(...args))
+    ? settings[iframeId].console.warn(formatAdvise(identity)(msg), ...args)
     : queueMicrotask(
         // eslint-disable-next-line no-console
         () => console?.warn(formatAdvise(formatLogMsg(iframeId))(...args)),
