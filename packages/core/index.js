@@ -1297,7 +1297,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
   function checkUniqueId(id) {
     if (shownDuplicateIdWarning[id] === true) return false
 
-    const elements = document.querySelectorAll(`iframe#${id}`)
+    const elements = document.querySelectorAll(`iframe#${CSS.escape(id)}`)
     if (elements.length === 1) return true
 
     shownDuplicateIdWarning[id] = true
