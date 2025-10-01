@@ -62,6 +62,7 @@ import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
 import {
   advise,
   debug,
+  endAutoGroup,
   error,
   errorBoundary,
   event as consoleEvent,
@@ -959,6 +960,7 @@ function createOutgoingMsg(id) {
 let count = 0
 let vAdvised = false
 let vInfoDisable = false
+const shownDuplicateIdWarning = {}
 
 function checkMode(iframeId, childMode = -3) {
   if (vAdvised) return
@@ -1292,6 +1294,30 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setTargetOrigin()
   }
 
+  function checkUniqueId(id) {
+    if (shownDuplicateIdWarning[id] === true) return false
+
+    const elements = document.querySelectorAll(`iframe#${id}`)
+    if (elements.length === 1) return true
+
+    shownDuplicateIdWarning[id] = true
+
+    const elementList = Array.from(elements).flatMap((element) => [
+      '\n',
+      element,
+    ])
+
+    advise(
+      id,
+      `<rb>Duplicate IDs detected</>\n\nThe ID <b>${id}</> is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
+      
+Found ${elements.length} iframes with matching IDs:`,
+      ...elementList,
+    )
+
+    return false
+  }
+
   function setupIframe(options) {
     if (beenHere()) {
       warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
@@ -1299,6 +1325,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     processOptions(options)
+    checkUniqueId(iframeId)
     log(iframeId, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
     preModeCheck()
     setupEventListenersOnce()
@@ -1307,6 +1334,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     init(iframeId, createOutgoingMsg(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
+    endAutoGroup(iframeId)
   }
 
   function enableVInfo(options) {
