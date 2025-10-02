@@ -79,11 +79,11 @@ const formatLogMsg =
 const formatAdvise = createFormatAdvise(identity)
 export const advise = (iframeId, ...args) =>
   settings[iframeId]
-    ? settings[iframeId].console.warn(...args.map((msg) => formatAdvise(msg)))
+    ? settings[iframeId].console.warn(...args.map(formatAdvise))
     : queueMicrotask(() => {
         const localFormatAdvise = createFormatAdvise(formatLogMsg(iframeId))
         // eslint-disable-next-line no-console
-        return console?.warn(...args.map((msg) => localFormatAdvise(msg)))
+        return console?.warn(...args.map(localFormatAdvise))
       })
 
 const deprecateAdvise = deprecate(advise)
