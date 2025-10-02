@@ -2,7 +2,7 @@ import acg, { NORMAL } from 'auto-console-group'
 
 import { BOLD, LABEL } from '../common/consts'
 import deprecate from '../common/deprecate'
-import formatAdvise from '../common/format-advise'
+import createFormatAdvise from '../common/format-advise'
 import { esModuleInterop, id as identity } from '../common/utils'
 
 let enabled = true
@@ -51,7 +51,9 @@ export const {
   warn,
 } = childConsole
 
-export const advise = (msg) => childConsole.warn(formatAdvise(identity)(msg))
+const formatAdvise = createFormatAdvise(identity)
+export const advise = (...args) =>
+  childConsole.warn(...args.map((msg) => formatAdvise(msg)))
 
 const deprecateAdvise = deprecate((id, msg) => advise(msg))
 export const deprecateMethod = deprecateAdvise('Method')

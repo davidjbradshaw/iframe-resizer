@@ -1,6 +1,6 @@
-import formatAdvise from './format-advise'
+import createFormatAdvise from './format-advise'
 
-describe('formatAdvise', () => {
+describe('createFormatAdvise', () => {
   let mockFormatLogMsg
 
   beforeEach(() => {
@@ -15,8 +15,8 @@ describe('formatAdvise', () => {
     })
 
     const msg = '<rb>Error:</> <b>Something went wrong</><br><i>Details</>'
-    const formattedAdvise = formatAdvise(mockFormatLogMsg)
-    formattedAdvise(msg)
+    const formatAdvise = createFormatAdvise(mockFormatLogMsg)
+    formatAdvise(msg)
 
     const expectedOutput =
       '\u001B[31;1mError:\u001B[m \u001B[1mSomething went wrong\u001B[m\n\u001B[3mDetails\u001B[m'
@@ -32,8 +32,8 @@ describe('formatAdvise', () => {
     })
 
     const msg = '<rb>Error:</> <b>Something went wrong</><br><i>Details</></>'
-    const formattedAdvise = formatAdvise(mockFormatLogMsg)
-    formattedAdvise(msg)
+    const formatAdvise = createFormatAdvise(mockFormatLogMsg)
+    formatAdvise(msg)
 
     const expectedOutput = 'Error: Something went wrong\nDetails'
 
@@ -42,8 +42,8 @@ describe('formatAdvise', () => {
 
   test('should handle empty messages gracefully', () => {
     const msg = ''
-    const formattedAdvise = formatAdvise(mockFormatLogMsg)
-    formattedAdvise(msg)
+    const formatAdvise = createFormatAdvise(mockFormatLogMsg)
+    formatAdvise(msg)
 
     expect(mockFormatLogMsg).toHaveBeenCalledWith('')
   })
