@@ -1305,11 +1305,12 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     const elementList = Array.from(elements).flatMap((element) => [
       '\n',
       element,
+      '\n',
     ])
 
     advise(
       id,
-      `<rb>Duplicate IDs detected</>\n\nThe ID <b>${id}</> is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
+      `<rb>Duplicate ID attributes detected</>\n\nThe ID <b>${id}</> is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
       
 Found ${elements.length} iframes with matching IDs:`,
       ...elementList,
