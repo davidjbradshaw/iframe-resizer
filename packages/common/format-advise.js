@@ -11,7 +11,10 @@ const encode = (s) =>
         .replaceAll('<u>', '\u001B[4m')
     : s
 
-const remove = (s) => s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
+const remove = (s) =>
+  typeof s === STRING
+    ? s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
+    : s
 
 export default (formatLogMsg) => (msg) =>
   window.chrome // Only show formatting in Chrome as not supported in other browsers
