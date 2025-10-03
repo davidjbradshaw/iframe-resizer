@@ -7,7 +7,7 @@ export default function checkUniqueId(id) {
   if (shownDuplicateIdWarning[id] === true) return false
 
   const elements = document.querySelectorAll(`iframe#${CSS.escape(id)}`)
-  if (elements.length === 1) return true
+  if (elements.length <= 1) return true
 
   shownDuplicateIdWarning[id] = true
 
