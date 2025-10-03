@@ -5,6 +5,7 @@ const encode = (s) =>
     ? s
         .replaceAll('<br>', NEW_LINE)
         .replaceAll('<rb>', '\u001B[31;1m')
+        .replaceAll('<bb>', '\u001B[34;1m')
         .replaceAll('</>', '\u001B[m')
         .replaceAll('<b>', '\u001B[1m')
         .replaceAll('<i>', '\u001B[3m')

@@ -19,10 +19,11 @@ export default function checkUniqueId(id) {
 
   advise(
     id,
-    `<rb>Duplicate ID attributes detected</>\n\nThe ID <b>${id}</> is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
+    `<rb>Duplicate ID attributes detected</>\n\nThe <b>${id}</> ID is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
 
-Found ${elements.length} iframes with matching IDs:`,
+Found <bb>${elements.length}</> iframes with the <b>${id}</> ID:`,
     ...elementList,
+    NEW_LINE,
   )
 
   return false
