@@ -1,6 +1,4 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-useless-escape */
-// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable security/detect-non-literal-regexp */
 
 import { NEW_LINE } from './consts'
@@ -36,3 +34,6 @@ export default (formatLogMessage) => (message) =>
   formatLogMessage(
     window.chrome ? ifString(encode)(message) : ifString(filter)(message),
   )
+
+/* eslint-enable no-useless-escape */
+/* eslint-enable security/detect-non-literal-regexp */
