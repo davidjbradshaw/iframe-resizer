@@ -143,3 +143,6 @@ export const IGNORE_TAGS = new Set([
   'wbr',
   'nobr',
 ])
+
+export const REMOVED_NEXT_VERSION =
+  'Use of the old name will be removed in a future version of <i>iframe-resizer</>.'

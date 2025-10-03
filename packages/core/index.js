@@ -42,6 +42,7 @@ import {
   PARENT,
   PARENT_INFO,
   PARENT_INFO_STOP,
+  REMOVED_NEXT_VERSION,
   RESET,
   RESET_REQUIRED_METHODS,
   RESIZE,
@@ -1066,7 +1067,7 @@ export default (options) => (iframe) => {
             iframeId,
             `<rb>Deprecated Method Name</>
 
-The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</>.
+The <b>removeListeners()</> method has been renamed to <b>disconnect()</>. ${REMOVED_NEXT_VERSION}
 `,
           )
           this.disconnect()
@@ -1161,7 +1162,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         iframeId,
         `<rb>Deprecated Option</>
 
-The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <i>"${VERTICAL}"</>, <i>"${HORIZONTAL}"</> or <i>"${NONE}"</>.
+The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <bb>${VERTICAL}</>, <bb>${HORIZONTAL}</>, <bb>${BOTH}</> or <bb>${NONE}</>.
 `,
       )
     }
@@ -1237,7 +1238,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (hasOwn(settings[iframeId], oldName)) {
       advise(
         iframeId,
-        `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+        `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. ${REMOVED_NEXT_VERSION}`,
       )
       settings[iframeId][newName] = settings[iframeId][oldName]
       delete settings[iframeId][oldName]
@@ -1264,7 +1265,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (options?.offset) {
       advise(
         iframeId,
-        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. ${REMOVED_NEXT_VERSION}`,
       )
     }
   }
