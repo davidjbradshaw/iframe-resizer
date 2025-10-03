@@ -74,6 +74,7 @@ import {
   warn,
 } from './console'
 import warnOnNoResponse from './timeout'
+import checkUniqueId from './unique'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -960,7 +961,6 @@ function createOutgoingMsg(id) {
 let count = 0
 let vAdvised = false
 let vInfoDisable = false
-const shownDuplicateIdWarning = {}
 
 function checkMode(iframeId, childMode = -3) {
   if (vAdvised) return
@@ -1076,7 +1076,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
           advise(
             iframeId,
             `<rb>Deprecated Method</>
-        
+
 Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As their are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`,
           )
           trigger.bind(null, 'Window resize', RESIZE, iframeId)
@@ -1292,31 +1292,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     checkWarningTimeout()
     getPostMessageTarget()
     setTargetOrigin()
-  }
-
-  function checkUniqueId(id) {
-    if (shownDuplicateIdWarning[id] === true) return false
-
-    const elements = document.querySelectorAll(`iframe#${CSS.escape(id)}`)
-    if (elements.length === 1) return true
-
-    shownDuplicateIdWarning[id] = true
-
-    const elementList = Array.from(elements).flatMap((element) => [
-      '\n',
-      element,
-      '\n',
-    ])
-
-    advise(
-      id,
-      `<rb>Duplicate ID attributes detected</>\n\nThe ID <b>${id}</> is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
-      
-Found ${elements.length} iframes with matching IDs:`,
-      ...elementList,
-    )
-
-    return false
   }
 
   function setupIframe(options) {
