@@ -2,13 +2,7 @@ import { NEW_LINE } from './consts'
 import { isString } from './utils'
 
 function removeTags(s) {
-  let input = s.replaceAll('<br>', NEW_LINE)
-  let previous
-  do {
-    previous = input
-    input = input.replace(/<\/?[^>]+>/gi, '')
-  } while (input !== previous)
-  return input
+  return s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
 }
 
 const encodeTags = (s) =>
