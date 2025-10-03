@@ -1,10 +1,6 @@
 import { NEW_LINE } from './consts'
 import { isString } from './utils'
 
-function removeTags(s) {
-  return s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
-}
-
 const encodeTags = (s) =>
   s
     .replaceAll('<br>', NEW_LINE)
@@ -14,6 +10,9 @@ const encodeTags = (s) =>
     .replaceAll('<b>', '\u001B[1m')
     .replaceAll('<i>', '\u001B[3m')
     .replaceAll('<u>', '\u001B[4m')
+
+const removeTags = (s) =>
+  s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
 
 const encode = (s) => (isString(s) ? encodeTags(s) : s)
 const remove = (s) => (isString(s) ? removeTags(s) : s)
