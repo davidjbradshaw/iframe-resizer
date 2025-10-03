@@ -14,7 +14,15 @@ const encode = (s) =>
 
 const remove = (s) =>
   typeof s === STRING
-    ? s.replaceAll('<br>', NEW_LINE).replaceAll(/<[/a-z]+>/gi, '')
+    ? (function () {
+        let input = s.replaceAll('<br>', NEW_LINE);
+        let previous;
+        do {
+          previous = input;
+          input = input.replace(/<\/?[^>]+>/gi, '');
+        } while (input !== previous);
+        return input;
+      })()
     : s
 
 export default (formatLogMsg) => (msg) =>
