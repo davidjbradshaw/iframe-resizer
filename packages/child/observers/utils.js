@@ -1,5 +1,6 @@
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
+import { NEW_LINE } from '../../common/consts'
 import { debug, error, info } from '../console'
 
 export const metaCreateDebugObserved =
@@ -9,7 +10,7 @@ export const metaCreateDebugObserved =
     if (observed.size > 0) {
       debug(
         `${type}Observer ${text}:`,
-        ...Array.from(observed).flatMap((node) => ['\n', node]),
+        ...Array.from(observed).flatMap((node) => [NEW_LINE, node]),
       )
     }
   }
@@ -21,7 +22,7 @@ export const metaCreateErrorObserved =
     if (observed.size > 0) {
       error(
         `${type}Observer ${text}:`,
-        ...Array.from(observed).flatMap((node) => ['\n', node]),
+        ...Array.from(observed).flatMap((node) => [NEW_LINE, node]),
       )
     }
   }

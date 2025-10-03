@@ -43,6 +43,7 @@ export const OFFSET = 'offset'
 export const OFFSET_HEIGHT = 'offsetHeight'
 export const OFFSET_SIZE = 'offsetSize'
 export const SCROLL = 'scroll'
+export const NEW_LINE = '\n'
 
 export const HIDDEN = 'hidden'
 export const VISIBLE = 'visible'
@@ -142,3 +143,6 @@ export const IGNORE_TAGS = new Set([
   'wbr',
   'nobr',
 ])
+
+export const REMOVED_NEXT_VERSION =
+  'Use of the old name will be removed in a future version of <i>iframe-resizer</>.'

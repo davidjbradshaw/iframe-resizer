@@ -42,6 +42,7 @@ import {
   PARENT,
   PARENT_INFO,
   PARENT_INFO_STOP,
+  REMOVED_NEXT_VERSION,
   RESET,
   RESET_REQUIRED_METHODS,
   RESIZE,
@@ -62,6 +63,7 @@ import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
 import {
   advise,
   debug,
+  endAutoGroup,
   error,
   errorBoundary,
   event as consoleEvent,
@@ -73,6 +75,7 @@ import {
   warn,
 } from './console'
 import warnOnNoResponse from './timeout'
+import checkUniqueId from './unique'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -1064,7 +1067,7 @@ export default (options) => (iframe) => {
             iframeId,
             `<rb>Deprecated Method Name</>
 
-The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</>.
+The <b>removeListeners()</> method has been renamed to <b>disconnect()</>. ${REMOVED_NEXT_VERSION}
 `,
           )
           this.disconnect()
@@ -1074,7 +1077,7 @@ The \u001B[removeListeners()</> method has been renamed to \u001B[disconnect()</
           advise(
             iframeId,
             `<rb>Deprecated Method</>
-        
+
 Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As their are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`,
           )
           trigger.bind(null, 'Window resize', RESIZE, iframeId)
@@ -1159,7 +1162,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
         iframeId,
         `<rb>Deprecated Option</>
 
-The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <i>"${VERTICAL}"</>, <i>"${HORIZONTAL}"</> or <i>"${NONE}"</>.
+The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <bb>${VERTICAL}</>, <bb>${HORIZONTAL}</>, <bb>${BOTH}</> or <bb>${NONE}</>.
 `,
       )
     }
@@ -1235,7 +1238,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (hasOwn(settings[iframeId], oldName)) {
       advise(
         iframeId,
-        `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
+        `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. ${REMOVED_NEXT_VERSION}`,
       )
       settings[iframeId][newName] = settings[iframeId][oldName]
       delete settings[iframeId][oldName]
@@ -1258,15 +1261,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  function checkOffset(options) {
-    if (options?.offset) {
-      advise(
-        iframeId,
-        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. Use of the old name will be removed in a future version of <i>iframe-resizer</>.`,
-      )
-    }
-  }
-
   function processOptions(options) {
     settings[iframeId] = {
       ...settings[iframeId],
@@ -1286,7 +1280,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     consoleEvent(iframeId, 'setup')
     setDirection()
     setOffsetSize(options?.offsetSize || options?.offset) // ignore zero offset
-    checkOffset(options)
     checkWarningTimeout()
     getPostMessageTarget()
     setTargetOrigin()
@@ -1299,6 +1292,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
 
     processOptions(options)
+    checkUniqueId(iframeId)
     log(iframeId, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
     preModeCheck()
     setupEventListenersOnce()
@@ -1307,6 +1301,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     init(iframeId, createOutgoingMsg(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
+    endAutoGroup(iframeId)
   }
 
   function enableVInfo(options) {

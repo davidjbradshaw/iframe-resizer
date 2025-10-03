@@ -1,15 +1,41 @@
-const encode = (s) =>
-  s
-    .replaceAll('<br>', '\n')
-    .replaceAll('<rb>', '\u001B[31;1m')
-    .replaceAll('</>', '\u001B[m')
-    .replaceAll('<b>', '\u001B[1m')
-    .replaceAll('<i>', '\u001B[3m')
-    .replaceAll('<u>', '\u001B[4m')
+/* eslint-disable no-useless-escape */
+/* eslint-disable security/detect-non-literal-regexp */
 
-const remove = (s) => s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
+import { NEW_LINE } from './consts'
+import { isString } from './utils'
 
-export default (formatLogMsg) => (msg) =>
-  window.chrome // Only show formatting in Chrome as not supported in other browsers
-    ? formatLogMsg(encode(msg))
-    : formatLogMsg(remove(msg))
+const TAGS = {
+  br: '\n',
+  rb: '\u001B[31;1m', // red bold
+  bb: '\u001B[34;1m', // blue bold
+  b: '\u001B[1m', // bold
+  i: '\u001B[3m', // italic
+  u: '\u001B[4m', // underline
+  '/': '\u001B[m', // reset
+}
+
+// <tag> where tag is one of our keys
+const tags = new RegExp(
+  `<(\/|${Object.keys(TAGS)
+    .filter((tag) => tag !== '/')
+    .join('|')})>`,
+  'gi',
+)
+
+const lookup = (_, name) => TAGS[name] ?? ''
+
+const encode = (s) => s.replace(tags, lookup)
+
+const filter = (s) =>
+  s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
+
+const ifString = (process) => (s) => (isString(s) ? process(s) : s)
+
+// Chrome shows ANSI; others get plain text
+export default (formatLogMessage) => (message) =>
+  formatLogMessage(
+    window.chrome ? ifString(encode)(message) : ifString(filter)(message),
+  )
+
+/* eslint-enable security/detect-non-literal-regexp */
+/* eslint-enable no-useless-escape */
