@@ -35,5 +35,5 @@ export default (formatLogMessage) => (message) =>
     window.chrome ? ifString(encode)(message) : ifString(filter)(message),
   )
 
-/* eslint-enable no-useless-escape */
 /* eslint-enable security/detect-non-literal-regexp */
+/* eslint-enable no-useless-escape */
