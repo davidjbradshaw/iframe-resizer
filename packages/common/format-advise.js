@@ -1,7 +1,7 @@
 import { NEW_LINE } from './consts'
 import { isString } from './utils'
 
-const encodeTags = (s) =>
+const encode = (s) =>
   s
     .replaceAll('<br>', NEW_LINE)
     .replaceAll('<rb>', '\u001B[31;1m')
@@ -11,13 +11,13 @@ const encodeTags = (s) =>
     .replaceAll('<i>', '\u001B[3m')
     .replaceAll('<u>', '\u001B[4m')
 
-const removeTags = (s) =>
+const filter = (s) =>
   s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
 
-const encode = (s) => (isString(s) ? encodeTags(s) : s)
-const remove = (s) => (isString(s) ? removeTags(s) : s)
+const ifString = (process) => (s) => (isString(s) ? process(s) : s)
 
-export default (formatLogMsg) => (msg) =>
-  window.chrome // Only show formatting in Chrome as not supported in other browsers
-    ? formatLogMsg(encode(msg))
-    : formatLogMsg(remove(msg))
+export default (formatLogMsg) => (message) =>
+  // Only show formatting in Chrome as not supported in other browsers
+  formatLogMsg(
+    window.chrome ? ifString(encode)(message) : ifString(filter)(message),
+  )
