@@ -1261,15 +1261,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
         : '*'
   }
 
-  function checkOffset(options) {
-    if (options?.offset) {
-      advise(
-        iframeId,
-        `<rb>Deprecated option</>\n\n The <b>offset</> option has been renamed to <b>offsetSize</>. ${REMOVED_NEXT_VERSION}`,
-      )
-    }
-  }
-
   function processOptions(options) {
     settings[iframeId] = {
       ...settings[iframeId],
@@ -1289,7 +1280,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     consoleEvent(iframeId, 'setup')
     setDirection()
     setOffsetSize(options?.offsetSize || options?.offset) // ignore zero offset
-    checkOffset(options)
     checkWarningTimeout()
     getPostMessageTarget()
     setTargetOrigin()
