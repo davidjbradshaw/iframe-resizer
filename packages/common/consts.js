@@ -43,6 +43,7 @@ export const OFFSET = 'offset'
 export const OFFSET_HEIGHT = 'offsetHeight'
 export const OFFSET_SIZE = 'offsetSize'
 export const SCROLL = 'scroll'
+export const NEW_LINE = '\n'
 
 export const HIDDEN = 'hidden'
 export const VISIBLE = 'visible'

@@ -1,9 +1,9 @@
-import { STRING } from './consts'
+import { NEW_LINE, STRING } from './consts'
 
 const encode = (s) =>
   typeof s === STRING
     ? s
-        .replaceAll('<br>', '\n')
+        .replaceAll('<br>', NEW_LINE)
         .replaceAll('<rb>', '\u001B[31;1m')
         .replaceAll('</>', '\u001B[m')
         .replaceAll('<b>', '\u001B[1m')
@@ -13,7 +13,7 @@ const encode = (s) =>
 
 const remove = (s) =>
   typeof s === STRING
-    ? s.replaceAll('<br>', '\n').replaceAll(/<[/a-z]+>/gi, '')
+    ? s.replaceAll('<br>', NEW_LINE).replaceAll(/<[/a-z]+>/gi, '')
     : s
 
 export default (formatLogMsg) => (msg) =>
