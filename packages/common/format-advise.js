@@ -16,8 +16,8 @@ const filter = (s) =>
 
 const ifString = (process) => (s) => (isString(s) ? process(s) : s)
 
-export default (formatLogMsg) => (message) =>
+export default (formatLogMessage) => (message) =>
   // Only show formatting in Chrome as not supported in other browsers
-  formatLogMsg(
+  formatLogMessage(
     window.chrome ? ifString(encode)(message) : ifString(filter)(message),
   )
