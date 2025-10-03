@@ -22,7 +22,9 @@ const tags = new RegExp(
   'gi',
 )
 
-const encode = (s) => s.replace(tags, (_, name) => TAGS[name] ?? '')
+const lookup = (_, name) => TAGS[name] ?? ''
+
+const encode = (s) => s.replace(tags, lookup)
 
 const filter = (s) =>
   s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
