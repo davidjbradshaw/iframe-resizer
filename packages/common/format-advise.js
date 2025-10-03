@@ -1,29 +1,28 @@
-import { NEW_LINE, STRING } from './consts'
+import { NEW_LINE } from './consts'
+import { isString } from './utils'
 
-const encode = (s) =>
-  typeof s === STRING
-    ? s
-        .replaceAll('<br>', NEW_LINE)
-        .replaceAll('<rb>', '\u001B[31;1m')
-        .replaceAll('<bb>', '\u001B[34;1m')
-        .replaceAll('</>', '\u001B[m')
-        .replaceAll('<b>', '\u001B[1m')
-        .replaceAll('<i>', '\u001B[3m')
-        .replaceAll('<u>', '\u001B[4m')
-    : s
+function removeTags(s) {
+  let input = s.replaceAll('<br>', NEW_LINE)
+  let previous
+  do {
+    previous = input
+    input = input.replace(/<\/?[^>]+>/gi, '')
+  } while (input !== previous)
+  return input
+}
 
-const remove = (s) =>
-  typeof s === STRING
-    ? (function () {
-        let input = s.replaceAll('<br>', NEW_LINE);
-        let previous;
-        do {
-          previous = input;
-          input = input.replace(/<\/?[^>]+>/gi, '');
-        } while (input !== previous);
-        return input;
-      })()
-    : s
+const encodeTags = (s) =>
+  s
+    .replaceAll('<br>', NEW_LINE)
+    .replaceAll('<rb>', '\u001B[31;1m')
+    .replaceAll('<bb>', '\u001B[34;1m')
+    .replaceAll('</>', '\u001B[m')
+    .replaceAll('<b>', '\u001B[1m')
+    .replaceAll('<i>', '\u001B[3m')
+    .replaceAll('<u>', '\u001B[4m')
+
+const encode = (s) => (isString(s) ? encodeTags(s) : s)
+const remove = (s) => (isString(s) ? removeTags(s) : s)
 
 export default (formatLogMsg) => (msg) =>
   window.chrome // Only show formatting in Chrome as not supported in other browsers

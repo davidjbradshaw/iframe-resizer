@@ -1,6 +1,10 @@
+import { STRING } from './consts'
+
 export const isElement = (node) => node.nodeType === Node.ELEMENT_NODE
 
 export const isNumber = (value) => !Number.isNaN(value)
+
+export const isString = (value) => typeof value === STRING
 
 export const isolateUserCode = (func, ...val) =>
   setTimeout(() => func(...val), 0)
