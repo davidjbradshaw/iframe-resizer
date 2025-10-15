@@ -275,7 +275,7 @@ function iframeResizerChild() {
       addEventListener(document, READY_STATE_CHANGE, () => {
         sendSize(READY_STATE_CHANGE, 'Ready state change')
         checkReadyYet(readyCallback)
-      })
+      }, { once: true })
   }
 
   function checkAndSetupTags() {
