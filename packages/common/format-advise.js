@@ -14,8 +14,8 @@ const TAGS = {
   '/': '\u001B[m', // reset
 }
 
-const keys = Object.keys(TAGS).filter((tag) => tag !== '/')
-const tags = new RegExp(`<(\/|${keys.join('|')})>`, 'gi')
+const keys = Object.keys(TAGS)
+const tags = new RegExp(`<(${keys.join('|')})>`, 'gi')
 const lookup = (_, name) => TAGS[name] ?? ''
 const encode = (s) => s.replace(tags, lookup)
 
