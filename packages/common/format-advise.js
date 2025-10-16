@@ -14,27 +14,21 @@ const TAGS = {
   '/': '\u001B[m', // reset
 }
 
-// <tag> where tag is one of our keys
-const tags = new RegExp(
-  `<(\/|${Object.keys(TAGS)
-    .filter((tag) => tag !== '/')
-    .join('|')})>`,
-  'gi',
-)
-
+const keys = Object.keys(TAGS).filter((tag) => tag !== '/')
+const tags = new RegExp(`<(\/|${keys.join('|')})>`, 'gi')
 const lookup = (_, name) => TAGS[name] ?? ''
-
 const encode = (s) => s.replace(tags, lookup)
 
 const filter = (s) =>
   s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
 
-const ifString = (process) => (s) => (isString(s) ? process(s) : s)
-
-// Chrome shows ANSI; others get plain text
 export default (formatLogMessage) => (message) =>
   formatLogMessage(
-    window.chrome ? ifString(encode)(message) : ifString(filter)(message),
+    isString(message)
+      ? window.chrome
+        ? encode(message)
+        : filter(message)
+      : message,
   )
 
 /* eslint-enable security/detect-non-literal-regexp */

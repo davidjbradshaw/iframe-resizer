@@ -132,7 +132,6 @@ function iframeResizerChild() {
   const eventCancelTimer = 128
   const eventHandlersByName = {}
   const heightCalcModeDefault = AUTO
-  // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   const tearDown = []
   const widthCalcModeDefault = SCROLL
 
@@ -572,7 +571,7 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     if (found) {
       advise(
         `<rb>Deprecated Attributes</>
-          
+
 The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been deprecated and replaced with the single <b>data-iframe-size</> attribute. Use of the old attributes will be removed in a future version of <i>iframe-resizer</>.`,
       )
     }
@@ -591,7 +590,7 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
         const actionMsg = version
           ? 'remove this option.'
           : `set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page. This can be done on the child page by adding the following code:
-          
+
 window.iframeResizer = {
   license: 'xxxx',
   ${label}CalculationMethod: AUTO,
