@@ -16,7 +16,7 @@ const TAGS = {
 
 const keys = Object.keys(TAGS)
 const tags = new RegExp(`<(${keys.join('|')})>`, 'gi')
-const lookup = (_, name) => TAGS[name] ?? ''
+const lookup = (_, tag) => TAGS[tag] ?? ''
 const encode = (s) => s.replace(tags, lookup)
 
 const filter = (s) =>
