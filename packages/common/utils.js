@@ -6,6 +6,10 @@ export const isNumber = (value) => !Number.isNaN(value)
 
 export const isString = (value) => typeof value === STRING
 
+export const isSafari = /^((?!chrome|android).)*safari/i.test(
+  navigator.userAgent,
+)
+
 export const isolateUserCode = (func, ...val) =>
   setTimeout(() => func(...val), 0)
 
