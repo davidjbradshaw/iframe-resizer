@@ -272,10 +272,15 @@ function iframeResizerChild() {
   function checkReadyYet(readyCallback) {
     if (document.readyState === 'complete') isolateUserCode(readyCallback)
     else
-      addEventListener(document, READY_STATE_CHANGE, () => {
-        sendSize(READY_STATE_CHANGE, 'Ready state change')
-        checkReadyYet(readyCallback)
-      }, { once: true })
+      addEventListener(
+        document,
+        READY_STATE_CHANGE,
+        () => {
+          sendSize(READY_STATE_CHANGE, 'Ready state change')
+          checkReadyYet(readyCallback)
+        },
+        { once: true },
+      )
   }
 
   function checkAndSetupTags() {
