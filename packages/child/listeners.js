@@ -10,11 +10,11 @@ function logEvent(type, evt) {
 
 export const removeEventListener = (el, evt, func, options) => {
   el.removeEventListener(evt, func, options)
-  logEvent('Remove', evt)
+  logEvent('Removed', evt)
 }
 
 export const addEventListener = (el, evt, func, options = false) => {
   el.addEventListener(evt, func, options)
   tearDownList.push(() => removeEventListener(el, evt, func, options))
-  logEvent('Add', evt)
+  logEvent('Added', evt)
 }
