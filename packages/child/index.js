@@ -211,7 +211,7 @@ function iframeResizerChild() {
     readDataFromParent(data)
 
     setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
-    consoleEvent('initFromParent')
+    consoleEvent('initReceived')
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
 
     readDataFromPage()
@@ -1761,7 +1761,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     window.iframeChildListener = (data) =>
       setTimeout(() => received({ data, sameOrigin: true }))
 
-    consoleEvent('setup')
+    consoleEvent('listen')
     addEventListener(window, MESSAGE, received)
     addEventListener(document, READY_STATE_CHANGE, ready)
 
