@@ -211,9 +211,10 @@ function iframeResizerChild() {
     readDataFromParent(data)
 
     setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
-    log(`Initialising iframe v${VERSION} ${window.location.href}`)
-    readDataFromPage()
     consoleEvent('initFromParent')
+    log(`Initialising iframe v${VERSION} ${window.location.href}`)
+
+    readDataFromPage()
 
     const setup = [
       checkVersion,
