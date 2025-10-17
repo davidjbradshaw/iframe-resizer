@@ -9,15 +9,13 @@ import { esModuleInterop } from '../common/utils'
 const createAutoConsoleGroup = esModuleInterop(acg)
 
 // TODO: Add support for React.forwardRef() in next major version (Breaking change)
-function IframeResizer(props) {
-  // eslint-disable-next-line react/prop-types
-  const { forwardRef, ...rest } = props
-  const filteredProps = filterIframeAttribs(rest)
+function IframeResizer({ forwardRef, ...props }) {
+  const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef(null)
   const consoleGroup = createAutoConsoleGroup()
 
   const onBeforeClose = () => {
-    consoleGroup.event('Blocked Close Event')
+    consoleGroup.event('close')
     consoleGroup.warn(
       `Close event ignored, to remove the iframe update your React component.`,
     )
@@ -29,7 +27,7 @@ function IframeResizer(props) {
   // deal with changes to the element and does not need recalling
   useEffect(() => {
     const iframe = iframeRef.current
-    const resizerOptions = { ...rest, onBeforeClose }
+    const resizerOptions = { ...props, onBeforeClose }
 
     consoleGroup.label(`react(${iframe.id})`)
     consoleGroup.event('setup')
@@ -37,7 +35,7 @@ function IframeResizer(props) {
     const resizer = connectResizer(resizerOptions)(iframe)
 
     consoleGroup.expand(resizerOptions.logExpand)
-    if (rest.log) consoleGroup.log('Created React component')
+    if (props.log) consoleGroup.log('Created React component')
 
     return () => {
       consoleGroup.endAutoGroup()
