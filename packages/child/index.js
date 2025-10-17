@@ -272,17 +272,15 @@ function iframeResizerChild() {
   const setupOnPageHide = () =>
     addEventListener(window, lower(PAGE_HIDE), onPageHide)
 
-  let readyCallback = id
-
-  function readyStateChanged() {
-    sendSize(READY_STATE_CHANGE, 'Ready state change')
-    checkReadyYet(readyCallback)
-  }
-
-  function checkReadyYet(callback) {
-    readyCallback = callback
-    if (document.readyState === 'complete') isolateUserCode(callback)
-    else addEventListener(document, READY_STATE_CHANGE, readyStateChanged)
+  let readyChecked = false
+  function checkReadyYet(readyCallback) {
+    if (document.readyState === 'complete') isolateUserCode(readyCallback)
+    else if (!readyChecked)
+      addEventListener(document, READY_STATE_CHANGE, () => {
+        sendSize(READY_STATE_CHANGE, 'Ready state change')
+        checkReadyYet(readyCallback)
+      })
+    readyChecked = true
   }
 
   function checkAndSetupTags() {
