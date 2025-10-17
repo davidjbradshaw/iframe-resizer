@@ -95,7 +95,11 @@ import {
   warn,
 } from './console'
 import { getBoolean, getNumber } from './from-string'
-import { addEventListener, removeEventListener, tearDown } from './listeners'
+import {
+  addEventListener,
+  removeEventListener,
+  tearDownList,
+} from './listeners'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
 import createPerformanceObserver, {
@@ -263,7 +267,7 @@ function iframeResizerChild() {
     consoleEvent(PAGE_HIDE)
     info('Page persisted:', persisted)
     if (persisted) return
-    tearDown.forEach(invoke)
+    tearDownList.forEach(invoke)
   }
 
   const setupOnPageHide = () =>
@@ -1104,7 +1108,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function pushDisconnectsOnToTearDown(observers) {
-    tearDown.push(...observers.map((observer) => observer.disconnect))
+    tearDownList.push(...observers.map((observer) => observer.disconnect))
   }
 
   function attachObservers() {
