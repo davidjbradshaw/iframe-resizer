@@ -282,7 +282,7 @@ function iframeResizerChild() {
 
   function checkReadyYet(callback) {
     readyCallback = callback
-    if (document.readyState === 'complete') isolateUserCode(readyCallback)
+    if (document.readyState === 'complete') isolateUserCode(callback)
     else addEventListener(document, READY_STATE_CHANGE, readyStateChanged)
   }
 
