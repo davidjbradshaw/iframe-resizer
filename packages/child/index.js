@@ -213,6 +213,7 @@ function iframeResizerChild() {
     setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
     readDataFromPage()
+    consoleEvent('initFromParent')
 
     const setup = [
       checkVersion,
@@ -227,10 +228,6 @@ function iframeResizerChild() {
       checkAndSetupTags,
       bothDirections ? id : checkBlockingCSS,
 
-      applySelectors,
-      setupPublicMethods,
-      setupMouseEvents,
-      setupInPageLinks,
       setMargin,
       () => setBodyStyle('background', bodyBackground),
       () => setBodyStyle('padding', bodyPadding),
@@ -238,15 +235,21 @@ function iframeResizerChild() {
       bothDirections ? id : stopInfiniteResizingOfIframe,
       injectClearFixIntoBodyElement,
 
+      applySelectors,
       attachObservers,
-      initEventListeners,
+
+      setupInPageLinks,
+      setupEventListeners,
       setupOnPageHide,
+      setupPublicMethods,
+      setupMouseEvents,
     ]
 
     isolate(setup)
 
     checkReadyYet(once(onReady))
     log('Initialization complete')
+    endAutoGroup()
 
     sendSize(
       INIT,
@@ -634,7 +637,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     }
   }
 
-  function initEventListeners() {
+  function setupEventListeners() {
     if (autoResize !== true) {
       log('Auto Resize disabled')
     }
