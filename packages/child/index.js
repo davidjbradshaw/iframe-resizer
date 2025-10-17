@@ -1481,11 +1481,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           totalTime = performance.now()
           timerActive = true
 
-          rafId = requestAnimationFrame(() => {
-            sendPending = false
-            consoleEvent('requestAnimationFrame')
-            debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
-          })
+          if (!rafId)
+            rafId = requestAnimationFrame(() => {
+              sendPending = false
+              rafId = null
+              consoleEvent('requestAnimationFrame')
+              debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
+            })
 
           sizeIframe(
             triggerEvent,
