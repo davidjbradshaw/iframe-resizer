@@ -136,7 +136,6 @@ function iframeResizerChild() {
   const eventCancelTimer = 128
   const eventHandlersByName = {}
   const heightCalcModeDefault = AUTO
-  const tearDown = []
   const widthCalcModeDefault = SCROLL
 
   let autoResize = true
