@@ -95,7 +95,7 @@ import {
 //   scrollToLink,
 //   scrollToOffset,
 // } from './scroll'
-// import { setOffsetSize } from './send/offset'
+import { setOffsetSize } from './send/offset'
 import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
 import warnOnNoResponse from './send/timeout'
@@ -1110,18 +1110,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     log(iframeId, `direction: %c${direction}`, HIGHLIGHT)
   }
 
-  function setOffsetSize(offset) {
-    if (!offset) return // No offset set or offset is zero
-
-    if (settings[iframeId].direction === VERTICAL) {
-      settings[iframeId].offsetHeight = offset
-      log(iframeId, `Offset height: %c${offset}`, HIGHLIGHT)
-    } else {
-      settings[iframeId].offsetWidth = offset
-      log(iframeId, `Offset width: %c${offset}`, HIGHLIGHT)
-    }
-  }
-
   const getTargetOrigin = (remoteHost) =>
     remoteHost === '' ||
     remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
@@ -1184,7 +1172,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
     consoleEvent(iframeId, 'setup')
     setDirection()
-    setOffsetSize(options?.offsetSize || options?.offset) // ignore zero offset
+    setOffsetSize(iframeId, options)
     checkWarningTimeout()
     getPostMessageTarget()
     setTargetOrigin()
