@@ -10,7 +10,6 @@ import {
   CLOSE,
   COLLAPSE,
   EXPAND,
-  HEIGHT,
   HIDDEN,
   HORIZONTAL,
   IN_PAGE_LINK,
@@ -51,7 +50,6 @@ import {
   TITLE,
   VERSION,
   VERTICAL,
-  WIDTH,
 } from '../common/consts'
 import { addEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
@@ -71,13 +69,13 @@ import {
   warn,
 } from './console'
 import checkEvent from './event'
+import { resizeIframe, setSize } from './events/size'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
-// import { resizeIframe, setSize } from './size'
 import { checkTitle, setTitle } from './page/title'
 import checkUniqueId from './page/unique'
 // import onMouse from './mouse'
-import { getPagePosition, setPagePosition } from './page-position'
+import { getPagePosition } from './page-position'
 // import decodeMessage from './receive/decode'
 // import { onMessage } from './receive/message'
 // import {
@@ -103,13 +101,6 @@ import page from './values/page'
 import settings from './values/settings'
 
 function iframeListener(event) {
-  function resizeIframe() {
-    setSize(messageData)
-    setPagePosition(iframeId)
-
-    on('onResized', messageData)
-  }
-
   function getPaddingEnds(compStyle) {
     if (compStyle.boxSizing !== 'border-box') return 0
 
@@ -424,7 +415,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case INIT:
-        resizeIframe()
+        resizeIframe(messageData)
         checkSameDomain(iframeId)
         checkVersion(msg)
         settings[iframeId].initialised = true
@@ -453,7 +444,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
           return
         }
 
-        resizeIframe()
+        resizeIframe(messageData)
     }
   }
 
@@ -589,20 +580,6 @@ function resetIframe(messageData) {
   getPagePosition(messageData.id)
   setSize(messageData)
   trigger(RESET, RESET, messageData.id)
-}
-
-function setSize(messageData) {
-  function setDimension(dimension) {
-    const size = `${messageData[dimension]}px`
-    messageData.iframe.style[dimension] = size
-    info(id, `Set ${dimension}: %c${size}`, HIGHLIGHT)
-  }
-
-  const { id } = messageData
-  const { sizeHeight, sizeWidth } = settings[id]
-
-  if (sizeHeight) setDimension(HEIGHT)
-  if (sizeWidth) setDimension(WIDTH)
 }
 
 let count = 0
