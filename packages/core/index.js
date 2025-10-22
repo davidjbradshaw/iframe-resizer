@@ -16,7 +16,6 @@ import {
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
-  INIT_EVENTS,
   INIT_FROM_IFRAME,
   LABEL,
   LAZY,
@@ -100,7 +99,7 @@ import {
 import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
 import warnOnNoResponse from './send/timeout'
-// import trigger from './send/trigger'
+import trigger from './send/trigger'
 // import { resizeIframe, setSize } from './size'
 import { checkTitle, setTitle } from './title'
 import checkUniqueId from './unique'
@@ -868,58 +867,6 @@ function setSize(messageData) {
 
   if (sizeHeight) setDimension(HEIGHT)
   if (sizeWidth) setDimension(WIDTH)
-}
-
-const filterMsg = (msg) =>
-  msg
-    .split(SEPARATOR)
-    .filter((_, index) => index !== 19)
-    .join(SEPARATOR)
-
-function trigger(calleeMsg, msg, id) {
-  function logSent(route) {
-    const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
-    info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
-    info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
-  }
-
-  function postMessageToIframe() {
-    const { iframe, postMessageTarget, sameOrigin, targetOrigin } = settings[id]
-
-    if (sameOrigin) {
-      try {
-        iframe.contentWindow.iframeChildListener(MESSAGE_ID + msg)
-        logSent(`Sending message to iframe %c${id}%c via same origin%c`)
-        return
-      } catch (error) {
-        if (calleeMsg in INIT_EVENTS) {
-          settings[id].sameOrigin = false
-          log(id, 'New iframe does not support same origin')
-        } else {
-          warn(id, 'Same origin messaging failed, falling back to postMessage')
-        }
-      }
-    }
-
-    logSent(
-      `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
-    )
-
-    postMessageTarget.postMessage(MESSAGE_ID + msg, targetOrigin)
-  }
-
-  function checkAndSend() {
-    if (!settings[id]?.postMessageTarget) {
-      warn(id, `Iframe(${id}) not found`)
-      return
-    }
-
-    postMessageToIframe()
-  }
-
-  consoleEvent(id, calleeMsg)
-
-  if (settings[id]) checkAndSend()
 }
 
 let count = 0
