@@ -98,7 +98,7 @@ import {
 // } from './scroll'
 // import { setOffsetSize } from './send/offset'
 import createOutgoingMessage from './send/outgoing'
-// import iframeReady from './send/ready'
+import iframeReady from './send/ready'
 import warnOnNoResponse from './send/timeout'
 // import trigger from './send/trigger'
 // import { resizeIframe, setSize } from './size'
@@ -704,15 +704,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  const iframeReady =
-    (source) =>
-    ({ initChild, postMessageTarget }) => {
-      if (source === postMessageTarget) initChild()
-    }
-
-  const iFrameReadyMsgReceived = (source) =>
-    Object.values(settings).forEach(iframeReady(source))
-
   function firstRun() {
     if (!settings[iframeId]) return
     log(iframeId, `First run for ${iframeId}`)
@@ -735,7 +726,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
   let msg = event.data
 
   if (msg === CHILD_READY_MESSAGE) {
-    iFrameReadyMsgReceived(event.source)
+    iframeReady(event.source)
     return
   }
 
