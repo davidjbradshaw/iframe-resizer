@@ -10,7 +10,7 @@ const filterMsg = (msg) =>
     .filter((_, index) => index !== 19)
     .join(SEPARATOR)
 
-function postMessageToIframe(calleeMsg, msg, id) {
+function dispatch(calleeMsg, msg, id) {
   function logSent(route) {
     const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
     info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
@@ -48,7 +48,7 @@ function trigger(calleeMsg, msg, id) {
     return
   }
 
-  postMessageToIframe(calleeMsg, msg, id)
+  dispatch(calleeMsg, msg, id)
 }
 
 export default trigger
