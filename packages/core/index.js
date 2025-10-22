@@ -184,13 +184,35 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
   }
 
-  function receivedMessage() {
-    const { height, iframe, msg, type, width } = messageData
-    if (settings[iframeId]?.firstRun) firstRun()
+  function routeMessage({ height, id, iframe, msg, type, width }) {
+    const { lastMessage } = settings[id]
+    if (settings[id]?.firstRun) firstRun()
+    log(id, `Received: %c${lastMessage}`, HIGHLIGHT)
 
     switch (type) {
+      case AUTO_RESIZE:
+        settings[iframeId].autoResize = JSON.parse(getMessageBody(9))
+        break
+
+      case BEFORE_UNLOAD:
+        info(iframeId, 'Ready state reset')
+        settings[iframeId].initialised = false
+        break
+
       case CLOSE:
         closeIframe(iframe)
+        break
+
+      case IN_PAGE_LINK:
+        findTarget(getMessageBody(9))
+        break
+
+      case INIT:
+        resizeIframe(messageData)
+        checkSameDomain(iframeId)
+        checkVersion(msg)
+        settings[iframeId].initialised = true
+        on('onReady', iframe)
         break
 
       case MESSAGE:
@@ -203,27 +225,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
       case MOUSE_LEAVE:
         onMouse('onMouseLeave', messageData)
-        break
-
-      case BEFORE_UNLOAD:
-        info(iframeId, 'Ready state reset')
-        settings[iframeId].initialised = false
-        break
-
-      case AUTO_RESIZE:
-        settings[iframeId].autoResize = JSON.parse(getMessageBody(9))
-        break
-
-      case SCROLL_BY:
-        scrollBy(messageData)
-        break
-
-      case SCROLL_TO:
-        scrollTo(messageData)
-        break
-
-      case SCROLL_TO_OFFSET:
-        scrollToOffset(messageData)
         break
 
       case PAGE_INFO:
@@ -242,24 +243,24 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         stopParentInfoMonitor(id)
         break
 
-      case IN_PAGE_LINK:
-        findTarget(getMessageBody(9))
-        break
-
-      case TITLE:
-        setTitle(msg, iframeId)
-        break
-
       case RESET:
         resetIframe(messageData)
         break
 
-      case INIT:
-        resizeIframe(messageData)
-        checkSameDomain(iframeId)
-        checkVersion(msg)
-        settings[iframeId].initialised = true
-        on('onReady', iframe)
+      case SCROLL_BY:
+        scrollBy(messageData)
+        break
+
+      case SCROLL_TO:
+        scrollTo(messageData)
+        break
+
+      case SCROLL_TO_OFFSET:
+        scrollToOffset(messageData)
+        break
+
+      case TITLE:
+        setTitle(msg, iframeId)
         break
 
       default:
@@ -326,7 +327,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
     default:
       settings[id].lastMessage = event.data
-      errorBoundary(id, receivedMessage)(messageData)
+      errorBoundary(id, routeMessage)(messageData)
   }
 }
 
