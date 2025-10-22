@@ -52,8 +52,10 @@ import { hasOwn, once, typeAssert } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
 import checkMode, { enableVInfo, preModeCheck } from './checks/mode'
+import checkOptions from './checks/options'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
+import checkWarningTimeout from './checks/warning-timeout'
 import {
   advise,
   debug,
@@ -483,26 +485,6 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     sendInit(id, createInitChild(INIT))
   }
 
-  function checkOptions(options) {
-    if (!options) return {}
-
-    if (
-      'sizeWidth' in options ||
-      'sizeHeight' in options ||
-      AUTO_RESIZE in options
-    ) {
-      advise(
-        iframeId,
-        `<rb>Deprecated Option</>
-
-The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <bb>${VERTICAL}</>, <bb>${HORIZONTAL}</>, <bb>${BOTH}</> or <bb>${NONE}</>.
-`,
-      )
-    }
-
-    return options
-  }
-
   function setDirection() {
     const { direction } = settings[iframeId]
 
@@ -555,12 +537,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     }
   }
 
-  function checkWarningTimeout() {
-    if (!settings[iframeId].warningTimeout) {
-      info(iframeId, 'warningTimeout:%c disabled', HIGHLIGHT)
-    }
-  }
-
   const hasMouseEvents = (options) =>
     hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
 
@@ -577,7 +553,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       iframe,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
       ...defaults,
-      ...checkOptions(options),
+      ...checkOptions(iframeId, options),
       mouseEvents: hasMouseEvents(options),
       mode: setMode(options),
       syncTitle: checkTitle(iframeId),
@@ -590,7 +566,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     consoleEvent(iframeId, 'setup')
     setDirection()
     setOffsetSize(iframeId, options)
-    checkWarningTimeout()
+    checkWarningTimeout(iframeId)
     getPostMessageTarget()
     setTargetOrigin()
   }
