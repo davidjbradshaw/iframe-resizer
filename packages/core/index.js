@@ -6,7 +6,6 @@ import {
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
-  CHILD,
   CHILD_READY_MESSAGE,
   CLOSE,
   COLLAPSE,
@@ -98,7 +97,7 @@ import {
 //   scrollToOffset,
 // } from './scroll'
 // import { setOffsetSize } from './send/offset'
-// import createOutgoingMessage from './send/outgoing'
+import createOutgoingMessage from './send/outgoing'
 // import iframeReady from './send/ready'
 import warnOnNoResponse from './send/timeout'
 // import trigger from './send/trigger'
@@ -932,56 +931,6 @@ function trigger(calleeMsg, msg, id) {
   if (settings[id]) checkAndSend()
 }
 
-function createOutgoingMsg(id) {
-  const {
-    autoResize,
-    bodyBackground,
-    bodyMargin,
-    bodyPadding,
-    heightCalculationMethod,
-    inPageLinks,
-    license,
-    log,
-    logExpand,
-    mouseEvents,
-    offsetHeight,
-    offsetWidth,
-    mode,
-    sizeHeight,
-    // sizeSelector,
-    sizeWidth,
-    tolerance,
-    widthCalculationMethod,
-  } = settings[id]
-
-  return [
-    id,
-    '8', // Backwards compatibility (PaddingV1)
-    sizeWidth,
-    log,
-    '32', // Backwards compatibility (Interval)
-    true, // Backwards compatibility (EnablePublicMethods)
-    autoResize,
-    bodyMargin,
-    heightCalculationMethod,
-    bodyBackground,
-    bodyPadding,
-    tolerance,
-    inPageLinks,
-    CHILD, // Backwards compatibility (resizeFrom)
-    widthCalculationMethod,
-    mouseEvents,
-    offsetHeight,
-    offsetWidth,
-    sizeHeight,
-    license,
-    page.version,
-    mode,
-    '', // sizeSelector,
-    logExpand,
-  ].join(SEPARATOR)
-}
-
 let count = 0
 let vAdvised = false
 let vInfoDisable = false
@@ -1316,7 +1265,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setupEventListenersOnce()
     setScrolling()
     setupBodyMarginValues()
-    init(iframeId, createOutgoingMsg(iframeId))
+    init(iframeId, createOutgoingMessage(iframeId))
     setupIframeObject()
     log(iframeId, 'Setup complete')
     endAutoGroup(iframeId)
