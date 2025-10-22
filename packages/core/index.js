@@ -21,13 +21,10 @@ import {
   LOG_OPTIONS,
   MESSAGE,
   MESSAGE_HEADER_LENGTH,
-  MESSAGE_ID,
-  MESSAGE_ID_LENGTH,
   MIN_SIZE,
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
-  NULL,
   NUMBER,
   OBJECT,
   OFFSET,
@@ -76,14 +73,14 @@ import { checkTitle, setTitle } from './page/title'
 import checkUniqueId from './page/unique'
 // import onMouse from './mouse'
 import { getPagePosition } from './page-position'
-// import decodeMessage from './receive/decode'
-// import { onMessage } from './receive/message'
-// import {
-//   checkIframeExists,
-//   isMessageForUs,
-//   isMessageFromIframe,
-//   isMessageFromMetaParent,
-// } from './receive/preflight'
+import decodeMessage from './receive/decode'
+import { onMessage } from './receive/message'
+import {
+  checkIframeExists,
+  isMessageForUs,
+  isMessageFromIframe,
+  isMessageFromMetaParent,
+} from './receive/preflight'
 import {
   getElementPosition,
   scrollBy,
@@ -101,141 +98,8 @@ import page from './values/page'
 import settings from './values/settings'
 
 function iframeListener(event) {
-  function getPaddingEnds(compStyle) {
-    if (compStyle.boxSizing !== 'border-box') return 0
-
-    const top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
-    const bot = compStyle.paddingBottom
-      ? parseInt(compStyle.paddingBottom, 10)
-      : 0
-
-    return top + bot
-  }
-
-  function getBorderEnds(compStyle) {
-    if (compStyle.boxSizing !== 'border-box') return 0
-
-    const top = compStyle.borderTopWidth
-      ? parseInt(compStyle.borderTopWidth, 10)
-      : 0
-
-    const bot = compStyle.borderBottomWidth
-      ? parseInt(compStyle.borderBottomWidth, 10)
-      : 0
-
-    return top + bot
-  }
-
-  function processMessage(msg) {
-    const data = msg.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
-    const height = data[1] ? Number(data[1]) : 0
-    const iframe = settings[data[0]]?.iframe
-    const compStyle = getComputedStyle(iframe)
-
-    const messageData = {
-      iframe,
-      id: data[0],
-      height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
-      width: Number(data[2]),
-      type: data[3],
-      msg: data[4],
-    }
-
-    // eslint-disable-next-line prefer-destructuring
-    if (data[5]) messageData.mode = data[5]
-
-    return messageData
-  }
-
-  function isMessageFromIframe() {
-    function checkAllowedOrigin() {
-      function checkList() {
-        let i = 0
-        let retCode = false
-
-        log(
-          iframeId,
-          `Checking connection is from allowed list of origins: %c${checkOrigin}`,
-          HIGHLIGHT,
-        )
-
-        for (; i < checkOrigin.length; i++) {
-          if (checkOrigin[i] === origin) {
-            retCode = true
-            break
-          }
-        }
-
-        return retCode
-      }
-
-      function checkSingle() {
-        const remoteHost = settings[iframeId]?.remoteHost
-        log(iframeId, `Checking connection is from: %c${remoteHost}`, HIGHLIGHT)
-        return origin === remoteHost
-      }
-
-      return checkOrigin.constructor === Array ? checkList() : checkSingle()
-    }
-
-    const { origin, sameOrigin } = event
-
-    if (sameOrigin) return true
-
-    let checkOrigin = settings[iframeId]?.checkOrigin
-
-    if (checkOrigin && `${origin}` !== NULL && !checkAllowedOrigin()) {
-      throw new Error(
-        `Unexpected message received from: ${origin} for ${messageData.iframe.id}. Message was: ${event.data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`,
-      )
-    }
-
-    return true
-  }
-
-  const isMessageForUs = (msg) =>
-    MESSAGE_ID === `${msg}`.slice(0, MESSAGE_ID_LENGTH) &&
-    msg.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)[0] in settings
-
-  function isMessageFromMetaParent() {
-    // Test if this message is from a parent above us. This is an ugly test, however, updating
-    // the message format would break backwards compatibility.
-    const retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
-
-    if (retCode) {
-      log(iframeId, 'Ignoring init message from meta parent page')
-    }
-
-    return retCode
-  }
-
-  const getMsgBody = (offset) =>
+  const getMessageBody = (offset) =>
     msg.slice(msg.indexOf(SEPARATOR) + MESSAGE_HEADER_LENGTH + offset)
-
-  function forwardMsgFromIframe(msgBody) {
-    log(
-      iframeId,
-      `onMessage passed: {iframe: %c${messageData.iframe.id}%c, message: %c${msgBody}%c}`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
-      FOREGROUND,
-    )
-
-    on('onMessage', {
-      iframe: messageData.iframe,
-      message: JSON.parse(msgBody),
-    })
-  }
-
-  function checkIframeExists() {
-    if (messageData.iframe === null) {
-      warn(iframeId, `The iframe (${messageData.id}) was not found.`)
-      return false
-    }
-
-    return true
-  }
 
   function findTarget(location) {
     function jumpToTarget() {
@@ -288,7 +152,7 @@ function iframeListener(event) {
     let mousePos = {}
 
     if (messageData.width === 0 && messageData.height === 0) {
-      const coords = getMsgBody(9).split(SEPARATOR)
+      const coords = getMessageBody(9).split(SEPARATOR)
       mousePos = {
         x: coords[1],
         y: coords[0],
@@ -344,7 +208,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     )
   }
 
-  function eventMsg() {
+  function receivedMessage() {
     const { height, iframe, msg, type, width } = messageData
     if (settings[iframeId]?.firstRun) firstRun()
 
@@ -354,7 +218,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case MESSAGE:
-        forwardMsgFromIframe(getMsgBody(6))
+        onMessage(messageData, getMessageBody(6))
         break
 
       case MOUSE_ENTER:
@@ -371,7 +235,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case AUTO_RESIZE:
-        settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+        settings[iframeId].autoResize = JSON.parse(getMessageBody(9))
         break
 
       case SCROLL_BY:
@@ -403,7 +267,7 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case IN_PAGE_LINK:
-        findTarget(getMsgBody(9))
+        findTarget(getMessageBody(9))
         break
 
       case TITLE:
@@ -448,31 +312,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  function checkSettings(iframeId) {
-    if (!settings[iframeId]) {
-      throw new Error(
-        `${messageData.type} No settings for ${iframeId}. Message was: ${msg}`,
-      )
-    }
-  }
-
   function firstRun() {
     if (!settings[iframeId]) return
     log(iframeId, `First run for ${iframeId}`)
     checkMode(iframeId, messageData.mode)
     settings[iframeId].firstRun = false
-  }
-
-  function screenMessage(msg) {
-    checkSettings(iframeId)
-
-    if (!isMessageFromMetaParent()) {
-      log(iframeId, `Received: %c${msg}`, HIGHLIGHT)
-
-      if (checkIframeExists() && isMessageFromIframe()) {
-        eventMsg()
-      }
-    }
   }
 
   let msg = event.data
@@ -489,21 +333,25 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     return
   }
 
-  const messageData = processMessage(msg)
+  const messageData = decodeMessage(msg)
   const { id, type } = messageData
   const iframeId = id
 
-  if (!iframeId) {
-    warn(
-      '',
-      'iframeResizer received messageData without id, message was: ',
-      msg,
-    )
-    return
-  }
+  consoleEvent(id, type)
 
-  consoleEvent(iframeId, type)
-  errorBoundary(iframeId, screenMessage)(msg)
+  switch (true) {
+    case !settings[id]:
+      throw new Error(`${type} No settings for ${id}. Message was: ${msg}`)
+
+    case !checkIframeExists(messageData):
+    case isMessageFromMetaParent(messageData):
+    case !isMessageFromIframe(messageData, event):
+      return
+
+    default:
+      settings[id].lastMessage = event.data
+      errorBoundary(id, receivedMessage)(messageData)
+  }
 }
 
 function removeIframeListeners(iframe) {
@@ -535,41 +383,6 @@ function closeIframe(iframe) {
   checkEvent(id, 'onAfterClose', id)
   removeIframeListeners(iframe)
 }
-
-// function getPagePosition(iframeId) {
-//   if (page.position !== null) return
-
-//   page.position = {
-//     x: window.scrollX,
-//     y: window.scrollY,
-//   }
-
-//   log(
-//     iframeId,
-//     `Get page position: %c${page.position.x}%c, %c${page.position.y}`,
-//     HIGHLIGHT,
-//     FOREGROUND,
-//     HIGHLIGHT,
-//   )
-// }
-
-// function unsetPagePosition() {
-//   page.position = null
-// }
-
-// function setPagePosition(iframeId) {
-//   if (page.position === null) return
-
-//   window.Link(page.position.x, page.position.y)
-//   info(
-//     iframeId,
-//     `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
-//     HIGHLIGHT,
-//     FOREGROUND,
-//     HIGHLIGHT,
-//   )
-//   unsetPagePosition()
-// }
 
 function resetIframe(messageData) {
   log(
