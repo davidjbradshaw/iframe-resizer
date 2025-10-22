@@ -51,7 +51,7 @@ import setMode from '../common/mode'
 import { hasOwn, once, typeAssert } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
-import checkMode, { enableVInfo, preModeCheck } from './checks/mode'
+import { enableVInfo, preModeCheck } from './checks/mode'
 import checkOptions from './checks/options'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
@@ -96,6 +96,7 @@ import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
 import warnOnNoResponse from './send/timeout'
 import trigger from './send/trigger'
+import firstRun from './setup/first-run'
 import defaults from './values/defaults'
 import page from './values/page'
 import settings from './values/settings'
@@ -153,9 +154,9 @@ function iframeListener(event) {
 
   const on = (funcName, val) => checkEvent(iframeId, funcName, val)
 
-  function routeMessage({ height, id, iframe, msg, type, width }) {
+  function routeMessage({ height, id, iframe, mode, msg, type, width }) {
     const { lastMessage } = settings[id]
-    if (settings[id]?.firstRun) firstRun(id)
+    if (settings[id]?.firstRun) firstRun(id, mode)
     log(id, `Received: %c${lastMessage}`, HIGHLIGHT)
 
     switch (type) {
@@ -256,13 +257,6 @@ function iframeListener(event) {
 
         resizeIframe(messageData)
     }
-  }
-
-  function firstRun(id) {
-    if (!settings[id]) return
-    log(id, `First run for ${id}`)
-    checkMode(id, messageData.mode)
-    settings[id].firstRun = false
   }
 
   let msg = event.data
