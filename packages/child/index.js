@@ -1774,23 +1774,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     return win
   }
 
-  // Provide stable hooks for Karma/RequireJS environments
   try {
-    // Use a stubbed window for tests
-    win = {}
-    window.mockMsgListener = mockMsgListener
+    // eslint-disable-next-line no-restricted-globals
+    if (top?.document?.getElementById('banner')) {
+      win = {}
 
-    // Detach real message listener to avoid side-effects during tests
-    removeEventListener(window, MESSAGE, received)
+      // Create test hooks
+      window.mockMsgListener = mockMsgListener
 
-    // Register AMD module if RequireJS is present
-    if (typeof define === 'function' && define.amd) {
-      // Keep it anonymous so it maps to the requested path
+      removeEventListener(window, MESSAGE, received)
+
       define([], () => mockMsgListener)
     }
   } catch (error) {
     // do nothing
   }
+
   /* TEST CODE END */
 }
 
