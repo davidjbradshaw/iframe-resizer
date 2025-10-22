@@ -66,12 +66,12 @@ import {
   warn,
 } from './console'
 import checkEvent from './event'
+import onMouse from './events/mouse'
 import { resizeIframe, setSize } from './events/size'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
 import { checkTitle, setTitle } from './page/title'
 import checkUniqueId from './page/unique'
-// import onMouse from './mouse'
 import { getPagePosition } from './page-position'
 import decodeMessage from './receive/decode'
 import { onMessage } from './receive/message'
@@ -148,30 +148,6 @@ function iframeListener(event) {
     jumpToParent()
   }
 
-  function onMouse(event) {
-    let mousePos = {}
-
-    if (messageData.width === 0 && messageData.height === 0) {
-      const coords = getMessageBody(9).split(SEPARATOR)
-      mousePos = {
-        x: coords[1],
-        y: coords[0],
-      }
-    } else {
-      mousePos = {
-        x: messageData.width,
-        y: messageData.height,
-      }
-    }
-
-    on(event, {
-      iframe: messageData.iframe,
-      screenX: Number(mousePos.x),
-      screenY: Number(mousePos.y),
-      type: messageData.type,
-    })
-  }
-
   const on = (funcName, val) => checkEvent(iframeId, funcName, val)
 
   function checkSameDomain(id) {
@@ -222,11 +198,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case MOUSE_ENTER:
-        onMouse('onMouseEnter')
+        onMouse('onMouseEnter', messageData)
         break
 
       case MOUSE_LEAVE:
-        onMouse('onMouseLeave')
+        onMouse('onMouseLeave', messageData)
         break
 
       case BEFORE_UNLOAD:
