@@ -1,6 +1,6 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { HEIGHT_EDGE, OVERFLOW_ATTR } from '../../common/consts'
+import { HEIGHT_EDGE, NONE, OVERFLOW_ATTR } from '../../common/consts'
 import { id } from '../../common/utils'
 import { info } from '../console'
 import {
@@ -17,7 +17,7 @@ const logNewlyObserved = createLogNewlyObserved(OVERFLOW)
 const warnAlreadyObserved = createWarnAlreadyObserved(OVERFLOW)
 
 const isHidden = (node) =>
-  node.hidden || node.offsetParent === null || node.style.display === 'none'
+  node.hidden || node.offsetParent === null || node.style.display === NONE
 
 const createOverflowObserver = (callback, options) => {
   const side = options.side || HEIGHT_EDGE

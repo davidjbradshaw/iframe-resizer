@@ -1,4 +1,4 @@
-import { AUTO } from '../common/consts'
+import { AUTO, NONE } from '../common/consts'
 import { advise, log } from './console'
 
 const nodes = () => [document.documentElement, document.body]
@@ -7,7 +7,7 @@ const properties = ['min-height', 'min-width', 'max-height', 'max-width']
 const blockedStyleSheets = new Set()
 
 const hasCssValue = (value) =>
-  value && value !== '0px' && value !== AUTO && value !== 'none'
+  value && value !== '0px' && value !== AUTO && value !== NONE
 
 const getElementName = (node) =>
   node.tagName ? node.tagName.toLowerCase() : 'unknown'
