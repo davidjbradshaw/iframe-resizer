@@ -1,15 +1,15 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { info } from './console'
-import on from './event'
+import { info } from '../console'
+import on from '../event'
+import settings from '../values/settings'
 import {
   getPagePosition,
   getStoredPagePosition,
   setPagePosition,
   setStoredPagePosition,
   unsetPagePosition,
-} from './page-position'
-import settings from './values/settings'
+} from './position'
 
 export function getElementPosition(target) {
   const iFramePosition = target.getBoundingClientRect()

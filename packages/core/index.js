@@ -1,4 +1,4 @@
-import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+import { HIGHLIGHT } from 'auto-console-group'
 
 import {
   AFTER_EVENT_STACK,
@@ -45,12 +45,14 @@ import {
   SEPARATOR,
   STRING,
   TITLE,
-  VERSION,
   VERTICAL,
 } from '../common/consts'
 import { addEventListener } from '../common/listeners'
-import setMode, { getModeData, getModeLabel } from '../common/mode'
+import setMode from '../common/mode'
 import { hasOwn, once, typeAssert } from '../common/utils'
+import checkMode, { enableVInfo, preModeCheck } from './checks/mode'
+import checkSameDomain from './checks/origin'
+import checkVersion from './checks/version'
 import {
   advise,
   debug,
@@ -60,9 +62,7 @@ import {
   event as consoleEvent,
   info,
   log,
-  purge as consoleClear,
   setupConsole,
-  vInfo,
   warn,
 } from './console'
 import checkEvent from './event'
@@ -70,9 +70,16 @@ import onMouse from './events/mouse'
 import { resizeIframe, setSize } from './events/size'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
+import { getPagePosition } from './page/position'
+import {
+  getElementPosition,
+  scrollBy,
+  scrollTo,
+  scrollToLink,
+  scrollToOffset,
+} from './page/scroll'
 import { checkTitle, setTitle } from './page/title'
 import checkUniqueId from './page/unique'
-import { getPagePosition } from './page-position'
 import decodeMessage from './receive/decode'
 import { onMessage } from './receive/message'
 import {
@@ -81,13 +88,6 @@ import {
   isMessageFromIframe,
   isMessageFromMetaParent,
 } from './receive/preflight'
-import {
-  getElementPosition,
-  scrollBy,
-  scrollTo,
-  scrollToLink,
-  scrollToOffset,
-} from './scroll'
 import { setOffsetSize } from './send/offset'
 import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
@@ -150,53 +150,19 @@ function iframeListener(event) {
 
   const on = (funcName, val) => checkEvent(iframeId, funcName, val)
 
-  function checkSameDomain(id) {
-    try {
-      settings[id].sameOrigin =
-        !!settings[id]?.iframe?.contentWindow?.iframeChildListener
-    } catch (error) {
-      settings[id].sameOrigin = false
-    }
-
-    log(id, `sameOrigin: %c${settings[id].sameOrigin}`, HIGHLIGHT)
-  }
-
-  function checkVersion(version) {
-    if (version === VERSION) return
-    if (version === undefined) {
-      advise(
-        iframeId,
-        `<rb>Legacy version detected in iframe</>
-
-Detected legacy version of child page script. It is recommended to update the page in the iframe to use <b>@iframe-resizer/child</>.
-
-See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
-`,
-      )
-      return
-    }
-    log(
-      iframeId,
-      `Version mismatch (Child: %c${version}%c !== Parent: %c${VERSION})`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
-    )
-  }
-
   function routeMessage({ height, id, iframe, msg, type, width }) {
     const { lastMessage } = settings[id]
-    if (settings[id]?.firstRun) firstRun()
+    if (settings[id]?.firstRun) firstRun(id)
     log(id, `Received: %c${lastMessage}`, HIGHLIGHT)
 
     switch (type) {
       case AUTO_RESIZE:
-        settings[iframeId].autoResize = JSON.parse(getMessageBody(9))
+        settings[id].autoResize = JSON.parse(getMessageBody(9))
         break
 
       case BEFORE_UNLOAD:
-        info(iframeId, 'Ready state reset')
-        settings[iframeId].initialised = false
+        info(id, 'Ready state reset')
+        settings[id].initialised = false
         break
 
       case CLOSE:
@@ -209,9 +175,9 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
       case INIT:
         resizeIframe(messageData)
-        checkSameDomain(iframeId)
-        checkVersion(msg)
-        settings[iframeId].initialised = true
+        checkSameDomain(id)
+        checkVersion(id, msg)
+        settings[id].initialised = true
         on('onReady', iframe)
         break
 
@@ -260,13 +226,13 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         break
 
       case TITLE:
-        setTitle(msg, iframeId)
+        setTitle(msg, id)
         break
 
       default:
         if (width === 0 && height === 0) {
           warn(
-            iframeId,
+            id,
             `Unsupported message received (${type}), this is likely due to the iframe containing a later ` +
               `version of iframe-resizer than the parent page`,
           )
@@ -274,14 +240,14 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
         }
 
         if (width === 0 || height === 0) {
-          log(iframeId, 'Ignoring message with 0 height or width')
+          log(id, 'Ignoring message with 0 height or width')
           return
         }
 
         // Recheck document.hidden here, as only Firefox
         // correctly supports this in the iframe
         if (document.hidden) {
-          log(iframeId, 'Page hidden - ignored resize request')
+          log(id, 'Page hidden - ignored resize request')
           return
         }
 
@@ -289,11 +255,11 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
     }
   }
 
-  function firstRun() {
-    if (!settings[iframeId]) return
-    log(iframeId, `First run for ${iframeId}`)
-    checkMode(iframeId, messageData.mode)
-    settings[iframeId].firstRun = false
+  function firstRun(id) {
+    if (!settings[id]) return
+    log(id, `First run for ${id}`)
+    checkMode(id, messageData.mode)
+    settings[id].firstRun = false
   }
 
   let msg = event.data
@@ -373,26 +339,6 @@ function resetIframe(messageData) {
 }
 
 let count = 0
-let vAdvised = false
-let vInfoDisable = false
-
-function checkMode(iframeId, childMode = -3) {
-  if (vAdvised) return
-  const mode = Math.max(settings[iframeId].mode, childMode)
-  if (mode > settings[iframeId].mode) settings[iframeId].mode = mode
-  if (mode < 0) {
-    consoleClear(iframeId)
-    if (!settings[iframeId].vAdvised)
-      advise(iframeId || 'Parent', `${getModeData(mode + 2)}${getModeData(2)}`)
-    settings[iframeId].vAdvised = true
-    throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
-  }
-  if (!(mode > 0 && vInfoDisable)) {
-    vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-  }
-  if (mode < 1) advise('Parent', getModeData(3))
-  vAdvised = true
-}
 
 export default (options) => (iframe) => {
   function newId() {
@@ -624,12 +570,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
       settings[iframeId].postMessageTarget = iframe.contentWindow
   }
 
-  function preModeCheck() {
-    if (vAdvised) return
-    const { mode } = settings[iframeId]
-    if (mode !== -1) checkMode(iframeId, mode)
-  }
-
   function updateOptionName(oldName, newName) {
     if (hasOwn(settings[iframeId], oldName)) {
       advise(
@@ -690,7 +630,7 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     processOptions(options)
     checkUniqueId(iframeId)
     log(iframeId, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
-    preModeCheck()
+    preModeCheck(iframeId)
     setupEventListenersOnce()
     setScrolling()
     setupBodyMarginValues()
@@ -698,13 +638,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     setupIframeObject()
     log(iframeId, 'Setup complete')
     endAutoGroup(iframeId)
-  }
-
-  function enableVInfo(options) {
-    if (options?.log === -1) {
-      options.log = false
-      vInfoDisable = true
-    }
   }
 
   function checkLocationSearch(options) {

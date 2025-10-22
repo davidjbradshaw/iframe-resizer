@@ -1,7 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { info, log } from './console'
-import page from './values/page'
+import { info, log } from '../console'
+import page from '../values/page'
 
 export function unsetPagePosition() {
   page.position = null
