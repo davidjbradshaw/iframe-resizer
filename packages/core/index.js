@@ -10,7 +10,6 @@ import {
   CLOSE,
   COLLAPSE,
   EXPAND,
-  FUNCTION,
   HEIGHT,
   HIDDEN,
   HORIZONTAL,
@@ -56,7 +55,7 @@ import {
 } from '../common/consts'
 import { addEventListener } from '../common/listeners'
 import setMode, { getModeData, getModeLabel } from '../common/mode'
-import { hasOwn, isolateUserCode, once, typeAssert } from '../common/utils'
+import { hasOwn, once, typeAssert } from '../common/utils'
 import {
   advise,
   debug,
@@ -71,7 +70,7 @@ import {
   vInfo,
   warn,
 } from './console'
-// import checkEvent from './event'
+import checkEvent from './event'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
 // import onMouse from './mouse'
@@ -597,32 +596,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
 
   consoleEvent(iframeId, type)
   errorBoundary(iframeId, screenMessage)(msg)
-}
-
-function checkEvent(iframeId, funcName, val) {
-  let func = null
-  let retVal = null
-
-  if (settings[iframeId]) {
-    func = settings[iframeId][funcName]
-
-    if (typeof func === FUNCTION)
-      if (funcName === 'onBeforeClose' || funcName === 'onScroll') {
-        try {
-          retVal = func(val)
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(error)
-          warn(iframeId, `Error in ${funcName} callback`)
-        }
-      } else isolateUserCode(func, val)
-    else
-      throw new TypeError(
-        `${funcName} on iFrame[${iframeId}] is not a function`,
-      )
-  }
-
-  return retVal
 }
 
 function removeIframeListeners(iframe) {
