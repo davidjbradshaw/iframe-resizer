@@ -74,7 +74,11 @@ import checkEvent from './event'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
 // import onMouse from './mouse'
-// import { getPagePosition } from './page-position'
+import {
+  getPagePosition,
+  setPagePosition,
+  unsetPagePosition,
+} from './page-position'
 // import decodeMessage from './receive/decode'
 // import { onMessage } from './receive/message'
 // import {
@@ -628,40 +632,40 @@ function closeIframe(iframe) {
   removeIframeListeners(iframe)
 }
 
-function getPagePosition(iframeId) {
-  if (page.position !== null) return
+// function getPagePosition(iframeId) {
+//   if (page.position !== null) return
 
-  page.position = {
-    x: window.scrollX,
-    y: window.scrollY,
-  }
+//   page.position = {
+//     x: window.scrollX,
+//     y: window.scrollY,
+//   }
 
-  log(
-    iframeId,
-    `Get page position: %c${page.position.x}%c, %c${page.position.y}`,
-    HIGHLIGHT,
-    FOREGROUND,
-    HIGHLIGHT,
-  )
-}
+//   log(
+//     iframeId,
+//     `Get page position: %c${page.position.x}%c, %c${page.position.y}`,
+//     HIGHLIGHT,
+//     FOREGROUND,
+//     HIGHLIGHT,
+//   )
+// }
 
-function unsetPagePosition() {
-  page.position = null
-}
+// function unsetPagePosition() {
+//   page.position = null
+// }
 
-function setPagePosition(iframeId) {
-  if (page.position === null) return
+// function setPagePosition(iframeId) {
+//   if (page.position === null) return
 
-  window.scrollTo(page.position.x, page.position.y)
-  info(
-    iframeId,
-    `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
-    HIGHLIGHT,
-    FOREGROUND,
-    HIGHLIGHT,
-  )
-  unsetPagePosition()
-}
+//   window.scrollTo(page.position.x, page.position.y)
+//   info(
+//     iframeId,
+//     `Set page position: %c${page.position.x}%c, %c${page.position.y}`,
+//     HIGHLIGHT,
+//     FOREGROUND,
+//     HIGHLIGHT,
+//   )
+//   unsetPagePosition()
+// }
 
 function resetIframe(messageData) {
   log(
