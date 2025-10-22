@@ -1,7 +1,7 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { info } from './console'
-import settings from './values/settings'
+import { info } from '../console'
+import settings from '../values/settings'
 
 export function checkTitle(id) {
   const title = settings[id]?.iframe?.title
