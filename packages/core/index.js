@@ -74,7 +74,36 @@ import {
   vInfo,
   warn,
 } from './console'
-import warnOnNoResponse from './timeout'
+// import checkEvent from './event'
+// import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor-page-info'
+// import {
+//   startParentInfoMonitor,
+//   stopParentInfoMonitor,
+// } from './monitor-parent-props'
+// import onMouse from './mouse'
+// import { getPagePosition } from './page-position'
+// import decodeMessage from './receive/decode'
+// import { onMessage } from './receive/message'
+// import {
+//   checkIframeExists,
+//   isMessageForUs,
+//   isMessageFromIframe,
+//   isMessageFromMetaParent,
+// } from './receive/preflight'
+// import {
+//   getElementPosition,
+//   scrollBy,
+//   scrollTo,
+//   scrollToLink,
+//   scrollToOffset,
+// } from './scroll'
+// import { setOffsetSize } from './send/offset'
+// import createOutgoingMessage from './send/outgoing'
+// import iframeReady from './send/ready'
+import warnOnNoResponse from './send/timeout'
+// import trigger from './send/trigger'
+// import { resizeIframe, setSize } from './size'
+import { checkTitle, setTitle } from './title'
 import checkUniqueId from './unique'
 import defaults from './values/defaults'
 import page from './values/page'
@@ -562,12 +591,6 @@ See <u>https://iframe-resizer.com/setup/#child-page-setup</> for more details.
       FOREGROUND,
       HIGHLIGHT,
     )
-  }
-
-  function setTitle(title, iframeId) {
-    if (!settings[iframeId]?.syncTitle) return
-    settings[iframeId].iframe.title = title
-    info(iframeId, `Set iframe title attribute: %c${title}`, HIGHLIGHT)
   }
 
   function eventMsg() {
@@ -1227,11 +1250,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     if (vAdvised) return
     const { mode } = settings[iframeId]
     if (mode !== -1) checkMode(iframeId, mode)
-  }
-
-  function checkTitle(iframeId) {
-    const title = settings[iframeId]?.iframe?.title
-    return title === '' || title === undefined
   }
 
   function updateOptionName(oldName, newName) {
