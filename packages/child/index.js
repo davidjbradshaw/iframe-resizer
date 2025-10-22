@@ -26,22 +26,28 @@ function iframeResizerChild() {
     return state.win
   }
 
+  // Provide stable hooks for Karma/RequireJS environments
   try {
     // eslint-disable-next-line no-restricted-globals
     if (top?.document?.getElementById('banner')) {
       state.win = {}
+    }
 
-      // Create test hooks
-      window.mockMsgListener = mockMsgListener
+    // Use a stubbed window for tests
+    // win = {}
+    // window.mockMsgListener = mockMsgListener
 
-      removeEventListener(window, MESSAGE, received)
+    // Detach real message listener to avoid side-effects during tests
+    removeEventListener(window, MESSAGE, received)
 
+    // Register AMD module if RequireJS is present
+    if (typeof define === 'function' && define.amd) {
+      // Keep it anonymous so it maps to the requested path
       define([], () => mockMsgListener)
     }
   } catch (error) {
     // do nothing
   }
-
   /* TEST CODE END */
 }
 
