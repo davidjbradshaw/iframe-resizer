@@ -8,7 +8,6 @@ import {
   BOTH,
   CHILD_READY_MESSAGE,
   CLOSE,
-  COLLAPSE,
   EXPAND,
   HIDDEN,
   HORIZONTAL,
@@ -50,6 +49,8 @@ import {
 import { addEventListener } from '../common/listeners'
 import setMode from '../common/mode'
 import { hasOwn, once, typeAssert } from '../common/utils'
+import ensureHasId from './checks/id'
+import checkManualLogging from './checks/manual-logging'
 import checkMode, { enableVInfo, preModeCheck } from './checks/mode'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
@@ -338,34 +339,7 @@ function resetIframe(messageData) {
   trigger(RESET, RESET, messageData.id)
 }
 
-let count = 0
-
 export default (options) => (iframe) => {
-  function newId() {
-    let id = options?.id || defaults.id + count++
-
-    if (document.getElementById(id) !== null) {
-      id += count++
-    }
-
-    return id
-  }
-
-  function ensureHasId(iframeId) {
-    if (iframeId && typeof iframeId !== STRING) {
-      throw new TypeError('Invalid id for iFrame. Expected String')
-    }
-
-    if (iframeId === '' || !iframeId) {
-      iframeId = newId()
-      iframe.id = iframeId
-      consoleEvent(iframeId, 'assignId')
-      log(iframeId, `Added missing iframe ID: ${iframeId} (${iframe.src})`)
-    }
-
-    return iframeId
-  }
-
   function setScrolling() {
     log(
       iframeId,
@@ -640,15 +614,6 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     endAutoGroup(iframeId)
   }
 
-  function checkLocationSearch(options) {
-    const { search } = window.location
-
-    if (search.includes('ifrlog')) {
-      options.log = COLLAPSE
-      options.logExpand = search.includes('ifrlog=expanded')
-    }
-  }
-
   function startLogging(iframeId, options) {
     const isLogEnabled = hasOwn(options, 'log')
     const isLogString = typeof options.log === STRING
@@ -683,13 +648,13 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
 
   const beenHere = () => LABEL in iframe
 
-  const iframeId = ensureHasId(iframe.id)
+  const iframeId = ensureHasId(iframe, options)
 
   if (typeof options !== OBJECT) {
     throw new TypeError('Options is not an object')
   }
 
-  checkLocationSearch(options)
+  checkManualLogging(options)
   startLogging(iframeId, options)
   errorBoundary(iframeId, setupIframe)(options)
 
