@@ -1,4 +1,5 @@
-import { LABEL, OBJECT } from '../common/consts'
+import { LABEL } from '../common/consts'
+import { isObject } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
 import { errorBoundary, warn } from './console'
@@ -6,19 +7,22 @@ import setupEventListenersOnce from './listeners'
 import setupIframe from './setup'
 import startLogging from './setup/logging'
 
-export default (options) => (iframe) => {
-  const id = ensureHasId(iframe, options)
+export default function connectResizer(options) {
+  if (!isObject(options)) throw new TypeError('Options is not an object')
 
-  if (typeof options !== OBJECT) {
-    throw new TypeError('Options is not an object')
-  }
-
-  if (LABEL in iframe) return warn(id, `Ignored iframe (${id}), already setup.`)
-
-  checkManualLogging(options)
-  startLogging(id, options)
   setupEventListenersOnce()
-  errorBoundary(id, setupIframe)(iframe, options)
+  checkManualLogging(options)
 
-  return iframe?.iframeResizer
+  return (iframe) => {
+    const id = ensureHasId(iframe, options)
+
+    if (LABEL in iframe) {
+      warn(id, `Ignored iframe (${id}), already setup.`)
+    } else {
+      startLogging(id, options)
+      errorBoundary(id, setupIframe)(iframe, options)
+    }
+
+    return iframe?.iframeResizer
+  }
 }
