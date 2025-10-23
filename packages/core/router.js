@@ -24,7 +24,7 @@ import checkVersion from './checks/version'
 import { info, log, warn } from './console'
 import onMessage from './events/message'
 import onMouse from './events/mouse'
-import { resizeIframe } from './events/size'
+import resizeIframe from './events/resize'
 import on from './events/wrapper'
 import closeIframe from './methods/close'
 import resetIframe from './methods/reset'
@@ -38,7 +38,7 @@ import firstRun from './setup/first-run'
 import settings from './values/settings'
 
 export default function routeMessage(messageData) {
-  const { height, id, iframe, mode, msg, type, width } = messageData
+  const { height, id, iframe, mode, message, type, width } = messageData
   const { lastMessage } = settings[id]
 
   if (settings[id]?.firstRun) firstRun(id, mode)
@@ -65,7 +65,7 @@ export default function routeMessage(messageData) {
     case INIT:
       resizeIframe(messageData)
       checkSameDomain(id)
-      checkVersion(id, msg)
+      checkVersion(id, message)
       settings[id].initialised = true
       on(id, 'onReady', iframe)
       break
@@ -115,7 +115,7 @@ export default function routeMessage(messageData) {
       break
 
     case TITLE:
-      setTitle(msg, id)
+      setTitle(message, id)
       break
 
     default:

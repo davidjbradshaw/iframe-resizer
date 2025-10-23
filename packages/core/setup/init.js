@@ -1,5 +1,4 @@
 import {
-  AFTER_EVENT_STACK,
   INIT,
   INIT_FROM_IFRAME,
   LAZY,
@@ -14,6 +13,10 @@ import resetIframe from '../methods/reset'
 import warnOnNoResponse from '../send/timeout'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
+
+const AFTER_EVENT_STACK = 1
+const isLazy = (iframe) => iframe.loading === LAZY
+const isInit = (eventType) => eventType === INIT
 
 function checkReset(id) {
   if (!(settings[id]?.heightCalculationMethod in RESET_REQUIRED_METHODS)) return
@@ -38,9 +41,6 @@ const noContent = (iframe) => {
   const { src, srcdoc } = iframe
   return !srcdoc && (src == null || src === '' || src === 'about:blank')
 }
-
-const isLazy = (iframe) => iframe.loading === LAZY
-const isInit = (eventType) => eventType === INIT
 
 function sendInit(id, initChild) {
   const { iframe, waitForLoad } = settings[id]

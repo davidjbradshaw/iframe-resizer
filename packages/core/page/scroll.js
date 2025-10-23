@@ -12,12 +12,12 @@ import {
 } from './position'
 
 export function getElementPosition(target) {
-  const iFramePosition = target.getBoundingClientRect()
+  const iframePosition = target.getBoundingClientRect()
   const pagePosition = getPagePosition(target.id)
 
   return {
-    x: Number(iFramePosition.left) + Number(pagePosition.x),
-    y: Number(iFramePosition.top) + Number(pagePosition.y),
+    x: Number(iframePosition.left) + Number(pagePosition.x),
+    y: Number(iframePosition.top) + Number(pagePosition.y),
   }
 }
 

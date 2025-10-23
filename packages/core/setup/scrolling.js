@@ -31,6 +31,6 @@ export default function setScrolling(iframe) {
       break
 
     default:
-      iframe.scrolling = settings[id] ? settings[id].scrolling : NO
+      iframe.scrolling = settings[id]?.scrolling || NO
   }
 }

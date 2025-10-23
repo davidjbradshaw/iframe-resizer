@@ -16,6 +16,7 @@ function dispatch(calleeMsg, msg, id) {
     info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
     info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
   }
+
   const { iframe, postMessageTarget, sameOrigin, targetOrigin } = settings[id]
 
   if (sameOrigin) {

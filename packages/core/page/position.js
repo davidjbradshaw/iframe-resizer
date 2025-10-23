@@ -14,12 +14,11 @@ export function setStoredPagePosition(position) {
 }
 
 export function getPagePosition(id) {
-  if (page.position !== null) return page.position
-
-  page.position = {
-    x: window.scrollX,
-    y: window.scrollY,
-  }
+  if (page.position === null)
+    page.position = {
+      x: window.scrollX,
+      y: window.scrollY,
+    }
 
   log(
     id,

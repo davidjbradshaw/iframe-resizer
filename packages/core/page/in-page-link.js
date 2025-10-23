@@ -4,41 +4,38 @@ import { info, log } from '../console'
 import page from '../values/page'
 import { getElementPosition, scrollToLink } from './scroll'
 
-export default function inPageLink(id, location) {
-  function jumpToTarget() {
-    const jumpPosition = getElementPosition(target)
+function jumpToTarget(id, hash, target) {
+  const { x, y } = getElementPosition(target)
 
-    info(id, `Moving to in page link: %c#${hash}`, HIGHLIGHT)
+  info(id, `Moving to in page link: %c#${hash}`, HIGHLIGHT)
 
-    page.position = {
-      x: jumpPosition.x,
-      y: jumpPosition.y,
-    }
+  page.position = { x, y }
 
-    scrollToLink(id)
-    window.location.hash = hash
-  }
+  scrollToLink(id)
+  window.location.hash = hash
+}
 
-  function jumpToParent() {
-    // Check for V4 as well
-    const target = window.parentIframe || window.parentIFrame
+function jumpToParent(id, hash) {
+  // Check for V4 as well
+  const target = window.parentIframe || window.parentIFrame
 
-    if (target) {
-      target.moveToAnchor(hash)
-      return
-    }
-
+  if (!target) {
     log(id, `In page link #${hash} not found`)
+    return
   }
 
+  target.moveToAnchor(hash)
+}
+
+export default function inPageLink(id, location) {
   const hash = location.split('#')[1] || ''
   const hashData = decodeURIComponent(hash)
 
-  let target =
+  const target =
     document.getElementById(hashData) || document.getElementsByName(hashData)[0]
 
   if (target) {
-    jumpToTarget()
+    jumpToTarget(id, hash, target)
     return
   }
 
@@ -47,5 +44,5 @@ export default function inPageLink(id, location) {
     return
   }
 
-  jumpToParent()
+  jumpToParent(id, hash)
 }

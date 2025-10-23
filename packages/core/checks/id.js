@@ -5,13 +5,8 @@ import defaults from '../values/defaults'
 let count = 0
 
 function newId(options) {
-  let id = options?.id || defaults.id + count++
-
-  if (document.getElementById(id) !== null) {
-    id += count++
-  }
-
-  return id
+  const id = options?.id || defaults.id + count++
+  return document.getElementById(id) === null ? id : `${id}${count++}`
 }
 
 export default function ensureHasId(iframe, options) {
