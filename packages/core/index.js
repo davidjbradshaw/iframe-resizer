@@ -1,7 +1,6 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
 import {
-  AFTER_EVENT_STACK,
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
@@ -10,20 +9,15 @@ import {
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
-  INIT_FROM_IFRAME,
   LABEL,
-  LAZY,
-  LOAD,
   MESSAGE,
   MESSAGE_HEADER_LENGTH,
-  MIN_SIZE,
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
   OBJECT,
   OFFSET,
   OFFSET_SIZE,
-  ONLOAD,
   PAGE_INFO,
   PAGE_INFO_STOP,
   PARENT,
@@ -31,7 +25,6 @@ import {
   PARENT_INFO_STOP,
   REMOVED_NEXT_VERSION,
   RESET,
-  RESET_REQUIRED_METHODS,
   RESIZE,
   SCROLL_BY,
   SCROLL_TO,
@@ -84,10 +77,10 @@ import {
 import { setOffsetSize } from './send/offset'
 import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
-import warnOnNoResponse from './send/timeout'
 import trigger from './send/trigger'
 import setupBodyMargin from './setup/body-margin'
 import firstRun from './setup/first-run'
+import init from './setup/init'
 import startLogging from './setup/logging'
 import setScrolling from './setup/scrolling'
 import defaults from './values/defaults'
@@ -237,64 +230,6 @@ function iframeListener(event) {
 }
 
 export default (options) => (iframe) => {
-  function checkReset(id) {
-    if (!(settings[id]?.heightCalculationMethod in RESET_REQUIRED_METHODS))
-      return
-
-    resetIframe({ iframe, height: MIN_SIZE, width: MIN_SIZE, type: INIT })
-  }
-
-  function addLoadListener(iframe, initChild) {
-    // allow other concurrent events to go first
-    const onload = () => setTimeout(initChild, AFTER_EVENT_STACK)
-    addEventListener(iframe, LOAD, onload)
-  }
-
-  const noContent = (iframe) => {
-    const { src, srcdoc } = iframe
-    return !srcdoc && (src == null || src === '' || src === 'about:blank')
-  }
-
-  const isLazy = (iframe) => iframe.loading === LAZY
-  const isInit = (eventType) => eventType === INIT
-
-  function sendInit(id, initChild) {
-    const { iframe, waitForLoad } = settings[id]
-
-    if (waitForLoad === true) return
-    if (noContent(iframe)) {
-      setTimeout(() => {
-        consoleEvent(id, 'noContent')
-        info(id, 'No content detected in the iframe, delaying initialisation')
-      })
-      return
-    }
-
-    setTimeout(initChild)
-  }
-
-  // We have to call trigger twice, as we can not be sure if all
-  // iframes have completed loading when this code runs. The
-  // event listener also catches the page changing in the iFrame.
-  function init(id, message) {
-    const createInitChild = (eventType) => () => {
-      if (!settings[id]) return // iframe removed before load event
-
-      const { firstRun, iframe } = settings[id]
-
-      trigger(eventType, message, id)
-      if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
-
-      if (!firstRun) checkReset(id)
-    }
-
-    const { iframe } = settings[id]
-
-    settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
-    addLoadListener(iframe, createInitChild(ONLOAD))
-    sendInit(id, createInitChild(INIT))
-  }
-
   function setDirection() {
     const { direction } = settings[iframeId]
 
