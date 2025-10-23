@@ -48,7 +48,7 @@ import {
 } from '../common/consts'
 import { addEventListener } from '../common/listeners'
 import setMode from '../common/mode'
-import { hasOwn, once, typeAssert } from '../common/utils'
+import { hasOwn, once } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
 import { enableVInfo, preModeCheck } from './checks/mode'
@@ -70,11 +70,13 @@ import {
 } from './console'
 import on from './event'
 import onMouse from './events/mouse'
-import { resizeIframe, setSize } from './events/size'
+import { resizeIframe } from './events/size'
+import attachMethods from './methods/attach'
+import closeIframe from './methods/close'
+import resetIframe from './methods/reset'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
 import inPageLink from './page/in-page-link'
-import { getPagePosition } from './page/position'
 import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { checkTitle, setTitle } from './page/title'
 import checkUniqueId from './page/unique'
@@ -204,7 +206,7 @@ function iframeListener(event) {
     }
   }
 
-  let msg = event.data
+  const msg = event.data
 
   if (msg === CHILD_READY_MESSAGE) {
     iframeReady(event.source)
@@ -236,47 +238,6 @@ function iframeListener(event) {
       settings[id].lastMessage = event.data
       errorBoundary(id, routeMessage)(messageData)
   }
-}
-
-function removeIframeListeners(iframe) {
-  const { id } = iframe
-  log(id, 'Disconnected from iframe')
-  delete settings[id]
-  delete iframe.iframeResizer
-}
-
-function closeIframe(iframe) {
-  const { id } = iframe
-
-  if (on(id, 'onBeforeClose', id) === false) {
-    log(id, 'Close iframe cancelled by onBeforeClose')
-    return
-  }
-
-  log(id, `Removing iFrame: %c${id}`, HIGHLIGHT)
-
-  try {
-    // Catch race condition error with React
-    if (iframe.parentNode) {
-      iframe.remove()
-    }
-  } catch (error) {
-    warn(id, error)
-  }
-
-  on(id, 'onAfterClose', id)
-  removeIframeListeners(iframe)
-}
-
-function resetIframe(messageData) {
-  log(
-    messageData.id,
-    `Size reset requested by ${messageData.type === INIT ? 'parent page' : 'child page'}`,
-  )
-
-  getPagePosition(messageData.id)
-  setSize(messageData)
-  trigger(RESET, RESET, messageData.id)
 }
 
 export default (options) => (iframe) => {
@@ -325,51 +286,6 @@ export default (options) => (iframe) => {
       return
 
     resetIframe({ iframe, height: MIN_SIZE, width: MIN_SIZE, type: INIT })
-  }
-
-  function setupIframeObject() {
-    if (settings[iframeId]) {
-      const { iframe } = settings[iframeId]
-      const resizer = {
-        close: closeIframe.bind(null, iframe),
-
-        disconnect: removeIframeListeners.bind(null, iframe),
-
-        removeListeners() {
-          advise(
-            iframeId,
-            `<rb>Deprecated Method Name</>
-
-The <b>removeListeners()</> method has been renamed to <b>disconnect()</>. ${REMOVED_NEXT_VERSION}
-`,
-          )
-          this.disconnect()
-        },
-
-        resize() {
-          advise(
-            iframeId,
-            `<rb>Deprecated Method</>
-
-Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As their are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`,
-          )
-          trigger.bind(null, 'Window resize', RESIZE, iframeId)
-        },
-
-        moveToAnchor(anchor) {
-          typeAssert(anchor, STRING, 'moveToAnchor(anchor) anchor')
-          trigger('Move to anchor', `moveToAnchor:${anchor}`, iframeId)
-        },
-
-        sendMessage(message) {
-          message = JSON.stringify(message)
-          trigger(MESSAGE, `${MESSAGE}:${message}`, iframeId)
-        },
-      }
-
-      iframe.iframeResizer = resizer
-      iframe.iFrameResizer = resizer
-    }
   }
 
   function addLoadListener(iframe, initChild) {
@@ -523,7 +439,7 @@ Use of the <b>resize()</> method from the parent page is deprecated and will be 
     setScrolling()
     setupBodyMarginValues()
     init(iframeId, createOutgoingMessage(iframeId))
-    setupIframeObject()
+    attachMethods(iframeId)
     log(iframeId, 'Setup complete')
     endAutoGroup(iframeId)
   }
