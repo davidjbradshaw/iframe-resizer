@@ -24,13 +24,13 @@ import {
 } from './console'
 import attachMethods from './methods/attach'
 import checkUniqueId from './page/unique'
-import decodeMessage from './receive/decode'
+import decodeMessage from './received/decode'
 import {
   checkIframeExists,
   isMessageForUs,
   isMessageFromIframe,
   isMessageFromMetaParent,
-} from './receive/preflight'
+} from './received/preflight'
 import routeMessage from './router'
 import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'

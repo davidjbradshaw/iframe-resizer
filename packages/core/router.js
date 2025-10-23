@@ -32,7 +32,7 @@ import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
 import inPageLink from './page/in-page-link'
 import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
-import { getMessageBody, onMessage } from './receive/message'
+import { getMessageBody, onMessage } from './received/message'
 import firstRun from './setup/first-run'
 import settings from './values/settings'
 
