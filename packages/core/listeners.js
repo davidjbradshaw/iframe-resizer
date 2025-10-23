@@ -1,13 +1,8 @@
-import {
-  CHILD_READY_MESSAGE,
-  MESSAGE,
-  PARENT,
-  RESIZE,
-  STRING,
-} from '../common/consts'
+import { CHILD_READY_MESSAGE, MESSAGE, PARENT, STRING } from '../common/consts'
 import { addEventListener } from '../common/listeners'
 import { once } from '../common/utils'
 import { debug, errorBoundary, event as consoleEvent } from './console'
+import tabVisible from './events/visible'
 import decodeMessage from './received/decode'
 import {
   checkIframeExists,
@@ -17,7 +12,6 @@ import {
 } from './received/preflight'
 import routeMessage from './router'
 import iframeReady from './send/ready'
-import trigger from './send/trigger'
 import settings from './values/settings'
 
 function iframeListener(event) {
@@ -53,16 +47,6 @@ function iframeListener(event) {
       settings[id].lastMessage = event.data
       errorBoundary(id, routeMessage)(messageData)
   }
-}
-
-const sendTriggerMsg = (eventName, event) =>
-  Object.values(settings)
-    .filter(({ autoResize, firstRun }) => autoResize && !firstRun)
-    .forEach(({ iframe }) => trigger(eventName, event, iframe.id))
-
-function tabVisible() {
-  if (document.hidden === true) return
-  sendTriggerMsg('tabVisible', RESIZE)
 }
 
 export default once(() => {
