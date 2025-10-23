@@ -2,14 +2,12 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import {
   AFTER_EVENT_STACK,
-  AUTO,
   AUTO_RESIZE,
   BEFORE_UNLOAD,
   BOTH,
   CHILD_READY_MESSAGE,
   CLOSE,
   EXPAND,
-  HIDDEN,
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
@@ -24,7 +22,6 @@ import {
   MOUSE_ENTER,
   MOUSE_LEAVE,
   NONE,
-  NUMBER,
   OBJECT,
   OFFSET,
   OFFSET_SIZE,
@@ -93,7 +90,9 @@ import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
 import warnOnNoResponse from './send/timeout'
 import trigger from './send/trigger'
+import setupBodyMargin from './setup/body-margin'
 import firstRun from './setup/first-run'
+import setScrolling from './setup/scrolling'
 import defaults from './values/defaults'
 import settings from './values/settings'
 
@@ -241,48 +240,8 @@ function iframeListener(event) {
 }
 
 export default (options) => (iframe) => {
-  function setScrolling() {
-    log(
-      iframeId,
-      `Iframe scrolling ${
-        settings[iframeId]?.scrolling ? 'enabled' : 'disabled'
-      } for ${iframeId}`,
-    )
-
-    iframe.style.overflow =
-      settings[iframeId]?.scrolling === false ? HIDDEN : AUTO
-
-    switch (settings[iframeId]?.scrolling) {
-      case 'omit':
-        break
-
-      case true:
-        iframe.scrolling = 'yes'
-        break
-
-      case false:
-        iframe.scrolling = 'no'
-        break
-
-      default:
-        iframe.scrolling = settings[iframeId]
-          ? settings[iframeId].scrolling
-          : 'no'
-    }
-  }
-
-  function setupBodyMarginValues() {
-    const { bodyMargin } = settings[iframeId]
-
-    if (typeof bodyMargin === NUMBER || bodyMargin === '0') {
-      settings[iframeId].bodyMargin = `${bodyMargin}px`
-    }
-  }
-
-  function checkReset() {
-    if (
-      !(settings[iframeId]?.heightCalculationMethod in RESET_REQUIRED_METHODS)
-    )
+  function checkReset(id) {
+    if (!(settings[id]?.heightCalculationMethod in RESET_REQUIRED_METHODS))
       return
 
     resetIframe({ iframe, height: MIN_SIZE, width: MIN_SIZE, type: INIT })
@@ -329,7 +288,7 @@ export default (options) => (iframe) => {
       trigger(eventType, message, id)
       if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
-      if (!firstRun) checkReset()
+      if (!firstRun) checkReset(id)
     }
 
     const { iframe } = settings[id]
@@ -426,7 +385,7 @@ export default (options) => (iframe) => {
   }
 
   function setupIframe(options) {
-    if (beenHere()) {
+    if (LABEL in iframe) {
       warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
       return
     }
@@ -435,9 +394,8 @@ export default (options) => (iframe) => {
     checkUniqueId(iframeId)
     log(iframeId, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
     preModeCheck(iframeId)
-    setupEventListenersOnce()
-    setScrolling()
-    setupBodyMarginValues()
+    setScrolling(iframe)
+    setupBodyMargin(iframeId)
     init(iframeId, createOutgoingMessage(iframeId))
     attachMethods(iframeId)
     log(iframeId, 'Setup complete')
@@ -476,8 +434,6 @@ export default (options) => (iframe) => {
     options.log = enabled
   }
 
-  const beenHere = () => LABEL in iframe
-
   const iframeId = ensureHasId(iframe, options)
 
   if (typeof options !== OBJECT) {
@@ -486,6 +442,7 @@ export default (options) => (iframe) => {
 
   checkManualLogging(options)
   startLogging(iframeId, options)
+  setupEventListenersOnce()
   errorBoundary(iframeId, setupIframe)(options)
 
   return iframe?.iframeResizer
