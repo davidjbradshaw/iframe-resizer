@@ -7,7 +7,6 @@ import {
   BOTH,
   CHILD_READY_MESSAGE,
   CLOSE,
-  EXPAND,
   HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
@@ -15,7 +14,6 @@ import {
   LABEL,
   LAZY,
   LOAD,
-  LOG_OPTIONS,
   MESSAGE,
   MESSAGE_HEADER_LENGTH,
   MIN_SIZE,
@@ -48,7 +46,7 @@ import setMode from '../common/mode'
 import { hasOwn, once } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
-import { enableVInfo, preModeCheck } from './checks/mode'
+import { preModeCheck } from './checks/mode'
 import checkOptions from './checks/options'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
@@ -57,12 +55,10 @@ import {
   advise,
   debug,
   endAutoGroup,
-  error,
   errorBoundary,
   event as consoleEvent,
   info,
   log,
-  setupConsole,
   warn,
 } from './console'
 import on from './event'
@@ -92,6 +88,7 @@ import warnOnNoResponse from './send/timeout'
 import trigger from './send/trigger'
 import setupBodyMargin from './setup/body-margin'
 import firstRun from './setup/first-run'
+import startLogging from './setup/logging'
 import setScrolling from './setup/scrolling'
 import defaults from './values/defaults'
 import settings from './values/settings'
@@ -360,78 +357,43 @@ export default (options) => (iframe) => {
         : '*'
   }
 
-  function processOptions(options) {
-    settings[iframeId] = {
-      ...settings[iframeId],
+  function processOptions(id, options) {
+    settings[id] = {
+      ...settings[id],
       iframe,
       remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
       ...defaults,
-      ...checkOptions(iframeId, options),
+      ...checkOptions(id, options),
       mouseEvents: hasMouseEvents(options),
       mode: setMode(options),
-      syncTitle: checkTitle(iframeId),
+      syncTitle: checkTitle(id),
     }
 
     updateOptionName(OFFSET, OFFSET_SIZE)
     updateOptionName('onClose', 'onBeforeClose')
     updateOptionName('onClosed', 'onAfterClose')
 
-    consoleEvent(iframeId, 'setup')
+    consoleEvent(id, 'setup')
     setDirection()
-    setOffsetSize(iframeId, options)
-    checkWarningTimeout(iframeId)
+    setOffsetSize(id, options)
+    checkWarningTimeout(id)
     getPostMessageTarget()
     setTargetOrigin()
   }
 
-  function setupIframe(options) {
-    if (LABEL in iframe) {
-      warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
-      return
-    }
+  function setupIframe(iframe, options) {
+    const { id } = iframe
 
-    processOptions(options)
-    checkUniqueId(iframeId)
-    log(iframeId, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
-    preModeCheck(iframeId)
+    processOptions(id, options)
+    checkUniqueId(id)
+    log(id, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
+    preModeCheck(id)
     setScrolling(iframe)
-    setupBodyMargin(iframeId)
-    init(iframeId, createOutgoingMessage(iframeId))
-    attachMethods(iframeId)
-    log(iframeId, 'Setup complete')
-    endAutoGroup(iframeId)
-  }
-
-  function startLogging(iframeId, options) {
-    const isLogEnabled = hasOwn(options, 'log')
-    const isLogString = typeof options.log === STRING
-    const enabled = isLogEnabled
-      ? isLogString
-        ? true
-        : options.log
-      : defaults.log
-
-    if (!hasOwn(options, 'logExpand')) {
-      options.logExpand =
-        isLogEnabled && isLogString
-          ? options.log === EXPAND
-          : defaults.logExpand
-    }
-
-    enableVInfo(options)
-    setupConsole({
-      enabled,
-      expand: options.logExpand,
-      iframeId,
-    })
-
-    if (isLogString && !(options.log in LOG_OPTIONS))
-      error(
-        iframeId,
-        'Invalid value for options.log: Accepted values are "expanded" and "collapsed"',
-      )
-
-    options.log = enabled
+    setupBodyMargin(id)
+    init(id, createOutgoingMessage(id))
+    attachMethods(id)
+    log(id, 'Setup complete')
+    endAutoGroup(id)
   }
 
   const iframeId = ensureHasId(iframe, options)
@@ -440,10 +402,13 @@ export default (options) => (iframe) => {
     throw new TypeError('Options is not an object')
   }
 
+  if (LABEL in iframe)
+    return warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
+
   checkManualLogging(options)
   startLogging(iframeId, options)
   setupEventListenersOnce()
-  errorBoundary(iframeId, setupIframe)(options)
+  errorBoundary(iframeId, setupIframe)(iframe, options)
 
   return iframe?.iframeResizer
 }
