@@ -21,6 +21,18 @@ export function getElementPosition(target) {
   }
 }
 
+export function scrollToLink(id) {
+  const { x, y } = getStoredPagePosition()
+  const iframe = settings[id]?.iframe
+
+  if (on(id, 'onScroll', { iframe, top: y, left: x, x, y }) === false) {
+    unsetPagePosition()
+    return
+  }
+
+  setPagePosition(id)
+}
+
 export function scrollBy(messageData) {
   const { id, height, width } = messageData
 
@@ -42,7 +54,7 @@ const scrollRequestFromChild = (addOffset) => (messageData) => {
   /* istanbul ignore next */ // Not testable in Karma
   function reposition(newPosition) {
     setStoredPagePosition(newPosition)
-    scrollTo(id)
+    scrollToLink(id)
   }
 
   function scrollParent(target, newPosition) {
@@ -73,15 +85,3 @@ const scrollRequestFromChild = (addOffset) => (messageData) => {
 
 export const scrollTo = scrollRequestFromChild(false)
 export const scrollToOffset = scrollRequestFromChild(true)
-
-export function scrollToLink(id) {
-  const { x, y } = getStoredPagePosition()
-  const iframe = settings[id]?.iframe
-
-  if (on(id, 'onScroll', { iframe, top: y, left: x, x, y }) === false) {
-    unsetPagePosition()
-    return
-  }
-
-  setPagePosition(id)
-}

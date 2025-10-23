@@ -68,19 +68,14 @@ import {
   setupConsole,
   warn,
 } from './console'
-import checkEvent from './event'
+import on from './event'
 import onMouse from './events/mouse'
 import { resizeIframe, setSize } from './events/size'
 import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
+import inPageLink from './page/in-page-link'
 import { getPagePosition } from './page/position'
-import {
-  getElementPosition,
-  scrollBy,
-  scrollTo,
-  scrollToLink,
-  scrollToOffset,
-} from './page/scroll'
+import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { checkTitle, setTitle } from './page/title'
 import checkUniqueId from './page/unique'
 import decodeMessage from './receive/decode'
@@ -98,61 +93,11 @@ import warnOnNoResponse from './send/timeout'
 import trigger from './send/trigger'
 import firstRun from './setup/first-run'
 import defaults from './values/defaults'
-import page from './values/page'
 import settings from './values/settings'
 
 function iframeListener(event) {
   const getMessageBody = (offset) =>
     msg.slice(msg.indexOf(SEPARATOR) + MESSAGE_HEADER_LENGTH + offset)
-
-  function findTarget(location) {
-    function jumpToTarget() {
-      const jumpPosition = getElementPosition(target)
-
-      info(iframeId, `Moving to in page link: %c#${hash}`, HIGHLIGHT)
-
-      page.position = {
-        x: jumpPosition.x,
-        y: jumpPosition.y,
-      }
-
-      scrollToLink(iframeId)
-      window.location.hash = hash
-    }
-
-    function jumpToParent() {
-      // Check for V4 as well
-      const target = window.parentIframe || window.parentIFrame
-
-      if (target) {
-        target.moveToAnchor(hash)
-        return
-      }
-
-      log(iframeId, `In page link #${hash} not found`)
-    }
-
-    const hash = location.split('#')[1] || ''
-    const hashData = decodeURIComponent(hash)
-
-    let target =
-      document.getElementById(hashData) ||
-      document.getElementsByName(hashData)[0]
-
-    if (target) {
-      jumpToTarget()
-      return
-    }
-
-    if (window.top === window.self) {
-      log(iframeId, `In page link #${hash} not found`)
-      return
-    }
-
-    jumpToParent()
-  }
-
-  const on = (funcName, val) => checkEvent(iframeId, funcName, val)
 
   function routeMessage({ height, id, iframe, mode, msg, type, width }) {
     const { lastMessage } = settings[id]
@@ -174,7 +119,7 @@ function iframeListener(event) {
         break
 
       case IN_PAGE_LINK:
-        findTarget(getMessageBody(9))
+        inPageLink(id, getMessageBody(9))
         break
 
       case INIT:
@@ -182,7 +127,7 @@ function iframeListener(event) {
         checkSameDomain(id)
         checkVersion(id, msg)
         settings[id].initialised = true
-        on('onReady', iframe)
+        on(id, 'onReady', iframe)
         break
 
       case MESSAGE:
@@ -275,7 +220,6 @@ function iframeListener(event) {
 
   const messageData = decodeMessage(msg)
   const { id, type } = messageData
-  const iframeId = id
 
   consoleEvent(id, type)
 
@@ -304,7 +248,7 @@ function removeIframeListeners(iframe) {
 function closeIframe(iframe) {
   const { id } = iframe
 
-  if (checkEvent(id, 'onBeforeClose', id) === false) {
+  if (on(id, 'onBeforeClose', id) === false) {
     log(id, 'Close iframe cancelled by onBeforeClose')
     return
   }
@@ -320,7 +264,7 @@ function closeIframe(iframe) {
     warn(id, error)
   }
 
-  checkEvent(id, 'onAfterClose', id)
+  on(id, 'onAfterClose', id)
   removeIframeListeners(iframe)
 }
 

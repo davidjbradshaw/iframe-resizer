@@ -39,6 +39,7 @@ export default function decodeMessage(msg) {
     width: Number(data[2]),
     type: data[3],
     msg: data[4],
+    message: data[4],
   }
 
   // eslint-disable-next-line prefer-destructuring
