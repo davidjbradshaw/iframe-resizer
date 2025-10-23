@@ -5,7 +5,7 @@ import checkManualLogging from './checks/manual-logging'
 import { errorBoundary, warn } from './console'
 import setupEventListenersOnce from './listeners'
 import setupIframe from './setup'
-import startLogging from './setup/logging'
+import setupLogging from './setup/logging'
 
 export default function connectResizer(options) {
   if (!isObject(options)) throw new TypeError('Options is not an object')
@@ -19,7 +19,7 @@ export default function connectResizer(options) {
     if (LABEL in iframe) {
       warn(id, `Ignored iframe (${id}), already setup.`)
     } else {
-      startLogging(id, options)
+      setupLogging(id, options)
       errorBoundary(id, setupIframe)(iframe, options)
     }
 
