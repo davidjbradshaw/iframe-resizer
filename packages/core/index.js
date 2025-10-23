@@ -3,10 +3,8 @@ import { HIGHLIGHT } from 'auto-console-group'
 import {
   AUTO_RESIZE,
   BEFORE_UNLOAD,
-  BOTH,
   CHILD_READY_MESSAGE,
   CLOSE,
-  HORIZONTAL,
   IN_PAGE_LINK,
   INIT,
   LABEL,
@@ -14,16 +12,12 @@ import {
   MESSAGE_HEADER_LENGTH,
   MOUSE_ENTER,
   MOUSE_LEAVE,
-  NONE,
   OBJECT,
-  OFFSET,
-  OFFSET_SIZE,
   PAGE_INFO,
   PAGE_INFO_STOP,
   PARENT,
   PARENT_INFO,
   PARENT_INFO_STOP,
-  REMOVED_NEXT_VERSION,
   RESET,
   RESIZE,
   SCROLL_BY,
@@ -32,20 +26,15 @@ import {
   SEPARATOR,
   STRING,
   TITLE,
-  VERTICAL,
 } from '../common/consts'
 import { addEventListener } from '../common/listeners'
-import setMode from '../common/mode'
-import { hasOwn, once } from '../common/utils'
+import { once } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
 import { preModeCheck } from './checks/mode'
-import checkOptions from './checks/options'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
-import checkWarningTimeout from './checks/warning-timeout'
 import {
-  advise,
   debug,
   endAutoGroup,
   errorBoundary,
@@ -64,7 +53,7 @@ import { startPageInfoMonitor, stopPageInfoMonitor } from './monitor/page-info'
 import { startParentInfoMonitor, stopParentInfoMonitor } from './monitor/props'
 import inPageLink from './page/in-page-link'
 import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
-import { checkTitle, setTitle } from './page/title'
+import { setTitle } from './page/title'
 import checkUniqueId from './page/unique'
 import decodeMessage from './receive/decode'
 import { onMessage } from './receive/message'
@@ -74,7 +63,6 @@ import {
   isMessageFromIframe,
   isMessageFromMetaParent,
 } from './receive/preflight'
-import { setOffsetSize } from './send/offset'
 import createOutgoingMessage from './send/outgoing'
 import iframeReady from './send/ready'
 import trigger from './send/trigger'
@@ -82,8 +70,8 @@ import setupBodyMargin from './setup/body-margin'
 import firstRun from './setup/first-run'
 import init from './setup/init'
 import startLogging from './setup/logging'
+import processOptions from './setup/process-options'
 import setScrolling from './setup/scrolling'
-import defaults from './values/defaults'
 import settings from './values/settings'
 
 function iframeListener(event) {
@@ -230,96 +218,10 @@ function iframeListener(event) {
 }
 
 export default (options) => (iframe) => {
-  function setDirection() {
-    const { direction } = settings[iframeId]
-
-    switch (direction) {
-      case VERTICAL:
-        break
-
-      case HORIZONTAL:
-        settings[iframeId].sizeHeight = false
-      // eslint-disable-next-line no-fallthrough
-      case BOTH:
-        settings[iframeId].sizeWidth = true
-        break
-
-      case NONE:
-        settings[iframeId].sizeWidth = false
-        settings[iframeId].sizeHeight = false
-        settings[iframeId].autoResize = false
-        break
-
-      default:
-        throw new TypeError(
-          iframeId,
-          `Direction value of "${direction}" is not valid`,
-        )
-    }
-
-    log(iframeId, `direction: %c${direction}`, HIGHLIGHT)
-  }
-
-  const getTargetOrigin = (remoteHost) =>
-    remoteHost === '' ||
-    remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
-      ? '*'
-      : remoteHost
-
-  function getPostMessageTarget() {
-    if (settings[iframeId].postMessageTarget === null)
-      settings[iframeId].postMessageTarget = iframe.contentWindow
-  }
-
-  function updateOptionName(oldName, newName) {
-    if (hasOwn(settings[iframeId], oldName)) {
-      advise(
-        iframeId,
-        `<rb>Deprecated option</>\n\nThe <b>${oldName}</> option has been renamed to <b>${newName}</>. ${REMOVED_NEXT_VERSION}`,
-      )
-      settings[iframeId][newName] = settings[iframeId][oldName]
-      delete settings[iframeId][oldName]
-    }
-  }
-
-  const hasMouseEvents = (options) =>
-    hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
-
-  function setTargetOrigin() {
-    settings[iframeId].targetOrigin =
-      settings[iframeId].checkOrigin === true
-        ? getTargetOrigin(settings[iframeId].remoteHost)
-        : '*'
-  }
-
-  function processOptions(id, options) {
-    settings[id] = {
-      ...settings[id],
-      iframe,
-      remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
-      ...defaults,
-      ...checkOptions(id, options),
-      mouseEvents: hasMouseEvents(options),
-      mode: setMode(options),
-      syncTitle: checkTitle(id),
-    }
-
-    updateOptionName(OFFSET, OFFSET_SIZE)
-    updateOptionName('onClose', 'onBeforeClose')
-    updateOptionName('onClosed', 'onAfterClose')
-
-    consoleEvent(id, 'setup')
-    setDirection()
-    setOffsetSize(id, options)
-    checkWarningTimeout(id)
-    getPostMessageTarget()
-    setTargetOrigin()
-  }
-
   function setupIframe(iframe, options) {
     const { id } = iframe
 
-    processOptions(id, options)
+    processOptions(iframe, options)
     checkUniqueId(id)
     log(id, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
     preModeCheck(id)
