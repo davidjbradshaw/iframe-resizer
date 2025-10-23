@@ -1,5 +1,5 @@
 import { SEPARATOR } from '../../common/consts'
-import { getMessageBody } from '../received/message'
+import getMessageBody from '../received/message'
 import on from './wrapper'
 
 export default function onMouse(event, messageData) {
