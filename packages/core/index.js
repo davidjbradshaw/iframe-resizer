@@ -2,7 +2,7 @@ import { LABEL } from '../common/consts'
 import { isObject } from '../common/utils'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
-import { errorBoundary, warn } from './console'
+import { errorBoundary, event as consoleEvent, warn } from './console'
 import setupEventListenersOnce from './listeners'
 import setupIframe from './setup'
 import setupLogging from './setup/logging'
@@ -17,6 +17,7 @@ export default function connectResizer(options) {
     const id = ensureHasId(iframe, options)
 
     if (LABEL in iframe) {
+      consoleEvent('alreadySetup')
       warn(id, `Ignored iframe (${id}), already setup.`)
     } else {
       setupLogging(id, options)

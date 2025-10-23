@@ -2,7 +2,6 @@ import setMode from '../../common/mode'
 import { hasOwn } from '../../common/utils'
 import checkOptions from '../checks/options'
 import checkWarningTimeout from '../checks/warning-timeout'
-import { event as consoleEvent } from '../console'
 import { checkTitle } from '../page/title'
 import { setOffsetSize } from '../send/offset'
 import defaults from '../values/defaults'
@@ -27,7 +26,6 @@ export default function processOptions(iframe, options) {
     syncTitle: checkTitle(id),
   }
 
-  consoleEvent(id, 'setup')
   updateOptionNames(id)
   setDirection(id)
   setOffsetSize(id, options)
