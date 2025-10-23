@@ -1,11 +1,16 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { MESSAGE_HEADER_LENGTH } from '../../common/consts'
+import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '../../common/consts'
 import { log } from '../console'
 import on from '../event'
+import settings from '../values/settings'
 
-export const getMessageBody = (message, offset) =>
-  message.slice(message.indexOf(':') + MESSAGE_HEADER_LENGTH + offset)
+export function getMessageBody(id, offset) {
+  const { lastMessage } = settings[id]
+  return lastMessage.slice(
+    lastMessage.indexOf(SEPARATOR) + MESSAGE_HEADER_LENGTH + offset,
+  )
+}
 
 // eslint-disable-next-line import/prefer-default-export
 export function onMessage(messageData, messageBody) {

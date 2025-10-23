@@ -56,7 +56,7 @@ import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import checkUniqueId from './page/unique'
 import decodeMessage from './receive/decode'
-import { onMessage } from './receive/message'
+import { getMessageBody, onMessage } from './receive/message'
 import {
   checkIframeExists,
   isMessageForUs,
@@ -75,9 +75,6 @@ import setScrolling from './setup/scrolling'
 import settings from './values/settings'
 
 function iframeListener(event) {
-  const getMessageBody = (offset) =>
-    msg.slice(msg.indexOf(SEPARATOR) + MESSAGE_HEADER_LENGTH + offset)
-
   function routeMessage({ height, id, iframe, mode, msg, type, width }) {
     const { lastMessage } = settings[id]
     if (settings[id]?.firstRun) firstRun(id, mode)
@@ -85,7 +82,7 @@ function iframeListener(event) {
 
     switch (type) {
       case AUTO_RESIZE:
-        settings[id].autoResize = JSON.parse(getMessageBody(9))
+        settings[id].autoResize = JSON.parse(getMessageBody(id, 9))
         break
 
       case BEFORE_UNLOAD:
@@ -98,7 +95,7 @@ function iframeListener(event) {
         break
 
       case IN_PAGE_LINK:
-        inPageLink(id, getMessageBody(9))
+        inPageLink(id, getMessageBody(id, 9))
         break
 
       case INIT:
@@ -110,7 +107,7 @@ function iframeListener(event) {
         break
 
       case MESSAGE:
-        onMessage(messageData, getMessageBody(6))
+        onMessage(messageData, getMessageBody(id, 6))
         break
 
       case MOUSE_ENTER:
@@ -217,39 +214,6 @@ function iframeListener(event) {
   }
 }
 
-export default (options) => (iframe) => {
-  function setupIframe(iframe, options) {
-    const { id } = iframe
-
-    processOptions(iframe, options)
-    checkUniqueId(id)
-    log(id, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
-    preModeCheck(id)
-    setScrolling(iframe)
-    setupBodyMargin(id)
-    init(id, createOutgoingMessage(id))
-    attachMethods(id)
-    log(id, 'Setup complete')
-    endAutoGroup(id)
-  }
-
-  const iframeId = ensureHasId(iframe, options)
-
-  if (typeof options !== OBJECT) {
-    throw new TypeError('Options is not an object')
-  }
-
-  if (LABEL in iframe)
-    return warn(iframeId, `Ignored iframe (${iframeId}), already setup.`)
-
-  checkManualLogging(options)
-  startLogging(iframeId, options)
-  setupEventListenersOnce()
-  errorBoundary(iframeId, setupIframe)(iframe, options)
-
-  return iframe?.iframeResizer
-}
-
 const sendTriggerMsg = (eventName, event) =>
   Object.values(settings)
     .filter(({ autoResize, firstRun }) => autoResize && !firstRun)
@@ -266,3 +230,35 @@ const setupEventListenersOnce = once(() => {
   window.iframeParentListener = (data) =>
     setTimeout(() => iframeListener({ data, sameOrigin: true }))
 })
+
+function setupIframe(iframe, options) {
+  const { id } = iframe
+
+  processOptions(iframe, options)
+  checkUniqueId(id)
+  log(id, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
+  preModeCheck(id)
+  setScrolling(iframe)
+  setupBodyMargin(id)
+  init(id, createOutgoingMessage(id))
+  attachMethods(id)
+  log(id, 'Setup complete')
+  endAutoGroup(id)
+}
+
+export default (options) => (iframe) => {
+  const id = ensureHasId(iframe, options)
+
+  if (typeof options !== OBJECT) {
+    throw new TypeError('Options is not an object')
+  }
+
+  if (LABEL in iframe) return warn(id, `Ignored iframe (${id}), already setup.`)
+
+  checkManualLogging(options)
+  startLogging(id, options)
+  setupEventListenersOnce()
+  errorBoundary(id, setupIframe)(iframe, options)
+
+  return iframe?.iframeResizer
+}

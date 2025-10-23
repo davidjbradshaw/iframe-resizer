@@ -1,15 +1,13 @@
 import { SEPARATOR } from '../../common/consts'
 import on from '../event'
 import { getMessageBody } from '../receive/message'
-import settings from '../values/settings'
 
 export default function onMouse(event, messageData) {
   const { id, iframe, height, type, width } = messageData
-  const { lastMessage } = settings[id]
   let mousePos = {}
 
   if (width === 0 && height === 0) {
-    const coords = getMessageBody(lastMessage, 9).split(SEPARATOR)
+    const coords = getMessageBody(id, 9).split(SEPARATOR)
     mousePos = {
       x: coords[1],
       y: coords[0],
