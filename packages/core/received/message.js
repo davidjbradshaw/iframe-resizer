@@ -2,7 +2,7 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '../../common/consts'
 import { log } from '../console'
-import on from '../event'
+import on from '../events/wrapper'
 import settings from '../values/settings'
 
 export function getMessageBody(id, offset) {
@@ -12,7 +12,6 @@ export function getMessageBody(id, offset) {
   )
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function onMessage(messageData, messageBody) {
   const { id, iframe } = messageData
 

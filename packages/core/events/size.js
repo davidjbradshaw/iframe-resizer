@@ -2,9 +2,9 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import { HEIGHT, WIDTH } from '../../common/consts'
 import { info } from '../console'
-import checkEvent from '../event'
 import { setPagePosition } from '../page/position'
 import settings from '../values/settings'
+import checkEvent from './wrapper'
 
 export function setSize(messageData) {
   function setDimension(dimension) {

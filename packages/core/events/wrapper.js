@@ -1,7 +1,7 @@
-import { FUNCTION } from '../common/consts'
-import { isolateUserCode } from '../common/utils'
-import { warn } from './console'
-import settings from './values/settings'
+import { FUNCTION } from '../../common/consts'
+import { isolateUserCode } from '../../common/utils'
+import { warn } from '../console'
+import settings from '../values/settings'
 
 function on(iframeId, funcName, val) {
   if (!settings[iframeId]) return null

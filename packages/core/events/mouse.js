@@ -1,6 +1,6 @@
 import { SEPARATOR } from '../../common/consts'
-import on from '../event'
 import { getMessageBody } from '../received/message'
+import on from './wrapper'
 
 export default function onMouse(event, messageData) {
   const { id, iframe, height, type, width } = messageData

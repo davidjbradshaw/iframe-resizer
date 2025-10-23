@@ -1,7 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'
-import on from '../event'
+import on from '../events/wrapper'
 import settings from '../values/settings'
 import {
   getPagePosition,

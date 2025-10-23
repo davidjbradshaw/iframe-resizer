@@ -1,7 +1,7 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log, warn } from '../console'
-import on from '../event'
+import on from '../events/wrapper'
 import disconnect from './disconnect'
 
 export default function closeIframe(iframe) {
