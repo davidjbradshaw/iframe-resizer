@@ -110,6 +110,7 @@ import createPerformanceObserver, {
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
 import createVisibilityObserver from './observers/visibility'
+import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import { readFunction, readNumber, readString } from './read'
 
 function iframeResizerChild() {
@@ -413,18 +414,7 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
   }
 
   function checkBoth() {
-    if (calculateWidth === calculateHeight) {
-      bothDirections = true
-    }
-  }
-
-  function chkCSS(attr, value) {
-    if (value.includes('-')) {
-      warn(`Negative CSS value ignored for ${attr}`)
-      value = ''
-    }
-
-    return value
+    bothDirections = calculateWidth === calculateHeight
   }
 
   function setBodyStyle(attr, value) {
@@ -450,23 +440,22 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     applySelector('ignoreSelector', IGNORE_ATTR, ignoreSelector)
   }
 
+  function checkCSS(attr, value) {
+    if (value.includes('-')) {
+      warn(`Negative CSS value ignored for ${attr}`)
+      value = ''
+    }
+
+    return value
+  }
+
   function setMargin() {
     // If called via V1 script, convert bodyMargin from int to str
     if (undefined === bodyMarginStr) {
       bodyMarginStr = `${bodyMargin}px`
     }
 
-    setBodyStyle('margin', chkCSS('margin', bodyMarginStr))
-  }
-
-  function stopInfiniteResizingOfIframe() {
-    const setAutoHeight = (el) =>
-      el.style.setProperty(HEIGHT, AUTO, 'important')
-
-    setAutoHeight(document.documentElement)
-    setAutoHeight(document.body)
-
-    log('Set HTML & body height: %cauto !important', HIGHLIGHT)
+    setBodyStyle('margin', checkCSS('margin', bodyMarginStr))
   }
 
   function manageTriggerEvent(options) {
