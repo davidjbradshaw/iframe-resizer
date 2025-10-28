@@ -1,4 +1,4 @@
-import { FALSE } from '../common/consts'
+import { FALSE } from '../../common/consts'
 import { getBoolean, getNumber } from './from-string'
 
 describe('from-string utility functions', () => {

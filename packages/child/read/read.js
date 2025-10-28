@@ -1,4 +1,4 @@
-import { BOOLEAN, FUNCTION, NUMBER, STRING } from '../common/consts'
+import { BOOLEAN, FUNCTION, NUMBER, STRING } from '../../common/consts'
 
 const read = (type) => (data, key) => {
   if (!(key in data)) return

@@ -72,10 +72,10 @@ import {
   round,
   typeAssert,
 } from '../common/utils'
+import checkBlockingCSS from './check/blocking-css'
 import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
 import checkVersion from './check/version'
-import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
   assert,
@@ -95,12 +95,6 @@ import {
   vInfo,
   warn,
 } from './console'
-import { getBoolean, getNumber } from './from-string'
-import {
-  addEventListener,
-  removeEventListener,
-  tearDownList,
-} from './listeners'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
 import createPerformanceObserver, {
@@ -109,9 +103,17 @@ import createPerformanceObserver, {
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
 import createVisibilityObserver from './observers/visibility'
+import createApplySelectors from './page/apply-selectors'
 import { setBodyStyle, setMargin } from './page/css'
+import {
+  addEventListener,
+  removeEventListener,
+  tearDownList,
+} from './page/listeners'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
-import { readFunction, readNumber, readString } from './read'
+import { getBoolean, getNumber } from './read/from-string'
+import { readFunction, readNumber, readString } from './read/read'
+import settings from './values/settings'
 
 function iframeResizerChild() {
   const customCalcMethods = {
@@ -141,12 +143,12 @@ function iframeResizerChild() {
   const heightCalcModeDefault = AUTO
   const widthCalcModeDefault = SCROLL
 
+  let applySelectors = id
   let autoResize = true
   let bodyBackground = ''
   let bodyMargin = 0
   let bodyMarginStr = ''
   let bodyPadding = ''
-  let bothDirections = false
   let calculateHeight = true
   let calculateWidth = false
   let firstRun = true
@@ -210,18 +212,31 @@ function iframeResizerChild() {
     })
   }
 
+  const checkBoth = ({ calculateWidth, calculateHeight }) =>
+    calculateWidth === calculateHeight
+
+  function map2settings(data) {
+    for (const [key, value] of Object.entries(data)) {
+      settings[key] = value
+    }
+  }
+
   function init(data) {
-    readDataFromParent(data)
+    map2settings(readDataFromParent(data))
 
     setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
     consoleEvent('initReceived')
     log(`Initialising iframe v${VERSION} ${window.location.href}`)
 
-    readDataFromPage()
+    map2settings(readDataFromPage())
+
+    const { bodyBackground, bodyPadding, version } = settings
+    const bothDirections = checkBoth(settings)
+
+    applySelectors = createApplySelectors(settings)
 
     const setup = [
       () => checkVersion(version),
-      checkBoth,
       checkMode,
       checkIgnoredElements,
       checkCrossDomain,
@@ -232,7 +247,7 @@ function iframeResizerChild() {
       checkAndSetupTags,
       bothDirections ? id : checkBlockingCSS,
 
-      () => setMargin({ bodyMarginStr, bodyMargin }),
+      () => setMargin(settings),
       () => setBodyStyle('background', bodyBackground),
       () => setBodyStyle('padding', bodyPadding),
 
@@ -347,6 +362,30 @@ function iframeResizerChild() {
     mode = getNumber(data[21]) ?? mode
     // sizeSelector = data[22] || sizeSelector
     logExpand = getBoolean(data[23]) ?? logExpand
+
+    return {
+      parentId,
+      bodyMargin,
+      calculateWidth,
+      logging,
+      autoResize,
+      bodyMarginStr,
+      heightCalcMode,
+      bodyBackground,
+      bodyPadding,
+      tolerance,
+      inPageLinks,
+      resizeFrom,
+      widthCalcMode,
+      mouseEvents,
+      offsetHeight,
+      offsetWidth,
+      calculateHeight,
+      key,
+      version,
+      mode,
+      logExpand,
+    }
   }
 
   function readDataFromPage() {
@@ -400,37 +439,31 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
       return calcMode
     }
 
-    if (mode === 1) return
+    if (mode === 1) return {}
 
     const data = window.iframeResizer || window.iFrameResizer
 
-    if (typeof data !== OBJECT) return
+    if (typeof data !== OBJECT) return {}
 
     readData(data)
     heightCalcMode = setupCustomCalcMethods(heightCalcMode, HEIGHT)
     widthCalcMode = setupCustomCalcMethods(widthCalcMode, WIDTH)
 
     info(`Set targetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
-  }
 
-  function checkBoth() {
-    bothDirections = calculateWidth === calculateHeight
-  }
-
-  function applySelector(name, attribute, selector) {
-    if (selector === '') return
-
-    log(`${name}: %c${selector}`, HIGHLIGHT)
-
-    for (const el of document.querySelectorAll(selector)) {
-      log(`Applying ${attribute} to:`, el)
-      el.toggleAttribute(attribute, true)
+    return {
+      onBeforeResize,
+      onMessage,
+      onReady,
+      offsetHeight,
+      offsetWidth,
+      key2,
+      ignoreSelector,
+      sizeSelector,
+      targetOriginDefault,
+      heightCalcMode,
+      widthCalcMode,
     }
-  }
-
-  function applySelectors() {
-    applySelector('sizeSelector', SIZE_ATTR, sizeSelector)
-    applySelector('ignoreSelector', IGNORE_ATTR, ignoreSelector)
   }
 
   function manageTriggerEvent(options) {

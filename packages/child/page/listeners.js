@@ -1,6 +1,6 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { log } from './console'
+import { log } from '../console'
 
 export const tearDownList = []
 

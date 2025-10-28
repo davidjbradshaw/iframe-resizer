@@ -1,5 +1,5 @@
-import { AUTO } from '../common/consts'
-import { advise, log } from './console'
+import { AUTO } from '../../common/consts'
+import { advise, log } from '../console'
 
 const nodes = () => [document.documentElement, document.body]
 const properties = ['min-height', 'min-width', 'max-height', 'max-width']
