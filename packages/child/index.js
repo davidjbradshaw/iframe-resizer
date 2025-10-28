@@ -10,7 +10,6 @@ import {
   CHILD_READY_MESSAGE,
   CLOSE,
   ENABLE,
-  FALSE,
   FUNCTION,
   HEIGHT,
   HEIGHT_EDGE,
@@ -74,7 +73,9 @@ import {
   round,
   typeAssert,
 } from '../common/utils'
+import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
+import checkVersion from './check/version'
 import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
@@ -218,7 +219,7 @@ function iframeResizerChild() {
     readDataFromPage()
 
     const setup = [
-      checkVersion,
+      () => checkVersion(version),
       checkBoth,
       checkMode,
       checkIgnoredElements,
@@ -310,44 +311,6 @@ function iframeResizerChild() {
       ignoredElementsCount = ignoredElements.length
     }
     return hasIgnored
-  }
-
-  function checkQuirksMode() {
-    if (document.compatMode !== 'BackCompat') return
-
-    advise(
-      `<rb>Quirks Mode Detected</>
-
-This iframe is running in the browser's legacy <b>Quirks Mode</>, this may cause issues with the correct operation of <i>iframe-resizer</>. It is recommended that you switch to the modern <b>Standards Mode</>.
-
-For more information see <u>https://iframe-resizer.com/quirks-mode</>.
-`,
-    )
-  }
-
-  function checkVersion() {
-    if (!version || version === '' || version === FALSE) {
-      advise(
-        `<rb>Legacy version detected on parent page</>
-
-Detected legacy version of parent page script. It is recommended to update the parent page to use <b>@iframe-resizer/parent</>.
-
-See <u>https://iframe-resizer.com/setup/</> for more details.
-`,
-      )
-      return
-    }
-
-    if (version !== VERSION) {
-      advise(
-        `<b>Version mismatch</>
-
-The parent and child pages are running different versions of <i>iframe resizer</>.
-
-Parent page: ${version} - Child page: ${VERSION}.
-`,
-      )
-    }
   }
 
   function checkCrossDomain() {
