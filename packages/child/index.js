@@ -28,7 +28,6 @@ import {
   MUTATION_OBSERVER,
   NO_CHANGE,
   NONE,
-  NULL,
   NUMBER,
   OBJECT,
   OFFSET,
@@ -110,6 +109,7 @@ import createPerformanceObserver, {
 } from './observers/perf'
 import createResizeObserver from './observers/resize'
 import createVisibilityObserver from './observers/visibility'
+import { setBodyStyle, setMargin } from './page/css'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import { readFunction, readNumber, readString } from './read'
 
@@ -232,7 +232,7 @@ function iframeResizerChild() {
       checkAndSetupTags,
       bothDirections ? id : checkBlockingCSS,
 
-      setMargin,
+      () => setMargin({ bodyMarginStr, bodyMargin }),
       () => setBodyStyle('background', bodyBackground),
       () => setBodyStyle('padding', bodyPadding),
 
@@ -417,13 +417,6 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
     bothDirections = calculateWidth === calculateHeight
   }
 
-  function setBodyStyle(attr, value) {
-    if (undefined === value || value === '' || value === NULL) return
-
-    document.body.style.setProperty(attr, value)
-    info(`Set body ${attr}: %c${value}`, HIGHLIGHT)
-  }
-
   function applySelector(name, attribute, selector) {
     if (selector === '') return
 
@@ -438,24 +431,6 @@ See <u>https://iframe-resizer.com/api/child</> for more details.`,
   function applySelectors() {
     applySelector('sizeSelector', SIZE_ATTR, sizeSelector)
     applySelector('ignoreSelector', IGNORE_ATTR, ignoreSelector)
-  }
-
-  function checkCSS(attr, value) {
-    if (value.includes('-')) {
-      warn(`Negative CSS value ignored for ${attr}`)
-      value = ''
-    }
-
-    return value
-  }
-
-  function setMargin() {
-    // If called via V1 script, convert bodyMargin from int to str
-    if (undefined === bodyMarginStr) {
-      bodyMarginStr = `${bodyMargin}px`
-    }
-
-    setBodyStyle('margin', checkCSS('margin', bodyMarginStr))
   }
 
   function manageTriggerEvent(options) {
