@@ -74,6 +74,7 @@ import {
   round,
   typeAssert,
 } from '../common/utils'
+import checkReadyYet from './check/ready'
 import checkBlockingCSS from './check-blocking-css'
 import {
   advise,
@@ -275,16 +276,6 @@ function iframeResizerChild() {
 
   const setupOnPageHide = () =>
     addEventListener(window, lower(PAGE_HIDE), onPageHide)
-
-  let readyChecked = false
-  function checkReadyYet(readyCallback) {
-    if (document.readyState === 'complete') isolateUserCode(readyCallback)
-    else if (!readyChecked)
-      addEventListener(document, READY_STATE_CHANGE, () =>
-        checkReadyYet(readyCallback),
-      )
-    readyChecked = true
-  }
 
   function checkAndSetupTags() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
