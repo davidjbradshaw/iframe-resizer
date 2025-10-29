@@ -1,7 +1,7 @@
 import { FALSE, VERSION } from '../../common/consts'
 import { advise } from '../console'
 
-export default function checkVersion(version) {
+export default function checkVersion({ version }) {
   if (!version || version === '' || version === FALSE) {
     advise(
       `<rb>Legacy version detected on parent page</>

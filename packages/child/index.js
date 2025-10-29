@@ -1,17 +1,16 @@
 import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
 
 import {
-  AUTO,
   AUTO_RESIZE,
   BASE,
   BEFORE_UNLOAD,
   BOOLEAN,
-  CHILD,
   CHILD_READY_MESSAGE,
   CLOSE,
   ENABLE,
   FUNCTION,
   HEIGHT,
+  HEIGHT_CALC_MODE_DEFAULT,
   HEIGHT_EDGE,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
@@ -29,9 +28,6 @@ import {
   NO_CHANGE,
   NONE,
   NUMBER,
-  OBJECT,
-  OFFSET,
-  OFFSET_SIZE,
   OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   PAGE_HIDE,
@@ -42,7 +38,6 @@ import {
   PARENT_RESIZE_REQUEST,
   READY_STATE_CHANGE,
   RESIZE_OBSERVER,
-  SCROLL,
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
@@ -56,9 +51,10 @@ import {
   VERSION,
   VISIBILITY_OBSERVER,
   WIDTH,
+  WIDTH_CALC_MODE_DEFAULT,
   WIDTH_EDGE,
 } from '../common/consts'
-import setMode, { getKey, getModeData, getModeLabel } from '../common/mode'
+import setMode, { getModeData, getModeLabel } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
@@ -82,7 +78,6 @@ import {
   debug,
   deprecateMethod,
   deprecateMethodReplace,
-  deprecateOption,
   endAutoGroup,
   error,
   errorBoundary,
@@ -111,8 +106,8 @@ import {
   tearDownList,
 } from './page/listeners'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
-import { getBoolean, getNumber } from './read/from-string'
-import { readFunction, readNumber, readString } from './read/read'
+import readDataFromPage from './read/from-page'
+import readDataFromParent from './read/from-parent'
 import settings from './values/settings'
 
 function iframeResizerChild() {
@@ -126,7 +121,7 @@ function iframeResizerChild() {
       return getWidth.auto()
     },
   }
-  const deprecatedResizeMethods = {
+  const DEPRECATED_RESIZE_METHODS = {
     bodyOffset: 1,
     bodyScroll: 1,
     offset: 1,
@@ -138,67 +133,53 @@ function iframeResizerChild() {
     grow: 1,
     lowestElement: 1,
   }
-  const eventCancelTimer = 128
+  const EVENT_CANCEL_TIMER = 128
   const eventHandlersByName = {}
-  const heightCalcModeDefault = AUTO
-  const widthCalcModeDefault = SCROLL
 
   let applySelectors = id
-  let autoResize = true
-  let bodyBackground = ''
-  let bodyMargin = 0
-  let bodyMarginStr = ''
-  let bodyPadding = ''
-  let calculateHeight = true
-  let calculateWidth = false
   let firstRun = true
   let hasIgnored = false
   let hasOverflow = false
   let hasOverflowUpdated = true
   let hasTags = false
   let height = 1
-  let heightCalcMode = heightCalcModeDefault // only applies if not provided by host page (V1 compatibility)
-  let ignoreSelector = ''
   let initLock = true
   let inPageLinks = {}
   let isHidden = false
-  let logExpand = false
-  let logging = false
-  let key
-  let key2
-  let mode = 0
-  let mouseEvents = false
-  let offsetHeight = 0
-  let offsetWidth = 0
   let origin
   let overflowedNodeSet = new Set()
   let overflowObserver
-  let parentId = ''
-  let resizeFrom = CHILD
   let resizeObserver
   let sameOrigin = false
-  let sizeSelector = ''
   let taggedElements = []
   let target = window.parent
-  let targetOriginDefault = '*'
   let timerActive
   let totalTime
-  let tolerance = 0
   let triggerLocked = false
-  let version
   let width = 1
-  let widthCalcMode = widthCalcModeDefault
   let win = window
 
-  let onBeforeResize
-  let onMessage = () => {
-    warn('onMessage function not defined')
-  }
-  let onReady = () => {}
   let onPageInfo = null
   let onParentInfo = null
 
+  function setupCustomCalcMethods(calcMode, calcFunc) {
+    if (typeof calcMode === FUNCTION) {
+      advise(
+        `<rb>Deprecated Option(${calcFunc}CalculationMethod)</>
+
+  The use of <b>${calcFunc}CalculationMethod</> as a function is deprecated and will be removed in a future version of <i>iframe-resizer</>. Please use the new <b>onBeforeResize</> event handler instead.
+
+  See <u>https://iframe-resizer.com/api/child</> for more details.`,
+      )
+      customCalcMethods[calcFunc] = calcMode
+      calcMode = 'custom'
+    }
+
+    return calcMode
+  }
+
   function isolate(funcs) {
+    const { mode } = settings
     funcs.forEach((func) => {
       try {
         func()
@@ -217,27 +198,30 @@ function iframeResizerChild() {
 
   function map2settings(data) {
     for (const [key, value] of Object.entries(data)) {
-      settings[key] = value
+      if (value) settings[key] = value
     }
+  }
+
+  function startLogging({ logExpand, logging, parentId }) {
+    setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
+    consoleEvent('initReceived')
+    log(`Initialising iframe v${VERSION} ${window.location.href}`)
   }
 
   function init(data) {
     map2settings(readDataFromParent(data))
+    startLogging(settings)
+    map2settings(readDataFromPage(setupCustomCalcMethods))
+    // debug({ ...settings })
 
-    setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
-    consoleEvent('initReceived')
-    log(`Initialising iframe v${VERSION} ${window.location.href}`)
-
-    map2settings(readDataFromPage())
-
-    const { bodyBackground, bodyPadding, version } = settings
+    const { bodyBackground, bodyPadding, inPageLinks, mode, onReady } = settings
     const bothDirections = checkBoth(settings)
 
     applySelectors = createApplySelectors(settings)
 
     const setup = [
-      () => checkVersion(version),
-      checkMode,
+      () => checkVersion(settings),
+      () => checkMode(settings),
       checkIgnoredElements,
       checkCrossDomain,
       checkHeightMode,
@@ -257,9 +241,9 @@ function iframeResizerChild() {
       applySelectors,
       attachObservers,
 
-      setupInPageLinks,
+      () => setupInPageLinks(inPageLinks),
       setupEventListeners,
-      setupMouseEvents,
+      () => setupMouseEvents(settings),
       setupOnPageHide,
       setupPublicMethods,
     ]
@@ -331,138 +315,10 @@ function iframeResizerChild() {
 
   function checkCrossDomain() {
     try {
-      sameOrigin = mode === 1 || 'iframeParentListener' in window.parent
+      sameOrigin =
+        settings.mode === 1 || 'iframeParentListener' in window.parent
     } catch (error) {
       log('Cross domain iframe detected')
-    }
-  }
-
-  // eslint-disable-next-line sonarjs/cognitive-complexity
-  function readDataFromParent(data) {
-    parentId = data[0] ?? parentId
-    bodyMargin = getNumber(data[1]) ?? bodyMargin // For V1 compatibility
-    calculateWidth = getBoolean(data[2]) ?? calculateWidth
-    logging = getBoolean(data[3]) ?? logging
-    // data[4] no longer used (was intervalTimer)
-    autoResize = getBoolean(data[6]) ?? autoResize
-    bodyMarginStr = data[7] ?? bodyMarginStr
-    heightCalcMode = data[8] ?? heightCalcMode
-    bodyBackground = data[9] ?? bodyBackground
-    bodyPadding = data[10] ?? bodyPadding
-    tolerance = getNumber(data[11]) ?? tolerance
-    inPageLinks.enable = getBoolean(data[12]) ?? false
-    resizeFrom = data[13] ?? resizeFrom
-    widthCalcMode = data[14] ?? widthCalcMode
-    mouseEvents = getBoolean(data[15]) ?? mouseEvents
-    offsetHeight = getNumber(data[16]) ?? offsetHeight
-    offsetWidth = getNumber(data[17]) ?? offsetWidth
-    calculateHeight = getBoolean(data[18]) ?? calculateHeight
-    key = data[19] ?? key
-    version = data[20] ?? version
-    mode = getNumber(data[21]) ?? mode
-    // sizeSelector = data[22] || sizeSelector
-    logExpand = getBoolean(data[23]) ?? logExpand
-
-    return {
-      parentId,
-      bodyMargin,
-      calculateWidth,
-      logging,
-      autoResize,
-      bodyMarginStr,
-      heightCalcMode,
-      bodyBackground,
-      bodyPadding,
-      tolerance,
-      inPageLinks,
-      resizeFrom,
-      widthCalcMode,
-      mouseEvents,
-      offsetHeight,
-      offsetWidth,
-      calculateHeight,
-      key,
-      version,
-      mode,
-      logExpand,
-    }
-  }
-
-  function readDataFromPage() {
-    // eslint-disable-next-line sonarjs/cognitive-complexity
-    function readData(data) {
-      log(`Reading data from page:`, Object.keys(data))
-
-      onBeforeResize = readFunction(data, 'onBeforeResize') ?? onBeforeResize
-      onMessage = readFunction(data, 'onMessage') ?? onMessage
-      onReady = readFunction(data, 'onReady') ?? onReady
-
-      if (typeof data?.offset === NUMBER) {
-        deprecateOption(OFFSET, OFFSET_SIZE)
-        if (calculateHeight)
-          offsetHeight = readNumber(data, OFFSET) ?? offsetHeight
-        if (calculateWidth)
-          offsetWidth = readNumber(data, OFFSET) ?? offsetWidth
-      }
-
-      if (typeof data?.offsetSize === NUMBER) {
-        if (calculateHeight)
-          offsetHeight = readNumber(data, OFFSET_SIZE) ?? offsetHeight
-        if (calculateWidth)
-          offsetWidth = readNumber(data, OFFSET_SIZE) ?? offsetWidth
-      }
-
-      key2 = readString(data, getKey(0)) ?? key2
-      ignoreSelector = readString(data, 'ignoreSelector') ?? ignoreSelector
-      sizeSelector = readString(data, 'sizeSelector') ?? sizeSelector
-      targetOriginDefault =
-        readString(data, 'targetOrigin') ?? targetOriginDefault
-
-      // String or Function
-      heightCalcMode = data?.heightCalculationMethod || heightCalcMode
-      widthCalcMode = data?.widthCalculationMethod || widthCalcMode
-    }
-
-    function setupCustomCalcMethods(calcMode, calcFunc) {
-      if (typeof calcMode === FUNCTION) {
-        advise(
-          `<rb>Deprecated Option(${calcFunc}CalculationMethod)</>
-
-The use of <b>${calcFunc}CalculationMethod</> as a function is deprecated and will be removed in a future version of <i>iframe-resizer</>. Please use the new <b>onBeforeResize</> event handler instead.
-
-See <u>https://iframe-resizer.com/api/child</> for more details.`,
-        )
-        customCalcMethods[calcFunc] = calcMode
-        calcMode = 'custom'
-      }
-
-      return calcMode
-    }
-
-    if (mode === 1) return {}
-
-    const data = window.iframeResizer || window.iFrameResizer
-
-    if (typeof data !== OBJECT) return {}
-
-    readData(data)
-    heightCalcMode = setupCustomCalcMethods(heightCalcMode, HEIGHT)
-    widthCalcMode = setupCustomCalcMethods(widthCalcMode, WIDTH)
-
-    info(`Set targetOrigin for parent: %c${targetOriginDefault}`, HIGHLIGHT)
-
-    return {
-      onBeforeResize,
-      onMessage,
-      onReady,
-      offsetHeight,
-      offsetWidth,
-      key2,
-      ignoreSelector,
-      sizeSelector,
-      targetOriginDefault,
-      heightCalcMode,
-      widthCalcMode,
     }
   }
 
@@ -533,8 +389,8 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
         calcMode = calcModeDefault
       }
 
-      if (calcMode in deprecatedResizeMethods) {
-        const actionMsg = version
+      if (calcMode in DEPRECATED_RESIZE_METHODS) {
+        const actionMsg = settings.version
           ? 'remove this option.'
           : `set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page. This can be done on the child page by adding the following code:
 
@@ -558,22 +414,27 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function checkHeightMode() {
-    heightCalcMode = checkCalcMode(
-      heightCalcMode,
-      heightCalcModeDefault,
+    settings.heightCalcMode = checkCalcMode(
+      settings.heightCalcMode,
+      HEIGHT_CALC_MODE_DEFAULT,
       getHeight,
     )
   }
 
   function checkWidthMode() {
-    widthCalcMode = checkCalcMode(widthCalcMode, widthCalcModeDefault, getWidth)
+    settings.widthCalcMode = checkCalcMode(
+      settings.widthCalcMode,
+      WIDTH_CALC_MODE_DEFAULT,
+      getWidth,
+    )
   }
 
-  function checkMode() {
+  function checkMode({ key, key2, mode, version }) {
     const oMode = mode
     const pMode = setMode({ key })
     const cMode = setMode({ key: key2 })
     mode = Math.max(pMode, cMode)
+    settings.mode = mode
     if (mode < 0) {
       mode = Math.min(pMode, cMode)
       purge()
@@ -589,7 +450,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function setupEventListeners() {
-    if (autoResize !== true) {
+    if (settings.autoResize !== true) {
       log('Auto Resize disabled')
     }
 
@@ -607,7 +468,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     document.body.append(clearFix)
   }
 
-  function setupInPageLinks() {
+  function setupInPageLinks(enabled) {
     const getPagePosition = () => ({
       x: document.documentElement.scrollLeft,
       y: document.documentElement.scrollTop,
@@ -679,7 +540,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
     function initCheck() {
       // Check if page loaded with location hash after init resize
-      setTimeout(checkLocationHash, eventCancelTimer)
+      setTimeout(checkLocationHash, EVENT_CANCEL_TIMER)
     }
 
     function enableInPageLinks() {
@@ -689,9 +550,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       initCheck()
     }
 
-    const { enable } = inPageLinks
+    const { mode } = settings
 
-    if (enable) {
+    if (enabled) {
       if (mode === 1) {
         advise(getModeData(5))
       } else {
@@ -707,7 +568,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     }
   }
 
-  function setupMouseEvents() {
+  function setupMouseEvents({ mouseEvents }) {
     if (mouseEvents !== true) return
 
     function sendMouse(e) {
@@ -724,13 +585,13 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function setupPublicMethods() {
-    if (mode === 1) return
+    if (settings.mode === 1) return
 
     win.parentIframe = Object.freeze({
       autoResize: (enable) => {
         typeAssert(enable, BOOLEAN, 'parentIframe.autoResize(enable) enable')
+        const { autoResize, calculateHeight, calculateWidth } = settings
 
-        // if (calculateWidth === calculateHeight) {
         if (calculateWidth === false && calculateHeight === false) {
           consoleEvent(ENABLE)
           advise(
@@ -740,22 +601,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         }
 
         if (enable === true && autoResize === false) {
-          autoResize = true
+          settings.autoResize = true
           queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled'))
         } else if (enable === false && autoResize === true) {
-          autoResize = false
+          settings.autoResize = false
         }
 
-        sendMessage(0, 0, AUTO_RESIZE, JSON.stringify(autoResize))
+        sendMessage(0, 0, AUTO_RESIZE, JSON.stringify(settings.autoResize))
 
-        return autoResize
+        return settings.autoResize
       },
 
       close() {
         sendMessage(0, 0, CLOSE)
       },
 
-      getId: () => parentId,
+      getId: () => settings.parentId,
 
       getOrigin: () => {
         consoleEvent('getOrigin')
@@ -817,8 +678,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           NUMBER,
           'parentIframe.setOffsetSize(offset) offset',
         )
-        offsetHeight = newOffset
-        offsetWidth = newOffset
+        settings.offsetHeight = newOffset
+        settings.offsetWidth = newOffset
         sendSize(SET_OFFSET_SIZE, `parentIframe.setOffsetSize(${newOffset})`)
       },
 
@@ -851,12 +712,12 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
       },
 
       setHeightCalculationMethod(heightCalculationMethod) {
-        heightCalcMode = heightCalculationMethod
+        settings.heightCalcMode = heightCalculationMethod
         checkHeightMode()
       },
 
       setWidthCalculationMethod(widthCalculationMethod) {
-        widthCalcMode = widthCalculationMethod
+        settings.widthCalcMode = widthCalculationMethod
         checkWidthMode()
       },
 
@@ -868,7 +729,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         )
 
         log(`Set targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
-        targetOriginDefault = targetOrigin
+        settings.targetOrigin = targetOrigin
       },
 
       resize(customHeight, customWidth) {
@@ -972,7 +833,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   function createOverflowObservers(nodeList) {
     const overflowObserverOptions = {
       root: document.documentElement,
-      side: calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
+      side: settings.calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
     }
 
     overflowObserver = createOverflowObserver(
@@ -1079,6 +940,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     performance.mark(PREF_START)
 
     const Side = capitalizeFirstLetter(side)
+    const { logging } = settings
 
     let elVal = MIN_SIZE
     let maxEl = document.documentElement
@@ -1261,8 +1123,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
   const getHeight = {
     label: HEIGHT,
-    enabled: () => calculateHeight,
-    getOffset: () => offsetHeight,
+    enabled: () => settings.calculateHeight,
+    getOffset: () => settings.offsetHeight,
     auto: () => getAutoSize(getHeight),
     bodyOffset: getBodyOffset,
     bodyScroll: () => document.body.scrollHeight,
@@ -1284,8 +1146,8 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
   const getWidth = {
     label: WIDTH,
-    enabled: () => calculateWidth,
-    getOffset: () => offsetWidth,
+    enabled: () => settings.calculateWidth,
+    getOffset: () => settings.offsetWidth,
     auto: () => getAutoSize(getWidth),
     bodyScroll: () => document.body.scrollWidth,
     bodyOffset: () => document.body.offsetWidth,
@@ -1305,10 +1167,10 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     taggedElement: () => getMaxElement(WIDTH_EDGE),
   }
 
-  const checkTolerance = (a, b) => !(Math.abs(a - b) <= tolerance)
+  const checkTolerance = (a, b) => !(Math.abs(a - b) <= settings.tolerance)
 
   function callOnBeforeResize(newSize) {
-    const returnedSize = onBeforeResize(newSize)
+    const returnedSize = settings.onBeforeResize(newSize)
 
     if (returnedSize === undefined) {
       throw new TypeError(
@@ -1333,7 +1195,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   function getNewSize(direction, mode) {
     const calculatedSize = direction[mode]()
     const newSize =
-      direction.enabled() && onBeforeResize !== undefined
+      direction.enabled() && settings.onBeforeResize !== undefined
         ? callOnBeforeResize(calculatedSize)
         : calculatedSize
 
@@ -1352,6 +1214,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     customWidth,
     msg,
   ) {
+    const { calculateHeight, calculateWidth, heightCalcMode, widthCalcMode } =
+      settings
+
     const isSizeChangeDetected = () =>
       (calculateHeight && checkTolerance(height, newHeight)) ||
       (calculateWidth && checkTolerance(width, newWidth))
@@ -1403,6 +1268,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   const sendSize = errorBoundary(
     (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
       consoleEvent(triggerEvent)
+      const { autoResize } = settings
 
       switch (true) {
         case isHidden === true: {
@@ -1470,6 +1336,9 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function triggerReset(triggerEvent) {
+    const { heightCalcMode, widthCalcMode } = settings
+
+    log(`Reset trigger event: %c${triggerEvent}`, HIGHLIGHT)
     height = getHeight[heightCalcMode]()
     width = getWidth[widthCalcMode]()
 
@@ -1477,22 +1346,22 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   }
 
   function resetIframe(triggerEventDesc) {
-    const hcm = heightCalcMode
-    heightCalcMode = heightCalcModeDefault
+    const hcm = settings.heightCalcMode
+    settings.heightCalcMode = HEIGHT_CALC_MODE_DEFAULT
 
     log(`Reset trigger event: %c${triggerEventDesc}`, HIGHLIGHT)
     lockTrigger()
     triggerReset('reset')
 
-    heightCalcMode = hcm
+    settings.heightCalcMode = hcm
   }
 
   function dispatchMessage(height, width, triggerEvent, msg, targetOrigin) {
-    if (mode < -1) return
+    if (settings.mode < -1) return
 
     function setTargetOrigin() {
       if (undefined === targetOrigin) {
-        targetOrigin = targetOriginDefault
+        targetOrigin = settings.targetOrigin
         return
       }
 
@@ -1507,6 +1376,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
     }
 
     function dispatchToParent() {
+      const { mode, parentId } = settings
       const size = `${height}:${width}`
       const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
@@ -1567,7 +1437,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
 
         setTimeout(() => {
           initLock = false
-        }, eventCancelTimer)
+        }, EVENT_CANCEL_TIMER)
       },
 
       reset() {
@@ -1618,7 +1488,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
         const msgBody = getData()
         log(`onMessage called from parent:%c`, HIGHLIGHT, parseFrozen(msgBody))
         // eslint-disable-next-line sonarjs/no-extra-arguments
-        isolateUserCode(onMessage, parse(msgBody))
+        isolateUserCode(settings.onMessage, parse(msgBody))
       },
     }
 

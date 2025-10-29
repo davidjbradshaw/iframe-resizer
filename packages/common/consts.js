@@ -120,6 +120,9 @@ export const INIT_EVENTS = Object.freeze({
 export const EXPAND = 'expanded'
 export const COLLAPSE = 'collapsed'
 
+export const HEIGHT_CALC_MODE_DEFAULT = AUTO
+export const WIDTH_CALC_MODE_DEFAULT = SCROLL
+
 export const LOG_OPTIONS = Object.freeze({
   [EXPAND]: 1,
   [COLLAPSE]: 1,
