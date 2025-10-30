@@ -1,4 +1,4 @@
-import { BOLD, FOREGROUND, HIGHLIGHT, ITALIC, NORMAL } from 'auto-console-group'
+import { BOLD, FOREGROUND, HIGHLIGHT, NORMAL } from 'auto-console-group'
 
 import {
   AUTO_RESIZE,
@@ -63,7 +63,6 @@ import {
   isolateUserCode,
   lower,
   once,
-  round,
   typeAssert,
 } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
@@ -109,6 +108,7 @@ import {
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
+import sendMessage, { dispatch } from './send/message'
 import settings from './values/settings'
 import state from './values/state'
 
@@ -143,9 +143,6 @@ function iframeResizerChild() {
   let resizeObserver
 
   let taggedElements = []
-  let target = window.parent
-  let timerActive
-  let totalTime
   let triggerLocked = false
   let width = 1
   let win = window
@@ -1114,12 +1111,11 @@ function iframeResizerChild() {
     return newSize
   }
 
-  function sizeIframe(
+  function getContentSize(
     triggerEvent,
     triggerEventDesc,
     customHeight,
     customWidth,
-    msg,
   ) {
     const { calculateHeight, calculateWidth, heightCalcMode, widthCalcMode } =
       settings
@@ -1146,8 +1142,7 @@ function iframeResizerChild() {
         width = newWidth
       // eslint-disable-next-line no-fallthrough
       case SET_OFFSET_SIZE:
-        dispatchMessage(height, width, triggerEvent, msg)
-        break
+        return { height, width }
 
       // the following case needs {} to prevent a compile error
       case OVERFLOW_OBSERVER:
@@ -1164,11 +1159,10 @@ function iframeResizerChild() {
         info(NO_CHANGE)
     }
 
-    timerActive = false // Reset time for next resize
+    return null
   }
 
   let sendPending = false
-  const sendFailed = once(() => advise(getModeData(4)))
   let hiddenMessageShown = false
   let rafId
 
@@ -1203,8 +1197,18 @@ function iframeResizerChild() {
         default: {
           hiddenMessageShown = false
           sendPending = true
-          totalTime = performance.now()
-          timerActive = true
+          state.totalTime = performance.now()
+          state.timerActive = true
+
+          const newSize = getContentSize(
+            triggerEvent,
+            triggerEventDesc,
+            customHeight,
+            customWidth,
+          )
+
+          if (newSize)
+            dispatch(newSize.height, newSize.width, triggerEvent, msg)
 
           if (!rafId)
             rafId = requestAnimationFrame(() => {
@@ -1214,13 +1218,7 @@ function iframeResizerChild() {
               debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
             })
 
-          sizeIframe(
-            triggerEvent,
-            triggerEventDesc,
-            customHeight,
-            customWidth,
-            msg,
-          )
+          state.timerActive = false // Reset time for next resize
         }
       }
 
@@ -1263,62 +1261,6 @@ function iframeResizerChild() {
     settings.heightCalcMode = hcm
   }
 
-  function dispatchMessage(height, width, triggerEvent, msg, targetOrigin) {
-    if (settings.mode < -1) return
-
-    function setTargetOrigin() {
-      if (undefined === targetOrigin) {
-        targetOrigin = settings.targetOrigin
-        return
-      }
-
-      log(`Message targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
-    }
-
-    function displayTimeTaken() {
-      const timer = round(performance.now() - totalTime)
-      return triggerEvent === INIT
-        ? `Initialised iframe in %c${timer}ms`
-        : `Size calculated in %c${timer}ms`
-    }
-
-    function dispatchToParent() {
-      const { mode, parentId } = settings
-      const { sameOrigin } = state
-      const size = `${height}:${width}`
-      const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
-
-      if (sameOrigin)
-        try {
-          window.parent.iframeParentListener(MESSAGE_ID + message)
-        } catch (error) {
-          if (mode === 1) sendFailed()
-          else throw error
-          return
-        }
-      else target.postMessage(MESSAGE_ID + message, targetOrigin)
-
-      if (timerActive) log(displayTimeTaken(), HIGHLIGHT)
-
-      info(
-        `Sending message to parent page via ${sameOrigin ? 'sameOrigin' : 'postMessage'}: %c%c${message}`,
-        ITALIC,
-        HIGHLIGHT,
-      )
-    }
-
-    setTargetOrigin()
-    dispatchToParent()
-  }
-
-  const sendMessage = errorBoundary(
-    (height, width, triggerEvent, message, targetOrigin) => {
-      consoleEvent(triggerEvent)
-      dispatchMessage(height, width, triggerEvent, message, targetOrigin)
-      endAutoGroup()
-    },
-  )
-
   function receiver(event) {
     consoleEvent('onMessage')
     const { freeze } = Object
@@ -1336,7 +1278,7 @@ function iframeResizerChild() {
 
         const data = event.data.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
 
-        target = event.source
+        state.target = event.source
         origin = event.origin
 
         init(data)
