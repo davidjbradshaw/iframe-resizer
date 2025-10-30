@@ -203,7 +203,7 @@ function iframeResizerChild() {
     map2settings(readDataFromPage(setupCustomCalcMethods))
     // debug({ ...settings })
 
-    const { bodyBackground, bodyPadding, inPageLinks, mode, onReady } = settings
+    const { bodyBackground, bodyPadding, inPageLinks, onReady } = settings
     const bothDirections = checkBoth(settings)
 
     applySelectors = createApplySelectors(settings)
@@ -240,7 +240,7 @@ function iframeResizerChild() {
     isolate(setup)
 
     checkReadyYet(once(onReady))
-    log('Initialization complete')
+    log('Initialization complete', settings)
     endAutoGroup()
 
     sendSize(
@@ -248,7 +248,7 @@ function iframeResizerChild() {
       'Init message from host page',
       undefined,
       undefined,
-      `${VERSION}:${mode}`,
+      `${VERSION}:${settings.mode}`,
     )
 
     sendTitle()

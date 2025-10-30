@@ -20,7 +20,7 @@ const l = (l) => {
         (l <= 'Z' ? 90 : 122) >= (l = l.codePointAt(0) + 19) ? l : l - 26,
       ),
     ),
-  x = ['spjluzl', 'rlf', 'clyzpvu'],
+  x = ['spjluzl', 'rlf', 'clyzpvu', 'rlf2'],
   y = [
     '<yi>Puchspk Spjluzl Rlf</><iy><iy>',
     '<yi>Tpzzpun Spjluzl Rlf</><iy><iy>',
@@ -44,7 +44,7 @@ export const getModeData = (l) => p(y[l])
 export const getModeLabel = (l) => p(z[l])
 export const getKey = (l) => p(x[l])
 export default (y) => {
-  const z = y[p(x[0])] || y[p(x[1])] || y[p(x[2])]
+  const z = y[p(x[0])] || y[p(x[1])] || y[p(x[2])] || y[p(x[3])]
   if (!z) return -1
   const u = z.split('-')
   let v = (function (y = '') {
