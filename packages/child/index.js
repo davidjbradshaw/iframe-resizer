@@ -54,13 +54,12 @@ import {
   WIDTH_CALC_MODE_DEFAULT,
   WIDTH_EDGE,
 } from '../common/consts'
-import setMode, { getModeData, getModeLabel } from '../common/mode'
+import { getModeData } from '../common/mode'
 import {
   capitalizeFirstLetter,
   getElementName,
   id,
   invoke,
-  isDef,
   isolateUserCode,
   lower,
   once,
@@ -70,6 +69,7 @@ import {
 import checkBlockingCSS from './check/blocking-css'
 import checkCalcMode from './check/calculation-mode'
 import checkDeprecatedAttrs from './check/deprecated-attributes'
+import checkMode from './check/mode'
 import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
 import checkVersion from './check/version'
@@ -88,7 +88,6 @@ import {
   log,
   purge,
   setConsoleOptions,
-  vInfo,
   warn,
 } from './console'
 import createMutationObserver from './observers/mutation'
@@ -362,26 +361,6 @@ function iframeResizerChild() {
       WIDTH_CALC_MODE_DEFAULT,
       getWidth,
     )
-  }
-
-  function checkMode({ key, key2, mode, version }) {
-    const oMode = mode
-    const pMode = setMode({ key })
-    const cMode = setMode({ key: key2 })
-    mode = Math.max(pMode, cMode)
-    settings.mode = mode
-    if (mode < 0) {
-      mode = Math.min(pMode, cMode)
-      purge()
-      advise(`${getModeData(mode + 2)}${getModeData(2)}`)
-      if (isDef(version))
-        throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
-    } else if (!isDef(version) || (oMode > -1 && mode > oMode)) {
-      if (sessionStorage.getItem('ifr') !== VERSION)
-        vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-      if (mode < 2) advise(getModeData(3))
-      sessionStorage.setItem('ifr', VERSION)
-    }
   }
 
   function setupEventListeners() {
