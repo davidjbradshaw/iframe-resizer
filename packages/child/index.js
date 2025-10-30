@@ -68,6 +68,7 @@ import {
 } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
 import checkCalcMode from './check/calculation-mode'
+import checkCrossDomain from './check/cross-domain'
 import checkDeprecatedAttrs from './check/deprecated-attributes'
 import checkMode from './check/mode'
 import checkQuirksMode from './check/quirks-mode'
@@ -109,6 +110,7 @@ import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
 import settings from './values/settings'
+import state from './values/state'
 
 function iframeResizerChild() {
   const customCalcMethods = {
@@ -139,7 +141,7 @@ function iframeResizerChild() {
   let overflowedNodeSet = new Set()
   let overflowObserver
   let resizeObserver
-  let sameOrigin = false
+
   let taggedElements = []
   let target = window.parent
   let timerActive
@@ -300,15 +302,6 @@ function iframeResizerChild() {
       ignoredElementsCount = ignoredElements.length
     }
     return hasIgnored
-  }
-
-  function checkCrossDomain() {
-    try {
-      sameOrigin =
-        settings.mode === 1 || 'iframeParentListener' in window.parent
-    } catch (error) {
-      log('Cross domain iframe detected')
-    }
   }
 
   function manageTriggerEvent(options) {
@@ -1291,6 +1284,7 @@ function iframeResizerChild() {
 
     function dispatchToParent() {
       const { mode, parentId } = settings
+      const { sameOrigin } = state
       const size = `${height}:${width}`
       const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
