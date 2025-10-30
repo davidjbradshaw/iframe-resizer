@@ -61,7 +61,6 @@ import {
   id,
   invoke,
   isDef,
-  // isElement,
   isolateUserCode,
   lower,
   once,
@@ -69,6 +68,8 @@ import {
   typeAssert,
 } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
+import checkCalcMode from './check/calculation-mode'
+import checkDeprecatedAttrs from './check/deprecated-attributes'
 import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
 import checkVersion from './check/version'
@@ -121,18 +122,7 @@ function iframeResizerChild() {
       return getWidth.auto()
     },
   }
-  const DEPRECATED_RESIZE_METHODS = {
-    bodyOffset: 1,
-    bodyScroll: 1,
-    offset: 1,
-    documentElementOffset: 1,
-    documentElementScroll: 1,
-    boundingClientRect: 1,
-    max: 1,
-    min: 1,
-    grow: 1,
-    lowestElement: 1,
-  }
+
   const EVENT_CANCEL_TIMER = 128
   const eventHandlersByName = {}
 
@@ -356,61 +346,6 @@ function iframeResizerChild() {
       eventType: 'Before Print',
       eventName: 'beforeprint',
     })
-  }
-
-  function checkDeprecatedAttrs() {
-    let found = false
-
-    const checkAttrs = (attr) =>
-      document.querySelectorAll(`[${attr}]`).forEach((el) => {
-        found = true
-        el.removeAttribute(attr)
-        el.toggleAttribute(SIZE_ATTR, true)
-      })
-
-    checkAttrs('data-iframe-height')
-    checkAttrs('data-iframe-width')
-
-    if (found) {
-      advise(
-        `<rb>Deprecated Attributes</>
-
-The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been deprecated and replaced with the single <b>data-iframe-size</> attribute. Use of the old attributes will be removed in a future version of <i>iframe-resizer</>.`,
-      )
-    }
-  }
-
-  function checkCalcMode(calcMode, calcModeDefault, modes) {
-    const { label } = modes
-
-    if (calcModeDefault !== calcMode) {
-      if (!(calcMode in modes)) {
-        warn(`${calcMode} is not a valid option for ${label}CalculationMethod.`)
-        calcMode = calcModeDefault
-      }
-
-      if (calcMode in DEPRECATED_RESIZE_METHODS) {
-        const actionMsg = settings.version
-          ? 'remove this option.'
-          : `set this option to <b>'auto'</> when using an older version of <i>iframe-resizer</> on the parent page. This can be done on the child page by adding the following code:
-
-window.iframeResizer = {
-  license: 'xxxx',
-  ${label}CalculationMethod: AUTO,
-}
-`
-
-        advise(
-          `<rb>Deprecated ${label}CalculationMethod (${calcMode})</>
-
-This version of <i>iframe-resizer</> can auto detect the most suitable ${label} calculation method. It is recommended that you ${actionMsg}
-`,
-        )
-      }
-    }
-
-    log(`Set ${label} calculation method: %c${calcMode}`, HIGHLIGHT)
-    return calcMode
   }
 
   function checkHeightMode() {
