@@ -5,7 +5,6 @@ import {
   BASE,
   BEFORE_UNLOAD,
   BOOLEAN,
-  CHILD_READY_MESSAGE,
   CLOSE,
   ENABLE,
   FUNCTION,
@@ -105,6 +104,7 @@ import {
   removeEventListener,
   tearDownList,
 } from './page/listeners'
+import ready from './page/ready'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
@@ -128,7 +128,6 @@ function iframeResizerChild() {
   const eventHandlersByName = {}
 
   let applySelectors = id
-  let firstRun = true
   let hasIgnored = false
   let hasOverflow = false
   let hasOverflowUpdated = true
@@ -948,7 +947,7 @@ function iframeResizerChild() {
         break
 
       case !hasOverflow &&
-        firstRun &&
+        state.firstRun &&
         prevBoundingSize[dimension] === 0 &&
         prevScrollSize[dimension] === 0:
         info(`Initial page size values: ${sizes}`, ...BOUNDING_FORMAT)
@@ -1283,7 +1282,7 @@ function iframeResizerChild() {
 
         init(data)
 
-        firstRun = false
+        state.firstRun = false
 
         setTimeout(() => {
           initLock = false
@@ -1374,7 +1373,7 @@ function iframeResizerChild() {
     }
 
     function processMessage() {
-      if (firstRun === false) {
+      if (state.firstRun === false) {
         callFromParent()
         return
       }
@@ -1397,34 +1396,6 @@ function iframeResizerChild() {
   }
 
   const received = errorBoundary(receiver)
-
-  // Normally the parent kicks things off when it detects the iframe has loaded.
-  // If this script is async-loaded, then tell parent page to retry init.
-  let sent = false
-  const sendReady = (target) =>
-    target.postMessage(
-      CHILD_READY_MESSAGE,
-      window?.iframeResizer?.targetOrigin || '*',
-    )
-
-  function ready() {
-    if (document.readyState === 'loading' || !firstRun || sent) return
-
-    const { parent, top } = window
-
-    consoleEvent('ready')
-    log(
-      'Sending%c ready%c to parent from',
-      HIGHLIGHT,
-      FOREGROUND,
-      window.location.href,
-    )
-
-    sendReady(parent)
-    if (parent !== top) sendReady(top)
-
-    sent = true
-  }
 
   if ('iframeChildListener' in window) {
     warn('Already setup')
