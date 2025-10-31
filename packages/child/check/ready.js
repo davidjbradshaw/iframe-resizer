@@ -1,6 +1,6 @@
 import { READY_STATE_CHANGE } from '../../common/consts'
 import { isolateUserCode } from '../../common/utils'
-import { addEventListener } from '../page/listeners'
+import { addEventListener } from '../events/listeners'
 
 const COMPLETE = 'complete'
 let readyChecked = false

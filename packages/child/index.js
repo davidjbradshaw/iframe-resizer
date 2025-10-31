@@ -21,8 +21,6 @@ import {
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
   MIN_SIZE,
-  MOUSE_ENTER,
-  MOUSE_LEAVE,
   MUTATION_OBSERVER,
   NO_CHANGE,
   NONE,
@@ -89,6 +87,13 @@ import {
   setConsoleOptions,
   warn,
 } from './console'
+import {
+  addEventListener,
+  removeEventListener,
+  tearDownList,
+} from './events/listeners'
+import setupMouseEvents from './events/mouse'
+import ready from './events/ready'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
 import createPerformanceObserver, {
@@ -98,13 +103,8 @@ import createPerformanceObserver, {
 import createResizeObserver from './observers/resize'
 import createVisibilityObserver from './observers/visibility'
 import createApplySelectors from './page/apply-selectors'
+import injectClearFixIntoBodyElement from './page/clear-fix'
 import { setBodyStyle, setMargin } from './page/css'
-import {
-  addEventListener,
-  removeEventListener,
-  tearDownList,
-} from './page/listeners'
-import ready from './page/ready'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
@@ -303,12 +303,9 @@ function iframeResizerChild() {
   function manageTriggerEvent(options) {
     const listener = {
       add(eventName) {
-        function handleEvent() {
-          sendSize(options.eventName, options.eventType)
-        }
+        const handleEvent = () => sendSize(options.eventName, options.eventType)
 
         eventHandlersByName[eventName] = handleEvent
-
         addEventListener(window, eventName, handleEvent, { passive: true })
       },
       remove(eventName) {
@@ -358,17 +355,6 @@ function iframeResizerChild() {
     }
 
     manageEventListeners('add')
-  }
-
-  function injectClearFixIntoBodyElement() {
-    const clearFix = document.createElement('div')
-
-    clearFix.style.clear = 'both'
-    // Guard against the following having been globally redefined in CSS.
-    clearFix.style.display = 'block'
-    clearFix.style.height = '0'
-
-    document.body.append(clearFix)
   }
 
   function setupInPageLinks(enabled) {
@@ -469,22 +455,6 @@ function iframeResizerChild() {
       ...inPageLinks,
       findTarget,
     }
-  }
-
-  function setupMouseEvents({ mouseEvents }) {
-    if (mouseEvents !== true) return
-
-    function sendMouse(e) {
-      sendMessage(0, 0, e.type, `${e.screenY}:${e.screenX}`)
-    }
-
-    function addMouseListener(evt, name) {
-      log(`Add event listener: %c${name}`, HIGHLIGHT)
-      addEventListener(window.document, evt, sendMouse)
-    }
-
-    addMouseListener(MOUSE_ENTER, 'Mouse Enter')
-    addMouseListener(MOUSE_LEAVE, 'Mouse Leave')
   }
 
   function setupPublicMethods() {
