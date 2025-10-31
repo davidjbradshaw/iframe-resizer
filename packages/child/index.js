@@ -43,7 +43,6 @@ import {
   SIZE_ATTR,
   SIZE_CHANGE_DETECTED,
   STRING,
-  TITLE,
   UNDEFINED,
   VERSION,
   VISIBILITY_OBSERVER,
@@ -109,6 +108,7 @@ import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
 import sendMessage, { dispatch } from './send/message'
+import sendTitle from './send/title'
 import settings from './values/settings'
 import state from './values/state'
 
@@ -269,12 +269,6 @@ function iframeResizerChild() {
     taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     hasTags = taggedElements.length > 0
     log(`Tagged elements found: %c${hasTags}`, HIGHLIGHT)
-  }
-
-  function sendTitle() {
-    if (document.title && document.title !== '') {
-      sendMessage(0, 0, TITLE, document.title)
-    }
   }
 
   function warnIgnored(ignoredElements) {
