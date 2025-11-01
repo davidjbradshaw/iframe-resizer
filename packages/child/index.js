@@ -3,7 +3,6 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 import {
   AUTO_RESIZE,
   BASE,
-  BEFORE_UNLOAD,
   BOOLEAN,
   CLOSE,
   ENABLE,
@@ -20,7 +19,6 @@ import {
   NONE,
   NUMBER,
   OVERFLOW_OBSERVER,
-  PAGE_HIDE,
   PAGE_INFO,
   PAGE_INFO_STOP,
   PARENT_INFO,
@@ -45,9 +43,7 @@ import { getModeData } from '../common/mode'
 import {
   getElementName,
   id,
-  invoke,
   isolateUserCode,
-  lower,
   once,
   typeAssert,
 } from '../common/utils'
@@ -82,6 +78,7 @@ import {
   tearDownList,
 } from './events/listeners'
 import setupMouseEvents from './events/mouse'
+import setupOnPageHide from './events/page-hide'
 import ready from './events/ready'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
@@ -200,19 +197,6 @@ function iframeResizerChild() {
 
     sendTitle()
   }
-
-  const resetNoResponseTimer = () => sendMessage(0, 0, BEFORE_UNLOAD)
-
-  function onPageHide({ persisted }) {
-    if (!persisted) resetNoResponseTimer()
-    consoleEvent(PAGE_HIDE)
-    info('Page persisted:', persisted)
-    if (persisted) return
-    tearDownList.forEach(invoke)
-  }
-
-  const setupOnPageHide = () =>
-    addEventListener(window, lower(PAGE_HIDE), onPageHide)
 
   function checkAndSetupTags() {
     state.taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
