@@ -79,7 +79,6 @@ export default function readDataFromPage() {
   if (mode === 1) return {}
 
   const data = window.iframeResizer || window.iFrameResizer
-
   const localSettings = isObject(data) ? readData(data) : {}
 
   info(

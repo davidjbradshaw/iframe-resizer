@@ -8,7 +8,7 @@ import settings from '../values/settings'
 import state from '../values/state'
 import { getAllElements } from './all'
 
-function getTaggedElements() {
+function getSelectedElements() {
   const { hasOverflow, hasTags, overflowedNodeSet, taggedElements } = state
 
   return hasTags
@@ -45,7 +45,7 @@ export default function getMaxElement(side) {
   const { logging } = settings
   const { hasTags } = state
 
-  const targetElements = getTaggedElements()
+  const targetElements = getSelectedElements()
   const { maxEl, maxVal } = findMaxElement(targetElements, side)
 
   info(`${Side} position calculated from:`, maxEl)
