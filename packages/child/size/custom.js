@@ -14,17 +14,15 @@ See <u>https://iframe-resizer.com/api/child</> for more details.
 `
 
 export default function setupCustomCalcMethod(calcMode, calcFunc) {
-  if (typeof calcMode === FUNCTION) {
-    advise(deprecated(calcFunc))
+  if (typeof calcMode !== FUNCTION) return calcMode
 
-    if (calcFunc === HEIGHT) {
-      getHeight.custom = calcMode
-    } else {
-      getWidth.custom = calcMode
-    }
+  advise(deprecated(calcFunc))
 
-    calcMode = CUSTOM
+  if (calcFunc === HEIGHT) {
+    getHeight.custom = calcMode
+  } else {
+    getWidth.custom = calcMode
   }
 
-  return calcMode
+  return CUSTOM
 }
