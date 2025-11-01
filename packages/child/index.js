@@ -11,16 +11,13 @@ import {
   HEIGHT_CALC_MODE_DEFAULT,
   HEIGHT_EDGE,
   IGNORE_ATTR,
-  IGNORE_DISABLE_RESIZE,
   IN_PAGE_LINK,
   INIT,
   MANUAL_RESIZE_REQUEST,
   MESSAGE,
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
-  MIN_SIZE,
   MUTATION_OBSERVER,
-  NO_CHANGE,
   NONE,
   NUMBER,
   OVERFLOW_ATTR,
@@ -39,7 +36,6 @@ import {
   SEPARATOR,
   SET_OFFSET_SIZE,
   SIZE_ATTR,
-  SIZE_CHANGE_DETECTED,
   STRING,
   UNDEFINED,
   VERSION,
@@ -67,7 +63,6 @@ import checkReadyYet from './check/ready'
 import checkVersion from './check/version'
 import {
   advise,
-  assert,
   debug,
   deprecateMethod,
   deprecateMethodReplace,
@@ -78,7 +73,6 @@ import {
   info,
   label,
   log,
-  purge,
   setConsoleOptions,
   warn,
 } from './console'
@@ -100,7 +94,8 @@ import { setBodyStyle, setMargin } from './page/css'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
-import sendMessage, { dispatch } from './send/message'
+import sendMessage from './send/message'
+import sendSize from './send/size'
 import sendTitle from './send/title'
 import { getHeight, getWidth } from './size'
 import { getAllElements } from './size/all'
@@ -116,7 +111,6 @@ function iframeResizerChild() {
   let height = 1
   let initLock = true
   let inPageLinks = {}
-  let isHidden = false
   let origin
   let overflowObserver
   let resizeObserver
@@ -691,7 +685,7 @@ function iframeResizerChild() {
 
   function visibilityChange(isVisible) {
     log(`Visible: %c${isVisible}`, HIGHLIGHT)
-    isHidden = !isVisible
+    state.isHidden = !isVisible
     sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
   }
 
@@ -766,161 +760,6 @@ function iframeResizerChild() {
 
     pushDisconnectsOnToTearDown(observers)
   }
-
-  const checkTolerance = (a, b) => !(Math.abs(a - b) <= settings.tolerance)
-
-  function callOnBeforeResize(newSize) {
-    const returnedSize = settings.onBeforeResize(newSize)
-
-    if (returnedSize === undefined) {
-      throw new TypeError(
-        'No value returned from onBeforeResize(), expected a numeric value',
-      )
-    }
-
-    if (Number.isNaN(returnedSize))
-      throw new TypeError(
-        `Invalid value returned from onBeforeResize(): ${returnedSize}, expected Number`,
-      )
-
-    if (returnedSize < MIN_SIZE) {
-      throw new RangeError(
-        `Out of range value returned from onBeforeResize(): ${returnedSize}, must be at least ${MIN_SIZE}`,
-      )
-    }
-
-    return returnedSize
-  }
-
-  function getNewSize(direction, mode) {
-    const calculatedSize = direction[mode]()
-    const newSize =
-      direction.enabled() && settings.onBeforeResize !== undefined
-        ? callOnBeforeResize(calculatedSize)
-        : calculatedSize
-
-    assert(
-      newSize >= MIN_SIZE,
-      `New iframe ${direction.label} is too small: ${newSize}, must be at least ${MIN_SIZE}`,
-    )
-
-    return newSize
-  }
-
-  function getContentSize(
-    triggerEvent,
-    triggerEventDesc,
-    customHeight,
-    customWidth,
-  ) {
-    const { calculateHeight, calculateWidth, heightCalcMode, widthCalcMode } =
-      settings
-
-    const isSizeChangeDetected = () =>
-      (calculateHeight && checkTolerance(height, newHeight)) ||
-      (calculateWidth && checkTolerance(width, newWidth))
-
-    const newHeight = customHeight ?? getNewSize(getHeight, heightCalcMode)
-    const newWidth = customWidth ?? getNewSize(getWidth, widthCalcMode)
-
-    const updateEvent = isSizeChangeDetected()
-      ? SIZE_CHANGE_DETECTED
-      : triggerEvent
-
-    log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
-
-    switch (updateEvent) {
-      case INIT:
-      case ENABLE:
-      case SIZE_CHANGE_DETECTED:
-        // lockTrigger()
-        height = newHeight
-        width = newWidth
-      // eslint-disable-next-line no-fallthrough
-      case SET_OFFSET_SIZE:
-        return { height, width }
-
-      // the following case needs {} to prevent a compile error
-      case OVERFLOW_OBSERVER:
-      case MUTATION_OBSERVER:
-      case RESIZE_OBSERVER:
-      case VISIBILITY_OBSERVER: {
-        log(NO_CHANGE)
-        purge()
-        break
-      }
-
-      default:
-        purge()
-        info(NO_CHANGE)
-    }
-
-    return null
-  }
-
-  let sendPending = false
-  let hiddenMessageShown = false
-  let rafId
-
-  const sendSize = errorBoundary(
-    (triggerEvent, triggerEventDesc, customHeight, customWidth, msg) => {
-      consoleEvent(triggerEvent)
-      const { autoResize } = settings
-
-      switch (true) {
-        case isHidden === true: {
-          if (hiddenMessageShown === true) break
-          log('Iframe hidden - Ignored resize request')
-          hiddenMessageShown = true
-          sendPending = false
-          cancelAnimationFrame(rafId)
-          break
-        }
-
-        // Ignore overflowObserver here, as more efficient than using
-        // mutationObserver to detect OVERFLOW_ATTR changes
-        case sendPending === true && triggerEvent !== OVERFLOW_OBSERVER: {
-          purge()
-          log('Resize already pending - Ignored resize request')
-          break // only update once per frame
-        }
-
-        case !autoResize && !(triggerEvent in IGNORE_DISABLE_RESIZE): {
-          info('Resizing disabled')
-          break
-        }
-
-        default: {
-          hiddenMessageShown = false
-          sendPending = true
-          state.totalTime = performance.now()
-          state.timerActive = true
-
-          const newSize = getContentSize(
-            triggerEvent,
-            triggerEventDesc,
-            customHeight,
-            customWidth,
-          )
-
-          if (newSize)
-            dispatch(newSize.height, newSize.width, triggerEvent, msg)
-
-          if (!rafId)
-            rafId = requestAnimationFrame(() => {
-              sendPending = false
-              rafId = null
-              consoleEvent('requestAnimationFrame')
-              debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
-            })
-
-          state.timerActive = false // Reset time for next resize
-        }
-      }
-
-      endAutoGroup()
-    },
-  )
 
   function lockTrigger() {
     if (state.triggerLocked) {

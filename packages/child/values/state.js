@@ -3,6 +3,7 @@ export default {
   hasTags: false,
   hasOverflow: false,
   hasOverflowUpdated: true,
+  isHidden: false,
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [],
