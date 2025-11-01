@@ -3,7 +3,5 @@ import sendMessage from './message'
 
 export default function sendTitle() {
   const { title } = document
-  if (title && title !== '') {
-    sendMessage(0, 0, TITLE, title)
-  }
+  if (title && title !== '') sendMessage(0, 0, TITLE, title)
 }
