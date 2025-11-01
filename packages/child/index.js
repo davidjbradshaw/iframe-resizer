@@ -104,17 +104,11 @@ import state from './values/state'
 
 function iframeResizerChild() {
   const EVENT_CANCEL_TIMER = 128
-  const eventHandlersByName = {}
 
   let applySelectors = id
-  let hasIgnored = false
-  let height = 1
-  let initLock = true
   let inPageLinks = {}
-  let origin
   let overflowObserver
   let resizeObserver
-  let width = 1
   let win = window
 
   let onPageInfo = null
@@ -241,7 +235,7 @@ function iframeResizerChild() {
   let ignoredElementsCount = 0
   function checkIgnoredElements() {
     const ignoredElements = document.querySelectorAll(`*[${IGNORE_ATTR}]`)
-    hasIgnored = ignoredElements.length > 0
+    const hasIgnored = ignoredElements.length > 0
     if (hasIgnored && ignoredElements.length !== ignoredElementsCount) {
       warnIgnored(ignoredElements)
       ignoredElementsCount = ignoredElements.length
@@ -249,6 +243,7 @@ function iframeResizerChild() {
     return hasIgnored
   }
 
+  const eventHandlersByName = {}
   function manageTriggerEvent(options) {
     const listener = {
       add(eventName) {
@@ -443,10 +438,10 @@ function iframeResizerChild() {
       getOrigin: () => {
         consoleEvent('getOrigin')
         deprecateMethod('getOrigin()', 'getParentOrigin()')
-        return origin
+        return state.origin
       },
 
-      getParentOrigin: () => origin,
+      getParentOrigin: () => state.origin,
 
       getPageInfo(callback) {
         if (typeof callback === FUNCTION) {
@@ -779,8 +774,8 @@ function iframeResizerChild() {
     const { heightCalcMode, widthCalcMode } = settings
 
     log(`Reset trigger event: %c${triggerEvent}`, HIGHLIGHT)
-    height = getHeight[heightCalcMode]()
-    width = getWidth[widthCalcMode]()
+    const height = getHeight[heightCalcMode]()
+    const width = getWidth[widthCalcMode]()
 
     sendMessage(height, width, triggerEvent)
   }
@@ -796,6 +791,7 @@ function iframeResizerChild() {
     settings.heightCalcMode = hcm
   }
 
+  let initLock = true
   function receiver(event) {
     consoleEvent('onMessage')
     const { freeze } = Object
@@ -814,7 +810,7 @@ function iframeResizerChild() {
         const data = event.data.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
 
         state.target = event.source
-        origin = event.origin
+        state.origin = event.origin
 
         init(data)
 

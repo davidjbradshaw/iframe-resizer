@@ -4,6 +4,7 @@ export default {
   hasOverflow: false,
   hasOverflowUpdated: true,
   isHidden: false,
+  origin: undefined,
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [],
