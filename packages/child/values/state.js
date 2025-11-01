@@ -8,6 +8,7 @@ export default {
   initLock: true,
   inPageLinks: {},
   origin: undefined,
+  hasOverflowUpdated: true,
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [],
