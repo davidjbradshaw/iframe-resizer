@@ -8,12 +8,10 @@ import {
   CLOSE,
   ENABLE,
   FUNCTION,
-  HEIGHT,
   HEIGHT_CALC_MODE_DEFAULT,
   HEIGHT_EDGE,
   IGNORE_ATTR,
   IGNORE_DISABLE_RESIZE,
-  IGNORE_TAGS,
   IN_PAGE_LINK,
   INIT,
   MANUAL_RESIZE_REQUEST,
@@ -46,13 +44,11 @@ import {
   UNDEFINED,
   VERSION,
   VISIBILITY_OBSERVER,
-  WIDTH,
   WIDTH_CALC_MODE_DEFAULT,
   WIDTH_EDGE,
 } from '../common/consts'
 import { getModeData } from '../common/mode'
 import {
-  capitalizeFirstLetter,
   getElementName,
   id,
   invoke,
@@ -95,10 +91,7 @@ import setupMouseEvents from './events/mouse'
 import ready from './events/ready'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
-import createPerformanceObserver, {
-  PREF_END,
-  PREF_START,
-} from './observers/perf'
+import createPerformanceObserver from './observers/perf'
 import createResizeObserver from './observers/resize'
 import createVisibilityObserver from './observers/visibility'
 import createApplySelectors from './page/apply-selectors'
@@ -109,61 +102,30 @@ import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
 import sendMessage, { dispatch } from './send/message'
 import sendTitle from './send/title'
+import { getHeight, getWidth } from './size'
+import { getAllElements } from './size/all'
 import settings from './values/settings'
 import state from './values/state'
 
 function iframeResizerChild() {
-  const customCalcMethods = {
-    height: () => {
-      warn('Custom height calculation function not defined')
-      return getHeight.auto()
-    },
-    width: () => {
-      warn('Custom width calculation function not defined')
-      return getWidth.auto()
-    },
-  }
-
   const EVENT_CANCEL_TIMER = 128
   const eventHandlersByName = {}
 
   let applySelectors = id
   let hasIgnored = false
-  let hasOverflow = false
-  let hasOverflowUpdated = true
-  let hasTags = false
   let height = 1
   let initLock = true
   let inPageLinks = {}
   let isHidden = false
   let origin
-  let overflowedNodeSet = new Set()
   let overflowObserver
   let resizeObserver
 
-  let taggedElements = []
-  let triggerLocked = false
   let width = 1
   let win = window
 
   let onPageInfo = null
   let onParentInfo = null
-
-  function setupCustomCalcMethods(calcMode, calcFunc) {
-    if (typeof calcMode === FUNCTION) {
-      advise(
-        `<rb>Deprecated Option(${calcFunc}CalculationMethod)</>
-
-  The use of <b>${calcFunc}CalculationMethod</> as a function is deprecated and will be removed in a future version of <i>iframe-resizer</>. Please use the new <b>onBeforeResize</> event handler instead.
-
-  See <u>https://iframe-resizer.com/api/child</> for more details.`,
-      )
-      customCalcMethods[calcFunc] = calcMode
-      calcMode = 'custom'
-    }
-
-    return calcMode
-  }
 
   function isolate(funcs) {
     const { mode } = settings
@@ -198,7 +160,7 @@ function iframeResizerChild() {
   function init(data) {
     map2settings(readDataFromParent(data))
     startLogging(settings)
-    map2settings(readDataFromPage(setupCustomCalcMethods))
+    map2settings(readDataFromPage())
     // debug({ ...settings })
 
     const { bodyBackground, bodyPadding, inPageLinks, onReady } = settings
@@ -266,9 +228,9 @@ function iframeResizerChild() {
     addEventListener(window, lower(PAGE_HIDE), onPageHide)
 
   function checkAndSetupTags() {
-    taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
-    hasTags = taggedElements.length > 0
-    log(`Tagged elements found: %c${hasTags}`, HIGHLIGHT)
+    state.taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
+    state.hasTags = state.taggedElements.length > 0
+    log(`Tagged elements found: %c${state.hasTags}`, HIGHLIGHT)
   }
 
   function warnIgnored(ignoredElements) {
@@ -663,21 +625,24 @@ function iframeResizerChild() {
   function checkOverflow() {
     const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
 
-    overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
+    state.overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
 
-    hasOverflow = overflowedNodeSet.size > 0
+    state.hasOverflow = state.overflowedNodeSet.size > 0
 
     // Not supported in Safari 16 (or esLint!!!)
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native
     if (typeof Set.prototype.symmetricDifference === FUNCTION)
-      hasOverflowUpdated =
-        overflowedNodeSet.symmetricDifference(prevOverflowedNodeSet).size > 0
+      state.hasOverflowUpdated =
+        state.overflowedNodeSet.symmetricDifference(prevOverflowedNodeSet)
+          .size > 0
 
-    prevOverflowedNodeSet = overflowedNodeSet
+    prevOverflowedNodeSet = state.overflowedNodeSet
   }
 
   function overflowObserved() {
     checkOverflow()
+
+    const { hasOverflowUpdated, hasOverflow, overflowedNodeSet } = state
 
     switch (true) {
       case !hasOverflowUpdated:
@@ -801,237 +766,6 @@ function iframeResizerChild() {
     ]
 
     pushDisconnectsOnToTearDown(observers)
-  }
-
-  function getMaxElement(side) {
-    performance.mark(PREF_START)
-
-    const Side = capitalizeFirstLetter(side)
-    const { logging } = settings
-
-    let elVal = MIN_SIZE
-    let maxEl = document.documentElement
-    let maxVal = hasTags
-      ? 0
-      : document.documentElement.getBoundingClientRect().bottom
-
-    const targetElements = hasTags
-      ? taggedElements
-      : hasOverflow
-        ? Array.from(overflowedNodeSet)
-        : getAllElements(document.documentElement) // Width resizing may need to check all elements
-
-    for (const element of targetElements) {
-      elVal =
-        element.getBoundingClientRect()[side] +
-        parseFloat(getComputedStyle(element).getPropertyValue(`margin-${side}`))
-
-      if (elVal > maxVal) {
-        maxVal = elVal
-        maxEl = element
-      }
-    }
-
-    info(`${Side} position calculated from:`, maxEl)
-    info(`Checked %c${targetElements.length}%c elements`, HIGHLIGHT, FOREGROUND)
-
-    performance.mark(PREF_END, {
-      detail: {
-        hasTags,
-        len: targetElements.length,
-        logging,
-        Side,
-      },
-    })
-
-    return maxVal
-  }
-
-  const getAllMeasurements = (dimension) => [
-    dimension.bodyOffset(),
-    dimension.bodyScroll(),
-    dimension.documentElementOffset(),
-    dimension.documentElementScroll(),
-    dimension.boundingClientRect(),
-  ]
-
-  const addNot = (tagName) => `:not(${tagName})`
-  const selector = `* ${Array.from(IGNORE_TAGS).map(addNot).join('')}`
-  const getAllElements = (node) => node.querySelectorAll(selector)
-
-  function getOffsetSize(getDimension) {
-    const offset = getDimension.getOffset()
-
-    if (offset !== 0) {
-      info(`Page offsetSize: %c${offset}px`, HIGHLIGHT)
-    }
-
-    return offset
-  }
-
-  const prevScrollSize = {
-    height: 0,
-    width: 0,
-  }
-
-  const prevBoundingSize = {
-    height: 0,
-    width: 0,
-  }
-
-  const getAdjustedScroll = (getDimension) =>
-    getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
-
-  const BOUNDING_FORMAT = [HIGHLIGHT, FOREGROUND, HIGHLIGHT]
-
-  function getAutoSize(getDimension) {
-    function returnBoundingClientRect() {
-      prevBoundingSize[dimension] = boundingSize
-      prevScrollSize[dimension] = scrollSize
-      return Math.max(boundingSize, MIN_SIZE)
-    }
-
-    const isHeight = getDimension === getHeight
-    const dimension = getDimension.label
-    const boundingSize = getDimension.boundingClientRect()
-    const ceilBoundingSize = Math.ceil(boundingSize)
-    const floorBoundingSize = Math.floor(boundingSize)
-    const scrollSize = getAdjustedScroll(getDimension)
-    const sizes = `HTML: %c${boundingSize}px %cPage: %c${scrollSize}px`
-
-    let calculatedSize = MIN_SIZE
-
-    switch (true) {
-      case !getDimension.enabled():
-        return Math.max(scrollSize, MIN_SIZE)
-
-      case hasTags:
-        info(`Found element with data-iframe-size attribute`)
-        calculatedSize = getDimension.taggedElement()
-        break
-
-      case !hasOverflow &&
-        state.firstRun &&
-        prevBoundingSize[dimension] === 0 &&
-        prevScrollSize[dimension] === 0:
-        info(`Initial page size values: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = returnBoundingClientRect()
-        break
-
-      case triggerLocked &&
-        boundingSize === prevBoundingSize[dimension] &&
-        scrollSize === prevScrollSize[dimension]:
-        info(`Size unchanged: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = Math.max(boundingSize, scrollSize)
-        break
-
-      case boundingSize === 0 && scrollSize !== 0:
-        info(`Page is hidden: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = scrollSize
-        break
-
-      case !hasOverflow &&
-        boundingSize !== prevBoundingSize[dimension] &&
-        scrollSize <= prevScrollSize[dimension]:
-        info(`New <html> size: ${sizes} `, ...BOUNDING_FORMAT)
-        info(
-          `Previous <html> size: %c${prevBoundingSize[dimension]}px`,
-          HIGHLIGHT,
-        )
-        calculatedSize = returnBoundingClientRect()
-        break
-
-      case !isHeight:
-        calculatedSize = getDimension.taggedElement()
-        break
-
-      case !hasOverflow && boundingSize < prevBoundingSize[dimension]:
-        info(`<html> size decreased: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = returnBoundingClientRect()
-        break
-
-      case scrollSize === floorBoundingSize || scrollSize === ceilBoundingSize:
-        info(`<html> size equals page size: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = returnBoundingClientRect()
-        break
-
-      case boundingSize > scrollSize:
-        info(`Page size < <html> size: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = returnBoundingClientRect()
-        break
-
-      case hasOverflow:
-        info(`Found elements possibly overflowing <html> `)
-        calculatedSize = getDimension.taggedElement()
-        break
-
-      default:
-        info(`Using <html> size: ${sizes}`, ...BOUNDING_FORMAT)
-        calculatedSize = returnBoundingClientRect()
-    }
-
-    info(`Content ${dimension}: %c${calculatedSize}px`, HIGHLIGHT)
-
-    calculatedSize += getOffsetSize(getDimension)
-
-    return Math.max(calculatedSize, MIN_SIZE)
-  }
-
-  const getBodyOffset = () => {
-    const { body } = document
-    const style = getComputedStyle(body)
-
-    return (
-      body.offsetHeight +
-      parseInt(style.marginTop, BASE) +
-      parseInt(style.marginBottom, BASE)
-    )
-  }
-
-  const getHeight = {
-    label: HEIGHT,
-    enabled: () => settings.calculateHeight,
-    getOffset: () => settings.offsetHeight,
-    auto: () => getAutoSize(getHeight),
-    bodyOffset: getBodyOffset,
-    bodyScroll: () => document.body.scrollHeight,
-    offset: () => getHeight.bodyOffset(), // Backwards compatibility
-    custom: () => customCalcMethods.height(),
-    documentElementOffset: () => document.documentElement.offsetHeight,
-    documentElementScroll: () => document.documentElement.scrollHeight,
-    boundingClientRect: () =>
-      Math.max(
-        document.documentElement.getBoundingClientRect().bottom,
-        document.body.getBoundingClientRect().bottom,
-      ),
-    max: () => Math.max(...getAllMeasurements(getHeight)),
-    min: () => Math.min(...getAllMeasurements(getHeight)),
-    grow: () => getHeight.max(),
-    lowestElement: () => getMaxElement(HEIGHT_EDGE),
-    taggedElement: () => getMaxElement(HEIGHT_EDGE),
-  }
-
-  const getWidth = {
-    label: WIDTH,
-    enabled: () => settings.calculateWidth,
-    getOffset: () => settings.offsetWidth,
-    auto: () => getAutoSize(getWidth),
-    bodyScroll: () => document.body.scrollWidth,
-    bodyOffset: () => document.body.offsetWidth,
-    custom: () => customCalcMethods.width(),
-    documentElementScroll: () => document.documentElement.scrollWidth,
-    documentElementOffset: () => document.documentElement.offsetWidth,
-    boundingClientRect: () =>
-      Math.max(
-        document.documentElement.getBoundingClientRect().right,
-        document.body.getBoundingClientRect().right,
-      ),
-    max: () => Math.max(...getAllMeasurements(getWidth)),
-    min: () => Math.min(...getAllMeasurements(getWidth)),
-    rightMostElement: () => getMaxElement(WIDTH_EDGE),
-    scroll: () =>
-      Math.max(getWidth.bodyScroll(), getWidth.documentElementScroll()),
-    taggedElement: () => getMaxElement(WIDTH_EDGE),
   }
 
   const checkTolerance = (a, b) => !(Math.abs(a - b) <= settings.tolerance)
@@ -1190,15 +924,15 @@ function iframeResizerChild() {
   )
 
   function lockTrigger() {
-    if (triggerLocked) {
+    if (state.triggerLocked) {
       log('TriggerLock blocked calculation')
       return
     }
-    triggerLocked = true
+    state.triggerLocked = true
     debug('Trigger event lock on')
 
     requestAnimationFrame(() => {
-      triggerLocked = false
+      state.triggerLocked = false
       debug('Trigger event lock off')
     })
   }
