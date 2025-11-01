@@ -120,7 +120,6 @@ function iframeResizerChild() {
   let origin
   let overflowObserver
   let resizeObserver
-
   let width = 1
   let win = window
 
