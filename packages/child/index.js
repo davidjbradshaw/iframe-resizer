@@ -1,4 +1,4 @@
-import { BOLD, FOREGROUND, HIGHLIGHT, NORMAL } from 'auto-console-group'
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
   AUTO_RESIZE,
@@ -10,7 +10,6 @@ import {
   FUNCTION,
   HEIGHT_CALC_MODE_DEFAULT,
   HEIGHT_EDGE,
-  IGNORE_ATTR,
   IN_PAGE_LINK,
   INIT,
   MANUAL_RESIZE_REQUEST,
@@ -20,7 +19,6 @@ import {
   MUTATION_OBSERVER,
   NONE,
   NUMBER,
-  OVERFLOW_ATTR,
   OVERFLOW_OBSERVER,
   PAGE_HIDE,
   PAGE_INFO,
@@ -57,7 +55,9 @@ import checkBlockingCSS from './check/blocking-css'
 import checkCalcMode from './check/calculation-mode'
 import checkCrossDomain from './check/cross-domain'
 import checkDeprecatedAttrs from './check/deprecated-attributes'
+import checkIgnoredElements from './check/ignored-elements'
 import checkMode from './check/mode'
+import checkOverflow from './check/overflow'
 import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
 import checkVersion from './check/version'
@@ -218,29 +218,6 @@ function iframeResizerChild() {
     state.taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
     state.hasTags = state.taggedElements.length > 0
     log(`Tagged elements found: %c${state.hasTags}`, HIGHLIGHT)
-  }
-
-  function warnIgnored(ignoredElements) {
-    const s = ignoredElements.length === 1 ? '' : 's'
-
-    warn(
-      `%c[${IGNORE_ATTR}]%c found on %c${ignoredElements.length}%c element${s}`,
-      BOLD,
-      NORMAL,
-      BOLD,
-      NORMAL,
-    )
-  }
-
-  let ignoredElementsCount = 0
-  function checkIgnoredElements() {
-    const ignoredElements = document.querySelectorAll(`*[${IGNORE_ATTR}]`)
-    const hasIgnored = ignoredElements.length > 0
-    if (hasIgnored && ignoredElements.length !== ignoredElementsCount) {
-      warnIgnored(ignoredElements)
-      ignoredElementsCount = ignoredElements.length
-    }
-    return hasIgnored
   }
 
   const eventHandlersByName = {}
@@ -583,54 +560,9 @@ function iframeResizerChild() {
     win.parentIFrame = win.parentIframe
   }
 
-  function filterIgnoredElements(nodeList) {
-    const filteredNodeSet = new Set()
-    const ignoredNodeSet = new Set()
-
-    for (const node of nodeList) {
-      if (node.closest(`[${IGNORE_ATTR}]`)) {
-        ignoredNodeSet.add(node)
-      } else {
-        filteredNodeSet.add(node)
-      }
-    }
-
-    if (ignoredNodeSet.size > 0) {
-      queueMicrotask(() => {
-        consoleEvent('overflowIgnored')
-        info(
-          `Ignoring elements with [data-iframe-ignore] > *:\n`,
-          ignoredNodeSet,
-        )
-        endAutoGroup()
-      })
-    }
-
-    return filteredNodeSet
-  }
-
-  let prevOverflowedNodeSet = new Set()
-  function checkOverflow() {
-    const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
-
-    state.overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
-
-    state.hasOverflow = state.overflowedNodeSet.size > 0
-
-    // Not supported in Safari 16 (or esLint!!!)
-    // eslint-disable-next-line no-use-extend-native/no-use-extend-native
-    if (typeof Set.prototype.symmetricDifference === FUNCTION)
-      state.hasOverflowUpdated =
-        state.overflowedNodeSet.symmetricDifference(prevOverflowedNodeSet)
-          .size > 0
-
-    prevOverflowedNodeSet = state.overflowedNodeSet
-  }
-
   function overflowObserved() {
-    checkOverflow()
-
-    const { hasOverflowUpdated, hasOverflow, overflowedNodeSet } = state
+    const { hasOverflow } = state
+    const { hasOverflowUpdated, overflowedNodeSet } = checkOverflow()
 
     switch (true) {
       case !hasOverflowUpdated:
