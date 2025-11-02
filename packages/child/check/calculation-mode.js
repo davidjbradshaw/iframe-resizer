@@ -1,6 +1,11 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
+import {
+  HEIGHT_CALC_MODE_DEFAULT,
+  WIDTH_CALC_MODE_DEFAULT,
+} from '../../common/consts'
 import { advise, log, warn } from '../console'
+import { getHeight, getWidth } from '../size'
 import settings from '../values/settings'
 
 const DEPRECATED_RESIZE_METHODS = {
@@ -39,7 +44,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   )
 }
 
-export default function checkCalcMode(calcMode, calcModeDefault, modes) {
+export function checkCalcMode(calcMode, calcModeDefault, modes) {
   const { label } = modes
 
   if (calcModeDefault !== calcMode) {
@@ -54,4 +59,20 @@ export default function checkCalcMode(calcMode, calcModeDefault, modes) {
 
   log(`Set ${label} calculation method: %c${calcMode}`, HIGHLIGHT)
   return calcMode
+}
+
+export function checkHeightMode() {
+  settings.heightCalcMode = checkCalcMode(
+    settings.heightCalcMode,
+    HEIGHT_CALC_MODE_DEFAULT,
+    getHeight,
+  )
+}
+
+export function checkWidthMode() {
+  settings.widthCalcMode = checkCalcMode(
+    settings.widthCalcMode,
+    WIDTH_CALC_MODE_DEFAULT,
+    getWidth,
+  )
 }

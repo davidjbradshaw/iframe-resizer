@@ -36,7 +36,6 @@ import {
   UNDEFINED,
   VERSION,
   VISIBILITY_OBSERVER,
-  WIDTH_CALC_MODE_DEFAULT,
   WIDTH_EDGE,
 } from '../common/consts'
 import { getModeData } from '../common/mode'
@@ -48,7 +47,7 @@ import {
   typeAssert,
 } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
-import checkCalcMode from './check/calculation-mode'
+import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
 import checkCrossDomain from './check/cross-domain'
 import checkDeprecatedAttrs from './check/deprecated-attributes'
 import checkIgnoredElements from './check/ignored-elements'
@@ -236,22 +235,6 @@ function iframeResizerChild() {
       eventType: 'Before Print',
       eventName: 'beforeprint',
     })
-  }
-
-  function checkHeightMode() {
-    settings.heightCalcMode = checkCalcMode(
-      settings.heightCalcMode,
-      HEIGHT_CALC_MODE_DEFAULT,
-      getHeight,
-    )
-  }
-
-  function checkWidthMode() {
-    settings.widthCalcMode = checkCalcMode(
-      settings.widthCalcMode,
-      WIDTH_CALC_MODE_DEFAULT,
-      getWidth,
-    )
   }
 
   function setupEventListeners() {
