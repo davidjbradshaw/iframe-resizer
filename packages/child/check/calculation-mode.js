@@ -45,7 +45,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
   )
 }
 
-export default function checkCalcMode(calcMode, calcModeDefault, modes) {
+export function checkCalcMode(calcMode, calcModeDefault, modes) {
   const { label } = modes
 
   if (calcModeDefault !== calcMode) {
