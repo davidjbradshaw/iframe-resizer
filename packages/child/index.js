@@ -1,9 +1,8 @@
-import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+import { HIGHLIGHT } from 'auto-console-group'
 
 import {
-  BASE,
+  EVENT_CANCEL_TIMER,
   HEIGHT_EDGE,
-  IN_PAGE_LINK,
   INIT,
   MESSAGE,
   MESSAGE_ID,
@@ -15,7 +14,6 @@ import {
   PARENT_RESIZE_REQUEST,
   READY_STATE_CHANGE,
   RESIZE_OBSERVER,
-  SCROLL_TO_OFFSET,
   SEPARATOR,
   SIZE_ATTR,
   UNDEFINED,
@@ -23,7 +21,6 @@ import {
   VISIBILITY_OBSERVER,
   WIDTH_EDGE,
 } from '../common/consts'
-import { getModeData } from '../common/mode'
 import { getElementName, id, isolateUserCode, once } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
 import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
@@ -64,6 +61,7 @@ import createVisibilityObserver from './observers/visibility'
 import createApplySelectors from './page/apply-selectors'
 import injectClearFixIntoBodyElement from './page/clear-fix'
 import { setBodyStyle, setMargin } from './page/css'
+import setupInPageLinks from './page/links'
 import { triggerReset } from './page/reset'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
@@ -76,8 +74,6 @@ import settings from './values/settings'
 import state from './values/state'
 
 function iframeResizerChild() {
-  const EVENT_CANCEL_TIMER = 128
-
   let applySelectors = id
   let overflowObserver
   let resizeObserver
@@ -114,6 +110,7 @@ function iframeResizerChild() {
   }
 
   function init(data) {
+    if (!state.firstRun) return
     map2settings(readDataFromParent(data))
     startLogging(settings)
     map2settings(readDataFromPage())
@@ -216,106 +213,6 @@ function iframeResizerChild() {
     }
 
     manageEventListeners('add')
-  }
-
-  function setupInPageLinks(enabled) {
-    const getPagePosition = () => ({
-      x: document.documentElement.scrollLeft,
-      y: document.documentElement.scrollTop,
-    })
-
-    function getElementPosition(el) {
-      const elPosition = el.getBoundingClientRect()
-      const pagePosition = getPagePosition()
-
-      return {
-        x: parseInt(elPosition.left, BASE) + parseInt(pagePosition.x, BASE),
-        y: parseInt(elPosition.top, BASE) + parseInt(pagePosition.y, BASE),
-      }
-    }
-
-    function findTarget(location) {
-      function jumpToTarget(target) {
-        const jumpPosition = getElementPosition(target)
-
-        log(
-          `Moving to in page link (%c#${hash}%c) at x: %c${jumpPosition.x}%c y: %c${jumpPosition.y}`,
-          HIGHLIGHT,
-          FOREGROUND,
-          HIGHLIGHT,
-          FOREGROUND,
-          HIGHLIGHT,
-        )
-
-        sendMessage(jumpPosition.y, jumpPosition.x, SCROLL_TO_OFFSET) // X&Y reversed at sendMessage uses height/width
-      }
-
-      const hash = location.split('#')[1] || location // Remove # if present
-      const hashData = decodeURIComponent(hash)
-      const target =
-        document.getElementById(hashData) ||
-        document.getElementsByName(hashData)[0]
-
-      if (target !== undefined) {
-        jumpToTarget(target)
-        return
-      }
-
-      log(`In page link (#${hash}) not found in iframe, so sending to parent`)
-      sendMessage(0, 0, IN_PAGE_LINK, `#${hash}`)
-    }
-
-    function checkLocationHash() {
-      const { hash, href } = window.location
-
-      if (hash !== '' && hash !== '#') {
-        findTarget(href)
-      }
-    }
-
-    function bindAnchors() {
-      for (const link of document.querySelectorAll('a[href^="#"]')) {
-        if (link.getAttribute('href') !== '#') {
-          addEventListener(link, 'click', (e) => {
-            e.preventDefault()
-            findTarget(link.getAttribute('href'))
-          })
-        }
-      }
-    }
-
-    function bindLocationHash() {
-      addEventListener(window, 'hashchange', checkLocationHash)
-    }
-
-    function initCheck() {
-      // Check if page loaded with location hash after init resize
-      setTimeout(checkLocationHash, EVENT_CANCEL_TIMER)
-    }
-
-    function enableInPageLinks() {
-      log('Setting up location.hash handlers')
-      bindAnchors()
-      bindLocationHash()
-      initCheck()
-    }
-
-    const { mode } = settings
-
-    if (enabled) {
-      if (mode === 1) {
-        advise(getModeData(5))
-      } else {
-        enableInPageLinks()
-      }
-    } else {
-      log('In page linking not enabled')
-    }
-
-    state.inPageLinks = {
-      enabled,
-      findTarget,
-    }
   }
 
   function overflowObserved() {

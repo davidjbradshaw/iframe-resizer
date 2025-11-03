@@ -123,6 +123,8 @@ export const COLLAPSE = 'collapsed'
 export const HEIGHT_CALC_MODE_DEFAULT = AUTO
 export const WIDTH_CALC_MODE_DEFAULT = SCROLL
 
+export const EVENT_CANCEL_TIMER = 128
+
 export const LOG_OPTIONS = Object.freeze({
   [EXPAND]: 1,
   [COLLAPSE]: 1,
