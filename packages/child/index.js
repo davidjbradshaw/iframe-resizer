@@ -1,51 +1,30 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
-  AUTO_RESIZE,
   BASE,
-  BOOLEAN,
-  CLOSE,
-  ENABLE,
-  FUNCTION,
-  HEIGHT_CALC_MODE_DEFAULT,
   HEIGHT_EDGE,
   IN_PAGE_LINK,
   INIT,
-  MANUAL_RESIZE_REQUEST,
   MESSAGE,
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
   MUTATION_OBSERVER,
-  NONE,
-  NUMBER,
   OVERFLOW_OBSERVER,
   PAGE_INFO,
-  PAGE_INFO_STOP,
   PARENT_INFO,
-  PARENT_INFO_STOP,
   PARENT_RESIZE_REQUEST,
   READY_STATE_CHANGE,
   RESIZE_OBSERVER,
-  SCROLL_BY,
-  SCROLL_TO,
   SCROLL_TO_OFFSET,
   SEPARATOR,
-  SET_OFFSET_SIZE,
   SIZE_ATTR,
-  STRING,
   UNDEFINED,
   VERSION,
   VISIBILITY_OBSERVER,
   WIDTH_EDGE,
 } from '../common/consts'
 import { getModeData } from '../common/mode'
-import {
-  getElementName,
-  id,
-  isolateUserCode,
-  once,
-  typeAssert,
-} from '../common/utils'
+import { getElementName, id, isolateUserCode, once } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
 import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
 import checkCrossDomain from './check/cross-domain'
@@ -58,9 +37,6 @@ import checkReadyYet from './check/ready'
 import checkVersion from './check/version'
 import {
   advise,
-  debug,
-  deprecateMethod,
-  deprecateMethodReplace,
   endAutoGroup,
   error,
   errorBoundary,
@@ -79,6 +55,7 @@ import {
 import setupMouseEvents from './events/mouse'
 import setupOnPageHide from './events/page-hide'
 import ready from './events/ready'
+import setupPublicMethods from './methods'
 import createMutationObserver from './observers/mutation'
 import createOverflowObserver from './observers/overflow'
 import createPerformanceObserver from './observers/perf'
@@ -87,13 +64,13 @@ import createVisibilityObserver from './observers/visibility'
 import createApplySelectors from './page/apply-selectors'
 import injectClearFixIntoBodyElement from './page/clear-fix'
 import { setBodyStyle, setMargin } from './page/css'
+import { triggerReset } from './page/reset'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
 import sendMessage from './send/message'
 import sendSize from './send/size'
 import sendTitle from './send/title'
-import { getHeight, getWidth } from './size'
 import { getAllElements } from './size/all'
 import settings from './values/settings'
 import state from './values/state'
@@ -102,13 +79,9 @@ function iframeResizerChild() {
   const EVENT_CANCEL_TIMER = 128
 
   let applySelectors = id
-  let inPageLinks = {}
   let overflowObserver
   let resizeObserver
   let win = window
-
-  let onPageInfo = null
-  let onParentInfo = null
 
   function isolate(funcs) {
     const { mode } = settings
@@ -177,7 +150,7 @@ function iframeResizerChild() {
       setupEventListeners,
       () => setupMouseEvents(settings),
       setupOnPageHide,
-      setupPublicMethods,
+      () => setupPublicMethods(win),
     ]
 
     isolate(setup)
@@ -339,192 +312,10 @@ function iframeResizerChild() {
       log('In page linking not enabled')
     }
 
-    inPageLinks = {
-      ...inPageLinks,
+    state.inPageLinks = {
+      enabled,
       findTarget,
     }
-  }
-
-  function setupPublicMethods() {
-    if (settings.mode === 1) return
-
-    win.parentIframe = Object.freeze({
-      autoResize: (enable) => {
-        typeAssert(enable, BOOLEAN, 'parentIframe.autoResize(enable) enable')
-        const { autoResize, calculateHeight, calculateWidth } = settings
-
-        if (calculateWidth === false && calculateHeight === false) {
-          consoleEvent(ENABLE)
-          advise(
-            `Auto Resize can not be changed when <b>direction</> is set to '${NONE}'.`, //  or '${BOTH}'
-          )
-          return false
-        }
-
-        if (enable === true && autoResize === false) {
-          settings.autoResize = true
-          queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled'))
-        } else if (enable === false && autoResize === true) {
-          settings.autoResize = false
-        }
-
-        sendMessage(0, 0, AUTO_RESIZE, JSON.stringify(settings.autoResize))
-
-        return settings.autoResize
-      },
-
-      close() {
-        sendMessage(0, 0, CLOSE)
-      },
-
-      getId: () => settings.parentId,
-
-      getOrigin: () => {
-        consoleEvent('getOrigin')
-        deprecateMethod('getOrigin()', 'getParentOrigin()')
-        return state.origin
-      },
-
-      getParentOrigin: () => state.origin,
-
-      getPageInfo(callback) {
-        if (typeof callback === FUNCTION) {
-          onPageInfo = callback
-          sendMessage(0, 0, PAGE_INFO)
-          deprecateMethodReplace(
-            'getPageInfo()',
-            'getParentProps()',
-            'See <u>https://iframe-resizer.com/upgrade</> for details. ',
-          )
-          return
-        }
-
-        onPageInfo = null
-        sendMessage(0, 0, PAGE_INFO_STOP)
-      },
-
-      getParentProps(callback) {
-        typeAssert(
-          callback,
-          FUNCTION,
-          'parentIframe.getParentProps(callback) callback',
-        )
-
-        onParentInfo = callback
-        sendMessage(0, 0, PARENT_INFO)
-
-        return () => {
-          onParentInfo = null
-          sendMessage(0, 0, PARENT_INFO_STOP)
-        }
-      },
-
-      getParentProperties(callback) {
-        deprecateMethod('getParentProperties()', 'getParentProps()')
-        this.getParentProps(callback)
-      },
-
-      moveToAnchor(anchor) {
-        typeAssert(anchor, STRING, 'parentIframe.moveToAnchor(anchor) anchor')
-        inPageLinks.findTarget(anchor)
-      },
-
-      reset() {
-        resetIframe('parentIframe.reset')
-      },
-
-      setOffsetSize(newOffset) {
-        typeAssert(
-          newOffset,
-          NUMBER,
-          'parentIframe.setOffsetSize(offset) offset',
-        )
-        settings.offsetHeight = newOffset
-        settings.offsetWidth = newOffset
-        sendSize(SET_OFFSET_SIZE, `parentIframe.setOffsetSize(${newOffset})`)
-      },
-
-      scrollBy(x, y) {
-        typeAssert(x, NUMBER, 'parentIframe.scrollBy(x, y) x')
-        typeAssert(y, NUMBER, 'parentIframe.scrollBy(x, y) y')
-        sendMessage(y, x, SCROLL_BY) // X&Y reversed at sendMessage uses height/width
-      },
-
-      scrollTo(x, y) {
-        typeAssert(x, NUMBER, 'parentIframe.scrollTo(x, y) x')
-        typeAssert(y, NUMBER, 'parentIframe.scrollTo(x, y) y')
-        sendMessage(y, x, SCROLL_TO) // X&Y reversed at sendMessage uses height/width
-      },
-
-      scrollToOffset(x, y) {
-        typeAssert(x, NUMBER, 'parentIframe.scrollToOffset(x, y) x')
-        typeAssert(y, NUMBER, 'parentIframe.scrollToOffset(x, y) y')
-        sendMessage(y, x, SCROLL_TO_OFFSET) // X&Y reversed at sendMessage uses height/width
-      },
-
-      sendMessage(msg, targetOrigin) {
-        if (targetOrigin)
-          typeAssert(
-            targetOrigin,
-            STRING,
-            'parentIframe.sendMessage(msg, targetOrigin) targetOrigin',
-          )
-        sendMessage(0, 0, MESSAGE, JSON.stringify(msg), targetOrigin)
-      },
-
-      setHeightCalculationMethod(heightCalculationMethod) {
-        settings.heightCalcMode = heightCalculationMethod
-        checkHeightMode()
-      },
-
-      setWidthCalculationMethod(widthCalculationMethod) {
-        settings.widthCalcMode = widthCalculationMethod
-        checkWidthMode()
-      },
-
-      setTargetOrigin(targetOrigin) {
-        typeAssert(
-          targetOrigin,
-          STRING,
-          'parentIframe.setTargetOrigin(targetOrigin) targetOrigin',
-        )
-
-        log(`Set targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
-        settings.targetOrigin = targetOrigin
-      },
-
-      resize(customHeight, customWidth) {
-        if (customHeight !== undefined)
-          typeAssert(
-            customHeight,
-            NUMBER,
-            'parentIframe.resize(customHeight, customWidth) customHeight',
-          )
-
-        if (customWidth !== undefined)
-          typeAssert(
-            customWidth,
-            NUMBER,
-            'parentIframe.resize(customHeight, customWidth) customWidth',
-          )
-
-        const valString = `${customHeight || ''}${customWidth ? `,${customWidth}` : ''}`
-
-        sendSize(
-          MANUAL_RESIZE_REQUEST,
-          `parentIframe.resize(${valString})`,
-          customHeight,
-          customWidth,
-        )
-      },
-
-      size(customHeight, customWidth) {
-        deprecateMethod('size()', 'resize()')
-        this.resize(customHeight, customWidth)
-      },
-    })
-
-    win.parentIFrame = win.parentIframe
   }
 
   function overflowObserved() {
@@ -655,41 +446,6 @@ function iframeResizerChild() {
     pushDisconnectsOnToTearDown(observers)
   }
 
-  function lockTrigger() {
-    if (state.triggerLocked) {
-      log('TriggerLock blocked calculation')
-      return
-    }
-    state.triggerLocked = true
-    debug('Trigger event lock on')
-
-    requestAnimationFrame(() => {
-      state.triggerLocked = false
-      debug('Trigger event lock off')
-    })
-  }
-
-  function triggerReset(triggerEvent) {
-    const { heightCalcMode, widthCalcMode } = settings
-
-    log(`Reset trigger event: %c${triggerEvent}`, HIGHLIGHT)
-    const height = getHeight[heightCalcMode]()
-    const width = getWidth[widthCalcMode]()
-
-    sendMessage(height, width, triggerEvent)
-  }
-
-  function resetIframe(triggerEventDesc) {
-    const hcm = settings.heightCalcMode
-    settings.heightCalcMode = HEIGHT_CALC_MODE_DEFAULT
-
-    log(`Reset trigger event: %c${triggerEventDesc}`, HIGHLIGHT)
-    lockTrigger()
-    triggerReset('reset')
-
-    settings.heightCalcMode = hcm
-  }
-
   let initLock = true
   function receiver(event) {
     consoleEvent('onMessage')
@@ -737,7 +493,7 @@ function iframeResizerChild() {
       },
 
       moveToAnchor() {
-        inPageLinks.findTarget(getData())
+        state.inPageLinks.findTarget(getData())
       },
 
       inPageLink() {
@@ -745,6 +501,7 @@ function iframeResizerChild() {
       }, // Backward compatibility
 
       pageInfo() {
+        const { onPageInfo } = state
         const msgBody = getData()
         log(`PageInfo received from parent:`, parseFrozen(msgBody))
         if (onPageInfo) {
@@ -755,6 +512,7 @@ function iframeResizerChild() {
       },
 
       parentInfo() {
+        const { onParentInfo } = state
         const msgBody = parseFrozen(getData())
         log(`ParentInfo received from parent:`, msgBody)
         if (onParentInfo) {

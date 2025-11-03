@@ -3,10 +3,13 @@ export default {
   hasTags: false,
   hasOverflow: false,
   isHidden: false,
+  inPageLinks: {},
   origin: undefined,
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [],
   target: window?.parent,
   triggerLocked: false,
+  onPageInfo: null,
+  onParentInfo: null,
 }
