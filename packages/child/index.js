@@ -15,7 +15,6 @@ import {
   READY_STATE_CHANGE,
   RESIZE_OBSERVER,
   SEPARATOR,
-  SIZE_ATTR,
   UNDEFINED,
   VERSION,
   VISIBILITY_OBSERVER,
@@ -31,6 +30,8 @@ import checkMode from './check/mode'
 import checkOverflow from './check/overflow'
 import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
+import checkSettings from './check/settings'
+import checkAndSetupTags from './check/tags'
 import checkVersion from './check/version'
 import {
   advise,
@@ -51,6 +52,7 @@ import {
 } from './events/listeners'
 import setupMouseEvents from './events/mouse'
 import setupOnPageHide from './events/page-hide'
+import setupPrintListeners from './events/print'
 import ready from './events/ready'
 import setupPublicMethods from './methods'
 import createMutationObserver from './observers/mutation'
@@ -131,6 +133,7 @@ function iframeResizerChild() {
       checkDeprecatedAttrs,
       checkQuirksMode,
       checkAndSetupTags,
+      checkSettings,
       bothDirections ? id : checkBlockingCSS,
 
       () => setMargin(settings),
@@ -144,7 +147,7 @@ function iframeResizerChild() {
       attachObservers,
 
       () => setupInPageLinks(inPageLinks),
-      setupEventListeners,
+      setupPrintListeners,
       () => setupMouseEvents(settings),
       setupOnPageHide,
       () => setupPublicMethods(win),
@@ -165,54 +168,6 @@ function iframeResizerChild() {
     )
 
     sendTitle()
-  }
-
-  function checkAndSetupTags() {
-    state.taggedElements = document.querySelectorAll(`[${SIZE_ATTR}]`)
-    state.hasTags = state.taggedElements.length > 0
-    log(`Tagged elements found: %c${state.hasTags}`, HIGHLIGHT)
-  }
-
-  const eventHandlersByName = {}
-  function manageTriggerEvent(options) {
-    const listener = {
-      add(eventName) {
-        const handleEvent = () => sendSize(options.eventName, options.eventType)
-
-        eventHandlersByName[eventName] = handleEvent
-        addEventListener(window, eventName, handleEvent, { passive: true })
-      },
-      remove(eventName) {
-        const handleEvent = eventHandlersByName[eventName]
-        delete eventHandlersByName[eventName]
-
-        removeEventListener(window, eventName, handleEvent)
-      },
-    }
-
-    listener[options.method](options.eventName)
-  }
-
-  function manageEventListeners(method) {
-    manageTriggerEvent({
-      method,
-      eventType: 'After Print',
-      eventName: 'afterprint',
-    })
-
-    manageTriggerEvent({
-      method,
-      eventType: 'Before Print',
-      eventName: 'beforeprint',
-    })
-  }
-
-  function setupEventListeners() {
-    if (settings.autoResize !== true) {
-      log('Auto Resize disabled')
-    }
-
-    manageEventListeners('add')
   }
 
   function overflowObserved() {

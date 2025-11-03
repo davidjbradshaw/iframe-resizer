@@ -1,5 +1,3 @@
-import { HIGHLIGHT } from 'auto-console-group'
-
 import {
   FUNCTION,
   HEIGHT,
@@ -11,7 +9,7 @@ import {
   WIDTH,
 } from '../../common/consts'
 import { getKey } from '../../common/mode'
-import { deprecateOption, info, log } from '../console'
+import { deprecateOption, log } from '../console'
 import setupCustomCalcMethod from '../size/custom'
 import settings from '../values/settings'
 
@@ -75,16 +73,9 @@ function readData(data) {
 }
 
 export default function readDataFromPage() {
-  const { mode, targetOrigin } = settings
+  const { mode } = settings
   if (mode === 1) return {}
 
   const data = window.iframeResizer || window.iFrameResizer
-  const localSettings = isObject(data) ? readData(data) : {}
-
-  info(
-    `Set targetOrigin for parent: %c${localSettings.targetOrigin || targetOrigin}`,
-    HIGHLIGHT,
-  )
-
-  return localSettings
+  return isObject(data) ? readData(data) : {}
 }
