@@ -2,279 +2,35 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import {
   EVENT_CANCEL_TIMER,
-  HEIGHT_EDGE,
   INIT,
   MESSAGE,
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
-  MUTATION_OBSERVER,
-  OVERFLOW_OBSERVER,
   PAGE_INFO,
   PARENT_INFO,
   PARENT_RESIZE_REQUEST,
   READY_STATE_CHANGE,
-  RESIZE_OBSERVER,
   SEPARATOR,
   UNDEFINED,
-  VERSION,
-  VISIBILITY_OBSERVER,
-  WIDTH_EDGE,
 } from '../common/consts'
-import { getElementName, id, isolateUserCode, once } from '../common/utils'
-import checkBlockingCSS from './check/blocking-css'
-import checkBoth from './check/both'
-import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
-import checkCrossDomain from './check/cross-domain'
-import checkDeprecatedAttrs from './check/deprecated-attributes'
-import checkIgnoredElements from './check/ignored-elements'
-import checkMode from './check/mode'
-import checkOverflow from './check/overflow'
-import checkQuirksMode from './check/quirks-mode'
-import checkReadyYet from './check/ready'
-import checkSettings from './check/settings'
-import checkAndSetupTags from './check/tags'
-import checkVersion from './check/version'
+import { isolateUserCode } from '../common/utils'
 import {
-  endAutoGroup,
   errorBoundary,
   event as consoleEvent,
-  info,
   label,
   log,
-  setConsoleOptions,
   warn,
 } from './console'
-import {
-  addEventListener,
-  removeEventListener,
-  tearDownList,
-} from './events/listeners'
-import setupMouseEvents from './events/mouse'
-import setupOnPageHide from './events/page-hide'
-import setupPrintListeners from './events/print'
+import { addEventListener, removeEventListener } from './events/listeners'
 import ready from './events/ready'
-import setupPublicMethods from './methods'
-import createMutationObserver from './observers/mutation'
-import createOverflowObserver from './observers/overflow'
-import createPerformanceObserver from './observers/perf'
-import createResizeObserver from './observers/resize'
-import createVisibilityObserver from './observers/visibility'
-import createApplySelectors from './page/apply-selectors'
-import injectClearFixIntoBodyElement from './page/clear-fix'
-import { setBodyStyle, setMargin } from './page/css'
-import setupInPageLinks from './page/links'
+import init from './init'
 import { triggerReset } from './page/reset'
-import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
-import readDataFromPage from './read/from-page'
-import readDataFromParent from './read/from-parent'
 import sendMessage from './send/message'
 import sendSize from './send/size'
-import sendTitle from './send/title'
-import { getAllElements } from './size/all'
-import isolate from './utils/isolate'
-import map2settings from './utils/map-settings'
 import settings from './values/settings'
 import state from './values/state'
 
 function iframeResizerChild() {
-  let win = window
-
-  function startLogging({ logExpand, logging, parentId }) {
-    setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
-    consoleEvent('initReceived')
-    log(`Initialising iframe v${VERSION} ${window.location.href}`)
-  }
-
-  function init(data) {
-    if (!state.firstRun) return
-    map2settings(readDataFromParent(data))
-    startLogging(settings)
-    map2settings(readDataFromPage())
-    // debug({ ...settings })
-
-    const { bodyBackground, bodyPadding, inPageLinks, onReady } = settings
-    const bothDirections = checkBoth(settings)
-
-    state.applySelectors = createApplySelectors(settings)
-
-    const setup = [
-      () => checkVersion(settings),
-      () => checkMode(settings),
-      checkIgnoredElements,
-      checkCrossDomain,
-      checkHeightMode,
-      checkWidthMode,
-      checkDeprecatedAttrs,
-      checkQuirksMode,
-      checkAndSetupTags,
-      checkSettings,
-      bothDirections ? id : checkBlockingCSS,
-
-      () => setMargin(settings),
-      () => setBodyStyle('background', bodyBackground),
-      () => setBodyStyle('padding', bodyPadding),
-
-      bothDirections ? id : stopInfiniteResizingOfIframe,
-      injectClearFixIntoBodyElement,
-
-      state.applySelectors,
-      attachObservers,
-
-      () => setupInPageLinks(inPageLinks),
-      setupPrintListeners,
-      () => setupMouseEvents(settings),
-      setupOnPageHide,
-      () => setupPublicMethods(win),
-    ]
-
-    isolate(setup)
-
-    checkReadyYet(once(onReady))
-    log('Initialization complete', settings)
-    endAutoGroup()
-
-    sendSize(
-      INIT,
-      'Init message from host page',
-      undefined,
-      undefined,
-      `${VERSION}:${settings.mode}`,
-    )
-
-    sendTitle()
-  }
-
-  let overflowObserver
-  let resizeObserver
-
-  function overflowObserved() {
-    const { hasOverflow } = state
-    const { hasOverflowUpdated, overflowedNodeSet } = checkOverflow()
-
-    switch (true) {
-      case !hasOverflowUpdated:
-        return
-
-      case overflowedNodeSet.size > 1:
-        info('Overflowed Elements:', overflowedNodeSet)
-        break
-
-      case hasOverflow:
-        break
-
-      default:
-        info('No overflow detected')
-    }
-
-    sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
-  }
-
-  function createOverflowObservers(nodeList) {
-    const overflowObserverOptions = {
-      root: document.documentElement,
-      side: settings.calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,
-    }
-
-    overflowObserver = createOverflowObserver(
-      overflowObserved,
-      overflowObserverOptions,
-    )
-
-    overflowObserver.attachObservers(nodeList)
-
-    return overflowObserver
-  }
-
-  function resizeObserved(entries) {
-    if (!Array.isArray(entries) || entries.length === 0) return
-    const el = entries[0].target
-    sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
-  }
-
-  function createResizeObservers(nodeList) {
-    resizeObserver = createResizeObserver(resizeObserved)
-    resizeObserver.attachObserverToNonStaticElements(nodeList)
-    return resizeObserver
-  }
-
-  function visibilityChange(isVisible) {
-    log(`Visible: %c${isVisible}`, HIGHLIGHT)
-    state.isHidden = !isVisible
-    sendSize(VISIBILITY_OBSERVER, 'Visibility changed')
-  }
-
-  const getCombinedElementLists = (nodeList) => {
-    const elements = new Set()
-
-    for (const node of nodeList) {
-      elements.add(node)
-      for (const element of getAllElements(node)) elements.add(element)
-    }
-
-    info(`Inspecting:\n`, elements)
-    return elements
-  }
-
-  const addObservers = (nodeList) => {
-    if (nodeList.size === 0) return
-
-    consoleEvent('addObservers')
-
-    const elements = getCombinedElementLists(nodeList)
-
-    overflowObserver.attachObservers(elements)
-    resizeObserver.attachObserverToNonStaticElements(elements)
-
-    endAutoGroup()
-  }
-
-  const removeObservers = (nodeList) => {
-    if (nodeList.size === 0) return
-
-    consoleEvent('removeObservers')
-
-    const elements = getCombinedElementLists(nodeList)
-
-    overflowObserver.detachObservers(elements)
-    resizeObserver.detachObservers(elements)
-
-    endAutoGroup()
-  }
-
-  function contentMutated({ addedNodes, removedNodes }) {
-    consoleEvent('contentMutated')
-    state.applySelectors()
-    checkAndSetupTags()
-    checkOverflow()
-    endAutoGroup()
-
-    removeObservers(removedNodes)
-    addObservers(addedNodes)
-  }
-
-  function mutationObserved(mutations) {
-    contentMutated(mutations)
-    sendSize(MUTATION_OBSERVER, 'Mutation Observed')
-  }
-
-  function pushDisconnectsOnToTearDown(observers) {
-    tearDownList.push(...observers.map((observer) => observer.disconnect))
-  }
-
-  function attachObservers() {
-    const nodeList = getAllElements(document.documentElement)
-
-    const observers = [
-      createMutationObserver(mutationObserved),
-      createOverflowObservers(nodeList),
-      createPerformanceObserver(),
-      createResizeObservers(nodeList),
-      createVisibilityObserver(visibilityChange),
-    ]
-
-    pushDisconnectsOnToTearDown(observers)
-  }
-
   let initLock = true
   function receiver(event) {
     consoleEvent('onMessage')
@@ -431,13 +187,13 @@ function iframeResizerChild() {
   /* TEST CODE START */
   function mockMsgListener(msgObject) {
     received(msgObject)
-    return win
+    return state.win
   }
 
   try {
     // eslint-disable-next-line no-restricted-globals
     if (top?.document?.getElementById('banner')) {
-      win = {}
+      state.win = {}
 
       // Create test hooks
       window.mockMsgListener = mockMsgListener

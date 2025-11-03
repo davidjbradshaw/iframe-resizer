@@ -11,6 +11,7 @@ export default {
   taggedElements: [],
   target: window?.parent,
   triggerLocked: false,
+  win: window,
   onPageInfo: null,
   onParentInfo: null,
 }

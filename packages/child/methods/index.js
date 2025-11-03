@@ -35,10 +35,10 @@ import sendSize from '../send/size'
 import settings from '../values/settings'
 import state from '../values/state'
 
-export default function setupPublicMethods(win) {
+export default function setupPublicMethods() {
   if (settings.mode === 1) return
 
-  win.parentIframe = Object.freeze({
+  state.win.parentIframe = Object.freeze({
     autoResize: (enable) => {
       typeAssert(enable, BOOLEAN, 'parentIframe.autoResize(enable) enable')
       const { autoResize, calculateHeight, calculateWidth } = settings
@@ -210,5 +210,5 @@ export default function setupPublicMethods(win) {
     },
   })
 
-  win.parentIFrame = win.parentIframe
+  state.win.parentIFrame = state.win.parentIframe
 }
