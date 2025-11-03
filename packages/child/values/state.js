@@ -1,4 +1,5 @@
 export default {
+  applySelectors: null,
   firstRun: true,
   hasTags: false,
   hasOverflow: false,

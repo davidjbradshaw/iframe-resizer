@@ -22,6 +22,7 @@ import {
 } from '../common/consts'
 import { getElementName, id, isolateUserCode, once } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
+import checkBoth from './check/both'
 import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
 import checkCrossDomain from './check/cross-domain'
 import checkDeprecatedAttrs from './check/deprecated-attributes'
@@ -34,9 +35,7 @@ import checkSettings from './check/settings'
 import checkAndSetupTags from './check/tags'
 import checkVersion from './check/version'
 import {
-  advise,
   endAutoGroup,
-  error,
   errorBoundary,
   event as consoleEvent,
   info,
@@ -72,38 +71,13 @@ import sendMessage from './send/message'
 import sendSize from './send/size'
 import sendTitle from './send/title'
 import { getAllElements } from './size/all'
+import isolate from './utils/isolate'
+import map2settings from './utils/map-settings'
 import settings from './values/settings'
 import state from './values/state'
 
 function iframeResizerChild() {
-  let applySelectors = id
-  let overflowObserver
-  let resizeObserver
   let win = window
-
-  function isolate(funcs) {
-    const { mode } = settings
-    funcs.forEach((func) => {
-      try {
-        func()
-      } catch (error_) {
-        if (mode < 0) throw error_
-        advise(
-          `<rb>Error in setup function</>\n<i>iframe-resizer</> detected an error during setup.\n\nPlease report the following error message at <u>https://github.com/davidjbradshaw/iframe-resizer/issues</>`,
-        )
-        error(error_)
-      }
-    })
-  }
-
-  const checkBoth = ({ calculateWidth, calculateHeight }) =>
-    calculateWidth === calculateHeight
-
-  function map2settings(data) {
-    for (const [key, value] of Object.entries(data)) {
-      if (value) settings[key] = value
-    }
-  }
 
   function startLogging({ logExpand, logging, parentId }) {
     setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
@@ -121,7 +95,7 @@ function iframeResizerChild() {
     const { bodyBackground, bodyPadding, inPageLinks, onReady } = settings
     const bothDirections = checkBoth(settings)
 
-    applySelectors = createApplySelectors(settings)
+    state.applySelectors = createApplySelectors(settings)
 
     const setup = [
       () => checkVersion(settings),
@@ -143,7 +117,7 @@ function iframeResizerChild() {
       bothDirections ? id : stopInfiniteResizingOfIframe,
       injectClearFixIntoBodyElement,
 
-      applySelectors,
+      state.applySelectors,
       attachObservers,
 
       () => setupInPageLinks(inPageLinks),
@@ -169,6 +143,9 @@ function iframeResizerChild() {
 
     sendTitle()
   }
+
+  let overflowObserver
+  let resizeObserver
 
   function overflowObserved() {
     const { hasOverflow } = state
@@ -266,7 +243,7 @@ function iframeResizerChild() {
 
   function contentMutated({ addedNodes, removedNodes }) {
     consoleEvent('contentMutated')
-    applySelectors()
+    state.applySelectors()
     checkAndSetupTags()
     checkOverflow()
     endAutoGroup()
