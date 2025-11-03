@@ -8,16 +8,17 @@ import state from './values/state'
 function iframeResizerChild() {
   if ('iframeChildListener' in window) {
     warn('Already setup')
-  } else {
-    window.iframeChildListener = (data) =>
-      setTimeout(() => received({ data, sameOrigin: true }))
-
-    consoleEvent('listen')
-    addEventListener(window, MESSAGE, received)
-    addEventListener(document, READY_STATE_CHANGE, ready)
-
-    ready()
+    return
   }
+
+  window.iframeChildListener = (data) =>
+    setTimeout(() => received({ data, sameOrigin: true }))
+
+  consoleEvent('listen')
+  addEventListener(window, MESSAGE, received)
+  addEventListener(document, READY_STATE_CHANGE, ready)
+
+  ready()
 
   /* TEST CODE START */
   function mockMsgListener(msgObject) {
