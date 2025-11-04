@@ -43,7 +43,7 @@ function startLogging({ logExpand, logging, parentId }) {
   log(`Initialising iframe v${VERSION} ${window.location.href}`)
 }
 
-function startIframeResizer({
+function startIframeResizerChild({
   bodyBackground,
   bodyPadding,
   inPageLinks,
@@ -107,5 +107,5 @@ export default function (data) {
 
   state.applySelectors = createApplySelectors(settings)
 
-  startIframeResizer(settings)
+  startIframeResizerChild(settings)
 }
