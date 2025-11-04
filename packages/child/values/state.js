@@ -4,6 +4,7 @@ export default {
   hasTags: false,
   hasOverflow: false,
   isHidden: false,
+  initLock: true,
   inPageLinks: {},
   origin: undefined,
   overflowedNodeSet: new Set(),
