@@ -287,7 +287,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(
-            'Unexpected message ([iFrameSizer]foo)',
+            'Unexpected message ([iFrameSizer]foo), this is likely due to a newer version on iframe-resizer running on the parent page.',
           )
           done()
         })

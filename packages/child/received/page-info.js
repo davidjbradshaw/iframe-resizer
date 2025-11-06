@@ -6,12 +6,12 @@ import { getData, notExpected, parse, parseFrozen } from './utils'
 
 export default function pageInfo(event) {
   const { onPageInfo } = state
-  const msgBody = getData(event)
+  const messageBody = getData(event)
 
-  log(`PageInfo received from parent:`, parseFrozen(msgBody))
+  log(`PageInfo received from parent:`, parseFrozen(messageBody))
 
   if (onPageInfo) {
-    isolateUserCode(onPageInfo, parse(msgBody))
+    isolateUserCode(onPageInfo, parse(messageBody))
   } else {
     notExpected(PAGE_INFO)
   }

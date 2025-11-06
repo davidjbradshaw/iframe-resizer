@@ -6,12 +6,12 @@ import { getData, notExpected, parseFrozen } from './utils'
 
 export default function parentInfo(event) {
   const { onParentInfo } = state
-  const msgBody = parseFrozen(getData(event))
+  const messageBody = parseFrozen(getData(event))
 
-  log(`ParentInfo received from parent:`, msgBody)
+  log(`ParentInfo received from parent:`, messageBody)
 
   if (onParentInfo) {
-    isolateUserCode(onParentInfo, msgBody)
+    isolateUserCode(onParentInfo, messageBody)
   } else {
     notExpected(PARENT_INFO)
   }
