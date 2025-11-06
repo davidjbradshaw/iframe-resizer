@@ -16,6 +16,7 @@ const getCombinedElementLists = (nodeList) => {
   }
 
   info(`Inspecting:\n`, elements)
+
   return elements
 }
 

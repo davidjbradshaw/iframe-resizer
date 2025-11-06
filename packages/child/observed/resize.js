@@ -13,5 +13,6 @@ function resizeObserved(entries) {
 export default function createResizeObservers(nodeList) {
   observers.resize = createResizeObserver(resizeObserved)
   observers.resize.attachObserverToNonStaticElements(nodeList)
+
   return observers.resize
 }
