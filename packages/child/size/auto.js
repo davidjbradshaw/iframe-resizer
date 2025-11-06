@@ -4,6 +4,8 @@ import { HEIGHT, MIN_SIZE } from '../../common/consts'
 import { info } from '../console'
 import state from '../values/state'
 
+const BOUNDING_FORMAT = [HIGHLIGHT, FOREGROUND, HIGHLIGHT]
+
 const prevScrollSize = {
   height: 0,
   width: 0,
@@ -17,7 +19,7 @@ const prevBoundingSize = {
 function getBoundingClientRect(dimension, boundingSize, scrollSize) {
   prevBoundingSize[dimension] = boundingSize
   prevScrollSize[dimension] = scrollSize
-  return Math.max(boundingSize, MIN_SIZE)
+  return boundingSize
 }
 
 function getOffset(getDimension) {
@@ -28,8 +30,6 @@ function getOffset(getDimension) {
 
 const getAdjustedScroll = (getDimension) =>
   getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
-
-const BOUNDING_FORMAT = [HIGHLIGHT, FOREGROUND, HIGHLIGHT]
 
 export default function getAutoSize(getDimension) {
   const { hasOverflow, hasTags, triggerLocked } = state

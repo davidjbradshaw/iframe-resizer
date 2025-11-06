@@ -19,16 +19,18 @@ function getSelectedElements() {
 }
 
 function findMaxElement(targetElements, side) {
+  const marginSide = `margin-${side}`
+
   let elVal = MIN_SIZE
   let maxEl = document.documentElement
   let maxVal = state.hasTags
-    ? 0
+    ? MIN_SIZE
     : document.documentElement.getBoundingClientRect().bottom
 
   for (const element of targetElements) {
     elVal =
       element.getBoundingClientRect()[side] +
-      parseFloat(getComputedStyle(element).getPropertyValue(`margin-${side}`))
+      parseFloat(getComputedStyle(element).getPropertyValue(marginSide))
 
     if (elVal > maxVal) {
       maxVal = elVal
