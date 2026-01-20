@@ -4,7 +4,7 @@ import { info } from '../console'
 
 export default function visibilityObserver(callback) {
   const observer = new IntersectionObserver(
-    (entries) => callback(entries[0].isIntersecting),
+    (entries) => callback(entries.at(-1).isIntersecting),
     {
       threshold: 0,
     },
