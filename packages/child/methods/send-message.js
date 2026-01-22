@@ -9,5 +9,6 @@ export default function (msg, targetOrigin) {
       STRING,
       'parentIframe.sendMessage(msg, targetOrigin) targetOrigin',
     )
+
   sendMessage(0, 0, MESSAGE, JSON.stringify(msg), targetOrigin)
 }

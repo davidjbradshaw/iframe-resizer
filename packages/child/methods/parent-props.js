@@ -22,5 +22,5 @@ export function getParentProps(callback) {
 
 export function getParentProperties(callback) {
   deprecateMethod('getParentProperties()', 'getParentProps()')
-  this.getParentProps(callback)
+  getParentProps(callback)
 }

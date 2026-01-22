@@ -9,6 +9,7 @@ import state from '../values/state'
 export function getOrigin() {
   consoleEvent('getOrigin')
   deprecateMethod('getOrigin()', 'getParentOrigin()')
+
   return state.origin
 }
 

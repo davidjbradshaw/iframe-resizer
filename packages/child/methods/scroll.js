@@ -10,7 +10,9 @@ import sendMessage from '../send/message'
 const createScrollMethod = (TYPE) => (x, y) => {
   typeAssert(x, NUMBER, `parentIframe.${TYPE}(x, y) x`)
   typeAssert(y, NUMBER, `parentIframe.${TYPE}(x, y) y`)
-  sendMessage(y, x, TYPE) // X&Y reversed at sendMessage uses height/width
+
+  // X&Y reversed at sendMessage uses height/width
+  sendMessage(y, x, TYPE)
 }
 
 export const scrollBy = createScrollMethod(SCROLL_BY)
