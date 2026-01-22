@@ -27,6 +27,8 @@ echo
 echo "Publishing version $VERSION as $1"
 echo
 
+npm login
+
 git stash
 git pull
 git stash pop
@@ -38,7 +40,7 @@ npm run build:$1
 cd dist/parent
 npm publish --tag $1
 cd ../child
-npm publish --tag $1 
+npm publish --tag $1
 cd ../core
 npm publish --tag $1
 cd ../jquery
@@ -50,7 +52,7 @@ npm publish --tag $1
 cd ../legacy
 npm publish --tag $1
 
-if [ $1 != "latest" ] 
+if [ $1 != "latest" ]
 then
   exit 0
 fi
@@ -61,7 +63,7 @@ cd ../..
 rm -v iframe-resizer.zip
 zip iframe-resizer.zip js/**
 
-cp -v js/** js-dist 
+cp -v js/** js-dist
 
 git add .
 git commit -am "Release v$VERSION"
