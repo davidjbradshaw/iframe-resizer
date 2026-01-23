@@ -589,7 +589,7 @@ The <b>data-iframe-height</> and <b>data-iframe-width</> attributes have been de
 
 window.iframeResizer = {
   license: 'xxxx',
-  ${label}CalculationMethod: AUTO,
+  ${label}CalculationMethod: '${AUTO}',
 }
 `
 
