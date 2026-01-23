@@ -1,6 +1,7 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
 import {
+  AUTO,
   HEIGHT_CALC_MODE_DEFAULT,
   WIDTH_CALC_MODE_DEFAULT,
 } from '../../common/consts'
@@ -27,7 +28,7 @@ const olderVersions = (
 
 window.iframeResizer = {
 license: 'xxxx',
-${label}CalculationMethod: AUTO,
+${label}CalculationMethod: '${AUTO}',
 }
 `
 
