@@ -34,7 +34,7 @@ describe('warnOnNoResponse', () => {
     msgTimeout,
   } = {}) => ({
     [id]: {
-      iframe: { src, sandbox },
+      iframe: { id, src, sandbox },
       checkOrigin,
       waitForLoad,
       initialised,
@@ -74,7 +74,6 @@ describe('warnOnNoResponse', () => {
       expect.stringContaining('https://foo.example:8443'),
     )
 
-    expect(settings[id].loadErrorShown).toBe(true)
   })
 
   it('omits checkOrigin advice when checkOrigin is false', () => {
@@ -145,16 +144,6 @@ describe('warnOnNoResponse', () => {
     jest.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(settings[id].initialisedFirstPage).toBe(true)
-    expect(advise).not.toHaveBeenCalled()
-  })
-
-  it('does nothing if loadErrorShown is already true', () => {
-    const id = 'f6'
-    const settings = makeSettings({ id, loadErrorShown: true })
-
-    warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
-
     expect(advise).not.toHaveBeenCalled()
   })
 

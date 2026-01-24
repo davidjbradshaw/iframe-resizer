@@ -14,13 +14,13 @@ const allowsScriptsAndOrigin = (sandbox) =>
   sandbox.length > 0 &&
   !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))
 
-function showWarning(id, settings) {
+function showWarning(iframeSettings) {
   const {
     checkOrigin,
-    iframe: { src, sandbox },
+    iframe: { id, src, sandbox },
     initialisedFirstPage,
     waitForLoad,
-  } = settings[id]
+  } = iframeSettings
   const targetOrigin = getOrigin(src)
 
   event(id, 'noResponse')
@@ -28,7 +28,7 @@ function showWarning(id, settings) {
     id,
     `<rb>No response from iframe</>
 
-The iframe (<i>${id}</>) has not responded within ${settings[id].warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
+The iframe (<i>${id}</>) has not responded within ${iframeSettings.warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
   checkOrigin && targetOrigin
     ? `
@@ -53,29 +53,31 @@ This message can be ignored if everything is working, or you can set the <b>warn
   )
 }
 
+const iframeHasClosed = (iframeSettings) => iframeSettings === undefined
+const resetTimeout = (iframeSettings) => (iframeSettings.msgTimeout = undefined)
+
+function iframeHasInitialised(iframeSettings) {
+  const { initialised } = iframeSettings
+  if (initialised) {
+    // Flag at least one successful initialisation in iframe
+    iframeSettings.initialisedFirstPage = true
+  }
+  return initialised
+}
+
 export default function warnOnNoResponse(id, settings) {
-  function warning() {
-    if (settings[id] === undefined) return // iframe has been closed while we were waiting
-
-    const { initialised, loadErrorShown } = settings[id]
-
-    settings[id].msgTimeout = undefined
-
-    if (initialised) {
-      settings[id].initialisedFirstPage = true
-      return
-    }
-
-    if (loadErrorShown) return
-
-    settings[id].loadErrorShown = true
-    showWarning(id, settings)
+  function responseCheck() {
+    if (iframeHasClosed(iframeSettings)) return
+    resetTimeout(iframeSettings)
+    if (iframeHasInitialised(iframeSettings)) return
+    showWarning(iframeSettings)
   }
 
-  const { msgTimeout, warningTimeout } = settings[id]
+  const iframeSettings = settings[id]
+  const { msgTimeout, warningTimeout } = iframeSettings
 
   if (!warningTimeout) return
   if (msgTimeout) clearTimeout(msgTimeout)
 
-  settings[id].msgTimeout = setTimeout(warning, warningTimeout)
+  iframeSettings.msgTimeout = setTimeout(responseCheck, warningTimeout)
 }
