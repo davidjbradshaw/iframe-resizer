@@ -5,26 +5,27 @@ import {
 import { warn } from '../console'
 
 export default {
-  bodyMargin: 0, // For V1 compatibility
-  calculateWidth: false,
-  logging: false,
   autoResize: true,
-  bodyMarginStr: '',
-  heightCalcMode: HEIGHT_CALC_MODE_DEFAULT,
   bodyBackground: '',
+  bodyMargin: 0, // For V1 compatibility
+  bodyMarginStr: '',
   bodyPadding: '',
-  tolerance: 0,
+  calculateHeight: true,
+  calculateWidth: false,
+  heightCalcMode: HEIGHT_CALC_MODE_DEFAULT,
+  ignoreSelector: '',
   inPageLinks: false,
-  widthCalcMode: WIDTH_CALC_MODE_DEFAULT,
+  logging: false,
+  logExpand: false,
+  mode: 0,
   mouseEvents: false,
   offsetHeight: 0,
   offsetWidth: 0,
-  calculateHeight: true,
-  mode: 0,
-  logExpand: false,
-  ignoreSelector: '',
   sizeSelector: '',
   targetOrigin: '*',
+  tolerance: 0,
+  widthCalcMode: WIDTH_CALC_MODE_DEFAULT,
+
   onBeforeResize: undefined,
   onMessage: () => {
     warn('onMessage function not defined')
