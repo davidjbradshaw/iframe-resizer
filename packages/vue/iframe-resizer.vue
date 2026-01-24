@@ -6,8 +6,8 @@
   import connectResizer from '@iframe-resizer/core'
   import acg from 'auto-console-group'
 
-  export const EXPAND = 'expanded'
-  export const COLLAPSE = 'collapsed'
+  const EXPAND = 'expanded'
+  const COLLAPSE = 'collapsed'
 
   const esModuleInterop = (mod) =>
     // eslint-disable-next-line no-underscore-dangle
