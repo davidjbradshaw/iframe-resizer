@@ -23,7 +23,7 @@ function receiver(event) {
 
     default:
       warn(
-        `Unexpected message (${event.data}), this is likely due to a newer version on iframe-resizer running on the parent page.`,
+        `Unexpected message (${event.data}), this is likely due to a newer version of iframe-resizer running on the parent page.`,
       )
   }
 }

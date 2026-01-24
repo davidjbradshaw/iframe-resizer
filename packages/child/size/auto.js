@@ -41,7 +41,7 @@ export default function getAutoSize(getDimension) {
   const scrollSize = getAdjustedScroll(getDimension)
   const sizes = `HTML: %c${boundingSize}px %cPage: %c${scrollSize}px`
 
-  let calculatedSize = MIN_SIZE
+  let calculatedSize
 
   switch (true) {
     case !getDimension.enabled():

@@ -21,7 +21,7 @@ function getSelectedElements() {
 function findMaxElement(targetElements, side) {
   const marginSide = `margin-${side}`
 
-  let elVal = MIN_SIZE
+  let elVal
   let maxEl = document.documentElement
   let maxVal = state.hasTags
     ? MIN_SIZE

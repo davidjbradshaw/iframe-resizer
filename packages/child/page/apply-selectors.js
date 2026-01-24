@@ -3,7 +3,7 @@ import { HIGHLIGHT } from 'auto-console-group'
 import { IGNORE_ATTR, SIZE_ATTR } from '../../common/consts'
 import { log } from '../console'
 
-export const applySelector = (name, attribute, selector) => () => {
+export const applySelector = (name, attribute, selector) => /* () => */ {
   if (selector === '') return
 
   log(`${name}: %c${selector}`, HIGHLIGHT)
