@@ -5,7 +5,9 @@
 <script>
   import connectResizer from '@iframe-resizer/core'
   import acg from 'auto-console-group'
-  import { EXPAND, COLLAPSE } from '../common/consts'
+
+  export const EXPAND = 'expanded'
+  export const COLLAPSE = 'collapsed'
 
   const esModuleInterop = (mod) =>
     // eslint-disable-next-line no-underscore-dangle
@@ -70,7 +72,7 @@
         type: Number,
       },
     },
-    
+
     mounted() {
       const self = this
       const { iframe } = this.$refs
@@ -107,7 +109,7 @@
         consoleGroup.log('Created Vue component')
       }
     },
-    
+
     beforeUnmount() {
       this.resizer?.disconnect()
     },
