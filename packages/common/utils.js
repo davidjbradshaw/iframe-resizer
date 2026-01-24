@@ -2,7 +2,7 @@ import { OBJECT, STRING } from './consts'
 
 export const isElement = (node) => node.nodeType === Node.ELEMENT_NODE
 export const isNumber = (value) => !Number.isNaN(value)
-export const isObject = (value) => typeof value === OBJECT
+export const isObject = (value) => typeof value === OBJECT && value !== null
 export const isString = (value) => typeof value === STRING
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(
