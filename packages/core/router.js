@@ -115,7 +115,7 @@ export default function routeMessage(messageData) {
       break
 
     case TITLE:
-      setTitle(message, id)
+      setTitle(id, message)
       break
 
     default:

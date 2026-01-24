@@ -9,6 +9,16 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(
   navigator.userAgent,
 )
 
+export function isIframe(element) {
+  if (!isObject(element)) return false
+
+  try {
+    return element.tagName === 'IFRAME' || element instanceof HTMLIFrameElement
+  } catch (error) {
+    return false
+  }
+}
+
 export const isolateUserCode = (func, ...val) =>
   setTimeout(() => func(...val), 0)
 

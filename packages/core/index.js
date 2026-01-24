@@ -17,7 +17,7 @@ export default function connectResizer(options) {
     const id = ensureHasId(iframe, options)
 
     if (LABEL in iframe) {
-      consoleEvent('alreadySetup')
+      consoleEvent(id, 'alreadySetup')
       warn(id, `Ignored iframe (${id}), already setup.`)
     } else {
       setupLogging(id, options)

@@ -25,7 +25,7 @@ export default function setDirection(id) {
       break
 
     default:
-      throw new TypeError(id, `Direction value of "${direction}" is not valid`)
+      throw new TypeError(`Direction value of "${direction}" is not valid`)
   }
 
   log(id, `direction: %c${direction}`, HIGHLIGHT)

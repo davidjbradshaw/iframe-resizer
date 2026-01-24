@@ -21,10 +21,8 @@ const isInit = (eventType) => eventType === INIT
 function checkReset(id) {
   if (!(settings[id]?.heightCalculationMethod in RESET_REQUIRED_METHODS)) return
 
-  const iframe = settings[id]
-
   resetIframe({
-    iframe,
+    id,
     height: MIN_SIZE,
     width: MIN_SIZE,
     type: INIT,

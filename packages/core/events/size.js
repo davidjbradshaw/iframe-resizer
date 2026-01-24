@@ -7,7 +7,7 @@ import settings from '../values/settings'
 function setDimension(dimension, messageData) {
   const { id } = messageData
   const size = `${messageData[dimension]}px`
-  messageData.iframe.style[dimension] = size
+  settings[id].iframe.style[dimension] = size
   info(id, `Set ${dimension}: %c${size}`, HIGHLIGHT)
 }
 

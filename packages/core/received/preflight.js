@@ -1,6 +1,7 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '../../common/consts'
+import { isIframe } from '../../common/utils'
 import { log, warn } from '../console'
 import settings from '../values/settings'
 
@@ -8,7 +9,7 @@ const ABOVE_TYPES = { true: 1, false: 1, undefined: 1 }
 
 export function checkIframeExists(messageData) {
   const { id, msg, iframe } = messageData
-  const detectedIframe = iframe && iframe !== null
+  const detectedIframe = isIframe(iframe)
 
   if (!detectedIframe) {
     log(id, `Received: %c${msg}`, HIGHLIGHT)
