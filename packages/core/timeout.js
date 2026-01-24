@@ -68,7 +68,8 @@ function hasInitialised(iframeSettings) {
 
 export default function warnOnNoResponse(id, settings) {
   function responseCheck() {
-    if (hasClosed(iframeSettings)) return
+    if (settings[id] === undefined) return
+    const iframeSettings = settings[id]
     resetTimeout(iframeSettings)
     if (hasInitialised(iframeSettings)) return
     showWarning(iframeSettings)

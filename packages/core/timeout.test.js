@@ -186,4 +186,21 @@ describe('warnOnNoResponse', () => {
       expect.not.stringMatching(/checkOrigin/),
     )
   })
+
+  it('does not warn when iframe is closed before timeout fires', () => {
+    const id = 'f10'
+    const settings = makeSettings({ id, warningTimeout: 100 })
+
+    warnOnNoResponse(id, settings)
+
+    // Simulate iframe being closed by removing it from settings
+    delete settings[id]
+
+    // Advance time to trigger the timeout
+    jest.advanceTimersByTime(101)
+
+    // Should not warn because iframe was closed
+    expect(advise).not.toHaveBeenCalled()
+    expect(event).not.toHaveBeenCalled()
+  })
 })
