@@ -54,10 +54,10 @@ This message can be ignored if everything is working, or you can set the <b>warn
   )
 }
 
-const iframeHasClosed = (iframeSettings) => iframeSettings === undefined
+const hasClosed = (iframeSettings) => iframeSettings === undefined
 const resetTimeout = (iframeSettings) => (iframeSettings.msgTimeout = undefined)
 
-function iframeHasInitialised(iframeSettings) {
+function hasInitialised(iframeSettings) {
   const { initialised } = iframeSettings
   if (initialised) {
     // Flag at least one successful initialisation in iframe
@@ -68,9 +68,9 @@ function iframeHasInitialised(iframeSettings) {
 
 export default function warnOnNoResponse(id, settings) {
   function responseCheck() {
-    if (iframeHasClosed(iframeSettings)) return
+    if (hasClosed(iframeSettings)) return
     resetTimeout(iframeSettings)
-    if (iframeHasInitialised(iframeSettings)) return
+    if (hasInitialised(iframeSettings)) return
     showWarning(iframeSettings)
   }
 
