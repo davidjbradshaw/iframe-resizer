@@ -20,6 +20,7 @@ function showWarning(iframeSettings) {
     iframe: { id, src, sandbox },
     initialisedFirstPage,
     waitForLoad,
+    warningTimeout,
   } = iframeSettings
   const targetOrigin = getOrigin(src)
 
@@ -28,7 +29,7 @@ function showWarning(iframeSettings) {
     id,
     `<rb>No response from iframe</>
 
-The iframe (<i>${id}</>) has not responded within ${iframeSettings.warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
+The iframe (<i>${id}</>) has not responded within ${warningTimeout / 1000} seconds. Check <b>@iframe-resizer/child</> package has been loaded in the iframe.
 ${
   checkOrigin && targetOrigin
     ? `

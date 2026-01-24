@@ -73,7 +73,6 @@ describe('warnOnNoResponse', () => {
       id,
       expect.stringContaining('https://foo.example:8443'),
     )
-
   })
 
   it('omits checkOrigin advice when checkOrigin is false', () => {
