@@ -187,19 +187,23 @@ describe('warnOnNoResponse', () => {
     )
   })
 
-  it('does not warn when iframe is closed before timeout fires', () => {
+  it('does not warn when iframe is removed from settings before timeout fires', () => {
     const id = 'f10'
     const settings = makeSettings({ id, warningTimeout: 100 })
 
     warnOnNoResponse(id, settings)
 
-    // Simulate iframe being closed by removing it from settings
+    expect(setTimeout).toHaveBeenCalledWith(
+      expect.any(Function),
+      settings[id].warningTimeout,
+    )
+
+    // Simulate iframe being closed/removed from settings
     delete settings[id]
 
-    // Advance time to trigger the timeout
-    jest.advanceTimersByTime(101)
+    jest.advanceTimersByTime(100 + 1)
 
-    // Should not warn because iframe was closed
+    // Should not warn or throw error when iframe is no longer in settings
     expect(advise).not.toHaveBeenCalled()
     expect(event).not.toHaveBeenCalled()
   })
