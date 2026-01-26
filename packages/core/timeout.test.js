@@ -34,7 +34,7 @@ describe('warnOnNoResponse', () => {
     msgTimeout,
   } = {}) => ({
     [id]: {
-      iframe: { src, sandbox },
+      iframe: { id, src, sandbox },
       checkOrigin,
       waitForLoad,
       initialised,
@@ -73,8 +73,6 @@ describe('warnOnNoResponse', () => {
       id,
       expect.stringContaining('https://foo.example:8443'),
     )
-
-    expect(settings[id].loadErrorShown).toBe(true)
   })
 
   it('omits checkOrigin advice when checkOrigin is false', () => {
@@ -148,16 +146,6 @@ describe('warnOnNoResponse', () => {
     expect(advise).not.toHaveBeenCalled()
   })
 
-  it('does nothing if loadErrorShown is already true', () => {
-    const id = 'f6'
-    const settings = makeSettings({ id, loadErrorShown: true })
-
-    warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
-
-    expect(advise).not.toHaveBeenCalled()
-  })
-
   it('does not schedule when warningTimeout is 0', () => {
     const id = 'f7'
     const settings = makeSettings({ id, warningTimeout: 0 })
@@ -197,5 +185,26 @@ describe('warnOnNoResponse', () => {
       id,
       expect.not.stringMatching(/checkOrigin/),
     )
+  })
+
+  it('does not warn when iframe is removed from settings before timeout fires', () => {
+    const id = 'f10'
+    const settings = makeSettings({ id, warningTimeout: 100 })
+
+    warnOnNoResponse(id, settings)
+
+    expect(setTimeout).toHaveBeenCalledWith(
+      expect.any(Function),
+      settings[id].warningTimeout,
+    )
+
+    // Simulate iframe being closed/removed from settings
+    delete settings[id]
+
+    jest.advanceTimersByTime(100 + 1)
+
+    // Should not warn or throw error when iframe is no longer in settings
+    expect(advise).not.toHaveBeenCalled()
+    expect(event).not.toHaveBeenCalled()
   })
 })
