@@ -26,7 +26,7 @@ describe('createIframeResize - Disconnected iframes', () => {
 
   it('should immediately initialize a connected iframe', () => {
     // Add iframe to DOM first
-    document.body.appendChild(mockIframe)
+    document.body.append(mockIframe)
 
     // Initialize
     const result = iFrameResize({}, mockIframe)
@@ -48,7 +48,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     expect(result[0]).toBe(mockIframe)
   })
 
-  it('should initialize a disconnected iframe once it is added to DOM', (done) => {
+  it('should initialize a disconnected iframe once it is added to DOM', async () => {
     // Create a disconnected iframe
     expect(mockIframe.isConnected).toBe(false)
 
@@ -56,17 +56,20 @@ describe('createIframeResize - Disconnected iframes', () => {
     iFrameResize({}, mockIframe)
 
     // Add a small delay to ensure MutationObserver is set up
-    setTimeout(() => {
-      // Now add it to the DOM
-      document.body.appendChild(mockIframe)
+    await new Promise((resolve) => {
+      setTimeout(resolve, 10)
+    })
 
-      // Give MutationObserver time to fire
-      setTimeout(() => {
-        // Verify iframe is now connected
-        expect(mockIframe.isConnected).toBe(true)
-        done()
-      }, 50)
-    }, 10)
+    // Now add it to the DOM
+    document.body.append(mockIframe)
+
+    // Give MutationObserver time to fire
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50)
+    })
+
+    // Verify iframe is now connected
+    expect(mockIframe.isConnected).toBe(true)
   })
 
   it('should handle multiple disconnected iframes', () => {
@@ -112,11 +115,11 @@ describe('createIframeResize - Disconnected iframes', () => {
     // Add two iframes to the DOM
     const iframe1 = document.createElement('iframe')
     iframe1.id = 'iframe-1'
-    document.body.appendChild(iframe1)
+    document.body.append(iframe1)
 
     const iframe2 = document.createElement('iframe')
     iframe2.id = 'iframe-2'
-    document.body.appendChild(iframe2)
+    document.body.append(iframe2)
 
     // Initialize all iframes
     const result = iFrameResize({})
@@ -130,11 +133,11 @@ describe('createIframeResize - Disconnected iframes', () => {
     const iframe1 = document.createElement('iframe')
     iframe1.id = 'iframe-1'
     iframe1.className = 'resizable'
-    document.body.appendChild(iframe1)
+    document.body.append(iframe1)
 
     const iframe2 = document.createElement('iframe')
     iframe2.id = 'iframe-2'
-    document.body.appendChild(iframe2)
+    document.body.append(iframe2)
 
     // Initialize only iframes with the 'resizable' class
     const result = iFrameResize({}, '.resizable')
