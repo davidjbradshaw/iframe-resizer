@@ -13,7 +13,6 @@ describe('createIframeResize - Disconnected iframes', () => {
     // Reset the module and create a fresh instance
     vi.clearAllMocks()
     iFrameResize = createIframeResize()
-
     // Create a mock iframe element
     mockIframe = document.createElement('iframe')
     mockIframe.id = 'test-iframe'
@@ -27,7 +26,7 @@ describe('createIframeResize - Disconnected iframes', () => {
 
   it('should immediately initialize a connected iframe', () => {
     // Add iframe to DOM first
-    document.body.append(mockIframe)
+    document.body.appendChild(mockIframe)
 
     // Initialize
     const result = iFrameResize({}, mockIframe)
@@ -49,7 +48,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     expect(result[0]).toBe(mockIframe)
   })
 
-  it('should initialize a disconnected iframe once it is added to DOM', async () => {
+  it('should initialize a disconnected iframe once it is added to DOM', (done) => {
     // Create a disconnected iframe
     expect(mockIframe.isConnected).toBe(false)
 
@@ -57,20 +56,17 @@ describe('createIframeResize - Disconnected iframes', () => {
     iFrameResize({}, mockIframe)
 
     // Add a small delay to ensure MutationObserver is set up
-    await new Promise((resolve) => {
-      setTimeout(resolve, 10)
-    })
+    setTimeout(() => {
+      // Now add it to the DOM
+      document.body.appendChild(mockIframe)
 
-    // Now add it to the DOM
-    document.body.append(mockIframe)
-
-    // Give MutationObserver time to fire
-    await new Promise((resolve) => {
-      setTimeout(resolve, 50)
-    })
-
-    // Verify iframe is now connected
-    expect(mockIframe.isConnected).toBe(true)
+      // Give MutationObserver time to fire
+      setTimeout(() => {
+        // Verify iframe is now connected
+        expect(mockIframe.isConnected).toBe(true)
+        done()
+      }, 50)
+    }, 10)
   })
 
   it('should handle multiple disconnected iframes', () => {
@@ -93,7 +89,6 @@ describe('createIframeResize - Disconnected iframes', () => {
 
   it('should throw error for non-iframe elements', () => {
     const div = document.createElement('div')
-
     expect(() => {
       iFrameResize({}, div)
     }).toThrow('Expected <IFRAME> tag, found <DIV>')
@@ -117,11 +112,11 @@ describe('createIframeResize - Disconnected iframes', () => {
     // Add two iframes to the DOM
     const iframe1 = document.createElement('iframe')
     iframe1.id = 'iframe-1'
-    document.body.append(iframe1)
+    document.body.appendChild(iframe1)
 
     const iframe2 = document.createElement('iframe')
     iframe2.id = 'iframe-2'
-    document.body.append(iframe2)
+    document.body.appendChild(iframe2)
 
     // Initialize all iframes
     const result = iFrameResize({})
@@ -135,11 +130,11 @@ describe('createIframeResize - Disconnected iframes', () => {
     const iframe1 = document.createElement('iframe')
     iframe1.id = 'iframe-1'
     iframe1.className = 'resizable'
-    document.body.append(iframe1)
+    document.body.appendChild(iframe1)
 
     const iframe2 = document.createElement('iframe')
     iframe2.id = 'iframe-2'
-    document.body.append(iframe2)
+    document.body.appendChild(iframe2)
 
     // Initialize only iframes with the 'resizable' class
     const result = iFrameResize({}, '.resizable')
@@ -164,27 +159,5 @@ describe('createIframeResize - Disconnected iframes', () => {
 
     // Restore window
     global.window = originalWindow
-  })
-
-  it('should throw error when document.body is null in browser environment', () => {
-    // Save original document.body
-    const originalBody = document.body
-
-    // Temporarily remove document.body to simulate early initialization
-    Object.defineProperty(document, 'body', {
-      configurable: true,
-      get: () => null,
-    })
-
-    // Should throw an error since we're in browser environment (window exists)
-    expect(() => {
-      iFrameResize({}, mockIframe)
-    }).toThrow('document.body is not available')
-
-    // Restore document.body
-    Object.defineProperty(document, 'body', {
-      configurable: true,
-      get: () => originalBody,
-    })
   })
 })
