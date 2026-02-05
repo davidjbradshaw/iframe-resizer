@@ -38,6 +38,7 @@ function sendSize(
       hiddenMessageShown = true
       sendPending = false
       cancelAnimationFrame(rafId)
+      rafId = null
       break
     }
 
