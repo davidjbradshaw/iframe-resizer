@@ -6,13 +6,6 @@ const id = `[${LABEL}] `
 
 export default function createIframeResize() {
   function setupDisconnectedIframe(element) {
-    // Guard against SSR or early initialization when document.body doesn't exist yet
-    if (!document.body) {
-      // In SSR or before DOM ready, skip observer setup and just add to iFrames
-      // The iframe will need to be initialized manually when added to the DOM
-      return
-    }
-
     const observer = new MutationObserver(() => {
       if (element.isConnected) {
         connectWithOptions(element)
@@ -53,6 +46,13 @@ export default function createIframeResize() {
 
   return function (options, target) {
     if (typeof window === UNDEFINED) return [] // don't run for server side render
+
+    // Check if document.body exists in browser environment
+    if (!document.body) {
+      throw new TypeError(
+        `${id}document.body is not available. Ensure the DOM is fully loaded before calling iFrameResize.`,
+      )
+    }
 
     connectWithOptions = connectResizer(options)
     iFrames = [] // Only return iFrames passed in on this call

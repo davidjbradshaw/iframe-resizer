@@ -163,4 +163,26 @@ describe('createIframeResize - Disconnected iframes', () => {
     // Restore window
     global.window = originalWindow
   })
+
+  it('should throw error when document.body is null in browser environment', () => {
+    // Save original document.body
+    const originalBody = document.body
+
+    // Temporarily remove document.body to simulate early initialization
+    Object.defineProperty(document, 'body', {
+      configurable: true,
+      get: () => null,
+    })
+
+    // Should throw an error since we're in browser environment (window exists)
+    expect(() => {
+      iFrameResize({}, mockIframe)
+    }).toThrow('document.body is not available')
+
+    // Restore document.body
+    Object.defineProperty(document, 'body', {
+      configurable: true,
+      get: () => originalBody,
+    })
+  })
 })
