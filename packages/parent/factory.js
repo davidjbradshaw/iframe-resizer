@@ -5,6 +5,18 @@ import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts'
 const id = `[${LABEL}] `
 
 export default function createIframeResize() {
+  function setupDisconnectedIframe(element) {
+    const observer = new MutationObserver(() => {
+      if (element.isConnected) {
+        connectWithOptions(element)
+        observer.disconnect()
+      }
+    })
+
+    // Observe changes in the document body for added nodes
+    observer.observe(document.body, { childList: true, subtree: true })
+  }
+
   function setup(element) {
     switch (true) {
       case !element:
@@ -17,6 +29,11 @@ export default function createIframeResize() {
         throw new TypeError(
           `${id}Expected <IFRAME> tag, found <${element.tagName}>`,
         )
+
+      case !element.isConnected:
+        setupDisconnectedIframe(element)
+        iFrames.push(element)
+        break
 
       default:
         connectWithOptions(element)
