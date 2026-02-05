@@ -1460,6 +1460,7 @@ This version of <i>iframe-resizer</> can auto detect the most suitable ${label} 
           hiddenMessageShown = true
           sendPending = false
           cancelAnimationFrame(rafId)
+          rafId = null
           break
         }
 
