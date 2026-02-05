@@ -38,6 +38,9 @@ const l = (l) => {
       'ueokt0969w',
       'w2zxchhgqz',
       '1umuxblj2e5',
+      '2b5sdlfhbev',
+      'zo4ui3arjo',
+      'oclbb4thgl',
     ].map((l, p) => [l, Math.max(0, p - 1)]),
   )
 export const getModeData = (l) => p(y[l])
@@ -50,7 +53,7 @@ export default (y) => {
   let v = (function (y = '') {
     let z = -2
     const u = l(p(y))
-    return u in t && (z = t[u]), z
+    return u in t && (z = t[u]), z>4?z-4:z
   })(u[0])
   return 0 === v || ((p) => p[2] === l(p[0] + p[1]))(u) || (v = -2), v
 }
