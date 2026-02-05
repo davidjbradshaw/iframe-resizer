@@ -50,7 +50,7 @@ export default function createIframeResize() {
     // Check if document.body exists in browser environment
     if (!document.body) {
       throw new TypeError(
-        `${id}document.body is not available. Ensure the DOM is fully loaded before calling iFrameResize.`,
+        `${id}document.body is not available. Ensure the DOM is fully loaded before calling iframeResize().`,
       )
     }
 
