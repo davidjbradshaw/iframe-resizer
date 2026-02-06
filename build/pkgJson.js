@@ -31,8 +31,21 @@ const customConfig = (file) => {
       return {
         main: 'index.umd.js',
         module,
+        types: 'index.d.ts',
         browser: {
           './sfc': 'iframe-resizer.vue',
+        },
+        exports: {
+          '.': {
+            types: './index.d.ts',
+            import: './index.esm.js',
+            require: './index.cjs.js',
+            default: './index.umd.js',
+          },
+          './sfc': {
+            types: './sfc.d.ts',
+            default: './iframe-resizer.vue',
+          },
         },
         peerDependencies: {
           vue: '^2.6.0 || ^3.0.0',

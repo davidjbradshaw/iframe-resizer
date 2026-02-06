@@ -302,6 +302,14 @@ const npm = [
             src: 'packages/vue/iframe-resizer.vue',
             dest: 'dist/vue/',
           },
+          {
+            src: 'packages/vue/index.d.ts',
+            dest: 'dist/vue/',
+          },
+          {
+            src: 'packages/vue/sfc.d.ts',
+            dest: 'dist/vue/',
+          },
         ],
         verbose: true,
       }),
