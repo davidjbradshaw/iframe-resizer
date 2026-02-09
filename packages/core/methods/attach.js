@@ -17,7 +17,7 @@ The <b>removeListeners()</> method has been renamed to <b>disconnect()</>. ${REM
 
 const DEPRECATED_RESIZE = `<rb>Deprecated Method</>
 
-Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As their are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`
+Use of the <b>resize()</> method from the parent page is deprecated and will be removed in a future version of <i>iframe-resizer</>. As there are no longer any edge cases that require triggering a resize from the parent page, it is recommended to remove this method from your code.`
 
 export default function attachMethods(id) {
   if (settings[id]) {
