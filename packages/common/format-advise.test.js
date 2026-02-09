@@ -4,7 +4,7 @@ describe('createFormatAdvise', () => {
   let mockFormatLogMsg
 
   beforeEach(() => {
-    mockFormatLogMsg = jest.fn() // Mock the formatLogMsg function
+    mockFormatLogMsg = vi.fn() // Mock the formatLogMsg function
   })
 
   test('should format the message with encoded styles in Chrome', () => {
