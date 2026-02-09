@@ -39,7 +39,7 @@ export default function attachMethods(id) {
 
       resize() {
         advise(id, DEPRECATED_RESIZE)
-        trigger.bind(null, 'Window resize', RESIZE, id)
+        trigger('Window resize', RESIZE, id)
       },
 
       sendMessage(message) {
