@@ -1,6 +1,5 @@
 {
   "reject": [
-    
     "grunt-contrib-quint",
     "eslint",
     "eslint-plugin-compat",
