@@ -55,7 +55,7 @@ export function isMessageFromIframe(messageData, event) {
 
   if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
     throw new Error(
-      `Unexpected message received from: ${origin} for ${id}. Message was: ${data}. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.`,
+      `Unexpected message received from: ${origin} for ${id}. Message was: ${data}. This error can be disabled by setting the checkOrigin: false option or by providing an array of trusted domains.`,
     )
   }
 
