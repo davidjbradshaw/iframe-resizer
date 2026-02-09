@@ -1,0 +1,18 @@
+import { describe, test, expect, vi } from 'vitest'
+
+vi.mock('../console', () => ({ info: vi.fn() }))
+vi.mock('../values/settings', () => ({ default: { abc: { sizeHeight: true, sizeWidth: true, iframe: { style: {} } } } }))
+
+const setSize = (await import('./size')).default
+const info = (await import('../console')).info
+const settings = (await import('../values/settings')).default
+
+describe('core/events/size', () => {
+  test('sets iframe style height and width and logs', () => {
+    const data = { id: 'abc', height: 120, width: 340 }
+    setSize(data)
+    expect(settings.abc.iframe.style.height).toBe('120px')
+    expect(settings.abc.iframe.style.width).toBe('340px')
+    expect(info).toHaveBeenCalled()
+  })
+})
