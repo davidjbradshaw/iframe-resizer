@@ -61,6 +61,9 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.6",
     "@babel/plugin-syntax-import-attributes": "^7.28.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "react-dom": "^19.2.4",
     "@babel/plugin-transform-runtime": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-react": "^7.28.5",
