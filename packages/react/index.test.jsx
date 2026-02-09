@@ -61,7 +61,6 @@ describe('React IframeResizer component', () => {
     })
 
     const iframe = container.querySelector('iframe')
-
     expect(iframe).toBeTruthy()
     expect(iframe.id).toBe('react-iframe')
 
@@ -85,7 +84,6 @@ describe('React IframeResizer component', () => {
     await act(async () => {
       root.unmount()
     })
-
     expect(disconnect).toHaveBeenCalledTimes(1)
   })
 })

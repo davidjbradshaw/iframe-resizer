@@ -24,7 +24,6 @@ describe('jquery/plugin branch behavior', () => {
     await import('./plugin')
 
     const consoleCore = await import('../core/console')
-
     expect(consoleCore.warn).toHaveBeenCalledWith(
       '',
       expect.stringContaining('not available'),
@@ -37,7 +36,6 @@ describe('jquery/plugin branch behavior', () => {
     await import('./plugin')
 
     const consoleCore = await import('../core/console')
-
     expect(consoleCore.warn).toHaveBeenCalledWith(
       '',
       expect.stringContaining('not fully loaded'),
@@ -72,7 +70,6 @@ describe('jquery/plugin branch behavior', () => {
     $(document).iFrameResize({})
 
     const consoleCore = await import('../core/console')
-
     expect(consoleCore.deprecateMethod).toHaveBeenCalledWith(
       'iFrameResize()',
       'iframeResize()',
