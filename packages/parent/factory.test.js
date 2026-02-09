@@ -1,7 +1,9 @@
+import { vi } from 'vitest'
+
 import createIframeResize from './factory'
 
-// Mock the core module
-jest.mock('@iframe-resizer/core', () => jest.fn(() => jest.fn()))
+// Mock the core module (CJS/ESM default export)
+vi.mock('@iframe-resizer/core', () => ({ default: vi.fn(() => vi.fn()) }))
 
 describe('createIframeResize - Disconnected iframes', () => {
   let iFrameResize
@@ -9,7 +11,7 @@ describe('createIframeResize - Disconnected iframes', () => {
 
   beforeEach(() => {
     // Reset the module and create a fresh instance
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     iFrameResize = createIframeResize()
 
     // Create a mock iframe element
