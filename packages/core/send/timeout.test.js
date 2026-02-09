@@ -1,8 +1,8 @@
-import { advise, event } from './console'
+import { advise, event } from '../console'
 import warnOnNoResponse from './timeout'
 
 // Mock console integration used by showWarning
-jest.mock('./console', () => ({
+jest.mock('../console', () => ({
   advise: jest.fn(),
   event: jest.fn(),
 }))

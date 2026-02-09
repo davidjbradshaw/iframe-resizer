@@ -1,5 +1,5 @@
-import { NEW_LINE } from '../common/consts'
-import { advise } from './console'
+import { NEW_LINE } from '../../common/consts'
+import { advise } from '../console'
 
 const shownDuplicateIdWarning = {}
 

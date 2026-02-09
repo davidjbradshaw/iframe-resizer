@@ -1,14 +1,23 @@
-import { STRING } from './consts'
+import { OBJECT, STRING } from './consts'
 
 export const isElement = (node) => node.nodeType === Node.ELEMENT_NODE
-
 export const isNumber = (value) => !Number.isNaN(value)
-
+export const isObject = (value) => typeof value === OBJECT && value !== null
 export const isString = (value) => typeof value === STRING
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(
   navigator.userAgent,
 )
+
+export function isIframe(element) {
+  if (!isObject(element)) return false
+
+  try {
+    return element.tagName === 'IFRAME' || element instanceof HTMLIFrameElement
+  } catch (error) {
+    return false
+  }
+}
 
 export const isolateUserCode = (func, ...val) =>
   setTimeout(() => func(...val), 0)

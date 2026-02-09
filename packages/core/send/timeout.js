@@ -1,5 +1,5 @@
-import { OBJECT } from '../common/consts'
-import { advise, event } from './console'
+import { OBJECT } from '../../common/consts'
+import { advise, event } from '../console'
 
 const getOrigin = (url) => {
   try {

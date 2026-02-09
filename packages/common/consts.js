@@ -3,8 +3,6 @@ export const LABEL = 'iframeResizer'
 export const SEPARATOR = ':'
 export const CHILD_READY_MESSAGE = '[iFrameResizerChild]Ready'
 
-export const AFTER_EVENT_STACK = 1
-
 export const AUTO_RESIZE = 'autoResize'
 export const BEFORE_UNLOAD = 'beforeUnload'
 export const CLOSE = 'close'
