@@ -26,7 +26,7 @@ describe('utils.js', () => {
 
   describe('once', () => {
     test('should call the function only once', () => {
-      const mockFn = jest.fn()
+      const mockFn = vi.fn()
       const wrappedFn = once(mockFn)
 
       wrappedFn()
@@ -38,7 +38,7 @@ describe('utils.js', () => {
 
   describe('isDarkModeEnabled', () => {
     test('should return true if dark mode is enabled', () => {
-      window.matchMedia = jest.fn().mockImplementation((query) => ({
+      window.matchMedia = vi.fn().mockImplementation((query) => ({
         matches: query === '(prefers-color-scheme: dark)',
       }))
 
@@ -46,7 +46,7 @@ describe('utils.js', () => {
     })
 
     test('should return false if dark mode is not enabled', () => {
-      window.matchMedia = jest.fn().mockImplementation(() => ({
+      window.matchMedia = vi.fn().mockImplementation(() => ({
         matches: false,
       }))
 

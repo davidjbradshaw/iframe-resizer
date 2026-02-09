@@ -1,24 +1,26 @@
+import { vi } from 'vitest'
+
 import { advise, event } from '../console'
 import warnOnNoResponse from './timeout'
 
 // Mock console integration used by showWarning
-jest.mock('../console', () => ({
-  advise: jest.fn(),
-  event: jest.fn(),
+vi.mock('../console', () => ({
+  advise: vi.fn(),
+  event: vi.fn(),
 }))
 
 describe('warnOnNoResponse', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
-    jest.spyOn(global, 'setTimeout')
-    jest.spyOn(global, 'clearTimeout')
-    jest.clearAllMocks()
+    vi.useFakeTimers()
+    vi.spyOn(global, 'setTimeout')
+    vi.spyOn(global, 'clearTimeout')
+    vi.clearAllMocks()
   })
 
   afterEach(() => {
-    jest.runOnlyPendingTimers()
-    jest.useRealTimers()
-    jest.restoreAllMocks()
+    vi.runOnlyPendingTimers()
+    vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   const makeSettings = ({
@@ -60,7 +62,7 @@ describe('warnOnNoResponse', () => {
       settings[id].warningTimeout,
     )
 
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(event).toHaveBeenCalledWith(id, 'noResponse')
     expect(advise).toHaveBeenCalledTimes(1)
@@ -80,7 +82,7 @@ describe('warnOnNoResponse', () => {
     const settings = makeSettings({ id, checkOrigin: false })
 
     warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(advise).toHaveBeenCalledWith(
       id,
@@ -100,7 +102,7 @@ describe('warnOnNoResponse', () => {
     const settings = makeSettings({ id, sandbox })
 
     warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(advise).toHaveBeenCalledWith(id, expect.stringMatching(/sandbox/))
     expect(advise).toHaveBeenCalledWith(
@@ -123,7 +125,7 @@ describe('warnOnNoResponse', () => {
     })
 
     warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(advise).toHaveBeenCalledWith(
       id,
@@ -140,7 +142,7 @@ describe('warnOnNoResponse', () => {
     })
 
     warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(settings[id].initialisedFirstPage).toBe(true)
     expect(advise).not.toHaveBeenCalled()
@@ -179,7 +181,7 @@ describe('warnOnNoResponse', () => {
     const settings = makeSettings({ id, src: '::::not-a-url' })
 
     warnOnNoResponse(id, settings)
-    jest.advanceTimersByTime(settings[id].warningTimeout + 1)
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
 
     expect(advise).toHaveBeenCalledWith(
       id,
@@ -201,7 +203,7 @@ describe('warnOnNoResponse', () => {
     // Simulate iframe being closed/removed from settings
     delete settings[id]
 
-    jest.advanceTimersByTime(100 + 1)
+    vi.advanceTimersByTime(100 + 1)
 
     // Should not warn or throw error when iframe is no longer in settings
     expect(advise).not.toHaveBeenCalled()
