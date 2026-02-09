@@ -11,13 +11,13 @@ const settings = (await import('../values/settings')).default
 describe('core/checks/mode', () => {
   beforeEach(() => { vi.clearAllMocks(); settings.id.mode = -1; settings.id.vAdvised = false })
 
-  test('preModeCheck runs checkMode when mode !== -1', () => {
-    settings.id.mode = 0
-    expect(() => preModeCheck('id')).not.toThrow()
-  })
-
   test('checkMode throws for negative mode and marks advised', () => {
     expect(() => checkMode('id', -3)).toThrow()
     expect(settings.id.vAdvised).toBe(true)
+  })
+
+  test('preModeCheck runs checkMode when mode !== -1', () => {
+    settings.id.mode = 0
+    expect(() => preModeCheck('id')).not.toThrow()
   })
 })

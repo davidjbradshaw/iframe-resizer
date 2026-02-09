@@ -22,7 +22,7 @@ describe('core/send/trigger', () => {
     expect(settings.b.postMessageTarget.postMessage).toHaveBeenCalled()
   })
 
-  test('warns when id not found', () => {
+  test('warns when id not found', async () => {
     const s = (await import('../values/settings')).default
     delete s.a.postMessageTarget
     trigger('resize', 'msg', 'a')

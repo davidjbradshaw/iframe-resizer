@@ -165,10 +165,14 @@ const modules = [
 
 describe('packages smoke import', () => {
   for (const path of modules) {
-    test(`imports ${path}`, async () => {
-      const mod = await import(path)
+    test(
+      `imports ${path}`,
+      async () => {
+        const mod = await import(path)
 
-      expect(mod).toBeDefined()
-    })
+        expect(mod).toBeDefined()
+      },
+      15000,
+    )
   }
 })

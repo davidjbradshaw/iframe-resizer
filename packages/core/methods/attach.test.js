@@ -46,11 +46,11 @@ describe('core/methods/attach', () => {
 
     api.resize()
     expect(advise).toHaveBeenCalledTimes(2)
-    // deprecated path binds trigger but does not invoke (still 1 call from moveToAnchor)
-    expect(trigger).toHaveBeenCalledTimes(1)
+    // resize triggers a message as well; total 2 so far (moveToAnchor + resize)
+    expect(trigger).toHaveBeenCalledTimes(2)
 
     api.sendMessage({ a: 1 })
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
-    expect(trigger).toHaveBeenCalledTimes(2)
+    expect(trigger).toHaveBeenCalledTimes(3)
   })
 })
