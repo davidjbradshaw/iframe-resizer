@@ -8,6 +8,7 @@ bower_components
 coverage*
 .idea
 js/*
+js-dist/*
 dist
 test-js
 example-test

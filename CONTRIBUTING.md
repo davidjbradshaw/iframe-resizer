@@ -78,6 +78,57 @@ In lieu of a formal style-guide, take care to maintain the existing coding
 style. Add unit tests for any new or changed functionality. Lint and test
 your code using [Grunt](http://gruntjs.com/).
 
+## Testing
+
+This project uses multiple testing approaches:
+
+### Unit Tests (Jest)
+Unit tests are located in `packages/*/` directories with `.test.js` extension.
+
+```bash
+npm run test:jest        # Run unit tests
+npm run test:watch       # Run unit tests in watch mode
+```
+
+### Integration Tests (Karma)
+Legacy integration tests are in the `spec/` directory using Karma + Jasmine.
+
+```bash
+npm run test:int         # Run integration tests (requires build first)
+npm run test:int:watch   # Run integration tests in watch mode
+```
+
+### E2E Tests (Playwright)
+Modern end-to-end tests are in the `e2e/` directory using Playwright. These tests run in real browsers and test actual iframe behavior.
+
+**First time setup:**
+```bash
+npx playwright install chromium  # Install browser
+```
+
+**Running tests:**
+```bash
+npm run test:e2e         # Run all e2e tests
+npm run test:e2e:headed  # Run tests with visible browser
+npm run test:e2e:ui      # Run tests in interactive UI mode
+npm run test:e2e:debug   # Run tests in debug mode
+```
+
+See `e2e/README.md` for more details on writing and running Playwright tests.
+
+### Full Test Suite
+```bash
+npm test                 # Run all tests (Jest + build + Karma)
+```
+
+### Building
+Before running integration or e2e tests, build the project:
+
+```bash
+npm run rollup:debug     # Build for development
+npm run rollup:prod      # Build for production
+```
+
 ## License
 
 By contributing your code, you agree to license your contribution under the [MIT License](LICENSE).
