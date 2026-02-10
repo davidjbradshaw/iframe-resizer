@@ -16,7 +16,7 @@ const vi = {
 
 export const injectVersion = () => [versionInjector(vi)]
 
-export const pluginsBase = (stripLog) => {
+export const pluginsBase = (stripLog) => () => {
   const delog = [strip({ functions: ['log', 'debug'] })]
   const log = [strip({ functions: ['purge'] })]
 
@@ -81,6 +81,6 @@ export const createPluginsProd = (stripLog) => (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(stripLog),
+    ...pluginsBase(stripLog)(file),
   ]
 }
