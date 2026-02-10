@@ -9,8 +9,126 @@
         float: right;
       }
     </style>
-    <!-- <script src="../../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../../test-js/iframeResizer.child.js"></script> -->
+    <script src="/base/node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript">
+      console.log('>> location.href:', window.location.href)
+
+      ;(function () {
+        const logging = true
+
+        function warn(msg) {
+          console?.warn(`[Test] ${msg}`)
+        }
+
+        function init(test) {
+          function changeContent() {
+            $('p').eq(0).remove()
+          }
+
+          function callMethod(methodName, val1, val2) {
+            if ('parentIFrame' in window)
+              window.parentIFrame[methodName](val1, val2)
+            else warn('window.parentIFrame methods not enabled.')
+          }
+
+          console.info(test)
+
+          switch (test) {
+            case 'changeContent':
+              setInterval(() => {
+                changeContent()
+              }, 2)
+              break
+
+            case 'close':
+              callMethod('close')
+              break
+
+            case 'pageChange':
+              location.href = '/base/example/frame.hover.html'
+              break
+
+            case 'nested':
+              location.href = 'frame.nested.html'
+              break
+
+            case 'size':
+              changeContent()
+              callMethod('size')
+              break
+
+            case 'autoResize':
+              callMethod('setAutoResize', true)
+              setTimeout(() => {
+                changeContent()
+              }, 500)
+              break
+
+            case 'size100':
+              callMethod('size', 100)
+              break
+
+            case 'size200300':
+              callMethod('size', 200, 300)
+              break
+
+            case 'jsTrigger':
+              changeContent()
+              callMethod('trigger')
+              break
+
+            case 'chkHeight':
+              callMethod('sendMessage', document.body.offsetHeight)
+              break
+
+            case 'chkBackground':
+              callMethod('sendMessage', document.body.style.backgroundColor)
+              break
+
+            case 'chkSendMsg':
+              callMethod('sendMessage', 'message: test string')
+              break
+
+            case 'chkSendObj':
+              callMethod('sendMessage', { message: 'test object' })
+              break
+
+            case 'chkGetId':
+              if ('parentIFrame' in window)
+                callMethod('sendMessage', window.parentIFrame.getId())
+              break
+
+            case 'setHeightCalculationMethod':
+              if ('parentIFrame' in window) {
+                parentIFrame.setHeightCalculationMethod('max')
+                callMethod('size')
+              }
+              break
+
+            case 'width':
+              $('p').width(3000)
+              break
+
+            case 'image':
+              $('p').html('<img src="djb.jpg">')
+              break
+
+            case 'getPageInfo':
+              callMethod('getPageInfo', (pageInfo) => {})
+              break
+
+            default:
+              warn(`Test ${test} not recognised`)
+          }
+        }
+
+        window.iframeResizer = {
+          license: 'GPLv3',
+          onMessage: init,
+        }
+      })()
+    </script>
+    <script src="/base/test-js/iframe-resizer.child.js"></script>
   </head>
 
   <body>
@@ -180,123 +298,5 @@
       matters to this principle of selection: he rejects pleasures to secure
       other greater pleasures, or else he endures pains to avoid worse pains.
     </p>
-
-    <script type="text/javascript">
-      console.log('>> location.href:', window.location.href)
-
-      ;(function () {
-        const logging = true
-
-        function warn(msg) {
-          console?.warn(`[Test] ${msg}`)
-        }
-
-        function init(test) {
-          function changeContent() {
-            $('p').eq(0).remove()
-          }
-
-          function callMethod(methodName, val1, val2) {
-            if ('parentIFrame' in window)
-              window.parentIFrame[methodName](val1, val2)
-            else warn('window.parentIFrame methods not enabled.')
-          }
-
-          console.info(test)
-
-          switch (test) {
-            case 'changeContent':
-              setInterval(() => {
-                changeContent()
-              }, 2)
-              break
-
-            case 'close':
-              callMethod('close')
-              break
-
-            case 'pageChange':
-              location.href = '/base/example/frame.hover.html'
-              break
-
-            case 'nested':
-              location.href = 'frame.nested.html'
-              break
-
-            case 'size':
-              changeContent()
-              callMethod('size')
-              break
-
-            case 'autoResize':
-              callMethod('setAutoResize', true)
-              setTimeout(() => {
-                changeContent()
-              }, 500)
-              break
-
-            case 'size100':
-              callMethod('size', 100)
-              break
-
-            case 'size200300':
-              callMethod('size', 200, 300)
-              break
-
-            case 'jsTrigger':
-              changeContent()
-              callMethod('trigger')
-              break
-
-            case 'chkHeight':
-              callMethod('sendMessage', document.body.offsetHeight)
-              break
-
-            case 'chkBackground':
-              callMethod('sendMessage', document.body.style.backgroundColor)
-              break
-
-            case 'chkSendMsg':
-              callMethod('sendMessage', 'message: test string')
-              break
-
-            case 'chkSendObj':
-              callMethod('sendMessage', { message: 'test object' })
-              break
-
-            case 'chkGetId':
-              if ('parentIFrame' in window)
-                callMethod('sendMessage', window.parentIFrame.getId())
-              break
-
-            case 'setHeightCalculationMethod':
-              if ('parentIFrame' in window) {
-                parentIFrame.setHeightCalculationMethod('max')
-                callMethod('size')
-              }
-              break
-
-            case 'width':
-              $('p').width(3000)
-              break
-
-            case 'image':
-              $('p').html('<img src="djb.jpg">')
-              break
-
-            case 'getPageInfo':
-              callMethod('getPageInfo', (pageInfo) => {})
-              break
-
-            default:
-              warn(`Test ${test} not recognised`)
-          }
-        }
-
-        window.iframeResizer = {
-          onMessage: init,
-        }
-      })()
-    </script>
   </body>
 </html>

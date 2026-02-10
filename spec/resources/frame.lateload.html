@@ -29,12 +29,12 @@
     <p>Load JS with require after load event has fired.</p>
     <div style="margin: 20px"></div>
 
-    <script src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script src="/base/node_modules/jquery/dist/jquery.js"></script>
     <script>
       $(document).ready(() => {
         setTimeout(() => {
           console.log('Load Script')
-          $.getScript('../../test-js/iframe-resizer.child.js')
+          $.getScript('/base/test-js/iframe-resizer.child.js')
         }, 500)
       })
     </script>

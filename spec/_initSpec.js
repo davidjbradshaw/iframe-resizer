@@ -1,9 +1,9 @@
 define(['iframeResizerParent'], (iframeResize) => {
-  xdescribe('iFrame init', () => {
+  describe('iFrame init', () => {
     let iframe
     const id = 'initTest'
 
-    beforeEach((done) => {
+    beforeEach(() => {
       loadIFrame('iframe600.html')
 
       iframe = iframeResize({
@@ -15,10 +15,10 @@ define(['iframeResizerParent'], (iframeResize) => {
         scrolling: true,
         tolerance: 1,
         direction: 'horizontal',
-        onReady: () => {
-          setTimeout(done, 1)
-        },
       })[0]
+
+      // Mock the iframe as ready without waiting for actual iframe load
+      mockMsgFromIFrame(iframe, 'reset')
 
       console.log('iframe', iframe)
     })

@@ -23,6 +23,7 @@ module.exports = function (config) {
       'spec/lib/*.js',
       { pattern: 'js/*.js', included: false },
       { pattern: 'test-js/*.js', included: false },
+      { pattern: 'node_modules/jquery/dist/*.js', included: false },
       { pattern: 'dist/parent/*.js', included: false },
       { pattern: 'dist/child/*.js', included: false },
       { pattern: 'dist/jquery/*.js', included: false },
