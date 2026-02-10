@@ -56,7 +56,6 @@ test.describe('iframe-resizer basic functionality', () => {
     // Navigate to the two iframes example
     await page.goto('/example/html/two.html')
     await page.waitForLoadState('networkidle')
-
     // Check that both iframes are present
     const iframes = page.locator('iframe')
     const count = await iframes.count()
@@ -121,7 +120,6 @@ test.describe('iframe-resizer React example', () => {
     // Skipping for now as it requires additional setup
     await page.goto('/example/react/index.html')
     await page.waitForLoadState('networkidle')
-
     // Check that root element exists
     const root = page.locator('#root')
     await expect(root).toBeVisible()
@@ -134,7 +132,6 @@ test.describe('iframe-resizer Vue example', () => {
     // Skipping for now as it requires additional setup
     await page.goto('/example/vue/index.html')
     await page.waitForLoadState('networkidle')
-
     // Check that app element exists
     const app = page.locator('#app')
     await expect(app).toBeVisible()
