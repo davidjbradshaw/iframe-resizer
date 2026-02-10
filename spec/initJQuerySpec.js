@@ -13,16 +13,22 @@ define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
     })
 
     xit('should create iframeResizer object', (done) => {
-      $('iframe').iframeResize({
+      const $iframe = $('iframe').iframeResize({
         license: 'GPLv3',
         log: true,
         warningTimeout: 1000,
-        onReady: (iframe) => {
-          expect(iframe.iframeResizer).toBeDefined()
-          tearDown(iframe)
-          done()
-        },
       })
+      
+      const iframe = $iframe[0]
+
+      // Mock iframe as ready
+      setTimeout(() => {
+        mockMsgFromIFrame(iframe, 'reset')
+        
+        expect(iframe.iframeResizer).toBeDefined()
+        tearDown(iframe)
+        done()
+      }, 50)
     })
   })
 })

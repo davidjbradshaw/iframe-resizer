@@ -58,13 +58,14 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('ParentIFrame methods', () => {
-      xit('autoResize', (done) => {
+      it('autoResize', (done) => {
         win.parentIframe.autoResize(false)
         win.parentIFrame.autoResize(true)
 
         setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'Resize event: Auto Resize enabled',
+            'Resize event: %cAuto Resize enabled',
+            jasmine.any(String),
           )
           done()
         })
@@ -243,7 +244,8 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'Height calculation method set to "max"',
+            'Height calculation method set to %c"max"',
+            jasmine.any(String),
           )
           done()
         })
@@ -255,7 +257,8 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'Height calculation method set to "lowestElement"',
+            'Height calculation method set to %c"lowestElement"',
+            jasmine.any(String),
           )
           done()
         })
@@ -267,7 +270,8 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.log).toHaveBeenCalledWith(
-            'Width calculation method set to "rightMostElement"',
+            'Width calculation method set to %c"rightMostElement"',
+            jasmine.any(String),
           )
           done()
         })
@@ -339,11 +343,15 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(
-            'foo is not a valid option for heightCalculationMethod.',
+            '%cfoo%c is not a valid option for %cheightCalculationMethod',
+            jasmine.any(String),
+            jasmine.any(String),
+            jasmine.any(String),
           )
 
           expect(console.log).toHaveBeenCalledWith(
-            'Height calculation method set to "auto"',
+            'Height calculation method set to %c"auto"',
+            jasmine.any(String),
           )
           done()
         })
@@ -430,11 +438,15 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(
-            'foo is not a valid option for widthCalculationMethod.',
+            '%cfoo%c is not a valid option for %cwidthCalculationMethod',
+            jasmine.any(String),
+            jasmine.any(String),
+            jasmine.any(String),
           )
 
           expect(console.log).toHaveBeenCalledWith(
-            'Width calculation method set to "scroll"',
+            'Width calculation method set to %c"scroll"',
+            jasmine.any(String),
           )
           done()
         })

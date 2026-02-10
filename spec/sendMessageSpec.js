@@ -11,27 +11,27 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    xit('send message to iframe', (done) => {
+    it('send message to iframe', () => {
       const iframe1 = iframeResize({
         license: 'GPLv3',
         log,
         id: 'sendMessage1',
         warningTimeout: 1000,
-        onReady: (iframe1) => {
-          console.log('>>>', iframe1, iframe1.iframeResizer)
-          iframe1.iframeResizer.sendMessage('chkSendMsg:test')
-
-          expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
-            '[iFrameSizer]message:"chkSendMsg:test"',
-            getTarget(iframe1),
-          )
-
-          tearDown(iframe1)
-          done()
-        },
       })[0]
 
+      // Mock iframe as ready
+      mockMsgFromIFrame(iframe1, 'reset')
+
       spyOnIFramePostMessage(iframe1)
+      
+      iframe1.iframeResizer.sendMessage('chkSendMsg:test')
+
+      expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
+        '[iFrameSizer]message:"chkSendMsg:test"',
+        getTarget(iframe1),
+      )
+
+      tearDown(iframe1)
     })
 
     it('mock incoming message', (done) => {
@@ -50,6 +50,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     xit('send message and get response', (done) => {
+      // This test requires actual iframe communication which doesn't work in test environment
       iframe = iframeResize({
         license: 'GPLv3',
         log,

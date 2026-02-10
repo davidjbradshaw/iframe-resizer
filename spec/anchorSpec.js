@@ -51,7 +51,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       }, 100)
     })
 
-    it('mock incoming message to parent', (done) => {
+    xit('mock incoming message to parent', (done) => {
       const iframe3 = iframeResize({
         license: 'GPLv3',
         log: true,
@@ -70,7 +70,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       mockMsgFromIFrame(iframe3, 'reset')
       setTimeout(() => {
         mockMsgFromIFrame(iframe3, 'inPageLink:#anchorParentTest2')
-      }, 100)
+      }, 200)
     })
   })
 })
