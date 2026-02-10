@@ -1,8 +1,8 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import settings from '../values/settings'
-import { getPaddingEnds, getBorderEnds, default as decodeMessage } from './decode'
 import { MESSAGE_ID_LENGTH } from '../../common/consts'
+import settings from '../values/settings'
+import decodeMessage, { getBorderEnds, getPaddingEnds } from './decode'
 
 describe('core/received/decode', () => {
   const origGetComputed = global.getComputedStyle
@@ -21,6 +21,7 @@ describe('core/received/decode', () => {
 
   test('calculates padding and border ends', () => {
     const comp = global.getComputedStyle()
+
     expect(getPaddingEnds(comp)).toBe(8)
     expect(getBorderEnds(comp)).toBe(3)
   })

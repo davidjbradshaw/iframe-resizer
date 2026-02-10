@@ -1,11 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as commonMode from '../../common/mode'
 import * as utils from '../../common/utils'
 import * as childConsole from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
-
 import checkMode from './mode'
 
 describe('child/check/mode', () => {
@@ -14,10 +13,10 @@ describe('child/check/mode', () => {
     settings.mode = 0
     state.firstRun = true
 
-    vi.spyOn(commonMode, 'default').mockImplementation(({ key }) => {
+    vi.spyOn(commonMode, 'default').mockImplementation(({ key }) =>
       // simple deterministic mapping: key => 1, key2 => 0
-      return key ? 1 : 0
-    })
+      key ? 1 : 0,
+    )
     vi.spyOn(commonMode, 'getModeData').mockImplementation((i) => `data${i}`)
     vi.spyOn(commonMode, 'getModeLabel').mockImplementation(() => 'label')
     vi.spyOn(utils, 'isDef').mockImplementation((v) => v !== undefined)
@@ -41,12 +40,14 @@ describe('child/check/mode', () => {
     expect(() =>
       checkMode({ key: 'a', key2: 'b', mode: -2, version: '1.0.0' }),
     ).toThrow()
+
     expect(childConsole.purge).toHaveBeenCalled()
     expect(childConsole.advise).toHaveBeenCalled()
   })
 
   it('logs vInfo and sets session value when version is undefined', () => {
     checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+
     expect(childConsole.vInfo).toHaveBeenCalled()
     expect(sessionStorage.getItem('ifr')).toBeDefined()
   })

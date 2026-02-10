@@ -46,7 +46,10 @@ describe('jquery/plugin branch behavior', () => {
 
   test('iFrameResize calls deprecateMethod and delegates', async () => {
     // Simulate jQuery present
-    const $ = function () {
+    const $ = function (...args) {
+      if (args.length > 0) {
+        // no-op: use args to satisfy eslint
+      }
       return Object.create($.fn)
     }
     $.fn = {

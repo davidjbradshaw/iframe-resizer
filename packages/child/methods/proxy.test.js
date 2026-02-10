@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import deprecationProxy from './proxy'
 import * as childConsole from '../console'
+import deprecationProxy from './proxy'
 
 describe('child/methods/proxy', () => {
   it('warns once per property and binds methods', () => {
@@ -15,10 +15,9 @@ describe('child/methods/proxy', () => {
     const proxied = deprecationProxy(target)
 
     // Access property twice, warn only first time
-    // eslint-disable-next-line no-unused-expressions
-    proxied.foo
-    // eslint-disable-next-line no-unused-expressions
-    proxied.foo
+    expect(proxied.foo).toBe(1)
+    expect(proxied.foo).toBe(1)
+
     expect(childConsole.advise).toHaveBeenCalledTimes(1)
 
     // Method is bound to target

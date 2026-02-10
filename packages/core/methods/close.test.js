@@ -1,7 +1,6 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ log: vi.fn(), warn: vi.fn() }))
-vi.mock('../events/wrapper', () => ({ default: undefined, __esModule: true, default: undefined }))
 vi.mock('../events/wrapper', () => ({ default: vi.fn(() => true) }))
 vi.mock('./disconnect', () => ({ default: vi.fn() }))
 
@@ -19,7 +18,12 @@ describe('core/methods/close', () => {
     on.mockReturnValueOnce(false)
     const iframe = { id: 'if1', remove: vi.fn(), parentNode: {} }
     closeIframe(iframe)
-    expect(log).toHaveBeenCalledWith('if1', expect.stringContaining('cancelled'))
+
+    expect(log).toHaveBeenCalledWith(
+      'if1',
+      expect.stringContaining('cancelled'),
+    )
+
     expect(iframe.remove).not.toHaveBeenCalled()
     expect(disconnect).not.toHaveBeenCalled()
   })
@@ -28,6 +32,7 @@ describe('core/methods/close', () => {
     on.mockReturnValueOnce(true)
     const iframe = { id: 'if2', remove: vi.fn(), parentNode: {} }
     closeIframe(iframe)
+
     expect(iframe.remove).toHaveBeenCalled()
     expect(disconnect).toHaveBeenCalledWith(iframe)
   })
@@ -35,8 +40,15 @@ describe('core/methods/close', () => {
   test('warns on remove error', () => {
     on.mockReturnValueOnce(true)
     const err = new Error('boom')
-    const iframe = { id: 'if3', remove: vi.fn(() => { throw err }), parentNode: {} }
+    const iframe = {
+      id: 'if3',
+      remove: vi.fn(() => {
+        throw err
+      }),
+      parentNode: {},
+    }
     closeIframe(iframe)
+
     expect(warn).toHaveBeenCalledWith('if3', err)
   })
 })

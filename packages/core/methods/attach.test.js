@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../../common/utils', () => ({ typeAssert: vi.fn() }))
 vi.mock('../console', () => ({ advise: vi.fn() }))
@@ -26,30 +26,41 @@ describe('core/methods/attach', () => {
     settings.if1 = { iframe }
 
     attachMethods('if1')
+
     expect(iframe.iframeResizer).toBeDefined()
 
     const api = iframe.iframeResizer
 
     api.close()
+
     expect(closeIframe).toHaveBeenCalledWith(iframe)
 
     api.disconnect()
+
     expect(disconnect).toHaveBeenCalledWith(iframe)
 
     api.moveToAnchor('hash')
+
     expect(typeAssert).toHaveBeenCalled()
-    expect(trigger).toHaveBeenCalledWith('Move to anchor', 'moveToAnchor:hash', 'if1')
+    expect(trigger).toHaveBeenCalledWith(
+      'Move to anchor',
+      'moveToAnchor:hash',
+      'if1',
+    )
 
     api.removeListeners()
+
     expect(advise).toHaveBeenCalled()
     expect(disconnect).toHaveBeenCalledTimes(2)
 
     api.resize()
+
     expect(advise).toHaveBeenCalledTimes(2)
     // resize triggers a message as well; total 2 so far (moveToAnchor + resize)
     expect(trigger).toHaveBeenCalledTimes(2)
 
     api.sendMessage({ a: 1 })
+
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
     expect(trigger).toHaveBeenCalledTimes(3)
   })

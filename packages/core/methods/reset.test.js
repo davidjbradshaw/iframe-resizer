@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ log: vi.fn() }))
 vi.mock('../events/size', () => ({ default: vi.fn() }))
@@ -16,7 +16,12 @@ describe('core/methods/reset', () => {
   test('logs with correct source and triggers size reset', () => {
     const msg = { id: 'if1', type: INIT }
     resetIframe(msg)
-    expect(log).toHaveBeenCalledWith('if1', expect.stringContaining('parent page'))
+
+    expect(log).toHaveBeenCalledWith(
+      'if1',
+      expect.stringContaining('parent page'),
+    )
+
     expect(getPagePosition).toHaveBeenCalledWith('if1')
     expect(setSize).toHaveBeenCalledWith(msg)
     expect(trigger).toHaveBeenCalledWith(RESET, RESET, 'if1')
@@ -25,6 +30,10 @@ describe('core/methods/reset', () => {
   test('logs child page when type != INIT', () => {
     const msg = { id: 'if2', type: 'OTHER' }
     resetIframe(msg)
-    expect(log).toHaveBeenCalledWith('if2', expect.stringContaining('child page'))
+
+    expect(log).toHaveBeenCalledWith(
+      'if2',
+      expect.stringContaining('child page'),
+    )
   })
 })

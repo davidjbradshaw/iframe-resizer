@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import {
-  addEventListener,
-  removeEventListener,
-  tearDownList,
-} from './listeners'
+import { addEventListener, tearDownList } from './listeners'
 
 describe('child/events/listeners', () => {
   let el

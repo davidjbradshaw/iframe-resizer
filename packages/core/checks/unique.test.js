@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import checkUniqueId from './unique'
 import * as coreConsole from '../console'
+import checkUniqueId from './unique'
 
 describe('core/checks/unique', () => {
   it('returns true when ID is unique', () => {
@@ -12,6 +12,7 @@ describe('core/checks/unique', () => {
     const iframe = document.createElement('iframe')
     iframe.id = 'u'
     document.body.append(iframe)
+
     expect(checkUniqueId('u')).toBe(true)
   })
 
@@ -26,6 +27,7 @@ describe('core/checks/unique', () => {
     const b = document.createElement('iframe')
     b.id = 'dup'
     document.body.append(a, b)
+
     expect(checkUniqueId('dup')).toBe(false)
     expect(coreConsole.advise).toHaveBeenCalled()
   })

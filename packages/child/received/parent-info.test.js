@@ -1,4 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
 import state from '../values/state'
 
 vi.mock('./utils', () => ({
@@ -7,7 +8,9 @@ vi.mock('./utils', () => ({
   parseFrozen: (s) => Object.freeze(JSON.parse(s)),
 }))
 vi.mock('../console', () => ({ log: vi.fn() }))
-vi.mock('../../common/utils', () => ({ isolateUserCode: (fn, arg) => fn?.(arg) }))
+vi.mock('../../common/utils', () => ({
+  isolateUserCode: (fn, arg) => fn?.(arg),
+}))
 
 const { notExpected } = await import('./utils')
 
@@ -22,12 +25,14 @@ describe('child/received/parent-info', () => {
     state.onParentInfo = spy
     const { default: parentInfo } = await import('./parent-info')
     parentInfo({ data: 'x' })
+
     expect(spy).toHaveBeenCalledWith({ pi: false })
   })
 
   test('sends notExpected when no handler', async () => {
     const { default: parentInfo } = await import('./parent-info')
     parentInfo({ data: 'x' })
+
     expect(notExpected).toHaveBeenCalled()
   })
 })

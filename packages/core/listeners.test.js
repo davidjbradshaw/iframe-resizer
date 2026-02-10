@@ -8,7 +8,9 @@ vi.mock('./console', () => ({
   errorBoundary: (_id, fn) => fn,
   event: vi.fn(),
 }))
-vi.mock('./received/decode', () => ({ default: vi.fn(() => ({ id: 'abc', type: 'INIT' })) }))
+vi.mock('./received/decode', () => ({
+  default: vi.fn(() => ({ id: 'abc', type: 'INIT' })),
+}))
 vi.mock('./received/preflight', () => ({
   checkIframeExists: vi.fn(() => true),
   isMessageForUs: vi.fn(() => true),
@@ -43,6 +45,7 @@ describe('core/listeners', () => {
 
     const src = { name: 'parentWindow' }
     listener({ data: CHILD_READY_MESSAGE, source: src })
+
     expect(iframeReady).toHaveBeenCalledWith(src)
   })
 
@@ -52,6 +55,7 @@ describe('core/listeners', () => {
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
     listener({ data: 'not-ours' })
+
     expect(consoleEvent).toHaveBeenCalled()
     expect(debug).toHaveBeenCalled()
   })
@@ -67,7 +71,10 @@ describe('core/listeners', () => {
     const { default: setup } = await import('./listeners')
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
-    expect(() => listener({ data: '[iFrameSizer]x' })).toThrow(/No settings for nope/)
+
+    expect(() => listener({ data: '[iFrameSizer]x' })).toThrow(
+      /No settings for nope/,
+    )
   })
 
   test('routes known message and updates lastMessage', async () => {
@@ -94,6 +101,7 @@ describe('core/listeners', () => {
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
     listener({ data: '[iFrameSizer]x' })
+
     expect(routeMessage).not.toHaveBeenCalled()
   })
 })

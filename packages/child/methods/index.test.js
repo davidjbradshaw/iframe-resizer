@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
-import setupPublicMethods from './index'
 import settings from '../values/settings'
 import state from '../values/state'
+import setupPublicMethods from './index'
 
 describe('child/methods/index', () => {
   beforeEach(() => {
@@ -14,8 +14,10 @@ describe('child/methods/index', () => {
 
   it('freezes and exposes parentIframe API on window', () => {
     setupPublicMethods()
+
     expect(window.parentIframe).toBeDefined()
     const api = window.parentIframe
+
     expect(typeof api.autoResize).toBe('function')
     expect(typeof api.resize).toBe('function')
     expect(typeof api.scrollTo).toBe('function')
@@ -24,6 +26,7 @@ describe('child/methods/index', () => {
 
   it('sets deprecation proxy parentIFrame', () => {
     setupPublicMethods()
+
     expect(window.parentIFrame).toBeDefined()
   })
 })

@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
-import checkCrossDomain from './cross-domain'
 import settings from '../values/settings'
 import state from '../values/state'
+import checkCrossDomain from './cross-domain'
 
 describe('child/check/cross-domain', () => {
   beforeEach(() => {
@@ -18,6 +18,7 @@ describe('child/check/cross-domain', () => {
     vi.stubGlobal('parent', parentMock)
 
     checkCrossDomain()
+
     expect(state.sameOrigin).toBe(true)
 
     // restore
@@ -26,12 +27,18 @@ describe('child/check/cross-domain', () => {
 
   it('logs when cross-domain access throws', () => {
     const originalParent = window.parent
-    const throwingParent = new Proxy({}, {
-      has() { throw new Error('cross-domain') },
-    })
+    const throwingParent = new Proxy(
+      {},
+      {
+        has() {
+          throw new Error('cross-domain')
+        },
+      },
+    )
     vi.stubGlobal('parent', throwingParent)
 
     checkCrossDomain()
+
     expect(childConsole.log).toHaveBeenCalledWith(
       'Cross domain iframe detected',
     )

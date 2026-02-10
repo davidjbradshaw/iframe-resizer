@@ -4,8 +4,6 @@ import state from '../values/state'
 import getMaxElement from './max-element'
 
 describe('child/size/max-element', () => {
-  let originalGetComputedStyle
-
   beforeEach(() => {
     state.hasTags = false
     state.hasOverflow = false
@@ -16,7 +14,6 @@ describe('child/size/max-element', () => {
     document.body.innerHTML = ''
 
     // Mock getComputedStyle to return zero margins by default
-    originalGetComputedStyle = global.getComputedStyle
     global.getComputedStyle = vi.fn(() => ({
       getPropertyValue: () => '0',
     }))

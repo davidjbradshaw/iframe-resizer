@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import applySelectors, { applySelector } from './apply-selectors'
 import * as childConsole from '../console'
+import applySelectors, { applySelector } from './apply-selectors'
 
 describe('child/page/apply-selectors', () => {
   it('applySelector toggles attributes on matching elements and logs', () => {
@@ -11,7 +11,8 @@ describe('child/page/apply-selectors', () => {
     document.body.append(el)
 
     applySelector('sizeSelector', 'data-iframe-size', '.match')
-    expect(el.hasAttribute('data-iframe-size')).toBe(true)
+
+    expect(Object.hasOwn(el.dataset, 'iframeSize')).toBe(true)
     expect(childConsole.log).toHaveBeenCalled()
   })
 
@@ -23,9 +24,13 @@ describe('child/page/apply-selectors', () => {
     el2.className = 'ignore'
     document.body.append(el1, el2)
 
-    const run = applySelectors({ sizeSelector: '.size', ignoreSelector: '.ignore' })
+    const run = applySelectors({
+      sizeSelector: '.size',
+      ignoreSelector: '.ignore',
+    })
     run()
-    expect(el1.hasAttribute('data-iframe-size')).toBe(true)
-    expect(el2.hasAttribute('data-iframe-ignore')).toBe(true)
+
+    expect(Object.hasOwn(el1.dataset, 'iframeSize')).toBe(true)
+    expect(Object.hasOwn(el2.dataset, 'iframeIgnore')).toBe(true)
   })
 })

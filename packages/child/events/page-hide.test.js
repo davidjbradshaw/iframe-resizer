@@ -1,6 +1,7 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
-import setupOnPageHide, { } from './page-hide'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+
 import { tearDownList } from './listeners'
+import setupOnPageHide from './page-hide'
 
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 vi.mock('../console', () => ({ event: vi.fn(), info: vi.fn(), log: vi.fn() }))
@@ -12,6 +13,7 @@ describe('child/events/page-hide', () => {
     addSpy = vi.spyOn(window, 'addEventListener')
     tearDownList.length = 0
   })
+
   afterEach(() => {
     addSpy.mockRestore()
     vi.clearAllMocks()
@@ -20,10 +22,13 @@ describe('child/events/page-hide', () => {
 
   test('registers pagehide listener and handles persisted=true', () => {
     setupOnPageHide()
+
     expect(addSpy).toHaveBeenCalled()
     const [evt, handler] = addSpy.mock.calls[0]
+
     expect(evt).toBe('pagehide')
     handler({ persisted: true })
+
     expect(sendMessage).not.toHaveBeenCalled()
   })
 
@@ -35,6 +40,7 @@ describe('child/events/page-hide', () => {
     setupOnPageHide()
     const handler = addSpy.mock.calls[0][1]
     handler({ persisted: false })
+
     expect(sendMessage).toHaveBeenCalled()
     expect(td1).toHaveBeenCalled()
     expect(td2).toHaveBeenCalled()

@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import run from './settings'
 import * as childConsole from '../console'
 import settings from '../values/settings'
+import run from './settings'
 
 describe('child/check/settings', () => {
   beforeEach(() => {
@@ -14,11 +14,13 @@ describe('child/check/settings', () => {
 
   it('logs targetOrigin and does not log auto-resize when enabled', () => {
     run()
+
     expect(childConsole.info).toHaveBeenCalledTimes(1)
     expect(childConsole.info).toHaveBeenCalledWith(
       expect.stringContaining('Set targetOrigin for parent:'),
       expect.anything(),
     )
+
     expect(childConsole.log).not.toHaveBeenCalledWith(
       expect.stringContaining('Auto Resize disabled'),
     )
@@ -27,8 +29,7 @@ describe('child/check/settings', () => {
   it('logs auto-resize disabled when settings.autoResize is false', () => {
     settings.autoResize = false
     run()
-    expect(childConsole.log).toHaveBeenCalledWith(
-      'Auto Resize disabled',
-    )
+
+    expect(childConsole.log).toHaveBeenCalledWith('Auto Resize disabled')
   })
 })

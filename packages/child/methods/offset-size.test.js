@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import setOffsetSize from './offset-size'
 import * as childSize from '../send/size'
 import settings from '../values/settings'
+import setOffsetSize from './offset-size'
 
 describe('child/methods/offset-size', () => {
   beforeEach(() => {
@@ -13,6 +13,7 @@ describe('child/methods/offset-size', () => {
 
   it('sets both offsets and calls sendSize', () => {
     setOffsetSize(42)
+
     expect(settings.offsetHeight).toBe(42)
     expect(settings.offsetWidth).toBe(42)
     expect(childSize.default).toHaveBeenCalled()

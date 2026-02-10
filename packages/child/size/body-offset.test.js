@@ -8,7 +8,7 @@ describe('child/size/body-offset', () => {
 
   beforeEach(() => {
     origOffset = Object.getOwnPropertyDescriptor(
-      document.body.__proto__ || document.body,
+      Object.getPrototypeOf(document.body) || document.body,
       'offsetHeight',
     )
     Object.defineProperty(document.body, 'offsetHeight', {

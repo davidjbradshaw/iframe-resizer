@@ -1,9 +1,10 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
+
 import {
+  createDetachObservers,
   createLogCounter,
   metaCreateDebugObserved,
   metaCreateErrorObserved,
-  createDetachObservers,
 } from './utils'
 
 vi.mock('../console', () => ({ debug: vi.fn(), error: vi.fn(), info: vi.fn() }))
@@ -13,20 +14,24 @@ describe('child/observers/utils', () => {
   test('metaCreateDebugObserved logs when set has items', () => {
     const logNew = metaCreateDebugObserved('attached')('Resize')
     logNew(new Set([document.createElement('div')]))
+
     expect(debug).toHaveBeenCalled()
   })
 
   test('metaCreateErrorObserved logs errors when set has items', () => {
     const logErr = metaCreateErrorObserved('already')('Resize')
     logErr(new Set([document.createElement('span')]))
+
     expect(error).toHaveBeenCalled()
   })
 
   test('createLogCounter only logs when counter > 0', () => {
     const logC = createLogCounter('Resize')
     logC(0)
+
     expect(info).not.toHaveBeenCalled()
     logC(2)
+
     expect(info).toHaveBeenCalled()
   })
 
@@ -41,8 +46,14 @@ describe('child/observers/utils', () => {
     observed.add(n2)
 
     const logCounter = vi.fn()
-    const detach = createDetachObservers('Resize', observer, observed, logCounter)
+    const detach = createDetachObservers(
+      'Resize',
+      observer,
+      observed,
+      logCounter,
+    )
     detach([n1, n2, document.createElement('p')])
+
     expect(unobserve).toHaveBeenCalledTimes(2)
     expect(logCounter).toHaveBeenCalledWith(2)
   })

@@ -1,4 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
 import state from '../values/state'
 
 vi.mock('../console', () => ({ log: vi.fn() }))
@@ -15,6 +16,7 @@ describe('child/received/reset', () => {
     state.initLock = true
     const { default: reset } = await import('./reset')
     reset()
+
     expect(triggerReset).not.toHaveBeenCalled()
   })
 
@@ -22,6 +24,7 @@ describe('child/received/reset', () => {
     state.initLock = false
     const { default: reset } = await import('./reset')
     reset()
+
     expect(triggerReset).toHaveBeenCalledWith('resetPage')
   })
 })

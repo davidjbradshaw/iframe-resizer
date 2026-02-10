@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import IframeResizer from './index.jsx'
+import IframeResizer from './index'
 
 // Mock auto-console-group to avoid noisy logs and to provide required API
 vi.mock('auto-console-group', () => ({
@@ -24,7 +24,7 @@ const moveToAnchor = vi.fn()
 const sendMessage = vi.fn()
 
 vi.mock('@iframe-resizer/core', () => ({
-  default: vi.fn((options) => (iframe) => {
+  default: vi.fn(() => (iframe) => {
     // Expose a minimal API similar to production
     iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
     return iframe.iframeResizer

@@ -1,7 +1,14 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ errorBoundary: (fn) => fn, event: vi.fn(), warn: vi.fn() }))
-vi.mock('./is', () => ({ isMessageForUs: vi.fn(() => true), isMiddleTier: vi.fn(() => false) }))
+vi.mock('../console', () => ({
+  errorBoundary: (fn) => fn,
+  event: vi.fn(),
+  warn: vi.fn(),
+}))
+vi.mock('./is', () => ({
+  isMessageForUs: vi.fn(() => true),
+  isMiddleTier: vi.fn(() => false),
+}))
 vi.mock('./utils', () => ({ getMessageType: vi.fn(() => 'unknown') }))
 vi.mock('./process-request', () => ({ default: { known: vi.fn() } }))
 
@@ -22,6 +29,7 @@ describe('child/received/index', () => {
     getMessageType.mockReturnValue('known')
     const evt = { data: '[iFrameSizer]x' }
     receiver(evt)
+
     expect(processRequest.known).toHaveBeenCalledWith(evt)
   })
 
@@ -29,6 +37,7 @@ describe('child/received/index', () => {
     getMessageType.mockReturnValue('mystery')
     isMiddleTier.mockReturnValue(true)
     receiver({ data: 'whatever' })
+
     expect(warn).toHaveBeenCalled()
   })
 
@@ -36,7 +45,6 @@ describe('child/received/index', () => {
     state.firstRun = false
     getMessageType.mockReturnValue('surprise')
     receiver({ data: 'x' })
-    const args = warn.mock.calls.at(-1)?.[0] ? warn.mock.calls.at(-1) : warn.mock.calls.at(-1)
     expect(warn).toHaveBeenCalled()
   })
 })

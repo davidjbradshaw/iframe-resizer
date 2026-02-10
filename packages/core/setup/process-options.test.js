@@ -1,7 +1,9 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../../common/mode', () => ({ default: vi.fn(() => 0) }))
-vi.mock('../../common/utils', () => ({ hasOwn: (o, k) => Object.prototype.hasOwnProperty.call(o, k) }))
+vi.mock('../../common/utils', () => ({
+  hasOwn: (o, k) => Object.prototype.hasOwnProperty.call(o, k),
+}))
 vi.mock('../checks/options', () => ({ default: vi.fn((_id, opts) => opts) }))
 vi.mock('../checks/warning-timeout', () => ({ default: vi.fn() }))
 vi.mock('../page/title', () => ({ checkTitle: vi.fn(() => true) }))
@@ -9,23 +11,25 @@ vi.mock('../send/offset', () => ({ default: vi.fn() }))
 vi.mock('../values/defaults', () => ({ default: { def: 1 } }))
 vi.mock('../values/settings', () => ({ default: {} }))
 vi.mock('./direction', () => ({ default: vi.fn() }))
-vi.mock('./target-origin', () => ({ getPostMessageTarget: vi.fn(), setTargetOrigin: vi.fn() }))
+vi.mock('./target-origin', () => ({
+  getPostMessageTarget: vi.fn(),
+  setTargetOrigin: vi.fn(),
+}))
 vi.mock('./update-option-names', () => ({ default: vi.fn() }))
 
-const setMode = (await import('../../common/mode')).default
-const checkOptions = (await import('../checks/options')).default
 const checkWarningTimeout = (await import('../checks/warning-timeout')).default
-const { checkTitle } = await import('../page/title')
 const setOffsetSize = (await import('../send/offset')).default
-const defaults = (await import('../values/defaults')).default
 const settings = (await import('../values/settings')).default
 const setDirection = (await import('./direction')).default
-const { getPostMessageTarget, setTargetOrigin } = await import('./target-origin')
+const { getPostMessageTarget, setTargetOrigin } =
+  await import('./target-origin')
 const updateOptionNames = (await import('./update-option-names')).default
 const processOptions = (await import('./process-options')).default
 
 describe('core/setup/process-options', () => {
-  beforeEach(() => { for (const k of Object.keys(settings)) delete settings[k] })
+  beforeEach(() => {
+    for (const k of Object.keys(settings)) delete settings[k]
+  })
 
   test('composes settings and calls dependent setters', () => {
     const iframe = { id: 'if1', src: 'https://a/b' }
