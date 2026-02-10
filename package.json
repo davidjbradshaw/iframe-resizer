@@ -36,7 +36,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
-    "test:unit": "vitest run",
+    "test:unit": "vitest run --coverage --reporter verbose",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "upgrade": "time npm-check-updates -i && npm run build"
