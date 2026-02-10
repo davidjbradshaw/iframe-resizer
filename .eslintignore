@@ -6,3 +6,5 @@ example/react/src/message-data.jsx
 example-test/react/src/message-data.jsx
 example-test/
 packages/common/mode.js
+vite-build.js
+vite.config.js
