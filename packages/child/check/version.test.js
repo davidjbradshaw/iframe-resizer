@@ -8,6 +8,7 @@ describe('child/check/version', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
+
   it('advises legacy when version is missing or false', () => {
     vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
     checkVersion({ version: undefined })
