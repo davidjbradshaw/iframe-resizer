@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import checkDeprecatedAttrs from './deprecated-attributes'
@@ -8,17 +8,17 @@ describe('child/check/deprecated-attributes', () => {
     vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
 
     const el1 = document.createElement('div')
-    el1.setAttribute('data-iframe-height', '')
+    el1.dataset.iframeHeight = ''
     const el2 = document.createElement('div')
-    el2.setAttribute('data-iframe-width', '')
+    el2.dataset.iframeWidth = ''
     document.body.append(el1, el2)
 
     checkDeprecatedAttrs()
 
-    expect(el1.hasAttribute('data-iframe-size')).toBe(true)
-    expect(el1.hasAttribute('data-iframe-height')).toBe(false)
-    expect(el2.hasAttribute('data-iframe-size')).toBe(true)
-    expect(el2.hasAttribute('data-iframe-width')).toBe(false)
+    expect(Object.hasOwn(el1.dataset, 'iframeSize')).toBe(true)
+    expect(Object.hasOwn(el1.dataset, 'iframeHeight')).toBe(false)
+    expect(Object.hasOwn(el2.dataset, 'iframeSize')).toBe(true)
+    expect(Object.hasOwn(el2.dataset, 'iframeWidth')).toBe(false)
 
     expect(childConsole.advise).toHaveBeenCalled()
   })

@@ -1,8 +1,8 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
+import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '../../common/consts'
 import settings from '../values/settings'
 import getMessageBody from './message'
-import { SEPARATOR, MESSAGE_HEADER_LENGTH } from '../../common/consts'
 
 describe('core/received/message', () => {
   test('extracts message body after header and separator', () => {
@@ -11,6 +11,7 @@ describe('core/received/message', () => {
       settings.i6.lastMessage.indexOf(SEPARATOR) + MESSAGE_HEADER_LENGTH,
     )
     const body = getMessageBody('i6', 0)
+
     expect(body).toBe(expected)
     delete settings.i6
   })

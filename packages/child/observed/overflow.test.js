@@ -1,8 +1,15 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
-vi.mock('../check/overflow', () => ({ default: vi.fn(() => ({ hasOverflowUpdated: true, overflowedNodeSet: new Set() })) }))
+vi.mock('../check/overflow', () => ({
+  default: vi.fn(() => ({
+    hasOverflowUpdated: true,
+    overflowedNodeSet: new Set(),
+  })),
+}))
 vi.mock('../console', () => ({ info: vi.fn() }))
-vi.mock('../observers/overflow', () => ({ default: vi.fn(() => ({ attachObservers: vi.fn() })) }))
+vi.mock('../observers/overflow', () => ({
+  default: vi.fn(() => ({ attachObservers: vi.fn() })),
+}))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({ default: { calculateHeight: true } }))
 vi.mock('../values/state', () => ({ default: { hasOverflow: false } }))
@@ -17,6 +24,7 @@ describe('child/observed/overflow', () => {
   test('creates overflow observer and attaches; sends on update', () => {
     const nodeList = [document.createElement('div')]
     const api = createOverflowObservers(nodeList)
+
     expect(observers.overflow).toBeDefined()
     expect(api.attachObservers).toHaveBeenCalledWith(nodeList)
 

@@ -92,6 +92,7 @@
     },
     {
       "files": ["packages/**/*.test.js", "packages/**/*.test.jsx"],
+      "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
       "globals": {
         "test": true,
         "describe": true,
@@ -102,7 +103,10 @@
         "vi": true
       },
       "rules": {
-        "jasmine/new-line-before-expect": 0
+        "jasmine/new-line-before-expect": 0,
+        "no-underscore-dangle": 0,
+        "jasmine/prefer-toHaveBeenCalledWith": 0,
+        "unicorn/no-await-expression-member": 0
       }
     },
     {

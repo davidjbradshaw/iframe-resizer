@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import checkSameDomain from './origin'
 import * as coreConsole from '../console'
 import settings from '../values/settings'
+import checkSameDomain from './origin'
 
 describe('core/checks/origin', () => {
   it('sets sameOrigin true when child listener present', () => {
@@ -15,6 +15,7 @@ describe('core/checks/origin', () => {
     })
     settings.id1 = { iframe }
     checkSameDomain('id1')
+
     expect(settings.id1.sameOrigin).toBe(true)
   })
 
@@ -23,10 +24,13 @@ describe('core/checks/origin', () => {
     const iframe = document.createElement('iframe')
     iframe.id = 'id2'
     Object.defineProperty(iframe, 'contentWindow', {
-      get() { throw new Error('cross') },
+      get() {
+        throw new Error('cross')
+      },
     })
     settings.id2 = { iframe }
     checkSameDomain('id2')
+
     expect(settings.id2.sameOrigin).toBe(false)
   })
 })

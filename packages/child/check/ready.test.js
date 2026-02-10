@@ -1,7 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-
-import * as utils from '../../common/utils'
-import * as listeners from '../events/listeners'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('child/check/ready', () => {
   beforeEach(() => {
@@ -25,6 +22,7 @@ describe('child/check/ready', () => {
     checkReadyYet(cb)
     const mockedUtils = await import('../../common/utils')
     const mockedListeners = await import('../events/listeners')
+
     expect(mockedUtils.isolateUserCode).toHaveBeenCalledWith(cb)
     expect(mockedListeners.addEventListener).not.toHaveBeenCalled()
   })
@@ -45,6 +43,7 @@ describe('child/check/ready', () => {
     const cb = vi.fn()
     checkReadyYet(cb)
     const mockedListeners = await import('../events/listeners')
+
     expect(mockedListeners.addEventListener).toHaveBeenCalled()
   })
 })

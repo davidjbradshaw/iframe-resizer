@@ -1,8 +1,9 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ advise: vi.fn(), log: vi.fn() }))
 import * as consoleMod from '../console'
 import checkBlockingCSS from './blocking-css'
+
+vi.mock('../console', () => ({ advise: vi.fn(), log: vi.fn() }))
 
 describe('child/check/blocking-css', () => {
   beforeEach(() => {
@@ -11,11 +12,12 @@ describe('child/check/blocking-css', () => {
     // add a style rule that matches html element
     const style = document.createElement('style')
     style.textContent = 'html { min-width: 100px }'
-    document.head.appendChild(style)
+    document.head.append(style)
   })
 
   test('warns when stylesheet sets blocking CSS', () => {
     checkBlockingCSS()
+
     expect(consoleMod.advise).toHaveBeenCalled()
   })
 })

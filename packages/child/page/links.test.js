@@ -1,12 +1,12 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
+import sendMessage from '../send/message'
+import settings from '../values/settings'
+import state from '../values/state'
+import setupInPageLinks from './links'
 
 vi.mock('../console', () => ({ log: vi.fn(), advise: vi.fn() }))
 vi.mock('../send/message', () => ({ __esModule: true, default: vi.fn() }))
-
-import setupInPageLinks from './links'
-import settings from '../values/settings'
-import state from '../values/state'
-import sendMessage from '../send/message'
 
 describe('child/page/links', () => {
   beforeEach(() => {
@@ -18,11 +18,11 @@ describe('child/page/links', () => {
   test('setup and findTarget sends message for existing id', () => {
     const target = document.createElement('div')
     target.id = 't1'
-    document.body.appendChild(target)
+    document.body.append(target)
 
     const a = document.createElement('a')
     a.setAttribute('href', '#t1')
-    document.body.appendChild(a)
+    document.body.append(a)
 
     setupInPageLinks(true)
     // use the registered finder directly

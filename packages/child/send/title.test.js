@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 vi.mock('./message', () => ({ default: vi.fn() }))
 
@@ -12,6 +12,7 @@ describe('child/send/title', () => {
     const prev = d.title
     d.title = 'Hello'
     sendTitle()
+
     expect(sendMessage).toHaveBeenCalledWith(0, 0, TITLE, 'Hello')
     d.title = prev
   })
@@ -22,6 +23,7 @@ describe('child/send/title', () => {
     const prev = d.title
     d.title = ''
     sendTitle()
+
     expect(sendMessage).not.toHaveBeenCalled()
     d.title = prev
   })

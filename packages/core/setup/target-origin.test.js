@@ -1,12 +1,17 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { getTargetOrigin, setTargetOrigin, getPostMessageTarget } from './target-origin'
 import settings from '../values/settings'
+import {
+  getPostMessageTarget,
+  getTargetOrigin,
+  setTargetOrigin,
+} from './target-origin'
 
 describe('core/setup/target-origin', () => {
   it('getTargetOrigin returns * for blank and special schemes', () => {
     expect(getTargetOrigin('')).toBe('*')
     expect(getTargetOrigin('about:blank')).toBe('*')
+    // eslint-disable-next-line no-script-url
     expect(getTargetOrigin('javascript:alert(1)')).toBe('*')
     expect(getTargetOrigin('file:///tmp')).toBe('*')
     expect(getTargetOrigin('https://example.com')).toBe('https://example.com')
@@ -15,10 +20,12 @@ describe('core/setup/target-origin', () => {
   it('setTargetOrigin sets based on checkOrigin and remoteHost', () => {
     settings.x = { checkOrigin: true, remoteHost: 'https://a.b' }
     setTargetOrigin('x')
+
     expect(settings.x.targetOrigin).toBe('https://a.b')
 
     settings.y = { checkOrigin: false, remoteHost: 'https://a.b' }
     setTargetOrigin('y')
+
     expect(settings.y.targetOrigin).toBe('*')
   })
 
@@ -32,6 +39,7 @@ describe('core/setup/target-origin', () => {
     })
     settings.z = { postMessageTarget: null }
     getPostMessageTarget(iframe)
+
     expect(settings.z.postMessageTarget).toBe(cw)
   })
 })

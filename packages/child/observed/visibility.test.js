@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ log: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
@@ -12,6 +12,7 @@ const visibilityChange = (await import('./visibility')).default
 describe('child/observed/visibility', () => {
   test('logs, updates state, and sends size', () => {
     visibilityChange(true)
+
     expect(log).toHaveBeenCalled()
     expect(state.isHidden).toBe(false)
     expect(sendSize).toHaveBeenCalled()

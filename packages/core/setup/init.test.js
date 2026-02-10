@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.useFakeTimers()
 
@@ -16,15 +16,18 @@ const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
 const settings = (await import('../values/settings')).default
 const init = (await import('./init')).default
-const { INIT, ONLOAD, INIT_FROM_IFRAME } = await import('../../common/consts')
+const { INIT, INIT_FROM_IFRAME } = await import('../../common/consts')
 
 describe('core/setup/init', () => {
-  beforeEach(() => { for (const k of Object.keys(settings)) delete settings[k] })
+  beforeEach(() => {
+    for (const k of Object.keys(settings)) delete settings[k]
+  })
 
   test('delays when no content and emits noContent event', () => {
     settings.if1 = { iframe: { loading: 'eager', src: '', srcdoc: '' } }
     init('if1', 'm')
     vi.runAllTimers()
+
     expect(consoleEvent).toHaveBeenCalledWith('if1', 'noContent')
     expect(info).toHaveBeenCalled()
   })
@@ -35,22 +38,32 @@ describe('core/setup/init', () => {
     init('if2', 'msg')
 
     // onload listener registered
-    expect(addEventListener).toHaveBeenCalledWith(iframe, 'load', expect.any(Function))
+    expect(addEventListener).toHaveBeenCalledWith(
+      iframe,
+      'load',
+      expect.any(Function),
+    )
 
     // send init path
-    vi.runOnlyPendingTimers() // schedule sendInit
+    vi.runOnlyPendingTimers()
+
     expect(trigger).toHaveBeenCalledWith(INIT, 'msg', 'if2')
     expect(warnOnNoResponse).toHaveBeenCalledWith('if2', settings)
 
     // manual call of iframe-originated init
     settings.if2.initChild()
+
     expect(trigger).toHaveBeenCalledWith(INIT_FROM_IFRAME, 'msg', 'if2')
 
     // simulate onload (we only assert listener was registered above; internal timer behavior is implementation detail)
   })
 
   test('checkReset triggers reset for specific methods when not firstRun', () => {
-    settings.if3 = { iframe: { loading: 'eager', src: 'x' }, firstRun: false, heightCalculationMethod: 'max' }
+    settings.if3 = {
+      iframe: { loading: 'eager', src: 'x' },
+      firstRun: false,
+      heightCalculationMethod: 'max',
+    }
     init('if3', 'z')
     vi.runAllTimers()
     // allow checkReset evaluation after INIT path

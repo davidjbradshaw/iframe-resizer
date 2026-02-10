@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ info: vi.fn(), log: vi.fn() }))
 vi.mock('../values/page', () => ({ default: { position: null } }))
@@ -18,6 +18,7 @@ describe('core/page/position', () => {
 
   test('getPagePosition initializes and logs', () => {
     const pos = positionMod.getPagePosition('id')
+
     expect(pos).toEqual({ x: 3, y: 4 })
     expect(log).toHaveBeenCalled()
   })
@@ -25,6 +26,7 @@ describe('core/page/position', () => {
   test('setPagePosition scrolls and unsets', () => {
     page.position = { x: 7, y: 8 }
     positionMod.setPagePosition('id')
+
     expect(window.scrollTo).toHaveBeenCalledWith(7, 8)
     expect(info).toHaveBeenCalled()
     expect(page.position).toBe(null)

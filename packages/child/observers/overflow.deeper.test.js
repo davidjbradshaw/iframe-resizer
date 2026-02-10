@@ -1,29 +1,40 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ debug: vi.fn(), info: vi.fn() }))
 import { OVERFLOW_ATTR } from '../../common/consts'
 import * as consoleMod from '../console'
 import createOverflowObserver from './overflow'
 
+vi.mock('../console', () => ({ debug: vi.fn(), info: vi.fn() }))
+
 describe('child/observers/overflow deeper', () => {
-  const entries = []
   const origIO = globalThis.IntersectionObserver
   const origRAF = globalThis.requestAnimationFrame
 
   beforeEach(() => {
     vi.clearAllMocks()
-    entries.length = 0
-    globalThis.requestAnimationFrame = (cb) => { cb(); return 1 }
-    globalThis.IntersectionObserver = function(cb) { globalThis.IntersectionObserver.prototype._cb = cb; this.observe = vi.fn((node) => { this._node = node }); this.disconnect = vi.fn() }
+    globalThis.requestAnimationFrame = (cb) => {
+      cb()
+      return 1
+    }
+    globalThis.IntersectionObserver = function (cb) {
+      globalThis.IntersectionObserver.prototype._cb = cb
+      this.observe = vi.fn((node) => {
+        this._node = node
+      })
+      this.disconnect = vi.fn()
+    }
     document.body.innerHTML = ''
   })
 
   test('sets overflow attribute based on edge vs rootBounds', () => {
     const node = document.createElement('div')
     Object.defineProperty(node, 'offsetParent', { get: () => document.body })
-    document.body.appendChild(node)
+    document.body.append(node)
     const cb = vi.fn()
-    const obs = createOverflowObserver(cb, { side: 'bottom', root: document.body })
+    const obs = createOverflowObserver(cb, {
+      side: 'bottom',
+      root: document.body,
+    })
 
     // Attach and simulate an observation cycle
     obs.attachObservers([node])
@@ -38,8 +49,12 @@ describe('child/observers/overflow deeper', () => {
     expect(consoleMod.info).toHaveBeenCalled()
 
     obs.disconnect()
+
     expect(consoleMod.info).toHaveBeenCalled()
   })
 
-  afterAll(() => { globalThis.IntersectionObserver = origIO; globalThis.requestAnimationFrame = origRAF })
+  afterAll(() => {
+    globalThis.IntersectionObserver = origIO
+    globalThis.requestAnimationFrame = origRAF
+  })
 })

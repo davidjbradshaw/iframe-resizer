@@ -1,10 +1,12 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../../common/utils', () => ({ typeAssert: vi.fn() }))
 vi.mock('../console', () => ({ advise: vi.fn(), event: vi.fn() }))
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
-vi.mock('../values/settings', () => ({ default: { autoResize: false, calculateHeight: true, calculateWidth: false } }))
+vi.mock('../values/settings', () => ({
+  default: { autoResize: false, calculateHeight: true, calculateWidth: false },
+}))
 
 const { advise, event: consoleEvent } = await import('../console')
 const sendMessage = (await import('../send/message')).default
@@ -25,6 +27,7 @@ describe('child/methods/auto-resize', () => {
     settings.calculateHeight = false
     settings.calculateWidth = false
     const res = autoResize(true)
+
     expect(res).toBe(false)
     expect(consoleEvent).toHaveBeenCalledWith(ENABLE)
     expect(advise).toHaveBeenCalled()
@@ -33,10 +36,12 @@ describe('child/methods/auto-resize', () => {
 
   test('enables autoResize and queues sendSize; always sends AUTO_RESIZE message', async () => {
     const out = autoResize(true)
+
     expect(out).toBe(true)
     expect(settings.autoResize).toBe(true)
     // flush microtask queue
     await Promise.resolve()
+
     expect(sendSize).toHaveBeenCalledWith(ENABLE, 'Auto Resize enabled')
     expect(sendMessage).toHaveBeenCalledWith(0, 0, AUTO_RESIZE, 'true')
   })
@@ -44,6 +49,7 @@ describe('child/methods/auto-resize', () => {
   test('disables autoResize from true', () => {
     settings.autoResize = true
     const out = autoResize(false)
+
     expect(out).toBe(false)
     expect(settings.autoResize).toBe(false)
     expect(sendMessage).toHaveBeenCalledWith(0, 0, AUTO_RESIZE, 'false')

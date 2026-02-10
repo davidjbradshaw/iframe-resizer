@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../../common/utils', () => ({ typeAssert: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
@@ -14,6 +14,7 @@ describe('child/methods/resize', () => {
   })
   test('sends manual resize with both dims', () => {
     resize(100, 200)
+
     expect(typeAssert).toHaveBeenCalledTimes(2)
     expect(sendSize).toHaveBeenCalledWith(
       MANUAL_RESIZE_REQUEST,
@@ -25,6 +26,7 @@ describe('child/methods/resize', () => {
 
   test('sends manual resize with just height', () => {
     resize(150)
+
     expect(typeAssert).toHaveBeenCalledTimes(1)
     expect(sendSize).toHaveBeenCalledWith(
       MANUAL_RESIZE_REQUEST,
