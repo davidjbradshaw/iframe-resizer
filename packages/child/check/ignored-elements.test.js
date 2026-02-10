@@ -1,9 +1,15 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import checkIgnoredElements from './ignored-elements'
 
 describe('child/check/ignored-elements', () => {
+  beforeEach(() => {
+    // Ensure clean DOM and fresh spies between tests
+    document.body.innerHTML = ''
+    vi.restoreAllMocks()
+  })
+
   it('warns when ignored elements count changes and returns true', () => {
     vi.spyOn(childConsole, 'warn').mockImplementation(() => {})
     const el1 = document.createElement('div')
@@ -20,11 +26,21 @@ describe('child/check/ignored-elements', () => {
 
   it('does not warn again when count is unchanged', () => {
     vi.spyOn(childConsole, 'warn').mockImplementation(() => {})
-    // Elements already present from previous test; call again
-    const hasIgnored = checkIgnoredElements()
+    // Setup elements and call twice within the same test
+    const el1 = document.createElement('div')
+    el1.dataset.iframeIgnore = ''
+    const el2 = document.createElement('span')
+    el2.dataset.iframeIgnore = ''
+    document.body.append(el1, el2)
 
-    expect(hasIgnored).toBe(true)
-    // Count unchanged, should not warn again
-    expect(childConsole.warn).not.toHaveBeenCalled()
+    const first = checkIgnoredElements()
+    const callsAfterFirst = childConsole.warn.mock.calls.length
+    const second = checkIgnoredElements()
+    const callsAfterSecond = childConsole.warn.mock.calls.length
+
+    expect(first).toBe(true)
+    expect(second).toBe(true)
+    // Second call must not increase warn count
+    expect(callsAfterSecond).toBe(callsAfterFirst)
   })
 })
