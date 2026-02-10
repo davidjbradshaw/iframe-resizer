@@ -25,14 +25,16 @@ const betaMode = BETA || false
 const sourcemap = debugMode || betaMode || false
 const logging = debugMode || betaMode || TEST
 
-const outputPlugins = debugMode ? () => { } : (file, format) => ({
-  plugins: terser({
-    output: {
-      comments: false,
-      preamble: createBanner(file, format),
-    },
-  }),
-})
+const outputPlugins = debugMode
+  ? () => ({})
+  : (file, format) => ({
+      plugins: terser({
+        output: {
+          comments: false,
+          preamble: createBanner(file, format),
+        },
+      }),
+    })
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)

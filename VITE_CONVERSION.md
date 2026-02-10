@@ -1,6 +1,6 @@
-# Rollup to Vite Conversion
+# Rollup to Vite Conversion (Using Vite Plugins with Rollup)
 
-This document explains the conversion of the iframe-resizer project build system from Rollup to Vite.
+This document explains the conversion of the iframe-resizer project build system to use Vite plugins while maintaining Rollup for the build process.
 
 ## What Changed
 

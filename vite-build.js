@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable */
+/* eslint-disable no-console, no-await-in-loop */
 /**
  * Build script using Rollup (which powers Vite) with Vite plugins
  * This script uses the vite.config.js file for configuration
@@ -47,8 +47,10 @@ async function build() {
           }
         })
 
-        // Keep the process running
-        await new Promise(() => {})
+        // Keep the process running in watch mode (intentional infinite wait)
+        await new Promise(() => {
+          /* Keep process alive for watch mode */
+        })
       } else {
         const bundle = await rollup({
           input: config.input,
