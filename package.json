@@ -18,7 +18,7 @@
     "build:prod": "time npm run rollup:prod",
     "build:latest": "time npm run rollup:prod",
     "build:test": "time npm run test",
-    "eslint": "eslint *.js packages/ **/*.html **/*.jsx --color",
+    "eslint": "eslint packages/ build/ '**/*.html' '**/*.jsx' *.js --ext .js,.jsx --color --cache",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:sarif": "eslint packages/ --format @microsoft/sarif --output-file eslint-results.sarif",
     "publish": "time bin/publish.sh latest",
@@ -58,6 +58,8 @@
     "react": "^19.2.4"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.6",
+    "@babel/plugin-syntax-import-attributes": "^7.28.6",
     "@babel/plugin-transform-runtime": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-react": "^7.28.5",

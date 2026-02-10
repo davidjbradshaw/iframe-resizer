@@ -15,7 +15,7 @@
     "iframeResize": true,
     "parentIFrame": true
   },
-  "parserOptions": { "ecmaVersion": 2021 },
+  "parserOptions": { "ecmaVersion": 2024, "sourceType": "module" },
   "rules": {
     "comma-dangle": [1, "always-multiline"],
     "const-case/uppercase": 0,
@@ -77,6 +77,19 @@
         "prettier/prettier": 0,
         "xss/no-location-href-assign": 0
       }
+    },
+    {
+      "files": ["build/**/*.js"],
+      "parser": "@babel/eslint-parser",
+      "parserOptions": {
+        "requireConfigFile": false,
+        "sourceType": "module",
+        "ecmaVersion": 2024,
+        "babelOptions": {
+          "plugins": ["@babel/plugin-syntax-import-attributes"]
+        }
+      },
+      "rules": { "import/extensions": 0 }
     },
     {
       "files": ["packages/**/*.test.js", "packages/**/*.test.jsx"],
