@@ -45,8 +45,13 @@ jobs:
         run: npm run eslint:sarif
         continue-on-error: true
 
+      - name: Ensure SARIF file exists
+        run: |
+          if [ ! -f eslint-results.sarif ]; then
+            echo '{"version":"2.1.0","runs":[]}' > eslint-results.sarif
+          fi
+
       - name: Upload analysis results to GitHub
-        if: ${{ hashFiles('eslint-results.sarif') != '' }}
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: eslint-results.sarif
