@@ -11,3 +11,5 @@ js/*
 dist
 test-js
 example-test
+llm-context.md
+.eslintcache
