@@ -17,7 +17,11 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.js'],
     globals: true,
     deps: {
-      inline: ['auto-console-group'],
+      optimizer: {
+        web: {
+          include: ['auto-console-group'],
+        },
+      },
     },
     coverage: {
       enabled: true,

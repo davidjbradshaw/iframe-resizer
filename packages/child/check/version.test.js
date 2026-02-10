@@ -1,10 +1,13 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { VERSION } from '../../common/consts'
 import * as childConsole from '../console'
 import checkVersion from './version'
 
 describe('child/check/version', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+  })
   it('advises legacy when version is missing or false', () => {
     vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
     checkVersion({ version: undefined })
