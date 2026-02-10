@@ -96,10 +96,21 @@ test.describe('iframe-resizer cross-origin handling', () => {
     await page.goto('/example/html/index.html')
     await page.waitForLoadState('networkidle')
     
-    // Wait a bit for iframe resizer to initialize
-    await page.waitForTimeout(500)
+    // Wait for iframe resizer to initialize by checking for the iFrameResizer property
+    await page.locator('iframe').evaluate(el => {
+      return new Promise((resolve) => {
+        const checkResizer = () => {
+          if (el.iFrameResizer !== undefined) {
+            resolve(true)
+          } else {
+            setTimeout(checkResizer, 50)
+          }
+        }
+        checkResizer()
+      })
+    })
     
-    // Check that iframe resizer initialized (by checking for iFrameResizer property)
+    // Check that iframe resizer initialized
     const hasResizer = await page.locator('iframe').evaluate(el => {
       return el.iFrameResizer !== undefined
     })
