@@ -12,3 +12,8 @@ dist
 test-js
 example-test
 .eslintcache
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
