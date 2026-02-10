@@ -1,6 +1,6 @@
 {
   "extends": ["auto"],
-  "ignorePatterns": ["js/*", "dist/*", "*.d.ts"],
+  "ignorePatterns": ["js/*", "dist/*", "*.d.ts", "coverage/**"],
   "env": {
     "amd": true,
     "browser": true,
@@ -76,6 +76,12 @@
         "no-unsanitized/property": 0,
         "prettier/prettier": 0,
         "xss/no-location-href-assign": 0
+      }
+    },
+    {
+      "files": ["packages/**/*.test.js", "packages/**/*.test.jsx"],
+      "rules": {
+        "jasmine/new-line-before-expect": 0
       }
     },
     {
