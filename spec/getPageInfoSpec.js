@@ -31,7 +31,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
   })
 
-  xdescribe('Get Page info with multiple frames', () => {
+  describe('Get Page info with multiple frames', () => {
     beforeEach(() => {
       loadIFrame('twoIFrame600WithId.html')
     })
@@ -41,14 +41,13 @@ define(['iframeResizerParent'], (iframeResize) => {
         license: 'GPLv3',
         log: true,
         id: '#frame1,#frame2',
+        onReady: (iframe) => {
+          iframe.iframeResizer.sendMessage('getPageInfo')
+        },
       })
 
       const iframe1 = iframes[0]
       const iframe2 = iframes[1]
-
-      // Mock both iframes as ready
-      mockMsgFromIFrame(iframe1, 'reset')
-      mockMsgFromIFrame(iframe2, 'reset')
 
       setTimeout(() => {
         let counter = 0
@@ -78,9 +77,6 @@ define(['iframeResizerParent'], (iframeResize) => {
           }
         }
 
-        // Trigger the sendMessage to each iframe
-        iframe1.iframeResizer.sendMessage('getPageInfo')
-        iframe2.iframeResizer.sendMessage('getPageInfo')
         window.dispatchEvent(new Event('resize'))
       }, 200)
     })
