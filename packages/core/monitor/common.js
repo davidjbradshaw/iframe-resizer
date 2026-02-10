@@ -4,24 +4,27 @@ import { event, log } from '../console'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
 
-export const sendInfoToIframe = (type, infoFunction) => (requestType, id) => {
+export const sendInfoToIframe = (type, infoFunction) => {
   const gate = {}
-  const { iframe } = settings[id]
 
-  function throttle(func, frameId) {
-    if (!gate[frameId]) {
-      func()
-      gate[frameId] = requestAnimationFrame(() => {
-        gate[frameId] = null
-      })
+  return (requestType, id) => {
+    const { iframe } = settings[id]
+
+    function throttle(func, frameId) {
+      if (!gate[frameId]) {
+        func()
+        gate[frameId] = requestAnimationFrame(() => {
+          gate[frameId] = null
+        })
+      }
     }
-  }
 
-  function gatedTrigger() {
-    trigger(`${requestType} (${type})`, `${type}:${infoFunction(iframe)}`, id)
-  }
+    function gatedTrigger() {
+      trigger(`${requestType} (${type})`, `${type}:${infoFunction(iframe)}`, id)
+    }
 
-  throttle(gatedTrigger, id)
+    throttle(gatedTrigger, id)
+  }
 }
 
 export const stopInfoMonitor = (stopFunction) => (id) => {
