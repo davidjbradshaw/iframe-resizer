@@ -7,6 +7,7 @@ describe('child/check/quirks-mode', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
+
   it('advises when document.compatMode is Quirks Mode', () => {
     vi.spyOn(document, 'compatMode', 'get').mockReturnValue('BackCompat')
     vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
