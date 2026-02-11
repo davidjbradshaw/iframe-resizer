@@ -12,6 +12,11 @@ const { getElementPosition, scrollToLink } = await import('./scroll')
 const { log } = await import('../console')
 
 describe('core/page/in-page-link', () => {
+  const simulateIframe = () => {
+    Object.defineProperty(window, 'top', { value: {}, configurable: true })
+    Object.defineProperty(window, 'self', { value: window, configurable: true })
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
     document.body.innerHTML = ''
@@ -39,9 +44,7 @@ describe('core/page/in-page-link', () => {
   })
 
   test('calls parentIframe.moveToAnchor when element not found in iframe', () => {
-    // Simulate being in iframe
-    Object.defineProperty(window, 'top', { value: {}, configurable: true })
-    Object.defineProperty(window, 'self', { value: window, configurable: true })
+    simulateIframe()
     
     const moveToAnchor = vi.fn()
     window.parentIframe = { moveToAnchor }
@@ -52,9 +55,7 @@ describe('core/page/in-page-link', () => {
   })
 
   test('calls parentIFrame.moveToAnchor (v4 compatibility) when element not found', () => {
-    // Simulate being in iframe
-    Object.defineProperty(window, 'top', { value: {}, configurable: true })
-    Object.defineProperty(window, 'self', { value: window, configurable: true })
+    simulateIframe()
     
     const moveToAnchor = vi.fn()
     window.parentIFrame = { moveToAnchor }
@@ -65,9 +66,7 @@ describe('core/page/in-page-link', () => {
   })
 
   test('logs not found when parentIframe not available in iframe', () => {
-    // Simulate being in iframe
-    Object.defineProperty(window, 'top', { value: {}, configurable: true })
-    Object.defineProperty(window, 'self', { value: window, configurable: true })
+    simulateIframe()
 
     inPageLink('id', 'http://x/#missing')
 
