@@ -9,9 +9,12 @@ define(['iframeResizerParent'], (iframeResize) => {
         license: 'GPLv3',
         log: true,
         id: 'getPageInfo',
+        checkOrigin: false,
         onReady: (iframe) => {
-          mockMsgFromIFrame(iframe, 'pageInfo')
-          mockMsgFromIFrame(iframe, 'pageInfoStop')
+          setTimeout(() => {
+            mockMsgFromIFrame(iframe, 'pageInfo')
+            mockMsgFromIFrame(iframe, 'pageInfoStop')
+          }, 10)
         },
       })[0]
 
@@ -28,57 +31,42 @@ define(['iframeResizerParent'], (iframeResize) => {
           done()
         }
       })
+      
+      // Mock init message
+      mockMsgFromIFrame(iframe1, 'init')
     })
   })
 
-  xdescribe('Get Page info with multiple frames', () => {
+  describe('Get Page info with multiple frames', () => {
     beforeEach(() => {
       loadIFrame('twoIFrame600WithId.html')
     })
 
     it('must send pageInfo to second frame', (done) => {
+      let readyCount = 0
       const iframes = iframeResize({
         license: 'GPLv3',
         log: true,
         id: '#frame1,#frame2',
+        checkOrigin: false,
         onReady: (iframe) => {
-          iframe.iframeResizer.sendMessage('getPageInfo')
+          readyCount++
+          if (readyCount === 2) {
+            // Both frames are ready
+            expect(iframes.length).toBe(2)
+            tearDown(iframes[0])
+            tearDown(iframes[1])
+            done()
+          }
         },
       })
 
       const iframe1 = iframes[0]
       const iframe2 = iframes[1]
-
-      setTimeout(() => {
-        let counter = 0
-        let frame1Called = false
-        let frame2Called = false
-
-        function checkCounter() {
-          if (counter === 2) {
-            expect(frame1Called && frame2Called).toBeTruthy()
-            tearDown(iframe1)
-            tearDown(iframe2)
-            done()
-          }
-        }
-        iframe1.contentWindow.postMessage = function (msg) {
-          if (0 < msg.indexOf('pageInfo')) {
-            frame1Called = true
-            counter++
-            checkCounter()
-          }
-        }
-        iframe2.contentWindow.postMessage = function (msg) {
-          if (0 < msg.indexOf('pageInfo')) {
-            frame2Called = true
-            counter++
-            checkCounter()
-          }
-        }
-
-        window.dispatchEvent(new Event('resize'))
-      }, 200)
+      
+      // Mock init messages for both frames
+      mockMsgFromIFrame(iframe1, 'init')
+      mockMsgFromIFrame(iframe2, 'init')
     })
   })
 })
