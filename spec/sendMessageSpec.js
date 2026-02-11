@@ -22,10 +22,11 @@ define(['iframeResizerParent'], (iframeResize) => {
         log,
         id: 'sendMessage1',
         warningTimeout: 1000,
-        checkOrigin: false,
+        checkOrigin: false, // Disabled for testing - allows wildcard origin
         onReady: (iframe1) => {
           iframe1.iframeResizer.sendMessage('chkSendMsg:test')
 
+          // Using '*' as target origin is acceptable in tests with checkOrigin disabled
           expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
             '[iFrameSizer]message:"chkSendMsg:test"',
             '*',

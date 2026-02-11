@@ -63,6 +63,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.autoResize(true)
 
         setTimeout(() => {
+          // Verify autoResize message was sent to parent
           expect(msgObject.source.postMessage).toHaveBeenCalledWith(
             '[iFrameSizer]parentIFrameTests:0:0:autoResize:true',
             '*',
@@ -190,6 +191,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.setTargetOrigin(targetOrigin)
         win.parentIFrame.resize(10, 10)
 
+        // resize() sends 'manualResize' type (not 'size') to distinguish from auto-resize
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
           '[iFrameSizer]parentIFrameTests:10:10:manualResize',
           targetOrigin,
@@ -243,7 +245,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         setTimeout(() => {
-          // Verify some log was called (actual message may vary based on timing)
+          // Verify console.log was called with any message
           expect(console.log).toHaveBeenCalled()
           done()
         }, 10)
@@ -302,10 +304,10 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIFrame.size(50, 10)
         win.parentIFrame.size(60, 10)
         setTimeout(() => {
-          // Verify that not all sizes were sent (throttling worked)
           const callCount = msgObject.source.postMessage.calls.count()
           
-          // Should have fewer calls than requested due to throttling
+          // Verify throttling occurred - may have 0 calls if all throttled
+          // or some calls if throttling allowed some through
           expect(callCount).toBeLessThan(6)
           done()
         }, 17)
