@@ -1,15 +1,20 @@
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import react from '@vitejs/plugin-react'
+import { fileURLToPath } from 'node:url'
+import { dirname, resolve } from 'node:path'
+
+const rootDir = dirname(fileURLToPath(import.meta.url))
+const r = (p) => resolve(rootDir, p)
 
 export default defineConfig({
   plugins: [vue(), react()],
   resolve: {
     alias: {
-      '@iframe-resizer/jquery': '/Users/davidbradshaw/dev/iframe-resizer/mono/packages/jquery/plugin.js',
-      '@iframe-resizer/child': '/Users/davidbradshaw/dev/iframe-resizer/mono/packages/child/index.js',
-      '@iframe-resizer/parent': '/Users/davidbradshaw/dev/iframe-resizer/mono/packages/parent/factory.js',
-      '@iframe-resizer/core': '/Users/davidbradshaw/dev/iframe-resizer/mono/packages/core/index.js',
+      '@iframe-resizer/jquery': r('packages/jquery/plugin.js'),
+      '@iframe-resizer/child': r('packages/child/index.js'),
+      '@iframe-resizer/parent': r('packages/parent/factory.js'),
+      '@iframe-resizer/core': r('packages/core/index.js'),
     },
   },
   test: {
