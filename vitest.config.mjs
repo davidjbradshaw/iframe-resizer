@@ -1,8 +1,9 @@
-import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
-import react from '@vitejs/plugin-react'
-import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vitest/config'
 
 const rootDir = dirname(fileURLToPath(import.meta.url))
 const r = (p) => resolve(rootDir, p)
