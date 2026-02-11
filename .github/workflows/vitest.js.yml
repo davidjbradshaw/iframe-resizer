@@ -12,9 +12,9 @@ on:
     branches: [ "master", "dev" ]
 
 jobs:
-  name: Run unit tests
-  build:
 
+  build:
+    name: Run unit tests
     runs-on: ubuntu-latest
 
     strategy:
