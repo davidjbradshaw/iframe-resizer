@@ -1,8 +1,9 @@
-import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
-import react from '@vitejs/plugin-react'
-import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vitest/config'
 
 const rootDir = dirname(fileURLToPath(import.meta.url))
 const r = (p) => resolve(rootDir, p)
@@ -21,6 +22,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.js'],
     globals: true,
+    include: ['packages/**/*.test.{js,ts,jsx,tsx}'],
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      'coverage/**',
+      '**/.{git,svn,hg}/**',
+      'e2e/**',
+    ],
     deps: {
       optimizer: {
         web: {

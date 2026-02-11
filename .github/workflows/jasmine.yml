@@ -1,7 +1,7 @@
 # Integration Tests Workflow
 # Runs Jasmine/Karma integration tests for iframe-resizer
 
-name: Integration Tests
+name: Jasmine
 
 permissions:
   contents: read
@@ -15,13 +15,13 @@ on:
 
 jobs:
   integration-tests:
-    name: Run Integration Tests
+    name: Run integration tests on Karma
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
-        # Test against multiple Node.js versions
+        node-version: [22.x]
+        # Single Node.js version is sufficient (browser-targeted)
 
     steps:
     - name: Checkout code
@@ -37,7 +37,7 @@ jobs:
       run: npm ci
 
     - name: Build test artifacts
-      run: npm run rollup:test:ci
+      run: npm run vite:test:ci
 
     - name: Run integration tests
       run: npm run test:int

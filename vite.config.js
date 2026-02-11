@@ -4,7 +4,7 @@ import copy from 'rollup-plugin-copy'
 import filesize from 'rollup-plugin-filesize'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
-import vue from 'rollup-plugin-vue'
+import vue from '@vitejs/plugin-vue'
 
 import createBanner from './build/banner.js'
 import { output, outputs } from './build/output.js'
@@ -14,6 +14,7 @@ import {
   injectVersion,
 } from './build/plugins.js'
 
+// eslint-disable-next-line import/no-unresolved
 import pkg from './package.json' with { type: 'json' }
 import typescript from '@rollup/plugin-typescript'
 
@@ -24,14 +25,16 @@ const betaMode = BETA || false
 const sourcemap = debugMode || betaMode || false
 const logging = debugMode || betaMode || TEST
 
-const outputPlugins = debugMode ? () => { } : (file, format) => ({
-  plugins: terser({
-    output: {
-      comments: false,
-      preamble: createBanner(file, format),
-    },
-  }),
-})
+const outputPlugins = debugMode
+  ? () => ({})
+  : (file, format) => ({
+      plugins: terser({
+        output: {
+          comments: false,
+          preamble: createBanner(file, format),
+        },
+      }),
+    })
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -280,8 +283,11 @@ const npm = [
     plugins: [
       typescript(),
       vue({
-        css: true,
-        compileTemplate: true,
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) => tag.startsWith('iframe-resizer')
+          }
+        }
       }),
       ...pluginsProd('vue'),
       copy({
