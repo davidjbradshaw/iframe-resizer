@@ -39,6 +39,9 @@ jobs:
     - name: Build project
       run: npm run rollup:debug
     
+    - name: Copy built files to js-dist for e2e tests
+      run: cp -r js/* js-dist/
+    
     - name: Run Playwright tests
       run: npm run test:e2e
     
