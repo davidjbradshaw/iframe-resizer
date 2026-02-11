@@ -47,4 +47,29 @@ describe('child/read/from-page', () => {
     expect(typeof out.onReady).toBe('function')
     expect(typeof out.onBeforeResize).toBe('function')
   })
+
+  test('throws TypeError when value is wrong type', async () => {
+    window.iframeResizer = {
+      targetOrigin: 123, // should be string
+    }
+
+    const { default: readFromPage } = await import('./from-page')
+    
+    expect(() => readFromPage()).toThrow(TypeError)
+    expect(() => readFromPage()).toThrow('targetOrigin is not a string')
+  })
+
+  test('reads deprecated offset option', async () => {
+    settings.calculateHeight = true
+    settings.calculateWidth = true
+    window.iframeResizer = {
+      offset: 10,
+    }
+
+    const { default: readFromPage } = await import('./from-page')
+    const out = readFromPage()
+
+    expect(out.offsetHeight).toBe(10)
+    expect(out.offsetWidth).toBe(10)
+  })
 })

@@ -111,4 +111,14 @@ describe('child/size/auto branches', () => {
     })
     expect(res).toBeGreaterThanOrEqual(100)
   })
+
+  it('hasTags branch uses taggedElement', async () => {
+    state.firstRun = false
+    state.hasTags = true
+    const res = auto({
+      ...base,
+      taggedElement: () => 250,
+    })
+    expect(res).toBe(250)
+  })
 })
