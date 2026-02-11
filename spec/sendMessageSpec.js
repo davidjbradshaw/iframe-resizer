@@ -14,7 +14,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('send message to iframe', (done) => {
       iframe = document.getElementsByTagName('iframe')[0]
       iframe.id = 'sendMessage1'
-      
+
       spyOn(iframe.contentWindow, 'postMessage')
 
       const iframe1 = iframeResize({
@@ -77,7 +77,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       // Mock the init message from child
       mockMsgFromIFrame(iframe, 'init')
-      
+
       // Mock response from child after a short delay
       setTimeout(() => {
         mockMsgFromIFrame(iframe, 'message:"message: test string"')
