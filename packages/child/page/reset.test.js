@@ -38,4 +38,15 @@ describe('child/page/reset', () => {
     expect(sendMessage).toHaveBeenCalledWith(10, 20, 'reset')
     globalThis.requestAnimationFrame = raf
   })
+
+  test('lockTrigger blocks calculation when already locked', () => {
+    state.triggerLocked = true
+
+    resetIframe('blocked-test')
+
+    // Should log the blocked message
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      'TriggerLock blocked calculation',
+    )
+  })
 })

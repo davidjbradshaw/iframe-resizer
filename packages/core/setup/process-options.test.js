@@ -51,4 +51,12 @@ describe('core/setup/process-options', () => {
     expect(getPostMessageTarget).toHaveBeenCalledWith(iframe)
     expect(setTargetOrigin).toHaveBeenCalledWith('if1')
   })
+
+  test('sets mouseEvents to false when no mouse event handlers provided', () => {
+    const iframe = { id: 'if2', src: 'https://b/c' }
+    const options = { parentId: 'pid' } // No onMouseEnter/onMouseLeave
+    processOptions(iframe, options)
+
+    expect(settings.if2.mouseEvents).toBe(false)
+  })
 })

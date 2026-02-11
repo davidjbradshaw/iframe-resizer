@@ -64,4 +64,12 @@ describe('core/methods/attach', () => {
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
     expect(trigger).toHaveBeenCalledTimes(3)
   })
+
+  test('does nothing when settings[id] does not exist', () => {
+    const iframe = { id: 'missing' }
+
+    attachMethods('missing')
+
+    expect(iframe.iframeResizer).toBeUndefined()
+  })
 })

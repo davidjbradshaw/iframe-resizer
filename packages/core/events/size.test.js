@@ -20,4 +20,19 @@ describe('core/events/size', () => {
     expect(settings.abc.iframe.style.width).toBe('340px')
     expect(info).toHaveBeenCalled()
   })
+
+  test('does not set dimensions when sizeHeight/sizeWidth are false', async () => {
+    const settings = (await import('../values/settings')).default
+    settings.xyz = {
+      sizeHeight: false,
+      sizeWidth: false,
+      iframe: { style: {} },
+    }
+
+    const data = { id: 'xyz', height: 200, width: 400 }
+    setSize(data)
+
+    expect(settings.xyz.iframe.style.height).toBeUndefined()
+    expect(settings.xyz.iframe.style.width).toBeUndefined()
+  })
 })

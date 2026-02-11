@@ -20,4 +20,15 @@ describe('core/setup/update-option-names', () => {
     expect(settings.id1.onClose).toBeUndefined()
     expect(settings.id1.onClosed).toBeUndefined()
   })
+
+  it('does not rename when deprecated options are not present', () => {
+    settings.id2 = {
+      offsetSize: 20, // Already using new name
+      console: { warn: () => {} },
+    }
+    updateOptionNames('id2')
+
+    expect(settings.id2.offsetSize).toBe(20)
+    expect(settings.id2.offset).toBeUndefined()
+  })
 })

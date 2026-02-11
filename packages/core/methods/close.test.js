@@ -51,4 +51,13 @@ describe('core/methods/close', () => {
 
     expect(warn).toHaveBeenCalledWith('if3', err)
   })
+
+  test('does not call remove when parentNode is missing', () => {
+    on.mockReturnValueOnce(true)
+    const iframe = { id: 'if4', remove: vi.fn(), parentNode: null }
+    closeIframe(iframe)
+
+    expect(iframe.remove).not.toHaveBeenCalled()
+    expect(disconnect).toHaveBeenCalledWith(iframe)
+  })
 })

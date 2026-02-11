@@ -49,4 +49,19 @@ describe('child/read/from-parent', () => {
     expect(out.mode).toBe(0)
     expect(out.logExpand).toBe(true)
   })
+
+  test('handles undefined values gracefully', () => {
+    const data = []
+    data[0] = 'test-id'
+    // Leave other values undefined
+
+    const out = readFromParent(data)
+
+    expect(out.parentId).toBe('test-id')
+    expect(out.bodyMargin).toBeUndefined()
+    expect(out.calculateWidth).toBeUndefined()
+    expect(out.logging).toBeUndefined()
+    expect(out.tolerance).toBeUndefined()
+    expect(out.mode).toBeUndefined()
+  })
 })

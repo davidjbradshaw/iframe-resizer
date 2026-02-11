@@ -39,4 +39,38 @@ describe('core/monitor/page-info', () => {
     expect(data.offsetTop).toBe(5)
     expect(data.scrollLeft).toBe(2)
   })
+
+  test('getPageInfo handles undefined innerHeight/innerWidth', () => {
+    const iframe = {
+      getBoundingClientRect: () => ({
+        height: 50,
+        width: 100,
+        top: 0,
+        left: 0,
+      }),
+    }
+    document.body.getBoundingClientRect = () => ({ top: 0, left: 0 })
+    Object.defineProperty(document.documentElement, 'clientHeight', {
+      value: 500,
+      configurable: true,
+    })
+    Object.defineProperty(document.documentElement, 'clientWidth', {
+      value: 600,
+      configurable: true,
+    })
+    Object.defineProperty(window, 'innerHeight', {
+      value: undefined,
+      configurable: true,
+    })
+    Object.defineProperty(window, 'innerWidth', {
+      value: undefined,
+      configurable: true,
+    })
+
+    const json = getPageInfo(iframe)
+    const data = JSON.parse(json)
+
+    expect(data.clientHeight).toBe(500)
+    expect(data.clientWidth).toBe(600)
+  })
 })
