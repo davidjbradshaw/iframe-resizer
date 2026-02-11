@@ -245,7 +245,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         setTimeout(() => {
-          // Verify console.log was called with any message
+          // Just verify the test completed - resize may be pending
           expect(console.log).toHaveBeenCalled()
           done()
         }, 10)
@@ -256,7 +256,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('resize'))
 
         setTimeout(() => {
-          // Just verify the test completed without errors
+          // Just verify the test completed - resize may be pending
           expect(console.log).toHaveBeenCalled()
           done()
         }, 10)
@@ -306,8 +306,8 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         setTimeout(() => {
           const callCount = msgObject.source.postMessage.calls.count()
           
-          // Verify throttling occurred - may have 0 calls if all throttled
-          // or some calls if throttling allowed some through
+          // Verify throttling occurred - fewer than all 6 calls should be made
+          // Throttling may block all calls or allow some through depending on timing
           expect(callCount).toBeLessThan(6)
           done()
         }, 17)

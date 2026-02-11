@@ -49,10 +49,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           id: testId,
           checkOrigin: false,
           onReady: () => {
-            // Wait for ready, then send reset
+            // Wait for onReady callback before sending reset message to ensure iframe is initialized
             setTimeout(() => {
               mockMsgFromIFrame(iframe, 'reset')
-              // Give time for reset to be processed
+              // Give time for reset message to be processed
               setTimeout(done, 50)
             }, 10)
           },

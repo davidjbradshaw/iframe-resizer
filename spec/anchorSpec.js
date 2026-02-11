@@ -60,6 +60,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       window.parentIFrame = {
         moveToAnchor: () => {
           called = true
+          tearDown(iframe3)
           done()
         },
       }
@@ -75,7 +76,8 @@ define(['iframeResizerParent'], (iframeResize) => {
           setTimeout(() => {
             mockMsgFromIFrame(iframe3, 'inPageLink:#anchorParentTest')
             
-            // If not called after short delay, complete test anyway
+            // Fallback timeout in case moveToAnchor is not called
+            // This ensures test completes even if behavior differs
             setTimeout(() => {
               if (!called) {
                 tearDown(iframe3)
