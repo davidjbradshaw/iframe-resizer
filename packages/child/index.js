@@ -30,18 +30,15 @@ function iframeResizerChild() {
     // eslint-disable-next-line no-restricted-globals
     if (top?.document?.getElementById('banner')) {
       state.win = {}
-    }
-
-    // Use a stubbed window for tests
-    // win = {}
-    // window.mockMsgListener = mockMsgListener
 
       // Create test hooks
       window.mockMsgListener = mockMsgListener
 
       removeEventListener(window, MESSAGE, received)
 
-      define([], () => mockMsgListener)
+      if (typeof window.define === 'function') {
+        window.define([], () => mockMsgListener)
+      }
     }
   } catch (error) {
     // do nothing

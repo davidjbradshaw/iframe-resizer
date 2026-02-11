@@ -14,7 +14,7 @@ import {
 } from '../common/consts'
 
 vi.mock('./console', () => ({ info: vi.fn(), log: vi.fn(), warn: vi.fn() }))
-vi.mock('./events/message', () => ({ default: vi.fn(() => 'body') }))
+vi.mock('./events/message', () => ({ onMessage: vi.fn(() => 'body') }))
 vi.mock('./events/mouse', () => ({ default: vi.fn() }))
 vi.mock('./events/resize', () => ({ default: vi.fn() }))
 vi.mock('./page/in-page-link', () => ({ default: vi.fn() }))
@@ -33,7 +33,7 @@ vi.mock('./setup/first-run', () => ({ default: vi.fn() }))
 vi.mock('./received/message', () => ({ default: vi.fn(() => 'payload') }))
 
 const routeMessage = (await import('./router')).default
-const onMessage = (await import('./events/message')).default
+const { onMessage } = await import('./events/message')
 const onMouse = (await import('./events/mouse')).default
 const inPageLink = (await import('./page/in-page-link')).default
 const { scrollBy, scrollTo, scrollToOffset } = await import('./page/scroll')

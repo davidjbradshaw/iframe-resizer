@@ -22,7 +22,7 @@ import {
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
 import { info, log, warn } from './console'
-import onMessage from './events/message'
+import { onMessage } from './events/message'
 import onMouse from './events/mouse'
 import resizeIframe from './events/resize'
 import on from './events/wrapper'

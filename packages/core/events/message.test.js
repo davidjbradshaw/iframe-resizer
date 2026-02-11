@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest'
 vi.mock('../console', () => ({ log: vi.fn() }))
 vi.mock('./wrapper', () => ({ default: vi.fn() }))
 
-const onMessage = (await import('./message')).default
+const { onMessage } = await import('./message')
 const { log } = await import('../console')
 const on = (await import('./wrapper')).default
 

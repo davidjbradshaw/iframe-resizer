@@ -14,7 +14,7 @@ import {
 vi.mock('./checks/origin', () => ({ default: vi.fn() }))
 vi.mock('./checks/version', () => ({ default: vi.fn() }))
 vi.mock('./console', () => ({ info: vi.fn(), log: vi.fn(), warn: vi.fn() }))
-vi.mock('./events/message', () => ({ default: vi.fn() }))
+vi.mock('./events/message', () => ({ onMessage: vi.fn() }))
 vi.mock('./events/mouse', () => ({ default: vi.fn() }))
 vi.mock('./events/resize', () => ({ default: vi.fn() }))
 vi.mock('./events/wrapper', () => ({ default: vi.fn() }))

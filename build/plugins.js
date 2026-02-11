@@ -81,6 +81,6 @@ export const createPluginsProd = (stripLog) => (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(stripLog),
+    ...pluginsBase(stripLog)(),
   ]
 }
