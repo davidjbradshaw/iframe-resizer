@@ -121,4 +121,67 @@ describe('child/size/auto branches', () => {
     })
     expect(res).toBe(250)
   })
+
+  it('html size decreased when no overflow', async () => {
+    // First call to establish previous size (must trigger getBoundingClientRect to set prevBoundingSize)
+    state.firstRun = true
+    state.hasOverflow = false
+    auto({
+      ...base,
+      boundingClientRect: () => 150,
+      documentElementScroll: () => 100,
+    })
+
+    // Second call with decreased bounding size, but INCREASED scroll size
+    // This ensures we don't match the earlier case (line 79-81) which requires scrollSize <= prevScrollSize
+    state.firstRun = false
+    state.hasOverflow = false
+    const res = auto({
+      ...base,
+      boundingClientRect: () => 120, // decreased from 150
+      documentElementScroll: () => 110, // increased from 100
+    })
+    expect(res).toBe(120)
+  })
+
+  it('scrollSize equals floor of boundingSize', async () => {
+    state.firstRun = false
+    const res = auto({
+      ...base,
+      boundingClientRect: () => 100.7,
+      documentElementScroll: () => 100, // equals floor(100.7)
+    })
+    expect(res).toBe(100.7)
+  })
+
+  it('scrollSize equals ceil of boundingSize', async () => {
+    state.firstRun = false
+    const res = auto({
+      ...base,
+      boundingClientRect: () => 100.3,
+      documentElementScroll: () => 101, // equals ceil(100.3)
+    })
+    expect(res).toBe(100.3)
+  })
+
+  it('boundingSize greater than scrollSize', async () => {
+    state.firstRun = false
+    const res = auto({
+      ...base,
+      boundingClientRect: () => 180,
+      documentElementScroll: () => 160,
+    })
+    expect(res).toBe(180)
+  })
+
+  it('getOffset adds to calculated size', async () => {
+    state.firstRun = false
+    const res = auto({
+      ...base,
+      boundingClientRect: () => 100,
+      documentElementScroll: () => 100,
+      getOffset: () => 15,
+    })
+    expect(res).toBe(115) // 100 + 15 offset
+  })
 })
