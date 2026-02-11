@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 import createDeprecate from './deprecate'
 
 describe('deprecate', () => {
@@ -7,7 +5,7 @@ describe('deprecate', () => {
   let deprecate
 
   beforeEach(() => {
-    mockAdvise = jest.fn() // Mock the advise function
+    mockAdvise = vi.fn() // Mock the advise function
     deprecate = createDeprecate(mockAdvise) // Create the deprecate function
   })
 
