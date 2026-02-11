@@ -1,7 +1,7 @@
 # Integration Tests Workflow
 # Runs Jasmine/Karma integration tests for iframe-resizer
 
-name: Tests/Integration
+name: Jasmine
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ on:
 
 jobs:
   integration-tests:
-    name: Run Jasnmine/Karma integration tests
+    name: Run integration tests on Karma
     runs-on: ubuntu-latest
 
     strategy:
