@@ -20,8 +20,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
-        # Test against multiple Node.js versions
+        node-version: [22.x]
+        # Single Node.js version is sufficient (browser-targeted)
 
     steps:
     - name: Checkout code
