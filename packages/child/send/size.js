@@ -44,7 +44,10 @@ function sendSize(
 
     // Ignore overflowObserver here, as more efficient than using
     // mutationObserver to detect OVERFLOW_ATTR changes
-    case sendPending === true && triggerEvent !== OVERFLOW_OBSERVER: {
+    // Also allow manual and parent resize requests to bypass the pending check
+    case sendPending === true &&
+      triggerEvent !== OVERFLOW_OBSERVER &&
+      !(triggerEvent in IGNORE_DISABLE_RESIZE): {
       purge()
       log('Resize already pending - Ignored resize request')
       break // only update once per frame

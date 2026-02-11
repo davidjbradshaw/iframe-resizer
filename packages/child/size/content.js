@@ -3,9 +3,11 @@ import { HIGHLIGHT } from 'auto-console-group'
 import {
   ENABLE,
   INIT,
+  MANUAL_RESIZE_REQUEST,
   MUTATION_OBSERVER,
   NO_CHANGE,
   OVERFLOW_OBSERVER,
+  PARENT_RESIZE_REQUEST,
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_CHANGE_DETECTED,
@@ -38,6 +40,8 @@ export default function getContentSize(
     case INIT:
     case ENABLE:
     case SIZE_CHANGE_DETECTED:
+    case MANUAL_RESIZE_REQUEST:
+    case PARENT_RESIZE_REQUEST:
       state.height = newHeight
       state.width = newWidth
     // eslint-disable-next-line no-fallthrough
