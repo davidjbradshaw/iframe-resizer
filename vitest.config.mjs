@@ -21,6 +21,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.js'],
     globals: true,
+    include: ['packages/**/*.test.{js,ts,jsx,tsx}'],
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      'coverage/**',
+      '**/.{git,svn,hg}/**',
+      'e2e/**',
+    ],
     deps: {
       optimizer: {
         web: {
