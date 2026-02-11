@@ -37,7 +37,7 @@ jobs:
       run: npm ci
 
     - name: Build test artifacts
-      run: npm run rollup:test:ci
+      run: npm run vite:test:ci
 
     - name: Run integration tests
       run: npm run test:int

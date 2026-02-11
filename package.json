@@ -30,7 +30,7 @@
     "vite:test:ci": "TEST=1 node vite-build.js",
     "vite:prod": "npm run eslint:fix && node vite-build.js",
     "test": "time npm run vite:test && npm run test:unit && npm run test:int",
-    "test:ci": "npm run test:unit && time npm run vite:test:ci && npm run test:int",
+    "test:ci": "time npm run vite:test:ci && npm run test:unit && npm run test:int",
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
     "test:int:watch": "karma start --browsers Chrome karma.conf.cjs && karma run",
     "test:unit": "vitest run --coverage --reporter verbose",
