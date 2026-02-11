@@ -37,4 +37,40 @@ describe('core/page/in-page-link', () => {
 
     expect(log).toHaveBeenCalled()
   })
+
+  test('calls parentIframe.moveToAnchor when element not found in iframe', () => {
+    // Simulate being in iframe
+    Object.defineProperty(window, 'top', { value: {}, configurable: true })
+    Object.defineProperty(window, 'self', { value: window, configurable: true })
+    
+    const moveToAnchor = vi.fn()
+    window.parentIframe = { moveToAnchor }
+
+    inPageLink('id', 'http://x/#baz')
+
+    expect(moveToAnchor).toHaveBeenCalledWith('baz')
+  })
+
+  test('calls parentIFrame.moveToAnchor (v4 compatibility) when element not found', () => {
+    // Simulate being in iframe
+    Object.defineProperty(window, 'top', { value: {}, configurable: true })
+    Object.defineProperty(window, 'self', { value: window, configurable: true })
+    
+    const moveToAnchor = vi.fn()
+    window.parentIFrame = { moveToAnchor }
+
+    inPageLink('id', 'http://x/#qux')
+
+    expect(moveToAnchor).toHaveBeenCalledWith('qux')
+  })
+
+  test('logs not found when parentIframe not available in iframe', () => {
+    // Simulate being in iframe
+    Object.defineProperty(window, 'top', { value: {}, configurable: true })
+    Object.defineProperty(window, 'self', { value: window, configurable: true })
+
+    inPageLink('id', 'http://x/#missing')
+
+    expect(log).toHaveBeenCalledWith('id', expect.stringContaining('#missing not found'))
+  })
 })

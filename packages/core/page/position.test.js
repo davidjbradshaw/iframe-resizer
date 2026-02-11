@@ -31,4 +31,11 @@ describe('core/page/position', () => {
     expect(info).toHaveBeenCalled()
     expect(page.position).toBe(null)
   })
+
+  test('setStoredPagePosition sets position', () => {
+    const newPos = { x: 100, y: 200 }
+    positionMod.setStoredPagePosition(newPos)
+
+    expect(page.position).toEqual(newPos)
+  })
 })

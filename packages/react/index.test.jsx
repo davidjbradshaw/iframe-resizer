@@ -86,4 +86,60 @@ describe('React IframeResizer component', () => {
     })
     expect(disconnect).toHaveBeenCalledTimes(1)
   })
+
+  test('getRef returns iframeRef and getElement returns the element', async () => {
+    const fRef = createRef()
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-iframe-ref"
+          src="https://example.com"
+          forwardRef={fRef}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    const ref = fRef.current.getRef()
+    const element = fRef.current.getElement()
+
+    expect(ref.current).toBe(element)
+    expect(element.id).toBe('react-iframe-ref')
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('onBeforeClose returns false and logs warning', async () => {
+    const { default: acgFactory } = await import('auto-console-group')
+    const connectResizer = (await import('@iframe-resizer/core')).default
+
+    // Track the options passed to connectResizer
+    let capturedOptions
+    connectResizer.mockImplementation((options) => {
+      capturedOptions = options
+      return (iframe) => {
+        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        return iframe.iframeResizer
+      }
+    })
+
+    await act(async () => {
+      root.render(
+        <IframeResizer id="react-iframe-close" src="https://example.com" />,
+      )
+      await Promise.resolve()
+    })
+
+    // Call the onBeforeClose callback
+    const result = capturedOptions.onBeforeClose()
+
+    expect(result).toBe(false)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
 })
