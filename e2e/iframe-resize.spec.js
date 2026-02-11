@@ -106,13 +106,11 @@ test.describe('iframe-resizer cross-origin handling', () => {
       const iframeEl = document.querySelector('iframe')
       return iframeEl && iframeEl.iFrameResizer !== undefined
     }, { timeout: 10000 })
-
     // Verify that iframe resizer initialized successfully
     const hasResizer = await page.evaluate(() => {
       const iframeEl = document.querySelector('iframe')
       return iframeEl && iframeEl.iFrameResizer !== undefined
     })
-
     expect(hasResizer).toBeTruthy()
   })
 })
