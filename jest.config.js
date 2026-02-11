@@ -4,6 +4,7 @@ export default {
   moduleDirectories: ['node_modules'],
   setupFilesAfterEnv: ['./jest.setup.js'],
   testEnvironment: 'jsdom',
+  testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
   transform: {
     '^.+\\.[t|j]sx?$': 'babel-jest',
   },
