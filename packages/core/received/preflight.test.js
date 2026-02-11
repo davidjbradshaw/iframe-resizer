@@ -88,4 +88,27 @@ describe('core/received/preflight', () => {
     )
     delete settings.i8
   })
+
+  test('checkIframeExists returns true when iframe exists', () => {
+    const iframe = document.createElement('iframe')
+    const messageData = { id: 'i9', msg: 'm', iframe }
+    const res = preflight.checkIframeExists(messageData)
+
+    expect(res).toBe(true)
+  })
+
+  test('isMessageFromIframe allows null origin when checkOrigin set', () => {
+    settings.i10 = { checkOrigin: true }
+    const messageData = { id: 'i10' }
+    const nullOriginEvent = {
+      data: 'x',
+      origin: 'null',
+      sameOrigin: false,
+    }
+
+    expect(preflight.isMessageFromIframe(messageData, nullOriginEvent)).toBe(
+      true,
+    )
+    delete settings.i10
+  })
 })
