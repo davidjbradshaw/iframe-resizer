@@ -65,7 +65,10 @@ describe('core/send/trigger', () => {
 
     trigger('resize', 'resize:msg', 'a')
 
-    expect(warn).toHaveBeenCalledWith('a', expect.stringContaining('Same origin messaging failed'))
+    expect(warn).toHaveBeenCalledWith(
+      'a',
+      expect.stringContaining('Same origin messaging failed'),
+    )
     expect(settings.a.postMessageTarget.postMessage).toHaveBeenCalled()
   })
 

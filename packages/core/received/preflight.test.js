@@ -47,7 +47,9 @@ describe('core/received/preflight', () => {
   })
 
   test('isMessageFromIframe allows matching origin in checkOrigin array', () => {
-    settings.i6 = { checkOrigin: ['https://good.example', 'https://other.example'] }
+    settings.i6 = {
+      checkOrigin: ['https://good.example', 'https://other.example'],
+    }
     const messageData = { id: 'i6' }
     const goodEvent = {
       data: 'x',
@@ -81,7 +83,9 @@ describe('core/received/preflight', () => {
       sameOrigin: true,
     }
 
-    expect(preflight.isMessageFromIframe(messageData, sameOriginEvent)).toBe(true)
+    expect(preflight.isMessageFromIframe(messageData, sameOriginEvent)).toBe(
+      true,
+    )
     delete settings.i8
   })
 })

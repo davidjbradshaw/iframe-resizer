@@ -113,7 +113,6 @@ describe('React IframeResizer component', () => {
   })
 
   test('onBeforeClose returns false and logs warning', async () => {
-    const { default: acgFactory } = await import('auto-console-group')
     const connectResizer = (await import('@iframe-resizer/core')).default
 
     // Track the options passed to connectResizer

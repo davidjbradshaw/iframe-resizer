@@ -54,7 +54,7 @@ describe('child/read/from-page', () => {
     }
 
     const { default: readFromPage } = await import('./from-page')
-    
+
     expect(() => readFromPage()).toThrow(TypeError)
     expect(() => readFromPage()).toThrow('targetOrigin is not a string')
   })

@@ -55,12 +55,12 @@ describe('common/pubSub', () => {
     const evt = 'test'
     const fn1 = () => {}
     const fn2 = () => {}
-    
+
     pubSub.addListener(evt, fn1)
-    
+
     // Try to remove a listener that was never added
     expect(() => pubSub.removeListener(evt, fn2)).not.toThrow()
-    
+
     // Verify fn1 is still there
     expect(pubSub.events[evt]).toHaveLength(1)
   })

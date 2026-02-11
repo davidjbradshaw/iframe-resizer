@@ -45,7 +45,7 @@ describe('core/page/in-page-link', () => {
 
   test('calls parentIframe.moveToAnchor when element not found in iframe', () => {
     simulateIframe()
-    
+
     const moveToAnchor = vi.fn()
     window.parentIframe = { moveToAnchor }
 
@@ -56,7 +56,7 @@ describe('core/page/in-page-link', () => {
 
   test('calls parentIFrame.moveToAnchor (v4 compatibility) when element not found', () => {
     simulateIframe()
-    
+
     const moveToAnchor = vi.fn()
     window.parentIFrame = { moveToAnchor }
 
@@ -70,6 +70,9 @@ describe('core/page/in-page-link', () => {
 
     inPageLink('id', 'http://x/#missing')
 
-    expect(log).toHaveBeenCalledWith('id', expect.stringContaining('#missing not found'))
+    expect(log).toHaveBeenCalledWith(
+      'id',
+      expect.stringContaining('#missing not found'),
+    )
   })
 })

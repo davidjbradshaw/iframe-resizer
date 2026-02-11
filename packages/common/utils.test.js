@@ -101,7 +101,7 @@ describe('utils.js', () => {
     })
 
     test('should return empty string for undefined element', () => {
-      expect(getElementName(undefined)).toBe('')
+      expect(getElementName()).toBe('')
       expect(getElementName('')).toBe('')
     })
   })
@@ -127,7 +127,7 @@ describe('utils.js', () => {
       const mockObj = {
         get tagName() {
           throw new Error('Access denied')
-        }
+        },
       }
       expect(isIframe(mockObj)).toBe(false)
     })

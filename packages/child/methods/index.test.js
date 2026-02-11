@@ -31,7 +31,6 @@ describe('child/methods/index', () => {
   })
 
   it('size() method warns about deprecation', async () => {
-    const { warn } = await import('../console')
     const warnSpy = vi.fn()
     vi.spyOn(await import('../console'), 'warn').mockImplementation(warnSpy)
 
