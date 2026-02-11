@@ -1,5 +1,5 @@
 define(['iframeResizerParent'], (iframeResize) => {
-  xdescribe('iFrame init', () => {
+  describe('iFrame init', () => {
     let iframe
     const id = 'initTest'
 
@@ -20,7 +20,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         },
       })[0]
 
-      console.log('iframe', iframe)
+      // Mock the init message from child
+      mockMsgFromIFrame(iframe, 'init')
     })
 
     afterEach(() => {
