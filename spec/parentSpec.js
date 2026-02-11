@@ -47,9 +47,9 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       beforeEach((done) => {
         loadIFrame('iframe600.html')
-        iframe = iframeResize({ 
-          license: 'GPLv3', 
-          log: true, 
+        iframe = iframeResize({
+          license: 'GPLv3',
+          log: true,
           id: testId,
           checkOrigin: false,
           onReady: () => {
@@ -63,7 +63,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         })[0]
 
         spyOn(iframe.contentWindow, 'postMessage')
-        
+
         // Send init first
         mockMsgFromIFrame(iframe, 'init')
       })
@@ -87,9 +87,9 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       beforeEach((done) => {
         loadIFrame('iframe600.html')
-        iframe = iframeResize({ 
-          license: 'GPLv3', 
-          log: true, 
+        iframe = iframeResize({
+          license: 'GPLv3',
+          log: true,
           id: testId,
           checkOrigin: false,
         })[0]
@@ -98,7 +98,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           // Call done after first postMessage
           done()
         })
-        
+
         // Send ready message from child
         window.postMessage('[iframeResizerChild]Ready', '*')
       })
@@ -125,9 +125,9 @@ define(['iframeResizerParent'], (iframeResize) => {
       const setUp = (boxSizing, units) => {
         loadIFrame('iframe.html')
 
-        iframe = iframeResize({ 
-          license: 'GPLv3', 
-          log: true, 
+        iframe = iframeResize({
+          license: 'GPLv3',
+          log: true,
           id: testId,
           checkOrigin: false,
         })[0]
