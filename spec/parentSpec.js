@@ -5,8 +5,10 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       let iframe
       let ready
+      let finished
 
       beforeEach((done) => {
+        finished = false
         loadIFrame('iframe600.html')
         iframe = iframeResize({
           license: 'GPLv3',
@@ -15,6 +17,8 @@ define(['iframeResizerParent'], (iframeResize) => {
           warningTimeout: 1000,
           checkOrigin: false,
           onResized: () => {
+            if (finished) return
+            finished = true
             ready = true
             done()
           },
