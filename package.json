@@ -58,7 +58,7 @@
     "auto-console-group": "1.3.0",
     "react": "^19.2.4"
   },
-    "devDependencies": {
+  "devDependencies": {
     "@babel/eslint-parser": "^7.28.6",
     "@babel/plugin-syntax-import-attributes": "^7.28.6",
     "@vitejs/plugin-react": "^5.1.4",
@@ -144,7 +144,7 @@
     "rollup-plugin-vue": "^6.0.0",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
-    },
+  },
   "engines": {
     "node": ">=20.0.0"
   },
