@@ -39,6 +39,8 @@
     "test:unit": "vitest run --coverage --reporter verbose",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
+    "test:int:watch": "karma start --browsers Chrome karma.conf.cjs && karma run",
     "upgrade": "time npm-check-updates -i && npm run build"
   },
   "description": "Keep iframes sized to their content.",
