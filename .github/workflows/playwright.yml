@@ -53,7 +53,6 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
-
     - name: Upload test screenshots
       uses: actions/upload-artifact@v4
       if: failure()
