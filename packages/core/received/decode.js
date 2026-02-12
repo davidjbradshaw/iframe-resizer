@@ -30,12 +30,14 @@ export default function decodeMessage(msg) {
   const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
   const height = data[1] ? Number(data[1]) : 0
   const iframe = settings[data[0]]?.iframe
-  const compStyle = getComputedStyle(iframe)
+  const compStyle = iframe ? getComputedStyle(iframe) : null
 
   const messageData = {
     iframe,
     id: data[0],
-    height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
+    height: compStyle
+      ? height + getPaddingEnds(compStyle) + getBorderEnds(compStyle)
+      : height,
     width: Number(data[2]),
     type: data[3],
     msg: data[4],

@@ -92,6 +92,22 @@ describe('core/received/decode', () => {
     expect(data.mode).toBeUndefined()
   })
 
+  test('handles missing iframe without throwing', () => {
+    delete settings.i1
+    const body = 'i1:100:200:TYPE:MSG:MODE'
+    const msg = 'X'.repeat(MESSAGE_ID_LENGTH) + body
+
+    const data = decodeMessage(msg)
+
+    expect(data.id).toBe('i1')
+    expect(data.iframe).toBeUndefined()
+    expect(data.height).toBe(100)
+    expect(data.width).toBe(200)
+    expect(data.type).toBe('TYPE')
+    expect(data.message).toBe('MSG')
+    expect(data.mode).toBe('MODE')
+  })
+
   afterEach(() => {
     global.getComputedStyle = origGetComputed
     delete settings.i1
