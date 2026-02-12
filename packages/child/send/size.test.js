@@ -134,6 +134,7 @@ describe('child/send/size', () => {
   test('does not create new raf when rafId already exists', () => {
     let rafCallCount = 0
     // Override RAF to NOT execute callback immediately, so rafId persists
+    // Using 999 as a unique RAF ID that won't conflict with actual RAF calls
     const rafSpy = vi.fn(() => {
       rafCallCount++
       return 999
