@@ -187,4 +187,14 @@ describe('createIframeResize - Disconnected iframes', () => {
       get: () => originalBody,
     })
   })
+
+  it('should throw error for unexpected data type', () => {
+    expect(() => {
+      iFrameResize({}, 123)
+    }).toThrow('Unexpected data type (number)')
+
+    expect(() => {
+      iFrameResize({}, true)
+    }).toThrow('Unexpected data type (boolean)')
+  })
 })
