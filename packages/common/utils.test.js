@@ -260,12 +260,21 @@ describe('utils.js', () => {
       expect(hasOwn(obj, 'nonExistent')).toBe(false)
     })
 
-    test('should use fallback implementation when Object.hasOwn is not available', () => {
-      // Test the fallback directly
-      const fallback = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
-      const obj = { key: 'value' }
-      expect(fallback(obj, 'key')).toBe(true)
-      expect(fallback(obj, 'toString')).toBe(false)
+    test('should use fallback when Object.hasOwn is falsy', () => {
+      // Save original
+      const original = Object.hasOwn
+
+      try {
+        // Make Object.hasOwn falsy
+        Object.hasOwn = null
+
+        const obj = { key: 'value' }
+        expect(hasOwn(obj, 'key')).toBe(true)
+        expect(hasOwn(obj, 'toString')).toBe(false)
+      } finally {
+        // Restore
+        Object.hasOwn = original
+      }
     })
   })
 
