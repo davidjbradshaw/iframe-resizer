@@ -45,4 +45,70 @@ describe('core/received/preflight', () => {
 
     expect(preflight.isMessageFromMetaParent(messageData)).toBe(true)
   })
+
+  test('isMessageFromIframe allows matching origin in checkOrigin array', () => {
+    settings.i6 = {
+      checkOrigin: ['https://good.example', 'https://other.example'],
+    }
+    const messageData = { id: 'i6' }
+    const goodEvent = {
+      data: 'x',
+      origin: 'https://other.example',
+      sameOrigin: false,
+    }
+
+    expect(preflight.isMessageFromIframe(messageData, goodEvent)).toBe(true)
+    delete settings.i6
+  })
+
+  test('isMessageFromIframe checks single origin when not array', () => {
+    settings.i7 = { checkOrigin: true, remoteHost: 'https://single.example' }
+    const messageData = { id: 'i7' }
+    const goodEvent = {
+      data: 'x',
+      origin: 'https://single.example',
+      sameOrigin: false,
+    }
+
+    expect(preflight.isMessageFromIframe(messageData, goodEvent)).toBe(true)
+    delete settings.i7
+  })
+
+  test('isMessageFromIframe allows sameOrigin messages', () => {
+    settings.i8 = { checkOrigin: true }
+    const messageData = { id: 'i8' }
+    const sameOriginEvent = {
+      data: 'x',
+      origin: 'https://anywhere.example',
+      sameOrigin: true,
+    }
+
+    expect(preflight.isMessageFromIframe(messageData, sameOriginEvent)).toBe(
+      true,
+    )
+    delete settings.i8
+  })
+
+  test('checkIframeExists returns true when iframe exists', () => {
+    const iframe = document.createElement('iframe')
+    const messageData = { id: 'i9', msg: 'm', iframe }
+    const res = preflight.checkIframeExists(messageData)
+
+    expect(res).toBe(true)
+  })
+
+  test('isMessageFromIframe allows null origin when checkOrigin set', () => {
+    settings.i10 = { checkOrigin: true }
+    const messageData = { id: 'i10' }
+    const nullOriginEvent = {
+      data: 'x',
+      origin: 'null',
+      sameOrigin: false,
+    }
+
+    expect(preflight.isMessageFromIframe(messageData, nullOriginEvent)).toBe(
+      true,
+    )
+    delete settings.i10
+  })
 })

@@ -54,4 +54,35 @@ describe('core/send/trigger', () => {
 
     expect(warn).toHaveBeenCalled()
   })
+
+  test('falls back to postMessage when same-origin throws for non-init event', () => {
+    // Set up same origin but make it throw
+    settings.a.sameOrigin = true
+    settings.a.iframe.contentWindow.iframeChildListener = vi.fn(() => {
+      throw new Error('Same origin error')
+    })
+    settings.a.postMessageTarget = { postMessage: vi.fn() }
+
+    trigger('resize', 'resize:msg', 'a')
+
+    expect(warn).toHaveBeenCalledWith(
+      'a',
+      expect.stringContaining('Same origin messaging failed'),
+    )
+    expect(settings.a.postMessageTarget.postMessage).toHaveBeenCalled()
+  })
+
+  test('disables same origin when init event fails', () => {
+    // Set up same origin but make it throw for init event
+    settings.a.sameOrigin = true
+    settings.a.iframe.contentWindow.iframeChildListener = vi.fn(() => {
+      throw new Error('Init error')
+    })
+    settings.a.postMessageTarget = { postMessage: vi.fn() }
+
+    trigger('init', 'init:msg', 'a')
+
+    expect(settings.a.sameOrigin).toBe(false)
+    expect(settings.a.postMessageTarget.postMessage).toHaveBeenCalled()
+  })
 })

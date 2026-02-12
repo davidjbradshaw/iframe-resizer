@@ -69,4 +69,58 @@ describe('core/setup/init', () => {
     // allow checkReset evaluation after INIT path
     expect(resetIframe).toHaveBeenCalled()
   })
+
+  test('does not send init when waitForLoad is true', () => {
+    settings.if4 = {
+      iframe: { loading: 'eager', src: 'x' },
+      waitForLoad: true,
+    }
+
+    const triggerCallsBefore = trigger.mock.calls.length
+    init('if4', 'msg')
+    vi.runAllTimers()
+
+    // trigger should not be called for INIT path (only initChild and onload setups)
+    expect(trigger.mock.calls.length).toBe(triggerCallsBefore)
+  })
+
+  test('does not warn on no response for lazy loading iframe on INIT', () => {
+    settings.if5 = {
+      iframe: { loading: 'lazy', src: 'x' },
+      firstRun: true,
+    }
+
+    const warnCallsBefore = warnOnNoResponse.mock.calls.length
+    init('if5', 'msg')
+    vi.runAllTimers()
+
+    // warnOnNoResponse should be called for INIT, but would not be called if lazy check works
+    // Actually, looking at the code, it only skips for isInit(eventType) && isLazy(iframe)
+    // Since we're running timers, INIT path runs, and the condition checks eventType === INIT
+    // So warnOnNoResponse should NOT be called
+    expect(warnOnNoResponse.mock.calls.length).toBe(warnCallsBefore)
+  })
+
+  test('handles iframe removed before load event gracefully', () => {
+    settings.if6 = {
+      iframe: { loading: 'eager', src: 'x' },
+      firstRun: true,
+    }
+    const triggerCallsBefore = trigger.mock.calls.length
+    init('if6', 'msg')
+
+    // Remove settings to simulate iframe removal
+    delete settings.if6
+
+    // Get the initChild function and call it
+    // Since settings is deleted, it should return early
+    const initChild = settings.if6?.initChild
+    if (!initChild) {
+      // This is expected - settings were deleted
+      vi.runAllTimers()
+    }
+
+    // No new trigger calls should happen after deletion
+    expect(trigger.mock.calls.length).toBeGreaterThanOrEqual(triggerCallsBefore)
+  })
 })

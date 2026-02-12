@@ -44,4 +44,58 @@ describe('core/page/scroll', () => {
     expect(window.scrollBy).toHaveBeenCalledWith(20, 10)
     expect(info).toHaveBeenCalled()
   })
+
+  test('scrollToLink unsets position when onScroll returns false', () => {
+    on.mockReturnValueOnce(false)
+    scrollMod.scrollToLink('id')
+
+    expect(on).toHaveBeenCalled()
+    expect(position.unsetPagePosition).toHaveBeenCalled()
+    expect(position.setPagePosition).not.toHaveBeenCalled()
+  })
+
+  test('scrollTo calls scrollRequestFromChild without offset', () => {
+    window.parentIframe = {
+      scrollTo: vi.fn(),
+    }
+
+    scrollMod.scrollTo({
+      id: 'id',
+      iframe: { id: 'id' },
+      height: 10,
+      width: 20,
+    })
+
+    expect(window.parentIframe.scrollTo).toHaveBeenCalledWith(20, 10)
+    expect(info).toHaveBeenCalled()
+  })
+
+  test('scrollToOffset calls scrollRequestFromChild with offset', () => {
+    window.parentIframe = {
+      scrollToOffset: vi.fn(),
+    }
+
+    const iframe = {
+      id: 'id',
+      getBoundingClientRect: () => ({ left: 5, top: 10 }),
+    }
+
+    scrollMod.scrollToOffset({ id: 'id', iframe, height: 10, width: 20 })
+
+    expect(window.parentIframe.scrollToOffset).toHaveBeenCalledWith(26, 22)
+    expect(info).toHaveBeenCalled()
+  })
+
+  test('scrollBy uses parentIFrame (v4 compatibility)', () => {
+    window.parentIframe = undefined
+    window.parentIFrame = {
+      scrollBy: vi.fn(),
+    }
+
+    scrollMod.scrollBy({ id: 'id', height: 10, width: 20 })
+
+    expect(window.parentIFrame.scrollBy).toHaveBeenCalledWith(20, 10)
+
+    delete window.parentIFrame
+  })
 })

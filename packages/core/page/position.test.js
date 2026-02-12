@@ -23,6 +23,22 @@ describe('core/page/position', () => {
     expect(log).toHaveBeenCalled()
   })
 
+  test('getPagePosition returns existing position without re-initializing', () => {
+    page.position = { x: 10, y: 20 }
+    const pos = positionMod.getPagePosition('id')
+
+    expect(pos).toEqual({ x: 10, y: 20 })
+    expect(log).toHaveBeenCalled()
+  })
+
+  test('setPagePosition returns early when position is null', () => {
+    page.position = null
+    positionMod.setPagePosition('id')
+
+    expect(window.scrollTo).not.toHaveBeenCalled()
+    expect(info).not.toHaveBeenCalled()
+  })
+
   test('setPagePosition scrolls and unsets', () => {
     page.position = { x: 7, y: 8 }
     positionMod.setPagePosition('id')
@@ -30,5 +46,12 @@ describe('core/page/position', () => {
     expect(window.scrollTo).toHaveBeenCalledWith(7, 8)
     expect(info).toHaveBeenCalled()
     expect(page.position).toBe(null)
+  })
+
+  test('setStoredPagePosition sets position', () => {
+    const newPos = { x: 100, y: 200 }
+    positionMod.setStoredPagePosition(newPos)
+
+    expect(page.position).toEqual(newPos)
   })
 })

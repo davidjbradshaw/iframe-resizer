@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import settings from '../values/settings'
 import state from '../values/state'
@@ -28,5 +28,16 @@ describe('child/methods/index', () => {
     setupPublicMethods()
 
     expect(window.parentIFrame).toBeDefined()
+  })
+
+  it('size() method warns about deprecation', async () => {
+    const warnSpy = vi.fn()
+    vi.spyOn(await import('../console'), 'warn').mockImplementation(warnSpy)
+
+    setupPublicMethods()
+
+    window.parentIframe.size()
+
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('renamed'))
   })
 })

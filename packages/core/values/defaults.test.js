@@ -33,4 +33,13 @@ describe('core/values/defaults', () => {
     )
     expect(onInit).toHaveBeenCalledWith(messageData)
   })
+
+  it('default callbacks work as expected', () => {
+    expect(defaults.onBeforeClose()).toBe(true)
+    expect(defaults.onAfterClose()).toBeUndefined()
+    expect(defaults.onMouseEnter()).toBeUndefined()
+    expect(defaults.onMouseLeave()).toBeUndefined()
+    expect(defaults.onResized()).toBeUndefined()
+    expect(defaults.onScroll()).toBe(true)
+  })
 })

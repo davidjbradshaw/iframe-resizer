@@ -12,6 +12,11 @@ const { getElementPosition, scrollToLink } = await import('./scroll')
 const { log } = await import('../console')
 
 describe('core/page/in-page-link', () => {
+  const simulateIframe = () => {
+    Object.defineProperty(window, 'top', { value: {}, configurable: true })
+    Object.defineProperty(window, 'self', { value: window, configurable: true })
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
     document.body.innerHTML = ''
@@ -36,5 +41,38 @@ describe('core/page/in-page-link', () => {
     inPageLink('id', 'http://x/#bar')
 
     expect(log).toHaveBeenCalled()
+  })
+
+  test('calls parentIframe.moveToAnchor when element not found in iframe', () => {
+    simulateIframe()
+
+    const moveToAnchor = vi.fn()
+    window.parentIframe = { moveToAnchor }
+
+    inPageLink('id', 'http://x/#baz')
+
+    expect(moveToAnchor).toHaveBeenCalledWith('baz')
+  })
+
+  test('calls parentIFrame.moveToAnchor (v4 compatibility) when element not found', () => {
+    simulateIframe()
+
+    const moveToAnchor = vi.fn()
+    window.parentIFrame = { moveToAnchor }
+
+    inPageLink('id', 'http://x/#qux')
+
+    expect(moveToAnchor).toHaveBeenCalledWith('qux')
+  })
+
+  test('logs not found when parentIframe not available in iframe', () => {
+    simulateIframe()
+
+    inPageLink('id', 'http://x/#missing')
+
+    expect(log).toHaveBeenCalledWith(
+      'id',
+      expect.stringContaining('#missing not found'),
+    )
   })
 })

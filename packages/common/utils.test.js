@@ -5,6 +5,7 @@ import {
   getElementName,
   id,
   isDarkModeEnabled,
+  isIframe,
   isNumber,
   once,
   round,
@@ -97,6 +98,38 @@ describe('utils.js', () => {
       delete mockElement.className
 
       expect(getElementName(mockElement)).toBe('DIV')
+    })
+
+    test('should return empty string for undefined element', () => {
+      expect(getElementName()).toBe('')
+      expect(getElementName('')).toBe('')
+    })
+  })
+
+  describe('isIframe', () => {
+    test('should return true for iframe elements', () => {
+      const mockIframe = document.createElement('iframe')
+      expect(isIframe(mockIframe)).toBe(true)
+    })
+
+    test('should return false for non-iframe elements', () => {
+      const mockDiv = document.createElement('div')
+      expect(isIframe(mockDiv)).toBe(false)
+    })
+
+    test('should return false for non-objects', () => {
+      expect(isIframe(null)).toBe(false)
+      expect(isIframe('string')).toBe(false)
+      expect(isIframe(42)).toBe(false)
+    })
+
+    test('should handle errors gracefully', () => {
+      const mockObj = {
+        get tagName() {
+          throw new Error('Access denied')
+        },
+      }
+      expect(isIframe(mockObj)).toBe(false)
     })
   })
 

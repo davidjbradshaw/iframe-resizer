@@ -33,4 +33,14 @@ describe('child/page/apply-selectors', () => {
     expect(Object.hasOwn(el1.dataset, 'iframeSize')).toBe(true)
     expect(Object.hasOwn(el2.dataset, 'iframeIgnore')).toBe(true)
   })
+
+  it('applySelector returns early when selector is empty', () => {
+    vi.spyOn(childConsole, 'log').mockImplementation(() => {})
+    const logCallsBefore = childConsole.log.mock.calls.length
+
+    applySelector('test', 'data-test', '')
+
+    // Should not log anything beyond potentially clearing mocks
+    expect(childConsole.log.mock.calls.length).toBe(logCallsBefore)
+  })
 })
