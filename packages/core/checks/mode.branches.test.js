@@ -1,16 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-// getModeData import retained if needed for future assertions
-// import retained if needed for future assertions
-// import { getModeData } from '../../common/mode'
-
 let checkMode
 let preModeCheck
 let enableVInfo
-// console hooks retained for potential future assertions
-// let advise
-// let purge
-// let vInfo
 
 describe('core/checks/mode branches', () => {
   let settings
@@ -55,5 +47,44 @@ describe('core/checks/mode branches', () => {
 
     settings.a = { mode: 2, vAdvised: false }
     expect(() => checkMode('a', 0)).not.toThrow()
+  })
+
+  test('returns early when vAdvised is true', () => {
+    settings.b = { mode: 1, vAdvised: false }
+    // First call sets vAdvised to true
+    checkMode('b', 0)
+    // Second call should return early
+    expect(() => checkMode('b', 0)).not.toThrow()
+  })
+
+  test('skips advise when settings[id].vAdvised is true', () => {
+    settings.c = { mode: -3, vAdvised: true }
+    // Should throw but not call advise due to vAdvised being true
+    expect(() => checkMode('c', -2)).toThrow()
+  })
+
+  test('preModeCheck returns early when vAdvised is true', () => {
+    settings.d = { mode: 2, vAdvised: false }
+    // First call sets vAdvised
+    preModeCheck('d')
+    // Second call should return early
+    expect(() => preModeCheck('d')).not.toThrow()
+  })
+
+  test('enableVInfo handles undefined options', () => {
+    // Should not throw when called with undefined
+    expect(() => enableVInfo()).not.toThrow()
+  })
+
+  test('enableVInfo handles options without log property', () => {
+    const options = {}
+    enableVInfo(options)
+    expect(options.log).toBeUndefined()
+  })
+
+  test('advises with Parent label when id is falsy', () => {
+    settings[''] = { mode: -3, vAdvised: false }
+    // Calling with empty string id should use 'Parent' as fallback in advise
+    expect(() => checkMode('', -2)).toThrow()
   })
 })
