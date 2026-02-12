@@ -97,20 +97,24 @@ describe('monitor/common throttle gate', () => {
 
     // Dispatch scroll event - this sets pending = 'scroll'
     window.dispatchEvent(new Event('scroll'))
-    
+
     // Before flushing RAF, dispatch resize event
     // This should be blocked because pending === 'scroll'
     window.dispatchEvent(new Event('resize'))
 
     // Only scroll should have been sent
     expect(calls.filter((c) => c.requestType === 'scroll').length).toBe(1)
-    expect(calls.filter((c) => c.requestType === 'resize window').length).toBe(0)
+    expect(calls.filter((c) => c.requestType === 'resize window').length).toBe(
+      0,
+    )
 
     // Flush RAF to clear pending
     rafCallbacks.forEach((cb) => cb())
 
     // Now resize should work
     window.dispatchEvent(new Event('resize'))
-    expect(calls.filter((c) => c.requestType === 'resize window').length).toBe(1)
+    expect(calls.filter((c) => c.requestType === 'resize window').length).toBe(
+      1,
+    )
   })
 })

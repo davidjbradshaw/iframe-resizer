@@ -26,16 +26,12 @@ vi.mock('../values/settings', () => {
 // Stub ResizeObserver
 let pageCb
 let iframeCb
-let pageObserver
-let iframeObserver
 class RO {
   constructor(cb) {
     if (pageCb) {
       iframeCb = cb
-      iframeObserver = this
     } else {
       pageCb = cb
-      pageObserver = this
     }
   }
 
@@ -69,8 +65,6 @@ describe('core/monitor/common behavior', () => {
     trigger.mockClear()
     pageCb = undefined
     iframeCb = undefined
-    pageObserver = undefined
-    iframeObserver = undefined
   })
 
   it('startInfoMonitor sets listeners and observers and triggers info', () => {
