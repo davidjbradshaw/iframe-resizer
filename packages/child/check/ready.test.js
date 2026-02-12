@@ -46,4 +46,58 @@ describe('child/check/ready', () => {
 
     expect(mockedListeners.addEventListener).toHaveBeenCalled()
   })
+
+  it('triggers recursive call when event listener is invoked', async () => {
+    let readyStateValue = 'interactive'
+    let eventCallback = null
+
+    Object.defineProperty(document, 'readyState', {
+      configurable: true,
+      get: () => readyStateValue,
+    })
+    vi.doMock('../../common/utils', () => ({
+      isolateUserCode: vi.fn((fn) => fn()),
+    }))
+    vi.doMock('../events/listeners', () => ({
+      addEventListener: vi.fn((doc, event, callback) => {
+        eventCallback = callback
+      }),
+    }))
+    vi.resetModules()
+    const { default: checkReadyYet } = await import('./ready')
+    const mockedUtils = await import('../../common/utils')
+    const cb = vi.fn()
+
+    checkReadyYet(cb)
+
+    // Simulate readyState change to 'complete' and trigger the event callback
+    readyStateValue = 'complete'
+    eventCallback()
+
+    expect(mockedUtils.isolateUserCode).toHaveBeenCalledWith(cb)
+  })
+
+  it('does not add listener on subsequent calls when already checked', async () => {
+    Object.defineProperty(document, 'readyState', {
+      configurable: true,
+      get: () => 'interactive',
+    })
+    vi.doMock('../../common/utils', () => ({
+      isolateUserCode: vi.fn((fn) => fn()),
+    }))
+    vi.doMock('../events/listeners', () => ({
+      addEventListener: vi.fn(() => {}),
+    }))
+    vi.resetModules()
+    const { default: checkReadyYet } = await import('./ready')
+    const mockedListeners = await import('../events/listeners')
+    const cb = vi.fn()
+
+    checkReadyYet(cb)
+    expect(mockedListeners.addEventListener).toHaveBeenCalledTimes(1)
+
+    // Second call should not add listener again
+    checkReadyYet(cb)
+    expect(mockedListeners.addEventListener).toHaveBeenCalledTimes(1)
+  })
 })
