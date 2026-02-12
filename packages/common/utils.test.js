@@ -283,7 +283,7 @@ describe('utils.js', () => {
   })
 
   describe('esModuleInterop - edge cases', () => {
-    test('should return undefined for null or undefined module', () => {
+    test('should return null for null and undefined for undefined module', () => {
       expect(esModuleInterop(null)).toBe(null)
       expect(esModuleInterop()).toBe(undefined)
     })
