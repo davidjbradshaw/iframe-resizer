@@ -58,7 +58,7 @@ describe('child/methods/index', () => {
 
   it('close() sends close message', async () => {
     setupPublicMethods()
-    
+
     // close() is exposed on the API, just call it
     expect(typeof window.parentIframe.close).toBe('function')
     // The function should not throw
@@ -67,7 +67,7 @@ describe('child/methods/index', () => {
 
   it('reset() calls resetIframe', async () => {
     setupPublicMethods()
-    
+
     // reset() is exposed on the API, just call it
     expect(typeof window.parentIframe.reset).toBe('function')
     // The function should not throw
