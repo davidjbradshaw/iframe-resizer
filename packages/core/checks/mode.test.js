@@ -38,7 +38,7 @@ describe('core/checks/mode', () => {
     expect(() => preModeCheck('id')).not.toThrow()
   })
 
-  test('checkMode uses Parent fallback for falsy id', () => {
+  test('checkMode handles falsy id with Parent fallback', () => {
     settings[''] = { mode: -3, vAdvised: false }
     
     expect(() => checkMode('', -2)).toThrow()
