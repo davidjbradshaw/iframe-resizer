@@ -75,4 +75,10 @@ describe('core/page/in-page-link', () => {
       expect.stringContaining('#missing not found'),
     )
   })
+
+  test('handles location without hash', () => {
+    inPageLink('id', 'http://x/')
+
+    expect(log).toHaveBeenCalled()
+  })
 })

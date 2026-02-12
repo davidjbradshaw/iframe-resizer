@@ -54,4 +54,11 @@ describe('core/page/position', () => {
 
     expect(page.position).toEqual(newPos)
   })
+
+  test('getStoredPagePosition returns current position', () => {
+    page.position = { x: 50, y: 60 }
+    const pos = positionMod.getStoredPagePosition()
+
+    expect(pos).toEqual({ x: 50, y: 60 })
+  })
 })

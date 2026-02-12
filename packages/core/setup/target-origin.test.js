@@ -42,4 +42,19 @@ describe('core/setup/target-origin', () => {
 
     expect(settings.z.postMessageTarget).toBe(cw)
   })
+
+  it('does not set postMessageTarget when not null', () => {
+    const iframe = document.createElement('iframe')
+    iframe.id = 'already-set'
+    const cw = {}
+    const existingTarget = { existing: true }
+    Object.defineProperty(iframe, 'contentWindow', {
+      configurable: true,
+      get: () => cw,
+    })
+    settings['already-set'] = { postMessageTarget: existingTarget }
+    getPostMessageTarget(iframe)
+
+    expect(settings['already-set'].postMessageTarget).toBe(existingTarget)
+  })
 })
