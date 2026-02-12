@@ -209,4 +209,21 @@ describe('warnOnNoResponse', () => {
     expect(advise).not.toHaveBeenCalled()
     expect(event).not.toHaveBeenCalled()
   })
+
+  it('does not warn again when loadErrorShown is already true', () => {
+    const id = 'f11'
+    const settings = makeSettings({
+      id,
+      loadErrorShown: true,
+      warningTimeout: 100,
+    })
+
+    warnOnNoResponse(id, settings)
+
+    vi.advanceTimersByTime(settings[id].warningTimeout + 1)
+
+    // Should not warn or fire event when error was already shown
+    expect(advise).not.toHaveBeenCalled()
+    expect(event).not.toHaveBeenCalled()
+  })
 })
