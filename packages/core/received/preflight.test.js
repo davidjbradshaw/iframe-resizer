@@ -6,7 +6,7 @@ import * as preflight from './preflight'
 
 vi.mock('../console', () => ({ log: vi.fn(), warn: vi.fn() }))
 
-const { log, warn } = await import('../console')
+const { log } = await import('../console')
 
 describe('core/received/preflight', () => {
   beforeEach(() => {
