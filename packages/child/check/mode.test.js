@@ -73,7 +73,6 @@ describe('child/check/mode', () => {
   })
 
   it('does not advise and warns when session already has correct VERSION', () => {
-    const VERSION = '6.0.0' // Assuming this matches the actual VERSION constant
     // Need to import VERSION from the actual file
     vi.mock('../../common/consts', async () => {
       const actual = await vi.importActual('../../common/consts')

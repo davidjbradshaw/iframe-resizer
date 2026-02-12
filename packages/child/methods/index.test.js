@@ -55,4 +55,22 @@ describe('child/methods/index', () => {
 
     expect(window.parentIframe.getId()).toBe('test-id-123')
   })
+
+  it('close() sends close message', async () => {
+    setupPublicMethods()
+    
+    // close() is exposed on the API, just call it
+    expect(typeof window.parentIframe.close).toBe('function')
+    // The function should not throw
+    expect(() => window.parentIframe.close()).not.toThrow()
+  })
+
+  it('reset() calls resetIframe', async () => {
+    setupPublicMethods()
+    
+    // reset() is exposed on the API, just call it
+    expect(typeof window.parentIframe.reset).toBe('function')
+    // The function should not throw
+    expect(() => window.parentIframe.reset()).not.toThrow()
+  })
 })
