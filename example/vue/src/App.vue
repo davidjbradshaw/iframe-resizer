@@ -5,10 +5,9 @@
 <template>
   <h1>Vue 3 + Iframe Resizer</h1>
   <IframeResizer
-    src="https://iframe-resizer.com/examples/animate/" 
+    src="/example/html/child/frame.content.html" 
     license="GPLv3"
     log="collapsed"
-    bodyBackground="green" 
     @on-ready="() => console.log('onReady')"
   />
 </template>
@@ -16,6 +15,6 @@
 <style scoped>
   iframe {
     width: 100%;
-    height: 100vh;
+    min-height: 100px;
   }
 </style>

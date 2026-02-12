@@ -127,13 +127,26 @@ test.describe('iframe-resizer React example', () => {
 })
 
 test.describe('iframe-resizer Vue example', () => {
-  test.skip('should load Vue example', async ({ page }) => {
-    // Note: Vue example requires building with npm run build in example/vue
-    // Skipping for now as it requires additional setup
-    await page.goto('/example/vue/index.html')
+  test('should load Vue example', async ({ page }) => {
+    // Navigate to the built Vue example
+    await page.goto('/example/vue/dist/index.html')
     await page.waitForLoadState('networkidle')
+    
     // Check that app element exists
     const app = page.locator('#app')
     await expect(app).toBeVisible()
+    
+    // Check that Vue content loaded (h1 should be visible)
+    const heading = page.locator('h1')
+    await expect(heading).toBeVisible()
+    await expect(heading).toContainText('Vue 3 + Iframe Resizer')
+    
+    // Check that iframe is present
+    const iframe = page.locator('iframe')
+    await expect(iframe).toBeVisible()
+    
+    // Verify iframe has a height
+    const height = await iframe.evaluate(el => el.offsetHeight)
+    expect(height).toBeGreaterThan(0)
   })
 })
