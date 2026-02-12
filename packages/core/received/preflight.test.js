@@ -6,6 +6,8 @@ import * as preflight from './preflight'
 
 vi.mock('../console', () => ({ log: vi.fn(), warn: vi.fn() }))
 
+const { log, warn } = await import('../console')
+
 describe('core/received/preflight', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -44,6 +46,20 @@ describe('core/received/preflight', () => {
     const messageData = { id: 'i5', type: 'true' }
 
     expect(preflight.isMessageFromMetaParent(messageData)).toBe(true)
+    expect(log).toHaveBeenCalledWith(
+      'i5',
+      'Ignoring init message from meta parent page',
+    )
+  })
+
+  test('isMessageFromMetaParent returns false for non-meta-parent types', () => {
+    const messageData = { id: 'i5b', type: 'someOtherType' }
+
+    expect(preflight.isMessageFromMetaParent(messageData)).toBe(false)
+    expect(log).not.toHaveBeenCalledWith(
+      expect.anything(),
+      'Ignoring init message from meta parent page',
+    )
   })
 
   test('isMessageFromIframe allows matching origin in checkOrigin array', () => {

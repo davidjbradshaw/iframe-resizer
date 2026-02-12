@@ -92,6 +92,21 @@ describe('core/received/decode', () => {
     expect(data.mode).toBeUndefined()
   })
 
+  test('handles missing height value', () => {
+    global.getComputedStyle = () => ({
+      boxSizing: 'content-box',
+    })
+
+    const body = 'i1::200:TYPE:MSG'
+    const msg = 'X'.repeat(MESSAGE_ID_LENGTH) + body
+
+    const data = decodeMessage(msg)
+
+    expect(data.id).toBe('i1')
+    expect(data.height).toBe(0)
+    expect(data.width).toBe(200)
+  })
+
   afterEach(() => {
     global.getComputedStyle = origGetComputed
     delete settings.i1

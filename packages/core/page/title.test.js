@@ -5,6 +5,7 @@ vi.mock('../values/settings', () => ({
   default: {
     a: { iframe: { title: '' }, syncTitle: true },
     b: { iframe: {}, syncTitle: false },
+    c: { iframe: { title: 'Existing Title' }, syncTitle: true },
   },
 }))
 
@@ -23,5 +24,17 @@ describe('core/page/title', () => {
 
     expect(settings.a.iframe.title).toBe('Hello')
     expect(info).toHaveBeenCalled()
+  })
+
+  test('checkTitle returns false when title has content', () => {
+    expect(checkTitle('c')).toBe(false)
+  })
+
+  test('setTitle does nothing when syncTitle is disabled', () => {
+    vi.clearAllMocks()
+    setTitle('b', 'Should Not Set')
+
+    expect(settings.b.iframe.title).toBeUndefined()
+    expect(info).not.toHaveBeenCalled()
   })
 })
