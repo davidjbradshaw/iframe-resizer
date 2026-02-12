@@ -158,13 +158,13 @@ describe('core/console', () => {
 
   test('log uses consoleEnabled when settings entry does not exist', () => {
     const iframeId = 'no-settings'
-    
+
     // Don't create settings entry, but set consoleEnabled to false via another iframe
     setupConsole({ enabled: false, expand: false, iframeId: 'other' })
-    
+
     // This should check isLogEnabled which will return consoleEnabled (false from setup)
     const result = log(iframeId, 'test')
-    
+
     // Since settings[iframeId] is falsy and consoleEnabled is false, should return null
     expect(result).toBeNull()
   })
