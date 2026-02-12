@@ -121,6 +121,17 @@ describe('utils.js', () => {
       expect(isIframe(mockIframe)).toBe(true)
     })
 
+    test('should return true for HTMLIFrameElement instance when tagName is not IFRAME', () => {
+      const mockIframe = document.createElement('iframe')
+      Object.defineProperty(mockIframe, 'tagName', {
+        get() {
+          return 'DIV'
+        },
+        configurable: true,
+      })
+      expect(isIframe(mockIframe)).toBe(true)
+    })
+
     test('should return false for non-iframe elements', () => {
       const mockDiv = document.createElement('div')
       expect(isIframe(mockDiv)).toBe(false)
@@ -248,6 +259,14 @@ describe('utils.js', () => {
       const obj = { key: 'value' }
       expect(hasOwn(obj, 'nonExistent')).toBe(false)
     })
+
+    test('should use fallback implementation when Object.hasOwn is not available', () => {
+      // Test the fallback directly
+      const fallback = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
+      const obj = { key: 'value' }
+      expect(fallback(obj, 'key')).toBe(true)
+      expect(fallback(obj, 'toString')).toBe(false)
+    })
   })
 
   describe('isDef', () => {
@@ -290,6 +309,16 @@ describe('utils.js', () => {
 
     test('should return module without __esModule property', () => {
       const mockModule = { someProperty: 'value' }
+      expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+
+    test('should return module when __esModule is 0', () => {
+      const mockModule = { __esModule: 0, default: 'default-export' }
+      expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+
+    test('should return module when __esModule is empty string', () => {
+      const mockModule = { __esModule: '', default: 'default-export' }
       expect(esModuleInterop(mockModule)).toBe(mockModule)
     })
   })
