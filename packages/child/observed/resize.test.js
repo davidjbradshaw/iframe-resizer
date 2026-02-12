@@ -52,7 +52,7 @@ describe('child/observed/resize', () => {
     observers.resize._cb(null)
     expect(sendSize).not.toHaveBeenCalled()
 
-    observers.resize._cb(undefined)
+    observers.resize._cb()
     expect(sendSize).not.toHaveBeenCalled()
 
     observers.resize._cb({})
