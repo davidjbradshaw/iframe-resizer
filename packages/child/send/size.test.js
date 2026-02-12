@@ -31,7 +31,8 @@ const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 const dispatch = (await import('./dispatch')).default
 const sendSize = (await import('./size')).default
-const { OVERFLOW_OBSERVER } = await import('../../common/consts')
+const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST } =
+  await import('../../common/consts')
 
 describe('child/send/size', () => {
   const origRAF = globalThis.requestAnimationFrame
@@ -57,6 +58,28 @@ describe('child/send/size', () => {
 
     expect(consoleMod.log).toHaveBeenCalled()
     expect(globalThis.cancelAnimationFrame).toHaveBeenCalled()
+    expect(dispatch).not.toHaveBeenCalled()
+  })
+
+  test('skips log when already hidden and message already shown', () => {
+    // First ensure hiddenMessageShown is reset by going through default path
+    state.isHidden = false
+    sendSize('reset', 'reset')
+    vi.clearAllMocks()
+
+    // Now test the hidden path
+    state.isHidden = true
+
+    // First call when hidden sets hiddenMessageShown and logs
+    sendSize('evt1', 'desc1')
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      'Iframe hidden - Ignored resize request',
+    )
+    vi.clearAllMocks()
+
+    // Second call when still hidden skips log (hiddenMessageShown already true)
+    sendSize('evt2', 'desc2')
+    expect(consoleMod.log).not.toHaveBeenCalled()
     expect(dispatch).not.toHaveBeenCalled()
   })
 
@@ -98,6 +121,41 @@ describe('child/send/size', () => {
 
     expect(consoleMod.event).toHaveBeenCalledWith('requestAnimationFrame')
     expect(consoleMod.debug).toHaveBeenCalled()
+  })
+
+  test('does not call dispatch when getContentSize returns null', () => {
+    getContentSize.mockReturnValueOnce(null)
+    sendSize('evt', 'd')
+
+    expect(getContentSize).toHaveBeenCalled()
+    expect(dispatch).not.toHaveBeenCalled()
+  })
+
+  test('does not create new raf when rafId already exists', () => {
+    let rafCallCount = 0
+    // Override RAF to NOT execute callback immediately, so rafId persists
+    const rafSpy = vi.fn(() => {
+      rafCallCount++
+      return 999
+    })
+    globalThis.requestAnimationFrame = rafSpy
+
+    // First call creates rafId and doesn't execute callback
+    sendSize('evt1', 'd1')
+    expect(rafCallCount).toBe(1)
+
+    // Second call with MANUAL_RESIZE_REQUEST bypasses sendPending check
+    // and should reach line 76, but skip creating new raf since rafId exists
+    sendSize(MANUAL_RESIZE_REQUEST, 'd2')
+    expect(rafCallCount).toBe(1) // Still only 1 RAF created
+    expect(rafSpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('passes msg parameter through to dispatch', () => {
+    const customMsg = 'custom message'
+    sendSize('evt', 'd', undefined, undefined, customMsg)
+
+    expect(dispatch).toHaveBeenCalledWith(10, 20, 'evt', customMsg)
   })
 
   afterEach(() => {
