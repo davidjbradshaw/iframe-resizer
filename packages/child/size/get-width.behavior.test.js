@@ -15,4 +15,33 @@ describe('child/size/get-width behavior', () => {
     settings.offsetWidth = 456
     expect(getWidth.getOffset()).toBe(456)
   })
+
+  it('scroll() returns max of bodyScroll and documentElementScroll', () => {
+    // Mock document
+    global.document = {
+      body: {
+        scrollWidth: 800,
+      },
+      documentElement: {
+        scrollWidth: 1000,
+      },
+    }
+
+    const result = getWidth.scroll()
+    expect(result).toBe(1000)
+  })
+
+  it('scroll() uses bodyScroll when it is larger', () => {
+    global.document = {
+      body: {
+        scrollWidth: 1200,
+      },
+      documentElement: {
+        scrollWidth: 1000,
+      },
+    }
+
+    const result = getWidth.scroll()
+    expect(result).toBe(1200)
+  })
 })
