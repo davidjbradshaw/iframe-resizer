@@ -26,4 +26,26 @@ describe('core/setup/scrolling', () => {
 
     expect(iframe.scrolling).toBe('no')
   })
+
+  it('uses custom scrolling string value in default case', () => {
+    const iframe = document.createElement('iframe')
+    iframe.id = 'custom-scroll'
+    document.body.append(iframe)
+
+    settings['custom-scroll'] = { scrolling: 'auto' }
+    setScrolling(iframe)
+
+    expect(iframe.scrolling).toBe('auto')
+  })
+
+  it('defaults to "no" when scrolling is undefined', () => {
+    const iframe = document.createElement('iframe')
+    iframe.id = 'undefined-scroll'
+    document.body.append(iframe)
+
+    settings['undefined-scroll'] = { scrolling: undefined }
+    setScrolling(iframe)
+
+    expect(iframe.scrolling).toBe('no')
+  })
 })
