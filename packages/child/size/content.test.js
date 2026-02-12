@@ -44,4 +44,17 @@ describe('child/size/content', () => {
     expect(purge).not.toHaveBeenCalled()
     expect(info).not.toHaveBeenCalled()
   })
+
+  test('default case calls purge and info for unknown events', async () => {
+    const { info, purge } = await import('../console')
+    state.height = 100
+    state.width = 200
+
+    // Use an unknown event type that doesn't match any case
+    const ret = getContentSize('unknownEvent', 'unknown', 100, 200)
+
+    expect(ret).toBeNull()
+    expect(purge).toHaveBeenCalled()
+    expect(info).toHaveBeenCalled()
+  })
 })
