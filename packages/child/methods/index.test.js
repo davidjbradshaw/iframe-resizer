@@ -40,4 +40,12 @@ describe('child/methods/index', () => {
 
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('renamed'))
   })
+
+  it('returns early when settings.mode === 1', () => {
+    settings.mode = 1
+    setupPublicMethods()
+
+    expect(window.parentIframe).toBeUndefined()
+    expect(window.parentIFrame).toBeUndefined()
+  })
 })

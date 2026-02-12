@@ -54,4 +54,14 @@ describe('child/methods/auto-resize', () => {
     expect(settings.autoResize).toBe(false)
     expect(sendMessage).toHaveBeenCalledWith(0, 0, AUTO_RESIZE, 'false')
   })
+
+  test('no-op when disabling already-disabled autoResize', () => {
+    settings.autoResize = false
+    const out = autoResize(false)
+
+    expect(out).toBe(false)
+    expect(settings.autoResize).toBe(false)
+    expect(sendSize).not.toHaveBeenCalled()
+    expect(sendMessage).toHaveBeenCalledWith(0, 0, AUTO_RESIZE, 'false')
+  })
 })
