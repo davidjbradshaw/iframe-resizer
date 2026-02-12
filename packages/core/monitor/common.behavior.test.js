@@ -26,12 +26,16 @@ vi.mock('../values/settings', () => {
 // Stub ResizeObserver
 let pageCb
 let iframeCb
+let pageObserver
+let iframeObserver
 class RO {
   constructor(cb) {
     if (pageCb) {
       iframeCb = cb
+      iframeObserver = this
     } else {
       pageCb = cb
+      pageObserver = this
     }
   }
 
@@ -65,6 +69,8 @@ describe('core/monitor/common behavior', () => {
     trigger.mockClear()
     pageCb = undefined
     iframeCb = undefined
+    pageObserver = undefined
+    iframeObserver = undefined
   })
 
   it('startInfoMonitor sets listeners and observers and triggers info', () => {
@@ -90,6 +96,28 @@ describe('core/monitor/common behavior', () => {
     start('x')
     const stop = mockSettings.x.stopPageInfo
     stop()
+    expect(removeEventListener).toHaveBeenCalled()
+  })
+
+  it('sendInfo calls stop when settings[id] is deleted', () => {
+    const sender = vi.fn((requestType, id) =>
+      trigger(`${requestType} (PageInfo)`, `PageInfo:${id}`, id),
+    )
+    const start = startInfoMonitor(sender, 'PageInfo')
+    start('x')
+
+    // Delete settings[id] to simulate iframe removal
+    delete mockSettings.x
+
+    // Manually invoke the pageObserver callback which calls sendInfo
+    // This should call stop() internally without throwing an error
+    expect(() => {
+      if (pageCb) {
+        pageCb()
+      }
+    }).not.toThrow()
+
+    // Verify that removeEventListener was called for window listeners
     expect(removeEventListener).toHaveBeenCalled()
   })
 })

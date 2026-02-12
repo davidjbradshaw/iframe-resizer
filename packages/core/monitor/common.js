@@ -66,7 +66,9 @@ export const startInfoMonitor = (sendInfoToIframe, type) => (id) => {
     setListener('Remove ', removeEventListener)
     pageObserver.disconnect()
     iframeObserver.disconnect()
-    removeEventListener(settings[id].iframe, LOAD, stop)
+    if (settings[id]) {
+      removeEventListener(settings[id].iframe, LOAD, stop)
+    }
   }
 
   function start() {
