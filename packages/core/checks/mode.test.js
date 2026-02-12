@@ -14,8 +14,10 @@ vi.mock('../../common/mode', () => ({
 }))
 
 describe('core/checks/mode', () => {
-  let checkMode, preModeCheck, settings
-  
+  let checkMode
+  let preModeCheck
+  let settings
+
   beforeEach(async () => {
     vi.clearAllMocks()
     vi.resetModules()
@@ -40,7 +42,7 @@ describe('core/checks/mode', () => {
 
   test('checkMode handles falsy id with Parent fallback', () => {
     settings[''] = { mode: -3, vAdvised: false }
-    
+
     expect(() => checkMode('', -2)).toThrow()
     expect(settings[''].vAdvised).toBe(true)
   })

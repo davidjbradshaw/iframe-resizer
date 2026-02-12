@@ -72,9 +72,8 @@ describe('core/checks/mode branches', () => {
   })
 
   test('enableVInfo handles undefined options', () => {
-    enableVInfo(undefined)
-    // Should not throw
-    expect(true).toBe(true)
+    // Should not throw when called with undefined
+    expect(() => enableVInfo()).not.toThrow()
   })
 
   test('enableVInfo handles options without log property', () => {
