@@ -13,15 +13,18 @@ vi.mock('../../common/mode', () => ({
   getModeLabel: vi.fn(() => 'label'),
 }))
 
-const checkMode = (await import('./mode')).default
-const { preModeCheck } = await import('./mode')
-const settings = (await import('../values/settings')).default
-
 describe('core/checks/mode', () => {
-  beforeEach(() => {
+  let checkMode, preModeCheck, settings
+  
+  beforeEach(async () => {
     vi.clearAllMocks()
-    settings.id.mode = -1
-    settings.id.vAdvised = false
+    vi.resetModules()
+    // Re-import after module reset
+    const modeModule = await import('./mode')
+    checkMode = modeModule.default
+    preModeCheck = modeModule.preModeCheck
+    settings = (await import('../values/settings')).default
+    settings.id = { mode: -1, vAdvised: false }
   })
 
   test('checkMode throws for negative mode and marks advised', () => {
@@ -33,5 +36,12 @@ describe('core/checks/mode', () => {
     settings.id.mode = 0
 
     expect(() => preModeCheck('id')).not.toThrow()
+  })
+
+  test('checkMode uses Parent fallback for falsy id', () => {
+    settings[''] = { mode: -3, vAdvised: false }
+    
+    expect(() => checkMode('', -2)).toThrow()
+    expect(settings[''].vAdvised).toBe(true)
   })
 })

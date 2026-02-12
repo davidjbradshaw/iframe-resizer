@@ -1,16 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-// getModeData import retained if needed for future assertions
-// import retained if needed for future assertions
-// import { getModeData } from '../../common/mode'
-
 let checkMode
 let preModeCheck
 let enableVInfo
-// console hooks retained for potential future assertions
-// let advise
-// let purge
-// let vInfo
 
 describe('core/checks/mode branches', () => {
   let settings
