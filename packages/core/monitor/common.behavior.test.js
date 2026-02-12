@@ -92,4 +92,26 @@ describe('core/monitor/common behavior', () => {
     stop()
     expect(removeEventListener).toHaveBeenCalled()
   })
+
+  it('sendInfo calls stop when settings[id] is deleted', () => {
+    const sender = vi.fn((requestType, id) =>
+      trigger(`${requestType} (PageInfo)`, `PageInfo:${id}`, id),
+    )
+    const start = startInfoMonitor(sender, 'PageInfo')
+    start('x')
+
+    // Delete settings[id] to simulate iframe removal
+    delete mockSettings.x
+
+    // Manually invoke the pageObserver callback which calls sendInfo
+    // This should call stop() internally without throwing an error
+    expect(() => {
+      if (pageCb) {
+        pageCb()
+      }
+    }).not.toThrow()
+
+    // Verify that removeEventListener was called for window listeners
+    expect(removeEventListener).toHaveBeenCalled()
+  })
 })

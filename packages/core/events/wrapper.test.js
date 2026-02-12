@@ -11,6 +11,7 @@ vi.mock('../values/settings', () => ({
       onScroll: vi.fn(() => {
         throw new Error('nope')
       }),
+      onResized: vi.fn(() => 'success'),
     },
   },
 }))
@@ -28,5 +29,25 @@ describe('core/events/wrapper', () => {
 
     expect(res).toBeNull()
     expect(warn).toHaveBeenCalled()
+  })
+
+  test('catches errors for onScroll and warns', () => {
+    const res = on('id', 'onScroll', {})
+
+    expect(res).toBeNull()
+    expect(warn).toHaveBeenCalled()
+  })
+
+  test('returns null when settings[iframeId] does not exist', () => {
+    const res = on('nonexistent', 'onMessage', {})
+
+    expect(res).toBeNull()
+  })
+
+  test('calls isolateUserCode for non-onBeforeClose/onScroll handlers', () => {
+    const res = on('id', 'onResized', {})
+
+    // isolateUserCode returns a setTimeout handle
+    expect(typeof res).toBe('object')
   })
 })

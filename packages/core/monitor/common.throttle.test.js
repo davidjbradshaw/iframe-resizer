@@ -65,4 +65,56 @@ describe('monitor/common throttle gate', () => {
     stopInfoMonitor('stopProps')(id)
     expect(settings[id].stopProps).toBeUndefined()
   })
+
+  it('stopInfoMonitor does nothing when stop function not in settings', () => {
+    const id = 'mid3'
+    const iframe = document.createElement('iframe')
+    settings[id] = { iframe }
+
+    // Don't start monitor, so stopProps won't exist
+    // This should not throw
+    expect(() => stopInfoMonitor('stopProps')(id)).not.toThrow()
+  })
+
+  it('sendInfo blocks different request types when pending', () => {
+    const id = 'mid4'
+    const iframe = document.createElement('iframe')
+    settings[id] = { iframe }
+
+    const calls = []
+    const sendInfoStub = vi.fn((requestType, frameId) => {
+      calls.push({ requestType, frameId })
+    })
+
+    // Keep RAF callbacks pending
+    const rafCallbacks = []
+    vi.spyOn(global, 'requestAnimationFrame').mockImplementation((cb) => {
+      rafCallbacks.push(cb)
+      return 1
+    })
+
+    startInfoMonitor(sendInfoStub, 'Props')(id)
+
+    // Dispatch scroll event - this sets pending = 'scroll'
+    window.dispatchEvent(new Event('scroll'))
+
+    // Before flushing RAF, dispatch resize event
+    // This should be blocked because pending === 'scroll'
+    window.dispatchEvent(new Event('resize'))
+
+    // Only scroll should have been sent
+    expect(calls.filter((c) => c.requestType === 'scroll').length).toBe(1)
+    expect(calls.filter((c) => c.requestType === 'resize window').length).toBe(
+      0,
+    )
+
+    // Flush RAF to clear pending
+    rafCallbacks.forEach((cb) => cb())
+
+    // Now resize should work
+    window.dispatchEvent(new Event('resize'))
+    expect(calls.filter((c) => c.requestType === 'resize window').length).toBe(
+      1,
+    )
+  })
 })
