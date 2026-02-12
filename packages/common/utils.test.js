@@ -3,6 +3,7 @@ import {
   capitalizeFirstLetter,
   esModuleInterop,
   getElementName,
+  hasOwn,
   id,
   isDarkModeEnabled,
   isIframe,
@@ -161,6 +162,23 @@ describe('utils.js', () => {
       expect(() => typeAssert('test', NUMBER, 'Value')).toThrow(
         'Value is not a Number',
       )
+    })
+  })
+
+  describe('hasOwn', () => {
+    test('should return true for own properties', () => {
+      const obj = { foo: 'bar' }
+      expect(hasOwn(obj, 'foo')).toBe(true)
+    })
+
+    test('should return false for inherited properties', () => {
+      const obj = Object.create({ inherited: 'value' })
+      expect(hasOwn(obj, 'inherited')).toBe(false)
+    })
+
+    test('should return false for non-existent properties', () => {
+      const obj = {}
+      expect(hasOwn(obj, 'missing')).toBe(false)
     })
   })
 })

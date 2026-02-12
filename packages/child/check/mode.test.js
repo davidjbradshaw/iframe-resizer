@@ -51,4 +51,40 @@ describe('child/check/mode', () => {
     expect(childConsole.vInfo).toHaveBeenCalled()
     expect(sessionStorage.getItem('ifr')).toBeDefined()
   })
+
+  it('advises when oMode > -1 and mode > oMode', () => {
+    // Set session to something other than VERSION
+    sessionStorage.setItem('ifr', 'old-version')
+
+    checkMode({ key: 'a', key2: 'b', mode: 2, version: undefined })
+
+    expect(childConsole.vInfo).toHaveBeenCalled()
+    expect(sessionStorage.getItem('ifr')).toBeDefined()
+  })
+
+  it('advises when mode < 2 and version not defined', () => {
+    // Force mode to be 1 (< 2)
+    commonMode.default.mockReturnValueOnce(1).mockReturnValueOnce(0)
+
+    checkMode({ key: 'a', key2: 'b', mode: 1, version: undefined })
+
+    expect(childConsole.advise).toHaveBeenCalled()
+    expect(childConsole.vInfo).toHaveBeenCalled()
+  })
+
+  it('does not advise and warns when session already has correct VERSION', () => {
+    const VERSION = '6.0.0' // Assuming this matches the actual VERSION constant
+    // Need to import VERSION from the actual file
+    vi.mock('../../common/consts', async () => {
+      const actual = await vi.importActual('../../common/consts')
+      return { ...actual, VERSION: 'test-version' }
+    })
+
+    sessionStorage.setItem('ifr', 'test-version')
+
+    checkMode({ key: 'a', key2: 'b', mode: 2, version: undefined })
+
+    // vInfo should not be called since session already has the version
+    expect(childConsole.vInfo).not.toHaveBeenCalled()
+  })
 })

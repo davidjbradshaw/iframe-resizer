@@ -48,4 +48,11 @@ describe('child/methods/index', () => {
     expect(window.parentIframe).toBeUndefined()
     expect(window.parentIFrame).toBeUndefined()
   })
+
+  it('getId() returns settings.parentId', () => {
+    settings.parentId = 'test-id-123'
+    setupPublicMethods()
+
+    expect(window.parentIframe.getId()).toBe('test-id-123')
+  })
 })

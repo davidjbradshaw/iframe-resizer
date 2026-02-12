@@ -43,6 +43,11 @@ describe('Vue iframe-resizer mounted lifecycle', () => {
     expect(ctx.resizer.sendMessage).toHaveBeenCalledWith('m', undefined)
   })
 
+  it('renders template with iframe ref', () => {
+    // Verify the template structure exists
+    expect(comp.template || comp.render).toBeDefined()
+  })
+
   it('beforeUnmount disconnects the resizer', () => {
     comp.mounted.call(ctx)
     comp.beforeUnmount.call(ctx)

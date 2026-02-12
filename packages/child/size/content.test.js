@@ -5,6 +5,7 @@ import {
   INIT,
   MANUAL_RESIZE_REQUEST,
   MUTATION_OBSERVER,
+  OVERFLOW_OBSERVER,
   PARENT_RESIZE_REQUEST,
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
@@ -234,5 +235,19 @@ describe('child/size/content', () => {
     expect(ret).toBe(state)
     expect(state.height).toBe(150)
     expect(state.width).toBe(250)
+  })
+
+  test('returns null for OVERFLOW_OBSERVER constant when no change', async () => {
+    const { log, purge } = await import('../console')
+    const isSizeChangeDetected = (await import('./change-detected')).default
+    isSizeChangeDetected.mockReturnValue(false)
+
+    state.height = 100
+    state.width = 200
+    const ret = getContentSize(OVERFLOW_OBSERVER, 'overflow observer', 100, 200)
+
+    expect(ret).toBeNull()
+    expect(log).toHaveBeenCalled()
+    expect(purge).toHaveBeenCalled()
   })
 })
