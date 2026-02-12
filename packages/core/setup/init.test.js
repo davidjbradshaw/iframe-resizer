@@ -38,11 +38,11 @@ describe('core/setup/init', () => {
     init('if2', 'msg')
 
     // onload listener registered
-    expect(addEventListener).toHaveBeenCalledWith(
-      iframe,
-      'load',
-      expect.any(Function),
+    const onloadCall = addEventListener.mock.calls.find(
+      (call) => call[0] === iframe && call[1] === 'load',
     )
+    expect(onloadCall).toBeDefined()
+    const onloadHandler = onloadCall[2]
 
     // send init path
     vi.runOnlyPendingTimers()
@@ -55,7 +55,10 @@ describe('core/setup/init', () => {
 
     expect(trigger).toHaveBeenCalledWith(INIT_FROM_IFRAME, 'msg', 'if2')
 
-    // simulate onload (we only assert listener was registered above; internal timer behavior is implementation detail)
+    // simulate onload - invoke the registered handler
+    onloadHandler()
+    vi.runAllTimers()
+    // The onload handler should trigger ONLOAD event
   })
 
   test('checkReset triggers reset for specific methods when not firstRun', () => {
