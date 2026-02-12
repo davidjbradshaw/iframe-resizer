@@ -35,4 +35,28 @@ describe('child/methods/resize', () => {
       undefined,
     )
   })
+
+  test('sends manual resize with no arguments', () => {
+    resize()
+
+    expect(typeAssert).not.toHaveBeenCalled()
+    expect(sendSize).toHaveBeenCalledWith(
+      MANUAL_RESIZE_REQUEST,
+      'parentIframe.resize()',
+      undefined,
+      undefined,
+    )
+  })
+
+  test('sends manual resize with height and zero width', () => {
+    resize(100, 0)
+
+    expect(typeAssert).toHaveBeenCalledTimes(2)
+    expect(sendSize).toHaveBeenCalledWith(
+      MANUAL_RESIZE_REQUEST,
+      'parentIframe.resize(100)',
+      100,
+      0,
+    )
+  })
 })
