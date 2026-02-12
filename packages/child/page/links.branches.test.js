@@ -81,4 +81,68 @@ describe('child/page/links branches', () => {
 
     expect(sendMessage).toHaveBeenCalledWith(11, 7, SCROLL_TO_OFFSET)
   })
+
+  it('findTarget works with hash without # prefix', () => {
+    const target = document.createElement('div')
+    target.id = 'nohash'
+    target.getBoundingClientRect = () => ({ left: 5, top: 15 })
+    document.body.append(target)
+
+    setupInPageLinks(true)
+
+    // Pass location without # prefix
+    state.inPageLinks.findTarget('nohash')
+
+    expect(sendMessage).toHaveBeenCalledWith(15, 5, SCROLL_TO_OFFSET)
+  })
+
+  it('findTarget finds element by name attribute', () => {
+    const target = document.createElement('div')
+    target.setAttribute('name', 'byname')
+    target.getBoundingClientRect = () => ({ left: 3, top: 9 })
+    document.body.append(target)
+
+    setupInPageLinks(true)
+
+    state.inPageLinks.findTarget('#byname')
+
+    expect(sendMessage).toHaveBeenCalledWith(9, 3, SCROLL_TO_OFFSET)
+  })
+
+  it('skips anchors with href="#" during binding', () => {
+    const anchor = document.createElement('a')
+    anchor.setAttribute('href', '#')
+    document.body.append(anchor)
+
+    setupInPageLinks(true)
+
+    // Click the anchor - should not call sendMessage since it's skipped
+    const clickEvent = new Event('click', { bubbles: true, cancelable: true })
+    anchor.dispatchEvent(clickEvent)
+
+    // sendMessage should not be called for href="#"
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  it('checkLocationHash does nothing when hash is empty', () => {
+    window.location.hash = ''
+
+    setupInPageLinks(true)
+
+    // Trigger hashchange with empty hash
+    window.dispatchEvent(new Event('hashchange'))
+
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  it('checkLocationHash does nothing when hash is just #', () => {
+    window.location.hash = '#'
+
+    setupInPageLinks(true)
+
+    // Trigger hashchange with just #
+    window.dispatchEvent(new Event('hashchange'))
+
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
 })
