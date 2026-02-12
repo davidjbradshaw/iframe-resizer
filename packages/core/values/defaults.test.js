@@ -34,6 +34,40 @@ describe('core/values/defaults', () => {
     expect(onInit).toHaveBeenCalledWith(messageData)
   })
 
+  it('onReady does not call onInit when onInit is not a function', () => {
+    const id = 'non-func'
+    settings[id] = { onInit: false }
+
+    const messageData = { id }
+    defaults.onReady(messageData)
+
+    // Should not throw and should not call deprecateOption
+    expect(coreConsole.deprecateOption).not.toHaveBeenCalledWith(
+      'init()',
+      'onReady()',
+      '',
+      id,
+    )
+  })
+
+  it('onReady handles onInit as null', () => {
+    const id = 'null-init'
+    settings[id] = { onInit: null }
+
+    const messageData = { id }
+    // Should not throw
+    expect(() => defaults.onReady(messageData)).not.toThrow()
+  })
+
+  it('onReady handles onInit as string', () => {
+    const id = 'string-init'
+    settings[id] = { onInit: 'not a function' }
+
+    const messageData = { id }
+    // Should not throw
+    expect(() => defaults.onReady(messageData)).not.toThrow()
+  })
+
   it('default callbacks work as expected', () => {
     expect(defaults.onBeforeClose()).toBe(true)
     expect(defaults.onAfterClose()).toBeUndefined()
