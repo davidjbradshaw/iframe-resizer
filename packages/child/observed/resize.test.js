@@ -27,4 +27,35 @@ describe('child/observed/resize', () => {
 
     expect(sendSize).toHaveBeenCalled()
   })
+
+  test('does not send size when entries array is empty', () => {
+    const nodeList = [document.createElement('div')]
+    createResizeObservers(nodeList)
+
+    // Clear previous calls
+    sendSize.mockClear()
+
+    // simulate callback with empty array
+    observers.resize._cb([])
+
+    expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  test('does not send size when entries is not an array', () => {
+    const nodeList = [document.createElement('div')]
+    createResizeObservers(nodeList)
+
+    // Clear previous calls
+    sendSize.mockClear()
+
+    // simulate callback with non-array
+    observers.resize._cb(null)
+    expect(sendSize).not.toHaveBeenCalled()
+
+    observers.resize._cb(undefined)
+    expect(sendSize).not.toHaveBeenCalled()
+
+    observers.resize._cb({})
+    expect(sendSize).not.toHaveBeenCalled()
+  })
 })
