@@ -16,7 +16,7 @@ const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
 const settings = (await import('../values/settings')).default
 const init = (await import('./init')).default
-const { INIT, INIT_FROM_IFRAME } = await import('../../common/consts')
+const { INIT, INIT_FROM_IFRAME, ONLOAD } = await import('../../common/consts')
 
 describe('core/setup/init', () => {
   beforeEach(() => {
@@ -59,6 +59,7 @@ describe('core/setup/init', () => {
     onloadHandler()
     vi.runAllTimers()
     // The onload handler should trigger ONLOAD event
+    expect(trigger).toHaveBeenCalledWith(ONLOAD, 'msg', 'if2')
   })
 
   test('checkReset triggers reset for specific methods when not firstRun', () => {
