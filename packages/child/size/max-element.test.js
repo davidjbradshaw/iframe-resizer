@@ -67,7 +67,7 @@ describe('child/size/max-element', () => {
     state.hasTags = true
     state.taggedElements = []
 
-    // Mock document element 
+    // Mock document element
     document.documentElement.getBoundingClientRect = () => ({ bottom: 500 })
 
     const val = getMaxElement('bottom')

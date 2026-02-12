@@ -95,7 +95,7 @@ describe('child/send/dispatch', () => {
   })
 
   test('dispatch with undefined msg omits message suffix', () => {
-    dispatch(100, 200, 'evt', undefined)
+    dispatch(100, 200, 'evt')
 
     expect(state.target.postMessage).toHaveBeenCalled()
     const message = state.target.postMessage.mock.calls[0][0]
