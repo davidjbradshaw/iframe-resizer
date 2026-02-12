@@ -5,9 +5,17 @@ import {
   getElementName,
   hasOwn,
   id,
+  invoke,
   isDarkModeEnabled,
+  isDef,
+  isElement,
   isIframe,
   isNumber,
+  isObject,
+  isolateUserCode,
+  isSafari,
+  isString,
+  lower,
   once,
   round,
   typeAssert,
@@ -179,6 +187,184 @@ describe('utils.js', () => {
     test('should return false for non-existent properties', () => {
       const obj = {}
       expect(hasOwn(obj, 'missing')).toBe(false)
+    })
+
+    test('should use fallback when Object.hasOwn is falsy', () => {
+      // Save original
+      const original = Object.hasOwn
+
+      try {
+        // Make Object.hasOwn falsy
+        Object.hasOwn = null
+
+        const obj = { key: 'value' }
+        expect(hasOwn(obj, 'key')).toBe(true)
+        expect(hasOwn(obj, 'toString')).toBe(false)
+      } finally {
+        // Restore
+        Object.hasOwn = original
+      }
+    })
+  })
+
+  describe('isElement', () => {
+    test('should return true for element nodes', () => {
+      const element = document.createElement('div')
+      expect(isElement(element)).toBe(true)
+    })
+
+    test('should return false for non-element nodes', () => {
+      const textNode = document.createTextNode('text')
+      expect(isElement(textNode)).toBe(false)
+    })
+  })
+
+  describe('isObject', () => {
+    test('should return true for objects', () => {
+      expect(isObject({})).toBe(true)
+      expect(isObject({ key: 'value' })).toBe(true)
+      expect(isObject([])).toBe(true)
+    })
+
+    test('should return false for non-objects', () => {
+      expect(isObject(null)).toBe(false)
+      expect(isObject('string')).toBe(false)
+      expect(isObject(42)).toBe(false)
+      expect(isObject()).toBe(false)
+    })
+  })
+
+  describe('isString', () => {
+    test('should return true for strings', () => {
+      expect(isString('test')).toBe(true)
+      expect(isString('')).toBe(true)
+    })
+
+    test('should return false for non-strings', () => {
+      expect(isString(42)).toBe(false)
+      expect(isString(null)).toBe(false)
+      expect(isString()).toBe(false)
+      expect(isString({})).toBe(false)
+    })
+  })
+
+  describe('isSafari', () => {
+    test('should be a boolean', () => {
+      expect(typeof isSafari).toBe('boolean')
+    })
+  })
+
+  describe('isolateUserCode', () => {
+    test('should execute function asynchronously', () => {
+      vi.useFakeTimers()
+      const mockFn = vi.fn()
+      isolateUserCode(mockFn, 'arg1', 'arg2')
+
+      expect(mockFn).not.toHaveBeenCalled()
+      vi.runAllTimers()
+      expect(mockFn).toHaveBeenCalledWith('arg1', 'arg2')
+      vi.useRealTimers()
+    })
+  })
+
+  describe('isDef', () => {
+    test('should return true for defined values', () => {
+      expect(isDef('test')).toBe(true)
+      expect(isDef(42)).toBe(true)
+      expect(isDef(0)).toBe(true)
+      expect(isDef(false)).toBe(true)
+      expect(isDef(null)).toBe(true)
+    })
+
+    test('should return false for undefined or empty string', () => {
+      expect(isDef()).toBe(false)
+      expect(isDef('')).toBe(false)
+    })
+  })
+
+  describe('invoke', () => {
+    test('should invoke the function', () => {
+      const mockFn = vi.fn(() => 'result')
+      const result = invoke(mockFn)
+      expect(mockFn).toHaveBeenCalled()
+      expect(result).toBe('result')
+    })
+  })
+
+  describe('lower', () => {
+    test('should convert string to lowercase', () => {
+      expect(lower('HELLO')).toBe('hello')
+      expect(lower('World')).toBe('world')
+      expect(lower('TeSt')).toBe('test')
+    })
+  })
+
+  describe('esModuleInterop - edge cases', () => {
+    test('should return null for null and undefined for undefined module', () => {
+      expect(esModuleInterop(null)).toBe(null)
+      expect(esModuleInterop()).toBe(undefined)
+    })
+
+    test('should return module without __esModule property', () => {
+      const mockModule = { someProperty: 'value' }
+      expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+
+    test('should return module when __esModule is 0', () => {
+      const mockModule = { __esModule: 0, default: 'default-export' }
+      expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+
+    test('should return module when __esModule is empty string', () => {
+      const mockModule = { __esModule: '', default: 'default-export' }
+      expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+  })
+
+  describe('once - edge cases', () => {
+    test('should preserve function context', () => {
+      const context = { value: 42 }
+      const mockFn = vi.fn(function () {
+        return this.value
+      })
+      const wrappedFn = once(mockFn)
+
+      const result = wrappedFn.call(context)
+      expect(result).toBe(42)
+      expect(mockFn).toHaveBeenCalledTimes(1)
+    })
+
+    test('should pass arguments correctly', () => {
+      const mockFn = vi.fn((a, b) => a + b)
+      const wrappedFn = once(mockFn)
+
+      const result = wrappedFn(5, 3)
+      expect(result).toBe(8)
+      expect(mockFn).toHaveBeenCalledWith(5, 3)
+    })
+  })
+
+  describe('isDarkModeEnabled - edge cases', () => {
+    test('should return undefined when matchMedia is undefined', () => {
+      const originalMatchMedia = window.matchMedia
+      window.matchMedia = undefined
+
+      expect(isDarkModeEnabled()).toBe(undefined)
+
+      window.matchMedia = originalMatchMedia
+    })
+  })
+
+  describe('isIframe - edge cases', () => {
+    test('should return true for HTMLIFrameElement instance when tagName is not IFRAME', () => {
+      const mockIframe = document.createElement('iframe')
+      Object.defineProperty(mockIframe, 'tagName', {
+        get() {
+          return 'DIV'
+        },
+        configurable: true,
+      })
+      expect(isIframe(mockIframe)).toBe(true)
     })
   })
 })
