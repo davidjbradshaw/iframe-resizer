@@ -31,4 +31,25 @@ describe('core/checks/unique', () => {
     expect(checkUniqueId('dup')).toBe(false)
     expect(coreConsole.advise).toHaveBeenCalled()
   })
+
+  it('returns false immediately for already shown duplicate warning', () => {
+    vi.spyOn(coreConsole, 'advise').mockImplementation(() => {})
+    Object.defineProperty(window, 'CSS', {
+      configurable: true,
+      value: { escape: (s) => s },
+    })
+    const a = document.createElement('iframe')
+    a.id = 'dup2'
+    const b = document.createElement('iframe')
+    b.id = 'dup2'
+    document.body.append(a, b)
+
+    // First call should advise
+    expect(checkUniqueId('dup2')).toBe(false)
+    const firstCallCount = coreConsole.advise.mock.calls.length
+
+    // Second call should return false without calling advise again
+    expect(checkUniqueId('dup2')).toBe(false)
+    expect(coreConsole.advise.mock.calls.length).toBe(firstCallCount)
+  })
 })
