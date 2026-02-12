@@ -104,4 +104,75 @@ describe('core/listeners', () => {
 
     expect(routeMessage).not.toHaveBeenCalled()
   })
+
+  test('returns early when message is not a string and not for us', async () => {
+    preflight.isMessageForUs.mockReturnValue(false)
+    const { default: setup } = await import('./listeners')
+    setup()
+    const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
+    listener({ data: { some: 'object' } })
+
+    expect(consoleEvent).not.toHaveBeenCalled()
+    expect(debug).not.toHaveBeenCalled()
+  })
+
+  test('returns early when iframe does not exist', async () => {
+    const decode = (await import('./received/decode')).default
+    decode.mockReturnValue({ id: 'abc', type: 'INIT' })
+    preflight.checkIframeExists.mockReturnValue(false)
+
+    const settingsMod = await import('./values/settings')
+    settingsMod.default.abc = {}
+
+    const { default: setup } = await import('./listeners')
+    setup()
+    const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
+    listener({ data: '[iFrameSizer]x' })
+
+    expect(routeMessage).not.toHaveBeenCalled()
+  })
+
+  test('returns early when message is from meta parent', async () => {
+    const decode = (await import('./received/decode')).default
+    decode.mockReturnValue({ id: 'abc', type: 'INIT' })
+    preflight.checkIframeExists.mockReturnValue(true)
+    preflight.isMessageFromMetaParent.mockReturnValue(true)
+
+    const settingsMod = await import('./values/settings')
+    settingsMod.default.abc = {}
+
+    const { default: setup } = await import('./listeners')
+    setup()
+    const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
+    listener({ data: '[iFrameSizer]x' })
+
+    expect(routeMessage).not.toHaveBeenCalled()
+  })
+
+  test('iframeParentListener calls iframeListener with sameOrigin flag', async () => {
+    vi.useFakeTimers()
+
+    const decode = (await import('./received/decode')).default
+    decode.mockReturnValue({ id: 'abc', type: 'INIT' })
+    preflight.isMessageForUs.mockReturnValue(true)
+    preflight.checkIframeExists.mockReturnValue(true)
+    preflight.isMessageFromMetaParent.mockReturnValue(false)
+    preflight.isMessageFromIframe.mockReturnValue(true)
+
+    const settingsMod = await import('./values/settings')
+    settingsMod.default.abc = {}
+
+    const { default: setup } = await import('./listeners')
+    setup()
+
+    // Call iframeParentListener
+    window.iframeParentListener('[iFrameSizer]test')
+
+    // Fast-forward timers
+    vi.runAllTimers()
+
+    expect(routeMessage).toHaveBeenCalledWith({ id: 'abc', type: 'INIT' })
+
+    vi.useRealTimers()
+  })
 })
