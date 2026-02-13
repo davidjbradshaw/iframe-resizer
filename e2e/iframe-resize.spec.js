@@ -253,7 +253,7 @@ test.describe('iframe-resizer React example', () => {
     })
 
     // Click the "Send Message" link in the iframe to trigger a message
-    const sendMessageLink = iframe.locator('a', { hasText: 'Send Message' })
+    const sendMessageLink = iframe.locator('a').filter({ hasText: 'Send Message' })
     await expect(sendMessageLink).toBeVisible()
     await sendMessageLink.click()
 
@@ -280,7 +280,7 @@ test.describe('iframe-resizer React example', () => {
     const initialHeight = await iframeElement.evaluate(el => el.offsetHeight)
 
     // Click the "Toggle content" link to hide/show content
-    const toggleLink = iframe.locator('a', { hasText: 'Toggle content' })
+    const toggleLink = iframe.locator('a').filter({ hasText: 'Toggle content' })
     await expect(toggleLink).toBeVisible()
     await toggleLink.click()
 
