@@ -50,7 +50,7 @@ function checkDistDirectories() {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [checkDistDirectories(), react()],
-  base: '/example/react/dist/',
+  base: isDev ? '/' : '/example/react/dist/',
   resolve: {
     alias: isDev ? {
       '@iframe-resizer/react': path.resolve(__dirname, '../../packages/react/index.jsx'),
