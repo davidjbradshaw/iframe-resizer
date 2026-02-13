@@ -62,10 +62,6 @@ describe('Complex Integration Scenarios', () => {
 
     it('should handle message passing through nested structure', () => {
       const message = '[iFrameSizer]message:testIframe:customData'
-      const event = {
-        data: message,
-        origin: window.location.origin,
-      }
 
       settings.onMessage.and.returnValue(true)
       window.postMessage(message, '*')
@@ -279,23 +275,23 @@ describe('Complex Integration Scenarios', () => {
     })
 
     it('should handle shadow DOM elements', () => {
-      if (typeof HTMLElement.prototype.attachShadow !== 'undefined') {
-        const container = document.createElement('div')
-        const shadowRoot = container.attachShadow({ mode: 'open' })
-        shadowRoot.appendChild(iframe)
-
-        expect(iframe.parentNode).toBe(shadowRoot)
-      } else {
-        // Shadow DOM not supported, skip test
-        expect(true).toBe(true)
+      if (typeof HTMLElement.prototype.attachShadow === 'undefined') {
+        pending('Shadow DOM not supported in this environment')
+        return
       }
+
+      const container = document.createElement('div')
+      const shadowRoot = container.attachShadow({ mode: 'open' })
+      shadowRoot.appendChild(iframe)
+
+      expect(iframe.parentNode).toBe(shadowRoot)
     })
   })
 
   describe('Integration with other features', () => {
     it('should combine multiple configuration options', () => {
       settings.tolerance = 10
-      settings.checkOrigin = ['http://example.com']
+      settings.checkOrigin = ['http://localhost:3000']
       settings.heightCalculationMethod = 'max'
       settings.widthCalculationMethod = 'scroll'
       settings.scrolling = true
@@ -303,7 +299,7 @@ describe('Complex Integration Scenarios', () => {
       settings.sizeWidth = true
 
       expect(settings.tolerance).toBe(10)
-      expect(settings.checkOrigin).toEqual(['http://example.com'])
+      expect(settings.checkOrigin).toEqual(['http://localhost:3000'])
       expect(settings.heightCalculationMethod).toBe('max')
       expect(settings.widthCalculationMethod).toBe('scroll')
       expect(settings.scrolling).toBe(true)
