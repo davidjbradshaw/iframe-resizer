@@ -36,8 +36,9 @@ function checkDistDirectories() {
             `  These are created by building the main iframe-resizer project.\n\n` +
             `  To fix this, run the following command from the repository root:\n\n` +
             `    npm run vite:prod\n\n` +
-            `  Or for a debug build:\n\n` +
-            `    npm run vite:debug && npm run vite:prod\n\n` +
+            `  Alternatively, if you want to develop without building, run:\n\n` +
+            `    npm run dev\n\n` +
+            `  (Dev mode uses source files directly from packages/)\n\n` +
             `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
           )
         }
