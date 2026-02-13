@@ -31,7 +31,7 @@ function App() {
             inPageLinks
             onMessage={onMessage}
             onResized={onResized}
-            src="../child/frame.content.html"
+            src="child/frame.content.html"
             style={{ width: '100%', height: '100vh' }}
           />
       
