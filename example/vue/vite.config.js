@@ -60,6 +60,7 @@ export default defineConfig({
     // This is a well-maintained off-the-shelf plugin used by the Rollup team
     isDev && replace({
       preventAssignment: true,
+      include: '**/packages/**', // Only replace in packages directory
       values: {
         '[VI]{version}[/VI]': version,
       },
