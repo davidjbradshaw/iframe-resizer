@@ -43,6 +43,12 @@ jobs:
     - name: Copy built files to js-dist for e2e tests
       run: cp -r js/* js-dist/
 
+    - name: Build React example for e2e tests
+      run: |
+        cd example/react
+        npm install
+        npm run build
+
     - name: Run Playwright tests
       run: npm run test:e2e
 
