@@ -9,6 +9,27 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // In development, use source files; in production/build, use dist
 const isDev = process.env.NODE_ENV !== 'production'
 
+// Get version from root package.json
+const rootPkgPath = path.resolve(__dirname, '../../package.json')
+const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf-8'))
+const version = rootPkg.version
+
+// Inject version in development mode (replaces [VI]{version}[/VI] placeholder)
+function injectVersion() {
+  return {
+    name: 'inject-version',
+    transform(code, id) {
+      // Only transform files in packages/ directory that contain the version placeholder
+      if (isDev && id.includes('/packages/') && code.includes('[VI]{version}[/VI]')) {
+        return {
+          code: code.replace(/\[VI\]\{version\}\[\/VI\]/g, version),
+          map: null
+        }
+      }
+    }
+  }
+}
+
 // Check if dist directories exist when building for production
 function checkDistDirectories() {
   return {
@@ -49,7 +70,7 @@ function checkDistDirectories() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [checkDistDirectories(), react()],
+  plugins: [injectVersion(), checkDistDirectories(), react()],
   base: isDev ? '/' : '/example/react/dist/',
   resolve: {
     alias: isDev ? {
