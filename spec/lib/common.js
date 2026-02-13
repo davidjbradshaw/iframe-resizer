@@ -12,7 +12,8 @@ function tearDown(iframe) {
   }
 
   // Wait longer to ensure all queued callbacks (like onReady) complete
-  if (iframe?.iframeResizer) setTimeout(removeResizer, 50)
+  // Use 100ms to handle slower CI environments
+  if (iframe?.iframeResizer) setTimeout(removeResizer, 100)
   window.parentIFrame = undefined
 }
 
