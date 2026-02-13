@@ -11,7 +11,8 @@ function tearDown(iframe) {
     iframe?.iframeResizer?.close()
   }
 
-  if (iframe?.iframeResizer) setTimeout(removeResizer)
+  // Wait longer to ensure all queued callbacks (like onReady) complete
+  if (iframe?.iframeResizer) setTimeout(removeResizer, 50)
   window.parentIFrame = undefined
 }
 
