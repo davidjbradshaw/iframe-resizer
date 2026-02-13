@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import replace from '@rollup/plugin-replace'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
@@ -13,22 +14,6 @@ const isDev = process.env.NODE_ENV !== 'production'
 const rootPkgPath = path.resolve(__dirname, '../../package.json')
 const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf-8'))
 const version = rootPkg.version
-
-// Inject version in development mode (replaces [VI]{version}[/VI] placeholder)
-function injectVersion() {
-  return {
-    name: 'inject-version',
-    transform(code, id) {
-      // Only transform files in packages/ directory that contain the version placeholder
-      if (isDev && id.includes('/packages/') && code.includes('[VI]{version}[/VI]')) {
-        return {
-          code: code.replace(/\[VI\]\{version\}\[\/VI\]/g, version),
-          map: null
-        }
-      }
-    }
-  }
-}
 
 // Check if dist directories exist when building for production
 function checkDistDirectories() {
@@ -70,7 +55,18 @@ function checkDistDirectories() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [injectVersion(), checkDistDirectories(), vue()],
+  plugins: [
+    // Use @rollup/plugin-replace to inject version in dev mode
+    // This is a well-maintained off-the-shelf plugin used by the Rollup team
+    isDev && replace({
+      preventAssignment: true,
+      values: {
+        '[VI]{version}[/VI]': version,
+      },
+    }),
+    checkDistDirectories(),
+    vue()
+  ].filter(Boolean),
   base: isDev ? '/' : '/example/vue/dist/',
   resolve: {
     alias: isDev ? {
