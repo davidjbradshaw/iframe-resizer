@@ -1,7 +1,7 @@
 {
   "name": "vue",
   "private": true,
-  "version": "5.2.3",
+  "version": "6.0.0-beta.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/core": "^5.4.7",
-    "@iframe-resizer/vue": "^5.4.7",
+    "@iframe-resizer/core": "file:../../dist/core",
+    "@iframe-resizer/vue": "file:../../dist/vue",
     "vue": "^3.5.18"
   },
   "devDependencies": {
