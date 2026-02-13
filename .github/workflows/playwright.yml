@@ -49,6 +49,12 @@ jobs:
         npm install
         npm run build
 
+    - name: Build Vue example for e2e tests
+      run: |
+        cd example/vue
+        npm install
+        npm run build
+
     - name: Run Playwright tests
       run: npm run test:e2e
 

@@ -298,13 +298,43 @@ test.describe('iframe-resizer React example', () => {
 })
 
 test.describe('iframe-resizer Vue example', () => {
-  test.skip('should load Vue example', async ({ page }) => {
-    // Note: Vue example requires building with npm run build in example/vue
-    // Skipping for now as it requires additional setup
-    await page.goto('/example/vue/index.html')
+  test('should load Vue example', async ({ page }) => {
+    await page.goto('/example/vue/dist/')
     await page.waitForLoadState('networkidle')
+    
     // Check that app element exists
     const app = page.locator('#app')
     await expect(app).toBeVisible()
+    
+    // Check that heading exists
+    const heading = page.locator('h2:has-text("@iframe-resizer/vue example")')
+    await expect(heading).toBeVisible()
+  })
+
+  test('should initialize iframe with iframe-resizer', async ({ page }) => {
+    await page.goto('/example/vue/dist/')
+    await page.waitForLoadState('networkidle')
+    
+    // Wait for iframe to be present
+    const iframe = page.frameLocator('iframe')
+    
+    // Check iframe content loads
+    await expect(iframe.locator('body')).toBeVisible()
+    
+    // Verify iframe has expected content
+    const iframeText = iframe.locator('body')
+    await expect(iframeText).toContainText('Lorem ipsum')
+  })
+
+  test('should resize iframe based on content', async ({ page }) => {
+    await page.goto('/example/vue/dist/')
+    await page.waitForLoadState('networkidle')
+    
+    const iframeElement = page.locator('iframe')
+    await expect(iframeElement).toBeVisible()
+    
+    // Get initial height
+    const initialHeight = await iframeElement.evaluate((el) => el.offsetHeight)
+    expect(initialHeight).toBeGreaterThan(0)
   })
 })
