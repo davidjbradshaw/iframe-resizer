@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@iframe-resizer/child": "^5.5.0-beta.3",
-    "@iframe-resizer/react": "^5.5.0-beta.3",
+    "@iframe-resizer/core": "file:../../dist/core",
+    "@iframe-resizer/react": "file:../../dist/react",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
