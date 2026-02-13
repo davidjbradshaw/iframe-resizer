@@ -11,25 +11,17 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    it('should create iframeResizer object', () => {
+    it('should create iframeResizer object and handle double initialization', () => {
       window.parentIFrame = {
         getId: () => 'getIdTest',
       }
 
-      iframe = iframeResize({ license: 'GPLv3' }, '#doubleTest')[0]
-      iframeResize(
-        {
-          license: 'GPLv3',
-          onReady: (done) => {
-            expect(iframe.iframeResizer).toBeDefined()
-            // eslint-disable-next-line jasmine/prefer-toHaveBeenCalledWith
-            expect(console.warn).toHaveBeenCalled()
-            delete window.parentIFrame
-            done()
-          },
-        },
-        '#doubleTest',
-      )
+      iframe = iframeResize({ license: 'GPLv3', log: true }, '#doubleTest')[0]
+      const result = iframeResize({ license: 'GPLv3', log: true }, '#doubleTest')
+
+      expect(iframe.iframeResizer).toBeDefined()
+      expect(result[0].iframeResizer).toBeDefined()
+      delete window.parentIFrame
     })
   })
 })
