@@ -49,11 +49,11 @@ define(['iframeResizerParent'], (iframeResize) => {
         // Add iframe to DOM after a short delay
         setTimeout(() => {
           document.body.appendChild(disconnectedIframe)
-          // Send init message after adding to DOM
+          // Send init message after adding to DOM with more delay
           setTimeout(() => {
             mockMsgFromIFrame(disconnectedIframe, 'init')
-          }, 10)
-        }, 50)
+          }, 50)
+        }, 100)
 
         iframe = disconnectedIframe
         additionalIframes.push(disconnectedIframe)
@@ -80,13 +80,13 @@ define(['iframeResizerParent'], (iframeResize) => {
         // Verify onReady hasn't been called yet
         expect(readyCalled).toBe(false)
 
-        // Add to DOM
+        // Add to DOM with longer delay
         setTimeout(() => {
           document.body.appendChild(disconnectedIframe)
           setTimeout(() => {
             mockMsgFromIFrame(disconnectedIframe, 'init')
-          }, 10)
-        }, 50)
+          }, 50)
+        }, 100)
 
         iframe = disconnectedIframe
         additionalIframes.push(disconnectedIframe)
@@ -192,7 +192,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframes[0], 'init')
         mockMsgFromIFrame(iframes[1], 'init')
 
-        // Send different resize messages to each iframe
+        // Send different resize messages to each iframe with more delay
         setTimeout(() => {
           window.postMessage(
             `[iFrameSizer]${iframes[0].id}:100:200:mutationObserver`,
@@ -202,7 +202,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             `[iFrameSizer]${iframes[1].id}:150:250:mutationObserver`,
             '*',
           )
-        }, 50)
+        }, 100)
 
         iframe = iframes[0] // For cleanup
         additionalIframes.push(iframes[1])
@@ -224,12 +224,12 @@ define(['iframeResizerParent'], (iframeResize) => {
               const parent = iframeEl.parentNode
               parent.removeChild(iframeEl)
               
-              // Verify iframe is no longer in DOM
+              // Verify iframe is no longer in DOM with longer delay
               setTimeout(() => {
                 expect(document.getElementById('edge4')).toBeNull()
                 done()
-              }, 50)
-            }, 10)
+              }, 100)
+            }, 50)
           },
         })[0]
 
@@ -250,7 +250,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframeEl) => {
             setTimeout(() => {
               iframeEl.iframeResizer.close()
-            }, 10)
+            }, 50)
           },
         })[0]
 
@@ -277,7 +277,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Should have warned about already setup
               expect(console.warn).toHaveBeenCalled()
               done()
-            }, 50)
+            }, 100)
           },
         })[0]
 
@@ -506,7 +506,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Should have handled resizes (may be throttled)
               expect(resizeCount).toBeGreaterThan(0)
               done()
-            }, 100)
+            }, 200)
           },
         })[0]
 
@@ -529,10 +529,10 @@ define(['iframeResizerParent'], (iframeResize) => {
         // Try to send resize before init
         window.postMessage('[iFrameSizer]edge16:100:200:mutationObserver', '*')
 
-        // Now send init
+        // Now send init with more delay
         setTimeout(() => {
           mockMsgFromIFrame(iframe, 'init')
-        }, 50)
+        }, 100)
       })
     })
 

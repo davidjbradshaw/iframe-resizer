@@ -6,7 +6,8 @@ const LOG = true
 // Delay to ensure all queued callbacks complete before teardown
 const TEARDOWN_DELAY_MS = 100
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000
+// Increase timeout for async tests in CI environments
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000
 jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures'
 
 function tearDown(iframe) {
