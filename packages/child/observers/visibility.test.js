@@ -8,12 +8,15 @@ describe('child/observers/visibility', () => {
   let IO
   let observed
   let disconnect
+  let observerCallback
   beforeEach(() => {
     observed = []
     disconnect = vi.fn()
+    observerCallback = null
     IO = class {
       constructor(cb) {
         this.cb = cb
+        observerCallback = cb
         this.observe = (el) => {
           observed.push(el)
         }
@@ -36,14 +39,31 @@ describe('child/observers/visibility', () => {
 
     expect(observed).toContain(document.documentElement)
 
-    // simulate last entry intersecting
-    const inst = new IO((entries) => cb(entries.at(-1).isIntersecting))
-    inst.cb([{ isIntersecting: false }, { isIntersecting: true }])
+    // Use the actual observer callback created by visibilityObserver
+    observerCallback([{ isIntersecting: false }, { isIntersecting: true }])
 
     expect(cb).toHaveBeenCalledWith(true)
 
     api.disconnect()
 
     expect(disconnect).toHaveBeenCalled()
+  })
+
+  test('handles visibility changes correctly', () => {
+    const cb = vi.fn()
+    visibilityObserver(cb)
+
+    // Test with single entry
+    observerCallback([{ isIntersecting: false }])
+    expect(cb).toHaveBeenCalledWith(false)
+
+    // Test with multiple entries (uses last one)
+    cb.mockClear()
+    observerCallback([
+      { isIntersecting: false },
+      { isIntersecting: false },
+      { isIntersecting: true },
+    ])
+    expect(cb).toHaveBeenCalledWith(true)
   })
 })

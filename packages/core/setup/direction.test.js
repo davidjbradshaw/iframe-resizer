@@ -1,10 +1,14 @@
-import { describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 
-import { HORIZONTAL, NONE, VERTICAL } from '../../common/consts'
+import { BOTH, HORIZONTAL, NONE, VERTICAL } from '../../common/consts'
 import settings from '../values/settings'
 import setDirection from './direction'
 
 describe('core/setup/direction', () => {
+  afterEach(() => {
+    delete settings.i7
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     settings.i7 = {
@@ -22,11 +26,20 @@ describe('core/setup/direction', () => {
     expect(settings.i7.sizeHeight).toBe(true)
   })
 
-  test('horizontal toggles width and falls through to both', () => {
+  test('horizontal sets sizeWidth true and sizeHeight false via fallthrough', () => {
     settings.i7.direction = HORIZONTAL
     setDirection('i7')
 
     expect(settings.i7.sizeWidth).toBe(true)
+    expect(settings.i7.sizeHeight).toBe(false)
+  })
+
+  test('both sets sizeWidth true and keeps sizeHeight', () => {
+    settings.i7.direction = BOTH
+    setDirection('i7')
+
+    expect(settings.i7.sizeWidth).toBe(true)
+    expect(settings.i7.sizeHeight).toBe(true)
   })
 
   test('none disables sizes and autoResize', () => {

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { MESSAGE_ID } from '../../common/consts'
 import settings from '../values/settings'
@@ -11,7 +11,12 @@ const { log } = await import('../console')
 describe('core/received/preflight', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    delete settings.i2
+  })
+
+  afterEach(() => {
+    for (const key of Object.keys(settings)) {
+      delete settings[key]
+    }
   })
 
   test('checkIframeExists returns false and logs when iframe missing', () => {
@@ -26,7 +31,6 @@ describe('core/received/preflight', () => {
     const msg = `${MESSAGE_ID}i3:1:2`
 
     expect(preflight.isMessageForUs(msg)).toBe(true)
-    delete settings.i3
   })
 
   test('isMessageFromIframe throws for unmatched origin when checkOrigin is set', () => {
@@ -39,7 +43,6 @@ describe('core/received/preflight', () => {
     }
 
     expect(() => preflight.isMessageFromIframe(messageData, badEvent)).toThrow()
-    delete settings.i4
   })
 
   test('isMessageFromMetaParent recognizes meta parent types', () => {
@@ -74,7 +77,6 @@ describe('core/received/preflight', () => {
     }
 
     expect(preflight.isMessageFromIframe(messageData, goodEvent)).toBe(true)
-    delete settings.i6
   })
 
   test('isMessageFromIframe checks single origin when not array', () => {
@@ -87,7 +89,6 @@ describe('core/received/preflight', () => {
     }
 
     expect(preflight.isMessageFromIframe(messageData, goodEvent)).toBe(true)
-    delete settings.i7
   })
 
   test('isMessageFromIframe allows sameOrigin messages', () => {
@@ -102,7 +103,6 @@ describe('core/received/preflight', () => {
     expect(preflight.isMessageFromIframe(messageData, sameOriginEvent)).toBe(
       true,
     )
-    delete settings.i8
   })
 
   test('checkIframeExists returns true when iframe exists', () => {
@@ -125,6 +125,5 @@ describe('core/received/preflight', () => {
     expect(preflight.isMessageFromIframe(messageData, nullOriginEvent)).toBe(
       true,
     )
-    delete settings.i10
   })
 })

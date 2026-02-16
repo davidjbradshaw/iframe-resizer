@@ -40,7 +40,7 @@ export default defineConfig({
     coverage: {
       enabled: true,
       provider: 'v8',
-      reports: ['text', 'html', 'lcov'],
+      reporter: ['text', 'html', 'lcov'],
       include: ['packages/**/*.{js,jsx,vue}'],
       exclude: [
         'coverage/**',

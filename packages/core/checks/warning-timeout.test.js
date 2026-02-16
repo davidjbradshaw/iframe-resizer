@@ -18,10 +18,10 @@ describe('core/checks/warning-timeout', () => {
   test('does not log when warningTimeout is enabled', async () => {
     const settings = (await import('../values/settings')).default
     settings.id2 = { warningTimeout: 5000 }
-    const callsBefore = info.mock.calls.length
 
+    vi.clearAllMocks()
     checkWarningTimeout('id2')
 
-    expect(info.mock.calls.length).toBe(callsBefore)
+    expect(info).not.toHaveBeenCalled()
   })
 })

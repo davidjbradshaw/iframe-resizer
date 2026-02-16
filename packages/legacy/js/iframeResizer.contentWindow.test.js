@@ -1,7 +1,8 @@
-import { describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 describe('legacy/js/iframeResizer.contentWindow', () => {
   it('imports child/index without error', async () => {
-    await import('./iframeResizer.contentWindow.js')
+    const mod = await import('./iframeResizer.contentWindow.js')
+    expect(mod).toBeDefined()
   })
 })

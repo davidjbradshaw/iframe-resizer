@@ -1,10 +1,26 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import state from '../values/state'
 import checkOverflow, { filterIgnoredElements } from './overflow'
 
 describe('child/check/overflow', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('returns empty set and no overflow when no elements present', () => {
+    const { overflowedNodeSet, hasOverflowUpdated } = checkOverflow()
+
+    expect(overflowedNodeSet.size).toBe(0)
+    expect(state.hasOverflow).toBe(false)
+    expect(typeof hasOverflowUpdated).toBe('boolean')
+  })
+
   it('filterIgnoredElements removes nodes within ignored ancestors and logs', async () => {
     vi.spyOn(childConsole, 'event').mockImplementation(() => {})
     vi.spyOn(childConsole, 'info').mockImplementation(() => {})

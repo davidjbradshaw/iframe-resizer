@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import settings from '../values/settings'
@@ -10,6 +10,10 @@ describe('child/check/settings', () => {
     settings.autoResize = true
     vi.spyOn(childConsole, 'info').mockImplementation(() => {})
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('logs targetOrigin and does not log auto-resize when enabled', () => {

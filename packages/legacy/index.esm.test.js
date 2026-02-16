@@ -9,4 +9,9 @@ describe('legacy/index.esm', () => {
     expect(mod.default).toHaveProperty('iframeResizer')
     expect(mod.default).toHaveProperty('contentWindow')
   })
+
+  it('iframeResize and iframeResizer are the same reference', async () => {
+    const mod = await import('./index.esm')
+    expect(mod.default.iframeResize).toBe(mod.default.iframeResizer)
+  })
 })

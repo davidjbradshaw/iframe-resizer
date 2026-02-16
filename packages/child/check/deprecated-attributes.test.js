@@ -1,9 +1,18 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import checkDeprecatedAttrs from './deprecated-attributes'
 
 describe('child/check/deprecated-attributes', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+    vi.restoreAllMocks()
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
   it('converts deprecated attributes and advises when found', () => {
     vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
 
@@ -21,5 +30,16 @@ describe('child/check/deprecated-attributes', () => {
     expect(Object.hasOwn(el2.dataset, 'iframeWidth')).toBe(false)
 
     expect(childConsole.advise).toHaveBeenCalled()
+  })
+
+  it('does not advise when no deprecated attributes exist', () => {
+    vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
+
+    const el = document.createElement('div')
+    document.body.append(el)
+
+    checkDeprecatedAttrs()
+
+    expect(childConsole.advise).not.toHaveBeenCalled()
   })
 })

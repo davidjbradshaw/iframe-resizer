@@ -1,9 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import settings from '../values/settings'
 import setScrolling from './scrolling'
 
 describe('core/setup/scrolling', () => {
+  afterEach(() => {
+    document.body.innerHTML = ''
+    for (const k of Object.keys(settings)) delete settings[k]
+  })
+
   it('sets overflow and scrolling attribute based on settings', () => {
     const iframe = document.createElement('iframe')
     iframe.id = 'a'
@@ -25,6 +30,7 @@ describe('core/setup/scrolling', () => {
     setScrolling(iframe)
 
     expect(iframe.scrolling).toBe('no')
+    expect(iframe.style.overflow).toBe('auto')
   })
 
   it('uses custom scrolling string value in default case', () => {

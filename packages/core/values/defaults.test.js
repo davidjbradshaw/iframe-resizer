@@ -1,5 +1,5 @@
 /* eslint import/first: 0, simple-import-sort/imports: 0 */
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('../console', () => ({
   deprecateOption: vi.fn(),
@@ -11,6 +11,11 @@ import settings from './settings'
 import * as coreConsole from '../console'
 
 describe('core/values/defaults', () => {
+  afterEach(() => {
+    vi.clearAllMocks()
+    for (const key of Object.keys(settings)) delete settings[key]
+  })
+
   it('is a frozen defaults object', () => {
     expect(Object.isFrozen(defaults)).toBe(true)
     expect(defaults.autoResize).toBe(true)

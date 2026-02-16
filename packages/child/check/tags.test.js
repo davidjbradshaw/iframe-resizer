@@ -1,10 +1,19 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import state from '../values/state'
 import checkAndSetupTags from './tags'
 
 describe('child/check/tags', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+    vi.restoreAllMocks()
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
   it('collects elements with data-iframe-size and logs state', () => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
 
@@ -19,5 +28,13 @@ describe('child/check/tags', () => {
     expect(Array.isArray(state.taggedElements)).toBe(false) // NodeList
     expect(state.hasTags).toBe(true)
     expect(childConsole.log).toHaveBeenCalled()
+  })
+
+  it('sets hasTags to false when no tagged elements exist', () => {
+    vi.spyOn(childConsole, 'log').mockImplementation(() => {})
+
+    checkAndSetupTags()
+
+    expect(state.hasTags).toBe(false)
   })
 })
