@@ -53,6 +53,76 @@ describe('child/observers/mutation deeper', () => {
     expect(consoleMod.info).toHaveBeenCalled()
   })
 
+  test('logs when nodes are removed from the page', () => {
+    const callback = vi.fn()
+    const obs = createMutationObserver(callback)
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('span')
+
+    // simulate removing nodes that were never added
+    callbacks.cb([{ addedNodes: [], removedNodes: [el1, el2] }])
+    vi.runAllTimers()
+
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      expect.stringContaining('2'),
+      expect.anything(),
+      expect.anything(),
+    )
+    expect(callback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        removedNodes: expect.any(Set),
+      }),
+    )
+
+    obs.disconnect()
+  })
+
+  test('logs when new nodes are added to the page', () => {
+    const callback = vi.fn()
+    const obs = createMutationObserver(callback)
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('span')
+    const el3 = document.createElement('p')
+
+    // simulate adding nodes
+    callbacks.cb([{ addedNodes: [el1, el2, el3], removedNodes: [] }])
+    vi.runAllTimers()
+
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      expect.stringContaining('3'),
+      expect.anything(),
+      expect.anything(),
+    )
+    expect(callback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        addedNodes: expect.any(Set),
+      }),
+    )
+
+    obs.disconnect()
+  })
+
+  test('handles multiple mutations in sequence', () => {
+    const callback = vi.fn()
+    const obs = createMutationObserver(callback)
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('span')
+
+    // First batch of mutations
+    callbacks.cb([{ addedNodes: [el1], removedNodes: [] }])
+    vi.runAllTimers()
+
+    expect(callback).toHaveBeenCalledTimes(1)
+
+    // Second batch of mutations
+    callbacks.cb([{ addedNodes: [el2], removedNodes: [] }])
+    vi.runAllTimers()
+
+    expect(callback).toHaveBeenCalledTimes(2)
+
+    obs.disconnect()
+  })
+
   afterAll(() => {
     globalThis.MutationObserver = origMO
     globalThis.requestAnimationFrame = origRAF

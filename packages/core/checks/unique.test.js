@@ -1,9 +1,13 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import * as coreConsole from '../console'
 import checkUniqueId from './unique'
 
 describe('core/checks/unique', () => {
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
   it('returns true when ID is unique', () => {
     Object.defineProperty(window, 'CSS', {
       configurable: true,

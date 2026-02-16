@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import settings from '../values/settings'
@@ -10,6 +10,10 @@ describe('child/check/cross-domain', () => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
     settings.mode = 0
     state.sameOrigin = false
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('sets sameOrigin when parent has iframeParentListener', () => {

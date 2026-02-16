@@ -1,12 +1,10 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import * as listeners from '../../common/listeners'
 import * as consoleMod from '../console'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
 import * as mod from './common'
-
-vi.useFakeTimers()
 
 vi.mock('../../common/listeners', () => ({
   addEventListener: vi.fn(),
@@ -17,6 +15,8 @@ vi.mock('../send/trigger', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({ default: { i1: { iframe: {} } } }))
 
 describe('core/monitor/common', () => {
+  const origResizeObserver = globalThis.ResizeObserver
+
   beforeEach(() => {
     vi.clearAllMocks()
     globalThis.ResizeObserver = function (cb) {
@@ -24,6 +24,10 @@ describe('core/monitor/common', () => {
       this.disconnect = vi.fn()
       this._cb = cb
     }
+  })
+
+  afterEach(() => {
+    globalThis.ResizeObserver = origResizeObserver
   })
 
   test('startInfoMonitor registers listeners and stores stop function', () => {

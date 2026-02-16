@@ -159,6 +159,8 @@ const modules = [
   '../parent/factory.js',
   '../parent/iife.js',
   '../parent/umd.js',
+  // react
+  '../react/index.jsx',
   // vue
   '../vue/index.js',
 ]

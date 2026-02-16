@@ -31,4 +31,10 @@ describe('core/setup/body-margin', () => {
     setupBodyMargin('x')
     expect(settings.x.bodyMargin).toBe('0px')
   })
+
+  it('converts numeric 0 to "0px"', () => {
+    settings.x.bodyMargin = 0
+    setupBodyMargin('x')
+    expect(settings.x.bodyMargin).toBe('0px')
+  })
 })
