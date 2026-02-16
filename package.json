@@ -56,7 +56,6 @@
     "url": "https://iframe-resizer.com/pricing/"
   },
   "dependencies": {
-    "@angular/core": "^16.0.0",
     "@babel/runtime": "^7.28.6",
     "@iframe-resizer/child": "file:./packages/child/",
     "@iframe-resizer/core": "file:./packages/core/",
@@ -66,6 +65,7 @@
     "react": "^19.2.4"
   },
   "devDependencies": {
+    "@angular/core": "^16.0.0",
     "@babel/eslint-parser": "^7.28.6",
     "@babel/plugin-syntax-import-attributes": "^7.28.6",
     "@babel/plugin-transform-runtime": "^7.29.0",
