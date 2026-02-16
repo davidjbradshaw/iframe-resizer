@@ -27,6 +27,17 @@ const customConfig = (file) => {
         module,
       }
 
+    case 'angular':
+      return {
+        main,
+        module,
+        types: 'directive.d.ts',
+        peerDependencies: {
+          '@angular/core':
+            '^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0',
+        },
+      }
+
     case 'vue':
       return {
         main: 'index.umd.js',

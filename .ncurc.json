@@ -1,5 +1,6 @@
 {
   "reject": [
+    "@angular/core",
     "grunt-contrib-quint",
     "eslint",
     "eslint-plugin-compat",

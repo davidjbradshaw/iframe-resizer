@@ -40,6 +40,7 @@ const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
   delete pkg.dependencies.react
   delete pkg.dependencies.vue
+  delete pkg.dependencies['@angular/core']
   delete pkg.private
   return JSON.stringify(pkg, null, 2)
 }
@@ -307,6 +308,34 @@ const npm = [
           {
             src: 'packages/vue/iframe-resizer.vue',
             dest: 'dist/vue/',
+          },
+        ],
+        verbose: true,
+      }),
+      filesize(),
+    ],
+    watch: false,
+  },
+
+  // Angular
+  {
+    input: 'packages/angular/directive.ts',
+    output: [output('angular')('esm'), output('angular')('cjs')],
+    external: ['@iframe-resizer/core', 'auto-console-group', '@angular/core'],
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: true,
+        declarationDir: 'dist/angular',
+      }),
+      ...pluginsProd('angular'),
+      copy({
+        hook: 'closeBundle',
+        targets: [
+          {
+            src: 'dist/angular/package.json',
+            dest: 'dist/angular/',
+            transform: filterDeps,
           },
         ],
         verbose: true,
