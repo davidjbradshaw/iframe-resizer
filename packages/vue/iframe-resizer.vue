@@ -116,13 +116,13 @@
 
     methods: {
       moveToAnchor(anchor) {
-        this.resizer.moveToAnchor(anchor)
+        this.resizer?.moveToAnchor(anchor)
       },
       resize() {
-        this.resizer.resize()
+        this.resizer?.resize()
       },
       sendMessage(msg, target) {
-        this.resizer.sendMessage(msg, target)
+        this.resizer?.sendMessage(msg, target)
       },
     },
   }

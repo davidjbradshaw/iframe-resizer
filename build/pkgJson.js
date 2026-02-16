@@ -42,6 +42,7 @@ const customConfig = (file) => {
       return {
         main: 'index.umd.js',
         module,
+        types: 'index.d.ts',
         browser: {
           './sfc': 'iframe-resizer.vue',
         },

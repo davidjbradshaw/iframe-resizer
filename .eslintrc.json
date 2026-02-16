@@ -106,7 +106,8 @@
         "jasmine/new-line-before-expect": 0,
         "no-underscore-dangle": 0,
         "jasmine/prefer-toHaveBeenCalledWith": 0,
-        "unicorn/no-await-expression-member": 0
+        "unicorn/no-await-expression-member": 0,
+        "import/extensions": 0
       }
     },
     {
