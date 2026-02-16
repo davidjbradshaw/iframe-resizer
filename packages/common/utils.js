@@ -32,8 +32,10 @@ export const once = (fn) => {
   }
 }
 
-export const hasOwn =
-  Object.hasOwn || ((o, k) => Object.prototype.hasOwnProperty.call(o, k))
+const hasOwnFallback = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
+
+export const hasOwn = (o, k) =>
+  Object.hasOwn ? Object.hasOwn(o, k) : hasOwnFallback(o, k)
 
 export const isDarkModeEnabled = () =>
   window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches

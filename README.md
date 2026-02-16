@@ -85,4 +85,4 @@ With this release, the opportunity has been taken to refresh and simplify the AP
 
 ---
 [<img align="right" src="https://badge.fury.io/js/@iframe-resizer%2Fcore.svg" alt="NPM" />](https://badge.fury.io/js/@iframe-resizer%2Fparent)
-Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-26 [David J. Bradshaw](https://github.com/davidjbradshaw)

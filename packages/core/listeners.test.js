@@ -96,7 +96,16 @@ describe('core/listeners', () => {
   })
 
   test('returns early when not from iframe', async () => {
+    const decode = (await import('./received/decode')).default
+    decode.mockReturnValue({ id: 'abc', type: 'INIT' })
+    preflight.isMessageForUs.mockReturnValue(true)
+    preflight.checkIframeExists.mockReturnValue(true)
+    preflight.isMessageFromMetaParent.mockReturnValue(false)
     preflight.isMessageFromIframe.mockReturnValue(false)
+
+    const settingsMod = await import('./values/settings')
+    settingsMod.default.abc = {}
+
     const { default: setup } = await import('./listeners')
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
@@ -174,5 +183,16 @@ describe('core/listeners', () => {
     expect(routeMessage).toHaveBeenCalledWith({ id: 'abc', type: 'INIT' })
 
     vi.useRealTimers()
+  })
+
+  test('sets up listeners for visibilitychange event', async () => {
+    const { default: setup } = await import('./listeners')
+    setup()
+
+    // Check that visibilitychange listener was added
+    const visibilityCall = addEventListener.mock.calls.find(
+      (c) => c[0] === document && c[1] === 'visibilitychange',
+    )
+    expect(visibilityCall).toBeDefined()
   })
 })
