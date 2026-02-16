@@ -60,4 +60,49 @@ describe('child/observers/resize', () => {
 
     expect(disconnect).toHaveBeenCalled()
   })
+
+  test('skips already observed elements', () => {
+    const cb = vi.fn()
+    const api = setupResizeObserver(cb)
+
+    const div = document.createElement('div')
+    div.dataset.pos = 'absolute'
+
+    // Observe the element for the first time
+    api.attachObserverToNonStaticElements([div])
+    const firstCallCount = observe.mock.calls.length
+
+    // Try to observe the same element again
+    api.attachObserverToNonStaticElements([div])
+    const secondCallCount = observe.mock.calls.length
+
+    // The observer should not have been called again for the already-observed element
+    expect(secondCallCount).toBe(firstCallCount)
+
+    api.disconnect()
+  })
+
+  test('handles multiple elements with mixed positions', () => {
+    const cb = vi.fn()
+    const api = setupResizeObserver(cb)
+
+    const relative = document.createElement('div')
+    const absolute = document.createElement('div')
+    const fixed = document.createElement('div')
+    const staticEl = document.createElement('div')
+
+    relative.dataset.pos = 'relative'
+    absolute.dataset.pos = 'absolute'
+    fixed.dataset.pos = 'fixed'
+    staticEl.dataset.pos = 'static'
+
+    api.attachObserverToNonStaticElements([relative, absolute, fixed, staticEl])
+
+    expect(observed).toContain(relative)
+    expect(observed).toContain(absolute)
+    expect(observed).toContain(fixed)
+    expect(observed).not.toContain(staticEl)
+
+    api.disconnect()
+  })
 })

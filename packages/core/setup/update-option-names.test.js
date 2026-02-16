@@ -1,9 +1,13 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import settings from '../values/settings'
 import updateOptionNames from './update-option-names'
 
 describe('core/setup/update-option-names', () => {
+  afterEach(() => {
+    for (const key of Object.keys(settings)) delete settings[key]
+  })
+
   it('renames deprecated option names and preserves values', () => {
     settings.id1 = {
       offset: 10,

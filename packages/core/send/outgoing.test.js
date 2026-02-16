@@ -30,9 +30,19 @@ const createOutgoingMessage = (await import('./outgoing')).default
 describe('core/send/outgoing', () => {
   test('creates expected outgoing message string', () => {
     const msg = createOutgoingMessage('abc')
+    const parts = msg.split(':')
 
     expect(typeof msg).toBe('string')
-    expect(msg.split(':').length).toBeGreaterThan(10)
-    expect(msg.startsWith('abc:')).toBe(true)
+    expect(parts.length).toBeGreaterThan(10)
+    expect(parts[0]).toBe('abc')
+    // Verify key field positions match expected settings values
+    expect(parts[2]).toBe('false') // sizeWidth
+    expect(parts[3]).toBe('true') // log
+    expect(parts[6]).toBe('true') // autoResize
+    expect(parts[7]).toBe('8') // bodyMargin
+    expect(parts[8]).toBe('auto') // heightCalculationMethod
+    expect(parts[11]).toBe('0') // tolerance
+    expect(parts[12]).toBe('true') // inPageLinks
+    expect(parts[14]).toBe('scroll') // widthCalculationMethod
   })
 })

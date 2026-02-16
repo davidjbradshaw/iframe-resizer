@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import settings from '../values/settings'
 import state from '../values/state'
@@ -6,8 +6,14 @@ import setupPublicMethods from './index'
 
 describe('child/methods/index', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     settings.mode = 0
     state.win = window
+    delete window.parentIframe
+    delete window.parentIFrame
+  })
+
+  afterEach(() => {
     delete window.parentIframe
     delete window.parentIFrame
   })

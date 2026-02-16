@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import checkIgnoredElements from './ignored-elements'
@@ -8,6 +8,14 @@ describe('child/check/ignored-elements', () => {
     // Ensure clean DOM and fresh spies between tests
     document.body.innerHTML = ''
     vi.restoreAllMocks()
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('returns false when no ignored elements exist', () => {
+    expect(checkIgnoredElements()).toBe(false)
   })
 
   it('warns when ignored elements count changes and returns true', () => {

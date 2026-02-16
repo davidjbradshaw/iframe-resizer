@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import settings from '../values/settings'
 import {
@@ -8,6 +8,10 @@ import {
 } from './target-origin'
 
 describe('core/setup/target-origin', () => {
+  afterEach(() => {
+    for (const key of Object.keys(settings)) delete settings[key]
+  })
+
   it('getTargetOrigin returns * for blank and special schemes', () => {
     expect(getTargetOrigin('')).toBe('*')
     expect(getTargetOrigin('about:blank')).toBe('*')

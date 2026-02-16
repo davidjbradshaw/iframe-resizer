@@ -110,21 +110,21 @@ describe('core/setup/init', () => {
       iframe: { loading: 'eager', src: 'x' },
       firstRun: true,
     }
-    const triggerCallsBefore = trigger.mock.calls.length
     init('if6', 'msg')
+
+    // Save initChild reference before deleting settings
+    const { initChild } = settings.if6
+    expect(initChild).toBeDefined()
+
+    const triggerCallsBefore = trigger.mock.calls.length
 
     // Remove settings to simulate iframe removal
     delete settings.if6
 
-    // Get the initChild function and call it
-    // Since settings is deleted, it should return early
-    const initChild = settings.if6?.initChild
-    if (!initChild) {
-      // This is expected - settings were deleted
-      vi.runAllTimers()
-    }
+    // Call initChild after removal — should return early without triggering
+    initChild()
+    vi.runAllTimers()
 
-    // No new trigger calls should happen after deletion
-    expect(trigger.mock.calls.length).toBeGreaterThanOrEqual(triggerCallsBefore)
+    expect(trigger.mock.calls.length).toBe(triggerCallsBefore)
   })
 })

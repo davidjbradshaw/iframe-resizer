@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ info: vi.fn() }))
 vi.mock('../events/wrapper', () => ({ default: vi.fn(() => true) }))
@@ -19,9 +19,17 @@ const position = await import('./position')
 const { info } = await import('../console')
 
 describe('core/page/scroll', () => {
+  const origScrollBy = window.scrollBy
+
   beforeEach(() => {
     vi.clearAllMocks()
     window.scrollBy = vi.fn()
+  })
+
+  afterEach(() => {
+    window.scrollBy = origScrollBy
+    delete window.parentIframe
+    delete window.parentIFrame
   })
 
   test('getElementPosition adds iframe and page positions', () => {
