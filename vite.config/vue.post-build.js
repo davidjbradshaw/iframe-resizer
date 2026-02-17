@@ -16,13 +16,7 @@ export default async function vuePostBuild() {
       throw new Error(`Source file not found: ${sfcSource}`)
     }
 
-    try {
-      copyFileSync(sfcSource, sfcDest)
-    } catch (error) {
-      throw new Error(
-        `Failed to copy SFC file from ${sfcSource} to ${sfcDest}: ${error.message}`,
-      )
-    }
+    copyFileSync(sfcSource, sfcDest)
 
     // Copy SFC type declarations
     const dtsSource = join(root, 'packages/vue/iframe-resizer.vue.d.ts')
@@ -32,13 +26,7 @@ export default async function vuePostBuild() {
       throw new Error(`Type declaration file not found: ${dtsSource}`)
     }
 
-    try {
-      copyFileSync(dtsSource, dtsDest)
-    } catch (error) {
-      throw new Error(
-        `Failed to copy type declarations from ${dtsSource} to ${dtsDest}: ${error.message}`,
-      )
-    }
+    copyFileSync(dtsSource, dtsDest)
 
     // Fix import paths in generated JS files
     const files = ['index.umd.js', 'index.esm.js', 'index.cjs.js']
@@ -51,24 +39,17 @@ export default async function vuePostBuild() {
         )
       }
 
-      try {
-        const content = readFileSync(filePath, 'utf8')
-        const fixed = content.replace(/packages\/vue/g, '.')
-        writeFileSync(filePath, fixed)
-      } catch (error) {
-        throw new Error(
-          `Failed to fix import paths in ${filePath}: ${error.message}`,
-        )
-      }
+      const content = readFileSync(filePath, 'utf8')
+      const fixed = content.replace(/packages\/vue/g, '.')
+      writeFileSync(filePath, fixed)
     }
   } catch (error) {
-    // If error already has context, rethrow it; otherwise add context
-    if (
-      error.message.includes('Failed to') ||
-      error.message.includes('not found')
-    ) {
-      throw error
+    // Re-throw with context if this is a system error without clear context
+    if (error.code) {
+      throw new Error(
+        `Vue post-build failed with ${error.code}: ${error.message}`,
+      )
     }
-    throw new Error(`Vue post-build failed: ${error.message}`)
+    throw error
   }
 }
