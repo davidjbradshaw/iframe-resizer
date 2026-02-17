@@ -126,6 +126,12 @@
       }
     },
 
+    // Vue 2 lifecycle hook
+    beforeDestroy() {
+      this.resizer?.disconnect()
+    },
+
+    // Vue 3 lifecycle hook
     beforeUnmount() {
       this.resizer?.disconnect()
     },

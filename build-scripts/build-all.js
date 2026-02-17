@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { rollup } from 'rollup'
 import { build as viteBuild } from 'vite'
@@ -21,7 +21,7 @@ const packages = [
 
 async function buildPackage(pkg) {
   const configPath = join(root, 'vite.config', `${pkg.name}.config.js`)
-  const config = await import(configPath)
+  const config = await import(pathToFileURL(configPath).href)
 
   if (pkg.type === 'vite') {
     await viteBuild({ configFile: configPath })
@@ -41,7 +41,7 @@ async function buildPackage(pkg) {
 
   if (pkg.postBuild) {
     const postBuildPath = join(root, 'vite.config', `${pkg.name}.post-build.js`)
-    const postBuild = await import(postBuildPath)
+    const postBuild = await import(pathToFileURL(postBuildPath).href)
     await postBuild.default()
   }
 }
