@@ -53,4 +53,10 @@ describe('Vue iframe-resizer mounted lifecycle', () => {
     comp.beforeUnmount.call(ctx)
     expect(ctx.resizer.disconnect).toHaveBeenCalled()
   })
+
+  it('beforeDestroy disconnects the resizer (Vue 2 compatibility)', () => {
+    comp.mounted.call(ctx)
+    comp.beforeDestroy.call(ctx)
+    expect(ctx.resizer.disconnect).toHaveBeenCalled()
+  })
 })
