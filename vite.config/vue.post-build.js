@@ -16,7 +16,13 @@ export default async function vuePostBuild() {
       throw new Error(`Source file not found: ${sfcSource}`)
     }
 
-    copyFileSync(sfcSource, sfcDest)
+    try {
+      copyFileSync(sfcSource, sfcDest)
+    } catch (error) {
+      throw new Error(
+        `Failed to copy SFC file from ${sfcSource} to ${sfcDest}: ${error.message}`,
+      )
+    }
 
     // Copy SFC type declarations
     const dtsSource = join(root, 'packages/vue/iframe-resizer.vue.d.ts')
@@ -26,7 +32,13 @@ export default async function vuePostBuild() {
       throw new Error(`Type declaration file not found: ${dtsSource}`)
     }
 
-    copyFileSync(dtsSource, dtsDest)
+    try {
+      copyFileSync(dtsSource, dtsDest)
+    } catch (error) {
+      throw new Error(
+        `Failed to copy type declarations from ${dtsSource} to ${dtsDest}: ${error.message}`,
+      )
+    }
 
     // Fix import paths in generated JS files
     const files = ['index.umd.js', 'index.esm.js', 'index.cjs.js']
@@ -39,11 +51,24 @@ export default async function vuePostBuild() {
         )
       }
 
-      const content = readFileSync(filePath, 'utf8')
-      const fixed = content.replace(/packages\/vue/g, '.')
-      writeFileSync(filePath, fixed)
+      try {
+        const content = readFileSync(filePath, 'utf8')
+        const fixed = content.replace(/packages\/vue/g, '.')
+        writeFileSync(filePath, fixed)
+      } catch (error) {
+        throw new Error(
+          `Failed to fix import paths in ${filePath}: ${error.message}`,
+        )
+      }
     }
   } catch (error) {
-    throw new Error(`Vue post-build failed: ${error.message}`, { cause: error })
+    // If error already has context, rethrow it; otherwise add context
+    if (
+      error.message.includes('Failed to') ||
+      error.message.includes('not found')
+    ) {
+      throw error
+    }
+    throw new Error(`Vue post-build failed: ${error.message}`)
   }
 }
