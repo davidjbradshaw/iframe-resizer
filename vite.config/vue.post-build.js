@@ -45,7 +45,12 @@ export default async function vuePostBuild() {
     }
   } catch (error) {
     // Re-throw with context if this is a system error without clear context
-    if (error.code) {
+    // Common system error codes: ENOENT, EACCES, ENOSPC, EROFS, etc.
+    if (
+      error.code &&
+      typeof error.code === 'string' &&
+      !error.message.includes('not found')
+    ) {
       throw new Error(
         `Vue post-build failed with ${error.code}: ${error.message}`,
       )
