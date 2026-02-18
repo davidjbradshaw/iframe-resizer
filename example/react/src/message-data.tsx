@@ -1,6 +1,12 @@
-const MessageData = ({ data }) =>
+import { ResizedEvent, MessageEvent } from './iframe-events'
+
+type MessageDataProps = {
+  data?: ResizedEvent | MessageEvent
+}
+
+const MessageData = ({ data }: MessageDataProps) =>
   data ? (
-    data.message ? (
+    'message' in data ? (
       <span>
         <b>Frame ID:</b> {data.iframe.id} <br/>
         <b>Message:</b> {data.message}
