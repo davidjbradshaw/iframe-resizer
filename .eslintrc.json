@@ -106,7 +106,7 @@
       }
     },
     {
-      "files": ["packages/**/*.test.js", "packages/**/*.test.jsx"],
+      "files": ["packages/**/*.test.js", "packages/**/*.test.jsx", "packages/**/*.test.ts", "packages/**/*.test.tsx"],
       "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
       "globals": {
         "test": true,

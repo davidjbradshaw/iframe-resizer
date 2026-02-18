@@ -3,13 +3,17 @@
     "target": "ES2015",
     "module": "ESNext",
     "moduleResolution": "node",
+    "jsx": "react",
     "experimentalDecorators": true,
     "skipLibCheck": true,
+    "allowJs": true,
     "strict": false
   },
   "include": [
     "packages/angular/**/*.ts",
     "packages/vue/**/*.ts",
-    "packages/vue/**/*.vue"
+    "packages/vue/**/*.vue",
+    "packages/react/**/*.ts",
+    "packages/react/**/*.tsx"
   ]
 }

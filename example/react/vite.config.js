@@ -71,7 +71,7 @@ export default defineConfig({
   base: isDev ? '/' : '/example/react/dist/',
   resolve: {
     alias: isDev ? {
-      '@iframe-resizer/react': path.resolve(__dirname, '../../packages/react/index.jsx'),
+      '@iframe-resizer/react': path.resolve(__dirname, '../../packages/react/index.tsx'),
       '@iframe-resizer/core': path.resolve(__dirname, '../../packages/core/index.js'),
       '@iframe-resizer/child': path.resolve(__dirname, '../../packages/child/index.js'),
     } : {},

@@ -1,5 +1,5 @@
-import React, { createRef } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRef } from 'react'
+import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
@@ -24,7 +24,7 @@ const moveToAnchor = vi.fn()
 const sendMessage = vi.fn()
 
 vi.mock('@iframe-resizer/core', () => ({
-  default: vi.fn(() => (iframe) => {
+  default: vi.fn(() => (iframe: any) => {
     // Expose a minimal API similar to production
     iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
     return iframe.iframeResizer
@@ -32,8 +32,8 @@ vi.mock('@iframe-resizer/core', () => ({
 }))
 
 describe('React IframeResizer component', () => {
-  let container
-  let root
+  let container: HTMLDivElement
+  let root: Root
 
   beforeEach(() => {
     container = document.createElement('div')
@@ -46,7 +46,7 @@ describe('React IframeResizer component', () => {
   })
 
   test('renders an iframe and wires ref methods', async () => {
-    const fRef = createRef()
+    const fRef = createRef<any>()
 
     await act(async () => {
       root.render(
@@ -62,7 +62,7 @@ describe('React IframeResizer component', () => {
 
     const iframe = container.querySelector('iframe')
     expect(iframe).toBeTruthy()
-    expect(iframe.id).toBe('react-iframe')
+    expect(iframe!.id).toBe('react-iframe')
 
     // Imperative API
     expect(typeof fRef.current.getRef).toBe('function')
@@ -88,7 +88,7 @@ describe('React IframeResizer component', () => {
   })
 
   test('getRef returns iframeRef and getElement returns the element', async () => {
-    const fRef = createRef()
+    const fRef = createRef<any>()
 
     await act(async () => {
       root.render(
@@ -116,10 +116,10 @@ describe('React IframeResizer component', () => {
     const connectResizer = (await import('@iframe-resizer/core')).default
 
     // Track the options passed to connectResizer
-    let capturedOptions
-    connectResizer.mockImplementation((options) => {
+    let capturedOptions: any
+    connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
-      return (iframe) => {
+      return (iframe: any) => {
         iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }

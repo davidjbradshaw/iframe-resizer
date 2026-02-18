@@ -1,5 +1,5 @@
-import { AUTO } from './consts'
 import filterIframeAttribs from './filter-iframe-attribs'
+import { AUTO } from '../common/consts'
 
 describe('filterIframeAttribs', () => {
   test('should filter out specific iframe-related properties', () => {
