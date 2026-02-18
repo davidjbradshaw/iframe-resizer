@@ -89,7 +89,6 @@ const modules = [
   // common
   '../common/consts.js',
   '../common/deprecate.js',
-  '../common/filter-iframe-attribs.ts',
   '../common/format-advise.js',
   '../common/listeners.js',
   '../common/modal.js',
