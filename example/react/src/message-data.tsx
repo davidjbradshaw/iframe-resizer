@@ -1,17 +1,4 @@
-import type IframeResizer from '@iframe-resizer/react'
-
-type ResizedEvent = {
-  iframe: IframeResizer.IFrameComponent
-  height: number
-  width: number
-  type: string
-}
-
-type MessageEvent = {
-  iframe: IframeResizer.IFrameComponent
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  message: any
-}
+import { ResizedEvent, MessageEvent } from './iframe-events'
 
 type MessageDataProps = {
   data?: ResizedEvent | MessageEvent
