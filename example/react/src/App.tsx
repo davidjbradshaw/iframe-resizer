@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import IframeResizer from '@iframe-resizer/react'
 
-import MessageData from './message-data.tsx'
+import MessageData from './message-data'
 
 import './App.css'
 
