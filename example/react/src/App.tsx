@@ -1,22 +1,10 @@
 import { useRef, useState } from 'react'
 import IframeResizer from '@iframe-resizer/react'
 
-import MessageData from './message-data.tsx'
+import MessageData from './message-data'
+import { ResizedEvent, MessageEvent } from './iframe-events'
 
 import './App.css'
-
-type ResizedEvent = {
-  iframe: IframeResizer.IFrameComponent
-  height: number
-  width: number
-  type: string
-}
-
-type MessageEvent = {
-  iframe: IframeResizer.IFrameComponent
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  message: any
-}
 
 function App() {
   const iframeRef = useRef<IframeResizer.IFrameForwardRef>(null)
