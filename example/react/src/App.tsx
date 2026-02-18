@@ -1,21 +1,34 @@
 import { useRef, useState } from 'react'
 import IframeResizer from '@iframe-resizer/react'
 
-import MessageData from './message-data.jsx'
+import MessageData from './message-data.tsx'
 
 import './App.css'
 
+type ResizedEvent = {
+  iframe: IframeResizer.IFrameComponent
+  height: number
+  width: number
+  type: string
+}
+
+type MessageEvent = {
+  iframe: IframeResizer.IFrameComponent
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  message: any
+}
+
 function App() {
-  const iframeRef = useRef(null)
-  const [messageData, setMessageData] = useState()
+  const iframeRef = useRef<IframeResizer.IFrameForwardRef>(null)
+  const [messageData, setMessageData] = useState<ResizedEvent | MessageEvent>()
   const [show, setShow] = useState(true)
 
-  const onResized = (data) => setMessageData(data)
+  const onResized = (data: ResizedEvent) => setMessageData(data)
 
-  const onMessage = (data) => {
+  const onMessage = (data: MessageEvent) => {
     setMessageData(data)
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
-    iframeRef.current.sendMessage('Hello back from the parent page')
+    iframeRef.current?.sendMessage('Hello back from the parent page')
   }
 
   return (
@@ -34,7 +47,6 @@ function App() {
             src="child/frame.content.html"
             style={{ width: '100%', height: '100vh' }}
           />
-      
           <MessageData data={messageData} />
         </>
       }
