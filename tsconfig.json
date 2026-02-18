@@ -7,5 +7,9 @@
     "skipLibCheck": true,
     "strict": false
   },
-  "include": ["packages/angular/**/*.ts"]
+  "include": [
+    "packages/angular/**/*.ts",
+    "packages/vue/**/*.ts",
+    "packages/vue/**/*.vue"
+  ]
 }

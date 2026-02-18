@@ -1,6 +1,13 @@
 {
   "extends": ["auto"],
-  "ignorePatterns": ["js/*", "dist/*", "*.d.ts", "coverage/**"],
+  "ignorePatterns": [
+    "js/*",
+    "dist/*",
+    "*.d.ts",
+    "coverage/**",
+    "vite-build.js",
+    "vite.config.js"
+  ],
   "env": {
     "amd": true,
     "browser": true,
@@ -78,7 +85,7 @@
       }
     },
     {
-      "files": ["build/**/*.js"],
+      "files": ["build/**/*.js", "build-scripts/**/*.js", "vite.config/**/*.js"],
       "parser": "@babel/eslint-parser",
       "parserOptions": {
         "requireConfigFile": false,
@@ -88,7 +95,15 @@
           "plugins": ["@babel/plugin-syntax-import-attributes"]
         }
       },
-      "rules": { "import/extensions": 0 }
+      "rules": {
+        "import/extensions": 0,
+        "no-console": 0,
+        "no-await-in-loop": 0,
+        "no-underscore-dangle": 0,
+        "no-unsanitized/method": 0,
+        "unicorn/prefer-top-level-await": 0,
+        "security/detect-non-literal-fs-filename": 0
+      }
     },
     {
       "files": ["packages/**/*.test.js", "packages/**/*.test.jsx"],
@@ -106,7 +121,8 @@
         "jasmine/new-line-before-expect": 0,
         "no-underscore-dangle": 0,
         "jasmine/prefer-toHaveBeenCalledWith": 0,
-        "unicorn/no-await-expression-member": 0
+        "unicorn/no-await-expression-member": 0,
+        "import/extensions": 0
       }
     },
     {

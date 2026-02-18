@@ -266,7 +266,7 @@ const npm = [
 
   // Vue
   {
-    input: 'packages/vue/index.js',
+    input: 'packages/vue/index.ts',
     output: [
       {
         globals: {
@@ -282,13 +282,19 @@ const npm = [
     ],
     external: ['@iframe-resizer/core', 'vue', 'auto-console-group'],
     plugins: [
-      typescript(),
       vue({
         template: {
           compilerOptions: {
             isCustomElement: (tag) => tag.startsWith('iframe-resizer')
           }
         }
+      }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: true,
+        declarationDir: 'dist/vue',
+        include: ['packages/vue/**/*.ts'],
+        exclude: ['packages/vue/**/*.vue'],
       }),
       ...pluginsProd('vue'),
       copy({
@@ -307,6 +313,14 @@ const npm = [
           },
           {
             src: 'packages/vue/iframe-resizer.vue',
+            dest: 'dist/vue/',
+          },
+          {
+            src: 'packages/vue/iframe-resizer.vue.d.ts',
+            dest: 'dist/vue/',
+          },
+          {
+            src: 'dist/vue/vue/index.d.ts',
             dest: 'dist/vue/',
           },
         ],
