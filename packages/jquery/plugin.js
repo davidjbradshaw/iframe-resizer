@@ -1,6 +1,6 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { deprecateMethod, warn } from '../core/console'
+import { deprecateMethod, warn } from '../core/console.ts'
 
 switch (true) {
   case window.jQuery === undefined:

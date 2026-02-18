@@ -1,5 +1,6 @@
 import commonjs from '@rollup/plugin-commonjs'
 import strip from '@rollup/plugin-strip'
+import typescript from '@rollup/plugin-typescript'
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
@@ -74,6 +75,33 @@ export const createPluginsProd = (file) => {
     ...pluginsBase(process.env.DEBUG !== '1')(),
   ]
 }
+
+// TypeScript plugin helpers for Rollup-based builds
+const TS_COMMON = 'packages/common/**/*.ts'
+const TS_CORE = 'packages/core/**/*.ts'
+const TS_CONFIG = './tsconfig.build.json'
+const TS_EXCLUDE = ['**/*.test.ts', '**/*.test.tsx']
+
+export const typescriptCore = () =>
+  typescript({
+    tsconfig: TS_CONFIG,
+    include: [TS_COMMON, TS_CORE],
+    exclude: TS_EXCLUDE,
+  })
+
+export const typescriptParent = () =>
+  typescript({
+    tsconfig: TS_CONFIG,
+    include: [TS_COMMON, TS_CORE, 'packages/parent/**/*.ts'],
+    exclude: TS_EXCLUDE,
+  })
+
+export const typescriptChild = () =>
+  typescript({
+    tsconfig: TS_CONFIG,
+    include: [TS_COMMON, 'packages/child/**/*.ts'],
+    exclude: TS_EXCLUDE,
+  })
 
 // Export createBanner for use in browser/test builds
 

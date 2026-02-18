@@ -5,7 +5,7 @@ import { createPluginsProd } from './shared/plugins.js'
 export default defineConfig({
   build: {
     lib: {
-      entry: './packages/core/index.js',
+      entry: './packages/core/index.ts',
       name: 'connectResizer',
       formats: ['umd', 'es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,

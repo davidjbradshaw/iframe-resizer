@@ -1,5 +1,5 @@
-import { PARENT } from '../common/consts'
-import { deprecateFunction } from '../core/console'
+import { PARENT } from '../common/consts.ts'
+import { deprecateFunction } from '../core/console.ts'
 import createIframeResize from './factory'
 
 window.iframeResize = createIframeResize()

@@ -11,6 +11,9 @@
   },
   "include": [
     "packages/angular/**/*.ts",
+    "packages/common/**/*.ts",
+    "packages/core/**/*.ts",
+    "packages/child/**/*.ts",
     "packages/vue/**/*.ts",
     "packages/vue/**/*.vue",
     "packages/react/**/*.ts",

@@ -1,6 +1,6 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts'
+import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts.ts'
 
 const id = `[${LABEL}] `
 

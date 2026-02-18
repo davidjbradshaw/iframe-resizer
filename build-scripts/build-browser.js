@@ -3,7 +3,12 @@ import terser from '@rollup/plugin-terser'
 import { rollup } from 'rollup'
 import clear from 'rollup-plugin-clear'
 
-import { createBanner, injectVersion } from '../vite.config/shared/plugins.js'
+import {
+  createBanner,
+  injectVersion,
+  typescriptChild,
+  typescriptParent,
+} from '../vite.config/shared/plugins.js'
 
 const { DEBUG } = process.env
 const sourcemap = DEBUG || false
@@ -28,10 +33,15 @@ const configs = [
             }),
           ],
     },
-    plugins: [clear({ targets: ['js'] }), resolve(), ...injectVersion()],
+    plugins: [
+      typescriptParent(),
+      clear({ targets: ['js'] }),
+      resolve(),
+      ...injectVersion(),
+    ],
   },
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: {
       banner: createBanner('child', 'iife'),
       file: 'js/iframe-resizer.child.js',
@@ -48,7 +58,7 @@ const configs = [
             }),
           ],
     },
-    plugins: [resolve(), ...injectVersion()],
+    plugins: [typescriptChild(), resolve(), ...injectVersion()],
   },
   {
     input: 'packages/jquery/plugin.js',
@@ -68,7 +78,7 @@ const configs = [
             }),
           ],
     },
-    plugins: [resolve(), ...injectVersion()],
+    plugins: [typescriptParent(), resolve(), ...injectVersion()],
   },
 ]
 
