@@ -19,4 +19,4 @@ export default ({
   onMessage,
   onResized,
   ...iframeProps
-}) => iframeProps
+}: Record<string, unknown>) => iframeProps

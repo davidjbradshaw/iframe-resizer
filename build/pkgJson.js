@@ -13,7 +13,7 @@ const customConfig = (file) => {
       return {
         main,
         module,
-        types: `iframe-resizer.${file}.d.ts`,
+        types: 'index.d.ts',
         peerDependencies: {
           react: '^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0',
           'react-dom': '^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0',

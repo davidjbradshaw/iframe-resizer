@@ -1,5 +1,5 @@
-import React, { createRef } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRef } from 'react'
+import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
@@ -17,7 +17,7 @@ vi.mock('auto-console-group', () => ({
 }))
 
 vi.mock('@iframe-resizer/core', () => ({
-  default: vi.fn(() => (iframe) => {
+  default: vi.fn(() => (iframe: any) => {
     iframe.iframeResizer = {
       disconnect: vi.fn(),
       resize: vi.fn(),
@@ -29,8 +29,8 @@ vi.mock('@iframe-resizer/core', () => ({
 }))
 
 describe('React IframeResizer branches', () => {
-  let container
-  let root
+  let container: HTMLDivElement
+  let root: Root
 
   beforeEach(() => {
     container = document.createElement('div')
@@ -40,9 +40,9 @@ describe('React IframeResizer branches', () => {
 
   test('does not log when props.log is falsy', async () => {
     const { default: acgFactory } = await import('auto-console-group')
-    const consoleGroup = acgFactory()
+    const consoleGroup = (acgFactory as any)()
 
-    const fRef = createRef()
+    const fRef = createRef<any>()
     await act(async () => {
       root.render(
         <IframeResizer

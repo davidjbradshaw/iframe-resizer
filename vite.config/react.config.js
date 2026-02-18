@@ -1,13 +1,12 @@
-import { babel } from '@rollup/plugin-babel'
-import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 import { createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
     lib: {
-      entry: './packages/react/index.jsx',
+      entry: './packages/react/index.tsx',
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'esm' : 'cjs'}.js`,
     },
@@ -19,27 +18,18 @@ export default defineConfig({
         'react-dom',
         '@iframe-resizer/core',
         'auto-console-group',
-        /@babel\/runtime/,
       ],
     },
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,
   },
   plugins: [
+    dts({
+      include: ['packages/react/**/*.ts', 'packages/react/**/*.tsx'],
+      exclude: ['packages/react/**/*.test.*'],
+      outDir: 'dist/react',
+      entryRoot: 'packages/react',
+    }),
     ...createPluginsProd('react'),
-    babel({
-      babelHelpers: 'runtime',
-      exclude: 'node_modules/**',
-    }),
-    copy({
-      hook: 'closeBundle',
-      targets: [
-        {
-          src: 'packages/react/index.d.ts',
-          dest: 'dist/react/',
-          rename: 'iframe-resizer.react.d.ts',
-        },
-      ],
-    }),
   ],
 })

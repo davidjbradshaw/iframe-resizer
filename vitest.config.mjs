@@ -41,7 +41,7 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
-      include: ['packages/**/*.{js,jsx,vue}'],
+      include: ['packages/**/*.{js,jsx,ts,tsx,vue}'],
       exclude: [
         'coverage/**',
         'node_modules/**',

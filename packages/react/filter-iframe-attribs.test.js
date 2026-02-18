@@ -1,4 +1,4 @@
-import { AUTO } from './consts'
+import { AUTO } from '../common/consts'
 import filterIframeAttribs from './filter-iframe-attribs'
 
 describe('filterIframeAttribs', () => {

@@ -229,24 +229,24 @@ const npm = [
 
   // React
   {
-    input: 'packages/react/index.jsx',
+    input: 'packages/react/index.tsx',
     output: [output('react')('esm'), output('react')('cjs')],
     external: [
       '@iframe-resizer/core',
       'auto-console-group',
       'react',
-      /@babel\/runtime/,
     ],
     plugins: [
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: true,
+        declarationDir: 'dist/react',
+        include: ['packages/react/**/*.ts', 'packages/react/**/*.tsx'],
+      }),
       ...pluginsProd('react'),
       copy({
         hook: 'closeBundle',
         targets: [
-          {
-            src: 'packages/react/index.d.ts',
-            dest: 'dist/react/',
-            rename: 'iframe-resizer.react.d.ts',
-          },
           {
             src: 'dist/react/package.json',
             dest: 'dist/react/',
@@ -254,10 +254,6 @@ const npm = [
           },
         ],
         verbose: true,
-      }),
-      babel({
-        babelHelpers: 'runtime',
-        exclude: 'node_modules/**',
       }),
       filesize(),
     ],
