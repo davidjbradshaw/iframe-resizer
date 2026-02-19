@@ -3,18 +3,8 @@ import { HIGHLIGHT } from 'auto-console-group'
 import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '../../common/consts'
 import { isIframe } from '../../common/utils'
 import { log, warn } from '../console'
+import type { MessageData } from '../types'
 import settings from '../values/settings'
-
-interface MessageData {
-  id: string
-  iframe: HTMLIFrameElement
-  height: number
-  width: number
-  type: string
-  msg?: string
-  message?: string
-  mode?: string
-}
 
 const ABOVE_TYPES: Record<string, number> = { true: 1, false: 1, undefined: 1 }
 

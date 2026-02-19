@@ -30,7 +30,7 @@ describe('utils.js', () => {
 
     test('should return false for invalid numbers', () => {
       expect(isNumber(NaN)).toBe(false)
-      expect(isNumber('42')).toBe(true)
+      expect(isNumber('42')).toBe(false)
     })
   })
 

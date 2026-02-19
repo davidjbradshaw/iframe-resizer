@@ -17,7 +17,7 @@ import dispatch from './dispatch'
 
 let sendPending = false
 let hiddenMessageShown = false
-let rafId: number | null
+let rafId: number | null = null
 
 function sendSize(
   triggerEvent: string,
