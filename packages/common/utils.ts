@@ -1,7 +1,8 @@
 import { OBJECT, STRING } from './consts'
 
 export const isElement = (node: Node): boolean => node.nodeType === Node.ELEMENT_NODE
-export const isNumber = (value: unknown): value is number => !Number.isNaN(value)
+export const isNumber = (value: unknown): value is number =>
+  typeof value === 'number' && !Number.isNaN(value)
 export const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === OBJECT && value !== null
 export const isString = (value: unknown): value is string => typeof value === STRING
