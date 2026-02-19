@@ -1,7 +1,62 @@
-# Vue 3 + Vite
+# Vue 3 + Vite + TypeScript + iframe-resizer
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This example demonstrates how to use `@iframe-resizer/vue` with TypeScript in a Vue 3 project.
 
-## Recommended IDE Setup
+## Features
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+- **TypeScript Support**: Full type checking for iframe-resizer props, events, and methods
+- **Vue 3 Composition API**: Uses `<script setup>` with TypeScript
+- **Type-safe Event Handlers**: Properly typed event handlers for onReady, onMessage, and onResized
+
+## Usage Example
+
+```vue
+<script setup lang="ts">
+import IframeResizer from '@iframe-resizer/vue/sfc'
+import type { IFrameComponent } from '@iframe-resizer/vue/sfc'
+
+const handleReady = (iframe: IFrameComponent) => {
+  console.log('onReady', iframe)
+}
+
+const handleResized = (data: { 
+  iframe: IFrameComponent; 
+  height: number; 
+  width: number; 
+  type: string 
+}) => {
+  console.log('Resized:', data.height, data.width)
+}
+</script>
+
+<template>
+  <IframeResizer
+    src="https://example.com" 
+    license="GPLv3"
+    log="collapsed"
+    @on-ready="handleReady"
+    @on-resized="handleResized"
+  />
+</template>
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production (includes type checking)
+- `npm run type-check` - Run TypeScript type checking only
+- `npm run preview` - Preview production build
+
+## Type Definitions
+
+The package includes complete TypeScript definitions for:
+
+- Component props (license, direction, log, etc.)
+- Event handlers (onReady, onMessage, onResized)
+- Component methods (moveToAnchor, resize, sendMessage)
+- IFrame interfaces (IFrameObject, IFrameComponent)
+
+## IDE Setup
+
+- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar)
+
