@@ -77,6 +77,7 @@ export const createPluginsProd = (file) => {
 }
 
 // TypeScript plugin helpers for Rollup-based builds
+const TS_GLOBAL = 'packages/global.d.ts'
 const TS_COMMON = 'packages/common/**/*.ts'
 const TS_CORE = 'packages/core/**/*.ts'
 const TS_CONFIG = './tsconfig.build.json'
@@ -85,21 +86,21 @@ const TS_EXCLUDE = ['**/*.test.ts', '**/*.test.tsx']
 export const typescriptCore = () =>
   typescript({
     tsconfig: TS_CONFIG,
-    include: [TS_COMMON, TS_CORE],
+    include: [TS_GLOBAL, TS_COMMON, TS_CORE],
     exclude: TS_EXCLUDE,
   })
 
 export const typescriptParent = () =>
   typescript({
     tsconfig: TS_CONFIG,
-    include: [TS_COMMON, TS_CORE, 'packages/parent/**/*.ts'],
+    include: [TS_GLOBAL, TS_COMMON, TS_CORE, 'packages/parent/**/*.ts'],
     exclude: TS_EXCLUDE,
   })
 
 export const typescriptChild = () =>
   typescript({
     tsconfig: TS_CONFIG,
-    include: [TS_COMMON, 'packages/child/**/*.ts'],
+    include: [TS_GLOBAL, TS_COMMON, 'packages/child/**/*.ts'],
     exclude: TS_EXCLUDE,
   })
 

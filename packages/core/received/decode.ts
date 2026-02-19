@@ -1,4 +1,5 @@
 import { MESSAGE_ID_LENGTH } from '../../common/consts'
+import type { MessageData } from '../types'
 import settings from '../values/settings'
 
 export function getPaddingEnds(compStyle: CSSStyleDeclaration): number {
@@ -26,18 +27,7 @@ export function getBorderEnds(compStyle: CSSStyleDeclaration): number {
   return top + bot
 }
 
-interface DecodedMessage {
-  iframe: HTMLIFrameElement
-  id: string
-  height: number
-  width: number
-  type: string
-  msg: string
-  message: string
-  mode?: string
-}
-
-export default function decodeMessage(msg: string): DecodedMessage {
+export default function decodeMessage(msg: string): MessageData {
   const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
   const height = data[1] ? Number(data[1]) : 0
   const iframe = settings[data[0]]?.iframe

@@ -1,20 +1,9 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { HEIGHT, WIDTH } from '../../common/consts'
+import type { MessageData } from '../types'
 import { info } from '../console'
 import settings from '../values/settings'
-
-interface MessageData {
-  id: string
-  iframe: HTMLIFrameElement
-  height: number
-  width: number
-  type: string
-  msg?: string
-  message?: string
-  mode?: string
-  [key: string]: any
-}
 
 function setDimension(dimension: string, messageData: MessageData): void {
   const { id } = messageData

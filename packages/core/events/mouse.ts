@@ -1,17 +1,7 @@
 import { SEPARATOR } from '../../common/consts'
+import type { MessageData } from '../types'
 import getMessageBody from '../received/message'
 import on from './wrapper'
-
-interface MessageData {
-  id: string
-  iframe: HTMLIFrameElement
-  height: number
-  width: number
-  type: string
-  msg?: string
-  message?: string
-  mode?: string
-}
 
 export default function onMouse(event: string, messageData: MessageData): void {
   const { id, iframe, height, type, width } = messageData

@@ -1,17 +1,7 @@
+import type { MessageData } from '../types'
 import { setPagePosition } from '../page/position'
 import setSize from './size'
 import on from './wrapper'
-
-interface MessageData {
-  id: string
-  iframe: HTMLIFrameElement
-  height: number
-  width: number
-  type: string
-  msg?: string
-  message?: string
-  mode?: string
-}
 
 export default function resizeIframe(messageData: MessageData): void {
   const { id } = messageData

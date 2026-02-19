@@ -19,6 +19,7 @@ import {
   SCROLL_TO_OFFSET,
   TITLE,
 } from '../common/consts'
+import type { MessageData } from './types'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
 import { info, log, warn } from './console'
@@ -36,17 +37,6 @@ import { setTitle } from './page/title'
 import getMessageBody from './received/message'
 import firstRun from './setup/first-run'
 import settings from './values/settings'
-
-interface MessageData {
-  id: string
-  iframe: HTMLIFrameElement
-  height: number
-  width: number
-  type: string
-  msg?: string
-  message?: string
-  mode?: string
-}
 
 export default function routeMessage(messageData: MessageData): void {
   const { height, id, iframe, mode, message, type, width } = messageData

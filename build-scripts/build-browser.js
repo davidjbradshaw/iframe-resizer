@@ -15,7 +15,7 @@ const sourcemap = DEBUG || false
 
 const configs = [
   {
-    input: 'packages/parent/iife.js',
+    input: 'packages/parent/iife.ts',
     output: {
       banner: createBanner('parent', 'iife'),
       file: 'js/iframe-resizer.parent.js',

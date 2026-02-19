@@ -16,7 +16,7 @@ const filterDeps = (contents) => {
 export default [
   // UMD build (bundles dependencies)
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: {
       name: 'iframeResize',
       ...output('parent')('umd'),
@@ -26,7 +26,7 @@ export default [
 
   // ESM + CJS build (external dependencies)
   {
-    input: 'packages/parent/esm.js',
+    input: 'packages/parent/esm.ts',
     output: [output('parent')('esm'), output('parent')('cjs')],
     external: ['@iframe-resizer/core', 'auto-console-group'],
     plugins: [

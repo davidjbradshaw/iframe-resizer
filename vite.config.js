@@ -99,7 +99,7 @@ const npm = [
 
   // Parent browser-friendly UMD build
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: [
       {
         name: 'iframeResize',
@@ -125,7 +125,7 @@ const npm = [
 
   //  Parent ES module (for bundlers) and CommonJS (for Node) build.
   {
-    input: 'packages/parent/esm.js',
+    input: 'packages/parent/esm.ts',
     output: [output('parent')('esm'), output('parent')('cjs')],
     external: ['@iframe-resizer/core', 'auto-console-group'],
     plugins: pluginsProd('parent'),
@@ -383,7 +383,7 @@ const npm = [
 // JS folder (iife)
 const js = [
   {
-    input: `packages/parent/iife.js`,
+    input: `packages/parent/iife.ts`,
     output: [
       {
         banner: createBanner('parent', 'iife'),
@@ -443,7 +443,7 @@ const js = [
     plugins: [typescriptChild(), injectVersion(), resolve()],
   },
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: [
       {
         banner: createBanner('parent', 'test-js'),

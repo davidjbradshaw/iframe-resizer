@@ -1,11 +1,11 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts.ts'
+import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts'
 
 const id = `[${LABEL}] `
 
 export default function createIframeResize() {
-  function setupDisconnectedIframe(element) {
+  function setupDisconnectedIframe(element: HTMLIFrameElement): void {
     const observer = new MutationObserver(() => {
       if (element.isConnected) {
         connectWithOptions(element)
@@ -17,7 +17,7 @@ export default function createIframeResize() {
     observer.observe(document.body, { childList: true, subtree: true })
   }
 
-  function setup(element) {
+  function setup(element: any): void {
     switch (true) {
       case !element:
         throw new TypeError(`${id}iframe is not defined`)
@@ -41,10 +41,13 @@ export default function createIframeResize() {
     }
   }
 
-  let connectWithOptions
-  let iFrames
+  let connectWithOptions: (iframe: HTMLIFrameElement) => any
+  let iFrames: HTMLIFrameElement[]
 
-  return function (options, target) {
+  return function (
+    options: Record<string, any>,
+    target?: string | HTMLElement,
+  ): readonly HTMLIFrameElement[] {
     if (typeof window === UNDEFINED) return [] // don't run for server side render
 
     // Check if document.body exists in browser environment

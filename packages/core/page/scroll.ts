@@ -1,5 +1,6 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
+import type { MessageData } from '../types'
 import { info } from '../console'
 import on from '../events/wrapper'
 import settings from '../values/settings'
@@ -14,17 +15,6 @@ import {
 interface Position {
   x: number
   y: number
-}
-
-interface MessageData {
-  id: string
-  iframe: HTMLIFrameElement
-  height: number
-  width: number
-  type: string
-  msg?: string
-  message?: string
-  mode?: string
 }
 
 export function getElementPosition(target: HTMLIFrameElement): Position {

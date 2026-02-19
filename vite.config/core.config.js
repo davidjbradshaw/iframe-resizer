@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 import { createPluginsProd } from './shared/plugins.js'
 
@@ -23,5 +24,12 @@ export default defineConfig({
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,
   },
-  plugins: createPluginsProd('core'),
+  plugins: [
+    dts({
+      include: ['packages/core/index.ts', 'packages/core/types.ts'],
+      outDir: 'dist/core',
+      entryRoot: 'packages/core',
+    }),
+    ...createPluginsProd('core'),
+  ],
 })

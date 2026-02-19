@@ -23,7 +23,7 @@ const configs = [
     ],
   },
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: {
       file: 'test-js/iframe-resizer.parent.js',
       format: 'umd',

@@ -1,6 +1,7 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { deprecateMethod, warn } from '../core/console.ts'
+// eslint-disable-next-line import/extensions
+import { deprecateMethod, warn } from '../core/console'
 
 switch (true) {
   case window.jQuery === undefined:

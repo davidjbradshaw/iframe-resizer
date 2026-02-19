@@ -1,3 +1,14 @@
+export type {
+  IFrameObject,
+  IFrameComponent,
+  IFrameMouseData,
+  IFrameResizedData,
+  IFrameMessageData,
+  IFrameScrollData,
+  IFrameOptions,
+  MessageData,
+} from './types'
+
 import { LABEL } from '../common/consts'
 import { isObject } from '../common/utils'
 import ensureHasId from './checks/id'

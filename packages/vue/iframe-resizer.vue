@@ -5,19 +5,13 @@
 <script lang="ts">
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
+  import type { IFrameObject } from '@iframe-resizer/core'
   import acg from 'auto-console-group'
 
   const EXPAND = 'expanded'
   const COLLAPSE = 'collapsed'
 
   type LogOption = 'expanded' | 'collapsed' | boolean | -1
-
-  interface IframeResizerObject {
-    disconnect: () => void
-    moveToAnchor: (anchor: string) => void
-    resize: () => void
-    sendMessage: (msg: any, target?: string) => void
-  }
 
   const esModuleInterop = (mod: any) =>
     // eslint-disable-next-line no-underscore-dangle
@@ -85,7 +79,7 @@
 
     data() {
       return {
-        resizer: null as IframeResizerObject | null,
+        resizer: null as IFrameObject | null,
       }
     },
 
