@@ -6,12 +6,14 @@ import clear from 'rollup-plugin-clear'
 import {
   createBanner,
   injectVersion,
+  pluginsBase,
   typescriptChild,
   typescriptParent,
 } from '../vite.config/shared/plugins.js'
 
-const { DEBUG } = process.env
-const sourcemap = DEBUG || false
+const { BETA, DEBUG } = process.env
+const sourcemap = DEBUG || BETA || false
+const stripLog = !(DEBUG || BETA)
 
 const configs = [
   {
@@ -37,6 +39,7 @@ const configs = [
       typescriptParent(),
       clear({ targets: ['js'] }),
       resolve(),
+      ...pluginsBase(stripLog)(),
       ...injectVersion(),
     ],
   },
@@ -58,7 +61,12 @@ const configs = [
             }),
           ],
     },
-    plugins: [typescriptChild(), resolve(), ...injectVersion()],
+    plugins: [
+      typescriptChild(),
+      resolve(),
+      ...pluginsBase(stripLog)(),
+      ...injectVersion(),
+    ],
   },
   {
     input: 'packages/jquery/plugin.js',
@@ -78,7 +86,12 @@ const configs = [
             }),
           ],
     },
-    plugins: [typescriptParent(), resolve(), ...injectVersion()],
+    plugins: [
+      typescriptParent(),
+      resolve(),
+      ...pluginsBase(stripLog)(),
+      ...injectVersion(),
+    ],
   },
 ]
 

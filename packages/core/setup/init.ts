@@ -23,6 +23,7 @@ function checkReset(id: string): void {
 
   resetIframe({
     id,
+    iframe: settings[id].iframe,
     height: MIN_SIZE,
     width: MIN_SIZE,
     type: INIT,

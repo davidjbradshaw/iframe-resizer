@@ -33,7 +33,7 @@ export default function decodeMessage(msg: string): MessageData {
   const iframe = settings[data[0]]?.iframe
   const compStyle = getComputedStyle(iframe)
 
-  const messageData = {
+  const messageData: MessageData = {
     iframe,
     id: data[0],
     height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),

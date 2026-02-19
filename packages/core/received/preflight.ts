@@ -58,7 +58,8 @@ export function isMessageFromIframe(messageData: MessageData, event: MessageEven
   }
 
   const { id } = messageData
-  const { data, origin, sameOrigin } = event
+  const { data, origin } = event
+  const sameOrigin = 'sameOrigin' in event && event.sameOrigin
 
   if (sameOrigin) return true
 

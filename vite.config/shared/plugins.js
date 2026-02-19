@@ -10,6 +10,9 @@ import versionInjector from 'rollup-plugin-version-injector'
 import pkg from '../../package.json' with { type: 'json' }
 import createPkgJson from './pkgJson.js'
 
+const { BETA, DEBUG, TEST } = process.env
+const stripLog = !(DEBUG === '1' || BETA === '1' || TEST === '1')
+
 const vi = {
   injectInComments: false,
   logLevel: 'warn',
@@ -17,9 +20,11 @@ const vi = {
 
 export const injectVersion = () => [versionInjector(vi)]
 
+const stripInclude = ['**/*.js', '**/*.ts']
+
 export const pluginsBase = (stripLog) => () => {
-  const delog = [strip({ functions: ['log', 'debug'] })]
-  const log = [strip({ functions: ['purge'] })]
+  const delog = [strip({ include: stripInclude, functions: ['log', 'debug'] })]
+  const log = [strip({ include: stripInclude, functions: ['purge'] })]
 
   const base = [versionInjector(vi), commonjs()]
 
@@ -72,7 +77,7 @@ export const createPluginsProd = (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(process.env.DEBUG !== '1')(),
+    ...pluginsBase(stripLog)(),
   ]
 }
 

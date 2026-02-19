@@ -18,7 +18,7 @@ function iframeListener(event: MessageEvent | { data: any, sameOrigin?: boolean 
   const msg = event.data
 
   if (msg === CHILD_READY_MESSAGE) {
-    iframeReady(event.source)
+    iframeReady((event as MessageEvent).source)
     return
   }
 
@@ -50,7 +50,7 @@ function iframeListener(event: MessageEvent | { data: any, sameOrigin?: boolean 
 }
 
 export default once(() => {
-  addEventListener(window, MESSAGE, iframeListener)
+  addEventListener(window, MESSAGE, iframeListener as EventListener)
   addEventListener(document, 'visibilitychange', tabVisible)
   window.iframeParentListener = (data: any) =>
     setTimeout(() => iframeListener({ data, sameOrigin: true }))

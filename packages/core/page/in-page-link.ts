@@ -5,7 +5,7 @@ import page from '../values/page'
 import { getElementPosition, scrollToLink } from './scroll'
 
 function jumpToTarget(id: string, hash: string, target: HTMLElement): void {
-  const { x, y } = getElementPosition(target)
+  const { x, y } = getElementPosition(target as unknown as HTMLIFrameElement)
 
   info(id, `Moving to in page link: %c#${hash}`, HIGHLIGHT)
 

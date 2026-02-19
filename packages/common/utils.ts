@@ -14,7 +14,7 @@ export function isIframe(element: unknown): element is HTMLIFrameElement {
   if (!isObject(element)) return false
 
   try {
-    return (element as HTMLElement).tagName === 'IFRAME' || element instanceof HTMLIFrameElement
+    return (element as unknown as HTMLElement).tagName === 'IFRAME' || element instanceof HTMLIFrameElement
   } catch (error) {
     return false
   }
@@ -23,7 +23,7 @@ export function isIframe(element: unknown): element is HTMLIFrameElement {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyFunction = (...args: any[]) => any
 
-export const isolateUserCode = (func: AnyFunction, ...val: unknown[]): number =>
+export const isolateUserCode = (func: AnyFunction, ...val: unknown[]): ReturnType<typeof setTimeout> =>
   setTimeout(() => func(...val), 0)
 
 export const once = <T extends AnyFunction>(fn: T): T => {

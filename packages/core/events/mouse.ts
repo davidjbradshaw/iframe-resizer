@@ -5,7 +5,7 @@ import on from './wrapper'
 
 export default function onMouse(event: string, messageData: MessageData): void {
   const { id, iframe, height, type, width } = messageData
-  let mousePos = {}
+  let mousePos: { x: string | number; y: string | number } = { x: 0, y: 0 }
 
   if (width === 0 && height === 0) {
     const coords = getMessageBody(id, 9).split(SEPARATOR)

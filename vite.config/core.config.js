@@ -26,7 +26,11 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      include: ['packages/core/index.ts', 'packages/core/types.ts'],
+      include: [
+        'packages/global.d.ts',
+        'packages/core/index.ts',
+        'packages/core/types.ts',
+      ],
       outDir: 'dist/core',
       entryRoot: 'packages/core',
     }),

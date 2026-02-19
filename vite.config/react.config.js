@@ -25,7 +25,11 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      include: ['packages/react/**/*.ts', 'packages/react/**/*.tsx'],
+      include: [
+        'packages/global.d.ts',
+        'packages/react/**/*.ts',
+        'packages/react/**/*.tsx',
+      ],
       exclude: ['packages/react/**/*.test.*'],
       outDir: 'dist/react',
       entryRoot: 'packages/react',

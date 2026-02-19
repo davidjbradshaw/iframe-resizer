@@ -35,7 +35,7 @@ export const stopInfoMonitor = (stopFunction: string) => (id: string): void => {
 }
 
 export const startInfoMonitor = (sendInfoToIframe: (requestType: string, id: string) => void, type: string) => (id: string): void => {
-  let pending = false
+  let pending: string | false = false
 
   const sendInfo = (requestType: string) => (): void => {
     if (settings[id]) {
@@ -74,17 +74,8 @@ export const startInfoMonitor = (sendInfoToIframe: (requestType: string, id: str
   function start(): void {
     setListener('Add ', addEventListener)
 
-    pageObserver.observe(document.body, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-    })
-
-    iframeObserver.observe(settings[id].iframe, {
-      attributes: true,
-      childList: false,
-      subtree: false,
-    })
+    pageObserver.observe(document.body)
+    iframeObserver.observe(settings[id].iframe)
   }
 
   const pageObserver = new ResizeObserver(sendInfo('pageObserver'))
