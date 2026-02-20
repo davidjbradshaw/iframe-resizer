@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Iframe-Resizer Examples</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      a.toggle {
+        float: right;
+        margin-left: 8px;
+      }
+      #callback {
+        margin: -5px 0 5px 24px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 300px;
+        /* border-width: 0; */
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
+    <h2>iFrame Wrapper</h2>
+    <p>
+      Resize window or click one of the links in the iFrame to watch it resize.
+      Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.
+    </p>
+
+    <div id="iframeContainer" style="margin: 20px">
+      <iframe
+        src="index.html"
+        scrolling="auto"
+      ></iframe>
+    </div>
+    
+  </body>
+</html>

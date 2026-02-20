@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      a.back {
+        float: right;
+        margin-left: 8px;
+      }
+      body {
+        margin: 0;
+        padding: 8px 10px;
+        border: solid 1px red;
+      }
+      p {
+        padding: 5px 112px 5px 5px;
+        margin: 0 0 5px;
+      }
+      #abs {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 1600px;
+        background-color: wheat;
+      }
+      a.top {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>
+      <b>iFrame</b>
+
+      <a href="frame.content.html" class="back">Back to page 1</a>
+      &nbsp;
+      <a
+        href="#"
+        class="back"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;"
+        >Bottom</a
+      >
+      &nbsp;
+      <a
+        href="#"
+        class="back"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollBy(0,50);return false;"
+        >scrollBy(50)</a
+      >
+      &nbsp;
+      <a
+        href="#"
+        class="back"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;"
+        >Scroll to iFrame</a
+      >
+      &nbsp;
+      <a href="#test" class="back">Jump to iFrame anchor</a>
+      <a href="#anchorParentTest" class="back">Jump to parent anchor</a>
+    </p>
+    <p>
+      This page has an absolute position element that take it out side the
+      normal document body, which is marked with a red border on this page. This
+      prevents the normal height calculation, which is based on the body tag
+      from returning the correct height. To work around this you can set the
+      <b>heightCalculationMethod</b> option to use one of the other page height
+      properties.
+    </p>
+    <p>
+      Use the dropdown to change the sizing method of the page, select the
+      different sizing options to see how the effect the page. Note that they
+      can have different effects in different browsers, so you are normally best
+      off selecting <b>max</b> if you need to change away from the default
+      <b>bodyOffset</b> option.
+    </p>
+    <p>
+      <b>Height Calculation Method</b>
+      <select id="heightCalculationMethod">
+        <option>auto</option>
+        <option>bodyOffset</option>
+        <option>bodyScroll</option>
+        <option>documentElementOffset</option>
+        <option>documentElementScroll</option>
+        <option>documentElementBoundingClientRect</option>
+        <option>max</option>
+        <option>min</option>
+        <option>grow</option>
+        <option>lowestElement</option>
+        <option>taggedElement</option>
+      </select>
+    </p>
+    <span style="visibility: collapse">a</span>
+    <span style="visibility: hidden">a</span>
+    <span style="display: none">a</span>
+    <p>
+      <i
+        >This option should be used sparingly, as the alternate methods can be
+        less accurate at working out the correct page size, can cause screen
+        flicker and can sometimes fail to reduce in size when the frame content
+        changes in browsers that do not support mutationObservers (See
+        <a href="http://caniuse.com/mutationobserver">caniuse.com</a> for
+        details).</i
+      >
+    </p>
+    <a name="test">Test in page anchor</a>
+
+    <div  id="abs">
+      Absolute positioned element
+      <a
+        href="#"
+        class="top"
+        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,0);return false;"
+        >Top</a
+      >
+    </div>
+
+    <script
+      type="text/javascript"
+      src="../../../js/iframe-resizer.child.js"
+    ></script>
+
+    <script>
+      // window.iFrameResizer = {
+      //   ignoreSelector: '#abs',
+      // }
+
+      document
+        .getElementById('heightCalculationMethod')
+        .addEventListener('change', function() {
+          if ('parentIFrame' in window) {
+            const { parentIFrame } = window
+            console.log('heightCalculationMethod', this)
+
+            parentIFrame.setHeightCalculationMethod(this.value)
+            parentIFrame.resize()
+          }
+        })
+    </script>
+  </body>
+</html>

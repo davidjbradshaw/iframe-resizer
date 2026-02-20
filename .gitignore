@@ -10,7 +10,8 @@ coverage*
 js/*
 dist
 test-js
-example-test
+example-test/react
+example-test/vue
 .eslintcache
 
 # Playwright

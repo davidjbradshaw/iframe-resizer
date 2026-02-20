@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame animate example</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      a.back {
+        float: right;
+        margin-left: 8px;
+      }
+      html{
+        margin: 0;
+        padding: 8px 10px;
+        /* border: solid 1px red; */
+      }
+      p {
+        padding: 12px 218px 0 0;
+        margin: 0 0 5px;
+      }
+
+      th {
+        vertical-align: top;
+        text-align: right;
+        padding: 5px 0;
+      }
+      td {
+        padding: 3px 0;
+      }
+      tr{
+        border-top: dashed 1px #900;
+      }
+
+      table table th {
+        width: 110px;
+        padding: 0;
+      }
+      table table td {
+        padding: 0 0 0 10px;
+      }
+
+      #abs {
+        position: absolute;
+        padding: 0 2px 0 12px;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        background-color: wheat;
+        animation-direction: alternate;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-name: animate;
+        z-index: -10;
+      }
+
+      #abs p {
+        margin: 35px 0;
+        width: 180px;
+      }
+
+      @keyframes animate {
+        from {
+         height: 145px;
+          
+        }
+
+        to {
+          height: 801px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="frame.content.html" class="back">Back to page 1</a>
+    <b>Animated iFrame</b>
+
+    <p>
+      This iframe contains a page element animated via CSS to change the height of the page. 
+    </p>
+
+    <h4>Data returned by parentIFrame.getParentProps()</h4>
+    <table id="data"></table>
+
+    <span id="insert"></span>
+
+    <!-- 
+      The data-iframe-size attribute tells iframe-resizer to use this element
+      to calculate the height of the iframe, when the content overflows the
+      <body> element.     
+    -->
+    <div id="abs">
+      <p>
+        This is an absolute positioned element that will animate to 
+        a height of 800px using CSS keyframes. 
+      </p>
+    </div>
+
+    <script>
+      // Add some content to to show the effect of using data-iframe-size above
+      for (let i = 0; i < 500; i++) {
+        const span = document.createElement('span')
+        span.style.setProperty('position', 'relative')
+        span.textContent = `. `
+        document.getElementById('insert').append(span);
+      }
+      
+    </script>
+
+    <script>
+      const dataTable = document.getElementById('data')
+      const row = ([key, value]) => `<tr><th>${key}</th><td>${value}</td></tr>`
+      const rowParent = ([key, info]) =>
+  `<tr><th>${key}</th><td><table>${Object.entries(info).map(row).join('\n')}</table></td></tr>`
+
+      window.iframeResizer = {
+        // We cheat a little here, as the iframe resize can be one
+        // frame behind the actual content height in the iframe if
+        // we're having to use postMessage due to operating cross
+        // domain.
+        //
+        // Making the offsetHeight -1, ensures that the content height
+        // will always fill the iframe when downsizing and avoid any
+        // annoying 1px gaps at the bottom.
+        //
+        // You should not need to do this with same domain iframes.
+        // offsetHeight: -1,
+
+        // sizeSelector: "#abs",
+
+        onReady: () => {
+          parentIFrame.getParentProps((pageInfo) => {
+            dataTable.replaceChildren() // Prevent memory leak
+            dataTable.innerHTML = Object.entries(pageInfo).map(rowParent).join('\n')
+          })
+        },
+}
+    </script>
+
+    <script
+      type="text/javascript"
+      src="../../../js/iframe-resizer.child.js"
+    ></script>
+    
+  </body>
+</html>

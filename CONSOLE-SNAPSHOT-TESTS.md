@@ -106,7 +106,7 @@ git commit -m "Update console snapshots"
 
 ### Test Workflow
 
-The test executes these steps on `/example-test/html/index.html`:
+The test executes these steps on `/example/html/index.html`:
 
 1. ✅ Open modal → Close modal
 2. ✅ Toggle content
@@ -272,7 +272,7 @@ When logging changes are intentional:
 - **Snapshot Location**: `e2e/console-snapshot.spec.js-snapshots/`
 - **Build Testing**: Each project runs against js/ after the appropriate build
 - **Projects**: `console-dev` and `console-prod` in `playwright.config.js`
-- **Page Under Test**: `/example-test/html/index.html`
+- **Page Under Test**: `/example/html/index.html`
 
 ## Next Steps
 

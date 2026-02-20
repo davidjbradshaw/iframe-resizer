@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Iframe-Resizer Test Content</title>
+    <meta name="description" content="iframe-resizer examples" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script
+      type="text/javascript"
+      src="../../../js/iframe-resizer.child.js"
+    ></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5.5.3-beta.2" async></script> -->
+    <script>
+      function toggle() {
+        const { style } = document.getElementsByTagName('p')[1]
+        style.display = style.display === 'none' ? '' : 'none'
+        return false
+      }
+    </script>
+
+    <script>
+      window.iframeResizer = {
+        // offset: 20,
+        // onBeforeResize(newSize) {
+        //   console.log('onBeforeResize:', newSize)
+        //   return newSize + 1
+        // },
+        // offsetSize: -1,
+        onMessage(message) {
+          alert(message, parentIFrame.getId())
+        },
+        license: 'GPLv3',
+        // license: '1mjb12zhxy1-e7xgtnhjaj-1ujwkdy7ay', //solo
+        // heightCalculationMethod: 'auto',
+      }
+    </script>
+    <script>
+      function insertContent() {
+        document.getElementsByTagName('p')[0].innerHTML =
+          `
+          <b>Content inserted by script</b>
+          <!-- This content is inserted by script to test the iframe resizing functionality. -->
+          <p>New paragraph added to test resizing.</p>
+          <select>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <p>Another paragraph to ensure the iframe resizes correctly.</p>
+          `
+        return false
+      }
+
+      function createDiv() {
+        const div = document.createElement('div')
+        const { style } = div
+        style.width = '25px'
+        style.height = '25px'
+        style.border = '1px solid #0c0'
+        style.background = '#9f9'
+        style.opacity = '0.5'
+        style.position = 'absolute'
+
+        div.innerContent = 'New content'
+        div.className = 'new-content'
+
+        return div
+      }
+
+      const innerDiv = createDiv()
+      document.onreadystatechange = () => {
+        if (document.readyState === 'complete') {
+          // Insert the div into the body after it is fully loaded
+          document.body.prepend(innerDiv)
+        }
+      }
+
+      function insertOverflow() {
+        const div = document.createElement('div')
+        const { style } = div
+        style.overflow = 'auto'
+        style.width = '50px'
+        style.height = '50px'
+        style.border = '1px solid #c00'
+        style.background = '#f99'
+        style.opacity = '0.7'
+        style.position = 'absolute'
+        style.top = `${document.body.scrollHeight - 10}px`
+
+        div.innerContent = 'Overflowing content'
+        div.className = 'overflow'
+
+        div.appendChild(innerDiv)
+        document.body.lastChild.append(div)
+
+        return false
+      }
+
+      function removeOverflow() {
+        const elements = document.getElementsByClassName('overflow')
+
+        if (elements.length === 0) {
+          console.log('No overflow elements to remove')
+          return false
+        }
+
+        for(div of elements) {
+          div.parentNode.removeChild(div)
+        }
+
+        return false
+      }
+    </script>
+    <!-- html/body height is set to test that iframe-resizer can over ride this value and set it back to 'auto' -->
+    <style>
+      html,
+      body {
+        height: 100vh;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+      }
+      a {
+        float: right;
+        margin-left: 10px;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <b>iFrame</b>
+    <a href="#" onclick="toggle()">Toggle content</a>
+    &nbsp;
+    <a
+      href="#"
+      onclick="if ('parentIFrame' in window) window.parentIFrame.size(250);return false;"
+      >Size(250)</a
+    >
+    &nbsp;
+    <a
+      href="#"
+      onclick="if ('parentIFrame' in window) window.parentIFrame.autoResize(true);return false;"
+      >autoResize(true)</a
+    >
+
+    <a
+      href="#"
+      onclick="if ('parentIFrame' in window) window.parentIFrame.autoResize(false);return false;"
+      >autoResize(false)</a
+    >
+
+    <a href="https://iframe-resizer.com/examples/hover/">external</a>
+    &nbsp;
+    <a href="404.html">404</a>
+    &nbsp;
+    <a href="frame.4.html">v4</a>
+    &nbsp;
+    <a id="nested" href="frame.nested.html">Nested</a>
+    &nbsp;
+    <a href="frame.animate.html">Animate</a>
+    &nbsp;
+    <a href="frame.overflow.html">Overflow</a>
+    &nbsp;
+    <a href="frame.hover.html">:Hover</a>
+    &nbsp;
+    <a href="frame.textarea.html">TextArea</a>
+    &nbsp;
+    <a href="frame.absolute.html">Absolute Position</a>
+    &nbsp;
+    <a href="#" id="insert" onclick="return insertContent()">Insert content</a>
+    &nbsp;
+    <a href="#" id="insert" onclick="return insertOverflow()">Insert overflow</a>
+    &nbsp;
+    <a href="#" id="remove" onclick="return removeOverflow()">Remove overflow</a>
+    &nbsp;
+    <a href="#" id="remove" onclick="return document.getElementsByTagName('p')[0].textContent = 'This text is different!'">Mutate text node</a>
+    &nbsp;
+    <a
+      href="#"
+      onclick="if ('parentIFrame' in window) window.parentIFrame.sendMessage('Hello from the iFrame');return false;"
+      >Send Message</a
+    >
+    <a href="../width.html" target="_top">Width</a>
+    &nbsp; &nbsp;
+    <a
+      href="#"
+      onclick="if ('parentIFrame' in window) window.parentIFrame.close();return false;"
+      >Close</a
+    >
+
+    <div style="overflow: auto; width: 2000px; height: 1px"></div>
+
+    <div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </p>
+      <p>
+        But I must explain to you how all this mistaken idea of denouncing
+        pleasure and praising pain was born and I will give you a complete
+        account of the system, and expound the actual teachings of the great
+        explorer of the truth, the master-builder of human happiness. No one
+        rejects, dislikes, or avoids pleasure itself, because it is pleasure,
+        but because those who do not know how to pursue pleasure rationally
+        encounter consequences that are extremely painful. Nor again is there
+        anyone who loves or pursues or desires to obtain pain of itself, because
+        it is pain, but because occasionally circumstances occur in which toil
+        and pain can procure him some great pleasure. To take a trivial example,
+        which of us ever undertakes laborious physical exercise, except to
+        obtain some advantage from it? But who has any right to find fault with
+        a man who chooses to enjoy a pleasure that has no annoying consequences,
+        or one who avoids a pain that produces no resultant pleasure?
+      </p>
+      <p>
+        On the other hand, we denounce with righteous indignation and dislike
+        men who are so beguiled and demoralized by the charms of pleasure of the
+        moment, so blinded by desire, that they cannot foresee the pain and
+        trouble that are bound to ensue; and equal blame belongs to those who
+        fail in their duty through weakness of will, which is the same as saying
+        through shrinking from toil and pain. These cases are perfectly simple
+        and easy to distinguish. In a free hour, when our power of choice is
+        untrammelled and when nothing prevents our being able to do what we like
+        best, every pleasure is to be welcomed and every pain avoided. But in
+        certain circumstances and owing to the claims of duty or the obligations
+        of business it will frequently occur that pleasures have to be
+        repudiated and annoyances accepted. The wise man therefore always holds
+        in these matters to this principle of selection: he rejects pleasures to
+        secure other greater pleasures, or else he endures pains to avoid worse
+        pains.
+      </p>
+    </div>
+    <script>
+      let level = document.location.search.replace(/\?/, '') || 0
+
+      document
+        .getElementById('nested')
+        .setAttribute('href', `frame.nested.html?${++level}`)
+    </script>
+  </body>
+</html>

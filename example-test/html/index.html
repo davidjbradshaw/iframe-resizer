@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Iframe-Resizer Examples</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      a.toggle {
+        float: right;
+        margin-left: 8px;
+      }
+      #callback {
+        margin: -5px 0 5px 24px;
+      }
+
+      #modal {
+        width: 80%;
+        border: none;
+        color:#555;
+        border: 2px solid #999;
+        border-radius:7px;
+        margin:16px auto;
+        background-color:#FEF6D5;
+        justify-content: center;
+        align-items: center;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      }
+
+      iframe {
+        width: 100%;
+        height: 0; /*100vh;
+        /* margin-top: 101vh; */
+        /* border-width: 0; */
+      }
+
+    </style>
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.parent.js"
+    ></script>
+    <!-- <script
+      type="text/javascript"
+      src="../../dist/legacy/js/iframeResizer.js"
+    ></script> -->
+  </head>
+
+  <body>
+    <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
+    <h2>Automagically resizing iframes</h2>
+    <p>
+      Resize window or click one of the links in the iFrame to watch it resize.
+      Alternatively try with <a name="anchorParentTest" href="two.html">two iframes</a>,
+      or a <a name="anchorModalTest" href="#modal" onclick="openModal()">Modal iframe</a>.
+    </p>
+
+    <dialog id="modal">
+      <h2 style="margin: 0 0 8px 0">Modal Test</h2>
+      <iframe
+        src="child/frame.content.html"
+        id="modalFrame"
+        loading="lazy"
+      ></iframe>
+      <button id="closeDialog" style="margin-top: 16px;">Close</button>
+    </dialog>
+
+    <script type="text/javascript">
+      const dialog = document.getElementById('modal')
+
+      function openModal() {
+        dialog.showModal()
+     //   setTimeout(() => {
+     //     const modalFrame = document.getElementById('modalFrame')
+     //     modalFrame.src = 'child/frame.content.html'
+     //   }, 100)
+      }
+
+      document.getElementById('closeDialog').addEventListener('click', () => {
+        dialog.close()
+      })
+    </script>
+
+    <div id="iframeContainer" style="margin: 20px">
+      <!-- <iframe
+        src="https://iframe-resizer.com/examples/hover/"
+        id="testFrame"
+      ></iframe> -->
+      <iframe
+        src="./child/frame.content.html"
+        id="testFrame"
+      ></iframe>
+    </div>
+
+    <p id="callback"></p>
+    <div style="margin: 8px 0 0 24px; font-size: 13px">
+      For details on how this works, see
+      <a href="https://iframe-resizer.com">https://frame-resizer.com</a>.
+    </div>
+
+    <div style="display:none">
+      <iframe
+        srcdoc="<!doctype html><html><head><title>Hidden frame</title></head><body><p>This frame is hidden to test that iframe-resizer can detect and resize hidden iframes.</p></body></html>"
+        id="hiddenFrame"
+      ></iframe>
+      <iframe id="hiddenFrame"></iframe>
+    </div>
+
+    <script type="text/javascript">
+      /*
+       * If you do not understand what the code below does, then please just use the
+       * following call in your own code.
+       *
+       *   iframeResize({ license: 'YOUR-LICENSE', log: 'collapsed' })
+       *
+       */
+
+      function start() {
+        const callbackDisplay = document.querySelector('p#callback')
+
+        const iframes = iframeResize({
+          inPageLinks: true,
+          // license: '1mjb12zhxy1-e7xgtnhjaj-1ujwkdy7ay', //solo
+          // license: '12ajjdewwwy-1vceajj666b-9uhu9s7rcm', //business
+          license: '2c4hmjizg39-1vceajj666b-xuov7l9i0z', //business 6
+          // license: 'GPLv3', //GPLv3
+          log: true,
+          warningTimeout: 500,
+          checkOrigin: false,
+          // offset: 50,
+          // heightCalculationMethod: 'bodyOffset',
+          // sizeWidth: true,
+          // sizeHeight: false,
+
+          bodyMargin: 8,
+          bodyPadding: '0 8px',
+          bodyBackground: '#f7f7f7',
+          // direction: 'both',
+          // tolerance: 1,
+
+          // heightCalculationMethod: 'bodyOffset',
+
+          // offsetSize: -100,
+          onReady() {
+            // Callback fn when iFrame is initialized
+            callbackDisplay.innerHTML = `<b>Initialized</b>`
+          },
+
+          onResized(messageData) {
+            // Callback fn when resize is received
+            callbackDisplay.innerHTML =
+            `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Height:</b> ${messageData.height} <br><b>Width:</b> ${messageData.width} <br><b>Event type:</b> ${messageData.type}`
+          },
+
+          // onMouseEnter(messageData) {
+          //   // Callback fn when mouse enters iframe
+          //   callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>ScreenX:</b> ${messageData.screenX} <br><b>ScreenY:</b> ${messageData.screenY} <br><b>Event type:</b> ${messageData.type}`
+          // },
+
+          // onMouseLeave(messageData) {
+          //   // Callback fn when mouse enters iframe
+          //   callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>ScreenX:</b> ${messageData.screenX} <br><b>ScreenY:</b> ${messageData.screenY} <br><b>Event type:</b> ${messageData.type}`
+          // },
+
+          onMessage(messageData) {
+            // Callback fn when message is received
+            callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Message:</b> ${messageData.message}`
+            alert(messageData.message)
+            messageData.iframe.iFrameResizer.sendMessage(
+              'Hello back from parent page',
+            )
+          },
+
+          onBeforeClose(id) {
+            // Callback fn when iFrame is closed
+            callbackDisplay.innerHTML = `<b>Iframe (</b>${id}<b>) removed from page.</b>`
+          },
+
+          onScroll(messageData) {
+            // Callback fn when iframe is scrolled
+            callbackDisplay.innerHTML = `<b>Iframe ID:</b> ${messageData.iframe.id} <br><b>Top:</b> ${messageData.top} <br><b>Left:</b> ${messageData.left}`
+          },
+        })
+
+        window.resizer = iframes[0]
+      }
+
+      setTimeout(() => {
+        // Start iFrame resizing after a short delay to allow the page to load
+        start()
+      }, 1)
+
+      // iFrameResize({}, document.getElementById('testFrame'))
+
+      function toggle() {
+        const iframes = document.querySelectorAll('iframe')
+        const iframe = iframes[1]
+
+        iframe.style.display =
+          iframe.style.display === 'none' ? 'block' : 'none'
+      }
+
+      document.getElementById('toggle').addEventListener('click', toggle)
+    </script>
+  </body>
+</html>
