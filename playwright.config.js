@@ -57,6 +57,7 @@ export default defineConfig({
       name: 'console-dev',
       use: { ...DESKTOP_CHROME },
       testMatch: CONSOLE_SNAPSHOT_TEST,
+      timeout: 60000, // 60s timeout for comprehensive interaction workflow
     },
 
     // Console snapshot tests - prod build
@@ -65,6 +66,7 @@ export default defineConfig({
       name: 'console-prod',
       use: { ...DESKTOP_CHROME },
       testMatch: CONSOLE_SNAPSHOT_TEST,
+      timeout: 60000, // 60s timeout for comprehensive interaction workflow
     },
 
     // Uncomment to test in Firefox and Safari

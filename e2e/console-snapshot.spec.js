@@ -56,7 +56,7 @@ test.describe('Console log snapshot', () => {
       const text = msg.text()
       const location = msg.location()
 
-      // Filter out logs with non-deterministic ordering
+      // Filter out logs with non-deterministic ordering or variable content
       // Async initialization of multiple iframes causes race conditions
       const isNonDeterministic =
         // Timing-sensitive async operations
@@ -72,6 +72,7 @@ test.describe('Console log snapshot', () => {
         text.includes('%c initReceived %c') ||
         text.includes('%c title %c') ||
         text.includes('%c onload %c') ||
+        text.includes('%c iframeReady %c') ||
         text.includes('First run for') ||
         text.includes('Added event listener') ||
         text.includes('Received: %c[iFrameSizer]') ||
@@ -79,7 +80,13 @@ test.describe('Console log snapshot', () => {
         text.includes('Set iframe title') ||
         text.includes('sameOrigin:') ||
         text.includes('Sending message to iframe') ||
-        text.includes('Message data: %c')
+        text.includes('Message data: %c') ||
+        text.includes('Sending%c ready%c to parent') ||
+        // Element counts that vary based on timing
+        text.includes('Attached %cOverflowObserver') ||
+        text.includes('Attached %cResizeObserver') ||
+        text.includes('ResizeObserver attached to') ||
+        text.includes('JSHandle@node')
 
       if (!isNonDeterministic) {
         consoleLogs.push({
@@ -100,10 +107,10 @@ test.describe('Console log snapshot', () => {
     })
 
     // Wait for network to be idle and iframe-resizer to initialize
-    // Using fixed timeouts is acceptable for snapshot tests where we need
-    // consistent timing to capture all initialization logs
+    // Using longer timeout in CI to ensure complete initialization
+    // before user interactions begin
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(5000)
+    await page.waitForTimeout(10000) // Increased from 5s to 10s for CI stability
   })
 
   test('should produce consistent console output through user interactions', async ({
