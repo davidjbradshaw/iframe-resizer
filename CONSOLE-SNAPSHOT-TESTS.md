@@ -138,9 +138,10 @@ The test executes these steps on `/example-test/html/index.html`:
 
 ## What Gets Captured
 
-The test captures console logs containing:
-- `[iframe-resizer` - Framework logs
-- `iframeResizer` - API logs
+The test captures all console output from the browser during execution (no filtering is applied). This includes:
+- iframe-resizer framework logs (prefixed with `[iframe-resizer`)
+- Application-specific logs from the test pages
+- Any errors or warnings emitted during the test workflow
 
 **Normalization** (to prevent false positives):
 - Memory addresses: `@0x123456` → `@0xXXXXXX`

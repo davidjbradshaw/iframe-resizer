@@ -38,7 +38,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
-  /* Platform-agnostic snapshot paths - removes platform suffix for cross-platform compatibility */
+  /* Snapshot paths without OS-specific suffixes for cross-platform compatibility */
+  /* Preserves project differentiation (console-dev/console-prod) while removing platform suffixes */
   snapshotPathTemplate:
     '{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}',
 

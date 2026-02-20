@@ -39,9 +39,11 @@ function normalizeLog(log) {
 }
 
 test.describe('Console log snapshot', () => {
+  // Shared array for collecting console logs - reset in beforeEach to ensure test isolation
   let consoleLogs = []
 
   test.beforeEach(async ({ page }) => {
+    // Reset logs array for each test run
     consoleLogs = []
 
     // Capture all console messages

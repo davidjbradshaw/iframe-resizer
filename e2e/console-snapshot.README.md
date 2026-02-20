@@ -33,9 +33,10 @@ The test runs against the js/ directory, with different builds tested separately
 
 ### 2. Console Capture
 
-The test captures all console messages that contain:
-- `[iframe-resizer` - Framework logs
-- `iframeResizer` - API-related logs
+The test captures all console output emitted during the workflow (no filtering is applied). This includes:
+- iframe-resizer framework logs (prefixed with `[iframe-resizer`)
+- Application-specific logs from the test pages
+- Any errors or warnings emitted during test execution
 
 Logs are normalized to remove:
 - Memory addresses (`@0x123456` → `@0xXXXXXX`)
