@@ -35,6 +35,8 @@ function normalizeLog(log) {
       .replace(/file:\/{3}\S+/g, 'file:///PATH')
       // Remove line/column numbers from stack traces
       .replace(/:\d+:\d+/g, ':XX:XX')
+      // Remove milliseconds after normalized timestamps (e.g., "@ 18:XX:XX.610" → "@ 18:XX:XX.XXX")
+      .replace(/(:XX:XX)\.\d+/g, '$1.XXX')
   )
 }
 

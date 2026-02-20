@@ -1,4 +1,4 @@
-[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.405 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Duplicate ID attributes detected
 
 The hiddenFrame ID is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
@@ -11,15 +11,15 @@ Found 2 iframes with the hiddenFrame ID:
 
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (pro) font-weight: bold;
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.409 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.410 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.412 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -30,42 +30,42 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached%c ResizeObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.415 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.417 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.418 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.419 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c371px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.419 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.420 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.421 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(1)
 [LOG] Attached %cOverflowObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.427 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c iframeReady %c@ 18:XX:XX.022 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c initReceived %c@ 18:XX:XX.022 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cmodalFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -77,63 +77,63 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c init %c@ 18:XX:XX.023 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cmodalFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c407px %cPage: %c407px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c407px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cmodalFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c title %c@ 18:XX:XX.023 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cmodalFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cmodalFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c onload %c@ 18:XX:XX.023 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.024 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c407px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c title %c@ 18:XX:XX.024 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 18:XX:XX.852 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe %cmodalFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c247px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 18:XX:XX.854 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c247px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.169 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.169 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c211px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.170 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c211px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.486 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord, MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.486 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(1)
 [LOG] Detached %cOverflowObserver%c from %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Detached %cResizeObserver%c from %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.486 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(2)
 [LOG] Attached %cOverflowObserver%c to %c2%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached %cResizeObserver%c to %c2%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 18:XX:XX.502 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Overflowed Elements: Set(2)
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
@@ -141,10 +141,10 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Content height: %c235px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:overflowObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c overflowObserver %c@ 18:XX:XX.503 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c overflowObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c235px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ctestFrame%c autoResize %c@ 18:XX:XX.789 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ctestFrame%c autoResize %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
 The window.parentIFrame object has been renamed to window.parentIframe. Please update your code as the old object will be removed in a future version.
 
@@ -152,50 +152,50 @@ Called property: 'autoResize'
 
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:autoResize:false font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.136 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.136 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(2)
 [LOG] Detached %cOverflowObserver%c from %c2%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Detached %cResizeObserver%c from %c2%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.136 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resizing disabled
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c autoResize %c@ 18:XX:XX.455 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c autoResize %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:autoResize:true font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c autoResizeEnabled %c@ 18:XX:XX.456 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c autoResizeEnabled %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] New <html> size: HTML: %c211px %cPage: %c235px  color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Previous <html> size: %c371px color: #135CD2;
 [LOG] Content height: %c211px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:autoResizeEnabled font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c autoResizeEnabled %c@ 18:XX:XX.469 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c autoResizeEnabled %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c211px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.802 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.803 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Attached %cOverflowObserver%c to %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.804 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c314px %cPage: %c314px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c314px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.804 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c314px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.110 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.110 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -203,14 +203,14 @@ Called property: 'autoResize'
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.119 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.122 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.122 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -222,25 +222,25 @@ Called property: 'autoResize'
 [LOG] Attached %cResizeObserver%c to %c2%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.123 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c292px %cPage: %c1600px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c292px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.123 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:iFrame message passing test font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.123 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c292px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.123 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %ciFrame message passing test color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.123 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 18:XX:XX.152 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Overflowed Elements: Set(2)
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
@@ -248,10 +248,10 @@ Called property: 'autoResize'
 [LOG] Content height: %c1600px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:overflowObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c overflowObserver %c@ 18:XX:XX.153 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c overflowObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c1600px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ctestFrame%c scrollTo %c@ 18:XX:XX.641 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ctestFrame%c scrollTo %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
 The window.parentIFrame object has been renamed to window.parentIframe. Please update your code as the old object will be removed in a future version.
 
@@ -259,14 +259,14 @@ Called property: 'scrollTo'
 
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:scrollTo font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c scrollTo %c@ 18:XX:XX.653 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c scrollTo %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Reposition requested (offset x:%c0%c y:%c0) color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Set page position: %c0%c, %c99999 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c beforeUnload %c@ 18:XX:XX.908 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cmodalFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cmodalFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c pageHide %c@ 18:XX:XX.908 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cmodalFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -274,10 +274,10 @@ Called property: 'scrollTo'
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.909 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.909 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -285,12 +285,12 @@ Called property: 'scrollTo'
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c setup %c@ 18:XX:XX.914 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated option
 
 The onClosed option has been renamed to onAfterClose. Use of the old name will be removed in a future version of iframe-resizer.
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c setup %c@ 18:XX:XX.915 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated option
 
 The onClosed option has been renamed to onAfterClose. Use of the old name will be removed in a future version of iframe-resizer.
@@ -303,23 +303,23 @@ This version of iframe-resizer is being used under the terms of the GPL V3 licen
 If you are using this library in a non-open source project or website, you will need to purchase a low cost one time commercial license.
 
 For more information visit https://iframe-resizer.com/pricing.
-[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.916 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.916 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c iframeReady %c@ 18:XX:XX.921 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c iframeReady %c@ 18:XX:XX.922 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c initReceived %c@ 18:XX:XX.922 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -328,15 +328,19 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c init %c@ 18:XX:XX.923 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c677px %cPage: %c720px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c title %c@ 18:XX:XX.924 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c initReceived %c@ 18:XX:XX.924 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUP] %ciFrameResizer1%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -345,38 +349,34 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c init %c@ 18:XX:XX.924 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c677px %cPage: %c720px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c title %c@ 18:XX:XX.925 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 18:XX:XX.925 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.925 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c677px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 18:XX:XX.925 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c onload %c@ 18:XX:XX.926 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.926 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c677px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c title %c@ 18:XX:XX.926 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 18:XX:XX.421 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c pageHide %c@ 18:XX:XX.421 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -384,10 +384,10 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c beforeUnload %c@ 18:XX:XX.422 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c pageHide %c@ 18:XX:XX.422 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -395,7 +395,7 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.433 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Duplicate ID attributes detected
 
 The hiddenFrame ID is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
@@ -408,19 +408,19 @@ Found 2 iframes with the hiddenFrame ID:
 
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (pro) font-weight: bold;
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.434 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.434 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.434 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.434 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -432,28 +432,28 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.435 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.435 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.435 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Set height: %c371px color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.435 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.435 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.477 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Set height: %c371px color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.477 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -461,14 +461,14 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.486 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.487 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ctestFrame%c initReceived %c@ 18:XX:XX.487 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] %c[data-iframe-ignore]%c found on %c1%c element font-weight: bold; font-weight: normal; font-weight: bold; font-weight: normal;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
@@ -481,60 +481,60 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.488 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c135px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c135px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.488 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:iFrame overflow test font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.488 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c135px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.489 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %ciFrame overflow test color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.489 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c overflowIgnored %c@ 18:XX:XX.519 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c overflowIgnored %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ignoring elements with [data-iframe-ignore] > *:
  Set(3)
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.020 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.020 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c3%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c360px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.021 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c360px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.335 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.336 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Using <html> size: HTML: %c135px %cPage: %c360px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c135px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c overflowIgnored %c@ 18:XX:XX.336 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c overflowIgnored %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ignoring elements with [data-iframe-ignore] > *:
  Set(3)
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.336 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c135px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.626 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.626 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -542,7 +542,7 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.636 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Duplicate ID attributes detected
 
 The hiddenFrame ID is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
@@ -555,19 +555,19 @@ Found 2 iframes with the hiddenFrame ID:
 
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (pro) font-weight: bold;
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.638 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.638 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.639 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.639 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -579,28 +579,28 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.639 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.640 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.640 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c371px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.640 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.640 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.691 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.692 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -608,7 +608,7 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.702 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (GPLv3) font-weight: bold;
@@ -619,15 +619,15 @@ This version of iframe-resizer is being used under the terms of the GPL V3 licen
 If you are using this library in a non-open source project or website, you will need to purchase a low cost one time commercial license.
 
 For more information visit https://iframe-resizer.com/pricing.
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.706 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cnestedIFrame1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.706 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.706 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -638,25 +638,25 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached%c ResizeObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.706 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c271.90625px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c271.90625px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:271.90625:1224:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.707 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:iFrame message passing test font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.707 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c271.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.707 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %ciFrame message passing test color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c iframeReady %c@ 18:XX:XX.713 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cnestedIFrame1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c initReceived %c@ 18:XX:XX.713 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -665,48 +665,48 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c init %c@ 18:XX:XX.713 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c title %c@ 18:XX:XX.714 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.714 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c375px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c title %c@ 18:XX:XX.714 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c onload %c@ 18:XX:XX.714 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %cnestedIFrame1%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.714 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.718 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.719 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Attached %cOverflowObserver%c to %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.719 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c534.90625px %cPage: %c535px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c534.90625px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:534.90625:1224:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.719 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c534.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 18:XX:XX.751 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c pageHide %c@ 18:XX:XX.751 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -714,7 +714,7 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c beforeUnload %c@ 18:XX:XX.754 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (GPLv3) font-weight: bold;
@@ -725,15 +725,15 @@ This version of iframe-resizer is being used under the terms of the GPL V3 licen
 If you are using this library in a non-open source project or website, you will need to purchase a low cost one time commercial license.
 
 For more information visit https://iframe-resizer.com/pricing.
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c init %c@ 18:XX:XX.757 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cnestedIFrame2%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame2:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c iframeReady %c@ 18:XX:XX.757 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %cnestedIFrame1%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c initReceived %c@ 18:XX:XX.757 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c7%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -741,25 +741,25 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached%c ResizeObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c init %c@ 18:XX:XX.758 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c271.90625px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c271.90625px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:271.90625:1148:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c title %c@ 18:XX:XX.758 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:title:iFrame message passing test font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.758 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c275.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c title %c@ 18:XX:XX.758 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %ciFrame message passing test color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c iframeReady %c@ 18:XX:XX.762 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cnestedIFrame2%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame2:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c initReceived %c@ 18:XX:XX.762 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame2%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -768,91 +768,91 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c init %c@ 18:XX:XX.762 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame2%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c389px %cPage: %c389px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c389px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame2:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c title %c@ 18:XX:XX.763 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame2%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame2:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c init %c@ 18:XX:XX.763 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c393px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c title %c@ 18:XX:XX.763 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c onload %c@ 18:XX:XX.763 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame2)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %cnestedIFrame2%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame2:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c onload %c@ 18:XX:XX.763 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %cnestedIFrame1%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.769 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.770 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Detached %cOverflowObserver%c from %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.770 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Attached %cOverflowObserver%c to %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.770 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] New <html> size: HTML: %c435.8125px %cPage: %c535px  color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Previous <html> size: %c534.90625px color: #135CD2;
 [LOG] Content height: %c435.8125px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:435.8125:1224:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c contentMutated %c@ 18:XX:XX.770 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c addObservers %c@ 18:XX:XX.770 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Attached %cOverflowObserver%c to %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c mutationObserver %c@ 18:XX:XX.770 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c552.90625px %cPage: %c553px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c552.90625px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:552.90625:1148:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.772 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c435.8125px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c mutationObserver %c@ 18:XX:XX.773 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c556.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.786 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.786 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c removeObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Detached %cOverflowObserver%c from %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.786 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Attached %cOverflowObserver%c to %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.786 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c716.8125px %cPage: %c717px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c716.8125px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:716.8125:1224:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.787 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c716.8125px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.775 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.775 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -860,10 +860,10 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 18:XX:XX.775 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c pageHide %c@ 18:XX:XX.775 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -871,10 +871,10 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c beforeUnload %c@ 18:XX:XX.775 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame2%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame2:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c pageHide %c@ 18:XX:XX.775 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame2%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -882,14 +882,14 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.786 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.788 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.788 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -901,25 +901,25 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.789 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c717px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.789 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.789 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c371px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.789 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.789 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ctestFrame%c message %c@ 18:XX:XX.306 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ctestFrame%c message %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
 The window.parentIFrame object has been renamed to window.parentIframe. Please update your code as the old object will be removed in a future version.
 
@@ -927,31 +927,31 @@ Called property: 'sendMessage'
 
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:message:"Hello from the iFrame" font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c message %c@ 18:XX:XX.324 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c message %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmessage:"Hello back from parent page" color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ctestFrame%c  %c@ 18:XX:XX.324 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ctestFrame%c  %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
 The window.parentIFrame object has been renamed to window.parentIframe. Please update your code as the old object will be removed in a future version.
 
 Called property: 'getId'
 
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 18:XX:XX.352 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c247px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 18:XX:XX.353 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c247px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.643 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.643 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -959,12 +959,12 @@ Called property: 'getId'
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c setup %c@ 18:XX:XX.647 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated option
 
 The onClosed option has been renamed to onAfterClose. Use of the old name will be removed in a future version of iframe-resizer.
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c setup %c@ 18:XX:XX.649 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated option
 
 The onClosed option has been renamed to onAfterClose. Use of the old name will be removed in a future version of iframe-resizer.
@@ -977,23 +977,23 @@ This version of iframe-resizer is being used under the terms of the GPL V3 licen
 If you are using this library in a non-open source project or website, you will need to purchase a low cost one time commercial license.
 
 For more information visit https://iframe-resizer.com/pricing.
-[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.650 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.650 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c iframeReady %c@ 18:XX:XX.654 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c iframeReady %c@ 18:XX:XX.655 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c initReceived %c@ 18:XX:XX.655 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -1002,19 +1002,15 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c init %c@ 18:XX:XX.656 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c677px %cPage: %c720px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c title %c@ 18:XX:XX.656 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 18:XX:XX.656 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c initReceived %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -1023,34 +1019,38 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c init %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c677px %cPage: %c720px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c title %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c677px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c onload %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c677px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c title %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 18:XX:XX.713 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c pageHide %c@ 18:XX:XX.713 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1058,7 +1058,7 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c beforeUnload %c@ 18:XX:XX.719 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (GPLv3) font-weight: bold;
@@ -1069,15 +1069,15 @@ This version of iframe-resizer is being used under the terms of the GPL V3 licen
 If you are using this library in a non-open source project or website, you will need to purchase a low cost one time commercial license.
 
 For more information visit https://iframe-resizer.com/pricing.
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.723 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cnestedIFrame1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c iframeReady %c@ 18:XX:XX.723 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ciFrameResizer0%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c initReceived %c@ 18:XX:XX.724 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c7%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -1085,25 +1085,25 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached%c ResizeObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c init %c@ 18:XX:XX.725 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c271.90625px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c271.90625px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:271.90625:588:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c title %c@ 18:XX:XX.725 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:title:iFrame message passing test font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.726 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c271.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 18:XX:XX.726 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %ciFrame message passing test color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c iframeReady %c@ 18:XX:XX.728 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cnestedIFrame1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c initReceived %c@ 18:XX:XX.728 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached %cOverflowObserver%c to %c28%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
@@ -1112,58 +1112,58 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c init %c@ 18:XX:XX.729 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c713px %cPage: %c713px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c713px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:init:6.0.0-beta.0:0 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c title %c@ 18:XX:XX.729 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.729 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c717px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c title %c@ 18:XX:XX.729 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c onload %c@ 18:XX:XX.729 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnested parent(nestedIFrame1)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %cnestedIFrame1%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cnestedIFrame1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 18:XX:XX.729 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ciFrameResizer0%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c contentMutated %c@ 18:XX:XX.736 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c contentMutated %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c addObservers %c@ 18:XX:XX.736 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c addObservers %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Inspecting:
  Set(4)
 [LOG] Attached %cOverflowObserver%c to %c4%c elements color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c mutationObserver %c@ 18:XX:XX.736 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c876.90625px %cPage: %c877px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c876.90625px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:876.90625:588:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c mutationObserver %c@ 18:XX:XX.737 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer0)%c mutationObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c876.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c resizeObserver %c@ 18:XX:XX.269 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c resizeObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c445px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c resizeObserver %c@ 18:XX:XX.270 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(iFrameResizer1)%c resizeObserver %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c445px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 18:XX:XX.561 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c pageHide %c@ 18:XX:XX.561 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer0%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1171,10 +1171,10 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 18:XX:XX.561 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c pageHide %c@ 18:XX:XX.561 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cnestedIFrame1%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1182,10 +1182,10 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c beforeUnload %c@ 18:XX:XX.562 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c pageHide %c@ 18:XX:XX.562 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %ciFrameResizer1%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1193,7 +1193,7 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.572 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Duplicate ID attributes detected
 
 The hiddenFrame ID is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
@@ -1206,19 +1206,19 @@ Found 2 iframes with the hiddenFrame ID:
 
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (pro) font-weight: bold;
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.573 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.573 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.574 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.574 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -1230,28 +1230,28 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.575 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.575 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.575 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c371px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.575 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.575 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.611 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.611 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1259,18 +1259,18 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.619 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.623 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.623 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.623 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -1281,24 +1281,24 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached%c ResizeObserver%c to body color: #135CD2; color: #1F1F1F;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.624 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c126px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c126px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.624 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:iFrame textarea resizing example font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.624 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c126px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.624 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %ciFrame textarea resizing example color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.643 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.643 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1306,7 +1306,7 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Detached%c ResizeObserver color: #135CD2;
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.654 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(hiddenFrame)%c setup %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Duplicate ID attributes detected
 
 The hiddenFrame ID is not unique. Having multiple iframes on the same page with the same ID causes problems with communication between the iframe and parent page. Please ensure that the ID of each iframe has a unique value.
@@ -1319,19 +1319,19 @@ Found 2 iframes with the hiddenFrame ID:
 
 [ENDGROUP] console.groupEnd
 [INFO] %ciframe-resizer v6.0.0-beta.0 (pro) font-weight: bold;
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.655 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.655 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(modalFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %cmodalFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.655 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.655 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c iframeReady %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
+[ENDGROUP] console.groupEnd
+[STARTGROUPCOLLAPSED] %ctestFrame%c initReceived %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Set body margin: %c8px color: #135CD2;
 [LOG] Set body background: %c#f7f7f7 color: #135CD2;
@@ -1343,28 +1343,28 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Attached %cResizeObserver%c to %c1%c element color: #135CD2; font-weight: normal; color: #135CD2; font-weight: normal;
 [LOG] Attached%c VisibilityObserver%c to page color: #135CD2; color: #1F1F1F;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Initial page size values: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:init:6.0.0-beta.0:2 font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c371px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.657 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.692 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.692 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %ctestFrame%c pageHide %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page persisted: false
 [LOG] Detached%c MutationObserver color: #135CD2;
 [LOG] Detached%c OverflowObserver color: #135CD2;
@@ -1373,14 +1373,14 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Detached%c VisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found)
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.702 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c beforeUnload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ready state reset
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.704 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(testFrame)%c noResponse %c@ 18:XX:XX.209 font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[STARTGROUP] %cparent(testFrame)%c noResponse %c@ 18:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] No response from iframe
 
 The iframe (testFrame) has not responded within 0.5 seconds. Check @iframe-resizer/child package has been loaded in the iframe.
