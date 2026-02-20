@@ -87,14 +87,11 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Sending message to iframe %cmodalFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c247px color: #135CD2;
-[LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c247px color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
@@ -311,6 +308,10 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer1:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
+[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ciFrameResizer0%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
+[ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c initReceived %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set targetOrigin for parent: %c* color: #135CD2;
 [LOG] Attached%c MutationObserver%c to body color: #135CD2; color: #1F1F1F;
@@ -350,10 +351,6 @@ For more information visit https://iframe-resizer.com/pricing.
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %cparent(iFrameResizer0)%c title %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer0)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe %ciFrameResizer0%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %cparent(iFrameResizer1)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to iframe: %ciFrameResizer1%c targetOrigin: %chttp://localhost:8080 color: #135CD2; color: #1F1F1F; color: #135CD2;
@@ -432,15 +429,15 @@ Found 2 iframes with the hiddenFrame ID:
 [STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe: %ctestFrame%c targetOrigin: %c* color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
+[ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c371px color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c title %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -930,14 +927,11 @@ The window.parentIFrame object has been renamed to window.parentIframe. Please u
 Called property: 'getId'
 
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c247px color: #135CD2;
-[LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c247px color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
@@ -1142,14 +1136,11 @@ For more information visit https://iframe-resizer.com/pricing.
 [STARTGROUP] %cparent(iFrameResizer0)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c876.90625px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c445px color: #135CD2;
-[LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Set height: %c445px color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;

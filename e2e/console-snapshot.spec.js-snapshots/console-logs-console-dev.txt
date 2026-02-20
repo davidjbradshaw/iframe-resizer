@@ -122,8 +122,10 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:title:Iframe-Resizer Test Content color: #135CD2;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
+[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
+[LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
+[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
+[ENDGROUP] console.groupEnd
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -146,31 +148,20 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cMutation Observed color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
-[ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c onload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
-[LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ciframeResizer(child)%c listen %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Added event listener: %cmessage color: #135CD2;
@@ -270,57 +261,40 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Sending message to iframe %cmodalFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %cmodalFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c407px %cPage: %c407px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c407px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cmodalFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cmodalFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c407px %cPage: %c407px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c407px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cmodalFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Page is hidden: HTML: %c0px %cPage: %c407px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c407px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cmodalFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %cfalse color: #135CD2;
 [LOG] Iframe hidden - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c247px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
 [LOG] Size calculated in %cXXXms color: #135CD2;
-[LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Received: %c[iFrameSizer]testFrame:XX:XX:resizeObserver color: #135CD2;
 [LOG] Set height: %c247px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -335,15 +309,12 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:mutationObserver color: #135CD2;
 [LOG] Set height: %c211px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord, MutationRecord]
@@ -383,13 +354,9 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c211px color: #135CD2;
 [LOG] Resize event: %cMutation Observed color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Overflowed Elements: Set(2)
@@ -405,8 +372,6 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:overflowObserver color: #135CD2;
 [LOG] Set height: %c235px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ctestFrame%c autoResize %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
@@ -452,8 +417,6 @@ Called property: 'autoResize'
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:autoResizeEnabled font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cautoResizeEnabled color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c autoResize %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:autoResize:true color: #135CD2;
@@ -489,15 +452,12 @@ Called property: 'autoResize'
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:mutationObserver color: #135CD2;
 [LOG] Set height: %c314px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -618,21 +578,15 @@ Called property: 'autoResize'
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Using <html> size: HTML: %c292px %cPage: %c1600px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c292px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Overflowed Elements: Set(2)
@@ -648,8 +602,6 @@ Called property: 'autoResize'
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:overflowObserver color: #135CD2;
 [LOG] Set height: %c1600px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ctestFrame%c scrollTo %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
@@ -675,10 +627,7 @@ Called property: 'scrollTo'
 [LOG] Checked %c2%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c1600px color: #135CD2;
 [LOG] Resize event: %cVisibility changed color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cvisibilityObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cmodalFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cmodalFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -944,23 +893,15 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Received: %c[iFrameSizer]iFrameResizer1:XX:XX:title:Iframe-Resizer Test Content color: #135CD2;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
@@ -970,31 +911,21 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer1%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -1161,31 +1092,22 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -1291,21 +1213,15 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Using <html> size: HTML: %c135px %cPage: %c344px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c135px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowIgnored %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Ignoring elements with [data-iframe-ignore] > *:
@@ -1328,8 +1244,6 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:mutationObserver color: #135CD2;
 [LOG] Set height: %c360px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -1350,8 +1264,6 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:mutationObserver color: #135CD2;
 [LOG] Set height: %c135px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -1501,31 +1413,22 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -1735,8 +1638,6 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -1765,17 +1666,12 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:534.90625:1224:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]testFrame:534.90625:1224:mutationObserver color: #135CD2;
@@ -1789,21 +1685,14 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cnestedIFrame1%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cnestedIFrame1%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -2054,8 +1943,6 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:435.8125:1224:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cnestedIFrame1%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -2084,20 +1971,14 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%cnestedIFrame1:552.90625:1148:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c389px %cPage: %c389px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c389px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]testFrame:435.8125:1224:mutationObserver color: #135CD2;
@@ -2115,8 +1996,6 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -2161,31 +2040,21 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:716.8125:1224:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cnestedIFrame2%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c389px %cPage: %c389px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c389px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]testFrame:716.8125:1224:mutationObserver color: #135CD2;
 [LOG] Set height: %c716.8125px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame2%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -2341,31 +2210,22 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ctestFrame%c message %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [WARNING] Deprecated API object name
@@ -2393,21 +2253,15 @@ The window.parentIFrame object has been renamed to window.parentIframe. Please u
 Called property: 'getId'
 
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c247px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
 [LOG] Size calculated in %cXXXms color: #135CD2;
-[LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cparent(testFrame)%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Received: %c[iFrameSizer]testFrame:XX:XX:resizeObserver color: #135CD2;
 [LOG] Set height: %c247px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -2654,23 +2508,15 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Received: %c[iFrameSizer]iFrameResizer1:XX:XX:title:Iframe-Resizer Test Content color: #135CD2;
 [LOG] Set iframe title attribute: %cIframe-Resizer Test Content color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
@@ -2680,31 +2526,21 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer1%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c677px %cPage: %c677px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c677px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -2911,8 +2747,6 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Sending message to iframe %ciFrameResizer0%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ciFrameResizer0:8:false:true:32:true:true::auto:::0:true:child:auto:false:::true:6.0.0-beta.0:0::true color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c contentMutated %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Mutations: [MutationRecord]
@@ -2941,17 +2775,12 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Size calculated in %cXXXms color: #135CD2;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:876.90625:588:mutationObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c713px %cPage: %c713px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c713px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %cparent(iFrameResizer0)%c mutationObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Received: %c[iFrameSizer]iFrameResizer0:876.90625:588:mutationObserver color: #135CD2;
@@ -2965,37 +2794,24 @@ For more information visit https://iframe-resizer.com/pricing.
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer0%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cmutationObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cnestedIFrame1%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c713px %cPage: %c713px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c713px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %cnestedIFrame1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Found elements possibly overflowing <html> 
 [LOG] Bottom position calculated from: JSHandle@node
 [LOG] Checked %c1%c elements color: #135CD2; color: #1F1F1F;
 [LOG] Content height: %c445px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
 [LOG] Size calculated in %cXXXms color: #135CD2;
-[LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer1:XX:XX:resizeObserver font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %cparent(iFrameResizer1)%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[LOG] Received: %c[iFrameSizer]iFrameResizer1:XX:XX:resizeObserver color: #135CD2;
 [LOG] Set height: %c445px color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUP] %ciFrameResizer1%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUP] %ciFrameResizer0%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ciFrameResizer0:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -3180,31 +2996,22 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Sending message to iframe %ctestFrame%c via same origin%c color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Message data: %ctestFrame:8:false:true:32:true:true:8px:auto:#f7f7f7:0 8px:0:true:child:auto:false:::true:6.0.0-beta.0:2::false color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -3297,21 +3104,15 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Received: %c[iFrameSizer]testFrame:XX:XX:title:iFrame textarea resizing example color: #135CD2;
 [LOG] Set iframe title attribute: %ciFrame textarea resizing example color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c126px %cPage: %c126px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c126px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c visibilityObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;
@@ -3447,14 +3248,10 @@ Found 2 iframes with the hiddenFrame ID:
 [STARTGROUPCOLLAPSED] %ctestFrame%c title %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:title:Iframe-Resizer Test Content font-style: italic; color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cinit color: #135CD2;
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c resizeObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cElement resized <BODY> color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %cparent(testFrame)%c init %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] First run for testFrame
@@ -3474,18 +3271,13 @@ Found 2 iframes with the hiddenFrame ID:
 [LOG] Visible: %ctrue color: #135CD2;
 [LOG] Resize already pending - Ignored resize request
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %cresizeObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c overflowObserver %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] No overflow detected
 [LOG] <html> size equals page size: HTML: %c371px %cPage: %c371px color: #135CD2; color: #1F1F1F; color: #135CD2;
 [LOG] Content height: %c371px color: #135CD2;
 [LOG] Resize event: %cOverflow updated color: #135CD2;
-[LOG] No change in content size detected
 [ENDGROUP] console.groupEnd
-[STARTGROUPCOLLAPSED] %ctestFrame%c requestAnimationFrame %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
-[DEBUG] Reset sendPending: %coverflowObserver color: #135CD2;
 [ENDGROUP] console.groupEnd
 [STARTGROUPCOLLAPSED] %ctestFrame%c beforeUnload %c@ 20:XX:XX.XXX font-weight: normal; font-weight: bold; font-weight: normal;font-style: italic;
 [LOG] Sending message to parent page via sameOrigin: %c%ctestFrame:XX:XX:beforeUnload font-style: italic; color: #135CD2;

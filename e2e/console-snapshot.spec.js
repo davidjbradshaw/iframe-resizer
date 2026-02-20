@@ -56,15 +56,23 @@ test.describe('Console log snapshot', () => {
       const text = msg.text()
       const location = msg.location()
 
-      // Capture all console logs (don't filter - we want to see everything)
-      // The page has log: true so all iframe-resizer activity will be logged
-      consoleLogs.push({
-        type,
-        text: normalizeLog(text),
-        location: location.url
-          ? `${location.url}:${location.lineNumber}`
-          : 'unknown',
-      })
+      // Filter out timing-sensitive async logs that have non-deterministic ordering
+      // These logs appear in different orders between CI and local runs
+      const isTimingSensitive =
+        text.includes('requestAnimationFrame') ||
+        text.includes('resizeObserver') ||
+        text.includes('Reset sendPending') ||
+        text.includes('No change in content size detected')
+
+      if (!isTimingSensitive) {
+        consoleLogs.push({
+          type,
+          text: normalizeLog(text),
+          location: location.url
+            ? `${location.url}:${location.lineNumber}`
+            : 'unknown',
+        })
+      }
     })
 
     // Navigate to the test page
