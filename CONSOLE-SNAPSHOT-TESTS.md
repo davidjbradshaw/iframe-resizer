@@ -1,8 +1,8 @@
-# Console Snapshot Testing - Implementation Summary
+# Console Validation Testing - Implementation Summary
 
 ## What Was Created
 
-A comprehensive end-to-end test system that captures and validates console log output from iframe-resizer across both dev and prod builds.
+A comprehensive end-to-end test system that validates console behavior and detects errors during complex user interactions with iframe-resizer across both dev and prod builds.
 
 ## Files Created/Modified
 

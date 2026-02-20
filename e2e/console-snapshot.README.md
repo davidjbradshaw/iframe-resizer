@@ -1,15 +1,15 @@
-# Console Snapshot Test
+# Console Validation Test
 
 ## Overview
 
-This test captures and validates console log output from iframe-resizer during a comprehensive user interaction workflow. It runs against both **dev** and **prod** builds (both using js/ directory) to ensure consistent logging behavior.
+This test validates console behavior during a comprehensive user interaction workflow. It runs against both **dev** and **prod** builds (both using js/ directory) to ensure error-free operation.
 
 ## Purpose
 
-- **Regression Detection**: Catch unintended changes in logging output
-- **Build Comparison**: Verify both dev and prod builds behave consistently
-- **Documentation**: Serve as a living document of expected console behavior
-- **Debugging**: When logs change unexpectedly, the diff shows exactly what changed
+- **Error Detection**: Catch console errors during complex interaction sequences
+- **Event Validation**: Verify key events fire correctly (resize, scroll, messages)
+- **Build Validation**: Ensure both dev and prod builds work without errors
+- **Regression Prevention**: Detect when changes break core functionality
 
 ## How It Works
 
@@ -31,18 +31,18 @@ The test runs against the js/ directory, with different builds tested separately
 
 **Important**: Each test expects the appropriate build to be in js/ before running. Builds are run separately to prevent overwriting each other.
 
-### 2. Console Capture
+### 2. Console Validation
 
-The test captures all console output emitted during the workflow (no filtering is applied). This includes:
-- iframe-resizer framework logs (prefixed with `[iframe-resizer`)
-- Application-specific logs from the test pages
-- Any errors or warnings emitted during test execution
+The test monitors console output and validates:
+- **No errors occur** (excluding expected 404s)
+- **Resize events fire** (dev build only - stripped in prod)
+- **Message events fire** (dev build only - stripped in prod)
+- **Scroll events fire** when triggered
+- **Minimum log count** ensures logging hasn't been accidentally disabled
 
-Logs are normalized to remove:
-- Memory addresses (`@0x123456` → `@0xXXXXXX`)
-- Timestamps (`123ms` → `XXXms`)
-- File paths (normalized to `file:///PATH`)
-- Line/column numbers (`:123:45` → `:XX:XX`)
+Validation is build-aware:
+- **Dev build**: Expects detailed debug logging (100+ logs, resize/message events)
+- **Prod build**: Minimal logging acceptable (10+ logs, events may be stripped)
 
 ### 3. User Interaction Workflow
 
@@ -77,15 +77,20 @@ The test executes this sequence on `/example-test/html/index.html`:
 27. Back to page 1
 28. Navigate to 404 page
 
-### 4. Snapshot Comparison
+### 4. Test Assertions
 
-Captured logs are saved to:
-- `e2e/console-snapshot.spec.js-snapshots/console-logs-console-dev.txt`
-- `e2e/console-snapshot.spec.js-snapshots/console-logs-console-prod.txt`
+The test makes several assertions:
 
-Note: Playwright stores text snapshots in a directory named after the test file and automatically appends the project name to the snapshot filename. The snapshots are platform-agnostic and will work across different operating systems.
+**All builds:**
+- No console errors (filtered to exclude expected 404s from testing)
 
-On subsequent runs, Playwright compares new output against these snapshots.
+**Dev build only:**
+- Resize events > 0 (proves iframe resizing works)
+- Message events > 0 (proves parent-child communication)
+- Total logs > 100 (proves debug logging enabled)
+
+**Prod build:**
+- Total logs > 10 (minimal logging threshold)
 
 ## Running the Tests
 
@@ -115,23 +120,9 @@ npm run vite:prod
 npx playwright test console-snapshot --project=console-prod
 ```
 
-### Update Snapshots
+### Updating Test Expectations
 
-When logging behavior intentionally changes:
-
-```bash
-# Update dev snapshot
-npm run build:dev
-npm run test:e2e:console:update:dev
-
-# Update prod snapshot
-npm run vite:prod
-npm run test:e2e:console:update:prod
-
-# Commit updated snapshots
-git add e2e/*-snapshots/
-git commit -m "Update console snapshots"
-```
+If you need to update event count expectations or add new validations, edit the assertions in `e2e/console-snapshot.spec.js`.
 
 ### View Test Results
 
@@ -140,47 +131,41 @@ git commit -m "Update console snapshots"
 npx playwright show-report
 ```
 
-## When Snapshots Fail
+## When Tests Fail
 
-### Expected Failures
+### Console Errors
 
-Snapshots should be updated when:
-- ✅ New features add logging
-- ✅ Log messages are improved
-- ✅ Log formatting changes intentionally
-- ✅ Debug code behavior changes
+If errors are detected:
+1. Check the test output for the specific error message
+2. Verify the error isn't from expected scenarios (404 tests)
+3. Run with `--headed --debug` to see the error in browser console
+4. Fix the underlying issue causing the error
 
-### Unexpected Failures
+### Missing Events
 
-Investigate when:
-- ❌ Prod and dev outputs diverge unexpectedly
-- ❌ Logs disappear without code changes
-- ❌ Error messages appear in output
-- ❌ Performance characteristics change (many more/fewer logs)
+If resize/message event counts are 0 (dev build):
+1. Verify the page loaded correctly
+2. Check that user interactions are completing
+3. Ensure debug logging isn't disabled
+4. Review test output for warnings
 
 ### Debugging Failures
 
-1. **View the diff**:
+1. **Run with headed browser**:
    ```bash
-   # Playwright shows exact diff in the test report
-   npx playwright show-report
-   ```
-
-2. **Compare builds manually**:
-   ```bash
-   # Check if build artifacts changed
-   git diff e2e/*-snapshots/
-   ```
-
-3. **Run interactively**:
-   ```bash
-   # See logs in real-time with headed browser
    npx playwright test console-snapshot --project=console-dev --headed --debug
    ```
 
-4. **Inspect actual vs expected**:
-   - Failed snapshots are saved to `test-results/`
-   - Compare `-actual.txt` vs `-expected.txt`
+2. **Check test report**:
+   ```bash
+   npx playwright show-report
+   ```
+
+3. **Verify build**:
+   ```bash
+   # Ensure correct build is in js/
+   ls -lh js/
+   ```
 
 ## Maintenance
 

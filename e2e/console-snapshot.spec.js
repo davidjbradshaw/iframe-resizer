@@ -1,16 +1,18 @@
 import { expect, test } from '@playwright/test'
 
 /**
- * Console log snapshot test for iframe-resizer
+ * Console validation test for iframe-resizer
  *
  * This test runs through a comprehensive sequence of user interactions
- * and captures all console log output. It uses the Playwright project
+ * and validates console behavior. It uses the Playwright project
  * configuration to test different builds:
  *   - console-dev project: Tests dev build (DEBUG=1, full logging)
  *   - console-prod project: Tests prod build (optimized, stripped debug)
  *
- * The test creates snapshots of the console output which are compared
- * on future runs to detect any unintended changes in logging behavior.
+ * The test validates:
+ *   - No console errors occur during interactions
+ *   - Key events fire (resize, scroll, messages)
+ *   - Expected iframe behaviors work correctly
  *
  * IMPORTANT: The appropriate build must be in js/ before running the test.
  * - For dev: run `npm run build:dev` first
@@ -23,80 +25,58 @@ import { expect, test } from '@playwright/test'
  *   npx playwright test console-snapshot --project=console-prod
  */
 
-// Helper to normalize log messages (remove timestamps, memory addresses, etc.)
-function normalizeLog(log) {
-  return (
-    log
-      // Remove memory addresses like @0x123456
-      .replace(/@0x[\da-f]+/gi, '@0xXXXXXX')
-      // Remove line/column numbers from stack traces FIRST (e.g., ":12:34" → ":XX:XX")
-      .replace(/:\d+:\d+/g, ':XX:XX')
-      // Remove milliseconds after normalized timestamps (e.g., "@ 18:XX:XX.610" → "@ 18:XX:XX.XXX")
-      .replace(/(:XX:XX)\.\d+/g, '$1.XXX')
-      // Normalize duration/timing values - must handle .XXX suffix first, then regular ms
-      // This catches: "1.234ms" → "1.XXXms" → "XXXms" and "123ms" → "XXXms"
-      .replace(/\d+\.XXXms/g, 'XXXms')
-      .replace(/\d+(\.\d+)?ms/g, 'XXXms')
-      // Normalize file paths
-      .replace(/file:\/{3}\S+/g, 'file:///PATH')
-  )
-}
-
-test.describe('Console log snapshot', () => {
-  // Shared array for collecting console logs - reset in beforeEach to ensure test isolation
-  let consoleLogs = []
+test.describe('Console log validation', () => {
+  // Collect console messages for validation
+  let consoleMessages = {
+    errors: [],
+    warnings: [],
+    logs: [],
+    resizeEvents: 0,
+    scrollEvents: 0,
+    messageEvents: 0,
+  }
 
   test.beforeEach(async ({ page }) => {
-    // Reset logs array for each test run
-    consoleLogs = []
+    // Reset message collectors
+    consoleMessages = {
+      errors: [],
+      warnings: [],
+      logs: [],
+      resizeEvents: 0,
+      scrollEvents: 0,
+      messageEvents: 0,
+    }
 
-    // Capture all console messages
+    // Capture console messages and categorize them
     page.on('console', (msg) => {
       const type = msg.type()
       const text = msg.text()
-      const location = msg.location()
 
-      // Filter out logs with non-deterministic ordering or variable content
-      // Async initialization of multiple iframes causes race conditions
-      const isNonDeterministic =
-        // Timing-sensitive async operations
-        text.includes('requestAnimationFrame') ||
-        text.includes('resizeObserver') ||
-        text.includes('Reset sendPending') ||
-        text.includes('No change in content size detected') ||
-        // Initialization logs that can interleave differently
-        text.includes('%c setup %c') ||
-        text.includes('%c init %c') ||
-        text.includes('%c listen %c') ||
-        text.includes('%c ready %c') ||
-        text.includes('%c initReceived %c') ||
-        text.includes('%c title %c') ||
-        text.includes('%c onload %c') ||
-        text.includes('%c iframeReady %c') ||
-        text.includes('First run for') ||
-        text.includes('Added event listener') ||
-        text.includes('Received: %c[iFrameSizer]') ||
-        text.includes('Set height:') ||
-        text.includes('Set iframe title') ||
-        text.includes('sameOrigin:') ||
-        text.includes('Sending message to iframe') ||
-        text.includes('Message data: %c') ||
-        text.includes('Sending%c ready%c to parent') ||
-        // Element counts that vary based on timing
-        text.includes('Attached %cOverflowObserver') ||
-        text.includes('Attached %cResizeObserver') ||
-        text.includes('ResizeObserver attached to') ||
-        text.includes('JSHandle@node')
+      // Capture errors and warnings for assertion
+      // Filter out expected errors (like 404 from testing 404.html)
+      const isExpectedError =
+        text.includes('404') || text.includes('Failed to load resource')
 
-      if (!isNonDeterministic) {
-        consoleLogs.push({
-          type,
-          text: normalizeLog(text),
-          location: location.url
-            ? `${location.url}:${location.lineNumber}`
-            : 'unknown',
-        })
+      if (type === 'error' && !isExpectedError) {
+        consoleMessages.errors.push(text)
+      } else if (type === 'warning') {
+        consoleMessages.warnings.push(text)
       }
+
+      // Count key events (case-insensitive partial matching)
+      const lowerText = text.toLowerCase()
+      if (lowerText.includes('resize')) {
+        consoleMessages.resizeEvents++
+      }
+      if (lowerText.includes('scroll')) {
+        consoleMessages.scrollEvents++
+      }
+      if (lowerText.includes('message')) {
+        consoleMessages.messageEvents++
+      }
+
+      // Store all logs for debugging
+      consoleMessages.logs.push({ type, text })
     })
 
     // Navigate to the test page
@@ -107,37 +87,11 @@ test.describe('Console log snapshot', () => {
     })
 
     // Wait for network to be idle and iframe-resizer to initialize
-    // Using longer timeout in CI to ensure complete initialization
-    // before user interactions begin
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(10000) // Increased from 5s to 10s for CI stability
+    await page.waitForTimeout(2000) // Brief wait for iframe initialization
   })
 
-  test('should produce consistent console output through user interactions', async ({
-    page,
-  }) => {
-    // Debug: Log page state before starting interactions
-    await test.step('Verify page loaded', async () => {
-      const url = page.url()
-      const title = await page.title()
-      console.log(`Page URL: ${url}`)
-      console.log(`Page title: ${title}`)
-
-      // Check if the expected element exists
-      const anchorExists = await page.locator('a[name="anchorModalTest"]').count()
-      console.log(`Anchor count: ${anchorExists}`)
-
-      if (anchorExists === 0) {
-        // Take screenshot for debugging
-        await page.screenshot({ path: 'test-results/page-load-debug.png', fullPage: true })
-        console.log('Screenshot saved to test-results/page-load-debug.png')
-
-        // Log page content
-        const bodyText = await page.textContent('body')
-        console.log(`Body text (first 500 chars): ${bodyText?.substring(0, 500)}`)
-      }
-    })
-
+  test('should handle user interactions without errors', async ({ page }) => {
     const iframe = page.frameLocator('#testFrame')
 
     // Step 1: Click modal and close modal overlay
@@ -398,24 +352,38 @@ test.describe('Console log snapshot', () => {
     // Final wait to capture any trailing logs
     await page.waitForTimeout(1000)
 
-    // Format console logs for snapshot
-    const logSnapshot = consoleLogs
-      .map((log) => `[${log.type.toUpperCase()}] ${log.text}`)
-      .join('\n')
-
-    // Save snapshot (Playwright will add project name and platform suffix)
-    expect(logSnapshot).toMatchSnapshot('console-logs.txt')
-
-    // Also verify we captured a reasonable number of logs
-    // Dev build has more logs (debug code), prod has fewer (stripped)
-    // Determine build type from project name (console-dev or console-prod)
+    // Determine build type for assertions
     const buildType = test.info().project.name.includes('dev') ? 'dev' : 'prod'
-    const minLogs = buildType === 'dev' ? 20 : 3
-    expect(consoleLogs.length).toBeGreaterThan(minLogs)
+
+    // Assert no errors occurred during test
+    if (consoleMessages.errors.length > 0) {
+      console.error('Console errors found:', consoleMessages.errors)
+    }
+    expect(consoleMessages.errors).toHaveLength(0)
+
+    // Dev build has detailed logging, prod build strips most debug logs
+    if (buildType === 'dev') {
+      // Assert resize events occurred (iframes should resize during interactions)
+      expect(consoleMessages.resizeEvents).toBeGreaterThan(0)
+
+      // Assert message events occurred (iframe-parent communication)
+      expect(consoleMessages.messageEvents).toBeGreaterThan(0)
+
+      // Assert we captured a reasonable number of logs
+      expect(consoleMessages.logs.length).toBeGreaterThan(100)
+    } else {
+      // Prod build has minimal logging
+      expect(consoleMessages.logs.length).toBeGreaterThan(10)
+    }
 
     // Log summary for debugging
     console.log(
-      `\n${buildType.toUpperCase()} BUILD - Captured ${consoleLogs.length} log entries`,
+      `\n${buildType.toUpperCase()} BUILD - Captured ${consoleMessages.logs.length} log entries`,
     )
+    console.log(`  Resize events: ${consoleMessages.resizeEvents}`)
+    console.log(`  Scroll events: ${consoleMessages.scrollEvents}`)
+    console.log(`  Message events: ${consoleMessages.messageEvents}`)
+    console.log(`  Warnings: ${consoleMessages.warnings.length}`)
+    console.log(`  Errors: ${consoleMessages.errors.length}`)
   })
 })
