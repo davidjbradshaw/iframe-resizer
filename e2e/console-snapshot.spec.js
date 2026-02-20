@@ -15,6 +15,12 @@ import { expect, test } from '@playwright/test'
  * IMPORTANT: The appropriate build must be in js/ before running the test.
  * - For dev: run `npm run build:dev` first
  * - For prod: run `npm run vite:prod` first
+ *
+ * WARNING: Do not run both console-dev and console-prod projects in parallel
+ * locally, as they both use js/ and will overwrite each other's builds.
+ * Always run with explicit project flags:
+ *   npx playwright test console-snapshot --project=console-dev
+ *   npx playwright test console-snapshot --project=console-prod
  */
 
 // Helper to normalize log messages (remove timestamps, memory addresses, etc.)
@@ -148,15 +154,14 @@ test.describe('Console log snapshot', () => {
       await page.waitForTimeout(500)
     })
 
-    // Step 10: Jump to iFrame anchor (need to check what anchors exist)
+    // Step 10: Jump to iFrame anchor
     await test.step('Jump to iFrame anchor', async () => {
-      // Click "top" link or similar anchor navigation
       const newIframe = page.frameLocator('#testFrame')
       const anchorLink = newIframe.locator('a[href^="#"]').first()
-      if ((await anchorLink.count()) > 0) {
-        await anchorLink.click()
-        await page.waitForTimeout(300)
-      }
+      // Ensure anchor exists before clicking
+      await expect(anchorLink).toBeVisible({ timeout: 5000 })
+      await anchorLink.click()
+      await page.waitForTimeout(300)
     })
 
     // Step 11: Top
@@ -200,19 +205,17 @@ test.describe('Console log snapshot', () => {
     await test.step('Toggle ignore (1st time)', async () => {
       const overflowIframe = page.frameLocator('#testFrame')
       const toggleIgnore = overflowIframe.locator('a:has-text("Toggle ignore")')
-      if ((await toggleIgnore.count()) > 0) {
-        await toggleIgnore.click()
-        await page.waitForTimeout(300)
-      }
+      await expect(toggleIgnore).toBeVisible({ timeout: 5000 })
+      await toggleIgnore.click()
+      await page.waitForTimeout(300)
     })
 
     await test.step('Toggle ignore (2nd time)', async () => {
       const overflowIframe = page.frameLocator('#testFrame')
       const toggleIgnore = overflowIframe.locator('a:has-text("Toggle ignore")')
-      if ((await toggleIgnore.count()) > 0) {
-        await toggleIgnore.click()
-        await page.waitForTimeout(300)
-      }
+      await expect(toggleIgnore).toBeVisible({ timeout: 5000 })
+      await toggleIgnore.click()
+      await page.waitForTimeout(300)
     })
 
     // Step 18: Back to page 1
@@ -242,10 +245,9 @@ test.describe('Console log snapshot', () => {
         .locator('a#nested, a[href*="frame.nested.html"]')
         .first()
 
-      if ((await nestedLink.count()) > 0) {
-        await nestedLink.click()
-        await page.waitForTimeout(1000)
-      }
+      await expect(nestedLink).toBeVisible({ timeout: 5000 })
+      await nestedLink.click()
+      await page.waitForTimeout(1000)
     })
 
     // Go back to page 1 from nested
@@ -329,11 +331,11 @@ test.describe('Console log snapshot', () => {
       const textareaIframe = page.frameLocator('#testFrame')
       const textarea = textareaIframe.locator('textarea')
 
-      if ((await textarea.count()) > 0) {
-        // Type some content to trigger resize
-        await textarea.fill('This is test content\n'.repeat(10))
-        await page.waitForTimeout(500)
-      }
+      // Ensure textarea is present
+      await expect(textarea).toBeVisible({ timeout: 5000 })
+      // Type some content to trigger resize
+      await textarea.fill('This is test content\n'.repeat(10))
+      await page.waitForTimeout(500)
     })
 
     // Step 31: Back to page 1

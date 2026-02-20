@@ -79,10 +79,10 @@ The test executes this sequence on `/example-test/html/index.html`:
 ### 4. Snapshot Comparison
 
 Captured logs are saved to:
-- `e2e/console-snapshot.spec.js-snapshots/console-logs-console-dev-darwin.txt`
-- `e2e/console-snapshot.spec.js-snapshots/console-logs-console-prod-darwin.txt`
+- `e2e/console-snapshot.spec.js-snapshots/console-logs-console-dev.txt`
+- `e2e/console-snapshot.spec.js-snapshots/console-logs-console-prod.txt`
 
-Note: Playwright stores text snapshots in a directory named after the test file and automatically appends the project name and platform to the snapshot filename. The platform suffix may differ on your machine (e.g., `-linux` or `-windows` instead of `-darwin`).
+Note: Playwright stores text snapshots in a directory named after the test file and automatically appends the project name to the snapshot filename. The snapshots are platform-agnostic and will work across different operating systems.
 
 On subsequent runs, Playwright compares new output against these snapshots.
 

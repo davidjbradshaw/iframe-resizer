@@ -28,8 +28,11 @@ A comprehensive end-to-end test system that captures and validates console log o
    - `console-prod` - Tests with prod build (requires `npm run vite:prod` first)
 
 2. **`package.json`** - Added npm scripts:
-   - `npm run test:e2e:console` - Run both dev and prod snapshot tests
-   - `npm run test:e2e:console:update` - Update snapshots after intentional changes
+   - `npm run test:e2e:console:dev` - Run console snapshot test against dev build
+   - `npm run test:e2e:console:prod` - Run console snapshot test against prod build
+   - `npm run test:e2e:console:update:dev` - Update dev snapshots
+   - `npm run test:e2e:console:update:prod` - Update prod snapshots
+   - `npm run test:e2e:console:update` - Update both dev and prod snapshots
 
 ## How to Use
 
@@ -50,10 +53,10 @@ A comprehensive end-to-end test system that captures and validates console log o
    ```
 
    This will create:
-   - `e2e/console-snapshot.spec.js-snapshots/console-logs-console-dev-darwin.txt`
-   - `e2e/console-snapshot.spec.js-snapshots/console-logs-console-prod-darwin.txt`
+   - `e2e/console-snapshot.spec.js-snapshots/console-logs-console-dev.txt`
+   - `e2e/console-snapshot.spec.js-snapshots/console-logs-console-prod.txt`
 
-   Note: Playwright stores text snapshots in a directory named after the test file and automatically appends the project name and platform to the snapshot filename. The platform suffix may differ on your machine (e.g., `-linux` or `-windows` instead of `-darwin`).
+   Note: Playwright stores text snapshots in a directory named after the test file and automatically appends the project name to the snapshot filename. The snapshots are platform-agnostic and will work across different operating systems.
 
 3. **Review and commit snapshots:**
    ```bash

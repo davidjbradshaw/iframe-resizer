@@ -5,6 +5,7 @@ name: Playwright
 
 permissions:
   contents: read
+  pull-requests: write
 
 on:
   push:

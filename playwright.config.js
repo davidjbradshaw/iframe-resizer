@@ -38,6 +38,10 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
+  /* Platform-agnostic snapshot paths - removes platform suffix for cross-platform compatibility */
+  snapshotPathTemplate:
+    '{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}',
+
   /* Configure projects for major browsers */
   projects: [
     {
