@@ -75,6 +75,9 @@ test.describe('Console log snapshot', () => {
     // consistent timing to capture all initialization logs
     await page.waitForLoadState('networkidle')
     await page.waitForTimeout(5000)
+
+    // Verify page loaded correctly by checking for a known element
+    await page.waitForSelector('a[name="anchorModalTest"]', { state: 'visible', timeout: 10000 })
   })
 
   test('should produce consistent console output through user interactions', async ({
