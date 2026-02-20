@@ -66,16 +66,15 @@ test.describe('Console log snapshot', () => {
     // Navigate to the test page
     // Note: Uses js/ directory which should contain the appropriate build
     // (dev or prod) based on which project is running
-    await page.goto('/example-test/html/index.html')
+    await page.goto('/example-test/html/index.html', {
+      waitUntil: 'domcontentloaded',
+    })
+
+    // Wait for network to be idle and iframe-resizer to initialize
+    // Using fixed timeouts is acceptable for snapshot tests where we need
+    // consistent timing to capture all initialization logs
     await page.waitForLoadState('networkidle')
-
-    // Wait for the main iframe to be present in the DOM
-    await page.waitForSelector('#testFrame', { timeout: 10_000 })
-
-    // Brief wait to ensure iframe-resizer initializes and initial logs are captured
-    // Using a fixed timeout here is acceptable for snapshot tests where we need
-    // to ensure all async initialization completes before starting interactions
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(3000)
   })
 
   test('should produce consistent console output through user interactions', async ({
