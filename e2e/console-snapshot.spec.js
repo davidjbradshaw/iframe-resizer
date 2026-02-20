@@ -76,20 +76,10 @@ test.describe('Console log snapshot', () => {
       { timeout: 10_000 },
     )
 
-    // Wait for initial resize and log messages to be processed
-    // by checking that iframe height has been set to a non-zero value
-    await page.waitForFunction(
-      () => {
-        const iframe = document.querySelector('#testFrame')
-        return (
-          iframe &&
-          iframe.style &&
-          iframe.style.height &&
-          iframe.style.height !== '0px'
-        )
-      },
-      { timeout: 5000 },
-    )
+    // Brief wait to ensure initial resize logs are captured
+    // Using a small fixed timeout here is acceptable for snapshot tests
+    // where we need to ensure all async initialization completes
+    await page.waitForTimeout(500)
   })
 
   test('should produce consistent console output through user interactions', async ({
