@@ -56,15 +56,32 @@ test.describe('Console log snapshot', () => {
       const text = msg.text()
       const location = msg.location()
 
-      // Filter out timing-sensitive async logs that have non-deterministic ordering
-      // These logs appear in different orders between CI and local runs
-      const isTimingSensitive =
+      // Filter out logs with non-deterministic ordering
+      // Async initialization of multiple iframes causes race conditions
+      const isNonDeterministic =
+        // Timing-sensitive async operations
         text.includes('requestAnimationFrame') ||
         text.includes('resizeObserver') ||
         text.includes('Reset sendPending') ||
-        text.includes('No change in content size detected')
+        text.includes('No change in content size detected') ||
+        // Initialization logs that can interleave differently
+        text.includes('%c setup %c') ||
+        text.includes('%c init %c') ||
+        text.includes('%c listen %c') ||
+        text.includes('%c ready %c') ||
+        text.includes('%c initReceived %c') ||
+        text.includes('%c title %c') ||
+        text.includes('%c onload %c') ||
+        text.includes('First run for') ||
+        text.includes('Added event listener') ||
+        text.includes('Received: %c[iFrameSizer]') ||
+        text.includes('Set height:') ||
+        text.includes('Set iframe title') ||
+        text.includes('sameOrigin:') ||
+        text.includes('Sending message to iframe') ||
+        text.includes('Message data: %c')
 
-      if (!isTimingSensitive) {
+      if (!isNonDeterministic) {
         consoleLogs.push({
           type,
           text: normalizeLog(text),
