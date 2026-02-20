@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      a.toggle {
+        float: right;
+        margin-left: 8px;
+      }
+
+      iframe {
+        height: 300px;
+        /* border-width: 0; */
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
+    <h2>Automagically resizing iFrame</h2>
+    <p>
+      Back to
+      <a name="anchorParentTest" href="index.html">vertical iframes</a>.
+    </p>
+    
+    <div id="iframeContainer" style="margin: 20px">
+      <iframe
+        src="child/frame.animate-width.html"
+        scrolling="no"
+      ></iframe>
+    </div>
+
+    <p id="callback"></p>
+    <div style="margin: 8px 0; font-size: 13px">
+      For details on how this works, see
+      <a href="https://iframe-resizer.com">https://frame-resizer.com</a>.
+    </div>
+
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.parent.js"
+    ></script>
+    <script type="text/javascript">
+      /*
+       * If you do not understand what the code below does, then please just use the
+       * following call in your own code.
+       *
+       *   iframeResize({ license: 'YOUR-LICENSE' })
+       *
+       * Once you have it working, set the log option to false.
+       */
+
+      const callbackDisplay = document.querySelector('p#callback')
+
+      iframeResize({
+        log: true, // Enable console logging
+        inPageLinks: true, // Enable in page links
+        direction: 'horizontal', // Enable horizontal resizing
+        license: 'GPLv3',
+        overflow: -30,
+
+        // offsetHeight: 10, // Alter the returned height
+        onResized(messageData) {
+          // Callback fn when resize is received
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
+        },
+        onMouseEnter(messageData) {
+          // Callback fn when mouse enters iframe
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>ScreenX:</b> ${messageData.screenX} <b>ScreenY:</b> ${messageData.screenY} <b>Event type:</b> ${messageData.type}`
+        },
+        onMouseLeave(messageData) {
+          // Callback fn when mouse enters iframe
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>ScreenX:</b> ${messageData.screenX} <b>ScreenY:</b> ${messageData.screenY} <b>Event type:</b> ${messageData.type}`
+        },
+        onMessage(messageData) {
+          // Callback fn when message is received
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Message:</b> ${messageData.message}`
+          alert(messageData.message)
+          messageData.iframe.iFrameResizer.sendMessage(
+            'Hello back from parent page',
+          )
+        },
+        onClosed(id) {
+          // Callback fn when iFrame is closed
+          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+        },
+      })
+
+      function toggle() {
+        const iframes = document.querySelectorAll('iframe')
+        const iframe = iframes[0]
+
+        iframe.style.display =
+          iframe.style.display === 'none' ? 'block' : 'none'
+      }
+
+      document.getElementById('toggle').addEventListener('click', toggle)
+    </script>
+  </body>
+</html>

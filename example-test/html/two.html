@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iFrame message passing test</title>
+    <meta name="description" content="iFrame message passing test" />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      iframe {
+        width: 48%;
+        height: 100vh;
+        /* border-width: 0; */
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Automagically resizing iFrame</h2>
+    <p>
+      Resize window or click one of the links in the iFrame to watch it resize.
+      Or go back to a
+      <a name="anchorParentTest" href="index.html">single iFrame</a>.
+    </p>
+    <div style="margin: 20px; overflow: auto">
+      <iframe
+        src="child/frame.content.html"
+        scrolling="no"
+        style="float: left; margin-right: 2%"
+      ></iframe>
+      <iframe
+        src="child/frame.content.html"
+        scrolling="no"
+      ></iframe>
+    </div>
+
+    <p id="callback"></p>
+    <div style="margin: 8px 0; font-size: 13px">
+      For details on how this works, see
+      <a href="https://iframe-resizer.com">https://frame-resizer.com</a>.
+    </div>
+
+    <script
+      type="text/javascript"
+      src="../../js/iframe-resizer.parent.js"
+    ></script>
+    <script type="text/javascript">
+      /*
+       * If you do not understand what the code below does, then please just use the
+       * following call in your own code.
+       *
+       *   iframeResize({ license: 'YOUR-LICENSE' })
+       *
+       */
+
+      const callbackDisplay = document.querySelector('p#callback')
+
+      const iframes = iframeResize({
+        inPageLinks: true, // Enable in page links
+        license: 'GPLv3',
+        log: 'expanded',
+
+        onResized(messageData) {
+          // Callback fn when resize is received
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
+        },
+        onMessage(messageData) {
+          // Callback fn when message is received
+          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Message:</b> ${messageData.message}`
+          alert(`${messageData.message} (${messageData.iframe.id})`)
+        },
+        onClosed(id) {
+          // Callback fn when iFrame is closed
+          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+        },
+      })
+    </script>
+  </body>
+</html>
