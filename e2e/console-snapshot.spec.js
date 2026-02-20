@@ -74,7 +74,7 @@ test.describe('Console log snapshot', () => {
     // Using fixed timeouts is acceptable for snapshot tests where we need
     // consistent timing to capture all initialization logs
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(3000)
+    await page.waitForTimeout(5000)
   })
 
   test('should produce consistent console output through user interactions', async ({
