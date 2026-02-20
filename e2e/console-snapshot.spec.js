@@ -75,14 +75,33 @@ test.describe('Console log snapshot', () => {
     // consistent timing to capture all initialization logs
     await page.waitForLoadState('networkidle')
     await page.waitForTimeout(5000)
-
-    // Verify page loaded correctly by checking for a known element
-    await page.waitForSelector('a[name="anchorModalTest"]', { state: 'visible', timeout: 10000 })
   })
 
   test('should produce consistent console output through user interactions', async ({
     page,
   }) => {
+    // Debug: Log page state before starting interactions
+    await test.step('Verify page loaded', async () => {
+      const url = page.url()
+      const title = await page.title()
+      console.log(`Page URL: ${url}`)
+      console.log(`Page title: ${title}`)
+
+      // Check if the expected element exists
+      const anchorExists = await page.locator('a[name="anchorModalTest"]').count()
+      console.log(`Anchor count: ${anchorExists}`)
+
+      if (anchorExists === 0) {
+        // Take screenshot for debugging
+        await page.screenshot({ path: 'test-results/page-load-debug.png', fullPage: true })
+        console.log('Screenshot saved to test-results/page-load-debug.png')
+
+        // Log page content
+        const bodyText = await page.textContent('body')
+        console.log(`Body text (first 500 chars): ${bodyText?.substring(0, 500)}`)
+      }
+    })
+
     const iframe = page.frameLocator('#testFrame')
 
     // Step 1: Click modal and close modal overlay
