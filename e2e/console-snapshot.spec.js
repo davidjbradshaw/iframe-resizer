@@ -29,6 +29,8 @@ function normalizeLog(log) {
     log
       // Remove memory addresses like @0x123456
       .replace(/@0x[\da-f]+/gi, '@0xXXXXXX')
+      // Remove line/column numbers from stack traces FIRST (e.g., ":12:34" → ":XX:XX")
+      .replace(/:\d+:\d+/g, ':XX:XX')
       // Remove milliseconds after normalized timestamps (e.g., "@ 18:XX:XX.610" → "@ 18:XX:XX.XXX")
       .replace(/(:XX:XX)\.\d+/g, '$1.XXX')
       // Normalize duration/timing values - must handle .XXX suffix first, then regular ms
@@ -37,8 +39,6 @@ function normalizeLog(log) {
       .replace(/\d+(\.\d+)?ms/g, 'XXXms')
       // Normalize file paths
       .replace(/file:\/{3}\S+/g, 'file:///PATH')
-      // Remove line/column numbers from stack traces
-      .replace(/:\d+:\d+/g, ':XX:XX')
   )
 }
 
