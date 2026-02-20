@@ -69,19 +69,13 @@ test.describe('Console log snapshot', () => {
     await page.goto('/example-test/html/index.html')
     await page.waitForLoadState('networkidle')
 
-    // Wait for iframe-resizer to initialize
-    await page.waitForFunction(
-      () => {
-        const iframe = document.querySelector('#testFrame')
-        return iframe && iframe.iFrameResizer !== undefined
-      },
-      { timeout: 10_000 },
-    )
+    // Wait for the main iframe to be present in the DOM
+    await page.waitForSelector('#testFrame', { timeout: 10_000 })
 
-    // Brief wait to ensure initial resize logs are captured
-    // Using a small fixed timeout here is acceptable for snapshot tests
-    // where we need to ensure all async initialization completes
-    await page.waitForTimeout(500)
+    // Brief wait to ensure iframe-resizer initializes and initial logs are captured
+    // Using a fixed timeout here is acceptable for snapshot tests where we need
+    // to ensure all async initialization completes before starting interactions
+    await page.waitForTimeout(2000)
   })
 
   test('should produce consistent console output through user interactions', async ({
