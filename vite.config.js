@@ -55,10 +55,28 @@ console.log(
   '\n',
 )
 
+const typescriptCore = () =>
+  typescript({
+    tsconfig: './tsconfig.json',
+    include: ['packages/common/**/*.ts', 'packages/core/**/*.ts'],
+  })
+
+const typescriptParent = () =>
+  typescript({
+    tsconfig: './tsconfig.json',
+    include: ['packages/common/**/*.ts', 'packages/core/**/*.ts', 'packages/parent/**/*.ts'],
+  })
+
+const typescriptChild = () =>
+  typescript({
+    tsconfig: './tsconfig.json',
+    include: ['packages/common/**/*.ts', 'packages/child/**/*.ts'],
+  })
+
 const npm = [
   // Core
   {
-    input: 'packages/core/index.js',
+    input: 'packages/core/index.ts',
     output: [
       {
         name: 'createResizer',
@@ -72,6 +90,7 @@ const npm = [
     ],
     external: ['auto-console-group'],
     plugins: [
+      typescriptCore(),
       pluginsProd('core'),
       filesize(),
     ],
@@ -80,7 +99,7 @@ const npm = [
 
   // Parent browser-friendly UMD build
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: [
       {
         name: 'iframeResize',
@@ -88,6 +107,7 @@ const npm = [
       },
     ],
     plugins: [
+      typescriptParent(),
       ...pluginsProd('parent'),
       resolve(),
       copy({
@@ -105,7 +125,7 @@ const npm = [
 
   //  Parent ES module (for bundlers) and CommonJS (for Node) build.
   {
-    input: 'packages/parent/esm.js',
+    input: 'packages/parent/esm.ts',
     output: [output('parent')('esm'), output('parent')('cjs')],
     external: ['@iframe-resizer/core', 'auto-console-group'],
     plugins: pluginsProd('parent'),
@@ -114,9 +134,10 @@ const npm = [
 
   // Child UMD
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: output('child')('umd'),
     plugins: [
+      typescriptChild(),
       ...pluginsProd('child'),
       resolve(),
       copy({
@@ -135,10 +156,11 @@ const npm = [
 
   //Child ES module (for bundlers) and CommonJS (for Node) build.
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: [output('child')('esm'), output('child')('cjs')],
     external: ['auto-console-group'],
     plugins: [
+      typescriptChild(),
       filesize(),
       pluginsProd('child'),
     ],
@@ -158,7 +180,7 @@ const npm = [
   {
     input: 'packages/jquery/plugin.js',
     output: output('jquery')('umd'),
-    plugins: [...pluginsProd('jquery'), resolve()],
+    plugins: [typescriptParent(), ...pluginsProd('jquery'), resolve()],
   },
 
   //  legacy (ES)
@@ -189,7 +211,7 @@ const npm = [
         file: 'dist/legacy/js/iframeResizer.min.js',
       },
     ],
-    plugins: [pluginsProd('legacy'), resolve()],
+    plugins: [typescriptParent(), pluginsProd('legacy'), resolve()],
   },
 
   // legacy child(iife)
@@ -212,6 +234,7 @@ const npm = [
       },
     ],
     plugins: [
+      typescriptChild(),
       pluginsProd('legacy'),
       resolve(),
       copy({
@@ -360,7 +383,7 @@ const npm = [
 // JS folder (iife)
 const js = [
   {
-    input: `packages/parent/iife.js`,
+    input: `packages/parent/iife.ts`,
     output: [
       {
         banner: createBanner('parent', 'iife'),
@@ -372,6 +395,7 @@ const js = [
       },
     ],
     plugins: [
+      typescriptParent(),
       clear({ targets: ['js'] }),
       filesize(),
       ...pluginsJs('parent'),
@@ -380,7 +404,7 @@ const js = [
   },
 
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: [
       {
         banner: createBanner('child', 'iife'),
@@ -390,7 +414,7 @@ const js = [
         ...outputPlugins('child', 'iife'),
       },
     ],
-    plugins: [filesize(), resolve(), ...pluginsJs('child')],
+    plugins: [typescriptChild(), filesize(), resolve(), ...pluginsJs('child')],
   },
 
   {
@@ -404,22 +428,22 @@ const js = [
         ...outputPlugins('jquery', 'iife'),
       },
     ],
-    plugins: [filesize(), resolve(), ...pluginsJs('jquery')],
+    plugins: [typescriptParent(), filesize(), resolve(), ...pluginsJs('jquery')],
   },
 
   // test js folder (umd)
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: [
       {
         banner: createBanner('child', 'test-js'),
         file: 'test-js/iframe-resizer.child.js',
       },
     ],
-    plugins: [injectVersion(), resolve()],
+    plugins: [typescriptChild(), injectVersion(), resolve()],
   },
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: [
       {
         banner: createBanner('parent', 'test-js'),
@@ -428,7 +452,7 @@ const js = [
         name: 'iframeResize',
       },
     ],
-    plugins: [injectVersion(), resolve()],
+    plugins: [typescriptParent(), injectVersion(), resolve()],
   },
   {
     input: 'packages/jquery/plugin.js',
@@ -439,7 +463,7 @@ const js = [
         format: 'umd',
       },
     ],
-    plugins: [injectVersion(), resolve()],
+    plugins: [typescriptParent(), injectVersion(), resolve()],
   },
 ]
 

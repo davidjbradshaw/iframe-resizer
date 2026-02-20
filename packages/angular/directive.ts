@@ -12,79 +12,41 @@ import {
 } from '@angular/core'
 
 import connectResizer from '@iframe-resizer/core'
+import type {
+  IFrameObject,
+  IFrameComponent,
+  IFrameMessageData,
+  IFrameMouseData,
+  IFrameResizedData,
+  IFrameOptions,
+} from '@iframe-resizer/core'
 
-export type iframeResizerObject = {
-  moveToAnchor: (anchor: string) => void
-  resize: () => void
-  sendMessage: (message: string, targetOrigin?: string) => void
-}
-
-type iframeResizerObjectPrivateMethods = {
-  disconnect: () => void
-}
-type iframeResizerObjectPrivate = iframeResizerObject &
-  iframeResizerObjectPrivateMethods
-
-export interface iframeResizerElement extends HTMLIFrameElement {
-  iFrameResizer: iframeResizerObject
-}
-
-export type iframeResizerOptions = {
-  bodyBackground?: string | null
-  bodyMargin?: string | number | null
-  bodyPadding?: string | number | null
-  checkOrigin?: boolean | string[]
-  direction?: 'vertical' | 'horizontal' | 'both' | 'none'
-  inPageLinks?: boolean
-  license: string
-  offsetSize?: number
-  scrolling?: boolean | 'omit'
-  tolerance?: number
-  warningTimeout?: number
-}
+export type { IFrameObject, IFrameComponent, IFrameOptions }
 
 @Directive({
   selector: '[iframe-resizer]',
   standalone: true,
 })
 export class IframeResizerDirective {
-  private resizer?: iframeResizerObjectPrivate
+  private resizer?: IFrameObject
 
-  @Output() onReady = new EventEmitter<iframeResizerElement>()
-  @Output() onBeforeClose = new EventEmitter<iframeResizerElement>()
-  @Output() onMessage = new EventEmitter<{
-    iframe: iframeResizerElement
-    message: string
-  }>()
-  @Output() onMouseEnter = new EventEmitter<{
-    iframe: iframeResizerElement
-    height: number
-    width: number
-    type: string
-  }>()
-  @Output() onMouseLeave = new EventEmitter<{
-    iframe: iframeResizerElement
-    height: number
-    width: number
-    type: string
-  }>()
-  @Output() onResized = new EventEmitter<{
-    iframe: iframeResizerElement
-    height: number
-    width: number
-    type: string
-  }>()
+  @Output() onReady = new EventEmitter<IFrameComponent>()
+  @Output() onBeforeClose = new EventEmitter<IFrameComponent>()
+  @Output() onMessage = new EventEmitter<IFrameMessageData>()
+  @Output() onMouseEnter = new EventEmitter<IFrameMouseData>()
+  @Output() onMouseLeave = new EventEmitter<IFrameMouseData>()
+  @Output() onResized = new EventEmitter<IFrameResizedData>()
   @Output() onScroll = new EventEmitter<{
-    iframe: iframeResizerElement
+    iframe: IFrameComponent
     top: number
     left: number
   }>()
 
-  get iframeResizer(): iframeResizerObject | undefined {
+  get iframeResizer(): IFrameObject | undefined {
     return this.resizer
   }
 
-  @Input() options: iframeResizerOptions = {
+  @Input() options: IFrameOptions = {
     license: '',
   }
 
@@ -108,37 +70,18 @@ export class IframeResizerDirective {
         return false
       },
 
-      onMessage: (event: { iframe: iframeResizerElement; message: string }) =>
-        this.onMessage.next(event),
+      onMessage: (event: IFrameMessageData) => this.onMessage.next(event),
 
-      onMouseEnter: (event: {
-        iframe: iframeResizerElement
-        height: number
-        width: number
-        type: string
-      }) => this.onMouseEnter.next(event),
+      onMouseEnter: (event: IFrameMouseData) => this.onMouseEnter.next(event),
 
-      onMouseLeave: (event: {
-        iframe: iframeResizerElement
-        height: number
-        width: number
-        type: string
-      }) => this.onMouseLeave.next(event),
+      onMouseLeave: (event: IFrameMouseData) => this.onMouseLeave.next(event),
 
-      onReady: (iframe: iframeResizerElement) => this.onReady.next(iframe),
+      onReady: (iframe: IFrameComponent) => this.onReady.next(iframe),
 
-      onResized: (event: {
-        iframe: iframeResizerElement
-        height: number
-        width: number
-        type: string
-      }) => this.onResized.next(event),
+      onResized: (event: IFrameResizedData) => this.onResized.next(event),
 
-      onScroll: (event: {
-        iframe: iframeResizerElement
-        top: number
-        left: number
-      }) => this.onScroll.next(event),
+      onScroll: (event: { iframe: IFrameComponent; top: number; left: number }) =>
+        this.onScroll.next(event),
     })(this.elementRef.nativeElement)
   }
 

@@ -3,14 +3,21 @@ import terser from '@rollup/plugin-terser'
 import { rollup } from 'rollup'
 import clear from 'rollup-plugin-clear'
 
-import { createBanner, injectVersion } from '../vite.config/shared/plugins.js'
+import {
+  createBanner,
+  injectVersion,
+  pluginsBase,
+  typescriptChild,
+  typescriptParent,
+} from '../vite.config/shared/plugins.js'
 
-const { DEBUG } = process.env
-const sourcemap = DEBUG || false
+const { BETA, DEBUG } = process.env
+const sourcemap = DEBUG || BETA || false
+const stripLog = !(DEBUG || BETA)
 
 const configs = [
   {
-    input: 'packages/parent/iife.js',
+    input: 'packages/parent/iife.ts',
     output: {
       banner: createBanner('parent', 'iife'),
       file: 'js/iframe-resizer.parent.js',
@@ -28,10 +35,16 @@ const configs = [
             }),
           ],
     },
-    plugins: [clear({ targets: ['js'] }), resolve(), ...injectVersion()],
+    plugins: [
+      typescriptParent(),
+      clear({ targets: ['js'] }),
+      resolve(),
+      ...pluginsBase(stripLog)(),
+      ...injectVersion(),
+    ],
   },
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: {
       banner: createBanner('child', 'iife'),
       file: 'js/iframe-resizer.child.js',
@@ -48,7 +61,12 @@ const configs = [
             }),
           ],
     },
-    plugins: [resolve(), ...injectVersion()],
+    plugins: [
+      typescriptChild(),
+      resolve(),
+      ...pluginsBase(stripLog)(),
+      ...injectVersion(),
+    ],
   },
   {
     input: 'packages/jquery/plugin.js',
@@ -68,7 +86,12 @@ const configs = [
             }),
           ],
     },
-    plugins: [resolve(), ...injectVersion()],
+    plugins: [
+      typescriptParent(),
+      resolve(),
+      ...pluginsBase(stripLog)(),
+      ...injectVersion(),
+    ],
   },
 ]
 

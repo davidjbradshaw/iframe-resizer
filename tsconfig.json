@@ -7,10 +7,16 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "allowJs": true,
-    "strict": false
+    "strict": false,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": [
+    "packages/global.d.ts",
     "packages/angular/**/*.ts",
+    "packages/common/**/*.ts",
+    "packages/core/**/*.ts",
+    "packages/child/**/*.ts",
+    "packages/parent/**/*.ts",
     "packages/vue/**/*.ts",
     "packages/vue/**/*.vue",
     "packages/react/**/*.ts",

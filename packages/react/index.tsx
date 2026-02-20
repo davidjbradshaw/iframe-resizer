@@ -1,19 +1,19 @@
 import connectResizer from '@iframe-resizer/core'
+import type {
+  IFrameObject,
+  IFrameComponent,
+  IFrameMessageData,
+  IFrameMouseData,
+  IFrameResizedData,
+  IFrameScrollData,
+} from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 import React, { type ReactElement, type RefObject, useEffect, useImperativeHandle, useRef } from 'react'
 
 import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
 
-export type IFrameObject = {
-  moveToAnchor: (anchor: string) => void
-  resize: () => void
-  sendMessage: (message: string, targetOrigin?: string) => void
-}
-
-export interface IFrameComponent extends HTMLIFrameElement {
-  iFrameResizer: IFrameObject
-}
+export type { IFrameObject, IFrameComponent }
 
 export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
   getElement: () => IFrameComponent
@@ -46,27 +46,12 @@ export type ResizerOptions = {
 export type ResizerEvents = {
   onCLosed?: (iframeId: string) => void // Remove in v6
   onAfterClose?: (iframeId: string) => void
-  onMessage?: (ev: { iframe: IFrameComponent; message: any }) => void
-  onMouseEnter?: (ev: {
-    iframe: IFrameComponent
-    height: number
-    width: number
-    type: string
-  }) => void
-  onMouseLeave?: (ev: {
-    iframe: IFrameComponent
-    height: number
-    width: number
-    type: string
-  }) => void
+  onMessage?: (ev: IFrameMessageData) => void
+  onMouseEnter?: (ev: IFrameMouseData) => void
+  onMouseLeave?: (ev: IFrameMouseData) => void
   onReady?: (iframe: IFrameComponent) => void
-  onResized?: (ev: {
-    iframe: IFrameComponent
-    height: number
-    width: number
-    type: string
-  }) => void
-  onScroll?: (ev: { x: number; y: number }) => boolean
+  onResized?: (ev: IFrameResizedData) => void
+  onScroll?: (ev: IFrameScrollData) => boolean
 }
 
 export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &

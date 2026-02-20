@@ -1,5 +1,6 @@
 import connectResizer from '@iframe-resizer/core'
 
+// eslint-disable-next-line import/extensions
 import { deprecateMethod, warn } from '../core/console'
 
 switch (true) {

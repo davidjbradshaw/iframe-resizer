@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 import { createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
     lib: {
-      entry: './packages/core/index.js',
+      entry: './packages/core/index.ts',
       name: 'connectResizer',
       formats: ['umd', 'es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,
@@ -23,5 +24,16 @@ export default defineConfig({
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,
   },
-  plugins: createPluginsProd('core'),
+  plugins: [
+    dts({
+      include: [
+        'packages/global.d.ts',
+        'packages/core/index.ts',
+        'packages/core/types.ts',
+      ],
+      outDir: 'dist/core',
+      entryRoot: 'packages/core',
+    }),
+    ...createPluginsProd('core'),
+  ],
 })

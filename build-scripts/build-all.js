@@ -47,18 +47,18 @@ async function buildPackage(pkg) {
 }
 
 async function buildAll() {
-  console.log('Building iframe-resizer packages...\n')
-
-  for (const pkg of packages) {
-    console.log(`Building ${pkg.name}...`)
-    await buildPackage(pkg)
-  }
-
   if (!DEBUG) {
-    console.log('\nBuilding browser bundles...')
-    const buildBrowser = await import('./build-browser.js')
-    await buildBrowser.default()
+    console.log('Building iframe-resizer packages...\n')
+
+    for (const pkg of packages) {
+      console.log(`Building ${pkg.name}...`)
+      await buildPackage(pkg)
+    }
   }
+
+  console.log('\nBuilding browser bundles...')
+  const buildBrowser = await import('./build-browser.js')
+  await buildBrowser.default()
 
   if (TEST) {
     console.log('\nBuilding test bundles...')

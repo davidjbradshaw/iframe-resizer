@@ -2,7 +2,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import copy from 'rollup-plugin-copy'
 
 import { output } from './shared/output.js'
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, typescriptParent } from './shared/plugins.js'
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -16,20 +16,21 @@ const filterDeps = (contents) => {
 export default [
   // UMD build (bundles dependencies)
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: {
       name: 'iframeResize',
       ...output('parent')('umd'),
     },
-    plugins: [...createPluginsProd('parent'), resolve()],
+    plugins: [typescriptParent(), ...createPluginsProd('parent'), resolve()],
   },
 
   // ESM + CJS build (external dependencies)
   {
-    input: 'packages/parent/esm.js',
+    input: 'packages/parent/esm.ts',
     output: [output('parent')('esm'), output('parent')('cjs')],
     external: ['@iframe-resizer/core', 'auto-console-group'],
     plugins: [
+      typescriptParent(),
       ...createPluginsProd('parent'),
       copy({
         hook: 'closeBundle',

@@ -36,7 +36,7 @@ export default defineConfig({
       },
     }),
     dts({
-      include: ['packages/vue/**/*.ts'],
+      include: ['packages/global.d.ts', 'packages/vue/**/*.ts'],
       exclude: ['packages/vue/**/*.vue'],
       outDir: 'dist/vue',
     }),

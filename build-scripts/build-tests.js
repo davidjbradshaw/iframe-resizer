@@ -2,25 +2,34 @@ import resolve from '@rollup/plugin-node-resolve'
 import { rollup } from 'rollup'
 import clear from 'rollup-plugin-clear'
 
-import { injectVersion } from '../vite.config/shared/plugins.js'
+import {
+  injectVersion,
+  typescriptChild,
+  typescriptParent,
+} from '../vite.config/shared/plugins.js'
 
 const configs = [
   {
-    input: 'packages/child/index.js',
+    input: 'packages/child/index.ts',
     output: {
       file: 'test-js/iframe-resizer.child.js',
       format: 'iife',
     },
-    plugins: [clear({ targets: ['test-js'] }), resolve(), ...injectVersion()],
+    plugins: [
+      typescriptChild(),
+      clear({ targets: ['test-js'] }),
+      resolve(),
+      ...injectVersion(),
+    ],
   },
   {
-    input: 'packages/parent/umd.js',
+    input: 'packages/parent/umd.ts',
     output: {
       file: 'test-js/iframe-resizer.parent.js',
       format: 'umd',
       name: 'iframeResize',
     },
-    plugins: [resolve(), ...injectVersion()],
+    plugins: [typescriptParent(), resolve(), ...injectVersion()],
   },
   {
     input: 'packages/jquery/plugin.js',
@@ -29,7 +38,7 @@ const configs = [
       format: 'umd',
       name: 'iframeResize',
     },
-    plugins: [resolve(), ...injectVersion()],
+    plugins: [typescriptParent(), resolve(), ...injectVersion()],
   },
 ]
 

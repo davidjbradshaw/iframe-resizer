@@ -6,7 +6,7 @@ import { createPluginsProd } from './shared/plugins.js'
 export default defineConfig({
   build: {
     lib: {
-      entry: './packages/child/index.js',
+      entry: './packages/child/index.ts',
       name: 'iframeResizerChild',
       formats: ['umd', 'es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,

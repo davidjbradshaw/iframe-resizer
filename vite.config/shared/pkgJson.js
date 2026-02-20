@@ -1,5 +1,6 @@
 const main = 'index.cjs.js'
 const module = 'index.esm.js'
+const types = 'index.d.ts'
 
 const customConfig = (file) => {
   const entryPoints = {
@@ -13,7 +14,7 @@ const customConfig = (file) => {
       return {
         main,
         module,
-        types: 'index.d.ts',
+        types,
         peerDependencies: {
           react: '^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0',
           'react-dom': '^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0',
@@ -42,13 +43,19 @@ const customConfig = (file) => {
       return {
         main: 'index.umd.js',
         module,
-        types: 'index.d.ts',
+        types,
         browser: {
           './sfc': 'iframe-resizer.vue',
         },
         peerDependencies: {
           vue: '^2.6.0 || ^3.0.0',
         },
+      }
+
+    case 'core':
+      return {
+        ...entryPoints,
+        types,
       }
 
     case 'parent':
