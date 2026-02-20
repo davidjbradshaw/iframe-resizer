@@ -6,7 +6,6 @@ import { defineConfig, devices } from '@playwright/test'
  */
 
 const CONSOLE_SNAPSHOT_TEST = /console-snapshot\.spec\.js/
-const BUILD_PATTERN = / build/
 const DESKTOP_CHROME = devices['Desktop Chrome']
 
 export default defineConfig({
@@ -58,7 +57,7 @@ export default defineConfig({
         },
       },
       testMatch: CONSOLE_SNAPSHOT_TEST,
-      grep: new RegExp(`dev${BUILD_PATTERN.source}`),
+      grep: /dev build/,
     },
 
     // Console snapshot tests - prod build
@@ -72,7 +71,7 @@ export default defineConfig({
         },
       },
       testMatch: CONSOLE_SNAPSHOT_TEST,
-      grep: new RegExp(`prod${BUILD_PATTERN.source}`),
+      grep: /prod build/,
     },
 
     // Uncomment to test in Firefox and Safari
