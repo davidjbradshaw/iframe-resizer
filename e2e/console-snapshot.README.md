@@ -46,7 +46,7 @@ Logs are normalized to remove:
 
 ### 3. User Interaction Workflow
 
-The test executes this sequence on `/example/html/index.html`:
+The test executes this sequence on `/example-test/html/index.html`:
 
 1. Open modal → Close modal
 2. Toggle content

@@ -66,7 +66,7 @@ test.describe('Console log snapshot', () => {
     // Navigate to the test page
     // Note: Uses js/ directory which should contain the appropriate build
     // (dev or prod) based on which project is running
-    await page.goto('/example/html/index.html', {
+    await page.goto('/example-test/html/index.html', {
       waitUntil: 'domcontentloaded',
     })
 
@@ -196,7 +196,7 @@ test.describe('Console log snapshot', () => {
       await page.waitForTimeout(500)
 
       // Go back to page 1
-      await page.goto('/example/html/index.html')
+      await page.goto('/example-test/html/index.html')
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(500)
     })
@@ -227,7 +227,7 @@ test.describe('Console log snapshot', () => {
 
     // Step 18: Back to page 1
     await test.step('Back to page 1', async () => {
-      await page.goto('/example/html/index.html')
+      await page.goto('/example-test/html/index.html')
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(500)
     })
@@ -297,7 +297,7 @@ test.describe('Console log snapshot', () => {
 
     // Step 25: Two iframes
     await test.step('Navigate to two iframes', async () => {
-      await page.goto('/example/html/two.html')
+      await page.goto('/example-test/html/two.html')
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(500)
     })
@@ -321,7 +321,7 @@ test.describe('Console log snapshot', () => {
 
     // Step 28: Single iframe (back to index)
     await test.step('Back to single iframe', async () => {
-      await page.goto('/example/html/index.html')
+      await page.goto('/example-test/html/index.html')
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(500)
     })
@@ -347,7 +347,7 @@ test.describe('Console log snapshot', () => {
 
     // Step 31: Back to page 1
     await test.step('Back to page 1 (final)', async () => {
-      await page.goto('/example/html/index.html')
+      await page.goto('/example-test/html/index.html')
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(500)
     })
