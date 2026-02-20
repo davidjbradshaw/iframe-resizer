@@ -47,31 +47,19 @@ export default defineConfig({
     },
 
     // Console snapshot tests - dev build
+    // Requires: npm run build:dev (to populate js/ with dev build)
     {
       name: 'console-dev',
-      use: {
-        ...DESKTOP_CHROME,
-        contextOptions: {
-          // Route requests to use dev build (js/)
-          recordVideo: undefined,
-        },
-      },
+      use: { ...DESKTOP_CHROME },
       testMatch: CONSOLE_SNAPSHOT_TEST,
-      grep: /dev build/,
     },
 
     // Console snapshot tests - prod build
+    // Requires: npm run vite:prod (to populate js/ with prod build)
     {
       name: 'console-prod',
-      use: {
-        ...DESKTOP_CHROME,
-        contextOptions: {
-          // Route requests to use prod build (dist/)
-          recordVideo: undefined,
-        },
-      },
+      use: { ...DESKTOP_CHROME },
       testMatch: CONSOLE_SNAPSHOT_TEST,
-      grep: /prod build/,
     },
 
     // Uncomment to test in Firefox and Safari

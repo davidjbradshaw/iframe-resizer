@@ -24,8 +24,8 @@ A comprehensive end-to-end test system that captures and validates console log o
 ### Modified Files
 
 1. **`playwright.config.js`** - Added two new test projects:
-   - `console-dev` - Tests with dev build (js/)
-   - `console-prod` - Tests with prod build (js-dist/)
+   - `console-dev` - Tests with dev build (requires `npm run build:dev` first)
+   - `console-prod` - Tests with prod build (requires `npm run vite:prod` first)
 
 2. **`package.json`** - Added npm scripts:
    - `npm run test:e2e:console` - Run both dev and prod snapshot tests
@@ -45,18 +45,19 @@ A comprehensive end-to-end test system that captures and validates console log o
 
 2. **Create prod snapshot:**
    ```bash
-   npm run build:prod   # Rebuilds js/ with production build
-   cp -r js/* js-dist/  # Copy to js-dist/ for prod testing
+   npm run vite:prod    # Rebuilds js/ with production build
    npx playwright test console-snapshot --project=console-prod --update-snapshots
    ```
 
    This will create:
-   - `e2e/__snapshots__/console-logs-dev.txt`
-   - `e2e/__snapshots__/console-logs-prod.txt`
+   - `e2e/console-snapshot.spec.js-snapshots/console-logs-console-dev-darwin.txt`
+   - `e2e/console-snapshot.spec.js-snapshots/console-logs-console-prod-darwin.txt`
+
+   Note: Playwright stores text snapshots in a directory named after the test file and automatically appends the project name and platform to the snapshot filename. The platform suffix may differ on your machine (e.g., `-linux` or `-windows` instead of `-darwin`).
 
 3. **Review and commit snapshots:**
    ```bash
-   git add e2e/__snapshots__/
+   git add e2e/*-snapshots/
    git commit -m "Add console snapshot baselines"
    ```
 
@@ -72,8 +73,7 @@ npm run build:dev
 npx playwright test console-snapshot --project=console-dev
 
 # Test prod build
-npm run build:prod
-cp -r js/* js-dist/
+npm run vite:prod
 npx playwright test console-snapshot --project=console-prod
 ```
 
@@ -93,12 +93,11 @@ npm run build:dev
 npx playwright test console-snapshot --project=console-dev --update-snapshots
 
 # Update prod snapshot
-npm run build:prod
-cp -r js/* js-dist/
+npm run vite:prod
 npx playwright test console-snapshot --project=console-prod --update-snapshots
 
 # Commit updated snapshots
-git add e2e/__snapshots__/
+git add e2e/*-snapshots/
 git commit -m "Update console snapshots"
 ```
 
@@ -206,7 +205,7 @@ When logging changes are intentional:
 
 2. **Commit the updated snapshots:**
    ```bash
-   git add e2e/__snapshots__/
+   git add e2e/*-snapshots/
    git commit -m "Update console snapshots for [feature/fix]"
    git push
    ```
@@ -266,8 +265,8 @@ When logging changes are intentional:
 ## Technical Details
 
 - **Test Framework**: Playwright
-- **Snapshot Location**: `e2e/__snapshots__/`
-- **Build Routing**: Route interception swaps js/ ↔ js-dist/
+- **Snapshot Location**: `e2e/console-snapshot.spec.js-snapshots/`
+- **Build Testing**: Each project runs against js/ after the appropriate build
 - **Projects**: `console-dev` and `console-prod` in `playwright.config.js`
 - **Page Under Test**: `/example-test/html/index.html`
 

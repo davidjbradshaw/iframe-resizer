@@ -42,6 +42,7 @@
     "test:e2e:console:prod": "playwright test console-snapshot --project=console-prod",
     "test:e2e:console:update:dev": "playwright test console-snapshot --project=console-dev --update-snapshots",
     "test:e2e:console:update:prod": "playwright test console-snapshot --project=console-prod --update-snapshots",
+    "test:e2e:console:update": "test:e2e:console:update:dev && test:e2e:console:update:prod",
     "test:unit": "vitest run --coverage --reporter verbose",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
