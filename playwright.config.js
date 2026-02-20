@@ -4,6 +4,11 @@ import { defineConfig, devices } from '@playwright/test'
  * Playwright configuration for iframe-resizer e2e tests
  * @see https://playwright.dev/docs/test-configuration
  */
+
+const CONSOLE_SNAPSHOT_TEST = /console-snapshot\.spec\.js/
+const BUILD_PATTERN = / build/
+const DESKTOP_CHROME = devices['Desktop Chrome']
+
 export default defineConfig({
   testDir: './e2e',
 
@@ -38,7 +43,36 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...DESKTOP_CHROME },
+      testIgnore: CONSOLE_SNAPSHOT_TEST,
+    },
+
+    // Console snapshot tests - dev build
+    {
+      name: 'console-dev',
+      use: {
+        ...DESKTOP_CHROME,
+        contextOptions: {
+          // Route requests to use dev build (js/)
+          recordVideo: undefined,
+        },
+      },
+      testMatch: CONSOLE_SNAPSHOT_TEST,
+      grep: new RegExp(`dev${BUILD_PATTERN.source}`),
+    },
+
+    // Console snapshot tests - prod build
+    {
+      name: 'console-prod',
+      use: {
+        ...DESKTOP_CHROME,
+        contextOptions: {
+          // Route requests to use prod build (dist/)
+          recordVideo: undefined,
+        },
+      },
+      testMatch: CONSOLE_SNAPSHOT_TEST,
+      grep: new RegExp(`prod${BUILD_PATTERN.source}`),
     },
 
     // Uncomment to test in Firefox and Safari
