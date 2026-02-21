@@ -1,0 +1,113 @@
+# Copilot Instructions for iframe-resizer
+
+## Repository Summary
+
+`iframe-resizer` is a JavaScript library that automatically resizes iframes to match their content size. It supports cross-domain iframes and provides additional browser API features such as scroll control, viewport/position info, in-page linking, and message passing between parent and iframe pages. The library supports Vanilla JS, React, Vue, Angular, and jQuery.
+
+This is a **monorepo** (Node.js, ES modules, `"type": "module"` in root `package.json`) targeting Node.js ≥ 20. It uses **Rollup** to build distributable packages.
+
+## Project Layout
+
+```
+/
+├── packages/          # Source packages
+│   ├── core/          # Core resizer logic (shared by parent/child)
+│   ├── parent/        # Parent-page integration (iife, esm, umd, cjs entry points)
+│   ├── child/         # Child-page (iframe content) integration
+│   ├── react/         # React component wrapper
+│   ├── vue/           # Vue component wrapper
+│   ├── angular/       # Angular component wrapper
+│   ├── jquery/        # jQuery plugin wrapper
+│   ├── legacy/        # v4-compatible legacy API
+│   └── common/        # Shared utilities
+├── build/             # Rollup build helpers (banner, output, plugins)
+├── js/                # IIFE output for direct browser use (generated)
+├── dist/              # NPM package output (generated)
+├── test-js/           # UMD output used by Karma integration tests (generated)
+├── spec/              # Karma/Jasmine integration tests
+├── e2e/               # Playwright end-to-end tests
+├── example/           # Example pages
+├── rollup.config.mjs  # Rollup build configuration
+├── jest.config.js     # Jest unit test configuration
+├── karma.conf.cjs     # Karma integration test configuration
+├── playwright.config.js # Playwright e2e test configuration
+├── .eslintrc.json     # ESLint configuration (extends "auto")
+├── .prettierrc        # Prettier configuration
+├── babel.config.cjs   # Babel configuration (for Jest)
+└── package.json       # Root package with all scripts
+```
+
+## Build & Test Commands
+
+Always run `npm install` before building or testing (the CI pipeline uses `npm ci`).
+
+### Linting
+
+```bash
+npm run eslint          # Lint packages/ and HTML files
+npm run eslint:fix      # Lint and auto-fix
+```
+
+ESLint config is in `.eslintrc.json` (extends `"auto"`). Ignored paths: `js/*`, `dist/*`, `*.d.ts`.
+
+### Building
+
+```bash
+npm run build:dev       # Development build (debug mode, with sourcemaps) → js/
+npm run build:prod      # Production build (minified) → dist/ and js/
+```
+
+In debug/watch mode, only the `js/` IIFE targets are built. In production mode, all `dist/` npm packages plus `js/` targets are built.
+
+The build also runs `eslint:fix` automatically when using `rollup:prod` or `rollup:test`.
+
+### Testing
+
+```bash
+# Unit tests (Jest) — no build required
+npm run test:jest
+
+# Integration tests (Karma + Jasmine) — requires a build first
+npm run rollup:test     # Build test artifacts into test-js/ (runs eslint:fix first)
+npm run test:int        # Run Karma tests (ChromeHeadless)
+
+# E2E tests (Playwright) — requires a running server
+npx playwright install chromium   # First-time setup
+npm run serve:e2e &               # Start http-server on port 8080
+npm run test:e2e                  # Run all Playwright tests
+
+# Full test suite (Jest + build + Karma) — used in CI
+npm run test:ci         # Jest + rollup:test:ci (no eslint:fix) + Karma
+```
+
+The CI workflow (`.github/workflows/node.js.yml`) runs `npm ci` then `npm run test:ci` on Node.js 20.x.
+
+### Key test:ci sequence
+
+1. `npm run test:jest` — Jest unit tests
+2. `npm run rollup:test:ci` — Rollup build for test (skips eslint:fix, sets TEST env)
+3. `npm run test:int` — Karma integration tests in ChromeHeadless
+
+## Architecture Notes
+
+- **`packages/core/`** — central resizer logic consumed by parent and child packages.
+- **`packages/parent/`** — exposes `iframeResize()` / `connectResizer()`. Has separate entry points for UMD (`umd.js`), ESM (`esm.js`), and IIFE (`iife.js`).
+- **`packages/child/`** — loaded inside the iframe. Exposes `parentIFrame` global.
+- **`packages/react/`** — React component (`IframeResizer`), uses Babel with `@babel/runtime`.
+- **`packages/vue/`** — Vue SFC component, uses TypeScript plugin in Rollup.
+- **`packages/legacy/`** — backwards-compatible API for iframe-resizer v4.
+
+## CI / GitHub Workflows
+
+- **`node.js.yml`** — main CI: `npm ci` + `npm run test:ci` on push/PR to `master`.
+- **`eslint.yml`** — ESLint check.
+- **`playwright.yml`** — Playwright e2e tests.
+- **`claude.yml`** / **`claude-code-review.yml`** — AI-assisted code review.
+
+## Important Notes
+
+- The root `package.json` uses `"type": "module"` — all `.js` files are ES modules by default. Configuration files that must be CommonJS use the `.cjs` extension (`karma.conf.cjs`, `babel.config.cjs`).
+- Do not edit files in `js/`, `dist/`, or `test-js/` — these are generated by the build.
+- Unit test files (Jest) live alongside source files in `packages/*/` and use the `.test.js` extension.
+- Integration tests live in `spec/` and use Karma + Jasmine (not Jest).
+- The `spec/` ESLint overrides disable several Jest rules since those tests use Jasmine globals.
