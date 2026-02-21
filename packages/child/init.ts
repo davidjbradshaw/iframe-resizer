@@ -31,7 +31,6 @@ import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
 import sendSize from './send/size'
-import sendTitle from './send/title'
 import isolate from './utils/isolate'
 import map2settings from './utils/map-settings'
 import settings from './values/settings'
@@ -94,8 +93,6 @@ function startIframeResizerChild({
     undefined,
     `${VERSION}:${settings.mode}`,
   )
-
-  sendTitle()
 }
 
 export default function (data: string[]): void {

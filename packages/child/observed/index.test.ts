@@ -7,6 +7,9 @@ vi.mock('../observers/mutation', () => ({
 vi.mock('../observers/perf', () => ({
   default: vi.fn(() => ({ disconnect: vi.fn() })),
 }))
+vi.mock('../observers/title', () => ({
+  default: vi.fn(() => ({ disconnect: vi.fn() })),
+}))
 vi.mock('../observers/visibility', () => ({
   default: vi.fn(() => ({ disconnect: vi.fn() })),
 }))
@@ -18,6 +21,7 @@ vi.mock('./overflow', () => ({
   default: vi.fn(() => ({ disconnect: vi.fn() })),
 }))
 vi.mock('./resize', () => ({ default: vi.fn(() => ({ disconnect: vi.fn() })) }))
+vi.mock('./title', () => ({ default: vi.fn() }))
 vi.mock('./visibility', () => ({ default: vi.fn() }))
 
 const { tearDownList } = await import('../events/listeners')
@@ -31,7 +35,7 @@ describe('child/observed/index', () => {
   test('attaches all observers and pushes disconnects to teardown', () => {
     attachObservers()
 
-    expect(tearDownList.length).toBe(5)
+    expect(tearDownList.length).toBe(6)
     expect(tearDownList.every((fn) => typeof fn === 'function')).toBe(true)
   })
 })
