@@ -1,7 +1,8 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
+import { TITLE } from '../../common/consts'
 import { log } from '../console'
-import sendTitle from '../send/title'
+import sendMessage from '../send/message'
 
 let previousTitle: string | undefined
 
@@ -15,5 +16,5 @@ export default function titleChanged(): void {
   previousTitle = currentTitle
 
   log(`Title: %c${currentTitle}`, HIGHLIGHT)
-  sendTitle()
+  if (currentTitle) sendMessage(0, 0, TITLE, currentTitle)
 }

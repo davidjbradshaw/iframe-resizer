@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ log: vi.fn() }))
-vi.mock('../send/title', () => ({ default: vi.fn() }))
+vi.mock('../send/message', () => ({ default: vi.fn() }))
 
 const { log } = await import('../console')
-const sendTitle = (await import('../send/title')).default
+const sendMessage = (await import('../send/message')).default
+const { TITLE } = await import('../../common/consts')
 const titleChanged = (await import('./title')).default
 
 describe('child/observed/title', () => {
@@ -12,26 +13,33 @@ describe('child/observed/title', () => {
     vi.clearAllMocks()
   })
 
-  test('logs the current title and calls sendTitle', () => {
+  test('logs and sends message when title changes', () => {
     const prev = document.title
     document.title = 'My Page'
-
     titleChanged()
+    document.title = prev
 
     expect(log).toHaveBeenCalled()
-    expect(sendTitle).toHaveBeenCalled()
-
-    document.title = prev
+    expect(sendMessage).toHaveBeenCalledWith(0, 0, TITLE, 'My Page')
   })
 
-  test('calls sendTitle even when title is empty', () => {
+  test('does not send message when title is empty', () => {
     const prev = document.title
     document.title = ''
-
     titleChanged()
-
-    expect(sendTitle).toHaveBeenCalled()
-
     document.title = prev
+
+    expect(log).toHaveBeenCalled()
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  test('does not re-send when title has not changed', () => {
+    const prev = document.title
+    document.title = 'Unique Title'
+    titleChanged()
+    titleChanged()
+    document.title = prev
+
+    expect(sendMessage).toHaveBeenCalledTimes(1)
   })
 })

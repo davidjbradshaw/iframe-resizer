@@ -38,7 +38,7 @@ describe('child/observers/title', () => {
     vi.restoreAllMocks()
   })
 
-  test('observes head with characterData, childList and subtree', () => {
+  test('observes head when no title element exists in document', () => {
     const cb = vi.fn()
     createTitleObserver(cb)
 
@@ -48,6 +48,18 @@ describe('child/observers/title', () => {
       childList: true,
       subtree: true,
     })
+  })
+
+  test('observes title element directly when one exists in document', () => {
+    const titleEl = document.createElement('title')
+    document.head.appendChild(titleEl)
+
+    const cb = vi.fn()
+    createTitleObserver(cb)
+
+    expect(observedTarget).toBe(titleEl)
+
+    document.head.removeChild(titleEl)
   })
 
   test('calls callback immediately on creation (sends initial title)', () => {

@@ -9,7 +9,7 @@ const config: MutationObserverInit = {
 }
 
 export default function createTitleObserver(callback: () => void): { disconnect: () => void } {
-  const target = document.head ?? document.documentElement
+  const target = document.querySelector('title') ?? document.head ?? document.documentElement
   const observer = new MutationObserver(callback)
 
   observer.observe(target, config)
