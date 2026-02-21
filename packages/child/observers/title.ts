@@ -13,10 +13,8 @@ export default function createTitleObserver(callback: () => void): { disconnect:
   const observer = new MutationObserver(callback)
 
   observer.observe(target, config)
-  callback()
-
   info('Attached%c TitleObserver%c to head', HIGHLIGHT, FOREGROUND)
-
+  callback()
   return {
     disconnect: () => {
       observer.disconnect()
