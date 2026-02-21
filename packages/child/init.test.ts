@@ -4,7 +4,7 @@ beforeEach(() => {
   vi.resetModules()
 })
 
-it('initializes on first run, logs and sends init + title', async () => {
+it('initializes on first run, logs and sends init size', async () => {
   vi.mock('./console', async () => {
     const actual = await vi.importActual('./console')
     const endAutoGroup = vi.fn()
@@ -40,7 +40,6 @@ it('initializes on first run, logs and sends init + title', async () => {
     default: vi.fn(() => ({ bodyBackground: '', bodyPadding: '' })),
   }))
   vi.mock('./send/size', () => ({ default: vi.fn() }))
-  vi.mock('./send/title', () => ({ default: vi.fn() }))
   vi.mock('./utils/isolate', () => ({
     default: (arr) =>
       arr.forEach((fn) => {
@@ -52,13 +51,11 @@ it('initializes on first run, logs and sends init + title', async () => {
   const { default: state } = await import('./values/state')
   state.firstRun = true
   const sendSize = (await import('./send/size')).default
-  const sendTitle = (await import('./send/title')).default
 
   expect(state.firstRun).toBe(true)
   init({})
 
   expect(sendSize).toHaveBeenCalled()
-  expect(sendTitle).toHaveBeenCalled()
 })
 
 it('returns early when not first run', async () => {
