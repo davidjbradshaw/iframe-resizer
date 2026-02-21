@@ -68,6 +68,15 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
+### Disconnected iframes
+
+_iframe-resizer_ can safely handle iframes that are not yet connected to the DOM. When you initialize an iframe that is disconnected (not in the DOM tree), _iframe-resizer_ will automatically defer initialization until the iframe is added to the DOM. This is accomplished using:
+
+- **isConnected check**: Detects whether the iframe is connected to the DOM before initializing
+- **MutationObserver**: Watches for DOM changes and initializes the iframe once it's added to the DOM
+
+This ensures consistent behavior regardless of when you call `iFrameResize()`, making it safe to initialize iframes before they're added to the page.
+
 ## Version 5
 
 This version of iframe-resizer has been extensively rewritten to use modern browser APIs, this has enabled significantly better performance and greater accuracy in the detection of content resizing events.
@@ -76,4 +85,4 @@ With this release, the opportunity has been taken to refresh and simplify the AP
 
 ---
 [<img align="right" src="https://badge.fury.io/js/@iframe-resizer%2Fcore.svg" alt="NPM" />](https://badge.fury.io/js/@iframe-resizer%2Fparent)
-Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-26 [David J. Bradshaw](https://github.com/davidjbradshaw)
