@@ -2,7 +2,14 @@ dist
 js
 **/*.d.js
 coverage
+example/
 example/react/src/message-data.jsx
 example-test/react/src/message-data.jsx
 example-test/
+spec/
+test-js/
+js-dist/
+packages/**/dist/
 packages/common/mode.js
+vite-build.js
+vite.config.js
