@@ -1,11 +1,17 @@
 {
   "extends": ["auto"],
-  "ignorePatterns": ["js/*", "dist/*", "*.d.ts"],
+  "ignorePatterns": [
+    "js/*",
+    "dist/*",
+    "*.d.ts",
+    "coverage/**",
+    "vite-build.js",
+    "vite.config.js"
+  ],
   "env": {
     "amd": true,
     "browser": true,
     "jasmine": true,
-    "jest": true,
     "jquery": true,
     "commonjs": true,
     "es2020": true
@@ -15,7 +21,7 @@
     "iframeResize": true,
     "parentIFrame": true
   },
-  "parserOptions": { "ecmaVersion": 2021 },
+  "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
   "rules": {
     "comma-dangle": [1, "always-multiline"],
     "const-case/uppercase": 0,
@@ -79,6 +85,47 @@
       }
     },
     {
+      "files": ["build/**/*.js", "build-scripts/**/*.js", "vite.config/**/*.js"],
+      "parser": "@babel/eslint-parser",
+      "parserOptions": {
+        "requireConfigFile": false,
+        "sourceType": "module",
+        "ecmaVersion": 2024,
+        "babelOptions": {
+          "plugins": ["@babel/plugin-syntax-import-attributes"]
+        }
+      },
+      "rules": {
+        "import/extensions": 0,
+        "no-console": 0,
+        "no-await-in-loop": 0,
+        "no-underscore-dangle": 0,
+        "no-unsanitized/method": 0,
+        "unicorn/prefer-top-level-await": 0,
+        "security/detect-non-literal-fs-filename": 0
+      }
+    },
+    {
+      "files": ["packages/**/*.test.js", "packages/**/*.test.jsx", "packages/**/*.test.ts", "packages/**/*.test.tsx"],
+      "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
+      "globals": {
+        "test": true,
+        "describe": true,
+        "it": true,
+        "expect": true,
+        "beforeEach": true,
+        "afterEach": true,
+        "vi": true
+      },
+      "rules": {
+        "jasmine/new-line-before-expect": 0,
+        "no-underscore-dangle": 0,
+        "jasmine/prefer-toHaveBeenCalledWith": 0,
+        "unicorn/no-await-expression-member": 0,
+        "import/extensions": 0
+      }
+    },
+    {
       "files": ["spec/**"],
       "globals": {
         "jasmine": true,
@@ -108,11 +155,6 @@
         "prefer-template": 0,
         "yoda": 0,
         "jasmine/no-disabled-tests": 0,
-        "jest/expect-expect": 0,
-        "jest/no-done-callback": 0,
-        "jest/no-jasmine-globals": 0,
-        "jest/no-test-prefixes": 0,
-        "jest/prefer-to-be": 0,
         "no-secrets/no-secrets": 0,
         "sonarjs/no-duplicate-string": 0
       }

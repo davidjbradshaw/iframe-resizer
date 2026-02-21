@@ -1,14 +1,13 @@
-import strip from '@rollup/plugin-strip'
 import commonjs from '@rollup/plugin-commonjs'
+import strip from '@rollup/plugin-strip'
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
 import stripCode from 'rollup-plugin-strip-code'
 import versionInjector from 'rollup-plugin-version-injector'
 
-import createPkgJson from './pkgJson.js'
-
 import pkg from '../package.json' with { type: 'json' }
+import createPkgJson from './pkgJson.js'
 
 const vi = {
   injectInComments: false,
@@ -17,9 +16,9 @@ const vi = {
 
 export const injectVersion = () => [versionInjector(vi)]
 
-export const pluginsBase = (stripLog) => (file) => {
+export const pluginsBase = (stripLog) => () => {
   const delog = [strip({ functions: ['log', 'debug'] })]
-  const log = [strip({ functions: [ 'purge'] })]
+  const log = [strip({ functions: ['purge'] })]
 
   const base = [versionInjector(vi), commonjs()]
 
@@ -31,7 +30,8 @@ const fixVersion = (file) => {
     case 'core':
     case 'child':
       return {}
-      // return { additionalDependencies: { 'auto-console-group': pkg.dependencies['auto-console-group'] } }
+
+    // return { additionalDependencies: { 'auto-console-group': pkg.dependencies['auto-console-group'] } }
     case 'legacy':
       return {
         additionalDependencies: {
@@ -40,6 +40,7 @@ const fixVersion = (file) => {
           '@iframe-resizer/parent': pkg.version,
         },
       }
+
     default:
       return { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
   }
@@ -80,6 +81,6 @@ export const createPluginsProd = (stripLog) => (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(stripLog)(file),
+    ...pluginsBase(stripLog)(),
   ]
 }
