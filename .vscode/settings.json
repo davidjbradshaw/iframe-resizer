@@ -21,5 +21,11 @@
     "sarif",
     "scanjs",
     "sonarjs"
-  ]
+  ],
+  "chat.tools.terminal.autoApprove": {
+    "npm run -s test:unit:cov": true,
+    "npm run -s test:unit": true,
+    "npm run -s test:int": true
+  },
+  "claudeCodeChat.permissions.yoloMode": false
 }
