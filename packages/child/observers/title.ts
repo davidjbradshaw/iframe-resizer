@@ -17,7 +17,7 @@ export default function createTitleObserver(callback: () => void): {
 
   observer.observe(target, config)
   info('Attached%c TitleObserver%c to head', HIGHLIGHT, FOREGROUND)
-  setInterval(callback)
+  setTimeout(callback)
 
   return {
     disconnect: () => {

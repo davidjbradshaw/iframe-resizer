@@ -63,10 +63,13 @@ describe('child/observers/title', () => {
   })
 
   test('calls callback immediately on creation (sends initial title)', () => {
+    vi.useFakeTimers()
     const cb = vi.fn()
     createTitleObserver(cb)
 
+    vi.advanceTimersByTime(0)
     expect(cb).toHaveBeenCalledTimes(1)
+    vi.useRealTimers()
   })
 
   test('calls callback when a mutation is observed', () => {
