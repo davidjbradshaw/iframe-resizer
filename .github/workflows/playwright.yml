@@ -38,7 +38,7 @@ jobs:
       run: npx playwright install --with-deps chromium
 
     - name: Build project
-      run: npm run vite:prod
+      run: TEST=1 npm run vite:prod
 
     - name: Copy built files to js-dist for e2e tests
       run: cp -r js/* js-dist/

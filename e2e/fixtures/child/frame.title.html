@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Title Sync Test Child</title>
+    <script type="text/javascript" src="../../../test-js/iframe-resizer.child.js"></script>
+  </head>
+  <body>
+    <p>Child page for title sync testing.</p>
+    <button id="changeTitle">Change title</button>
+    <script>
+      document.getElementById('changeTitle').addEventListener('click', () => {
+        document.title = 'Updated Title'
+      })
+    </script>
+  </body>
+</html>

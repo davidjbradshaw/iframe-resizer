@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Title Sync Test Parent</title>
+    <script type="text/javascript" src="../../test-js/iframe-resizer.parent.js"></script>
+  </head>
+  <body>
+    <iframe id="testIframe" src="child/frame.title.html" scrolling="no"></iframe>
+    <script type="text/javascript">
+      iframeResize({ license: 'GPLv3', log: false }, '#testIframe')
+    </script>
+  </body>
+</html>

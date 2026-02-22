@@ -70,7 +70,6 @@ const modules = [
   '../child/send/dispatch.js',
   '../child/send/message.js',
   '../child/send/size.js',
-  '../child/send/title.js',
   '../child/size/all.js',
   '../child/size/auto.js',
   '../child/size/body-offset.js',
