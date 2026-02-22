@@ -36,18 +36,38 @@ import map2settings from './utils/map-settings'
 import settings from './values/settings'
 import state from './values/state'
 
-function startLogging({ logExpand, logging, parentId }: { logExpand: boolean; logging: boolean; parentId: string }): void {
+function startLogging({
+  logExpand,
+  logging,
+  parentId,
+}: {
+  logExpand: boolean
+  logging: boolean
+  parentId: string
+}): void {
   setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
   consoleEvent('initReceived')
   log(`Initialising iframe v${VERSION} ${window.location.href}`)
 }
+
+function ready(onReady: () => void): void {
+  consoleEvent('ready')
+  checkReadyYet(once(onReady))
+  log('Initialization complete', (({ key, key2, ...rest }) => rest)(settings))
+}
+
 
 function startIframeResizerChild({
   bodyBackground,
   bodyPadding,
   inPageLinks,
   onReady,
-}: { bodyBackground: string; bodyPadding: string; inPageLinks: boolean; onReady: () => void }): void {
+}: {
+  bodyBackground: string
+  bodyPadding: string
+  inPageLinks: boolean
+  onReady: () => void
+}): void {
   const bothDirections = checkBoth(settings)
 
   const setup = [
@@ -71,28 +91,28 @@ function startIframeResizerChild({
     injectClearFixIntoBodyElement,
 
     state.applySelectors,
-    attachObservers,
 
     () => setupInPageLinks(inPageLinks),
     setupPrintListeners,
     () => setupMouseEvents(settings),
     setupOnPageHide,
     () => setupPublicMethods(),
+
+    () =>
+      sendSize(
+        INIT,
+        'Init message from host page',
+        undefined,
+        undefined,
+        `${VERSION}:${settings.mode}`,
+      ),
+
+    attachObservers,
+    endAutoGroup,
   ]
 
   isolate(setup)
-
-  checkReadyYet(once(onReady))
-  log('Initialization complete', settings)
-  endAutoGroup()
-
-  sendSize(
-    INIT,
-    'Init message from host page',
-    undefined,
-    undefined,
-    `${VERSION}:${settings.mode}`,
-  )
+  ready(onReady)
 }
 
 export default function (data: string[]): void {

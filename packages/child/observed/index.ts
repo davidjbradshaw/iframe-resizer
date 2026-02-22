@@ -9,12 +9,16 @@ import createOverflowObservers from './overflow'
 import createResizeObservers from './resize'
 import titleChanged from './title'
 import visibilityChange from './visibility'
+import { event as consoleEvent } from '../console'
 
-function pushDisconnectsOnToTearDown(observers: { disconnect: () => void }[]): void {
+function pushDisconnectsOnToTearDown(
+  observers: { disconnect: () => void }[],
+): void {
   tearDownList.push(...observers.map((observer) => observer.disconnect))
 }
 
 export default function attachObservers(): void {
+  consoleEvent('attachObservers')
   const nodeList = getAllElements(document.documentElement)
 
   const observers = [

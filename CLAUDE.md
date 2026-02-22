@@ -95,3 +95,10 @@ ESLint config: `.eslintrc.json` (extends eslint-config-auto). Prettier: no semic
 - **Frame-based throttling:** Child's `sendSize()` uses `requestAnimationFrame` to coalesce resize messages
 - **User code isolation:** Callbacks invoked via `setTimeout(fn, 0)` to prevent user errors from crashing the library (except `onBeforeClose`/`onScroll` which need sync returns)
 - **`once()` guard:** Global message listener setup runs exactly once via the `once()` utility
+
+## Key rules
+- `js-dist/` is just for the distrobution of the lasted published version. It should never be updated, except by running `npm run publish`
+ - `js-dist/` should not be used for testing
+ - `example-test` should never be checked in to git or used with test scripts. It is just for manual testing.
+ - `example` is a public demo and uses `js` it should not be used for tests.
+ 
