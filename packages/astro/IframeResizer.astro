@@ -1,0 +1,120 @@
+---
+interface Props {
+  license: string
+  bodyBackground?: string | null
+  bodyMargin?: string | number | null
+  bodyPadding?: string | number | null
+  checkOrigin?: boolean | string[]
+  direction?: 'vertical' | 'horizontal' | 'none' | 'both'
+  inPageLinks?: boolean
+  log?: boolean
+  offsetSize?: number
+  scrolling?: boolean | 'omit'
+  tolerance?: number
+  waitForLoad?: boolean
+  warningTimeout?: number
+  [key: string]: any
+}
+
+const RESIZER_OPTION_KEYS = new Set([
+  'license',
+  'bodyBackground',
+  'bodyMargin',
+  'bodyPadding',
+  'checkOrigin',
+  'direction',
+  'inPageLinks',
+  'log',
+  'offsetSize',
+  'scrolling',
+  'tolerance',
+  'waitForLoad',
+  'warningTimeout',
+])
+
+const resizerOptions: Record<string, unknown> = {}
+const iframeAttrs: Record<string, unknown> = {}
+
+for (const [key, value] of Object.entries(Astro.props)) {
+  if (RESIZER_OPTION_KEYS.has(key)) {
+    if (value !== undefined) resizerOptions[key] = value
+  } else {
+    iframeAttrs[key] = value
+  }
+}
+---
+
+<iframe data-iframe-resizer={JSON.stringify(resizerOptions)} {...iframeAttrs}></iframe>
+
+<script>
+  import connectResizer from '@iframe-resizer/core'
+
+  const EVENTS = [
+    'onReady',
+    'onMessage',
+    'onResized',
+    'onScroll',
+    'onMouseEnter',
+    'onMouseLeave',
+  ]
+
+  const EVENT_MAP: Record<string, string> = {
+    onReady: 'iframe-resizer:ready',
+    onMessage: 'iframe-resizer:message',
+    onResized: 'iframe-resizer:resized',
+    onScroll: 'iframe-resizer:scroll',
+    onMouseEnter: 'iframe-resizer:mouseenter',
+    onMouseLeave: 'iframe-resizer:mouseleave',
+  }
+
+  function createEventDispatcher(iframe: HTMLIFrameElement) {
+    const handlers: Record<string, (data: unknown) => void> = {}
+
+    for (const event of EVENTS) {
+      handlers[event] = (data: unknown) => {
+        iframe.dispatchEvent(
+          new CustomEvent(EVENT_MAP[event], {
+            detail: data,
+            bubbles: true,
+          }),
+        )
+      }
+    }
+
+    return handlers
+  }
+
+  function initIframeResizers() {
+    document
+      .querySelectorAll<HTMLIFrameElement>('iframe[data-iframe-resizer]')
+      .forEach((iframe) => {
+        if ('iframeResizer' in iframe) return
+
+        const options = JSON.parse(iframe.dataset.iframeResizer!)
+        const eventHandlers = createEventDispatcher(iframe)
+
+        connectResizer({
+          ...options,
+          ...eventHandlers,
+          onBeforeClose: () => false,
+        })(iframe)
+      })
+  }
+
+  function cleanupIframeResizers() {
+    document
+      .querySelectorAll<HTMLIFrameElement>('iframe[data-iframe-resizer]')
+      .forEach((iframe) => {
+        if ('iframeResizer' in iframe) {
+          ;(iframe as any).iframeResizer?.disconnect()
+        }
+      })
+  }
+
+  // Initialize on page load
+  initIframeResizers()
+
+  // Support Astro View Transitions
+  document.addEventListener('astro:after-swap', initIframeResizers)
+  document.addEventListener('astro:before-swap', cleanupIframeResizers)
+</script>

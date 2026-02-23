@@ -51,6 +51,8 @@ cd ../vue
 npm publish --tag $1
 cd ../angular
 npm publish --tag $1
+cd ../astro
+npm publish --tag $1
 cd ../legacy
 npm publish --tag $1
 
