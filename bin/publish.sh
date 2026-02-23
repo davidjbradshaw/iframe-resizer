@@ -29,9 +29,15 @@ echo
 
 npm login
 
-git stash
+STASHED=false
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=true
+fi
 git pull
-git stash pop
+if $STASHED; then
+  git stash pop
+fi
 
 npm install
 npm test
