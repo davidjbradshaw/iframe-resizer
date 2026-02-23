@@ -1,20 +1,21 @@
 <script>
   import IframeResizer from '@iframe-resizer/svelte'
 
-  let messageData = null
+  let eventData = null
 
   function onResized(event) {
-    messageData = event.detail
+    eventData = event.detail
   }
 
   function onMessage(event) {
-    messageData = event.detail
+    eventData = event.detail
     alert(`Message from frame ${event.detail.iframe.id}: ${event.detail.message}`)
   }
 </script>
 
 <h2>@iframe-resizer/svelte example</h2>
 <IframeResizer
+  id="myframe"
   src="child/frame.content.html"
   license="GPLv3"
   log
@@ -23,10 +24,10 @@
   on:resized={onResized}
 />
 
-{#if messageData}
+{#if eventData}
   <div class="message-data">
-    <h3>Message Data:</h3>
-    <pre>{JSON.stringify(messageData, null, 2)}</pre>
+    <h3>Event Data:</h3>
+    <pre>{JSON.stringify(eventData, null, 2)}</pre>
   </div>
 {/if}
 
