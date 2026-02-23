@@ -157,6 +157,8 @@ const modules = [
   '../parent/factory.js',
   '../parent/iife.js',
   '../parent/umd.js',
+  // astro
+  '../astro/index.js',
   // react
   '../react/index.jsx',
   // vue

@@ -27,32 +27,38 @@ echo
 echo "Publishing version $VERSION as $1"
 echo
 
-npm login
+npm whoami &>/dev/null || npm login
 
-git stash
+STASHED=false
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=true
+fi
 git pull
-git stash pop
+if $STASHED; then
+  git stash pop
+fi
 
 npm install
 npm test
 npm run build:$1
 
 cd dist/parent
-npm publish --tag $1
+npm publish --tag $1 --access public
 cd ../child
-npm publish --tag $1
+npm publish --tag $1 --access public
 cd ../core
-npm publish --tag $1
+npm publish --tag $1 --access public
 cd ../jquery
-npm publish --tag $1
+npm publish --tag $1 --access public
 cd ../react
-npm publish --tag $1
+npm publish --tag $1 --access public
 cd ../vue
-npm publish --tag $1
+npm publish --tag $1 --access public
 cd ../angular
-npm publish --tag $1
-cd ../legacy
-npm publish --tag $1
+npm publish --tag $1 --access public
+cd ../astro
+npm publish --tag $1 --access public
 
 if [ $1 != "latest" ]
 then
