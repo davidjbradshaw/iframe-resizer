@@ -52,6 +52,24 @@ const customConfig = (file) => {
         },
       }
 
+    case 'svelte':
+      return {
+        main,
+        module,
+        types,
+        svelte: 'IframeResizer.svelte',
+        exports: {
+          '.': {
+            svelte: './IframeResizer.svelte',
+            import: './index.esm.js',
+            require: './index.cjs.js',
+          },
+        },
+        peerDependencies: {
+          svelte: '^4.0.0 || ^5.0.0',
+        },
+      }
+
     case 'core':
       return {
         ...entryPoints,
