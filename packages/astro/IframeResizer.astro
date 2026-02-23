@@ -1,18 +1,17 @@
 ---
-interface Props {
-  license: string
-  bodyBackground?: string | null
-  bodyMargin?: string | number | null
-  bodyPadding?: string | number | null
-  checkOrigin?: boolean | string[]
-  direction?: 'vertical' | 'horizontal' | 'none' | 'both'
-  inPageLinks?: boolean
-  log?: boolean
-  offsetSize?: number
-  scrolling?: boolean | 'omit'
-  tolerance?: number
-  waitForLoad?: boolean
-  warningTimeout?: number
+import type { IFrameOptions } from '@iframe-resizer/core'
+
+type CallbackProps =
+  | 'onBeforeClose'
+  | 'onAfterClose'
+  | 'onMouseEnter'
+  | 'onMouseLeave'
+  | 'onReady'
+  | 'onMessage'
+  | 'onResized'
+  | 'onScroll'
+
+interface Props extends Omit<IFrameOptions, CallbackProps> {
   [key: string]: any
 }
 
