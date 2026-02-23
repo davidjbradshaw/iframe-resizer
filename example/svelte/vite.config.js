@@ -15,9 +15,11 @@ const rootPkgPath = path.resolve(__dirname, '../../package.json')
 const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf-8'))
 const version = rootPkg.version
 
-// Serve child pages from the shared html example directory
+// Serve child pages from the shared html example directory,
+// rewriting the child script src to load from the js/ build output
 function serveHtmlChildPages() {
   const htmlChildDir = path.resolve(__dirname, '../html/child')
+  const jsDir = path.resolve(__dirname, '../../js')
   return {
     name: 'serve-html-child-pages',
     configureServer(server) {
@@ -25,7 +27,20 @@ function serveHtmlChildPages() {
         if (req.url?.startsWith('/child/')) {
           const filePath = path.join(htmlChildDir, req.url.slice(7).split('?')[0])
           if (fs.existsSync(filePath)) {
+            let content = fs.readFileSync(filePath, 'utf-8')
+            content = content.replace(
+              /src="[^"]*iframe-resizer\.child\.js"/,
+              'src="/js/iframe-resizer.child.js"',
+            )
             res.setHeader('Content-Type', 'text/html')
+            res.end(content)
+            return
+          }
+        }
+        if (req.url?.startsWith('/js/')) {
+          const filePath = path.join(jsDir, req.url.slice(4).split('?')[0])
+          if (fs.existsSync(filePath)) {
+            res.setHeader('Content-Type', 'application/javascript')
             res.end(fs.readFileSync(filePath))
             return
           }
