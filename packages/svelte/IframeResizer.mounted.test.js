@@ -8,8 +8,13 @@ const mockResizer = {
   sendMessage: vi.fn(),
 }
 
+let capturedOptions = {}
+
 vi.mock('@iframe-resizer/core', () => ({
-  default: vi.fn(() => vi.fn(() => mockResizer)),
+  default: vi.fn((options) => {
+    capturedOptions = options
+    return vi.fn(() => mockResizer)
+  }),
 }))
 
 vi.mock('auto-console-group', () => ({
@@ -32,6 +37,7 @@ describe('Svelte IframeResizer lifecycle', () => {
   beforeEach(() => {
     target = document.createElement('div')
     document.body.append(target)
+    capturedOptions = {}
     vi.clearAllMocks()
   })
 
@@ -89,6 +95,48 @@ describe('Svelte IframeResizer lifecycle', () => {
     flushSync()
     component.sendMessage('hello', '*')
     expect(mockResizer.sendMessage).toHaveBeenCalledWith('hello', '*')
+    unmount(component)
+  })
+
+  it('dispatches resized event', () => {
+    const events = []
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: { resized: (e) => events.push(e.detail) },
+    })
+    flushSync()
+    capturedOptions.onResized({ width: 100, height: 200 })
+    expect(events).toHaveLength(1)
+    expect(events[0]).toEqual({ width: 100, height: 200 })
+    unmount(component)
+  })
+
+  it('dispatches message event', () => {
+    const events = []
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: { message: (e) => events.push(e.detail) },
+    })
+    flushSync()
+    capturedOptions.onMessage({ message: 'hello' })
+    expect(events).toHaveLength(1)
+    expect(events[0]).toEqual({ message: 'hello' })
+    unmount(component)
+  })
+
+  it('dispatches ready event', () => {
+    const events = []
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: { ready: (e) => events.push(e.detail) },
+    })
+    flushSync()
+    capturedOptions.onReady({ iframe: {} })
+    expect(events).toHaveLength(1)
+    expect(events[0]).toEqual({ iframe: {} })
     unmount(component)
   })
 })

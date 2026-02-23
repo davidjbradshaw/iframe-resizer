@@ -26,6 +26,10 @@ function serveHtmlChildPages() {
       server.middlewares.use((req, res, next) => {
         if (req.url?.startsWith('/child/')) {
           const filePath = path.join(htmlChildDir, req.url.slice(7).split('?')[0])
+          if (!filePath.startsWith(htmlChildDir + path.sep)) {
+            next()
+            return
+          }
           if (fs.existsSync(filePath)) {
             let content = fs.readFileSync(filePath, 'utf-8')
             content = content.replace(
@@ -39,6 +43,10 @@ function serveHtmlChildPages() {
         }
         if (req.url?.startsWith('/js/')) {
           const filePath = path.join(jsDir, req.url.slice(4).split('?')[0])
+          if (!filePath.startsWith(jsDir + path.sep)) {
+            next()
+            return
+          }
           if (fs.existsSync(filePath)) {
             res.setHeader('Content-Type', 'application/javascript')
             res.end(fs.readFileSync(filePath))
