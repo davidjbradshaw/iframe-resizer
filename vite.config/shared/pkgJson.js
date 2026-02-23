@@ -39,6 +39,20 @@ const customConfig = (file) => {
         },
       }
 
+    case 'astro':
+      return {
+        main: 'IframeResizer.astro',
+        module: 'IframeResizer.astro',
+        types,
+        exports: {
+          '.': './IframeResizer.astro',
+          './types': { types: './index.d.ts' },
+        },
+        peerDependencies: {
+          astro: '>=3.0.0',
+        },
+      }
+
     case 'vue':
       return {
         main: 'index.umd.js',

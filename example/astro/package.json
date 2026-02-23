@@ -1,0 +1,16 @@
+{
+  "name": "astro-example",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@iframe-resizer/core": "file:../../dist/core",
+    "@iframe-resizer/astro": "file:../../dist/astro",
+    "astro": "^5.5.0"
+  }
+}

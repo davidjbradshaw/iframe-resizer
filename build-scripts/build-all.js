@@ -17,6 +17,7 @@ const packages = [
   { name: 'vue', type: 'vite', postBuild: true },
   { name: 'svelte', type: 'vite', postBuild: true },
   { name: 'angular', type: 'vite' },
+  { name: 'astro', type: 'vite', postBuild: true },
   { name: 'jquery', type: 'rollup' },
 ]
 
