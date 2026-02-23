@@ -47,11 +47,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
 <iframe data-iframe-resizer={JSON.stringify(resizerOptions)} {...iframeAttrs}></iframe>
 
 <script>
-  import connectResizer from '@iframe-resizer/core'
-
-  interface ResizerIframe extends HTMLIFrameElement {
-    iframeResizer?: { disconnect: () => void }
-  }
+  import connectResizer, { type IFrameComponent } from '@iframe-resizer/core'
 
   const EVENTS = [
     'onReady',
@@ -92,7 +88,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
     document
       .querySelectorAll<HTMLIFrameElement>('iframe[data-iframe-resizer]')
       .forEach((iframe) => {
-        if ('iframeResizer' in iframe) return
+        if ('iFrameResizer' in iframe) return
 
         const options = JSON.parse(iframe.dataset.iframeResizer!)
         const eventHandlers = createEventDispatcher(iframe)
@@ -109,8 +105,8 @@ for (const [key, value] of Object.entries(Astro.props)) {
     document
       .querySelectorAll<HTMLIFrameElement>('iframe[data-iframe-resizer]')
       .forEach((iframe) => {
-        if ('iframeResizer' in iframe) {
-          ;(iframe as ResizerIframe).iframeResizer?.disconnect()
+        if ('iFrameResizer' in iframe) {
+          ;(iframe as IFrameComponent).iFrameResizer.disconnect()
         }
       })
   }
