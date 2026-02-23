@@ -1,2 +1,3 @@
-// eslint-disable-next-line no-restricted-exports
-export { default } from './IframeResizer.svelte'
+import IframeResizer from './IframeResizer.svelte'
+
+export default IframeResizer

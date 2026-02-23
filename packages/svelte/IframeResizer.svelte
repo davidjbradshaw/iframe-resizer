@@ -36,6 +36,8 @@
   let resizer: IFrameObject | null = null
 
   onMount(() => {
+    const consoleGroup = createAutoConsoleGroup()
+
     const props: Record<string, any> = {
       license,
       bodyBackground,
@@ -69,17 +71,12 @@
       onResized: (...args: any[]) => dispatch('resized', ...args),
     }
 
-    const connectWithOptions = connectResizer(options)
-    resizer = connectWithOptions(iframe)
-
-    const consoleOptions = {
-      label: `svelte(${iframe.id})`,
-      expand: (options as any).logExpand,
-    }
-
-    const consoleGroup = createAutoConsoleGroup(consoleOptions)
+    consoleGroup.label(`svelte(${iframe.id})`)
     consoleGroup.event('setup')
 
+    resizer = connectResizer(options)(iframe)
+
+    consoleGroup.expand(options.logExpand)
     if ([COLLAPSE, EXPAND, true].includes(options.log as any)) {
       consoleGroup.log('Created Svelte component')
     }

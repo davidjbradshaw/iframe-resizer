@@ -10,6 +10,7 @@
   function onMessage(event) {
     eventData = event.detail
     alert(`Message from frame ${event.detail.iframe.id}: ${event.detail.message}`)
+    event.detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
   }
 </script>
 
@@ -27,7 +28,7 @@
 {#if eventData}
   <div class="message-data">
     <h3>Event Data:</h3>
-    <pre>{JSON.stringify(eventData, null, 2)}</pre>
+    <pre>{JSON.stringify(eventData, (key, value) => key === 'iframe' ? undefined : value, 2)}</pre>
   </div>
 {/if}
 
