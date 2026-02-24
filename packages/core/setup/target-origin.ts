@@ -7,10 +7,14 @@ export const getTargetOrigin = (remoteHost: string): string =>
     : remoteHost
 
 export function setTargetOrigin(id: string): void {
+  const { checkOrigin, remoteHost } = settings[id]
+
   settings[id].targetOrigin =
-    settings[id].checkOrigin === true
-      ? getTargetOrigin(settings[id].remoteHost)
-      : '*'
+    checkOrigin === false
+      ? '*'
+      : Array.isArray(checkOrigin)
+        ? checkOrigin.map(getTargetOrigin)
+        : getTargetOrigin(remoteHost)
 }
 
 export function getPostMessageTarget(iframe: HTMLIFrameElement): void {

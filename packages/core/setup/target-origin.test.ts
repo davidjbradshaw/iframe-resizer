@@ -33,6 +33,16 @@ describe('core/setup/target-origin', () => {
     expect(settings.y.targetOrigin).toBe('*')
   })
 
+  it('setTargetOrigin stores mapped array when checkOrigin is an array', () => {
+    settings.z = {
+      checkOrigin: ['https://a.com', 'https://b.com', ''],
+      remoteHost: 'https://ignored.com',
+    }
+    setTargetOrigin('z')
+
+    expect(settings.z.targetOrigin).toEqual(['https://a.com', 'https://b.com', '*'])
+  })
+
   it('getPostMessageTarget sets contentWindow when null', () => {
     const iframe = document.createElement('iframe')
     iframe.id = 'z'
