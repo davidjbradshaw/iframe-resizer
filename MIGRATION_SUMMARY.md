@@ -368,7 +368,7 @@ const config = await import(pathToFileURL(configPath).href)
 
 The React component now uses the standard `React.forwardRef()` pattern. The custom `forwardRef` prop has been removed.
 
-### Before (v5 / early v6 beta)
+### Before (v5)
 
 ```jsx
 const ref = useRef()
