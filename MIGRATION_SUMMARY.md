@@ -362,13 +362,13 @@ const config = await import(pathToFileURL(configPath).href)
 
 ---
 
-## Breaking Change: React `forwardRef` prop removed in favour of `React.forwardRef()` ✅
+## Breaking Change: React `forwardRef` prop replaced with standard `ref` ✅
 
 ### What changed
 
 The React component now uses the standard `React.forwardRef()` pattern. The custom `forwardRef` prop has been removed.
 
-### Before (v5)
+### Before
 
 ```jsx
 const ref = useRef()
@@ -378,7 +378,7 @@ const ref = useRef()
 // ref.current → { getRef, getElement, resize, moveToAnchor, sendMessage }
 ```
 
-### After (v6)
+### After
 
 ```jsx
 const ref = useRef()
@@ -390,7 +390,7 @@ const ref = useRef()
 
 ### Migration
 
-Replace the `forwardRef` prop with the standard `ref` prop. The shape of the ref object (`IFrameForwardRef`) is unchanged.
+Replace the `forwardRef` prop with `ref`. The shape of the ref object (`IFrameForwardRef`) is unchanged.
 
 ### Why
 
