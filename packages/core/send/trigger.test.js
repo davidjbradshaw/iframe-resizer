@@ -12,13 +12,13 @@ vi.mock('../values/settings', () => ({
       iframe: { contentWindow: { iframeChildListener: vi.fn() }, id: 'a' },
       postMessageTarget: { postMessage: vi.fn() },
       sameOrigin: true,
-      targetOrigin: '*',
+      targetOrigin: ['*'],
     },
     b: {
       iframe: { contentWindow: {}, id: 'b' },
       postMessageTarget: { postMessage: vi.fn() },
       sameOrigin: false,
-      targetOrigin: 'https://x',
+      targetOrigin: ['https://x'],
     },
   },
 }))

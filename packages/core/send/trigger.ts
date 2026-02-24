@@ -35,10 +35,12 @@ function dispatch(calleeMsg: string, msg: string, id: string): void {
   }
 
   logSent(
-    `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
+    `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin.join(', ')}`,
   )
 
-  postMessageTarget.postMessage(MESSAGE_ID + msg, targetOrigin)
+  for (const origin of targetOrigin) {
+    postMessageTarget.postMessage(MESSAGE_ID + msg, origin)
+  }
 }
 
 function trigger(calleeMsg: string, msg: string, id: string): void {

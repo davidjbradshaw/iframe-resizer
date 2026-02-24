@@ -12,13 +12,19 @@ vi.mock('../values/settings', () => ({
       iframe: { contentWindow: { iframeChildListener: vi.fn() }, id: 'a' },
       postMessageTarget: { postMessage: vi.fn() },
       sameOrigin: true,
-      targetOrigin: '*',
+      targetOrigin: ['*'],
     },
     b: {
       iframe: { contentWindow: {}, id: 'b' },
       postMessageTarget: { postMessage: vi.fn() },
       sameOrigin: false,
-      targetOrigin: 'https://x',
+      targetOrigin: ['https://x'],
+    },
+    c: {
+      iframe: { contentWindow: {}, id: 'c' },
+      postMessageTarget: { postMessage: vi.fn() },
+      sameOrigin: false,
+      targetOrigin: ['https://x.com', 'https://y.com'],
     },
   },
 }))
@@ -45,6 +51,20 @@ describe('core/send/trigger', () => {
     trigger('resize', 'resize:msg', 'b')
 
     expect(settings.b.postMessageTarget.postMessage).toHaveBeenCalled()
+  })
+
+  test('sends postMessage once per origin when targetOrigin is an array', () => {
+    trigger('resize', 'resize:msg', 'c')
+
+    expect(settings.c.postMessageTarget.postMessage).toHaveBeenCalledTimes(2)
+    expect(settings.c.postMessageTarget.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://x.com',
+    )
+    expect(settings.c.postMessageTarget.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://y.com',
+    )
   })
 
   test('warns when id not found', async () => {
