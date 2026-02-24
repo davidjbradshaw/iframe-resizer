@@ -34,18 +34,12 @@ function dispatch(calleeMsg: string, msg: string, id: string): void {
     }
   }
 
-  if (Array.isArray(targetOrigin)) {
-    logSent(
-      `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin.join(', ')}`,
-    )
-    for (const origin of targetOrigin) {
-      postMessageTarget.postMessage(MESSAGE_ID + msg, origin)
-    }
-  } else {
-    logSent(
-      `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin}`,
-    )
-    postMessageTarget.postMessage(MESSAGE_ID + msg, targetOrigin)
+  logSent(
+    `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin.join(', ')}`,
+  )
+
+  for (const origin of targetOrigin) {
+    postMessageTarget.postMessage(MESSAGE_ID + msg, origin)
   }
 }
 

@@ -25,12 +25,12 @@ describe('core/setup/target-origin', () => {
     settings.x = { checkOrigin: true, remoteHost: 'https://a.b' }
     setTargetOrigin('x')
 
-    expect(settings.x.targetOrigin).toBe('https://a.b')
+    expect(settings.x.targetOrigin).toEqual(['https://a.b'])
 
     settings.y = { checkOrigin: false, remoteHost: 'https://a.b' }
     setTargetOrigin('y')
 
-    expect(settings.y.targetOrigin).toBe('*')
+    expect(settings.y.targetOrigin).toEqual(['*'])
   })
 
   it('setTargetOrigin stores mapped array when checkOrigin is an array', () => {
