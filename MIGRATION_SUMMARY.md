@@ -359,3 +359,39 @@ const config = await import(pathToFileURL(configPath).href)
 | Vue peerDependencies | High | ✅ Fixed | Genuinely supports Vue 2 & 3 |
 
 **All 5 issues from Copilot PR review successfully resolved!** ✅
+
+---
+
+## Breaking Change: React `forwardRef` prop removed in favour of `React.forwardRef()` ✅
+
+### What changed
+
+The React component now uses the standard `React.forwardRef()` pattern. The custom `forwardRef` prop has been removed.
+
+### Before (v5 / early v6 beta)
+
+```jsx
+const ref = useRef()
+
+<IframeResizer forwardRef={ref} src="..." license="..." />
+
+// ref.current → { getRef, getElement, resize, moveToAnchor, sendMessage }
+```
+
+### After (v6)
+
+```jsx
+const ref = useRef()
+
+<IframeResizer ref={ref} src="..." license="..." />
+
+// ref.current → { getRef, getElement, resize, moveToAnchor, sendMessage }
+```
+
+### Migration
+
+Replace the `forwardRef` prop with the standard `ref` prop. The shape of the ref object (`IFrameForwardRef`) is unchanged.
+
+### Why
+
+Using a custom prop was a workaround. `React.forwardRef()` is the idiomatic API, works correctly with TypeScript generics, and is compatible with `React.memo()` and other higher-order components.

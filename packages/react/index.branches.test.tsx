@@ -48,7 +48,7 @@ describe('React IframeResizer branches', () => {
         <IframeResizer
           id="react-nolog"
           src="https://example.org"
-          forwardRef={fRef}
+          ref={fRef}
         />,
       )
       await Promise.resolve()
