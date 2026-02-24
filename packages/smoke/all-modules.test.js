@@ -163,6 +163,8 @@ const modules = [
   '../react/index.jsx',
   // vue
   '../vue/index.js',
+  // svelte
+  '../svelte/index.js',
 ]
 
 describe('packages smoke import', () => {

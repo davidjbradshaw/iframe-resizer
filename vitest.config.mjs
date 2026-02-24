@@ -1,6 +1,7 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 import react from '@vitejs/plugin-react'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
@@ -9,8 +10,9 @@ const rootDir = dirname(fileURLToPath(import.meta.url))
 const r = (p) => resolve(rootDir, p)
 
 export default defineConfig({
-  plugins: [vue(), react()],
+  plugins: [vue(), react(), svelte()],
   resolve: {
+    conditions: ['browser'],
     alias: {
       '@iframe-resizer/jquery': r('packages/jquery/plugin.js'),
       '@iframe-resizer/child': r('packages/child/index.js'),
@@ -41,7 +43,7 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
-      include: ['packages/**/*.{js,jsx,ts,tsx,vue}'],
+      include: ['packages/**/*.{js,jsx,ts,tsx,vue,svelte}'],
       exclude: [
         'coverage/**',
         'node_modules/**',

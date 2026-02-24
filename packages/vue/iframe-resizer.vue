@@ -85,6 +85,7 @@
 
     mounted() {
       const self = this
+      const consoleGroup = createAutoConsoleGroup()
       const { iframe } = this.$refs as { iframe: HTMLIFrameElement }
       const options: any = {
         ...Object.fromEntries(
@@ -104,17 +105,12 @@
         onResized: (...args: any[]) => self.$emit('onResized', ...args),
       }
 
-      const connectWithOptions = connectResizer(options)
-      self.resizer = connectWithOptions(iframe)
-
-      const consoleOptions = {
-        label: `vue(${iframe.id})`,
-        expand: (options as any).logExpand, // set inside connectResizer
-      }
-
-      const consoleGroup = createAutoConsoleGroup(consoleOptions)
+      consoleGroup.label(`vue(${iframe.id})`)
       consoleGroup.event('setup')
 
+      self.resizer = connectResizer(options)(iframe)
+
+      consoleGroup.expand(options.logExpand)
       if ([COLLAPSE, EXPAND, true].includes(options.log as any)) {
         consoleGroup.log('Created Vue component')
       }
