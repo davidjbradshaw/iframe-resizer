@@ -1,16 +1,13 @@
 import {
   FUNCTION,
-  HEIGHT,
   NUMBER,
   OBJECT,
   OFFSET,
   OFFSET_SIZE,
   STRING,
-  WIDTH,
 } from '../../common/consts'
 import { getKey } from '../../common/mode'
 import { deprecateOption, log } from '../console'
-import setupCustomCalcMethod from '../size/custom'
 import settings from '../values/settings'
 
 const read = (type: string) => (data: Record<string, any>, key: string): any => {
@@ -59,12 +56,6 @@ function readData(data: Record<string, any>): Record<string, any> {
     key2: readString(data, getKey(0)),
     sizeSelector: readString(data, 'sizeSelector'),
     targetOrigin: readString(data, 'targetOrigin'),
-
-    heightCalcMode: setupCustomCalcMethod(
-      data?.heightCalculationMethod,
-      HEIGHT,
-    ),
-    widthCalcMode: setupCustomCalcMethod(data?.widthCalculationMethod, WIDTH),
 
     onBeforeResize: readFunction(data, 'onBeforeResize'),
     onMessage: readFunction(data, 'onMessage'),

@@ -5,10 +5,6 @@ import APIsendMessage from '../send/message'
 import settings from '../values/settings'
 import state from '../values/state'
 import autoResize from './auto-resize'
-import {
-  setHeightCalculationMethod,
-  setWidthCalculationMethod,
-} from './calculation-methods'
 import moveToAnchor from './move-to-anchor'
 import setOffsetSize from './offset-size'
 import { getOrigin, getParentOrigin, setTargetOrigin } from './origin'
@@ -45,8 +41,6 @@ export default function setupPublicMethods(): void {
     scrollTo,
     scrollToOffset,
     sendMessage,
-    setHeightCalculationMethod,
-    setWidthCalculationMethod,
     setTargetOrigin,
     resize,
     size, // TODO Remove in V6
