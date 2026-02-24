@@ -12,7 +12,13 @@ vi.mock('@iframe-resizer/core', () => ({
 }))
 
 vi.mock('auto-console-group', () => ({
-  default: () => ({ event: vi.fn(), log: vi.fn(), warn: vi.fn() }),
+  default: () => ({
+    event: vi.fn(),
+    label: vi.fn(),
+    expand: vi.fn(),
+    log: vi.fn(),
+    warn: vi.fn(),
+  }),
 }))
 
 const comp = (await import('./iframe-resizer.vue')).default

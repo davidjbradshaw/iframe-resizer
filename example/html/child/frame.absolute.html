@@ -46,21 +46,21 @@
       <a
         href="#"
         class="back"
-        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,99999);return false;"
+        onclick="if ('parentIframe' in window) window.parentIframe.scrollTo(0,99999);return false;"
         >Bottom</a
       >
       &nbsp;
       <a
         href="#"
         class="back"
-        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollBy(0,50);return false;"
+        onclick="if ('parentIframe' in window) window.parentIframe.scrollBy(0,50);return false;"
         >scrollBy(50)</a
       >
       &nbsp;
       <a
         href="#"
         class="back"
-        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollToOffset(0,0);return false;"
+        onclick="if ('parentIframe' in window) window.parentIframe.scrollToOffset(0,0);return false;"
         >Scroll to iFrame</a
       >
       &nbsp;
@@ -118,7 +118,7 @@
       <a
         href="#"
         class="top"
-        onclick="if ('parentIFrame' in window) window.parentIFrame.scrollTo(0,0);return false;"
+        onclick="if ('parentIframe' in window) window.parentIframe.scrollTo(0,0);return false;"
         >Top</a
       >
     </div>
@@ -132,12 +132,12 @@
       document
         .getElementById('heightCalculationMethod')
         .addEventListener('change', function() {
-          if ('parentIFrame' in window) {
-            const { parentIFrame } = window
+          if ('parentIframe' in window) {
+            const { parentIframe } = window
             console.log('heightCalculationMethod', this)
 
-            parentIFrame.setHeightCalculationMethod(this.value)
-            parentIFrame.resize()
+            parentIframe.setHeightCalculationMethod(this.value)
+            parentIframe.resize()
           }
         })
     </script>

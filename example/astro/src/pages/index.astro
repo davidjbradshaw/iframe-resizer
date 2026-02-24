@@ -53,14 +53,15 @@ import IframeResizer from '@iframe-resizer/astro'
       iframe?.addEventListener('iframe-resizer:resized', (e: Event) => {
         const detail = (e as CustomEvent).detail
         eventData!.style.display = 'block'
-        eventOutput!.textContent = JSON.stringify(detail, null, 2)
+        eventOutput!.textContent = JSON.stringify(detail, (key, value) => key === 'iframe' ? undefined : value, 2)
       })
 
       iframe?.addEventListener('iframe-resizer:message', (e: Event) => {
         const detail = (e as CustomEvent).detail
         eventData!.style.display = 'block'
-        eventOutput!.textContent = JSON.stringify(detail, null, 2)
+        eventOutput!.textContent = JSON.stringify(detail, (key, value) => key === 'iframe' ? undefined : value, 2)
         alert(`Message from frame ${detail.iframe.id}: ${detail.message}`)
+        detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
       })
     </script>
   </body>

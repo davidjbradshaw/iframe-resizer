@@ -2,32 +2,34 @@
   import { ref } from 'vue'
   import IframeResizer from '@iframe-resizer/vue/sfc'
 
-  const messageData = ref(null)
+  const eventData = ref(null)
 
   const onResized = (data) => {
-    messageData.value = data
+    eventData.value = data
   }
 
   const onMessage = (data) => {
-    messageData.value = data
+    eventData.value = data
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
+    data.iframe.iframeResizer.sendMessage('Hello back from the parent page')
   }
 </script>
 
 <template>
   <h2>@iframe-resizer/vue example</h2>
   <IframeResizer
-    src="child/frame.content.html" 
+    id="myframe"
+    src="child/frame.content.html"
     license="GPLv3"
     log
     inPageLinks
     @on-message="onMessage"
     @on-resized="onResized"
   />
-  
-  <div v-if="messageData" class="message-data">
-    <h3>Message Data:</h3>
-    <pre>{{ JSON.stringify(messageData, null, 2) }}</pre>
+
+  <div v-if="eventData" class="message-data">
+    <h3>Event Data:</h3>
+    <pre>{{ JSON.stringify(eventData, (key, value) => key === 'iframe' ? undefined : value, 2) }}</pre>
   </div>
 </template>
 

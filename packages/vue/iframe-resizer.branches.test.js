@@ -21,6 +21,8 @@ vi.mock('@iframe-resizer/core', () => ({
 // Mock auto-console-group and capture spies
 const acg = {
   event: vi.fn(),
+  label: vi.fn(),
+  expand: vi.fn(),
   log: vi.fn(),
   warn: vi.fn(),
 }
@@ -34,6 +36,8 @@ describe('Vue iframe-resizer branches', () => {
   let ctx
   beforeEach(() => {
     acg.event.mockClear()
+    acg.label.mockClear()
+    acg.expand.mockClear()
     acg.log.mockClear()
     acg.warn.mockClear()
 

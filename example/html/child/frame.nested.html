@@ -74,7 +74,7 @@
 
         // Callback fn when message is received, forward to parent page
         onMessage(messageData) {
-          window.parentIFrame.sendMessage(`${messageData.message} (via ${id})`)
+          window.parentIframe.sendMessage(`${messageData.message} (via ${id})`)
         },
 
         // Callback fn when iFrame is closed
