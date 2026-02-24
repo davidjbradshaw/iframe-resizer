@@ -53,7 +53,7 @@ describe('React IframeResizer component', () => {
         <IframeResizer
           id="react-iframe"
           src="https://example.com"
-          forwardRef={fRef}
+          ref={fRef}
           log
         />,
       )
@@ -95,7 +95,7 @@ describe('React IframeResizer component', () => {
         <IframeResizer
           id="react-iframe-ref"
           src="https://example.com"
-          forwardRef={fRef}
+          ref={fRef}
         />,
       )
       await Promise.resolve()

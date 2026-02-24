@@ -430,3 +430,36 @@ parentIframe.setHeightCalculationMethod('max')
 **After:** Remove these options entirely. The library auto-detects the optimal method.
 
 **Status:** ✅ All 368 unit tests passing
+## Breaking Change: React `forwardRef` prop replaced with standard `ref` ✅
+
+### What changed
+
+The React component now uses the standard `React.forwardRef()` pattern. The custom `forwardRef` prop has been removed.
+
+### Before
+
+```jsx
+const ref = useRef()
+
+<IframeResizer forwardRef={ref} src="..." license="..." />
+
+// ref.current → { getRef, getElement, resize, moveToAnchor, sendMessage }
+```
+
+### After
+
+```jsx
+const ref = useRef()
+
+<IframeResizer ref={ref} src="..." license="..." />
+
+// ref.current → { getRef, getElement, resize, moveToAnchor, sendMessage }
+```
+
+### Migration
+
+Replace the `forwardRef` prop with `ref`. The shape of the ref object (`IFrameForwardRef`) is unchanged.
+
+### Why
+
+Using a custom prop was a workaround. `React.forwardRef()` is the idiomatic API, works correctly with TypeScript generics, and is compatible with `React.memo()` and other higher-order components.

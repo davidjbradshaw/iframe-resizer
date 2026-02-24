@@ -8,7 +8,7 @@ import type {
   IFrameScrollData,
 } from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-import React, { type ReactElement, type RefObject, useEffect, useImperativeHandle, useRef } from 'react'
+import React, { forwardRef, type ReactElement, type RefObject, useEffect, useImperativeHandle, useRef } from 'react'
 
 import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
@@ -31,7 +31,6 @@ export type ResizerOptions = {
   bodyPadding?: string | number | null
   checkOrigin?: boolean | string[]
   direction?: 'vertical' | 'horizontal' | 'none' | 'both'
-  forwardRef?: any
   inPageLinks?: boolean
   license: string
   log?: boolean | 'expanded' | 'collapsed'
@@ -61,8 +60,7 @@ export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
 
-// TODO: Add support for React.forwardRef() in next major version (Breaking change)
-function IframeResizer({ forwardRef, ...props }: IframeResizerProps): ReactElement {
+function IframeResizer(props: IframeResizerProps, ref: React.ForwardedRef<IFrameForwardRef>): ReactElement {
   const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef<IFrameComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
@@ -96,7 +94,7 @@ function IframeResizer({ forwardRef, ...props }: IframeResizerProps): ReactEleme
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useImperativeHandle(forwardRef, () => ({
+  useImperativeHandle(ref, () => ({
     getRef: () => iframeRef,
     getElement: () => iframeRef.current,
     resize: () => iframeRef.current.iframeResizer.resize(),
@@ -111,4 +109,4 @@ function IframeResizer({ forwardRef, ...props }: IframeResizerProps): ReactEleme
   return <iframe {...filteredProps} ref={iframeRef} />
 }
 
-export default IframeResizer
+export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
