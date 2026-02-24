@@ -30,7 +30,7 @@ function serveHtmlChildPages() {
             next()
             return
           }
-          if (fs.existsSync(filePath)) {
+          if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             let content = fs.readFileSync(filePath, 'utf-8')
             content = content.replace(
               /src="[^"]*iframe-resizer\.child\.js"/,
@@ -47,7 +47,7 @@ function serveHtmlChildPages() {
             next()
             return
           }
-          if (fs.existsSync(filePath)) {
+          if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             res.setHeader('Content-Type', 'application/javascript')
             res.end(fs.readFileSync(filePath))
             return
