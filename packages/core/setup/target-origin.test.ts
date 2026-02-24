@@ -1,4 +1,6 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+vi.mock('../console', () => ({ warn: vi.fn() }))
 
 import settings from '../values/settings'
 import {
@@ -25,12 +27,31 @@ describe('core/setup/target-origin', () => {
     settings.x = { checkOrigin: true, remoteHost: 'https://a.b' }
     setTargetOrigin('x')
 
-    expect(settings.x.targetOrigin).toBe('https://a.b')
+    expect(settings.x.targetOrigin).toEqual(['https://a.b'])
 
     settings.y = { checkOrigin: false, remoteHost: 'https://a.b' }
     setTargetOrigin('y')
 
-    expect(settings.y.targetOrigin).toBe('*')
+    expect(settings.y.targetOrigin).toEqual(['*'])
+  })
+
+  it('setTargetOrigin stores mapped array when checkOrigin is an array', () => {
+    settings.z = {
+      checkOrigin: ['https://a.com', 'https://b.com', ''],
+      remoteHost: 'https://ignored.com',
+    }
+    setTargetOrigin('z')
+
+    expect(settings.z.targetOrigin).toEqual(['https://a.com', 'https://b.com', '*'])
+  })
+
+  it('setTargetOrigin warns and sets empty array when checkOrigin is []', async () => {
+    const { warn } = await import('../console')
+    settings.empty = { checkOrigin: [], remoteHost: 'https://ignored.com' }
+    setTargetOrigin('empty')
+
+    expect(settings.empty.targetOrigin).toEqual([])
+    expect(warn).toHaveBeenCalledWith('empty', expect.stringContaining('empty array'))
   })
 
   it('getPostMessageTarget sets contentWindow when null', () => {

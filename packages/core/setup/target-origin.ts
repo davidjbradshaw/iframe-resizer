@@ -1,3 +1,4 @@
+import { warn } from '../console'
 import settings from '../values/settings'
 
 export const getTargetOrigin = (remoteHost: string): string =>
@@ -7,10 +8,15 @@ export const getTargetOrigin = (remoteHost: string): string =>
     : remoteHost
 
 export function setTargetOrigin(id: string): void {
-  settings[id].targetOrigin =
-    settings[id].checkOrigin === true
-      ? getTargetOrigin(settings[id].remoteHost)
-      : '*'
+  const { checkOrigin, remoteHost } = settings[id]
+
+  if (Array.isArray(checkOrigin) && checkOrigin.length === 0) {
+    warn(id, 'checkOrigin is an empty array — no messages will be sent to the iframe')
+  }
+
+  settings[id].targetOrigin = Array.isArray(checkOrigin)
+    ? checkOrigin.map(getTargetOrigin)
+    : [checkOrigin === false ? '*' : getTargetOrigin(remoteHost)]
 }
 
 export function getPostMessageTarget(iframe: HTMLIFrameElement): void {
