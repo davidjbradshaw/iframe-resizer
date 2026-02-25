@@ -4,13 +4,14 @@ import { fileURLToPath } from 'node:url'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import react from '@vitejs/plugin-react'
 import vue from '@vitejs/plugin-vue'
+import solid from 'vite-plugin-solid'
 import { defineConfig } from 'vitest/config'
 
 const rootDir = dirname(fileURLToPath(import.meta.url))
 const r = (p) => resolve(rootDir, p)
 
 export default defineConfig({
-  plugins: [vue(), react(), svelte()],
+  plugins: [vue(), react(), svelte(), solid()],
   resolve: {
     conditions: ['browser'],
     alias: {

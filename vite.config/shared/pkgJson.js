@@ -84,6 +84,24 @@ const customConfig = (file) => {
         },
       }
 
+    case 'solid':
+      return {
+        main,
+        module,
+        types,
+        solid: 'IframeResizer.tsx',
+        exports: {
+          '.': {
+            solid: './IframeResizer.tsx',
+            import: './index.esm.js',
+            require: './index.cjs.js',
+          },
+        },
+        peerDependencies: {
+          'solid-js': '^1.0.0',
+        },
+      }
+
     case 'core':
       return {
         ...entryPoints,
