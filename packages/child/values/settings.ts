@@ -1,7 +1,4 @@
-import {
-  HEIGHT_CALC_MODE_DEFAULT,
-  WIDTH_CALC_MODE_DEFAULT,
-} from '../../common/consts'
+import { AUTO } from '../../common/consts'
 import { warn } from '../console'
 
 export default {
@@ -12,7 +9,7 @@ export default {
   bodyPadding: '',
   calculateHeight: true,
   calculateWidth: false,
-  heightCalcMode: HEIGHT_CALC_MODE_DEFAULT,
+  heightCalcMode: AUTO,
   ignoreSelector: '',
   inPageLinks: false,
   logging: false,
@@ -24,7 +21,7 @@ export default {
   sizeSelector: '',
   targetOrigin: '*',
   tolerance: 0,
-  widthCalcMode: WIDTH_CALC_MODE_DEFAULT,
+  widthCalcMode: AUTO,
 
   onBeforeResize: undefined,
   onMessage: () => {

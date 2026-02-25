@@ -25,8 +25,6 @@ describe('child/read/from-page', () => {
       sizeSelector: '#y',
       targetOrigin: 'https://example.com',
       offsetSize: 5,
-      heightCalculationMethod: 'auto',
-      widthCalculationMethod: 'scroll',
       onMessage: () => {},
       onReady: () => {},
       onBeforeResize: () => 1,
@@ -41,8 +39,6 @@ describe('child/read/from-page', () => {
     expect(out.offsetHeight).toBe(5)
     // calculateWidth is false by default so width offset omitted
     expect(out.offsetWidth).toBeUndefined()
-    expect(out.heightCalcMode).toBe('auto')
-    expect(out.widthCalcMode).toBe('scroll')
     expect(typeof out.onMessage).toBe('function')
     expect(typeof out.onReady).toBe('function')
     expect(typeof out.onBeforeResize).toBe('function')

@@ -1,22 +1,25 @@
 import { describe, expect, test, vi } from 'vitest'
 
-import getHeight from '../size/get-height'
+import { advise } from '../console'
 import { checkCalcMode } from './calculation-mode'
 
 vi.mock('../console', () => ({ advise: vi.fn(), log: vi.fn(), warn: vi.fn() }))
 
-describe('child/check/calculation-mode', () => {
-  test('deprecated method triggers advise', () => {
-    const modes = getHeight
-    const res = checkCalcMode('bodyOffset', 'auto', modes)
+const modes = { label: 'height' }
 
-    expect(res).toBeDefined()
+describe('child/check/calculation-mode', () => {
+  test('returns auto when no mode is provided', () => {
+    expect(checkCalcMode('', modes)).toBe('auto')
   })
 
-  test('invalid method warns and returns default', () => {
-    const modes = { label: 'height', auto: 1 }
-    const res = checkCalcMode('badMode', 'auto', modes)
+  test('returns auto when auto is provided', () => {
+    expect(checkCalcMode('auto', modes)).toBe('auto')
+  })
+
+  test('returns auto and calls advise when a non-auto mode is provided', () => {
+    const res = checkCalcMode('bodyOffset', modes)
 
     expect(res).toBe('auto')
+    expect(advise).toHaveBeenCalled()
   })
 })

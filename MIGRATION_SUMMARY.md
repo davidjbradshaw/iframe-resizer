@@ -362,6 +362,74 @@ const config = await import(pathToFileURL(configPath).href)
 
 ---
 
+## Child Package: Removed Custom Calculation Methods (2026-02-24) ✅
+
+### Overview
+
+Removed the ability to set custom height/width calculation methods in the child package. The library now always uses `auto` mode, which automatically detects the most suitable calculation method.
+
+### Changes
+
+#### API Removed
+
+- `parentIframe.setHeightCalculationMethod(method)` — removed from public API
+- `parentIframe.setWidthCalculationMethod(method)` — removed from public API
+- `window.iframeResizer.heightCalculationMethod` — option now ignored (with advisory)
+- `window.iframeResizer.widthCalculationMethod` — option now ignored (with advisory)
+- `window.iframeResizer.heightCalculationMethod` as a function — removed custom function support
+
+#### Behaviour Change
+
+If a `heightCalculationMethod` or `widthCalculationMethod` option is passed (from `window.iframeResizer` or previously via the setter methods), the library now:
+
+1. Calls `advise()` to inform the developer the option has been ignored
+2. Silently falls back to `auto`
+
+#### Files Removed
+
+- `packages/child/size/custom.ts` — custom function calc support
+- `packages/child/size/body-offset.ts` — bodyOffset measurement (only used by removed modes)
+- `packages/child/methods/calculation-methods.ts` — `setHeight/WidthCalculationMethod`
+
+#### Calculation Methods Removed from `get-height` / `get-width`
+
+`bodyOffset`, `bodyScroll`, `documentElementOffset`, `max`, `min`, `grow`, `lowestElement`, `rightMostElement`, `scroll`, `custom`
+
+#### Retained (used internally by `auto`)
+
+`boundingClientRect`, `documentElementScroll`, `taggedElement`
+
+#### Default Changed
+
+`widthCalcMode` default: `'scroll'` → `'auto'`
+
+#### `getAllMeasurements` Removed
+
+Only used by the deleted `max`/`min` methods; `getAllElements` is retained.
+
+### Tests
+
+- Deleted: `custom.test.ts`, `body-offset.test.{ts,js}`, `calculation-methods.test.ts`, `get-height.deep.test.ts`, `get-width.deep.test.ts`
+- Updated: `calculation-mode.test.ts`, `all.test.ts`, `get-height.behavior.test.ts`, `get-width.behavior.test.ts`
+- Integration spec: removed `height calculation methods` and `width calculation methods` describe blocks from `spec/childSpec.js`
+
+### Migration Guide
+
+**Before:**
+
+```javascript
+window.iframeResizer = {
+  heightCalculationMethod: 'lowestElement',
+  widthCalculationMethod: 'rightMostElement',
+}
+
+// or at runtime:
+parentIframe.setHeightCalculationMethod('max')
+```
+
+**After:** Remove these options entirely. The library auto-detects the optimal method.
+
+**Status:** ✅ All 368 unit tests passing
 ## Breaking Change: React `forwardRef` prop replaced with standard `ref` ✅
 
 ### What changed
