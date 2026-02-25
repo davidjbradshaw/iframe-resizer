@@ -480,7 +480,7 @@ The Vue component has been rewritten using Vue 3's Composition API (`<script set
 | --- | --- |
 | `export default { name, props, data, mounted, methods }` | `defineOptions`, `defineProps`, `defineEmits`, `defineExpose` macros |
 | `beforeDestroy()` + `beforeUnmount()` (dual hooks) | `onBeforeUnmount()` composable only |
-| `this.$refs.iframe` cast | `useTemplateRef<HTMLIFrameElement>('iframe')` (Vue 3.5+) |
+| `this.$refs.iframe` cast | `ref<HTMLIFrameElement \| null>(null)` in `<script setup>` |
 | `this.$props` spread | `toRaw(props)` spread |
 | `this.$emit(...)` | typed `emit(...)` from `defineEmits<T>()` |
 | `methods: { moveToAnchor, resize, sendMessage }` | `defineExpose({ moveToAnchor, resize, sendMessage })` |
@@ -508,10 +508,10 @@ The 8-generic `DefineComponent<Props, Methods, {}, {}, {}, {}, {}, Emits>` is un
 "vue": "^2.6.0 || ^3.0.0"
 
 // After
-"vue": "^3.5.0"
+"vue": "^3.3.0"
 ```
 
-Bumped minimum to 3.5.0 to reflect the use of `useTemplateRef` (introduced in Vue 3.5).
+Bumped minimum to 3.3.0 to reflect the use of `defineOptions` (introduced in Vue 3.3).
 
 ### Migration guide for library consumers
 
@@ -524,7 +524,7 @@ Bumped minimum to 3.5.0 to reflect the use of `useTemplateRef` (introduced in Vu
 - Vue 2 EOL: 31 December 2023 — over 2 years past end-of-life by the time of this change (February 2026)
 - The dual `beforeDestroy`/`beforeUnmount` hooks were the only runtime Vue 2 accommodation; cost was low but the signal was wrong
 - `<script setup>` gives better TypeScript inference, removes the `self = this` workaround, and aligns with how new Vue 3 code is written
-- `useTemplateRef` (Vue 3.5) replaces the unsafe `$refs` cast pattern
+- `defineOptions` (Vue 3.3) sets the component name without a separate `<script>` block
 
 ### Test changes
 
