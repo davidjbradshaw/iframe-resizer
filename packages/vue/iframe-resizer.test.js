@@ -7,7 +7,6 @@ describe('vue/iframe-resizer SFC', () => {
   it('exports a component object with expected shape', () => {
     expect(typeof Component).toBe('object')
     expect(Component).toHaveProperty('props')
-    expect(Component).toHaveProperty('methods')
     expect(Component.props).toHaveProperty('license')
   })
 })

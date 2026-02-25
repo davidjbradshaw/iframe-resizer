@@ -1,4 +1,4 @@
-import { DefineComponent } from 'vue'
+import type { DefineComponent } from 'vue'
 
 export interface IframeResizerProps {
   license: string
@@ -15,6 +15,7 @@ export interface IframeResizerProps {
   warningTimeout?: number
 }
 
+/** Methods exposed via defineExpose, accessible on template refs */
 export interface IframeResizerMethods {
   moveToAnchor(anchor: string): void
   resize(): void
