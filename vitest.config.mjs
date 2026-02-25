@@ -16,9 +16,9 @@ export default defineConfig({
     conditions: ['browser'],
     alias: {
       '@iframe-resizer/jquery': r('packages/jquery/plugin.js'),
-      '@iframe-resizer/child': r('packages/child/index.js'),
-      '@iframe-resizer/parent': r('packages/parent/factory.js'),
-      '@iframe-resizer/core': r('packages/core/index.js'),
+      '@iframe-resizer/child': r('packages/child/index.ts'),
+      '@iframe-resizer/parent': r('packages/parent/factory.ts'),
+      '@iframe-resizer/core': r('packages/core/index.ts'),
     },
   },
   test: {

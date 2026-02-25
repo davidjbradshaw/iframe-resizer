@@ -1,5 +1,5 @@
 import Alpine from 'alpinejs'
-import IframeResizerAlpine from '@iframe-resizer/alpine'
+import IframeResizer from '@iframe-resizer/alpine'
 
-Alpine.plugin(IframeResizerAlpine)
+Alpine.plugin(IframeResizer)
 Alpine.start()

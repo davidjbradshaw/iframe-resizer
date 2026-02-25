@@ -1,11 +1,15 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-// Mock auto-console-group to avoid noisy logs and to provide required API
+// Stable mock handles for auto-console-group
+const mockGroupLabel = vi.fn()
+const mockGroupEvent = vi.fn()
+const mockGroupWarn = vi.fn()
+
 vi.mock('auto-console-group', () => ({
   default: () => ({
-    label: vi.fn(),
-    event: vi.fn(),
-    warn: vi.fn(),
+    label: mockGroupLabel,
+    event: mockGroupEvent,
+    warn: mockGroupWarn,
     expand: vi.fn(),
     log: vi.fn(),
     endAutoGroup: vi.fn(),
@@ -25,7 +29,7 @@ vi.mock('@iframe-resizer/core', () => ({
   }),
 }))
 
-import IframeResizerAlpine from './index'
+import IframeResizer from './index'
 import connectResizer from '@iframe-resizer/core'
 
 type DirectiveCallback = (
@@ -60,7 +64,7 @@ function createMockContext(evaluateResult: unknown = {}) {
   }
 }
 
-describe('Alpine IframeResizerAlpine plugin', () => {
+describe('Alpine IframeResizer plugin', () => {
   let mockIframe: HTMLIFrameElement
 
   beforeEach(() => {
@@ -68,6 +72,9 @@ describe('Alpine IframeResizerAlpine plugin', () => {
     resize.mockClear()
     moveToAnchor.mockClear()
     sendMessage.mockClear()
+    mockGroupLabel.mockClear()
+    mockGroupEvent.mockClear()
+    mockGroupWarn.mockClear()
     vi.mocked(connectResizer).mockClear()
 
     mockIframe = document.createElement('iframe')
@@ -78,7 +85,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
   test('plugin registers iframe-resizer directive', () => {
     const mockAlpine = createMockAlpine()
 
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     expect(mockAlpine.directive).toHaveBeenCalledWith(
       'iframe-resizer',
@@ -88,7 +95,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
 
   test('directive calls connectResizer on element mount', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext({ license: 'TEST' })
@@ -100,7 +107,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
 
   test('directive calls disconnect on cleanup', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext({ license: 'TEST' })
@@ -113,7 +120,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
 
   test('directive passes options to connectResizer', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext({
@@ -132,7 +139,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
 
   test('directive handles null evaluate result gracefully', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext(null)
@@ -140,11 +147,27 @@ describe('Alpine IframeResizerAlpine plugin', () => {
     callback(mockIframe, { expression: 'nullOptions' }, ctx)
 
     expect(connectResizer).toHaveBeenCalled()
+    expect(mockGroupWarn).not.toHaveBeenCalled()
+  })
+
+  test('directive warns and falls back to empty options when expression returns a non-object', () => {
+    const mockAlpine = createMockAlpine()
+    IframeResizer(mockAlpine as any)
+
+    const callback = mockAlpine.getCallback()!
+    const ctx = createMockContext('not-an-object')
+
+    callback(mockIframe, { expression: 'badExpr' }, ctx)
+
+    expect(connectResizer).toHaveBeenCalled()
+    expect(mockGroupWarn).toHaveBeenCalledWith(
+      expect.stringContaining('must evaluate to an options object'),
+    )
   })
 
   test('directive uses empty options when expression is empty', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext()
@@ -156,7 +179,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
 
   test('directive registers cleanup handler', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext()
@@ -166,13 +189,25 @@ describe('Alpine IframeResizerAlpine plugin', () => {
     expect(ctx.cleanup).toHaveBeenCalledWith(expect.any(Function))
   })
 
-  test('onBeforeClose returns false and logs warning', () => {
+  test('directive labels console group with iframe id on setup', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext()
-    const consoleWarnSpy = vi.spyOn(console, 'warn')
+
+    callback(mockIframe, { expression: '' }, ctx)
+
+    expect(mockGroupLabel).toHaveBeenCalledWith('alpine(test-iframe)')
+    expect(mockGroupEvent).toHaveBeenCalledWith('setup')
+  })
+
+  test('onBeforeClose returns false and warns via consoleGroup', () => {
+    const mockAlpine = createMockAlpine()
+    IframeResizer(mockAlpine as any)
+
+    const callback = mockAlpine.getCallback()!
+    const ctx = createMockContext()
 
     let capturedOptions: any
     vi.mocked(connectResizer).mockImplementationOnce((options: any) => {
@@ -188,44 +223,15 @@ describe('Alpine IframeResizerAlpine plugin', () => {
     const result = capturedOptions.onBeforeClose()
 
     expect(result).toBe(false)
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(mockGroupEvent).toHaveBeenCalledWith('close')
+    expect(mockGroupWarn).toHaveBeenCalledWith(
       expect.stringContaining('Close event ignored'),
     )
-
-    consoleWarnSpy.mockRestore()
-  })
-
-  test('onBeforeClose includes iframe id in warning', () => {
-    const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
-
-    const callback = mockAlpine.getCallback()!
-    const ctx = createMockContext()
-    const consoleWarnSpy = vi.spyOn(console, 'warn')
-
-    let capturedOptions: any
-    vi.mocked(connectResizer).mockImplementationOnce((options: any) => {
-      capturedOptions = options
-      return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
-        return iframe.iframeResizer
-      }
-    })
-
-    callback(mockIframe, { expression: '' }, ctx)
-
-    capturedOptions.onBeforeClose()
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[iframe-resizer/alpine][test-iframe]'),
-    )
-
-    consoleWarnSpy.mockRestore()
   })
 
   test('directive evaluates expression via Alpine evaluate', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext({ license: 'GPLv3' })
@@ -237,7 +243,7 @@ describe('Alpine IframeResizerAlpine plugin', () => {
 
   test('directive sets waitForLoad option', () => {
     const mockAlpine = createMockAlpine()
-    IframeResizerAlpine(mockAlpine as any)
+    IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
     const ctx = createMockContext({})
