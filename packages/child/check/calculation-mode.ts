@@ -14,7 +14,7 @@ export function checkCalcMode(calcMode: string, modes: any): string {
 
 This version of <i>iframe-resizer</> auto detects the most suitable ${label} calculation method. The <b>${label}CalculationMethod</> option is no longer supported and has been ignored.
 
-To remove this warning, delete the <b>${label}CalculationMethod</> option from your parent page config and/or <i>window.iframeResizer</> on the child page.
+To remove this warning, delete the <b>${label}CalculationMethod</> option from your parent page config and/or the <i>window.iframeResizer</> config on the child page.
 `,
     )
   }
