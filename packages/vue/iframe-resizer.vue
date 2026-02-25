@@ -1,9 +1,9 @@
 <template>
-  <iframe ref="iframe" v-bind="$attrs"></iframe>
+  <iframe ref="iframeRef" v-bind="$attrs"></iframe>
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, toRaw, useTemplateRef } from 'vue'
+  import { onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type { IFrameObject } from '@iframe-resizer/core'
@@ -65,7 +65,7 @@
     onResized: [...args: any[]]
   }>()
 
-  const iframeRef = useTemplateRef<HTMLIFrameElement>('iframe')
+  const iframeRef = ref<HTMLIFrameElement | null>(null)
   const resizer = ref<IFrameObject | null>(null)
 
   onMounted(() => {
