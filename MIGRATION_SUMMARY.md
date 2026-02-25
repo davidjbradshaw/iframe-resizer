@@ -523,7 +523,6 @@ Alpine.start()
 ### Examples
 
 - `example/alpine/` — Full Vite dev example with show/hide toggle and message data display
-- `example-test/alpine/` — Test example (gitignored per convention)
 
 ### Dist Output
 
