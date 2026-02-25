@@ -57,6 +57,8 @@ cd ../vue
 npm publish --tag $1 --access public
 cd ../svelte
 npm publish --tag $1 --access public
+cd ../alpine
+npm publish --tag $1 --access public
 cd ../angular
 npm publish --tag $1 --access public
 cd ../astro

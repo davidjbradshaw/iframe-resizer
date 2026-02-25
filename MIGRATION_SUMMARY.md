@@ -463,3 +463,78 @@ Replace the `forwardRef` prop with `ref`. The shape of the ref object (`IFrameFo
 ### Why
 
 Using a custom prop was a workaround. `React.forwardRef()` is the idiomatic API, works correctly with TypeScript generics, and is compatible with `React.memo()` and other higher-order components.
+
+---
+
+## New Package: Alpine.js ✅
+
+### Overview
+
+Added `@iframe-resizer/alpine` — an Alpine.js plugin that registers the `x-iframe-resizer` directive.
+
+### Usage
+
+```javascript
+import Alpine from 'alpinejs'
+import IframeResizerAlpine from '@iframe-resizer/alpine'
+
+Alpine.plugin(IframeResizerAlpine)
+Alpine.start()
+```
+
+```html
+<div x-data="{
+  iframeOptions() {
+    const self = this
+    return {
+      license: 'GPLv3',
+      inPageLinks: true,
+      onResized(data) { self.messageData = data },
+      onMessage(data) { self.messageData = data }
+    }
+  }
+}">
+  <template x-if="show">
+    <iframe x-iframe-resizer="iframeOptions()" src="..."></iframe>
+  </template>
+</div>
+```
+
+### Key Design Decisions
+
+- **`x-iframe-resizer` directive**: Applied directly to the `<iframe>` element. Accepts an Alpine expression that evaluates to an `IFrameOptions` object.
+- **`x-if` for lifecycle**: Use `x-if` (not `x-show`) to add/remove the iframe. When `x-if` removes the element, Alpine's `cleanup()` fires and calls `resizer.disconnect()`.
+- **`waitForLoad: true`** set by default so the directive works with lazily loaded iframes.
+- **`onBeforeClose` override**: Returns `false` with a console warning, directing users to use `x-if` instead of programmatic iframe removal.
+- **Reactive callbacks**: Use `const self = this` inside the options method to capture the Alpine data proxy, allowing callbacks to update reactive state from outside Alpine's context.
+
+### Files Added
+
+- `packages/alpine/index.ts` — Alpine plugin (registers `x-iframe-resizer` directive)
+- `packages/alpine/index.test.ts` — 11 unit tests (100% statement coverage)
+- `vite.config/alpine.config.js` — Vite library build + `vite-plugin-dts` for type declarations
+
+### Files Modified
+
+- `vite.config/shared/pkgJson.js` — Added `alpine` case with `alpinejs: '^3.0.0'` peer dependency
+- `build-scripts/build-all.js` — Added `{ name: 'alpine', type: 'vite' }` to packages array
+- `bin/publish.sh` — Added alpine publish step between svelte and angular
+
+### Examples
+
+- `example/alpine/` — Full Vite dev example with show/hide toggle and message data display
+- `example-test/alpine/` — Test example (gitignored per convention)
+
+### Dist Output
+
+```
+dist/alpine/
+├── index.cjs.js    # CommonJS bundle
+├── index.esm.js    # ES module bundle
+├── index.d.ts      # TypeScript declarations
+├── package.json    # With alpinejs peerDependency
+├── LICENSE
+└── README.md
+```
+
+**Status:** ✅ All 1003 unit tests passing, 201/201 integration tests, 18/18 e2e tests
