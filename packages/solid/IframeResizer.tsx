@@ -3,6 +3,7 @@ import type {
   IFrameComponent,
   IFrameMessageData,
   IFrameMouseData,
+  IFrameObject,
   IFrameResizedData,
   IFrameScrollData,
 } from '@iframe-resizer/core'
@@ -15,11 +16,11 @@ import { onCleanup, onMount, splitProps } from 'solid-js'
 const esModuleInterop = (mod: any): any => (mod?.__esModule ? mod.default : mod)
 const createAutoConsoleGroup = esModuleInterop(acg)
 
-export type IframeResizerMethods = {
+export type IframeResizerMethods = Pick<
+  IFrameObject,
+  'moveToAnchor' | 'resize' | 'sendMessage'
+> & {
   getElement: () => IFrameComponent
-  moveToAnchor: (anchor: string) => void
-  resize: () => void
-  sendMessage: (message: any, targetOrigin?: string) => void
 }
 
 export type IframeResizerProps = {

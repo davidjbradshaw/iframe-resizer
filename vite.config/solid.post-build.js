@@ -39,7 +39,11 @@ export default async function solidPostBuild() {
       writeFileSync(filePath, fixed)
     }
   } catch (error) {
-    if (error.code && !error.message.includes('not found')) {
+    if (
+      error.code &&
+      typeof error.code === 'string' &&
+      !error.message.includes('not found')
+    ) {
       throw new Error(
         `Solid post-build failed with ${error.code}: ${error.message}`,
       )

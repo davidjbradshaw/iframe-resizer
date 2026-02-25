@@ -72,6 +72,18 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(iframe!.id).toBe('test-frame')
   })
 
+  it('exposes getElement via ref', () => {
+    let api: any
+    dispose = render(
+      () => <IframeResizer id="test-frame" license="GPLv3" ref={(r) => (api = r)} />,
+      container,
+    )
+
+    const iframe = container.querySelector('iframe')
+    expect(iframe).toBeTruthy()
+    expect(api.getElement()).toBe(iframe)
+  })
+
   it('exposes moveToAnchor via ref', () => {
     let api: any
     dispose = render(
