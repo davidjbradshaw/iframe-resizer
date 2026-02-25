@@ -11,7 +11,7 @@ const rootDir = dirname(fileURLToPath(import.meta.url))
 const r = (p) => resolve(rootDir, p)
 
 export default defineConfig({
-  plugins: [vue(), react(), svelte(), solid()],
+  plugins: [vue(), react(), svelte(), solid({ include: /packages\/solid\// })],
   resolve: {
     conditions: ['browser'],
     alias: {
