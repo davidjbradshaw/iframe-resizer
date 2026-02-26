@@ -68,6 +68,7 @@ export class IframeResizerDirective {
 
     this.consoleGroup.label(`angular(${id})`)
     this.consoleGroup.event('setup')
+    this.consoleGroup.expand((this.options as any).logExpand)
 
     if (this.debug) this.consoleGroup.log('ngAfterViewInit')
 
@@ -100,6 +101,7 @@ export class IframeResizerDirective {
 
   ngOnDestroy() {
     if (this.debug) this.consoleGroup.log('ngOnDestroy')
+    this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
   }
 

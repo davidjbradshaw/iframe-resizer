@@ -8,15 +8,17 @@ const mockGroupLabel = vi.fn()
 const mockGroupEvent = vi.fn()
 const mockGroupWarn = vi.fn()
 const mockGroupLog = vi.fn()
+const mockGroupExpand = vi.fn()
+const mockGroupEndAutoGroup = vi.fn()
 
 vi.mock('auto-console-group', () => ({
   default: () => ({
     label: mockGroupLabel,
     event: mockGroupEvent,
     warn: mockGroupWarn,
-    expand: vi.fn(),
+    expand: mockGroupExpand,
     log: mockGroupLog,
-    endAutoGroup: vi.fn(),
+    endAutoGroup: mockGroupEndAutoGroup,
   }),
 }))
 
@@ -49,6 +51,8 @@ describe('Angular IframeResizerDirective', () => {
     mockGroupEvent.mockClear()
     mockGroupWarn.mockClear()
     mockGroupLog.mockClear()
+    mockGroupExpand.mockClear()
+    mockGroupEndAutoGroup.mockClear()
 
     // Reset module state to get fresh mocks
     vi.resetModules()
@@ -339,6 +343,27 @@ describe('Angular IframeResizerDirective', () => {
     directive.ngAfterViewInit()
 
     expect(capturedOptions.license).toBe('TEST-LICENSE-KEY')
+  })
+
+  test('expand is called after setup in ngAfterViewInit', () => {
+    directive.ngAfterViewInit()
+
+    expect(mockGroupExpand).toHaveBeenCalledTimes(1)
+    expect(mockGroupExpand).toHaveBeenCalledWith(undefined)
+  })
+
+  test('expand passes logExpand option when set', () => {
+    directive.options = { license: 'TEST', logExpand: true } as any
+    directive.ngAfterViewInit()
+
+    expect(mockGroupExpand).toHaveBeenCalledWith(true)
+  })
+
+  test('endAutoGroup is called in ngOnDestroy', () => {
+    directive.ngAfterViewInit()
+    directive.ngOnDestroy()
+
+    expect(mockGroupEndAutoGroup).toHaveBeenCalledTimes(1)
   })
 
   test('debug mode logs in ngAfterViewInit and ngOnDestroy', () => {
