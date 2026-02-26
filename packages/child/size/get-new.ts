@@ -1,10 +1,16 @@
-import { MIN_SIZE } from '../../common/consts'
+import { HEIGHT, MIN_SIZE, WIDTH } from '../../common/consts'
 import settings from '../values/settings'
 import getHeight from './get-height'
 import getWidth from './get-width'
 
-function callOnBeforeResize(newSize: number): number {
-  const returnedSize = settings.onBeforeResize(newSize)
+type Direction = typeof HEIGHT | typeof WIDTH
+
+function callOnBeforeResize(
+  newSize: number,
+  event: string,
+  direction: Direction,
+): number {
+  const returnedSize = settings.onBeforeResize(newSize, event, direction)
 
   if (returnedSize === undefined) {
     throw new TypeError(
@@ -26,13 +32,15 @@ function callOnBeforeResize(newSize: number): number {
   return returnedSize
 }
 
-const createGetNewSize = (direction: any) => (mode: string): number => {
-  const calculatedSize = direction[mode]()
+const createGetNewSize =
+  (direction: any, directionName: Direction) =>
+  (mode: string, event: string): number => {
+    const calculatedSize = direction[mode]()
 
-  return direction.enabled() && settings.onBeforeResize !== undefined
-    ? callOnBeforeResize(calculatedSize)
-    : calculatedSize
-}
+    return direction.enabled() && settings.onBeforeResize !== undefined
+      ? callOnBeforeResize(calculatedSize, event, directionName)
+      : calculatedSize
+  }
 
-export const getNewHeight = createGetNewSize(getHeight)
-export const getNewWidth = createGetNewSize(getWidth)
+export const getNewHeight = createGetNewSize(getHeight, HEIGHT)
+export const getNewWidth = createGetNewSize(getWidth, WIDTH)
