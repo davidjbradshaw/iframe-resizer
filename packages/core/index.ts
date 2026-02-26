@@ -1,12 +1,15 @@
 export type {
-  IFrameObject,
+  Direction,
   IFrameComponent,
-  IFrameMouseData,
-  IFrameResizedData,
   IFrameMessageData,
-  IFrameScrollData,
+  IFrameMouseData,
+  IFrameObject,
   IFrameOptions,
+  IFrameResizedData,
+  IFrameScrollData,
+  LogOption,
   MessageData,
+  ScrollOption,
 } from './types'
 
 import { LABEL } from '../common/consts'

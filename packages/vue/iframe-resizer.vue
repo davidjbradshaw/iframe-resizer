@@ -6,13 +6,11 @@
   import { onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
-  import type { IFrameObject } from '@iframe-resizer/core'
+  import type { IFrameObject, LogOption } from '@iframe-resizer/core'
   import acg from 'auto-console-group'
 
   const EXPAND = 'expanded'
   const COLLAPSE = 'collapsed'
-
-  type LogOption = 'expanded' | 'collapsed' | boolean | -1
 
   const esModuleInterop = (mod: any) =>
     // eslint-disable-next-line no-underscore-dangle
