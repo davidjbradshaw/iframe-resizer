@@ -51,4 +51,12 @@ describe('core/checks/manual-logging', () => {
 
     expect(options.log).toBe('expanded')
   })
+
+  it('sets collapsed logging for ?ifrlog=collapsed', () => {
+    const options = { log: false }
+    window.history.replaceState(null, '', '?ifrlog=collapsed')
+    manualLogging(options)
+
+    expect(options.log).toBe('collapsed')
+  })
 })
