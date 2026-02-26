@@ -44,14 +44,18 @@ and API documentation. This includes versions for:
 * **[React](https://iframe-resizer.com/frameworks/react)**
 * **[Vue](https://iframe-resizer.com/frameworks/vue3)**
 * **[Angular](https://iframe-resizer.com/frameworks/angular)**
+* **[Svelte](https://iframe-resizer.com/frameworks/svelte)**
+* **[Solid](https://iframe-resizer.com/frameworks/solid)**
+* **[Astro](https://iframe-resizer.com/frameworks/astro)**
+* **[Alpine](https://iframe-resizer.com/frameworks/alpine)**
 * **[jQuery](https://iframe-resizer.com/frameworks/jquery)**
 
 Along with setup guides for:
-  
+
 * **[Wordpress](https://iframe-resizer.com/guides/wordpress/)**
 * **[Google Apps Script](https://iframe-resizer.com/guides/google_apps_script)**
 
-Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation
+There is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation
 of additional custom components.
 
 ### Extended API
@@ -68,20 +72,17 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
-### Disconnected iframes
+## Version 6
 
-_iframe-resizer_ can safely handle iframes that are not yet connected to the DOM. When you initialize an iframe that is disconnected (not in the DOM tree), _iframe-resizer_ will automatically defer initialization until the iframe is added to the DOM. This is accomplished using:
+Version 6 expands the framework ecosystem with new official packages for **Svelte**, **Solid.js**, **Astro**, and **Alpine.js**, and migrates the React and Vue packages to **TypeScript**.
 
-- **isConnected check**: Detects whether the iframe is connected to the DOM before initializing
-- **MutationObserver**: Watches for DOM changes and initializes the iframe once it's added to the DOM
+Other notable changes in this release:
 
-This ensures consistent behavior regardless of when you call `iFrameResize()`, making it safe to initialize iframes before they're added to the page.
+- **React**: The custom `forwardRef` prop has been replaced with the standard `React.forwardRef()` pattern — change `forwardRef={ref}` to `ref={ref}`
+- **Vue**: Vue 2 support has been dropped; the package now requires Vue 3
+- **Simplified sizing**: Custom height/width calculation methods have been removed in favour of automatic mode, which selects the optimal method for your page
 
-## Version 5
-
-This version of iframe-resizer has been extensively rewritten to use modern browser APIs, this has enabled significantly better performance and greater accuracy in the detection of content resizing events.
-
-With this release, the opportunity has been taken to refresh and simplify the API, if you are coming from a previous version then their is an [Upgrade Guide](https://iframe-resizer.com/upgrade) to explain the changes.
+If you are upgrading from a previous version, please see the [Upgrade Guide](https://iframe-resizer.com/upgrade).
 
 ---
 [<img align="right" src="https://badge.fury.io/js/@iframe-resizer%2Fcore.svg" alt="NPM" />](https://badge.fury.io/js/@iframe-resizer%2Fparent)

@@ -29,7 +29,7 @@ describe('child/size/get-new', () => {
     getHeight.enabled = () => true
     getHeight.testMode = () => 42
 
-    const v = getNewHeight('testMode')
+    const v = getNewHeight('testMode', 'mutationObserver')
 
     expect(v).toBe(42)
   })
@@ -40,9 +40,9 @@ describe('child/size/get-new', () => {
     getHeight.enabled = () => true
     getHeight.testMode = () => 50
 
-    const v = getNewHeight('testMode')
+    const v = getNewHeight('testMode', 'mutationObserver')
 
-    expect(hook).toHaveBeenCalledWith(50)
+    expect(hook).toHaveBeenCalledWith(50, 'mutationObserver', 'height')
     expect(v).toBe(77)
   })
 
@@ -52,7 +52,7 @@ describe('child/size/get-new', () => {
     getHeight.enabled = () => false
     getHeight.testMode = () => 12
 
-    const v = getNewHeight('testMode')
+    const v = getNewHeight('testMode', 'mutationObserver')
 
     expect(hook).not.toHaveBeenCalled()
     expect(v).toBe(12)
@@ -63,7 +63,9 @@ describe('child/size/get-new', () => {
     getHeight.enabled = () => true
     getHeight.testMode = () => 5
 
-    expect(() => getNewHeight('testMode')).toThrowError(TypeError)
+    expect(() => getNewHeight('testMode', 'mutationObserver')).toThrowError(
+      TypeError,
+    )
   })
 
   test('throws when onBeforeResize returns NaN', () => {
@@ -71,7 +73,9 @@ describe('child/size/get-new', () => {
     getHeight.enabled = () => true
     getHeight.testMode = () => 5
 
-    expect(() => getNewHeight('testMode')).toThrowError(TypeError)
+    expect(() => getNewHeight('testMode', 'mutationObserver')).toThrowError(
+      TypeError,
+    )
   })
 
   test('throws when onBeforeResize returns below MIN_SIZE', () => {
@@ -79,16 +83,20 @@ describe('child/size/get-new', () => {
     getHeight.enabled = () => true
     getHeight.testMode = () => 5
 
-    expect(() => getNewHeight('testMode')).toThrowError(RangeError)
+    expect(() => getNewHeight('testMode', 'mutationObserver')).toThrowError(
+      RangeError,
+    )
   })
 
-  test('also works for width path', () => {
-    settings.onBeforeResize = (n) => n + 1
+  test('passes direction "width" for width path', () => {
+    const hook = vi.fn((n) => n + 1)
+    settings.onBeforeResize = hook
     getWidth.enabled = () => true
     getWidth.testMode = () => 10
 
-    const v = getNewWidth('testMode')
+    const v = getNewWidth('testMode', 'mutationObserver')
 
+    expect(hook).toHaveBeenCalledWith(10, 'mutationObserver', 'width')
     expect(v).toBe(11)
   })
 })
