@@ -68,4 +68,30 @@ describe('core/setup/logging', () => {
 
     expect(options.logExpand).toBe(true)
   })
+
+  test('log as 0 disables logging', () => {
+    const id = 'i16'
+    const options = { log: 0 }
+    startLogging(id, options)
+
+    expect(options.log).toBe(false)
+  })
+
+  test('log as 1 enables collapsed logging', () => {
+    const id = 'i17'
+    const options = { log: 1 }
+    startLogging(id, options)
+
+    expect(options.log).toBe(true)
+    expect(options.logExpand).toBe(false)
+  })
+
+  test('log as 2 enables expanded logging', () => {
+    const id = 'i18'
+    const options = { log: 2 }
+    startLogging(id, options)
+
+    expect(options.log).toBe(true)
+    expect(options.logExpand).toBe(true)
+  })
 })

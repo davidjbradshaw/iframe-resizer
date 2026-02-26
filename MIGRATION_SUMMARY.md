@@ -466,6 +466,58 @@ Using a custom prop was a workaround. `React.forwardRef()` is the idiomatic API,
 
 ---
 
+## Enhancement: Numeric shorthand for `log` option ✅
+
+### What changed
+
+The `log` option now accepts numeric shorthands alongside the existing string and boolean values:
+
+| Value | Equivalent | Behaviour |
+|-------|-----------|-----------|
+| `0` | `false` | Logging disabled |
+| `1` | `'collapsed'` | Logging enabled, console groups collapsed |
+| `2` | `'expanded'` | Logging enabled, console groups expanded |
+
+The existing `true`, `false`, `'collapsed'`, and `'expanded'` values are unchanged.
+
+### URL query parameter
+
+The `?ifrlog` parameter also accepts the numeric values:
+
+| Query string | Behaviour |
+|---|---|
+| `?ifrlog` | Collapsed (unchanged) |
+| `?ifrlog=0` | Disabled |
+| `?ifrlog=1` | Collapsed |
+| `?ifrlog=2` | Expanded |
+| `?ifrlog=expanded` | Expanded (unchanged) |
+
+### Usage
+
+```javascript
+// All equivalent — enable logging with collapsed groups
+connectResizer({ license: '...', log: 1 })
+connectResizer({ license: '...', log: 'collapsed' })
+
+// All equivalent — enable logging with expanded groups
+connectResizer({ license: '...', log: 2 })
+connectResizer({ license: '...', log: 'expanded' })
+
+// Disable logging
+connectResizer({ license: '...', log: 0 })
+connectResizer({ license: '...', log: false })
+```
+
+### Constants
+
+Named constants are exported from `@iframe-resizer/core`:
+
+```javascript
+import { LOG_DISABLED, LOG_COLLAPSED, LOG_EXPANDED } from '@iframe-resizer/core'
+```
+
+---
+
 ## Breaking Change: Vue package drops Vue 2 support, migrates to `<script setup>` ✅
 
 ### Background

@@ -43,6 +43,9 @@
           case false:
           case true:
           case -1:
+          case 0:
+          case 1:
+          case 2:
             return true
           default:
             return false
