@@ -1,5 +1,6 @@
 /**
- * @fileoverview Declare module @iframe-resizer/core for use in Angular
+ * @fileoverview Type declarations for @iframe-resizer/angular
+ *
+ * Types are re-exported from @iframe-resizer/core.
+ * See packages/core/types.ts for canonical type definitions.
  */
-
-declare module '@iframe-resizer/core'

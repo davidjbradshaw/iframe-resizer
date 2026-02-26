@@ -1,0 +1,26 @@
+import { warn } from '../console'
+import settings from '../values/settings'
+
+export const getTargetOrigin = (remoteHost: string): string =>
+  remoteHost === '' ||
+  remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
+    ? '*'
+    : remoteHost
+
+export function setTargetOrigin(id: string): void {
+  const { checkOrigin, remoteHost } = settings[id]
+
+  if (Array.isArray(checkOrigin) && checkOrigin.length === 0) {
+    warn(id, 'checkOrigin is an empty array — no messages will be sent to the iframe')
+  }
+
+  settings[id].targetOrigin = Array.isArray(checkOrigin)
+    ? checkOrigin.map(getTargetOrigin)
+    : [checkOrigin === false ? '*' : getTargetOrigin(remoteHost)]
+}
+
+export function getPostMessageTarget(iframe: HTMLIFrameElement): void {
+  const { id } = iframe
+  if (settings[id].postMessageTarget === null)
+    settings[id].postMessageTarget = iframe.contentWindow
+}
