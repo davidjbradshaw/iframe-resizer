@@ -1,11 +1,14 @@
 import connectResizer from '@iframe-resizer/core'
 import type {
-  IFrameObject,
+  Direction,
   IFrameComponent,
   IFrameMessageData,
   IFrameMouseData,
+  IFrameObject,
   IFrameResizedData,
   IFrameScrollData,
+  LogOption,
+  ScrollOption,
 } from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 import React, { forwardRef, type ReactElement, type RefObject, useEffect, useImperativeHandle, useRef } from 'react'
@@ -30,13 +33,13 @@ export type ResizerOptions = {
   bodyMargin?: string | number | null
   bodyPadding?: string | number | null
   checkOrigin?: boolean | string[]
-  direction?: 'vertical' | 'horizontal' | 'none' | 'both'
+  direction?: Direction
   inPageLinks?: boolean
   license: string
-  log?: boolean | 'expanded' | 'collapsed'
+  log?: LogOption
   logExpand?: boolean
   offsetSize?: number
-  scrolling?: boolean | 'omit'
+  scrolling?: ScrollOption
   tolerance?: number
   waitForLoad?: boolean
   warningTimeout?: number

@@ -12,7 +12,7 @@
   const EXPAND = 'expanded'
   const COLLAPSE = 'collapsed'
 
-  type LogOption = 'expanded' | 'collapsed' | boolean | -1
+  type LogOption = typeof EXPAND | typeof COLLAPSE | boolean | -1
 
   const esModuleInterop = (mod: any) =>
     // eslint-disable-next-line no-underscore-dangle

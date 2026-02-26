@@ -1,11 +1,14 @@
 import connectResizer from '@iframe-resizer/core'
 import type {
+  Direction,
   IFrameComponent,
   IFrameMessageData,
   IFrameMouseData,
   IFrameObject,
   IFrameResizedData,
   IFrameScrollData,
+  LogOption,
+  ScrollOption,
 } from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 import type { ComponentProps } from 'solid-js'
@@ -29,11 +32,11 @@ export type IframeResizerProps = {
   bodyMargin?: string | number | null
   bodyPadding?: string | number | null
   checkOrigin?: boolean | string[]
-  direction?: 'vertical' | 'horizontal' | 'none' | 'both'
+  direction?: Direction
   inPageLinks?: boolean
-  log?: boolean | 'expanded' | 'collapsed'
+  log?: LogOption
   offsetSize?: number
-  scrolling?: boolean | 'omit'
+  scrolling?: ScrollOption
   tolerance?: number
   waitForLoad?: boolean
   warningTimeout?: number

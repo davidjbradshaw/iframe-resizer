@@ -3,6 +3,27 @@
  * Canonical source of truth for the parent-side public API.
  */
 
+import {
+  AUTO,
+  BOTH,
+  COLLAPSE,
+  EXPAND,
+  HORIZONTAL,
+  NONE,
+  OMIT,
+  VERTICAL,
+} from '../common/consts'
+
+export type Direction =
+  | typeof VERTICAL
+  | typeof HORIZONTAL
+  | typeof NONE
+  | typeof BOTH
+
+export type LogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
+
+export type ScrollOption = boolean | typeof AUTO | typeof OMIT
+
 // --- Resizer object attached to iframe.iFrameResizer ---
 
 export interface IFrameObject {
@@ -76,7 +97,7 @@ export interface IFrameOptions {
    */
   checkOrigin?: boolean | string[]
   /** Set the resizing direction of the iframe. */
-  direction?: 'vertical' | 'horizontal' | 'none' | 'both'
+  direction?: Direction
   /** Custom iframe id. */
   id?: string
   /**
@@ -87,11 +108,11 @@ export interface IFrameOptions {
   /** Set iframe-resizer license key. */
   license: string
   /** Enable/disable console logging. */
-  log?: boolean | 'expanded' | 'collapsed' | number
+  log?: LogOption
   /** Set offset size of iframe content. */
   offsetSize?: number
   /** Enable scroll bars in the iframe. */
-  scrolling?: boolean | 'auto' | 'omit'
+  scrolling?: ScrollOption
   /**
    * Set the number of pixels the iframe content size has to change by,
    * before triggering a resize of the iframe.

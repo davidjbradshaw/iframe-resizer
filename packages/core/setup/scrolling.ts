@@ -1,10 +1,9 @@
-import { AUTO, HIDDEN } from '../../common/consts'
+import { AUTO, HIDDEN, OMIT } from '../../common/consts'
 import { log } from '../console'
 import settings from '../values/settings'
 
 const YES = 'yes'
 const NO = 'no'
-const OMIT = 'omit'
 
 export default function setScrolling(iframe: HTMLIFrameElement): void {
   const { id } = iframe
