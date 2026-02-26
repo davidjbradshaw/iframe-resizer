@@ -27,8 +27,8 @@ export default function getContentSize(
 ): { height: number; width: number } | null {
   const { heightCalcMode, widthCalcMode } = settings
 
-  const newHeight = customHeight ?? getNewHeight(heightCalcMode)
-  const newWidth = customWidth ?? getNewWidth(widthCalcMode)
+  const newHeight = customHeight ?? getNewHeight(heightCalcMode, triggerEvent)
+  const newWidth = customWidth ?? getNewWidth(widthCalcMode, triggerEvent)
 
   const updateEvent = isSizeChangeDetected(newHeight, newWidth)
     ? SIZE_CHANGE_DETECTED
