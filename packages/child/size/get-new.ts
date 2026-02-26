@@ -1,12 +1,14 @@
-import { MIN_SIZE } from '../../common/consts'
+import { HEIGHT, MIN_SIZE, WIDTH } from '../../common/consts'
 import settings from '../values/settings'
 import getHeight from './get-height'
 import getWidth from './get-width'
 
+type Direction = typeof HEIGHT | typeof WIDTH
+
 function callOnBeforeResize(
   newSize: number,
   event: string,
-  direction: 'height' | 'width',
+  direction: Direction,
 ): number {
   const returnedSize = settings.onBeforeResize(newSize, event, direction)
 
@@ -31,7 +33,7 @@ function callOnBeforeResize(
 }
 
 const createGetNewSize =
-  (direction: any, directionName: 'height' | 'width') =>
+  (direction: any, directionName: Direction) =>
   (mode: string, event: string): number => {
     const calculatedSize = direction[mode]()
 
@@ -40,5 +42,5 @@ const createGetNewSize =
       : calculatedSize
   }
 
-export const getNewHeight = createGetNewSize(getHeight, 'height')
-export const getNewWidth = createGetNewSize(getWidth, 'width')
+export const getNewHeight = createGetNewSize(getHeight, HEIGHT)
+export const getNewWidth = createGetNewSize(getWidth, WIDTH)
