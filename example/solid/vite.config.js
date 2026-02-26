@@ -118,11 +118,11 @@ export default defineConfig({
           ),
           '@iframe-resizer/core': path.resolve(
             __dirname,
-            '../../packages/core/index.js',
+            '../../packages/core/index.ts',
           ),
           '@iframe-resizer/child': path.resolve(
             __dirname,
-            '../../packages/child/index.js',
+            '../../packages/child/index.ts',
           ),
         }
       : {},
