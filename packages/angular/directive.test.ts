@@ -353,7 +353,7 @@ describe('Angular IframeResizerDirective', () => {
   })
 
   test('expand passes logExpand option when set', () => {
-    directive.options = { license: 'TEST', logExpand: true } as any
+    directive.options = { license: 'TEST', logExpand: true }
     directive.ngAfterViewInit()
 
     expect(mockGroupExpand).toHaveBeenCalledWith(true)

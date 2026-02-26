@@ -53,7 +53,7 @@ export class IframeResizerDirective {
     return this.resizer
   }
 
-  @Input() options: IFrameOptions = {
+  @Input() options: IFrameOptions & { logExpand?: boolean } = {
     license: '',
   }
 
@@ -68,7 +68,7 @@ export class IframeResizerDirective {
 
     this.consoleGroup.label(`angular(${id})`)
     this.consoleGroup.event('setup')
-    this.consoleGroup.expand((this.options as any).logExpand)
+    this.consoleGroup.expand(this.options.logExpand)
 
     if (this.debug) this.consoleGroup.log('ngAfterViewInit')
 
