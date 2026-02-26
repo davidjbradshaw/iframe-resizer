@@ -511,7 +511,7 @@ Alpine.start()
 ### Files Added
 
 - `packages/alpine/index.ts` — Alpine plugin (registers `x-iframe-resizer` directive)
-- `packages/alpine/index.test.ts` — 11 unit tests (100% statement coverage)
+- `packages/alpine/index.test.ts` — 13 unit tests (100% statement coverage)
 - `vite.config/alpine.config.js` — Vite library build + `vite-plugin-dts` for type declarations
 
 ### Files Modified
