@@ -32,7 +32,8 @@ function sendSize(
   consoleEvent(triggerEvent)
 
   switch (true) {
-    case isHidden === true: {
+    // Allow manual and parent resize requests to bypass the hidden check
+    case isHidden === true && !(triggerEvent in IGNORE_DISABLE_RESIZE): {
       if (hiddenMessageShown === true) break
       log('Iframe hidden - Ignored resize request')
       hiddenMessageShown = true
