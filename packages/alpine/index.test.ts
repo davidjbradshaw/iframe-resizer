@@ -150,6 +150,19 @@ describe('Alpine IframeResizer plugin', () => {
     expect(mockGroupWarn).not.toHaveBeenCalled()
   })
 
+  test('directive handles undefined evaluate result gracefully without warning', () => {
+    const mockAlpine = createMockAlpine()
+    IframeResizer(mockAlpine as any)
+
+    const callback = mockAlpine.getCallback()!
+    const ctx = createMockContext(undefined)
+
+    callback(mockIframe, { expression: 'undefinedOptions' }, ctx)
+
+    expect(connectResizer).toHaveBeenCalled()
+    expect(mockGroupWarn).not.toHaveBeenCalled()
+  })
+
   test('directive warns and falls back to empty options when expression returns a non-object', () => {
     const mockAlpine = createMockAlpine()
     IframeResizer(mockAlpine as any)

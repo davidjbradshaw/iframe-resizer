@@ -36,11 +36,11 @@ export default function IframeResizer(Alpine: Alpine): void {
 
       const evaluated = expression ? evaluate(expression) : {}
       const options =
-        evaluated !== null && typeof evaluated === 'object'
+        evaluated !== null && evaluated !== undefined && typeof evaluated === 'object'
           ? (evaluated as IFrameOptions)
           : {}
 
-      if (evaluated !== null && typeof evaluated !== 'object') {
+      if (evaluated !== null && evaluated !== undefined && typeof evaluated !== 'object') {
         consoleGroup.warn(
           `x-iframe-resizer expression must evaluate to an options object, got ${typeof evaluated}`,
         )

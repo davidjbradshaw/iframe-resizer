@@ -22,6 +22,9 @@
         background: #f5f5f5;
         border-radius: 4px;
       }
+      pre {
+        overflow: auto;
+      }
     </style>
   </head>
   <body>
@@ -29,7 +32,7 @@
       x-data="{
         show: true,
         messageData: null,
-        iframeOptions() {
+        get iframeOptions() {
           const self = this
           return {
             license: 'GPLv3',
@@ -50,27 +53,15 @@
 
       <template x-if="show">
         <iframe
-          x-iframe-resizer="iframeOptions()"
+          x-iframe-resizer="iframeOptions"
           id="myIframe"
           src="child/frame.content.html"
         ></iframe>
       </template>
 
       <div class="message-data" x-show="messageData">
-        <template x-if="messageData && 'message' in messageData">
-          <div>
-            <b>Frame ID:</b> <span x-text="messageData?.iframe?.id"></span><br />
-            <b>Message:</b> <span x-text="messageData?.message"></span>
-          </div>
-        </template>
-        <template x-if="messageData && !('message' in messageData)">
-          <div>
-            <b>Frame ID:</b> <span x-text="messageData?.iframe?.id"></span><br />
-            <b>Height:</b> <span x-text="messageData?.height"></span><br />
-            <b>Width:</b> <span x-text="messageData?.width"></span><br />
-            <b>Event type:</b> <span x-text="messageData?.type"></span>
-          </div>
-        </template>
+        <h3>Event Data:</h3>
+        <pre x-text="JSON.stringify(messageData, (k, v) => k === 'iframe' ? undefined : v, 2)"></pre>
       </div>
     </div>
 
