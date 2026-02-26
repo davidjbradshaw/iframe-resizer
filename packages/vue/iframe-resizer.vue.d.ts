@@ -1,4 +1,5 @@
-import { DefineComponent } from 'vue'
+import type { DefineComponent } from 'vue'
+import type { IFrameObject } from '@iframe-resizer/core'
 
 export interface IframeResizerProps {
   license: string
@@ -15,11 +16,8 @@ export interface IframeResizerProps {
   warningTimeout?: number
 }
 
-export interface IframeResizerMethods {
-  moveToAnchor(anchor: string): void
-  resize(): void
-  sendMessage(msg: any, target?: string): void
-}
+/** Methods exposed via defineExpose, accessible on template refs */
+export type IframeResizerMethods = Pick<IFrameObject, 'moveToAnchor' | 'resize' | 'sendMessage'>
 
 export interface IframeResizerEmits {
   onReady: (...args: any[]) => void
