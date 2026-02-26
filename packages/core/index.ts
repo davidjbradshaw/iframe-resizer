@@ -1,3 +1,5 @@
+export { LOG_COLLAPSED, LOG_DISABLED, LOG_EXPANDED } from '../common/consts'
+
 export type {
   Direction,
   IFrameComponent,

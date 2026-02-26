@@ -1,10 +1,21 @@
-import { COLLAPSE, EXPAND, LOG_OPTIONS } from '../../common/consts'
+import {
+  COLLAPSE,
+  EXPAND,
+  LOG_COLLAPSED,
+  LOG_DISABLED,
+  LOG_EXPANDED,
+  LOG_OPTIONS,
+} from '../../common/consts'
 import { hasOwn, isString } from '../../common/utils'
 import { enableVInfo } from '../checks/mode'
 import { error, setupConsole } from '../console'
 import defaults from '../values/defaults'
 
 export default function startLogging(id: string, options: Record<string, any>): void {
+  if (options.log === LOG_DISABLED) options.log = false
+  else if (options.log === LOG_COLLAPSED) options.log = COLLAPSE
+  else if (options.log === LOG_EXPANDED) options.log = EXPAND
+
   const isLogEnabled = hasOwn(options, 'log')
   const isLogString = isString(options.log)
   const enabled = isLogEnabled
