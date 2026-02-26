@@ -185,19 +185,24 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         )
       })
 
-      it('setTargetOrigin', () => {
+      it('setTargetOrigin', (done) => {
         const targetOrigin = 'http://foo.bar:1337'
 
         win.parentIFrame.setTargetOrigin(targetOrigin)
         win.parentIFrame.resize(10, 10)
 
-        // resize() sends 'manualResize' type (not 'size') to distinguish from auto-resize
-        expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:10:10:manualResize',
-          targetOrigin,
-        )
+        // Use setTimeout to allow any pending async callbacks (e.g., IntersectionObserver,
+        // RAF) to settle before checking, preventing intermittent race condition failures
+        setTimeout(() => {
+          // resize() sends 'manualResize' type (not 'size') to distinguish from auto-resize
+          expect(msgObject.source.postMessage).toHaveBeenCalledWith(
+            '[iFrameSizer]parentIFrameTests:10:10:manualResize',
+            targetOrigin,
+          )
 
-        win.parentIFrame.setTargetOrigin('*')
+          win.parentIFrame.setTargetOrigin('*')
+          done()
+        })
       })
     })
 
@@ -231,11 +236,12 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         setTimeout(() => {
           // Wait for init lock to clear
           mockMsgListener(createMsg('reset'))
-          console.log('>>', msgObject.source.postMessage.calls.argsFor(0))
 
-          expect(msgObject.source.postMessage.calls.argsFor(0)[0]).toContain(
-            ':reset',
-          )
+          // Use mostRecent() to avoid fragile index-based check which could fail
+          // if the IntersectionObserver or other async callbacks fire first
+          expect(
+            msgObject.source.postMessage.calls.mostRecent().args[0],
+          ).toContain(':reset')
           done()
         }, 200)
       })

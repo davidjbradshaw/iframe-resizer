@@ -102,6 +102,16 @@ const customConfig = (file) => {
         },
       }
 
+    case 'alpine':
+      return {
+        main,
+        module,
+        types,
+        peerDependencies: {
+          alpinejs: '^3.0.0',
+        },
+      }
+
     case 'core':
       return {
         ...entryPoints,

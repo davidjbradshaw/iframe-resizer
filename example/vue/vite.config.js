@@ -72,8 +72,8 @@ export default defineConfig({
   resolve: {
     alias: isDev ? {
       '@iframe-resizer/vue/sfc': path.resolve(__dirname, '../../packages/vue/iframe-resizer.vue'),
-      '@iframe-resizer/core': path.resolve(__dirname, '../../packages/core/index.js'),
-      '@iframe-resizer/child': path.resolve(__dirname, '../../packages/child/index.js'),
+      '@iframe-resizer/core': path.resolve(__dirname, '../../packages/core/index.ts'),
+      '@iframe-resizer/child': path.resolve(__dirname, '../../packages/child/index.ts'),
     } : {},
     dedupe: ['@iframe-resizer/core', 'auto-console-group'],
   },

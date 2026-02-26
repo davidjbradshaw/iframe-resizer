@@ -1,8 +1,7 @@
-import { svelte } from '@sveltejs/vite-plugin-svelte'
 import replace from '@rollup/plugin-replace'
+import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import fs from 'fs'
 import { defineConfig } from 'vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -65,15 +64,15 @@ function checkDistDirectories() {
     name: 'check-dist-directories',
     buildStart() {
       if (!isDev) {
-        const distSveltePath = path.resolve(__dirname, '../../dist/svelte')
+        const distAlpinePath = path.resolve(__dirname, '../../dist/alpine')
         const distCorePath = path.resolve(__dirname, '../../dist/core')
 
-        const svelteExists = fs.existsSync(distSveltePath)
+        const alpineExists = fs.existsSync(distAlpinePath)
         const coreExists = fs.existsSync(distCorePath)
 
-        if (!svelteExists || !coreExists) {
+        if (!alpineExists || !coreExists) {
           const missing = []
-          if (!svelteExists) missing.push('dist/svelte')
+          if (!alpineExists) missing.push('dist/alpine')
           if (!coreExists) missing.push('dist/core')
 
           throw new Error(
@@ -106,15 +105,14 @@ export default defineConfig({
       }),
     serveHtmlChildPages(),
     checkDistDirectories(),
-    svelte(),
   ].filter(Boolean),
-  base: isDev ? '/' : '/example/svelte/dist/',
+  base: isDev ? '/' : '/example/alpine/dist/',
   resolve: {
     alias: isDev
       ? {
-          '@iframe-resizer/svelte': path.resolve(
+          '@iframe-resizer/alpine': path.resolve(
             __dirname,
-            '../../packages/svelte/IframeResizer.svelte',
+            '../../packages/alpine/index.ts',
           ),
           '@iframe-resizer/core': path.resolve(
             __dirname,

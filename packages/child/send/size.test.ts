@@ -52,13 +52,20 @@ describe('child/send/size', () => {
     vi.spyOn(consoleMod, 'debug')
   })
 
-  test('skips when hidden and cancels raf', () => {
+  test('skips non-manual resize when hidden and cancels raf', () => {
     state.isHidden = true
     sendSize('evt', 'desc')
 
     expect(consoleMod.log).toHaveBeenCalled()
     expect(globalThis.cancelAnimationFrame).toHaveBeenCalled()
     expect(dispatch).not.toHaveBeenCalled()
+  })
+
+  test('manual resize bypasses hidden check and dispatches', () => {
+    state.isHidden = true
+    sendSize(MANUAL_RESIZE_REQUEST, 'manual resize', 10, 20)
+
+    expect(dispatch).toHaveBeenCalledWith(10, 20, MANUAL_RESIZE_REQUEST, undefined)
   })
 
   test('skips log when already hidden and message already shown', () => {

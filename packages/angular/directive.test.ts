@@ -3,15 +3,22 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { IframeResizerDirective } from './directive'
 
-// Mock auto-console-group to avoid noisy logs and to provide required API
+// Stable mock handles for auto-console-group
+const mockGroupLabel = vi.fn()
+const mockGroupEvent = vi.fn()
+const mockGroupWarn = vi.fn()
+const mockGroupLog = vi.fn()
+const mockGroupExpand = vi.fn()
+const mockGroupEndAutoGroup = vi.fn()
+
 vi.mock('auto-console-group', () => ({
   default: () => ({
-    label: vi.fn(),
-    event: vi.fn(),
-    warn: vi.fn(),
-    expand: vi.fn(),
-    log: vi.fn(),
-    endAutoGroup: vi.fn(),
+    label: mockGroupLabel,
+    event: mockGroupEvent,
+    warn: mockGroupWarn,
+    expand: mockGroupExpand,
+    log: mockGroupLog,
+    endAutoGroup: mockGroupEndAutoGroup,
   }),
 }))
 
@@ -40,6 +47,12 @@ describe('Angular IframeResizerDirective', () => {
     resize.mockClear()
     moveToAnchor.mockClear()
     sendMessage.mockClear()
+    mockGroupLabel.mockClear()
+    mockGroupEvent.mockClear()
+    mockGroupWarn.mockClear()
+    mockGroupLog.mockClear()
+    mockGroupExpand.mockClear()
+    mockGroupEndAutoGroup.mockClear()
 
     // Reset module state to get fresh mocks
     vi.resetModules()
@@ -276,19 +289,16 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const consoleWarnSpy = vi.spyOn(console, 'warn')
-
     directive.ngAfterViewInit()
 
     const result = capturedOptions.onBeforeClose('test-iframe')
 
     // The directive always returns false to prevent iframe removal
     expect(result).toBe(false)
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(mockGroupEvent).toHaveBeenCalledWith('close')
+    expect(mockGroupWarn).toHaveBeenCalledWith(
       expect.stringContaining('Close event ignored'),
     )
-
-    consoleWarnSpy.mockRestore()
   })
 
   test('options input is passed to connectResizer', async () => {
@@ -335,16 +345,34 @@ describe('Angular IframeResizerDirective', () => {
     expect(capturedOptions.license).toBe('TEST-LICENSE-KEY')
   })
 
-  test('debug mode logs in ngOnDestroy', () => {
-    const consoleDebugSpy = vi.spyOn(console, 'debug')
+  test('expand is called after setup in ngAfterViewInit', () => {
+    directive.ngAfterViewInit()
 
+    expect(mockGroupExpand).toHaveBeenCalledTimes(1)
+    expect(mockGroupExpand).toHaveBeenCalledWith(undefined)
+  })
+
+  test('expand passes logExpand option when set', () => {
+    directive.options = { license: 'TEST', logExpand: true }
+    directive.ngAfterViewInit()
+
+    expect(mockGroupExpand).toHaveBeenCalledWith(true)
+  })
+
+  test('endAutoGroup is called in ngOnDestroy', () => {
+    directive.ngAfterViewInit()
+    directive.ngOnDestroy()
+
+    expect(mockGroupEndAutoGroup).toHaveBeenCalledTimes(1)
+  })
+
+  test('debug mode logs in ngAfterViewInit and ngOnDestroy', () => {
     directive.debug = true
     directive.ngAfterViewInit()
     directive.ngOnDestroy()
 
-    expect(consoleDebugSpy).toHaveBeenCalledWith('ngOnDestroy')
-
-    consoleDebugSpy.mockRestore()
+    expect(mockGroupLog).toHaveBeenCalledWith('ngAfterViewInit')
+    expect(mockGroupLog).toHaveBeenCalledWith('ngOnDestroy')
   })
 
   test('public methods handle undefined resizer gracefully', () => {
@@ -394,17 +422,14 @@ describe('Angular IframeResizerDirective', () => {
       await import('./directive')
     const directiveNoId = new FreshDirective(elementRefNoId)
 
-    const consoleWarnSpy = vi.spyOn(console, 'warn')
-
     directiveNoId.ngAfterViewInit()
 
     const result = capturedOptions.onBeforeClose('some-id')
 
     expect(result).toBe(false)
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[iframe-resizer/angular][]'),
+    expect(mockGroupLabel).toHaveBeenCalledWith('angular()')
+    expect(mockGroupWarn).toHaveBeenCalledWith(
+      expect.stringContaining('Close event ignored'),
     )
-
-    consoleWarnSpy.mockRestore()
   })
 })
