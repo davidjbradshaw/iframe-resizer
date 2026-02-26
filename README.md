@@ -72,15 +72,6 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
-### Disconnected iframes
-
-_iframe-resizer_ can safely handle iframes that are not yet connected to the DOM. When you initialize an iframe that is disconnected (not in the DOM tree), _iframe-resizer_ will automatically defer initialization until the iframe is added to the DOM. This is accomplished using:
-
-- **isConnected check**: Detects whether the iframe is connected to the DOM before initializing
-- **MutationObserver**: Watches for DOM changes and initializes the iframe once it's added to the DOM
-
-This ensures consistent behavior regardless of when you call `iFrameResize()`, making it safe to initialize iframes before they're added to the page.
-
 ## Version 6
 
 Version 6 expands the framework ecosystem with new official packages for **Svelte**, **Solid.js**, **Astro**, and **Alpine.js**, and migrates the React and Vue packages to **TypeScript**.
@@ -90,7 +81,6 @@ Other notable changes in this release:
 - **React**: The custom `forwardRef` prop has been replaced with the standard `React.forwardRef()` pattern — change `forwardRef={ref}` to `ref={ref}`
 - **Vue**: Vue 2 support has been dropped; the package now requires Vue 3
 - **Simplified sizing**: Custom height/width calculation methods have been removed in favour of automatic mode, which selects the optimal method for your page
-- **Angular**: Now uses structured console logging via `auto-console-group`, consistent with other framework wrappers
 
 If you are upgrading from a previous version, please see the [Upgrade Guide](https://iframe-resizer.com/upgrade).
 
