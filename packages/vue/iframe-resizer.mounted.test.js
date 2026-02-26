@@ -1,14 +1,15 @@
 /* eslint import/first: 0, simple-import-sort/imports: 0 */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
+const mockResizer = {
+  moveToAnchor: vi.fn(),
+  resize: vi.fn(),
+  sendMessage: vi.fn(),
+  disconnect: vi.fn(),
+}
 
 vi.mock('@iframe-resizer/core', () => ({
-  default: vi.fn((options) => () => ({
-    options: { log: options.log, expand: true },
-    moveToAnchor: vi.fn(),
-    resize: vi.fn(),
-    sendMessage: vi.fn(),
-    disconnect: vi.fn(),
-  })),
+  default: vi.fn(() => () => mockResizer),
 }))
 
 vi.mock('auto-console-group', () => ({
@@ -21,48 +22,58 @@ vi.mock('auto-console-group', () => ({
   }),
 }))
 
-const comp = (await import('./iframe-resizer.vue')).default
+import { createApp, nextTick } from 'vue'
+import IframeResizer from './iframe-resizer.vue'
 
 describe('Vue iframe-resizer mounted lifecycle', () => {
-  let ctx
+  let container
+  let app
+
   beforeEach(() => {
-    const iframe = document.createElement('iframe')
-    iframe.id = 'i1'
-    document.body.append(iframe)
-    ctx = {
-      $refs: { iframe },
-      $props: { log: true },
-      $emit: vi.fn(),
-      resizer: null,
-    }
+    container = document.createElement('div')
+    document.body.append(container)
+    vi.clearAllMocks()
   })
 
-  it('mounts and connects resizer with console group', () => {
-    comp.mounted.call(ctx)
-    expect(ctx.resizer).toBeTruthy()
-    // Methods proxied exist
-    comp.methods.moveToAnchor.call(ctx, 'a')
-    comp.methods.resize.call(ctx)
-    comp.methods.sendMessage.call(ctx, 'm')
-    expect(ctx.resizer.moveToAnchor).toHaveBeenCalledWith('a')
-    expect(ctx.resizer.resize).toHaveBeenCalled()
-    expect(ctx.resizer.sendMessage).toHaveBeenCalledWith('m', undefined)
+  afterEach(() => {
+    app?.unmount()
+    container.remove()
+    app = null
   })
 
-  it('renders template with iframe ref', () => {
-    // Verify the template structure exists
-    expect(comp.template || comp.render).toBeDefined()
+  it('mounts and connects resizer', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: true })
+    const vm = app.mount(container)
+    await nextTick()
+
+    expect(container.querySelector('iframe')).toBeTruthy()
+
+    // Exposed methods delegate to the resizer
+    vm.moveToAnchor('a')
+    vm.resize()
+    vm.sendMessage('m')
+
+    expect(mockResizer.moveToAnchor).toHaveBeenCalledWith('a')
+    expect(mockResizer.resize).toHaveBeenCalled()
+    expect(mockResizer.sendMessage).toHaveBeenCalledWith('m', undefined)
   })
 
-  it('beforeUnmount disconnects the resizer', () => {
-    comp.mounted.call(ctx)
-    comp.beforeUnmount.call(ctx)
-    expect(ctx.resizer.disconnect).toHaveBeenCalled()
+  it('renders an iframe element', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3' })
+    app.mount(container)
+    await nextTick()
+
+    expect(container.querySelector('iframe')).toBeTruthy()
   })
 
-  it('beforeDestroy disconnects the resizer (Vue 2 compatibility)', () => {
-    comp.mounted.call(ctx)
-    comp.beforeDestroy.call(ctx)
-    expect(ctx.resizer.disconnect).toHaveBeenCalled()
+  it('beforeUnmount disconnects the resizer', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3' })
+    app.mount(container)
+    await nextTick()
+
+    app.unmount()
+    app = null
+
+    expect(mockResizer.disconnect).toHaveBeenCalled()
   })
 })

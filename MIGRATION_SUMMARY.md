@@ -463,3 +463,71 @@ Replace the `forwardRef` prop with `ref`. The shape of the ref object (`IFrameFo
 ### Why
 
 Using a custom prop was a workaround. `React.forwardRef()` is the idiomatic API, works correctly with TypeScript generics, and is compatible with `React.memo()` and other higher-order components.
+
+---
+
+## Breaking Change: Vue package drops Vue 2 support, migrates to `<script setup>` ✅
+
+### Background
+
+The Vue component has been rewritten using Vue 3's Composition API (`<script setup>`), dropping the Vue 2 compatibility layer added in an earlier migration. Vue 2 reached **End of Life on 31 December 2023**.
+
+### Component changes
+
+#### `iframe-resizer.vue` — rewritten with `<script setup>`
+
+| Before | After |
+| --- | --- |
+| `export default { name, props, data, mounted, methods }` | `defineOptions`, `defineProps`, `defineEmits`, `defineExpose` macros |
+| `beforeDestroy()` + `beforeUnmount()` (dual hooks) | `onBeforeUnmount()` composable only |
+| `this.$refs.iframe` cast | `ref<HTMLIFrameElement \| null>(null)` in `<script setup>` |
+| `this.$props` spread | `toRaw(props)` spread |
+| `this.$emit(...)` | typed `emit(...)` from `defineEmits<T>()` |
+| `methods: { moveToAnchor, resize, sendMessage }` | `defineExpose({ moveToAnchor, resize, sendMessage })` |
+
+#### `index.ts` — stricter plugin type
+
+```typescript
+// Before: duck-typed interface for Vue 2/3 compat
+interface VueApp {
+  component: (name: string, component: any) => void
+}
+
+// After: Vue 3 App type
+import type { App } from 'vue'
+```
+
+#### `iframe-resizer.vue.d.ts` — simplified `DefineComponent`
+
+The 8-generic `DefineComponent<Props, Methods, {}, {}, {}, {}, {}, Emits>` is unchanged externally but now semantically correct: the `Methods` generic maps to `defineExpose` output rather than `methods:`.
+
+#### `peerDependencies`
+
+```json
+// Before
+"vue": "^2.6.0 || ^3.0.0"
+
+// After
+"vue": "^3.3.0"
+```
+
+Bumped minimum to 3.3.0 to reflect the use of `defineOptions` (introduced in Vue 3.3).
+
+### Migration guide for library consumers
+
+**If you are on Vue 3:** no action required. The public API (props, events, exposed methods) is identical.
+
+**If you are on Vue 2:** upgrade to Vue 3. Vue 2 is end-of-life and no longer receives security patches.
+
+### Why now
+
+- Vue 2 EOL: 31 December 2023 — over 2 years past end-of-life by the time of this change (February 2026)
+- The dual `beforeDestroy`/`beforeUnmount` hooks were the only runtime Vue 2 accommodation; cost was low but the signal was wrong
+- `<script setup>` gives better TypeScript inference, removes the `self = this` workaround, and aligns with how new Vue 3 code is written
+- `defineOptions` (Vue 3.3) sets the component name without a separate `<script>` block
+
+### Test changes
+
+Tests were rewritten from the Options API internals pattern (`comp.mounted.call(ctx)`, `comp.methods.*`) to `createApp`/`nextTick` — the same pattern used by the React (`createRoot`/`act`) and Svelte (`mount`/`flushSync`) test suites. The Vue 2 `beforeDestroy` test was removed.
+
+**Status:** ✅ 978 unit tests passing, 100% line coverage on the Vue component

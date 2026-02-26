@@ -62,7 +62,7 @@ const customConfig = (file) => {
           './sfc': 'iframe-resizer.vue',
         },
         peerDependencies: {
-          vue: '^2.6.0 || ^3.0.0',
+          vue: '^3.3.0',
         },
       }
 
