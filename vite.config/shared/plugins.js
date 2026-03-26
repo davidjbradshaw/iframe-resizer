@@ -22,11 +22,11 @@ export const injectVersion = () => [versionInjector(vi)]
 
 const stripInclude = ['**/*.js', '**/*.ts']
 
-export const pluginsBase = (stripLog) => () => {
+export const pluginsBase = (stripLog, skipVI = false) => () => {
   const delog = [strip({ include: stripInclude, functions: ['log', 'debug'] })]
   const log = [strip({ include: stripInclude, functions: ['purge'] })]
 
-  const base = [versionInjector(vi), commonjs()]
+  const base = skipVI ? [commonjs()] : [versionInjector(vi), commonjs()]
 
   return stripLog ? delog.concat(base) : log.concat(base)
 }
@@ -80,7 +80,7 @@ export const createPluginsProd = (
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...(skipVersionInjector ? [commonjs()] : pluginsBase(stripLog)()),
+    ...pluginsBase(stripLog, skipVersionInjector)(),
   ]
 }
 
