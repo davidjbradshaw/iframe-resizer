@@ -8,7 +8,7 @@ describe('common/pubSub', () => {
 
   test('add/remove listener and has()', () => {
     const evt = 'ready'
-    const fn = () => {}
+    const fn = (): void => {}
 
     expect(pubSub.has(evt)).toBe(false)
     const remove = pubSub.addListener(evt, fn)
@@ -25,7 +25,9 @@ describe('common/pubSub', () => {
   test('emit invokes listeners with arguments', () => {
     const evt = 'message'
     const calls = []
-    const fn = (...args) => calls.push(args)
+    const fn = (...args: unknown[]): void => {
+      calls.push(args)
+    }
 
     pubSub.addListener(evt, fn)
     pubSub.emit(evt, 'a', 'b')
@@ -36,7 +38,7 @@ describe('common/pubSub', () => {
   test('once invokes the listener only once', () => {
     const evt = 'init'
     let count = 0
-    const fn = () => {
+    const fn = (): void => {
       count += 1
     }
 
@@ -53,8 +55,8 @@ describe('common/pubSub', () => {
 
   test('removeListener handles non-existent listener', () => {
     const evt = 'test'
-    const fn1 = () => {}
-    const fn2 = () => {}
+    const fn1 = (): void => {}
+    const fn2 = (): void => {}
 
     pubSub.addListener(evt, fn1)
 

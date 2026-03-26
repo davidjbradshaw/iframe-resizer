@@ -7,10 +7,13 @@ The <b>window.parentIFrame</> object has been renamed to <b>window.parentIframe<
 Called property: '${String(prop)}'
 `
 
-export default function deprecationProxy(target: Record<string, any>): Record<string, any> {
+export default function deprecationProxy(
+  target: Record<string, any>,
+): Record<string, any> {
   const warnedProps = new Set()
 
   return new Proxy(target, {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     get(target: Record<string, any>, prop: string | symbol) {
       if (!warnedProps.has(prop)) {
         advise(oldObjectName(prop))

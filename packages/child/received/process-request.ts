@@ -7,7 +7,8 @@ import reset from './reset'
 import resize from './resize'
 import { getData } from './utils'
 
-const moveToAnchor = (event: MessageEvent): void => state.inPageLinks.findTarget(getData(event))
+const moveToAnchor = (event: MessageEvent): void =>
+  state.inPageLinks.findTarget(getData(event))
 
 export default {
   init,

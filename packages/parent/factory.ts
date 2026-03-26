@@ -5,6 +5,9 @@ import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts'
 const id = `[${LABEL}] `
 
 export default function createIframeResize() {
+  let connectWithOptions: (iframe: HTMLIFrameElement) => any
+  let iFrames: HTMLIFrameElement[]
+
   function setupDisconnectedIframe(element: HTMLIFrameElement): void {
     const observer = new MutationObserver(() => {
       if (element.isConnected) {
@@ -41,9 +44,6 @@ export default function createIframeResize() {
     }
   }
 
-  let connectWithOptions: (iframe: HTMLIFrameElement) => any
-  let iFrames: HTMLIFrameElement[]
-
   return function (
     options: Record<string, any>,
     target?: string | HTMLElement,
@@ -63,6 +63,7 @@ export default function createIframeResize() {
     switch (typeof target) {
       case UNDEFINED:
       case STRING:
+        // @ts-ignore
         document.querySelectorAll(target || 'iframe').forEach(setup)
         break
 

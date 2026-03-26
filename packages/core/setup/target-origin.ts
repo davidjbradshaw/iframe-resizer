@@ -11,7 +11,10 @@ export function setTargetOrigin(id: string): void {
   const { checkOrigin, remoteHost } = settings[id]
 
   if (Array.isArray(checkOrigin) && checkOrigin.length === 0) {
-    warn(id, 'checkOrigin is an empty array — no messages will be sent to the iframe')
+    warn(
+      id,
+      'checkOrigin is an empty array — no messages will be sent to the iframe',
+    )
   }
 
   settings[id].targetOrigin = Array.isArray(checkOrigin)

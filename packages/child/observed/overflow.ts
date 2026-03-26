@@ -29,7 +29,9 @@ function overflowObserved(): void {
   sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
 }
 
-export default function createOverflowObservers(nodeList: NodeListOf<Element>) {
+export default function createOverflowObservers(
+  nodeList: NodeListOf<Element>,
+): ReturnType<typeof createOverflowObserver> {
   const overflowOptions = {
     root: document.documentElement,
     side: settings.calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE,

@@ -1,4 +1,5 @@
-import connectResizer from '@iframe-resizer/core'
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable react/react-in-jsx-scope, react/require-default-props */
 import type {
   Direction,
   IFrameComponent,
@@ -10,8 +11,9 @@ import type {
   LogOption,
   ScrollOption,
 } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-import type { ComponentProps } from 'solid-js'
+import type { ComponentProps, JSX } from 'solid-js'
 import { onCleanup, onMount, splitProps } from 'solid-js'
 
 // Deal with UMD not converting default exports to named exports
@@ -75,7 +77,7 @@ const RESIZER_KEYS = [
   'ref',
 ] as const
 
-export default function IframeResizer(props: IframeResizerProps) {
+export default function IframeResizer(props: IframeResizerProps): JSX.Element {
   let iframeEl!: IFrameComponent
   const [local, iframeProps] = splitProps(props, RESIZER_KEYS)
   const consoleGroup = createAutoConsoleGroup()

@@ -1,7 +1,7 @@
 import { VERSION } from '../../common/consts'
 
 interface PageState {
-  position: { x: number, y: number } | null
+  position: { x: number; y: number } | null
   version: string
 }
 

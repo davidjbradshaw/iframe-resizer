@@ -21,8 +21,7 @@ describe('core/events/size', () => {
     expect(info).toHaveBeenCalled()
   })
 
-  test('does not set dimensions when sizeHeight/sizeWidth are false', async () => {
-    const settings = (await import('../values/settings')).default
+  test('does not set dimensions when sizeHeight/sizeWidth are false', () => {
     settings.xyz = {
       sizeHeight: false,
       sizeWidth: false,

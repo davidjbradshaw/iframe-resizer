@@ -25,7 +25,7 @@ describe('monitor/common sendInfoToIframe throttle', () => {
     const id = 'th1'
     settings[id] = { iframe: document.createElement('iframe') }
 
-    const infoFn = () => 'info'
+    const infoFn = (): string => 'info'
     const send = sendInfoToIframe('PageInfo', infoFn)
 
     // Two calls in same frame should yield one trigger
@@ -52,7 +52,7 @@ describe('monitor/common sendInfoToIframe throttle', () => {
     settings[id1] = { iframe: document.createElement('iframe') }
     settings[id2] = { iframe: document.createElement('iframe') }
 
-    const infoFn = () => 'info'
+    const infoFn = (): string => 'info'
     const send = sendInfoToIframe('PageInfo', infoFn)
 
     // First call for each id should trigger immediately

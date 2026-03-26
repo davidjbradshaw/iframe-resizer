@@ -3,7 +3,9 @@ import { deprecateMethodReplace } from '../console'
 import sendMessage from '../send/message'
 import state from '../values/state'
 
-export default function getPageInfo(callback: ((info: any) => void) | undefined): void {
+export default function getPageInfo(
+  callback: ((info: any) => void) | undefined,
+): void {
   if (typeof callback === FUNCTION) {
     state.onPageInfo = callback
     sendMessage(0, 0, PAGE_INFO)

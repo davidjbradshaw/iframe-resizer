@@ -48,7 +48,12 @@ export const createLogCounter =
     }
   }
 
-export const createDetachObservers = (type: string, observer: { unobserve: (node: any) => void }, observed: WeakSet<any>, logCounter: (counter: number) => void) => {
+export const createDetachObservers = (
+  type: string,
+  observer: { unobserve: (node: any) => void },
+  observed: WeakSet<any>,
+  logCounter: (counter: number) => void,
+) => {
   const logNewlyRemoved = createLogNewlyRemoved(type)
 
   return (nodeList: Iterable<any>): void => {

@@ -52,10 +52,9 @@ function startLogging({
 
 function ready(onReady: () => void): void {
   consoleEvent('ready')
-  checkReadyYet(once(onReady))
+  checkReadyYet(once(onReady)) // @ts-ignore
   log('Initialization complete', (({ key, key2, ...rest }) => rest)(settings))
 }
-
 
 function startIframeResizerChild({
   bodyBackground,
@@ -71,7 +70,9 @@ function startIframeResizerChild({
   const bothDirections = checkBoth(settings)
 
   const setup = [
+    // @ts-ignore
     () => checkVersion(settings),
+    // @ts-ignore
     () => checkMode(settings),
     checkIgnoredElements,
     checkCrossDomain,
@@ -119,6 +120,7 @@ export default function (data: string[]): void {
   if (!state.firstRun) return
 
   map2settings(readDataFromParent(data))
+  // @ts-ignore
   startLogging(settings)
   map2settings(readDataFromPage())
 

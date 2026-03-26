@@ -1,9 +1,9 @@
 import { INIT, RESET } from '../../common/consts'
-import type { MessageData } from '../types'
 import { log } from '../console'
 import setSize from '../events/size'
 import { getPagePosition } from '../page/position'
 import trigger from '../send/trigger'
+import type { MessageData } from '../types'
 
 export default function resetIframe(messageData: MessageData): void {
   const { id, type } = messageData

@@ -1,4 +1,4 @@
-import { createRef } from 'react'
+import React, { createRef } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
@@ -45,11 +45,7 @@ describe('React IframeResizer branches', () => {
     const fRef = createRef<any>()
     await act(async () => {
       root.render(
-        <IframeResizer
-          id="react-nolog"
-          src="https://example.org"
-          ref={fRef}
-        />,
+        <IframeResizer id="react-nolog" src="https://example.org" ref={fRef} />,
       )
       await Promise.resolve()
     })

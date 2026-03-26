@@ -2,29 +2,25 @@
  * Angular directive for iframe-resizer by Bjørn Håkon (https://github.com/bjornoss)
  */
 
-
 import {
   Directive,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
-  ElementRef,
 } from '@angular/core'
-
-import connectResizer from '@iframe-resizer/core'
 import type {
-  IFrameObject,
   IFrameComponent,
   IFrameMessageData,
   IFrameMouseData,
-  IFrameResizedData,
+  IFrameObject,
   IFrameOptions,
+  IFrameResizedData,
 } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 
 import { esModuleInterop } from '../common/utils'
-
-export type { IFrameObject, IFrameComponent, IFrameOptions }
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
@@ -35,14 +31,21 @@ const createAutoConsoleGroup = esModuleInterop(acg)
 })
 export class IframeResizerDirective {
   private resizer?: IFrameObject
+
   private consoleGroup = createAutoConsoleGroup()
 
   @Output() onReady = new EventEmitter<IFrameComponent>()
+
   @Output() onBeforeClose = new EventEmitter<IFrameComponent>()
+
   @Output() onMessage = new EventEmitter<IFrameMessageData>()
+
   @Output() onMouseEnter = new EventEmitter<IFrameMouseData>()
+
   @Output() onMouseLeave = new EventEmitter<IFrameMouseData>()
+
   @Output() onResized = new EventEmitter<IFrameResizedData>()
+
   @Output() onScroll = new EventEmitter<{
     iframe: IFrameComponent
     top: number
@@ -60,8 +63,6 @@ export class IframeResizerDirective {
   @Input() debug: boolean = false
 
   constructor(private elementRef: ElementRef) {}
-
-  ngOnInit() {}
 
   ngAfterViewInit(): void {
     const id = this.elementRef.nativeElement?.id
@@ -94,26 +95,36 @@ export class IframeResizerDirective {
 
       onResized: (event: IFrameResizedData) => this.onResized.next(event),
 
-      onScroll: (event: { iframe: IFrameComponent; top: number; left: number }) =>
-        this.onScroll.next(event),
+      onScroll: (event: {
+        iframe: IFrameComponent
+        top: number
+        left: number
+      }) => this.onScroll.next(event),
     })(this.elementRef.nativeElement)
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.debug) this.consoleGroup.log('ngOnDestroy')
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
   }
 
   // parent methods
-  public resize() {
+  public resize(): void {
     this.resizer?.resize()
   }
-  public moveToAnchor(anchor: string) {
+
+  public moveToAnchor(anchor: string): void {
     this.resizer?.moveToAnchor(anchor)
   }
 
-  public sendMessage(message: string, targetOrigin?: string) {
+  public sendMessage(message: string, targetOrigin?: string): void {
     this.resizer?.sendMessage(message, targetOrigin)
   }
 }
+
+export {
+  type IFrameComponent,
+  type IFrameObject,
+  type IFrameOptions,
+} from '@iframe-resizer/core'

@@ -9,7 +9,10 @@ function newId(options: Record<string, any>): string {
   return document.getElementById(id) === null ? id : `${id}${count++}`
 }
 
-export default function ensureHasId(iframe: HTMLIFrameElement, options: Record<string, any>): string {
+export default function ensureHasId(
+  iframe: HTMLIFrameElement,
+  options: Record<string, any>,
+): string {
   let { id } = iframe
 
   if (id && !isString(id)) {

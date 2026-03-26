@@ -1,4 +1,5 @@
 import type { App } from 'vue'
+
 import IframeResizer from './iframe-resizer.vue'
 
 export default {

@@ -50,7 +50,10 @@ const createTransform = (file) => (contents) =>
     .replace(/@@PKG_VERSION@@/g, pkg.version)
     .replace(/@@BUILD_DATE@@/g, today)
 
-export const createPluginsProd = (file) => {
+export const createPluginsProd = (
+  file,
+  { skipVersionInjector = false } = {},
+) => {
   const dest = `dist/${file}`
   const src = `packages`
 
@@ -77,7 +80,7 @@ export const createPluginsProd = (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(stripLog)(),
+    ...(skipVersionInjector ? [commonjs()] : pluginsBase(stripLog)()),
   ]
 }
 

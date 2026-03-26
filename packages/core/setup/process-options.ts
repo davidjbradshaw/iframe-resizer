@@ -13,7 +13,10 @@ import updateOptionNames from './update-option-names'
 const hasMouseEvents = (options: Record<string, any>): boolean =>
   hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
 
-export default function processOptions(iframe: HTMLIFrameElement, options: Record<string, any>): void {
+export default function processOptions(
+  iframe: HTMLIFrameElement,
+  options: Record<string, any>,
+): void {
   const { id } = iframe
   settings[id] = {
     ...settings[id],

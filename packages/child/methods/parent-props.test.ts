@@ -8,7 +8,7 @@ import { getParentProperties, getParentProps } from './parent-props'
 describe('child/methods/parent-props', () => {
   it('sets onParentInfo, sends message, and returns an unsubscribe', () => {
     vi.spyOn(sendMessage, 'default').mockImplementation(() => {})
-    const cb = () => {}
+    const cb = (): void => {}
     const unsub = getParentProps(cb)
 
     expect(typeof unsub).toBe('function')
@@ -24,7 +24,7 @@ describe('child/methods/parent-props', () => {
   it('getParentProperties calls deprecate and forwards to getParentProps', () => {
     vi.spyOn(childConsole, 'deprecateMethod').mockImplementation(() => {})
     vi.spyOn(sendMessage, 'default').mockImplementation(() => {})
-    const cb = () => {}
+    const cb = (): void => {}
     getParentProperties(cb)
 
     expect(childConsole.deprecateMethod).toHaveBeenCalled()

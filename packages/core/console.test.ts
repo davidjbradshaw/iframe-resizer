@@ -5,7 +5,7 @@ import settings from './values/settings'
 
 // Mock auto-console-group to control console group instances
 vi.mock('auto-console-group', () => {
-  const makeGroup = () => ({
+  const makeGroup = (): Record<string, ReturnType<typeof vi.fn>> => ({
     log: vi.fn(),
     warn: vi.fn(),
     debug: vi.fn(),
