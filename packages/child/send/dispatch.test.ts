@@ -2,7 +2,13 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { INIT } from '../../common/consts'
 
-vi.mock('../../common/mode', () => ({ getModeData: vi.fn(() => 'msg') }))
+vi.mock('../../common/mode', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    getModeData: vi.fn(() => 'msg'),
+  }
+})
 vi.mock('../console', () => ({ advise: vi.fn(), info: vi.fn(), log: vi.fn() }))
 vi.mock('../values/settings', () => ({
   default: { parentId: 'pid', mode: 0, targetOrigin: 'https://p' },

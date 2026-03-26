@@ -14,7 +14,9 @@ import routeMessage from './router'
 import iframeReady from './send/ready'
 import settings from './values/settings'
 
-function iframeListener(event: MessageEvent | { data: any, sameOrigin?: boolean }): void {
+function iframeListener(
+  event: MessageEvent | { data: any; sameOrigin?: boolean },
+): void {
   const msg = event.data
 
   if (msg === CHILD_READY_MESSAGE) {

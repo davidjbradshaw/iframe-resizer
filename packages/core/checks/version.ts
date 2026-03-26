@@ -3,7 +3,10 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 import { VERSION } from '../../common/consts'
 import { advise, log } from '../console'
 
-export default function checkVersion(id: string, version: string | undefined): void {
+export default function checkVersion(
+  id: string,
+  version: string | undefined,
+): void {
   if (version === VERSION) return
   if (version === undefined) {
     advise(

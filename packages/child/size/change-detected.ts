@@ -2,7 +2,10 @@ import checkTolerance from '../check/tolerance'
 import settings from '../values/settings'
 import state from '../values/state'
 
-export default function isSizeChangeDetected(newHeight: number, newWidth: number): boolean {
+export default function isSizeChangeDetected(
+  newHeight: number,
+  newWidth: number,
+): boolean {
   const { calculateHeight, calculateWidth } = settings
   const { height, width } = state
 

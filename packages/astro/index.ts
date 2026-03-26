@@ -1,9 +1,9 @@
 export type {
-  IFrameObject,
   IFrameComponent,
   IFrameMessageData,
   IFrameMouseData,
+  IFrameObject,
+  IFrameOptions,
   IFrameResizedData,
   IFrameScrollData,
-  IFrameOptions,
 } from '@iframe-resizer/core'

@@ -18,7 +18,10 @@ const getComputedStyle = (node: Element, property: string): string =>
 const hasBlockingCSS = (node: Element, property: string): boolean =>
   hasCssValue(getComputedStyle(node, property))
 
-function getInlineStyleValue(node: HTMLElement, property: string): { source: string; value: string } | null {
+function getInlineStyleValue(
+  node: HTMLElement,
+  property: string,
+): { source: string; value: string } | null {
   const inlineValue = node.style[property]
   return inlineValue
     ? { source: 'an inline style attribute', value: inlineValue }
@@ -32,7 +35,10 @@ function crossOriginStylesheetError({ href }: { href: string | null }): void {
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-function getStyleSheetCSSPropertyValue(node: Element, property: string): { source: string; value: string } {
+function getStyleSheetCSSPropertyValue(
+  node: Element,
+  property: string,
+): { source: string; value: string } {
   for (const stylesheet of document.styleSheets) {
     try {
       for (const rule of stylesheet.cssRules || []) {
@@ -62,7 +68,10 @@ function getStyleSheetCSSPropertyValue(node: Element, property: string): { sourc
   }
 }
 
-const getSetCSSPropertyValue = (node: HTMLElement, property: string): { source: string; value: string } =>
+const getSetCSSPropertyValue = (
+  node: HTMLElement,
+  property: string,
+): { source: string; value: string } =>
   getInlineStyleValue(node, property) ||
   getStyleSheetCSSPropertyValue(node, property)
 

@@ -1,10 +1,8 @@
-import connectResizer from '@iframe-resizer/core'
 import type { IFrameOptions } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 
 import { esModuleInterop } from '../common/utils'
-
-export type { IFrameOptions }
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
@@ -36,11 +34,17 @@ export default function IframeResizer(Alpine: Alpine): void {
 
       const evaluated = expression ? evaluate(expression) : {}
       const options =
-        evaluated !== null && evaluated !== undefined && typeof evaluated === 'object'
+        evaluated !== null &&
+        evaluated !== undefined &&
+        typeof evaluated === 'object'
           ? (evaluated as IFrameOptions)
           : {}
 
-      if (evaluated !== null && evaluated !== undefined && typeof evaluated !== 'object') {
+      if (
+        evaluated !== null &&
+        evaluated !== undefined &&
+        typeof evaluated !== 'object'
+      ) {
         consoleGroup.warn(
           `x-iframe-resizer expression must evaluate to an options object, got ${typeof evaluated}`,
         )
@@ -62,3 +66,5 @@ export default function IframeResizer(Alpine: Alpine): void {
     },
   )
 }
+
+export { type IFrameOptions } from '@iframe-resizer/core'

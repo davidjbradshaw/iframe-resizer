@@ -4,10 +4,25 @@ let checkMode
 let preModeCheck
 let enableVInfo
 
+const mockConsole = {
+  warn: vi.fn(),
+  log: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
+  group: vi.fn(),
+  groupEnd: vi.fn(),
+}
+
+const withConsole = (obj: Record<string, any>): Record<string, any> => ({
+  ...obj,
+  console: mockConsole,
+})
+
 describe('core/checks/mode branches', () => {
   let settings
   beforeEach(async () => {
     vi.resetModules()
+    vi.clearAllMocks()
     // Freshly import module after reset to clear internal state (vAdvised, vInfoDisable)
     ;({
       default: checkMode,
@@ -22,21 +37,21 @@ describe('core/checks/mode branches', () => {
   })
 
   test('throws and advises when mode is negative', () => {
-    settings.x = { mode: -3, vAdvised: false }
+    settings.x = withConsole({ mode: -3, vAdvised: false })
 
     expect(() => checkMode('x', -2)).toThrow()
   })
 
   test('calls vInfo when mode is positive and vInfo enabled', () => {
-    settings.y = { mode: 1, vAdvised: false }
+    settings.y = withConsole({ mode: 1, vAdvised: false })
     expect(() => checkMode('y', 0)).not.toThrow()
   })
 
   test('preModeCheck triggers checkMode when mode is not -1', () => {
-    settings.z = { mode: -1, vAdvised: false }
+    settings.z = withConsole({ mode: -1, vAdvised: false })
     expect(() => preModeCheck('z')).not.toThrow()
 
-    settings.z = { mode: 2, vAdvised: false }
+    settings.z = withConsole({ mode: 2, vAdvised: false })
     expect(() => preModeCheck('z')).not.toThrow()
   })
 
@@ -45,12 +60,12 @@ describe('core/checks/mode branches', () => {
     enableVInfo(options)
     expect(options.log).toBe(false)
 
-    settings.a = { mode: 2, vAdvised: false }
+    settings.a = withConsole({ mode: 2, vAdvised: false })
     expect(() => checkMode('a', 0)).not.toThrow()
   })
 
   test('returns early when vAdvised is true', () => {
-    settings.b = { mode: 1, vAdvised: false }
+    settings.b = withConsole({ mode: 1, vAdvised: false })
     // First call sets vAdvised to true
     checkMode('b', 0)
     // Second call should return early
@@ -58,13 +73,13 @@ describe('core/checks/mode branches', () => {
   })
 
   test('skips advise when settings[id].vAdvised is true', () => {
-    settings.c = { mode: -3, vAdvised: true }
+    settings.c = withConsole({ mode: -3, vAdvised: true })
     // Should throw but not call advise due to vAdvised being true
     expect(() => checkMode('c', -2)).toThrow()
   })
 
   test('preModeCheck returns early when vAdvised is true', () => {
-    settings.d = { mode: 2, vAdvised: false }
+    settings.d = withConsole({ mode: 2, vAdvised: false })
     // First call sets vAdvised
     preModeCheck('d')
     // Second call should return early
@@ -83,7 +98,7 @@ describe('core/checks/mode branches', () => {
   })
 
   test('advises with Parent label when id is falsy', () => {
-    settings[''] = { mode: -3, vAdvised: false }
+    settings[''] = withConsole({ mode: -3, vAdvised: false })
     // Calling with empty string id should use 'Parent' as fallback in advise
     expect(() => checkMode('', -2)).toThrow()
   })

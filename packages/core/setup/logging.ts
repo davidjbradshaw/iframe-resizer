@@ -11,7 +11,11 @@ import { enableVInfo } from '../checks/mode'
 import { error, setupConsole } from '../console'
 import defaults from '../values/defaults'
 
-export default function startLogging(id: string, options: Record<string, any>): void {
+export default function startLogging(
+  id: string,
+  options: Record<string, any>,
+): void {
+  // eslint-disable-next-line unicorn/prefer-switch
   if (options.log === LOG_DISABLED) options.log = false
   else if (options.log === LOG_COLLAPSED) options.log = COLLAPSE
   else if (options.log === LOG_EXPANDED) options.log = EXPAND

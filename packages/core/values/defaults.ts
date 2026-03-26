@@ -2,7 +2,10 @@ import { AUTO, FUNCTION, VERTICAL } from '../../common/consts'
 import { deprecateOption } from '../console'
 import settings from './settings'
 
-const onReadyDeprecated = (messageData: { id: string, iframe: HTMLIFrameElement }): void => {
+const onReadyDeprecated = (messageData: {
+  id: string
+  iframe: HTMLIFrameElement
+}): void => {
   if (typeof settings[messageData.id].onInit === FUNCTION) {
     deprecateOption('init()', 'onReady()', '', messageData.id)
     settings[messageData.id].onInit(messageData)

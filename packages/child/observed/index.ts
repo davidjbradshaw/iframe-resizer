@@ -1,3 +1,4 @@
+import { event as consoleEvent } from '../console'
 import { tearDownList } from '../events/listeners'
 import createMutationObserver from '../observers/mutation'
 import createPerformanceObserver from '../observers/perf'
@@ -9,7 +10,6 @@ import createOverflowObservers from './overflow'
 import createResizeObservers from './resize'
 import titleChanged from './title'
 import visibilityChange from './visibility'
-import { event as consoleEvent } from '../console'
 
 function pushDisconnectsOnToTearDown(
   observers: { disconnect: () => void }[],

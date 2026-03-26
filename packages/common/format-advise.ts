@@ -16,7 +16,10 @@ const TAGS = {
 
 const keys = Object.keys(TAGS)
 const tags = new RegExp(`<(${keys.join('|')})>`, 'gi')
-const lookup = (_: string, tag: string): string => TAGS[tag as keyof typeof TAGS] ?? ''
+
+const lookup = (_: string, tag: string): string =>
+  TAGS[tag as keyof typeof TAGS] ?? ''
+
 const encode = (s: string): string => s.replace(tags, lookup)
 
 const filter = (s: string): string =>
@@ -24,14 +27,15 @@ const filter = (s: string): string =>
 
 type FormatLogMessageFn = (message: unknown) => void
 
-export default (formatLogMessage: FormatLogMessageFn) => (message: unknown): void =>
-  formatLogMessage(
-    isString(message)
-      ? window.chrome
-        ? encode(message)
-        : filter(message)
-      : message,
-  )
+export default (formatLogMessage: FormatLogMessageFn) =>
+  (message: unknown): void =>
+    formatLogMessage(
+      isString(message)
+        ? window.chrome
+          ? encode(message)
+          : filter(message)
+        : message,
+    )
 
 /* eslint-enable security/detect-non-literal-regexp */
 /* eslint-enable no-useless-escape */

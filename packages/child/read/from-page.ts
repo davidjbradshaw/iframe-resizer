@@ -6,17 +6,19 @@ import {
   OFFSET_SIZE,
   STRING,
 } from '../../common/consts'
-import { getKey } from '../../common/mode'
+import { checkMode, getKey } from '../../common/mode'
 import { deprecateOption, log } from '../console'
 import settings from '../values/settings'
 
-const read = (type: string) => (data: Record<string, any>, key: string): any => {
-  if (!(key in data)) return
-  // eslint-disable-next-line valid-typeof, consistent-return
-  if (typeof data[key] === type) return data[key]
+const read =
+  (type: string) =>
+  (data: Record<string, any>, key: string): any => {
+    if (!(key in data)) return
+    // eslint-disable-next-line valid-typeof, consistent-return
+    if (typeof data[key] === type) return data[key]
 
-  throw new TypeError(`${key} is not a ${type}.`)
-}
+    throw new TypeError(`${key} is not a ${type}.`)
+  }
 
 export const readFunction = read(FUNCTION)
 export const readNumber = read(NUMBER)
@@ -25,7 +27,10 @@ export const readString = read(STRING)
 const isObject = (obj: any): obj is Record<string, any> =>
   obj !== null && typeof obj === OBJECT && !Array.isArray(obj)
 
-function readOffsetSize(data: Record<string, any>): { offsetHeight: number | undefined; offsetWidth: number | undefined } {
+function readOffsetSize(data: Record<string, any>): {
+  offsetHeight: number | undefined
+  offsetWidth: number | undefined
+} {
   const { calculateHeight, calculateWidth } = settings
   let offsetHeight
   let offsetWidth
@@ -53,7 +58,7 @@ function readData(data: Record<string, any>): Record<string, any> {
     offsetHeight,
     offsetWidth,
     ignoreSelector: readString(data, 'ignoreSelector'),
-    key2: readString(data, getKey(0)),
+    [getKey(3)]: readString(data, getKey(0)),
     sizeSelector: readString(data, 'sizeSelector'),
     targetOrigin: readString(data, 'targetOrigin'),
 
@@ -65,7 +70,7 @@ function readData(data: Record<string, any>): Record<string, any> {
 
 export default function readDataFromPage(): Record<string, any> {
   const { mode } = settings
-  if (mode === 1) return {}
+  if (checkMode(mode)) return {}
 
   const data = window.iframeResizer || window.iFrameResizer
   return isObject(data) ? readData(data) : {}

@@ -4,7 +4,10 @@ import { VERTICAL } from '../../common/consts'
 import { log } from '../console'
 import settings from '../values/settings'
 
-export default function setOffsetSize(id: string, { offset, offsetSize }: { offset?: number, offsetSize?: number }): void {
+export default function setOffsetSize(
+  id: string,
+  { offset, offsetSize }: { offset?: number; offsetSize?: number },
+): void {
   const newOffset = offsetSize || offset
 
   if (!newOffset) return // No offset set or offset is zero

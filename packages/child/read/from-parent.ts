@@ -1,7 +1,9 @@
 const strBool = (str: string): boolean => str === 'true'
 
-const castDefined = <T>(cast: (data: string) => T) => (data: string | undefined): T | undefined =>
-  undefined === data ? undefined : cast(data)
+const castDefined =
+  <T>(cast: (data: string) => T) =>
+  (data: string | undefined): T | undefined =>
+    undefined === data ? undefined : cast(data)
 
 const getBoolean = castDefined(strBool)
 const getNumber = castDefined(Number)

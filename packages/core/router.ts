@@ -19,7 +19,6 @@ import {
   SCROLL_TO_OFFSET,
   TITLE,
 } from '../common/consts'
-import type { MessageData } from './types'
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
 import { info, log, warn } from './console'
@@ -36,6 +35,7 @@ import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import getMessageBody from './received/message'
 import firstRun from './setup/first-run'
+import type { MessageData } from './types'
 import settings from './values/settings'
 
 export default function routeMessage(messageData: MessageData): void {

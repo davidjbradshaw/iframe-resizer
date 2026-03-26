@@ -2,11 +2,13 @@ import { FUNCTION, IGNORE_ATTR, OVERFLOW_ATTR } from '../../common/consts'
 import { endAutoGroup, event as consoleEvent, info } from '../console'
 import state from '../values/state'
 
-let prevOverflowedNodeSet = new Set()
+let prevOverflowedNodeSet = new Set<Element>()
 
-export function filterIgnoredElements(nodeList: NodeListOf<Element>): Set<Element> {
-  const filteredNodeSet = new Set()
-  const ignoredNodeSet = new Set()
+export function filterIgnoredElements(
+  nodeList: NodeListOf<Element>,
+): Set<Element> {
+  const filteredNodeSet = new Set<Element>()
+  const ignoredNodeSet = new Set<Element>()
 
   for (const node of nodeList) {
     if (node.closest(`[${IGNORE_ATTR}]`)) {
@@ -27,7 +29,10 @@ export function filterIgnoredElements(nodeList: NodeListOf<Element>): Set<Elemen
   return filteredNodeSet
 }
 
-export default function checkOverflow(): { hasOverflowUpdated: boolean; overflowedNodeSet: Set<Element> } {
+export default function checkOverflow(): {
+  hasOverflowUpdated: boolean
+  overflowedNodeSet: Set<Element>
+} {
   const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
   const overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
   let hasOverflowUpdated = false
