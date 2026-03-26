@@ -22,14 +22,18 @@ export const injectVersion = () => [versionInjector(vi)]
 
 const stripInclude = ['**/*.js', '**/*.ts']
 
-export const pluginsBase = (stripLog, skipVI = false) => () => {
-  const delog = [strip({ include: stripInclude, functions: ['log', 'debug'] })]
-  const log = [strip({ include: stripInclude, functions: ['purge'] })]
+export const pluginsBase =
+  (stripLog, skipVI = false) =>
+  () => {
+    const delog = [
+      strip({ include: stripInclude, functions: ['log', 'debug'] }),
+    ]
+    const log = [strip({ include: stripInclude, functions: ['purge'] })]
 
-  const base = skipVI ? [commonjs()] : [versionInjector(vi), commonjs()]
+    const base = skipVI ? [commonjs()] : [versionInjector(vi), commonjs()]
 
-  return stripLog ? delog.concat(base) : log.concat(base)
-}
+    return stripLog ? delog.concat(base) : log.concat(base)
+  }
 
 const fixVersion = (file) => {
   switch (file) {
