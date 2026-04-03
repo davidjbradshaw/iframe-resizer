@@ -81,6 +81,7 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
   const consoleGroup = createAutoConsoleGroup()
 
   onMount(() => {
+    // eslint-disable-next-line solid/reactivity -- intentional: this is a one-shot setup; the library does not support re-initializing an element
     const {
       license,
       bodyBackground,

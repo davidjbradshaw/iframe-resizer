@@ -42,11 +42,13 @@ export function dispatchToParent(
       else throw error
       return false
     }
-  else if (target)
-    (target as Window).postMessage(
+  else {
+    console.assert(target !== null, '[iFrameResizer] Internal error: postMessage target is null')
+    ;(target as Window).postMessage(
       MESSAGE_ID + message,
       setTargetOrigin(targetOrigin),
     )
+  }
 
   return true
 }
