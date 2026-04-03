@@ -11,14 +11,14 @@ export default function ({
   mode,
   version,
 }: {
-  key: string
-  key2: string
+  key?: string
+  key2?: string
   mode: number
-  version: string
+  version?: string
 }): void {
   const oMode = mode
-  const pMode = setMode({ key })
-  const cMode = setMode({ key2 })
+  const pMode = isDef(key) ? setMode({ key }) : -1
+  const cMode = isDef(key2) ? setMode({ key: key2 }) : -1
   // eslint-disable-next-line no-multi-assign
   settings.mode = mode = Math.max(pMode, cMode)
   if (mode < 0) {
