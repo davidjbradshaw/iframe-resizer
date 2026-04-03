@@ -24,6 +24,12 @@ export default function (options: Record<string, any>): void {
         break
       }
 
+      case COLLAPSE:
+      case String(LOG_COLLAPSED): {
+        options.log = COLLAPSE
+        break
+      }
+
       default: {
         options.log = COLLAPSE
       }
