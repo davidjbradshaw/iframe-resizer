@@ -3,7 +3,7 @@ import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 import { INIT, MESSAGE_ID } from '../../common/consts'
 import { checkMode, getModeData } from '../../common/mode'
 import { once, round } from '../../common/utils'
-import { advise, info, log } from '../console'
+import { advise, assert, info, log } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
 
@@ -43,7 +43,7 @@ export function dispatchToParent(
       return false
     }
   else {
-    console.assert(target !== null, '[iFrameResizer] Internal error: postMessage target is null')
+    assert(target !== null, '[iFrameResizer] Internal error: postMessage target is null')
     ;(target as Window).postMessage(
       MESSAGE_ID + message,
       setTargetOrigin(targetOrigin),
