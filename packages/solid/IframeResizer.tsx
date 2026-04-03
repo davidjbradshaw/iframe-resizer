@@ -1,4 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable react/react-in-jsx-scope, react/require-default-props */
 import type {
   Direction,
@@ -165,3 +164,4 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
   // eslint-disable-next-line jsx-a11y/iframe-has-title
   return <iframe {...iframeProps} ref={iframeEl} />
 }
+/* eslint-enable react/react-in-jsx-scope, react/require-default-props */
