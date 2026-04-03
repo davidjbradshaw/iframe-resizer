@@ -52,7 +52,8 @@ function startLogging({
 
 function ready(onReady: () => void): void {
   consoleEvent('ready')
-  checkReadyYet(once(onReady)) // @ts-ignore
+  // @ts-ignore
+  checkReadyYet(once(onReady))
   log('Initialization complete', (({ key, key2, ...rest }) => rest)(settings))
 }
 
