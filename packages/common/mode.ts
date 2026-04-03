@@ -47,8 +47,8 @@ const l = (l: string): string => {
   ],
   r = (arr: Array<string>): string[] => [
     arr[0],
-    ...arr.slice(1).map((l) => `${l}${a}}`),
-    `${arr[4]}${a}}`,
+    ...arr.slice(1).map((l) => `${l}${a}`),
+    `${arr[4]}${a}`,
     ...arr.slice(1),
   ],
   z = r(['NWSc3', 'zvsv', 'wyv', 'ibzpulzz', 'VLT']),
