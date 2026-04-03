@@ -59,6 +59,8 @@ export function scrollBy(messageData: MessageData): void {
 const scrollRequestFromChild =
   (addOffset: boolean) =>
   (messageData: MessageData): void => {
+    const { id, iframe, height, width } = messageData
+
     /* istanbul ignore next */ // Not testable in Karma
     function reposition(newPosition: Position): void {
       setStoredPagePosition(newPosition)
@@ -77,7 +79,6 @@ const scrollRequestFromChild =
       y: height + offset.y,
     })
 
-    const { id, iframe, height, width } = messageData
     const offset = addOffset ? getElementPosition(iframe) : { x: 0, y: 0 }
     const newPosition = calcOffset(offset)
     const target = window.parentIframe || window.parentIFrame // Check for V4 as well

@@ -16,8 +16,10 @@ const TAGS = {
 
 const keys = Object.keys(TAGS)
 const tags = new RegExp(`<(${keys.join('|')})>`, 'gi')
+
 const lookup = (_: string, tag: string): string =>
   TAGS[tag as keyof typeof TAGS] ?? ''
+
 const encode = (s: string): string => s.replace(tags, lookup)
 
 const filter = (s: string): string =>

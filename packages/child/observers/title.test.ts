@@ -23,7 +23,7 @@ describe('child/observers/title', () => {
       }
 
       // eslint-disable-next-line class-methods-use-this
-      observe(target: Node, config: MutationObserverInit) {
+      observe(target: Node, config: MutationObserverInit): void {
         observedTarget = target
         observedConfig = config
       }

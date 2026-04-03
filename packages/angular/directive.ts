@@ -64,9 +64,6 @@ export class IframeResizerDirective {
 
   constructor(private elementRef: ElementRef) {}
 
-  // eslint-disable-next-line class-methods-use-this
-  ngOnInit() {}
-
   ngAfterViewInit(): void {
     const id = this.elementRef.nativeElement?.id
 
@@ -106,22 +103,22 @@ export class IframeResizerDirective {
     })(this.elementRef.nativeElement)
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.debug) this.consoleGroup.log('ngOnDestroy')
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
   }
 
   // parent methods
-  public resize() {
+  public resize(): void {
     this.resizer?.resize()
   }
 
-  public moveToAnchor(anchor: string) {
+  public moveToAnchor(anchor: string): void {
     this.resizer?.moveToAnchor(anchor)
   }
 
-  public sendMessage(message: string, targetOrigin?: string) {
+  public sendMessage(message: string, targetOrigin?: string): void {
     this.resizer?.sendMessage(message, targetOrigin)
   }
 }

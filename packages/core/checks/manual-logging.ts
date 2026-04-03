@@ -15,21 +15,12 @@ export default function (options: Record<string, any>): void {
     switch (value) {
       case String(LOG_DISABLED): {
         options.log = false
-
         break
       }
 
       case EXPAND:
       case String(LOG_EXPANDED): {
         options.log = EXPAND
-
-        break
-      }
-
-      case COLLAPSE:
-      case String(LOG_COLLAPSED): {
-        options.log = COLLAPSE
-
         break
       }
 

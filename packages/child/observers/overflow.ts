@@ -22,7 +22,11 @@ const isHidden = (node: HTMLElement): boolean =>
 const createOverflowObserver = (
   callback: (mutated?: boolean) => void,
   options: { root: Element; side?: string },
-) => {
+): {
+  attachObservers: (nodeList: Iterable<Node>) => void
+  detachObservers: (nodeList: Iterable<Node>) => void
+  disconnect: () => void
+} => {
   const side = options.side || HEIGHT_EDGE
   const observerOptions = {
     root: options.root,

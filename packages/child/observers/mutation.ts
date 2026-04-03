@@ -148,7 +148,7 @@ export default function createMutationObserver(
     addedNodes: Set<Node>
     removedNodes: Set<Node>
   }) => void,
-) {
+): { disconnect: () => void } {
   const observer = new window.MutationObserver(mutationObserved)
   const target = document.body || document.documentElement
 

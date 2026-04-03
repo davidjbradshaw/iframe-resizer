@@ -40,64 +40,66 @@ export const stopInfoMonitor =
   }
 
 export const startInfoMonitor =
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   (sendInfoToIframe: (requestType: string, id: string) => void, type: string) =>
-  (id: string): void => {
-    let pending: string | false = false
+    (id: string): void => {
+      let pending: string | false = false
 
-    const sendInfo = (requestType: string) => (): void => {
-      if (settings[id]) {
-        if (!pending || pending === requestType) {
-          sendInfoToIframe(requestType, id)
+      const sendInfo = (requestType: string) => (): void => {
+        if (settings[id]) {
+          if (!pending || pending === requestType) {
+            sendInfoToIframe(requestType, id)
 
-          pending = requestType
-          requestAnimationFrame(() => {
-            pending = false
-          })
+            pending = requestType
+            requestAnimationFrame(() => {
+              pending = false
+            })
+          }
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          stop()
         }
-      } else {
-        stop()
       }
-    }
 
-    const sendScroll = sendInfo(SCROLL)
-    const sendResize = sendInfo('resize window')
+      const sendScroll = sendInfo(SCROLL)
+      const sendResize = sendInfo('resize window')
 
-    function setListener(
-      requestType: string,
-      listener: (
-        target: EventTarget,
-        event: string,
-        handler: EventListener,
-      ) => void,
-    ): void {
-      log(id, `${requestType}listeners for send${type}`)
-      listener(window, SCROLL, sendScroll)
-      listener(window, RESIZE, sendResize)
-    }
+      const pageObserver = new ResizeObserver(sendInfo('pageObserver'))
+      const iframeObserver = new ResizeObserver(sendInfo('iframeObserver'))
 
-    function stop(): void {
-      event(id, `stop${type}`)
-      setListener('Remove ', removeEventListener)
-      pageObserver.disconnect()
-      iframeObserver.disconnect()
-      if (settings[id]) {
-        removeEventListener(settings[id].iframe, LOAD, stop)
+      function setListener(
+        requestType: string,
+        listener: (
+          target: EventTarget,
+          event: string,
+          handler: EventListener,
+        ) => void,
+      ): void {
+        log(id, `${requestType}listeners for send${type}`)
+        listener(window, SCROLL, sendScroll)
+        listener(window, RESIZE, sendResize)
       }
+
+      function stop(): void {
+        event(id, `stop${type}`)
+        setListener('Remove ', removeEventListener)
+        pageObserver.disconnect()
+        iframeObserver.disconnect()
+        if (settings[id]) {
+          removeEventListener(settings[id].iframe, LOAD, stop)
+        }
+      }
+
+      function start(): void {
+        setListener('Add ', addEventListener)
+
+        pageObserver.observe(document.body)
+        iframeObserver.observe(settings[id].iframe)
+      }
+
+      if (!settings[id]) return
+
+      settings[id][`stop${type}`] = stop
+      addEventListener(settings[id].iframe, LOAD, stop)
+      start()
     }
-
-    function start(): void {
-      setListener('Add ', addEventListener)
-
-      pageObserver.observe(document.body)
-      iframeObserver.observe(settings[id].iframe)
-    }
-
-    const pageObserver = new ResizeObserver(sendInfo('pageObserver'))
-    const iframeObserver = new ResizeObserver(sendInfo('iframeObserver'))
-
-    if (!settings[id]) return
-
-    settings[id][`stop${type}`] = stop
-    addEventListener(settings[id].iframe, LOAD, stop)
-    start()
-  }

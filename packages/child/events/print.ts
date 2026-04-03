@@ -8,7 +8,7 @@ function add({
   eventType: string
   eventName: string
 }): void {
-  const handleEvent = () => sendSize(eventName, eventType)
+  const handleEvent = (): void => sendSize(eventName, eventType)
   addEventListener(window, eventName, handleEvent, { passive: true })
 }
 

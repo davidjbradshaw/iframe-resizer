@@ -15,23 +15,10 @@ export default function startLogging(
   id: string,
   options: Record<string, any>,
 ): void {
-  // eslint-disable-next-line default-case
-  switch (options.log) {
-    case LOG_DISABLED: {
-      options.log = false
-      break
-    }
-
-    case LOG_COLLAPSED: {
-      options.log = COLLAPSE
-      break
-    }
-
-    case LOG_EXPANDED: {
-      options.log = EXPAND
-      break
-    }
-  }
+  // eslint-disable-next-line unicorn/prefer-switch
+  if (options.log === LOG_DISABLED) options.log = false
+  else if (options.log === LOG_COLLAPSED) options.log = COLLAPSE
+  else if (options.log === LOG_EXPANDED) options.log = EXPAND
 
   const isLogEnabled = hasOwn(options, 'log')
   const isLogString = isString(options.log)

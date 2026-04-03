@@ -24,6 +24,14 @@ export function isMessageFromIframe(
   messageData: MessageData,
   event: MessageEvent | { data: any; origin?: string; sameOrigin?: boolean },
 ): boolean {
+  const { id } = messageData
+  const { data, origin } = event
+  const sameOrigin = 'sameOrigin' in event && event.sameOrigin
+
+  if (sameOrigin) return true
+
+  const checkOrigin = settings[id]?.checkOrigin
+
   function checkAllowedOrigin(): boolean {
     function checkList(): boolean {
       log(
@@ -49,14 +57,6 @@ export function isMessageFromIframe(
 
     return checkOrigin.constructor === Array ? checkList() : checkSingle()
   }
-
-  const { id } = messageData
-  const { data, origin } = event
-  const sameOrigin = 'sameOrigin' in event && event.sameOrigin
-
-  if (sameOrigin) return true
-
-  let checkOrigin = settings[id]?.checkOrigin
 
   if (checkOrigin && `${origin}` !== 'null' && !checkAllowedOrigin()) {
     throw new Error(

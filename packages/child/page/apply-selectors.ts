@@ -7,7 +7,7 @@ export const applySelector = (
   name: string,
   attribute: string,
   selector: string,
-): void => /* () => */ {
+): void => {
   if (selector === '') return
 
   log(`${name}: %c${selector}`, HIGHLIGHT)

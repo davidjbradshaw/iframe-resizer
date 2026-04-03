@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable react/require-default-props */
 import type {
   Direction,
   IFrameComponent,
@@ -51,7 +53,6 @@ export type ResizerOptions = {
 }
 
 export type ResizerEvents = {
-  onCLosed?: (iframeId: string) => void // Remove in v6
   onAfterClose?: (iframeId: string) => void
   onMessage?: (ev: IFrameMessageData) => void
   onMouseEnter?: (ev: IFrameMouseData) => void
@@ -72,11 +73,12 @@ function IframeResizer(
   props: IframeResizerProps,
   ref: React.ForwardedRef<IFrameForwardRef>,
 ): ReactElement {
+  const { log, logExpand } = props
   const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef<IFrameComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
 
-  const onBeforeClose = () => {
+  const onBeforeClose = (): boolean => {
     consoleGroup.event('close')
     consoleGroup.warn(
       `Close event ignored, to remove the iframe update your React component.`,
@@ -96,8 +98,8 @@ function IframeResizer(
 
     const resizer = connectResizer(resizerOptions)(iframe)
 
-    consoleGroup.expand(resizerOptions.logExpand)
-    if (props.log) consoleGroup.log('Created React component')
+    consoleGroup.expand(logExpand)
+    if (log) consoleGroup.log('Created React component')
 
     return () => {
       consoleGroup.endAutoGroup()

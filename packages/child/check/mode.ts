@@ -6,15 +6,15 @@ import settings from '../values/settings'
 import state from '../values/state'
 
 export default function ({
-  key = '',
-  key2 = '',
-  mode = 0,
+  key,
+  key2,
+  mode,
   version,
 }: {
-  key?: string
-  key2?: string
-  mode?: number
-  version?: string
+  key: string
+  key2: string
+  mode: number
+  version: string
 }): void {
   const oMode = mode
   const pMode = setMode({ key })
@@ -27,6 +27,7 @@ export default function ({
     advise(`${getModeData(mode + 2)}${getModeData(2)}`)
     if (isDef(version)) {
       state.firstRun = false
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw getModeData(mode + 2).replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
     }
   } else if (!isDef(version) || (oMode > -1 && mode > oMode)) {
