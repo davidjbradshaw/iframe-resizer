@@ -15,7 +15,6 @@ export default function initFromParent(event: MessageEvent): void {
 
   const data = event.data.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
 
-  // @ts-ignore
   state.target = event.source
   state.origin = event.origin
 

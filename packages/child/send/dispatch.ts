@@ -42,7 +42,11 @@ export function dispatchToParent(
       else throw error
       return false
     }
-  else target.postMessage(MESSAGE_ID + message, setTargetOrigin(targetOrigin))
+  else
+    (target as Window).postMessage(
+      MESSAGE_ID + message,
+      setTargetOrigin(targetOrigin),
+    )
 
   return true
 }
