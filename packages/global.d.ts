@@ -9,9 +9,9 @@
 
 declare global {
   interface Window {
-    // Parent IIFE/UMD globals
-    iframeResize: (...args: any[]) => any
-    iFrameResize: (...args: any[]) => any
+    // Parent IIFE/UMD globals (may not be present on every page)
+    iframeResize?: (...args: any[]) => any
+    iFrameResize?: (...args: any[]) => any
 
     // Child page configuration
     iframeResizer: any

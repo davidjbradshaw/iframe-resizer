@@ -15,7 +15,7 @@ The parent and child pages are running different versions of <i>iframe resizer</
 Parent page: ${version} - Child page: ${VERSION}.
 `
 
-export default function checkVersion({ version }: { version: string }): void {
+export default function checkVersion({ version }: { version?: string }): void {
   if (!version || version === '' || version === FALSE) {
     advise(LEGACY)
   } else if (version !== VERSION) {

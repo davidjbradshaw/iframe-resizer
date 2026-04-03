@@ -407,20 +407,24 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       it('should handle undefined selector (defaults to all iframes)', (done) => {
+        let readyCount = 0
         const iframes = iframeResize({
           license: 'GPLv3',
           log: true,
           checkOrigin: false,
           onReady: () => {
-            expect(iframes.length).toBeGreaterThan(0)
-            done()
+            if (++readyCount >= iframes.length) {
+              expect(iframes.length).toBeGreaterThan(0)
+              done()
+            }
           },
         })
 
         // Should find the iframe loaded in beforeEach
         expect(iframes.length).toBeGreaterThan(0)
-        
-        mockMsgFromIFrame(iframes[0], 'init')
+
+        // Mock init for all found iframes so every onReady fires exactly once
+        iframes.forEach((f) => mockMsgFromIFrame(f, 'init'))
         iframe = iframes[0]
         // Track any additional iframes beyond the first one
         for (let i = 1; i < iframes.length; i++) {
