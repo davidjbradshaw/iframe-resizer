@@ -41,7 +41,10 @@ type DirectiveCallback = (
   },
 ) => void
 
-function createMockAlpine() {
+function createMockAlpine(): {
+  directive: ReturnType<typeof vi.fn>
+  getCallback: () => DirectiveCallback | undefined
+} {
   let registeredCallback: DirectiveCallback | undefined
 
   return {
@@ -52,7 +55,11 @@ function createMockAlpine() {
   }
 }
 
-function createMockContext(evaluateResult: unknown = {}) {
+function createMockContext(evaluateResult: unknown = {}): {
+  evaluate: ReturnType<typeof vi.fn>
+  cleanup: ReturnType<typeof vi.fn>
+  runCleanup: () => void
+} {
   const cleanupFns: (() => void)[] = []
 
   return {

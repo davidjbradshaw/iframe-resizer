@@ -14,7 +14,7 @@ function getSelectedElements(): Element[] | NodeListOf<Element> {
   return hasTags
     ? taggedElements
     : hasOverflow
-      ? Array.from(overflowedNodeSet)
+      ? Array.from(overflowedNodeSet as Iterable<Element>)
       : getAllElements(document.documentElement) // Width resizing may need to check all elements
 }
 
@@ -25,7 +25,7 @@ function findMaxElement(
   const marginSide = `margin-${side}`
 
   let elVal
-  let maxEl = document.documentElement
+  let maxEl: Element = document.documentElement
   let maxVal = state.hasTags
     ? MIN_SIZE
     : document.documentElement.getBoundingClientRect().bottom

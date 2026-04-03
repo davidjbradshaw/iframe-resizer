@@ -11,7 +11,7 @@ describe('child/methods/page-info', () => {
       () => {},
     )
     vi.spyOn(sendMessage, 'default').mockImplementation(() => {})
-    const cb = () => {}
+    const cb = (): void => {}
     getPageInfo(cb)
 
     expect(state.onPageInfo).toBe(cb)

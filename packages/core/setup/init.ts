@@ -35,7 +35,8 @@ function addLoadListener(
   initChild: () => void,
 ): void {
   // allow other concurrent events to go first
-  const onload = () => setTimeout(initChild, AFTER_EVENT_STACK)
+  const onload = (): ReturnType<typeof setTimeout> =>
+    setTimeout(initChild, AFTER_EVENT_STACK)
   addEventListener(iframe, LOAD, onload)
 }
 

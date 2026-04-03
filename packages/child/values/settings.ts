@@ -54,6 +54,7 @@ const settings: ChildSettings = {
   mouseEvents: false,
   offsetHeight: 0,
   offsetWidth: 0,
+  parentId: undefined,
   sizeSelector: '',
   targetOrigin: '*',
   tolerance: 0,

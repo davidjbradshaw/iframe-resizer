@@ -6,7 +6,7 @@ import {
   OFFSET_SIZE,
   STRING,
 } from '../../common/consts'
-import { getKey } from '../../common/mode'
+import { checkMode, getKey } from '../../common/mode'
 import { deprecateOption, log } from '../console'
 import settings from '../values/settings'
 
@@ -58,7 +58,7 @@ function readData(data: Record<string, any>): Record<string, any> {
     offsetHeight,
     offsetWidth,
     ignoreSelector: readString(data, 'ignoreSelector'),
-    key2: readString(data, getKey(0)),
+    [getKey(3)]: readString(data, getKey(0)),
     sizeSelector: readString(data, 'sizeSelector'),
     targetOrigin: readString(data, 'targetOrigin'),
 
@@ -70,7 +70,7 @@ function readData(data: Record<string, any>): Record<string, any> {
 
 export default function readDataFromPage(): Record<string, any> {
   const { mode } = settings
-  if (mode === 1) return {}
+  if (checkMode(mode)) return {}
 
   const data = window.iframeResizer || window.iFrameResizer
   return isObject(data) ? readData(data) : {}

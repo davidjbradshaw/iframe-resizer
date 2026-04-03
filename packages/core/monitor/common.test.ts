@@ -31,7 +31,7 @@ describe('core/monitor/common', () => {
   })
 
   test('startInfoMonitor registers listeners and stores stop function', () => {
-    const send = (requestType, id) =>
+    const send = (requestType: string, id: string): void =>
       trigger(`${requestType} (PageInfo)`, `PageInfo:info`, id)
     const start = mod.startInfoMonitor(send, 'PageInfo')
     start('i1')

@@ -6,7 +6,7 @@ import isolate from './isolate'
 describe('child/utils/isolate branches', () => {
   test('throws when mode is negative', () => {
     settings.mode = -1
-    const boom = () => {
+    const boom = (): void => {
       throw new Error('boom')
     }
 
@@ -15,10 +15,10 @@ describe('child/utils/isolate branches', () => {
 
   test('advises and logs error when mode is non-negative', () => {
     settings.mode = 0
-    const boom = () => {
+    const boom = (): void => {
       throw new Error('kaboom')
     }
-    const ok = () => {}
+    const ok = (): void => {}
 
     expect(() => isolate([ok, boom])).not.toThrow()
   })

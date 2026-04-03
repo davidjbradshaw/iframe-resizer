@@ -12,7 +12,7 @@ const { getElementPosition, scrollToLink } = await import('./scroll')
 const { log } = await import('../console')
 
 describe('core/page/in-page-link', () => {
-  const simulateIframe = () => {
+  const simulateIframe = (): void => {
     Object.defineProperty(window, 'top', { value: {}, configurable: true })
     Object.defineProperty(window, 'self', { value: window, configurable: true })
   }

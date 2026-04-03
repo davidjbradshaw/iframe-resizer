@@ -35,13 +35,13 @@ class RO {
     }
   }
 
-  observe() {
+  observe(): void {
     // whenever observe is called, simulate a callback
     if (pageCb) pageCb()
     if (iframeCb) iframeCb()
   }
 
-  disconnect() {}
+  disconnect(): void {}
 }
 // eslint-disable-next-line no-undef
 global.ResizeObserver = RO

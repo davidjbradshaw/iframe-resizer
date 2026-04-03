@@ -13,6 +13,7 @@ export default function deprecationProxy(
   const warnedProps = new Set()
 
   return new Proxy(target, {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     get(target: Record<string, any>, prop: string | symbol) {
       if (!warnedProps.has(prop)) {
         advise(oldObjectName(prop))

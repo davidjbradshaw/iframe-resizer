@@ -11,9 +11,10 @@ function iframeResizerChild(): void {
     return
   }
 
-  window.iframeChildListener = (data: string) =>
-    setTimeout(() => received({ data, sameOrigin: true }))
-
+  window.iframeChildListener = ((data: any) =>
+    setTimeout(() =>
+      received({ data, sameOrigin: true }),
+    )) as typeof window.iframeChildListener
   consoleEvent('listen')
   addEventListener(window, MESSAGE, received)
   addEventListener(document, READY_STATE_CHANGE, ready)
@@ -21,7 +22,7 @@ function iframeResizerChild(): void {
   ready()
 
   /* TEST CODE START */
-  function mockMsgListener(msgObject: any) {
+  function mockMsgListener(msgObject: any): typeof state.win {
     received(msgObject)
     return state.win
   }

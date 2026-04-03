@@ -1,7 +1,7 @@
 import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 
 import { INIT, MESSAGE_ID } from '../../common/consts'
-import { getModeData } from '../../common/mode'
+import { checkMode, getModeData } from '../../common/mode'
 import { once, round } from '../../common/utils'
 import { advise, info, log } from '../console'
 import settings from '../values/settings'
@@ -38,7 +38,7 @@ export function dispatchToParent(
     try {
       window.parent.iframeParentListener(MESSAGE_ID + message)
     } catch (error) {
-      if (mode === 1) sendFailed()
+      if (checkMode(mode)) sendFailed()
       else throw error
       return false
     }

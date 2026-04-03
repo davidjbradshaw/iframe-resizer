@@ -6,7 +6,7 @@ export const isMessageForUs = (event: MessageEvent): boolean =>
   MESSAGE_ID === `${event.data}`.slice(0, MESSAGE_ID_LENGTH)
 
 export const isMiddleTier = (): boolean =>
-  IFRAME_RESIZE in window ||
+  IFRAME_RESIZE in window || // @ts-ignore
   (window.jQuery !== undefined && IFRAME_RESIZE in window.jQuery.prototype)
 
 // Test if this message is from a child below us. This is an ugly test,

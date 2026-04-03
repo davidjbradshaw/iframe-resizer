@@ -59,7 +59,7 @@ const formatAdvise = createFormatAdvise(identity)
 export const advise = (...args: any[]): void =>
   childConsole.warn(...args.map(formatAdvise))
 
-const deprecateAdvise = deprecate((id, msg) => advise(msg))
+const deprecateAdvise = deprecate((_, msg) => advise(msg))
 export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateMethodReplace = deprecateAdvise('Method', 'replaced with')
 export const deprecateOption = deprecateAdvise('Option')

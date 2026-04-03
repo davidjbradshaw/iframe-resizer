@@ -6,7 +6,7 @@ import {
   IN_PAGE_LINK,
   SCROLL_TO_OFFSET,
 } from '../../common/consts'
-import { getModeData } from '../../common/mode'
+import { checkMode, getModeData } from '../../common/mode'
 import { advise, log } from '../console'
 import { addEventListener } from '../events/listeners'
 import sendMessage from '../send/message'
@@ -101,7 +101,7 @@ export default function setupInPageLinks(enabled: boolean): void {
   const { mode } = settings
 
   if (enabled) {
-    if (mode === 1) {
+    if (checkMode(mode)) {
       advise(getModeData(5))
     } else {
       enableInPageLinks()

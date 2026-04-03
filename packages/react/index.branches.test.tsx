@@ -1,4 +1,4 @@
-import { createRef } from 'react'
+import React, { createRef } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'

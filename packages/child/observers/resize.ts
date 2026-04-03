@@ -49,7 +49,13 @@ export function attachObserverToNonStaticElements(
   alreadyObserved.clear()
 }
 
-export default (callback: (entries: ResizeObserverEntry[]) => void) => {
+export default (
+  callback: (entries: ResizeObserverEntry[]) => void,
+): {
+  attachObserverToNonStaticElements: (nodeList: Iterable<Node>) => void
+  detachObservers: (nodeList: Iterable<Node>) => void
+  disconnect: () => void
+} => {
   observer = new ResizeObserver(callback)
   observer.observe(document.body)
   observed.add(document.body)
