@@ -19,7 +19,10 @@ const warnAlreadyObserved = createWarnAlreadyObserved(OVERFLOW)
 const isHidden = (node: HTMLElement): boolean =>
   node.hidden || node.offsetParent === null || node.style.display === NONE
 
-const createOverflowObserver = (callback: (mutated?: boolean) => void, options: { root: Element; side?: string }) => {
+const createOverflowObserver = (
+  callback: (mutated?: boolean) => void,
+  options: { root: Element; side?: string },
+) => {
   const side = options.side || HEIGHT_EDGE
   const observerOptions = {
     root: options.root,
@@ -28,7 +31,8 @@ const createOverflowObserver = (callback: (mutated?: boolean) => void, options: 
   }
 
   const afterReflow = window?.requestAnimationFrame || id
-  const emitOverflowDetected = (mutated: boolean = false): void => callback(mutated)
+  const emitOverflowDetected = (mutated: boolean = false): void =>
+    callback(mutated)
 
   const isOverflowed = (edge: number, rootBounds: DOMRectReadOnly): boolean =>
     edge === 0 || edge > rootBounds[side]

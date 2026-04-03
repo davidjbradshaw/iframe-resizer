@@ -1,8 +1,8 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import type { MessageData } from '../types'
 import { info } from '../console'
 import on from '../events/wrapper'
+import type { MessageData } from '../types'
 import settings from '../values/settings'
 import {
   getPagePosition,
@@ -56,38 +56,43 @@ export function scrollBy(messageData: MessageData): void {
   target.scrollBy(width, height)
 }
 
-const scrollRequestFromChild = (addOffset: boolean) => (messageData: MessageData): void => {
-  /* istanbul ignore next */ // Not testable in Karma
-  function reposition(newPosition: Position): void {
-    setStoredPagePosition(newPosition)
-    scrollToLink(id)
+const scrollRequestFromChild =
+  (addOffset: boolean) =>
+  (messageData: MessageData): void => {
+    /* istanbul ignore next */ // Not testable in Karma
+    function reposition(newPosition: Position): void {
+      setStoredPagePosition(newPosition)
+      scrollToLink(id)
+    }
+
+    function scrollParent(target: any, newPosition: Position): void {
+      target[`scrollTo${addOffset ? 'Offset' : ''}`](
+        newPosition.x,
+        newPosition.y,
+      )
+    }
+
+    const calcOffset = (offset: Position): Position => ({
+      x: width + offset.x,
+      y: height + offset.y,
+    })
+
+    const { id, iframe, height, width } = messageData
+    const offset = addOffset ? getElementPosition(iframe) : { x: 0, y: 0 }
+    const newPosition = calcOffset(offset)
+    const target = window.parentIframe || window.parentIFrame // Check for V4 as well
+
+    info(
+      id,
+      `Reposition requested (offset x:%c${offset.x}%c y:%c${offset.y})`,
+      HIGHLIGHT,
+      FOREGROUND,
+      HIGHLIGHT,
+    )
+
+    if (target) scrollParent(target, newPosition)
+    else reposition(newPosition)
   }
-
-  function scrollParent(target: any, newPosition: Position): void {
-    target[`scrollTo${addOffset ? 'Offset' : ''}`](newPosition.x, newPosition.y)
-  }
-
-  const calcOffset = (offset: Position): Position => ({
-    x: width + offset.x,
-    y: height + offset.y,
-  })
-
-  const { id, iframe, height, width } = messageData
-  const offset = addOffset ? getElementPosition(iframe) : { x: 0, y: 0 }
-  const newPosition = calcOffset(offset)
-  const target = window.parentIframe || window.parentIFrame // Check for V4 as well
-
-  info(
-    id,
-    `Reposition requested (offset x:%c${offset.x}%c y:%c${offset.y})`,
-    HIGHLIGHT,
-    FOREGROUND,
-    HIGHLIGHT,
-  )
-
-  if (target) scrollParent(target, newPosition)
-  else reposition(newPosition)
-}
 
 export const scrollTo = scrollRequestFromChild(false)
 export const scrollToOffset = scrollRequestFromChild(true)

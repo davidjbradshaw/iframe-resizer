@@ -18,7 +18,10 @@ function getSelectedElements(): Element[] | NodeListOf<Element> {
       : getAllElements(document.documentElement) // Width resizing may need to check all elements
 }
 
-function findMaxElement(targetElements: Element[] | NodeListOf<Element>, side: string): { maxEl: Element; maxVal: number } {
+function findMaxElement(
+  targetElements: Element[] | NodeListOf<Element>,
+  side: string,
+): { maxEl: Element; maxVal: number } {
   const marginSide = `margin-${side}`
 
   let elVal

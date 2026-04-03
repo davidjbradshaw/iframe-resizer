@@ -16,7 +16,11 @@ const prevBoundingSize = {
   width: 0,
 }
 
-function getBoundingClientRect(dimension: string, boundingSize: number, scrollSize: number): number {
+function getBoundingClientRect(
+  dimension: string,
+  boundingSize: number,
+  scrollSize: number,
+): number {
   prevBoundingSize[dimension] = boundingSize
   prevScrollSize[dimension] = scrollSize
   return boundingSize

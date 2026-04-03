@@ -15,5 +15,4 @@ describe('child/size/get-height behavior', () => {
     settings.offsetHeight = 123
     expect(getHeight.getOffset()).toBe(123)
   })
-
 })

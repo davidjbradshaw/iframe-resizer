@@ -6,6 +6,6 @@ export default function firstRun(id: string, mode: string | undefined): void {
   if (!settings[id]) return
 
   log(id, `First run for ${id}`)
-  checkMode(id, mode !== undefined ? Number(mode) : undefined)
+  checkMode(id, mode === undefined ? undefined : Number(mode))
   settings[id].firstRun = false
 }

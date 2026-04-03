@@ -1,4 +1,3 @@
-import connectResizer from '@iframe-resizer/core'
 import type {
   Direction,
   IFrameComponent,
@@ -10,13 +9,19 @@ import type {
   LogOption,
   ScrollOption,
 } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-import React, { forwardRef, type ReactElement, type RefObject, useEffect, useImperativeHandle, useRef } from 'react'
+import React, {
+  forwardRef,
+  type ReactElement,
+  type RefObject,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 
 import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
-
-export type { IFrameObject, IFrameComponent }
 
 export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
   getElement: () => IFrameComponent
@@ -63,7 +68,10 @@ export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
 
-function IframeResizer(props: IframeResizerProps, ref: React.ForwardedRef<IFrameForwardRef>): ReactElement {
+function IframeResizer(
+  props: IframeResizerProps,
+  ref: React.ForwardedRef<IFrameForwardRef>,
+): ReactElement {
   const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef<IFrameComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
@@ -113,3 +121,5 @@ function IframeResizer(props: IframeResizerProps, ref: React.ForwardedRef<IFrame
 }
 
 export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
+
+export { type IFrameComponent, type IFrameObject } from '@iframe-resizer/core'

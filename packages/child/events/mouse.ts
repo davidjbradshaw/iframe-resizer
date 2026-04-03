@@ -13,7 +13,11 @@ function addMouseListener(evt: string, name: string): void {
   addEventListener(window.document, evt, sendMouse)
 }
 
-export default function setupMouseEvents({ mouseEvents }: { mouseEvents: boolean }): void {
+export default function setupMouseEvents({
+  mouseEvents,
+}: {
+  mouseEvents: boolean
+}): void {
   if (mouseEvents !== true) return
 
   addMouseListener(MOUSE_ENTER, 'Mouse Enter')

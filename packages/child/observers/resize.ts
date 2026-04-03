@@ -19,7 +19,9 @@ const newlyObserved = new Set()
 
 let observer: ResizeObserver
 
-export function attachObserverToNonStaticElements(nodeList: Iterable<Node>): void {
+export function attachObserverToNonStaticElements(
+  nodeList: Iterable<Node>,
+): void {
   let counter = 0
 
   for (const node of nodeList) {

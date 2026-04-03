@@ -6,7 +6,8 @@ import { log } from '../console'
 const IMPORTANT = 'important'
 
 export default function stopInfiniteResizingOfIframe(): void {
-  const setAutoHeight = (el: HTMLElement): void => el.style.setProperty(HEIGHT, AUTO, IMPORTANT)
+  const setAutoHeight = (el: HTMLElement): void =>
+    el.style.setProperty(HEIGHT, AUTO, IMPORTANT)
 
   setAutoHeight(document.documentElement)
   setAutoHeight(document.body)

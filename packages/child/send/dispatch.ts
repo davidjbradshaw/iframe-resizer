@@ -27,7 +27,10 @@ export function setTargetOrigin(targetOrigin: string | undefined): string {
   return targetOrigin
 }
 
-export function dispatchToParent(message: string, targetOrigin: string | undefined): boolean {
+export function dispatchToParent(
+  message: string,
+  targetOrigin: string | undefined,
+): boolean {
   const { mode } = settings
   const { sameOrigin, target } = state
 

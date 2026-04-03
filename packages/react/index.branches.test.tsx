@@ -45,11 +45,7 @@ describe('React IframeResizer branches', () => {
     const fRef = createRef<any>()
     await act(async () => {
       root.render(
-        <IframeResizer
-          id="react-nolog"
-          src="https://example.org"
-          ref={fRef}
-        />,
+        <IframeResizer id="react-nolog" src="https://example.org" ref={fRef} />,
       )
       await Promise.resolve()
     })

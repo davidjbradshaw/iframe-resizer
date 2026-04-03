@@ -4,7 +4,9 @@ import state from '../values/state'
 
 let prevOverflowedNodeSet = new Set()
 
-export function filterIgnoredElements(nodeList: NodeListOf<Element>): Set<Element> {
+export function filterIgnoredElements(
+  nodeList: NodeListOf<Element>,
+): Set<Element> {
   const filteredNodeSet = new Set()
   const ignoredNodeSet = new Set()
 
@@ -27,7 +29,10 @@ export function filterIgnoredElements(nodeList: NodeListOf<Element>): Set<Elemen
   return filteredNodeSet
 }
 
-export default function checkOverflow(): { hasOverflowUpdated: boolean; overflowedNodeSet: Set<Element> } {
+export default function checkOverflow(): {
+  hasOverflowUpdated: boolean
+  overflowedNodeSet: Set<Element>
+} {
   const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
   const overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
   let hasOverflowUpdated = false

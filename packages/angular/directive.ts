@@ -2,29 +2,25 @@
  * Angular directive for iframe-resizer by Bjørn Håkon (https://github.com/bjornoss)
  */
 
-
 import {
   Directive,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
-  ElementRef,
 } from '@angular/core'
-
-import connectResizer from '@iframe-resizer/core'
 import type {
-  IFrameObject,
   IFrameComponent,
   IFrameMessageData,
   IFrameMouseData,
-  IFrameResizedData,
+  IFrameObject,
   IFrameOptions,
+  IFrameResizedData,
 } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 
 import { esModuleInterop } from '../common/utils'
-
-export type { IFrameObject, IFrameComponent, IFrameOptions }
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
@@ -35,14 +31,21 @@ const createAutoConsoleGroup = esModuleInterop(acg)
 })
 export class IframeResizerDirective {
   private resizer?: IFrameObject
+
   private consoleGroup = createAutoConsoleGroup()
 
   @Output() onReady = new EventEmitter<IFrameComponent>()
+
   @Output() onBeforeClose = new EventEmitter<IFrameComponent>()
+
   @Output() onMessage = new EventEmitter<IFrameMessageData>()
+
   @Output() onMouseEnter = new EventEmitter<IFrameMouseData>()
+
   @Output() onMouseLeave = new EventEmitter<IFrameMouseData>()
+
   @Output() onResized = new EventEmitter<IFrameResizedData>()
+
   @Output() onScroll = new EventEmitter<{
     iframe: IFrameComponent
     top: number
@@ -61,6 +64,7 @@ export class IframeResizerDirective {
 
   constructor(private elementRef: ElementRef) {}
 
+  // eslint-disable-next-line class-methods-use-this
   ngOnInit() {}
 
   ngAfterViewInit(): void {
@@ -94,8 +98,11 @@ export class IframeResizerDirective {
 
       onResized: (event: IFrameResizedData) => this.onResized.next(event),
 
-      onScroll: (event: { iframe: IFrameComponent; top: number; left: number }) =>
-        this.onScroll.next(event),
+      onScroll: (event: {
+        iframe: IFrameComponent
+        top: number
+        left: number
+      }) => this.onScroll.next(event),
     })(this.elementRef.nativeElement)
   }
 
@@ -109,6 +116,7 @@ export class IframeResizerDirective {
   public resize() {
     this.resizer?.resize()
   }
+
   public moveToAnchor(anchor: string) {
     this.resizer?.moveToAnchor(anchor)
   }
@@ -117,3 +125,9 @@ export class IframeResizerDirective {
     this.resizer?.sendMessage(message, targetOrigin)
   }
 }
+
+export {
+  type IFrameComponent,
+  type IFrameObject,
+  type IFrameOptions,
+} from '@iframe-resizer/core'

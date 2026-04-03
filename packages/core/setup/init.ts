@@ -30,7 +30,10 @@ function checkReset(id: string): void {
   })
 }
 
-function addLoadListener(iframe: HTMLIFrameElement, initChild: () => void): void {
+function addLoadListener(
+  iframe: HTMLIFrameElement,
+  initChild: () => void,
+): void {
   // allow other concurrent events to go first
   const onload = () => setTimeout(initChild, AFTER_EVENT_STACK)
   addEventListener(iframe, LOAD, onload)

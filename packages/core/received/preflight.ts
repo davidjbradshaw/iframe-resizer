@@ -20,7 +20,10 @@ export function checkIframeExists(messageData: MessageData): boolean {
   return detectedIframe
 }
 
-export function isMessageFromIframe(messageData: MessageData, event: MessageEvent | { data: any, origin?: string, sameOrigin?: boolean }): boolean {
+export function isMessageFromIframe(
+  messageData: MessageData,
+  event: MessageEvent | { data: any; origin?: string; sameOrigin?: boolean },
+): boolean {
   function checkAllowedOrigin(): boolean {
     function checkList(): boolean {
       log(

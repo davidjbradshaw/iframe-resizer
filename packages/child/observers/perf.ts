@@ -90,7 +90,9 @@ function perfObserver(list: PerformanceObserverEntryList): void {
   })
 }
 
-export default function createPerformanceObserver(): { disconnect: () => void } {
+export default function createPerformanceObserver(): {
+  disconnect: () => void
+} {
   info('Attached%c PerformanceObserver%c to page', HIGHLIGHT, FOREGROUND)
   const observer = new PerformanceObserver(perfObserver)
   observer.observe({ entryTypes: ['mark'] })

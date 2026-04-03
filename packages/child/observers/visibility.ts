@@ -2,9 +2,12 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'
 
-export default function visibilityObserver(callback: (isVisible: boolean) => void): { disconnect: () => void } {
+export default function visibilityObserver(
+  callback: (isVisible: boolean) => void,
+): { disconnect: () => void } {
   const observer = new IntersectionObserver(
-    (entries: IntersectionObserverEntry[]) => callback(entries.at(-1)?.isIntersecting ?? false),
+    (entries: IntersectionObserverEntry[]) =>
+      callback(entries.at(-1)?.isIntersecting ?? false),
     {
       threshold: 0,
     },

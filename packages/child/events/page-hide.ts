@@ -15,4 +15,5 @@ function onPageHide({ persisted }: PageTransitionEvent): void {
 }
 
 // setupOnPageHide
-export default (): void => addEventListener(window, lower(PAGE_HIDE), onPageHide as EventListener)
+export default (): void =>
+  addEventListener(window, lower(PAGE_HIDE), onPageHide as EventListener)

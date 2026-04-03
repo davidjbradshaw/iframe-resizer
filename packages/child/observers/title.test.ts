@@ -21,10 +21,13 @@ describe('child/observers/title', () => {
       constructor(cb: () => void) {
         observerCallback = cb
       }
+
+      // eslint-disable-next-line class-methods-use-this
       observe(target: Node, config: MutationObserverInit) {
         observedTarget = target
         observedConfig = config
       }
+
       disconnect = disconnect
     }
 
@@ -52,14 +55,14 @@ describe('child/observers/title', () => {
 
   test('observes title element directly when one exists in document', () => {
     const titleEl = document.createElement('title')
-    document.head.appendChild(titleEl)
+    document.head.append(titleEl)
 
     const cb = vi.fn()
     createTitleObserver(cb)
 
     expect(observedTarget).toBe(titleEl)
 
-    document.head.removeChild(titleEl)
+    titleEl.remove()
   })
 
   test('calls callback immediately on creation (sends initial title)', () => {

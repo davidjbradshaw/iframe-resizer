@@ -10,13 +10,15 @@ import { getKey } from '../../common/mode'
 import { deprecateOption, log } from '../console'
 import settings from '../values/settings'
 
-const read = (type: string) => (data: Record<string, any>, key: string): any => {
-  if (!(key in data)) return
-  // eslint-disable-next-line valid-typeof, consistent-return
-  if (typeof data[key] === type) return data[key]
+const read =
+  (type: string) =>
+  (data: Record<string, any>, key: string): any => {
+    if (!(key in data)) return
+    // eslint-disable-next-line valid-typeof, consistent-return
+    if (typeof data[key] === type) return data[key]
 
-  throw new TypeError(`${key} is not a ${type}.`)
-}
+    throw new TypeError(`${key} is not a ${type}.`)
+  }
 
 export const readFunction = read(FUNCTION)
 export const readNumber = read(NUMBER)
@@ -25,7 +27,10 @@ export const readString = read(STRING)
 const isObject = (obj: any): obj is Record<string, any> =>
   obj !== null && typeof obj === OBJECT && !Array.isArray(obj)
 
-function readOffsetSize(data: Record<string, any>): { offsetHeight: number | undefined; offsetWidth: number | undefined } {
+function readOffsetSize(data: Record<string, any>): {
+  offsetHeight: number | undefined
+  offsetWidth: number | undefined
+} {
   const { calculateHeight, calculateWidth } = settings
   let offsetHeight
   let offsetWidth

@@ -1,3 +1,8 @@
 // checkBoth
-export default ({ calculateWidth, calculateHeight }: { calculateWidth: boolean; calculateHeight: boolean }): boolean =>
-  calculateWidth === calculateHeight
+export default ({
+  calculateWidth,
+  calculateHeight,
+}: {
+  calculateWidth: boolean
+  calculateHeight: boolean
+}): boolean => calculateWidth === calculateHeight
