@@ -5,7 +5,17 @@ import { advise, purge, vInfo } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
 
-export default function ({ key, key2, mode, version }: { key: string; key2: string; mode: number; version: string }): void {
+export default function ({
+  key = '',
+  key2 = '',
+  mode = 0,
+  version,
+}: {
+  key?: string
+  key2?: string
+  mode?: number
+  version?: string
+}): void {
   const oMode = mode
   const pMode = setMode({ key })
   const cMode = setMode({ key2 })

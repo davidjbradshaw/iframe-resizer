@@ -22,14 +22,18 @@ export const injectVersion = () => [versionInjector(vi)]
 
 const stripInclude = ['**/*.js', '**/*.ts']
 
-export const pluginsBase = (stripLog) => () => {
-  const delog = [strip({ include: stripInclude, functions: ['log', 'debug'] })]
-  const log = [strip({ include: stripInclude, functions: ['purge'] })]
+export const pluginsBase =
+  (stripLog, skipVI = false) =>
+  () => {
+    const delog = [
+      strip({ include: stripInclude, functions: ['log', 'debug'] }),
+    ]
+    const log = [strip({ include: stripInclude, functions: ['purge'] })]
 
-  const base = [versionInjector(vi), commonjs()]
+    const base = skipVI ? [commonjs()] : [versionInjector(vi), commonjs()]
 
-  return stripLog ? delog.concat(base) : log.concat(base)
-}
+    return stripLog ? delog.concat(base) : log.concat(base)
+  }
 
 const fixVersion = (file) => {
   switch (file) {
@@ -50,7 +54,10 @@ const createTransform = (file) => (contents) =>
     .replace(/@@PKG_VERSION@@/g, pkg.version)
     .replace(/@@BUILD_DATE@@/g, today)
 
-export const createPluginsProd = (file) => {
+export const createPluginsProd = (
+  file,
+  { skipVersionInjector = false } = {},
+) => {
   const dest = `dist/${file}`
   const src = `packages`
 
@@ -77,7 +84,7 @@ export const createPluginsProd = (file) => {
       start_comment: 'TEST CODE START',
       end_comment: 'TEST CODE END',
     }),
-    ...pluginsBase(stripLog)(),
+    ...pluginsBase(stripLog, skipVersionInjector)(),
   ]
 }
 

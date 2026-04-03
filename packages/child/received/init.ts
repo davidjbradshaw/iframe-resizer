@@ -15,7 +15,7 @@ export default function initFromParent(event: MessageEvent): void {
 
   const data = event.data.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
 
-  state.target = event.source
+  state.target = event.source as Window
   state.origin = event.origin
 
   init(data)

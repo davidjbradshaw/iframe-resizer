@@ -39,11 +39,11 @@ import state from './values/state'
 function startLogging({
   logExpand,
   logging,
-  parentId,
+  parentId = '',
 }: {
   logExpand: boolean
   logging: boolean
-  parentId: string
+  parentId?: string
 }): void {
   setConsoleOptions({ id: parentId, enabled: logging, expand: logExpand })
   consoleEvent('initReceived')
@@ -55,7 +55,6 @@ function ready(onReady: () => void): void {
   checkReadyYet(once(onReady))
   log('Initialization complete', (({ key, key2, ...rest }) => rest)(settings))
 }
-
 
 function startIframeResizerChild({
   bodyBackground,
