@@ -9,7 +9,12 @@ vi.mock('../../common/mode', async (importOriginal) => {
     getModeData: vi.fn(() => 'msg'),
   }
 })
-vi.mock('../console', () => ({ advise: vi.fn(), info: vi.fn(), log: vi.fn() }))
+vi.mock('../console', () => ({
+  advise: vi.fn(),
+  assert: vi.fn(),
+  info: vi.fn(),
+  log: vi.fn(),
+}))
 vi.mock('../values/settings', () => ({
   default: { parentId: 'pid', mode: 0, targetOrigin: 'https://p' },
 }))
@@ -22,7 +27,7 @@ vi.mock('../values/state', () => ({
   },
 }))
 
-const { advise, info, log } = await import('../console')
+const { advise, assert, info, log } = await import('../console')
 const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 const { displayTimeTaken, setTargetOrigin, dispatchToParent } =

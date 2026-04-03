@@ -27,8 +27,10 @@ export interface ChildSettings {
   targetOrigin: string
   tolerance: number
   widthCalcMode: string
-  onBeforeResize: (() => void) | undefined
-  onMessage: () => void
+  onBeforeResize:
+    | ((newSize: number, event: string, direction: 'height' | 'width') => number)
+    | undefined
+  onMessage: (message: any) => void
   onReady: () => void
   // Dynamic fields populated at runtime from parent / page init data
   parentId?: string
