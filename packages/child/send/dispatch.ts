@@ -43,10 +43,7 @@ export function dispatchToParent(
       return false
     }
   else {
-    assert(
-      target,
-      'Internal error: postMessage target is undefined',
-    )
+    assert(target, 'Internal error: postMessage target is undefined')
     ;(target as Window).postMessage(
       MESSAGE_ID + message,
       setTargetOrigin(targetOrigin),
