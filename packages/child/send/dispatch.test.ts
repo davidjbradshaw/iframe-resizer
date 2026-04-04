@@ -27,7 +27,7 @@ vi.mock('../values/state', () => ({
   },
 }))
 
-const { advise, assert, info, log } = await import('../console')
+const { advise, info, log } = await import('../console')
 const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 const { displayTimeTaken, setTargetOrigin, dispatchToParent } =

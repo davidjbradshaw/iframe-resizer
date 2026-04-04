@@ -81,7 +81,6 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
   const consoleGroup = createAutoConsoleGroup()
 
   onMount(() => {
-    // eslint-disable-next-line solid/reactivity -- intentional: this is a one-shot setup; the library does not support re-initializing an element
     const {
       license,
       bodyBackground,
@@ -103,6 +102,7 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
       onMouseEnter,
       onMouseLeave,
       ref: setRef,
+      // eslint-disable-next-line solid/reactivity -- intentional: this is a one-shot setup; the library does not support re-initializing an element
     } = local
 
     consoleGroup.label(`solid(${iframeEl.id})`)
