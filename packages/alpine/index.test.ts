@@ -1,4 +1,7 @@
+import connectResizer from '@iframe-resizer/core'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+
+import IframeResizer from './index'
 
 // Stable mock handles for auto-console-group
 const mockGroupLabel = vi.fn()
@@ -29,9 +32,6 @@ vi.mock('@iframe-resizer/core', () => ({
   }),
 }))
 
-import IframeResizer from './index'
-import connectResizer from '@iframe-resizer/core'
-
 type DirectiveCallback = (
   el: HTMLIFrameElement,
   attributes: { expression: string },
@@ -41,20 +41,25 @@ type DirectiveCallback = (
   },
 ) => void
 
-function createMockAlpine() {
+function createMockAlpine(): {
+  directive: ReturnType<typeof vi.fn>
+  getCallback: () => DirectiveCallback | undefined
+} {
   let registeredCallback: DirectiveCallback | undefined
 
-  const alpine = {
+  return {
     directive: vi.fn((name: string, callback: DirectiveCallback) => {
       registeredCallback = callback
     }),
     getCallback: () => registeredCallback,
   }
-
-  return alpine
 }
 
-function createMockContext(evaluateResult: unknown = {}) {
+function createMockContext(evaluateResult: unknown = {}): {
+  evaluate: ReturnType<typeof vi.fn>
+  cleanup: ReturnType<typeof vi.fn>
+  runCleanup: () => void
+} {
   const cleanupFns: (() => void)[] = []
 
   return {
@@ -155,7 +160,7 @@ describe('Alpine IframeResizer plugin', () => {
     IframeResizer(mockAlpine as any)
 
     const callback = mockAlpine.getCallback()!
-    const ctx = createMockContext(undefined)
+    const ctx = createMockContext()
 
     callback(mockIframe, { expression: 'undefinedOptions' }, ctx)
 

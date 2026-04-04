@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const EVENT = (data) => ({ data })
+const EVENT = (data): { data: unknown } => ({ data })
 
 describe('child/received/is', () => {
   beforeEach(() => {

@@ -53,7 +53,10 @@ This message can be ignored if everything is working, or you can set the <b>warn
   )
 }
 
-export default function warnOnNoResponse(id: string, settings: Record<string, any>): void {
+export default function warnOnNoResponse(
+  id: string,
+  settings: Record<string, any>,
+): void {
   function warning(): void {
     if (settings[id] === undefined) return // iframe has been closed while we were waiting
 

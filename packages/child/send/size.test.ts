@@ -65,7 +65,12 @@ describe('child/send/size', () => {
     state.isHidden = true
     sendSize(MANUAL_RESIZE_REQUEST, 'manual resize', 10, 20)
 
-    expect(dispatch).toHaveBeenCalledWith(10, 20, MANUAL_RESIZE_REQUEST, undefined)
+    expect(dispatch).toHaveBeenCalledWith(
+      10,
+      20,
+      MANUAL_RESIZE_REQUEST,
+      undefined,
+    )
   })
 
   test('skips log when already hidden and message already shown', () => {

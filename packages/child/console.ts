@@ -16,7 +16,11 @@ const childConsole = createGroupConsole({
   expand: false,
 })
 
-export function setConsoleOptions(options: { id?: string; enabled: boolean; expand: boolean }): void {
+export function setConsoleOptions(options: {
+  id?: string
+  enabled: boolean
+  expand: boolean
+}): void {
   id = options.id || LABEL
   childConsole.label(`${id}`)
   childConsole.expand(options.expand)
@@ -52,9 +56,10 @@ export const {
 } = childConsole
 
 const formatAdvise = createFormatAdvise(identity)
-export const advise = (...args: any[]): void => childConsole.warn(...args.map(formatAdvise))
+export const advise = (...args: any[]): void =>
+  childConsole.warn(...args.map(formatAdvise))
 
-const deprecateAdvise = deprecate((id, msg) => advise(msg))
+const deprecateAdvise = deprecate((_, msg) => advise(msg))
 export const deprecateMethod = deprecateAdvise('Method')
 export const deprecateMethodReplace = deprecateAdvise('Method', 'replaced with')
 export const deprecateOption = deprecateAdvise('Option')

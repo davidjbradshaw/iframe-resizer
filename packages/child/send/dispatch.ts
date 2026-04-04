@@ -1,9 +1,9 @@
 import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 
 import { INIT, MESSAGE_ID } from '../../common/consts'
-import { getModeData } from '../../common/mode'
+import { checkMode, getModeData } from '../../common/mode'
 import { once, round } from '../../common/utils'
-import { advise, info, log } from '../console'
+import { advise, assert, info, log } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
 
@@ -27,7 +27,10 @@ export function setTargetOrigin(targetOrigin: string | undefined): string {
   return targetOrigin
 }
 
-export function dispatchToParent(message: string, targetOrigin: string | undefined): boolean {
+export function dispatchToParent(
+  message: string,
+  targetOrigin: string | undefined,
+): boolean {
   const { mode } = settings
   const { sameOrigin, target } = state
 
@@ -35,11 +38,17 @@ export function dispatchToParent(message: string, targetOrigin: string | undefin
     try {
       window.parent.iframeParentListener(MESSAGE_ID + message)
     } catch (error) {
-      if (mode === 1) sendFailed()
+      if (checkMode(mode)) sendFailed()
       else throw error
       return false
     }
-  else target.postMessage(MESSAGE_ID + message, setTargetOrigin(targetOrigin))
+  else {
+    assert(target, 'Internal error: postMessage target is undefined')
+    ;(target as Window).postMessage(
+      MESSAGE_ID + message,
+      setTargetOrigin(targetOrigin),
+    )
+  }
 
   return true
 }

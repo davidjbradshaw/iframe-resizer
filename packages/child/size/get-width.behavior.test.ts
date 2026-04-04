@@ -15,5 +15,4 @@ describe('child/size/get-width behavior', () => {
     settings.offsetWidth = 456
     expect(getWidth.getOffset()).toBe(456)
   })
-
 })

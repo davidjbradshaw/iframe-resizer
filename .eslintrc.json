@@ -48,6 +48,13 @@
     "no-return-assign": [2, "except-parens"],
     "no-use-before-define": 0,
     "no-shadow": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-shadow": 0,
+    "@typescript-eslint/no-throw-literal": 0,
+    "@typescript-eslint/no-use-before-define": 0,
+    "react/destructuring-assignment": 0,
+    "react/react-in-jsx-scope": 0,
+    "react/require-default-props": 0,
     "prefer-rest-params": 0,
     "import/no-amd": 0,
     "import/no-extraneous-dependencies": 0,
@@ -157,6 +164,24 @@
         "jasmine/no-disabled-tests": 0,
         "no-secrets/no-secrets": 0,
         "sonarjs/no-duplicate-string": 0
+      }
+    },
+    {
+      "files": ["packages/react/**/*.tsx", "packages/react/**/*.jsx"],
+      "plugins": ["react"],
+      "rules": {
+        "react/react-in-jsx-scope": 0,
+        "react/require-default-props": 0
+      }
+    },
+    {
+      "files": ["packages/solid/**/*.tsx", "packages/solid/**/*.jsx"],
+      "plugins": ["solid"],
+      "extends": ["plugin:solid/typescript"],
+      "rules": {
+        "react/react-in-jsx-scope": 0,
+        "react/require-default-props": 0,
+        "react/prop-types": 0
       }
     }
   ]

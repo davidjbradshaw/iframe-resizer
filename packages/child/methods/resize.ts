@@ -2,7 +2,10 @@ import { MANUAL_RESIZE_REQUEST, NUMBER } from '../../common/consts'
 import { typeAssert } from '../../common/utils'
 import sendSize from '../send/size'
 
-export default function resize(customHeight?: number, customWidth?: number): void {
+export default function resize(
+  customHeight?: number,
+  customWidth?: number,
+): void {
   if (customHeight !== undefined)
     typeAssert(
       customHeight,

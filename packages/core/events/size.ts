@@ -1,8 +1,8 @@
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { HEIGHT, WIDTH } from '../../common/consts'
-import type { MessageData } from '../types'
 import { info } from '../console'
+import type { MessageData } from '../types'
 import settings from '../values/settings'
 
 function setDimension(dimension: string, messageData: MessageData): void {

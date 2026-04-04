@@ -1,4 +1,4 @@
-/* eslint import/first: 0, simple-import-sort/imports: 0 */
+/* eslint import/first: 0, simple-import-sort/imports: 0, react/react-in-jsx-scope: 0 */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockResizer = {
@@ -75,7 +75,9 @@ describe('Solid IframeResizer lifecycle', () => {
   it('exposes getElement via ref', () => {
     let api: any
     dispose = render(
-      () => <IframeResizer id="test-frame" license="GPLv3" ref={(r) => (api = r)} />,
+      () => (
+        <IframeResizer id="test-frame" license="GPLv3" ref={(r) => (api = r)} />
+      ),
       container,
     )
 

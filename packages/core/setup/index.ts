@@ -10,7 +10,11 @@ import init from './init'
 import processOptions from './process-options'
 import setScrolling from './scrolling'
 
-function setup(id: string, iframe: HTMLIFrameElement, options: Record<string, any>): void {
+function setup(
+  id: string,
+  iframe: HTMLIFrameElement,
+  options: Record<string, any>,
+): void {
   processOptions(iframe, options)
   log(id, `src: %c${iframe.srcdoc || iframe.src}`, HIGHLIGHT)
   preModeCheck(id)
@@ -21,7 +25,10 @@ function setup(id: string, iframe: HTMLIFrameElement, options: Record<string, an
   log(id, 'Setup complete')
 }
 
-export default function (iframe: HTMLIFrameElement, options: Record<string, any>): void {
+export default function (
+  iframe: HTMLIFrameElement,
+  options: Record<string, any>,
+): void {
   const { id } = iframe
   consoleEvent(id, 'setup')
   if (checkUniqueId(id)) setup(id, iframe, options)

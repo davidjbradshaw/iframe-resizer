@@ -98,6 +98,7 @@ ESLint config: `.eslintrc.json` (extends eslint-config-auto). Prettier: no semic
 - **tyoes** are imported from the core package
 
 ## Key rules
+- **Always run `npm run eslint:fix` before every commit/check-in.** This is mandatory — do not skip it.
 - `js-dist/` is just for the distrobution of the lasted published version. It should never be updated, except by running `npm run publish`
  - `js-dist/` should not be used for testing
  - `example-test` should never be checked in to git or used with test scripts. It is just for manual testing.

@@ -19,7 +19,13 @@ export function setBodyStyle(attr: string, value: string | undefined): void {
   info(`Set body ${attr}: %c${value}`, HIGHLIGHT)
 }
 
-export function setMargin({ bodyMarginStr, bodyMargin }: { bodyMarginStr: string | undefined; bodyMargin: number }): void {
+export function setMargin({
+  bodyMarginStr,
+  bodyMargin,
+}: {
+  bodyMarginStr: string | undefined
+  bodyMargin: number
+}): void {
   // If called via V1 script, convert bodyMargin from int to str
   if (undefined === bodyMarginStr) {
     bodyMarginStr = `${bodyMargin}px`

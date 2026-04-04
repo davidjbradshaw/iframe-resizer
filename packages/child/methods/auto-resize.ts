@@ -10,7 +10,11 @@ const WRONG_MODE = `Auto Resize can not be changed when <b>direction</> is set t
 export default function autoResize(enable: boolean): boolean {
   typeAssert(enable, BOOLEAN, 'parentIframe.autoResize(enable) enable')
 
-  const { autoResize, calculateHeight, calculateWidth } = settings
+  const {
+    autoResize: currentAutoResize,
+    calculateHeight,
+    calculateWidth,
+  } = settings
 
   if (calculateWidth === false && calculateHeight === false) {
     consoleEvent(ENABLE)
@@ -18,10 +22,10 @@ export default function autoResize(enable: boolean): boolean {
     return false
   }
 
-  if (enable === true && autoResize === false) {
+  if (enable === true && currentAutoResize === false) {
     settings.autoResize = true
     queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled'))
-  } else if (enable === false && autoResize === true) {
+  } else if (enable === false && currentAutoResize === true) {
     settings.autoResize = false
   }
 

@@ -1,22 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "react",
     "experimentalDecorators": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "allowJs": true,
     "strict": false,
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": [
     "packages/global.d.ts",
+    "packages/alpine/**/*.ts",
     "packages/angular/**/*.ts",
+    "packages/astro/**/*.ts",
     "packages/common/**/*.ts",
     "packages/core/**/*.ts",
     "packages/child/**/*.ts",
     "packages/parent/**/*.ts",
+    "packages/solid/**/*.ts",
+    "packages/solid/**/*.tsx",
     "packages/vue/**/*.ts",
     "packages/vue/**/*.vue",
     "packages/react/**/*.ts",

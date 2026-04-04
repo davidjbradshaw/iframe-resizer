@@ -16,6 +16,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['auto-console-group'],
       output: {
+        exports: 'named',
         globals: {
           'auto-console-group': 'acg',
         },

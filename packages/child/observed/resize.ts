@@ -10,7 +10,9 @@ function resizeObserved(entries: ResizeObserverEntry[]): void {
   sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
 }
 
-export default function createResizeObservers(nodeList: NodeListOf<Element>) {
+export default function createResizeObservers(
+  nodeList: NodeListOf<Element>,
+): ReturnType<typeof createResizeObserver> {
   observers.resize = createResizeObserver(resizeObserved)
   observers.resize.attachObserverToNonStaticElements(nodeList)
 

@@ -1,4 +1,5 @@
-import connectResizer from '@iframe-resizer/core'
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable react/require-default-props */
 import type {
   Direction,
   IFrameComponent,
@@ -10,13 +11,19 @@ import type {
   LogOption,
   ScrollOption,
 } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-import React, { forwardRef, type ReactElement, type RefObject, useEffect, useImperativeHandle, useRef } from 'react'
+import React, {
+  forwardRef,
+  type ReactElement,
+  type RefObject,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 
 import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
-
-export type { IFrameObject, IFrameComponent }
 
 export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
   getElement: () => IFrameComponent
@@ -46,7 +53,6 @@ export type ResizerOptions = {
 }
 
 export type ResizerEvents = {
-  onCLosed?: (iframeId: string) => void // Remove in v6
   onAfterClose?: (iframeId: string) => void
   onMessage?: (ev: IFrameMessageData) => void
   onMouseEnter?: (ev: IFrameMouseData) => void
@@ -63,12 +69,16 @@ export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
 
-function IframeResizer(props: IframeResizerProps, ref: React.ForwardedRef<IFrameForwardRef>): ReactElement {
+function IframeResizer(
+  props: IframeResizerProps,
+  ref: React.ForwardedRef<IFrameForwardRef>,
+): ReactElement {
+  const { log, logExpand } = props
   const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef<IFrameComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
 
-  const onBeforeClose = () => {
+  const onBeforeClose = (): boolean => {
     consoleGroup.event('close')
     consoleGroup.warn(
       `Close event ignored, to remove the iframe update your React component.`,
@@ -88,8 +98,8 @@ function IframeResizer(props: IframeResizerProps, ref: React.ForwardedRef<IFrame
 
     const resizer = connectResizer(resizerOptions)(iframe)
 
-    consoleGroup.expand(resizerOptions.logExpand)
-    if (props.log) consoleGroup.log('Created React component')
+    consoleGroup.expand(logExpand)
+    if (log) consoleGroup.log('Created React component')
 
     return () => {
       consoleGroup.endAutoGroup()
@@ -113,3 +123,5 @@ function IframeResizer(props: IframeResizerProps, ref: React.ForwardedRef<IFrame
 }
 
 export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
+
+export { type IFrameComponent, type IFrameObject } from '@iframe-resizer/core'

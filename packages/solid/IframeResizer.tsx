@@ -1,4 +1,3 @@
-import connectResizer from '@iframe-resizer/core'
 import type {
   Direction,
   IFrameComponent,
@@ -10,8 +9,9 @@ import type {
   LogOption,
   ScrollOption,
 } from '@iframe-resizer/core'
+import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-import type { ComponentProps } from 'solid-js'
+import type { ComponentProps, JSX } from 'solid-js'
 import { onCleanup, onMount, splitProps } from 'solid-js'
 
 // Deal with UMD not converting default exports to named exports
@@ -75,7 +75,7 @@ const RESIZER_KEYS = [
   'ref',
 ] as const
 
-export default function IframeResizer(props: IframeResizerProps) {
+export default function IframeResizer(props: IframeResizerProps): JSX.Element {
   let iframeEl!: IFrameComponent
   const [local, iframeProps] = splitProps(props, RESIZER_KEYS)
   const consoleGroup = createAutoConsoleGroup()
@@ -102,6 +102,7 @@ export default function IframeResizer(props: IframeResizerProps) {
       onMouseEnter,
       onMouseLeave,
       ref: setRef,
+      // eslint-disable-next-line solid/reactivity -- intentional: this is a one-shot setup; the library does not support re-initializing an element
     } = local
 
     consoleGroup.label(`solid(${iframeEl.id})`)

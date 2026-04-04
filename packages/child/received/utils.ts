@@ -6,7 +6,8 @@ const { freeze } = Object
 export const { parse } = JSON
 export const parseFrozen = (data: string): any => freeze(parse(data))
 
-export const notExpected = (type: string): void => sendMessage(0, 0, `${type}Stop`)
+export const notExpected = (type: string): void =>
+  sendMessage(0, 0, `${type}Stop`)
 
 export const getData = (event: MessageEvent): string =>
   event.data.slice(event.data.indexOf(SEPARATOR) + 1)

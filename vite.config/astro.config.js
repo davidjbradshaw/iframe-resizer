@@ -25,6 +25,6 @@ export default defineConfig({
       outDir: 'dist/astro',
       entryRoot: 'packages/astro',
     }),
-    ...createPluginsProd('astro'),
+    ...createPluginsProd('astro', { skipVersionInjector: true }),
   ],
 })

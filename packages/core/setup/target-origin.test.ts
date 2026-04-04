@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../console', () => ({ warn: vi.fn() }))
-
 import settings from '../values/settings'
 import {
   getPostMessageTarget,
   getTargetOrigin,
   setTargetOrigin,
 } from './target-origin'
+
+vi.mock('../console', () => ({ warn: vi.fn() }))
 
 describe('core/setup/target-origin', () => {
   afterEach(() => {
@@ -42,7 +42,11 @@ describe('core/setup/target-origin', () => {
     }
     setTargetOrigin('z')
 
-    expect(settings.z.targetOrigin).toEqual(['https://a.com', 'https://b.com', '*'])
+    expect(settings.z.targetOrigin).toEqual([
+      'https://a.com',
+      'https://b.com',
+      '*',
+    ])
   })
 
   it('setTargetOrigin warns and sets empty array when checkOrigin is []', async () => {
@@ -51,7 +55,10 @@ describe('core/setup/target-origin', () => {
     setTargetOrigin('empty')
 
     expect(settings.empty.targetOrigin).toEqual([])
-    expect(warn).toHaveBeenCalledWith('empty', expect.stringContaining('empty array'))
+    expect(warn).toHaveBeenCalledWith(
+      'empty',
+      expect.stringContaining('empty array'),
+    )
   })
 
   it('getPostMessageTarget sets contentWindow when null', () => {

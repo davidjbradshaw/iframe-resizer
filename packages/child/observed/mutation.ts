@@ -46,7 +46,13 @@ const removeObservers = (nodeList: Set<Node>): void => {
   endAutoGroup()
 }
 
-function contentMutated({ addedNodes, removedNodes }: { addedNodes: Set<Node>; removedNodes: Set<Node> }): void {
+function contentMutated({
+  addedNodes,
+  removedNodes,
+}: {
+  addedNodes: Set<Node>
+  removedNodes: Set<Node>
+}): void {
   consoleEvent('contentMutated')
   state.applySelectors()
   checkAndSetupTags()
@@ -57,7 +63,10 @@ function contentMutated({ addedNodes, removedNodes }: { addedNodes: Set<Node>; r
   addObservers(addedNodes)
 }
 
-export default function mutationObserved(mutations: { addedNodes: Set<Node>; removedNodes: Set<Node> }): void {
+export default function mutationObserved(mutations: {
+  addedNodes: Set<Node>
+  removedNodes: Set<Node>
+}): void {
   contentMutated(mutations)
   sendSize(MUTATION_OBSERVER, 'Mutation Observed')
 }

@@ -12,7 +12,7 @@ export default {
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [],
-  target: window?.parent,
+  target: window?.parent as MessageEventSource | null,
   timerActive: false,
   totalTime: 0,
   triggerLocked: false,

@@ -93,39 +93,46 @@ function logMutations(): void {
   }
 }
 
-const createProcessMutations = (callback: (mutations: { addedNodes: Set<Node>; removedNodes: Set<Node> }) => void) => (): void => {
-  const now = performance.now()
-  const delay = now - perfMon
-  const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
+const createProcessMutations =
+  (
+    callback: (mutations: {
+      addedNodes: Set<Node>
+      removedNodes: Set<Node>
+    }) => void,
+  ) =>
+  (): void => {
+    const now = performance.now()
+    const delay = now - perfMon
+    const delayLimit = DELAY * delayCount++ + DELAY_MARGIN
 
-  // Back off if the callStack is busy with other stuff
-  if (delay > delayLimit && delay < DELAY_MAX) {
-    event('mutationThrottled')
-    info('Update delayed due to heavy workload on the callStack')
-    info(
-      `EventLoop busy time: %c${round(delay)}ms %c> Max wait: %c${delayLimit - DELAY_MARGIN}ms`,
-      HIGHLIGHT,
-      FOREGROUND,
-      HIGHLIGHT,
-    )
-    setTimeout(processMutations, DELAY * delayCount)
-    perfMon = now
-    return
+    // Back off if the callStack is busy with other stuff
+    if (delay > delayLimit && delay < DELAY_MAX) {
+      event('mutationThrottled')
+      info('Update delayed due to heavy workload on the callStack')
+      info(
+        `EventLoop busy time: %c${round(delay)}ms %c> Max wait: %c${delayLimit - DELAY_MARGIN}ms`,
+        HIGHLIGHT,
+        FOREGROUND,
+        HIGHLIGHT,
+      )
+      setTimeout(processMutations, DELAY * delayCount)
+      perfMon = now
+      return
+    }
+
+    delayCount = 1
+
+    newMutations.forEach(flatFilterMutations)
+    newMutations.length = 0
+    pending = false
+
+    logMutations()
+
+    callback({ addedNodes, removedNodes })
+
+    addedNodes.clear()
+    removedNodes.clear()
   }
-
-  delayCount = 1
-
-  newMutations.forEach(flatFilterMutations)
-  newMutations.length = 0
-  pending = false
-
-  logMutations()
-
-  callback({ addedNodes, removedNodes })
-
-  addedNodes.clear()
-  removedNodes.clear()
-}
 
 function mutationObserved(mutations: MutationRecord[]): void {
   newMutations.push(mutations)
@@ -136,7 +143,12 @@ function mutationObserved(mutations: MutationRecord[]): void {
   requestAnimationFrame(processMutations)
 }
 
-export default function createMutationObserver(callback: (mutations: { addedNodes: Set<Node>; removedNodes: Set<Node> }) => void) {
+export default function createMutationObserver(
+  callback: (mutations: {
+    addedNodes: Set<Node>
+    removedNodes: Set<Node>
+  }) => void,
+): { disconnect: () => void } {
   const observer = new window.MutationObserver(mutationObserved)
   const target = document.body || document.documentElement
 

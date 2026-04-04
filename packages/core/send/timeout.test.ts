@@ -34,7 +34,7 @@ describe('warnOnNoResponse', () => {
     loadErrorShown = false,
     warningTimeout = 50,
     msgTimeout,
-  } = {}) => ({
+  } = {}): Record<string, unknown> => ({
     [id]: {
       iframe: { id, src, sandbox },
       checkOrigin,

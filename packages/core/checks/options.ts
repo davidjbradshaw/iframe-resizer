@@ -7,7 +7,10 @@ import {
 } from '../../common/consts'
 import { advise } from '../console'
 
-export default function checkOptions(id: string, options: Record<string, any> | undefined): Record<string, any> {
+export default function checkOptions(
+  id: string,
+  options: Record<string, any> | undefined,
+): Record<string, any> {
   if (!options) return {}
 
   if (
