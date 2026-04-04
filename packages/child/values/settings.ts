@@ -28,7 +28,11 @@ export interface ChildSettings {
   tolerance: number
   widthCalcMode: string
   onBeforeResize:
-    | ((newSize: number, event: string, direction: 'height' | 'width') => number)
+    | ((
+        newSize: number,
+        event: string,
+        direction: 'height' | 'width',
+      ) => number)
     | undefined
   onMessage: (message: any) => void
   onReady: () => void
