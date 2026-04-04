@@ -44,8 +44,8 @@ export function dispatchToParent(
     }
   else {
     assert(
-      target !== null,
-      '[iFrameResizer] Internal error: postMessage target is null',
+      target,
+      'Internal error: postMessage target is undefined',
     )
     ;(target as Window).postMessage(
       MESSAGE_ID + message,
