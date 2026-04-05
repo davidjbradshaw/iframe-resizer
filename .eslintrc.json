@@ -74,6 +74,7 @@
     "unicorn/no-this-assignment": 0,
     "unicorn/prefer-module": 0,
     "unicorn/prefer-query-selector": 0,
+    "unicorn/prefer-export-from": 0,
     "unicorn/prevent-abbreviations": 0,
     "xss/no-mixed-html": 0
   },

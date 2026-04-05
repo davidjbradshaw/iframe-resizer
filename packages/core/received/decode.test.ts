@@ -107,6 +107,21 @@ describe('core/received/decode', () => {
     expect(data.width).toBe(200)
   })
 
+  test('skips getComputedStyle when iframe is not in settings', () => {
+    const getComputedStyleSpy = vi.fn()
+    global.getComputedStyle = getComputedStyleSpy
+
+    const body = 'unknown::200:TYPE:MSG'
+    const msg = 'X'.repeat(MESSAGE_ID_LENGTH) + body
+
+    const data = decodeMessage(msg)
+
+    expect(getComputedStyleSpy).not.toHaveBeenCalled()
+    expect(data.id).toBe('unknown')
+    expect(data.iframe).toBeUndefined()
+    expect(data.height).toBe(0)
+  })
+
   afterEach(() => {
     global.getComputedStyle = origGetComputed
     delete settings.i1
