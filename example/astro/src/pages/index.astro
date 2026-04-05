@@ -1,0 +1,68 @@
+---
+import IframeResizer from '@iframe-resizer/astro'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@iframe-resizer/astro example</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      iframe {
+        width: 100%;
+        height: 100vh;
+      }
+      .message-data {
+        margin-top: 20px;
+        padding: 10px;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+      pre {
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>@iframe-resizer/astro example</h2>
+
+    <IframeResizer
+      id="myframe"
+      src="/child/frame.content.html"
+      license="GPLv3"
+      log
+      inPageLinks
+    />
+
+    <div id="event-data" class="message-data" style="display: none;">
+      <h3>Event Data:</h3>
+      <pre id="event-output"></pre>
+    </div>
+
+    <script>
+      const iframe = document.getElementById('myframe')
+      const eventData = document.getElementById('event-data')
+      const eventOutput = document.getElementById('event-output')
+
+      iframe?.addEventListener('iframe-resizer:resized', (e: Event) => {
+        const detail = (e as CustomEvent).detail
+        eventData!.style.display = 'block'
+        eventOutput!.textContent = JSON.stringify(detail, (key, value) => key === 'iframe' ? undefined : value, 2)
+      })
+
+      iframe?.addEventListener('iframe-resizer:message', (e: Event) => {
+        const detail = (e as CustomEvent).detail
+        eventData!.style.display = 'block'
+        eventOutput!.textContent = JSON.stringify(detail, (key, value) => key === 'iframe' ? undefined : value, 2)
+        alert(`Message from frame ${detail.iframe.id}: ${detail.message}`)
+        detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+      })
+    </script>
+  </body>
+</html>

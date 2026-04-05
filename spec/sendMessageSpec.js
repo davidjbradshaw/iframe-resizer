@@ -11,27 +11,33 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    xit('send message to iframe', (done) => {
+    it('send message to iframe', (done) => {
+      iframe = document.getElementsByTagName('iframe')[0]
+      iframe.id = 'sendMessage1'
+
+      spyOn(iframe.contentWindow, 'postMessage')
+
       const iframe1 = iframeResize({
         license: 'GPLv3',
         log,
         id: 'sendMessage1',
         warningTimeout: 1000,
+        checkOrigin: false, // Disabled for testing - allows wildcard origin
         onReady: (iframe1) => {
-          console.log('>>>', iframe1, iframe1.iframeResizer)
           iframe1.iframeResizer.sendMessage('chkSendMsg:test')
 
+          // Using '*' as target origin is acceptable in tests with checkOrigin disabled
           expect(iframe1.contentWindow.postMessage).toHaveBeenCalledWith(
             '[iFrameSizer]message:"chkSendMsg:test"',
-            getTarget(iframe1),
+            '*',
           )
 
-          tearDown(iframe1)
           done()
         },
       })[0]
 
-      spyOnIFramePostMessage(iframe1)
+      // Mock the init message from child
+      mockMsgFromIFrame(iframe, 'init')
     })
 
     it('mock incoming message', (done) => {
@@ -40,6 +46,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         log,
         id: 'sendMessage2',
         warningTimeout: 1000,
+        checkOrigin: false,
         onMessage: (messageData) => {
           expect(messageData.message).toBe('test:test')
           done()
@@ -49,21 +56,32 @@ define(['iframeResizerParent'], (iframeResize) => {
       mockMsgFromIFrame(iframe, 'message:"test:test"')
     })
 
-    xit('send message and get response', (done) => {
-      iframe = iframeResize({
+    it('send message and get response', (done) => {
+      iframe = document.getElementsByTagName('iframe')[0]
+      iframe.id = 'sendMessage3'
+
+      iframeResize({
         license: 'GPLv3',
         log,
         id: 'sendMessage3',
         warningTimeout: 1000,
+        checkOrigin: false,
         onReady: (iframe) => {
           iframe.iframeResizer.sendMessage('chkSendMsg')
-          console.log('>>> send message and get response')
         },
         onMessage: (messageData) => {
           expect(messageData.message).toBe('message: test string')
           done()
         },
       })[0]
+
+      // Mock the init message from child
+      mockMsgFromIFrame(iframe, 'init')
+
+      // Mock response from child after a short delay
+      setTimeout(() => {
+        mockMsgFromIFrame(iframe, 'message:"message: test string"')
+      }, 50)
     })
   })
 })

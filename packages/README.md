@@ -1,10 +1,10 @@
 # Packages
 
-For version 5 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking. These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
+For version 6 _iframe-resizer_ is split into two main packages to make it simpler to deploy across different domains and better support tree shaking. These two packages can be installed from NPM, or [downloaded](https://github.com/davidjbradshaw/iframe-resizer/raw/master/iframe-resizer.zip) as a zip file.
 
 ## [@iframe-resizer/parent](https://www.npmjs.com/package/@iframe-resizer/parent)
 
-The parent page package sets up an iframe for automatic content resizing. Their are versions of this package for several popular libraries and frameworks (see below).
+The parent page package sets up an iframe for automatic content resizing. There are versions of this package for several popular libraries and frameworks (see below).
 
 ## [@iframe-resizer/child](https://www.npmjs.com/package/@iframe-resizer/child)
 
@@ -12,17 +12,37 @@ This package needs loading into the iframe, where it will quietly wait for a mes
 
 # Frameworks and Libraries
 
-In addition to the two main packages, their are versions of the parent package for the following platforms.
+In addition to the two main packages, there are versions of the parent package for the following platforms.
 
 ## [@iframe-resizer/react](https://www.npmjs.com/package/@iframe-resizer/react)
 
 A **React** component for the parent page.
 
-### [@iframe-resizer/vue](https://www.npmjs.com/package/@iframe-resizer/vue)
+## [@iframe-resizer/vue](https://www.npmjs.com/package/@iframe-resizer/vue)
 
-A **Vue** component for the parent page.
+A **Vue 3** component for the parent page.
 
-### [@iframe-resizer/jquery](https://www.npmjs.com/package/@iframe-resizer/jquery)
+## [@iframe-resizer/angular](https://www.npmjs.com/package/@iframe-resizer/angular)
+
+An **Angular** standalone directive for the parent page.
+
+## [@iframe-resizer/svelte](https://www.npmjs.com/package/@iframe-resizer/svelte)
+
+A **Svelte** component for the parent page.
+
+## [@iframe-resizer/solid](https://www.npmjs.com/package/@iframe-resizer/solid)
+
+A **Solid.js** component for the parent page.
+
+## [@iframe-resizer/astro](https://www.npmjs.com/package/@iframe-resizer/astro)
+
+An **Astro** component for the parent page.
+
+## [@iframe-resizer/alpine](https://www.npmjs.com/package/@iframe-resizer/alpine)
+
+An **Alpine.js** plugin for the parent page.
+
+## [@iframe-resizer/jquery](https://www.npmjs.com/package/@iframe-resizer/jquery)
 
 A simple **jQuery** wrapper for the parent page.
 

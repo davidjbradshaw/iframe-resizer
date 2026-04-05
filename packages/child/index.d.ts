@@ -28,7 +28,11 @@ declare module '@iframe-resizer/child' {
       /**
        * Called before new size is set. Return a number to modify the new size.
        */
-      onBeforeResize?(newSize: number): number
+      onBeforeResize?(
+        newSize: number,
+        event: string,
+        direction: 'height' | 'width',
+      ): number
 
       /**
        * Receive message posted from the parent page with the iframe.iframeResizer.sendMessage() method.

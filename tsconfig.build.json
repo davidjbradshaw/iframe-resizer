@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "strict": false,
+    "declaration": false,
+    "noCheck": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+  }
+}

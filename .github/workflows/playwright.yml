@@ -1,7 +1,7 @@
 # This workflow runs Playwright e2e tests
 # For more information see: https://playwright.dev/docs/ci
 
-name: Playwright E2E Tests
+name: Playwright
 
 permissions:
   contents: read
@@ -15,36 +15,49 @@ on:
 jobs:
   test:
     timeout-minutes: 60
+    name: Run e2e tests
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
-        node-version: [20.x]
-    
+        node-version: [22.x]
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    
+
     - name: Install dependencies
       run: npm ci
-    
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium
-    
+
     - name: Build project
-      run: npm run rollup:debug
-    
+      run: TEST=1 npm run vite:prod
+
     - name: Copy built files to js-dist for e2e tests
       run: cp -r js/* js-dist/
-    
+
+    - name: Build React example for e2e tests
+      run: |
+        cd example/react
+        npm install
+        npm run build
+
+    - name: Build Vue example for e2e tests
+      run: |
+        cd example/vue
+        npm install
+        npm run build
+
     - name: Run Playwright tests
       run: npm run test:e2e
-    
+
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
@@ -52,7 +65,6 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
-    
     - name: Upload test screenshots
       uses: actions/upload-artifact@v4
       if: failure()

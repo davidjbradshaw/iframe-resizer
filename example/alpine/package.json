@@ -1,0 +1,20 @@
+{
+  "name": "alpine",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@iframe-resizer/alpine": "file:../../dist/alpine",
+    "@iframe-resizer/core": "file:../../dist/core",
+    "alpinejs": "^3.14.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "@rollup/plugin-replace": "^6.0.0"
+  }
+}

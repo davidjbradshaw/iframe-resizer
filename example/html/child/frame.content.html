@@ -23,7 +23,7 @@
     <script>
       window.iframeResizer = {
         onMessage(message) {
-          alert(message, parentIFrame.getId())
+          alert(message, parentIframe.getId())
         },
       }
     </script>
@@ -72,19 +72,19 @@
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.size(250);return false;"
-      >Size(250)</a
+      onclick="if ('parentIframe' in window) window.parentIframe.resize(250);return false;"
+      >Resize(250)</a
     >
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.autoResize(true);return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.autoResize(true);return false;"
       >autoResize(true)</a
     >
 
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.autoResize(false);return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.autoResize(false);return false;"
       >autoResize(false)</a
     >
 
@@ -104,14 +104,14 @@
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.sendMessage('Hello from the iFrame');return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.sendMessage('Hello from the iFrame');return false;"
       >Send Message</a
     >
     <a href="../width.html" target="_top">Width</a>
     &nbsp; &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.close();return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.close();return false;"
       >Close</a
     >
 
