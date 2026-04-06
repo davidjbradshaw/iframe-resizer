@@ -113,6 +113,65 @@ describe('child/observers/overflow deeper', () => {
     obs.disconnect()
   })
 
+  test('skips entries where rootBounds is null', () => {
+    const node = document.createElement('div')
+    document.body.append(node)
+    const cb = vi.fn()
+    const obs = createOverflowObserver(cb, {
+      side: 'bottom',
+      root: document.body,
+    })
+
+    obs.attachObservers([node])
+
+    // Entry with null rootBounds should be skipped (the !rootBounds guard)
+    const entry = {
+      boundingClientRect: { bottom: 200 },
+      rootBounds: null,
+      target: node,
+    }
+    globalThis.IntersectionObserver.prototype._cb([entry])
+
+    // No overflow attribute should be set since rootBounds is null
+    expect(node.hasAttribute(OVERFLOW_ATTR)).toBe(false)
+
+    obs.disconnect()
+  })
+
+  test('uses identity fallback when requestAnimationFrame is unavailable', () => {
+    // Temporarily remove requestAnimationFrame BEFORE creating the observer so
+    // `afterReflow` is set to the identity fallback `id` (not RAF)
+    const origRAFLocal = window.requestAnimationFrame
+    delete window.requestAnimationFrame
+
+    const node = document.createElement('div')
+    Object.defineProperty(node, 'offsetParent', { get: () => document.body })
+    document.body.append(node)
+    const cb = vi.fn()
+    const obs = createOverflowObserver(cb, {
+      side: 'bottom',
+      root: document.body,
+    })
+
+    obs.attachObservers([node])
+
+    // With `id` fallback, `afterReflow(fn)` returns fn without calling it — no throw
+    const entry = {
+      boundingClientRect: { bottom: 200 },
+      rootBounds: { bottom: 150 },
+      target: node,
+    }
+    expect(() => {
+      globalThis.IntersectionObserver.prototype._cb([entry])
+    }).not.toThrow()
+
+    // Overflow attribute should still be toggled even without RAF
+    expect(node.hasAttribute(OVERFLOW_ATTR)).toBe(true)
+
+    window.requestAnimationFrame = origRAFLocal
+    obs.disconnect()
+  })
+
   afterAll(() => {
     globalThis.IntersectionObserver = origIO
     globalThis.requestAnimationFrame = origRAF

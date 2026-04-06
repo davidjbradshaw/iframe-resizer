@@ -20,4 +20,14 @@ describe('core/setup/first-run', () => {
     expect(settings.i8.firstRun).toBe(false)
     delete settings.i8
   })
+
+  test('passes undefined to checkMode when mode argument is undefined', async () => {
+    const checkMode = (await import('../checks/mode')).default
+    settings.i9 = { firstRun: true }
+    firstRun('i9')
+
+    expect(checkMode).toHaveBeenCalledWith('i9', undefined)
+    expect(settings.i9.firstRun).toBe(false)
+    delete settings.i9
+  })
 })

@@ -13,7 +13,27 @@ vi.mock('@iframe-resizer/core', () => ({
 
 describe('jquery/plugin branch behavior', () => {
   beforeEach(() => {
+    vi.clearAllMocks()
     vi.resetModules()
+  })
+
+  test('warns when iframeResize is already assigned to jQuery.fn', async () => {
+    // In the plugin switch(true), `case window.jQuery.fn.iframeResize:` uses
+    // strict equality (===), so iframeResize must be exactly `true` (not just truthy)
+    // to match. This covers the branch that warns when it's already assigned.
+    window.jQuery = {
+      fn: {
+        iframeResize: true,
+      },
+    }
+
+    await import('./plugin')
+
+    const consoleCore = await import('../core/console')
+    expect(consoleCore.warn).toHaveBeenCalledWith(
+      '',
+      expect.stringContaining('already assigned'),
+    )
   })
 
   test('warns when jQuery is undefined', async () => {

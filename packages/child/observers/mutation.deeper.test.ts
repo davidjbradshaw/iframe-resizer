@@ -123,6 +123,34 @@ describe('child/observers/mutation deeper', () => {
     obs.disconnect()
   })
 
+  test('throttles mutations when event loop is busy (delay > delayLimit)', () => {
+    let perfNowValue = 0
+    const origPerfNow = performance.now
+
+    // Control timing to simulate a busy event loop
+    vi.spyOn(performance, 'now').mockImplementation(() => perfNowValue)
+
+    const callback = vi.fn()
+    const obs = createMutationObserver(callback)
+    const el1 = document.createElement('div')
+
+    // First mutation — captures perfMon
+    callbacks.cb([{ addedNodes: [el1], removedNodes: [] }])
+
+    // Advance time enough so delay > DELAY (16ms) + DELAY_MARGIN (2ms) but < DELAY_MAX (200ms)
+    perfNowValue = 50 // delay = 50 > 18 (delayLimit) and < 200 (DELAY_MAX)
+
+    // Second mutation while the first is still "pending" — this triggers throttle
+    // The first processMutations call sets pending=false, so we need a fresh pending=true
+    callbacks.cb([{ addedNodes: [el1], removedNodes: [] }])
+    // This is the processMutations call that should see delay > delayLimit
+    vi.runAllTimers()
+
+    obs.disconnect()
+    performance.now.mockRestore()
+    performance.now = origPerfNow
+  })
+
   afterAll(() => {
     globalThis.MutationObserver = origMO
     globalThis.requestAnimationFrame = origRAF

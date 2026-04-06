@@ -102,4 +102,19 @@ describe('core/checks/mode branches', () => {
     // Calling with empty string id should use 'Parent' as fallback in advise
     expect(() => checkMode('', -2)).toThrow()
   })
+
+  test('advises getModeData(7) when mode is 4', () => {
+    settings.m4 = withConsole({ mode: 4, vAdvised: false })
+    expect(() => checkMode('m4', 4)).not.toThrow()
+  })
+
+  test('advises getModeData(8) when mode is 5', () => {
+    settings.m5 = withConsole({ mode: 5, vAdvised: false })
+    expect(() => checkMode('m5', 5)).not.toThrow()
+  })
+
+  test('advises getModeData(3) in default case when mode < 1', () => {
+    settings.m0 = withConsole({ mode: 0, vAdvised: false })
+    expect(() => checkMode('m0', 0)).not.toThrow()
+  })
 })

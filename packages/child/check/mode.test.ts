@@ -86,4 +86,25 @@ describe('child/check/mode', () => {
     // vInfo should not be called since session already has the version
     expect(childConsole.vInfo).not.toHaveBeenCalled()
   })
+
+  it('skips else-if block when version is defined but mode did not increase (oMode <= -1)', () => {
+    // pMode=1, cMode=0 → mode=1; oMode=-1; version is defined → else-if is false
+    // The else-if condition is: !isDef(version) || (oMode > -1 && mode > oMode)
+    // With isDef(version)=true and oMode=-1 → both sides false → branch not taken
+    checkMode({ key: 'a', key2: 'b', mode: -1, version: '1.0.0' })
+
+    expect(childConsole.vInfo).not.toHaveBeenCalled()
+    expect(childConsole.advise).not.toHaveBeenCalled()
+  })
+
+  it('does not advise for mode >= 2 (skips advise(getModeData(3)) line)', () => {
+    // Force mode = 2 (>= 2 means advise(getModeData(3)) on line 36 is NOT called)
+    commonMode.default.mockReturnValueOnce(2).mockReturnValueOnce(0)
+
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+
+    expect(childConsole.vInfo).toHaveBeenCalled()
+    // advise for mode < 2 should NOT have been called
+    expect(childConsole.advise).not.toHaveBeenCalled()
+  })
 })

@@ -58,4 +58,23 @@ describe('child/check/overflow', () => {
     // Safari method might not exist; hasOverflowUpdated can be false
     expect(typeof hasOverflowUpdated).toBe('boolean')
   })
+
+  it('returns hasOverflowUpdated=false when symmetricDifference is unavailable', () => {
+    // Simulate environments (e.g. Safari) without Set.prototype.symmetricDifference
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native
+    const orig = Set.prototype.symmetricDifference
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native
+    delete Set.prototype.symmetricDifference
+
+    const el = document.createElement('div')
+    el.dataset.iframeOverflowed = ''
+    document.body.append(el)
+
+    const { hasOverflowUpdated } = checkOverflow()
+
+    expect(hasOverflowUpdated).toBe(false)
+
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native, no-extend-native
+    if (orig) Set.prototype.symmetricDifference = orig
+  })
 })

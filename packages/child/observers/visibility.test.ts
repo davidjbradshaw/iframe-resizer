@@ -66,4 +66,14 @@ describe('child/observers/visibility', () => {
     ])
     expect(cb).toHaveBeenCalledWith(true)
   })
+
+  test('defaults to false when entries array is empty', () => {
+    const cb = vi.fn()
+    visibilityObserver(cb)
+
+    // Empty array: entries.at(-1) is undefined, so isIntersecting is undefined, and ?? false applies
+    observerCallback([])
+
+    expect(cb).toHaveBeenCalledWith(false)
+  })
 })

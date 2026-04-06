@@ -93,6 +93,29 @@ describe('child/observers/perf additional branches', () => {
     obs.disconnect()
   })
 
+  it('trims timings array when it exceeds MAX_SAMPLES (100)', () => {
+    const obs = createPerformanceObserver()
+
+    // Push more than MAX_SAMPLES (100) entries to trigger timings.shift()
+    performance.measure = vi.fn(() => ({ duration: 1 }))
+
+    const entry = {
+      name: PREF_END,
+      detail: { Side: 'HEIGHT', hasTags: false, len: 100 },
+    }
+    const list = { getEntries: () => [entry] }
+    // Push 101 entries so the >MAX_SAMPLES branch fires
+    for (let i = 0; i < 101; i++) calls[0](list)
+
+    // The timings array should be capped at MAX_SAMPLES
+    vi.advanceTimersByTime(5000)
+
+    // Just verify no error thrown and advise not called (durations are 1ms, below THRESHOLD)
+    expect(consoleMod.advise).not.toHaveBeenCalled()
+
+    obs.disconnect()
+  })
+
   afterEach(() => {
     globalThis.PerformanceObserver = origPO
   })

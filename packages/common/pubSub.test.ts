@@ -66,4 +66,23 @@ describe('common/pubSub', () => {
     // Verify fn1 is still there
     expect(pubSub.events[evt]).toHaveLength(1)
   })
+
+  test('addListener accumulates multiple listeners on same event', () => {
+    const evt = 'update'
+    const calls: string[] = []
+    const fn1 = (): void => {
+      calls.push('fn1')
+    }
+    const fn2 = (): void => {
+      calls.push('fn2')
+    }
+
+    pubSub.addListener(evt, fn1)
+    // Second addListener skips creating the array (covers `if (!this.has(event))` false branch)
+    pubSub.addListener(evt, fn2)
+
+    expect(pubSub.events[evt]).toHaveLength(2)
+    pubSub.emit(evt)
+    expect(calls).toEqual(['fn1', 'fn2'])
+  })
 })

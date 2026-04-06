@@ -173,4 +173,48 @@ describe('child/check/blocking-css', () => {
     window.getComputedStyle = originalGetComputedStyle
     document.documentElement.style.minWidth = ''
   })
+
+  test('reports external stylesheet as source type when ownerNode is not a STYLE element', () => {
+    // Mock getComputedStyle so hasBlockingCSS() returns true for min-width
+    const originalGetComputedStyle = window.getComputedStyle
+    window.getComputedStyle = () =>
+      ({
+        getPropertyValue: (prop) => (prop === 'min-width' ? '200px' : ''),
+      }) as CSSStyleDeclaration
+
+    // Simulate a <link> stylesheet (ownerNode.tagName !== 'STYLE')
+    const linkNode = document.createElement('link')
+    linkNode.href = 'https://cdn.example.com/styles.css'
+
+    const mockStyleSheet = {
+      ownerNode: linkNode,
+      href: 'https://cdn.example.com/styles.css',
+      cssRules: [
+        {
+          selectorText: 'html',
+          style: { 'min-width': '200px' },
+        },
+      ],
+    }
+
+    const originalStyleSheets = document.styleSheets
+    Object.defineProperty(document, 'styleSheets', {
+      value: [mockStyleSheet],
+      configurable: true,
+    })
+
+    checkBlockingCSS()
+
+    expect(consoleMod.advise).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'stylesheet (https://cdn.example.com/styles.css)',
+      ),
+    )
+
+    Object.defineProperty(document, 'styleSheets', {
+      value: originalStyleSheets,
+      configurable: true,
+    })
+    window.getComputedStyle = originalGetComputedStyle
+  })
 })
