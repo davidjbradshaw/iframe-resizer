@@ -125,7 +125,6 @@ describe('child/observers/mutation deeper', () => {
 
   test('throttles mutations when event loop is busy (delay > delayLimit)', () => {
     let perfNowValue = 0
-    const origPerfNow = performance.now
 
     // Control timing to simulate a busy event loop
     vi.spyOn(performance, 'now').mockImplementation(() => perfNowValue)
@@ -148,7 +147,6 @@ describe('child/observers/mutation deeper', () => {
 
     obs.disconnect()
     performance.now.mockRestore()
-    performance.now = origPerfNow
   })
 
   afterAll(() => {
