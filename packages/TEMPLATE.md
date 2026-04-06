@@ -7,7 +7,7 @@
 This package is part of the __[iframe-resizer](https://iframe-resizer.com)__ library, which automatically resizes the height and width of both same-origin and cross-origin iframes to match their content. It also includes a range of features designed to address common issues associated with using iframes.
 
 
-__For more information, visit [iframe-resizer.com](https://iframe-resizer.com).__
+__For more information, please visit [iframe-resizer.com](https://iframe-resizer.com).__
 
 ## Install
 
