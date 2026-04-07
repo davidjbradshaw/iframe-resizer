@@ -20,7 +20,9 @@ export function getParentProps(callback: (info: any) => void): () => void {
   }
 }
 
-export function getParentProperties(callback: (info: any) => void): void {
+export function getParentProperties(
+  callback: (info: any) => void,
+): ReturnType<typeof getParentProps> {
   deprecateMethod('getParentProperties()', 'getParentProps()')
   return getParentProps(callback)
 }
