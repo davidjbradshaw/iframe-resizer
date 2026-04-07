@@ -54,7 +54,7 @@ it('initializes on first run, logs and sends init size', async () => {
   const sendSize = (await import('./send/size')).default
 
   expect(state.firstRun).toBe(true)
-  init({})
+  init([])
 
   expect(sendSize).toHaveBeenCalled()
 })
@@ -86,6 +86,6 @@ it('returns early when not first run', async () => {
   state.firstRun = false
   sendSize.mockClear()
 
-  init({})
+  init([])
   expect(sendSize).not.toHaveBeenCalled()
 })

@@ -1,5 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 
+let overflowCallback: () => void
+
 vi.mock('../check/overflow', () => ({
   default: vi.fn(() => ({
     hasOverflowUpdated: true,
@@ -8,7 +10,10 @@ vi.mock('../check/overflow', () => ({
 }))
 vi.mock('../console', () => ({ info: vi.fn() }))
 vi.mock('../observers/overflow', () => ({
-  default: vi.fn(() => ({ attachObservers: vi.fn() })),
+  default: vi.fn((cb) => {
+    overflowCallback = cb
+    return { attachObservers: vi.fn() }
+  }),
 }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({ default: { calculateHeight: true } }))
@@ -16,7 +21,6 @@ vi.mock('../values/state', () => ({ default: { hasOverflow: false } }))
 vi.mock('./observers', () => ({ default: {} }))
 
 const createOverflowObservers = (await import('./overflow')).default
-const { info } = await import('../console')
 const sendSize = (await import('../send/size')).default
 const observers = (await import('./observers')).default
 
@@ -28,9 +32,12 @@ describe('child/observed/overflow', () => {
     expect(observers.overflow).toBeDefined()
     expect(api.attachObservers).toHaveBeenCalledWith(nodeList)
 
-    // simulate observed event by calling internal observed through checkOverflow mock path
-    // just call again to drive branch where hasOverflowUpdated true
-    expect(info).not.toHaveBeenCalledWith('No overflow detected')
-    sendSize('overflow', 'Overflow updated')
+    // invoke the callback the observer would trigger
+    overflowCallback()
+
+    expect(sendSize).toHaveBeenCalledWith(
+      'overflowObserver',
+      'Overflow updated',
+    )
   })
 })
