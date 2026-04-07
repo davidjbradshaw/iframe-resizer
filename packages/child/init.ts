@@ -70,8 +70,6 @@ function startIframeResizerChild({
   const bothDirections = checkBoth(settings)
 
   const setup = [
-    () => checkVersion(settings),
-    () => checkMode(settings),
     checkIgnoredElements,
     checkCrossDomain,
     checkHeightMode,
@@ -110,6 +108,8 @@ function startIframeResizerChild({
     endAutoGroup,
   ]
 
+  checkVersion(settings)
+  checkMode(settings)
   isolate(setup)
   ready(onReady)
 }
