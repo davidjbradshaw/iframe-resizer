@@ -10,9 +10,9 @@ export const DELAY_MARGIN = 2
 export const DELAY_MAX = 200
 const MUTATION = 'Mutation'
 
-export const addedNodes = new Set()
-export const removedNodes = new Set()
-export const removedAddedNodes = new Set()
+export const addedNodes = new Set<Node>()
+export const removedNodes = new Set<Node>()
+export const removedAddedNodes = new Set<Node>()
 export const newMutations: MutationRecord[][] = []
 
 const config = {

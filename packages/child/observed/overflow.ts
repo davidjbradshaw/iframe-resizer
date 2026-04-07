@@ -30,7 +30,7 @@ function overflowObserved(): void {
 }
 
 export default function createOverflowObservers(
-  nodeList: NodeListOf<Element>,
+  nodeList: Iterable<Element>,
 ): ReturnType<typeof createOverflowObserver> {
   const overflowOptions = {
     root: document.documentElement,

@@ -26,7 +26,7 @@ vi.mock('./all', () => ({
 
 describe('child/size/max-element unit tests', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.restoreAllMocks()
     vi.mocked(getAllElements).mockReturnValue(
       [] as unknown as NodeListOf<Element>,
     )

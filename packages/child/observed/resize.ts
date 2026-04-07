@@ -11,7 +11,7 @@ function resizeObserved(entries: ResizeObserverEntry[]): void {
 }
 
 export default function createResizeObservers(
-  nodeList: NodeListOf<Element>,
+  nodeList: Iterable<Element>,
 ): ReturnType<typeof createResizeObserver> {
   observers.resize = createResizeObserver(resizeObserved)
   observers.resize.attachObserverToNonStaticElements(nodeList)
