@@ -39,6 +39,7 @@ it('initializes on first run, logs and sends init size', async () => {
   vi.mock('./read/from-page', () => ({
     default: vi.fn(() => ({ bodyBackground: '', bodyPadding: '' })),
   }))
+  vi.mock('./check/mode', () => ({ default: vi.fn() }))
   vi.mock('./send/size', () => ({ default: vi.fn() }))
   vi.mock('./utils/isolate', () => ({
     default: (arr) =>

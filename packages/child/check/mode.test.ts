@@ -5,7 +5,7 @@ import * as utils from '../../common/utils'
 import * as childConsole from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
-import checkMode from './mode'
+import checkMode, { showVersion } from './mode'
 
 describe('child/check/mode', () => {
   beforeEach(() => {
@@ -46,6 +46,7 @@ describe('child/check/mode', () => {
   })
 
   it('logs vInfo and sets session value when version is undefined', () => {
+    commonMode.default.mockReturnValueOnce(0).mockReturnValueOnce(0)
     checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
 
     expect(childConsole.vInfo).toHaveBeenCalled()
@@ -55,7 +56,8 @@ describe('child/check/mode', () => {
   it('advises when oMode > -1 and mode > oMode', () => {
     // Set session to something other than VERSION
     sessionStorage.setItem('ifr', 'old-version')
-
+    // Need mode >= 6 to hit default (showVersion), with oMode > -1 and mode > oMode
+    commonMode.default.mockReturnValueOnce(6).mockReturnValueOnce(0)
     checkMode({ key: 'a', key2: 'b', mode: 2, version: undefined })
 
     expect(childConsole.vInfo).toHaveBeenCalled()
@@ -63,10 +65,10 @@ describe('child/check/mode', () => {
   })
 
   it('advises when mode < 2 and version not defined', () => {
-    // Force mode to be 1 (< 2)
-    commonMode.default.mockReturnValueOnce(1).mockReturnValueOnce(0)
+    // mode=0 hits default case → showVersion, where mode < 2 triggers advise(getModeData(3))
+    commonMode.default.mockReturnValueOnce(0).mockReturnValueOnce(0)
 
-    checkMode({ key: 'a', key2: 'b', mode: 1, version: undefined })
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
 
     expect(childConsole.advise).toHaveBeenCalled()
     expect(childConsole.vInfo).toHaveBeenCalled()
@@ -98,13 +100,121 @@ describe('child/check/mode', () => {
   })
 
   it('does not advise for mode >= 2 (skips advise(getModeData(3)) line)', () => {
-    // Force mode = 2 (>= 2 means advise(getModeData(3)) on line 36 is NOT called)
-    commonMode.default.mockReturnValueOnce(2).mockReturnValueOnce(0)
+    // mode >= 6 hits default case → showVersion, where mode >= 2 skips advise(getModeData(3))
+    commonMode.default.mockReturnValueOnce(6).mockReturnValueOnce(0)
 
     checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
 
     expect(childConsole.vInfo).toHaveBeenCalled()
     // advise for mode < 2 should NOT have been called
     expect(childConsole.advise).not.toHaveBeenCalled()
+  })
+
+  it('calls advise with getModeData(6) for modes 1-3 when version is not defined', () => {
+    commonMode.default.mockReturnValueOnce(3).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+    expect(childConsole.advise).toHaveBeenCalledWith('data6')
+  })
+
+  it('calls advise with getModeData(7) for mode 4 when version is not defined', () => {
+    commonMode.default.mockReturnValueOnce(4).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+    expect(childConsole.advise).toHaveBeenCalledWith('data7')
+  })
+
+  it('calls advise with getModeData(8) for mode 5 when version is not defined', () => {
+    commonMode.default.mockReturnValueOnce(5).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+    expect(childConsole.advise).toHaveBeenCalledWith('data8')
+  })
+
+  it('does not advise for modes 1-5 when version is defined', () => {
+    commonMode.default.mockReturnValueOnce(3).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: '1.0.0' })
+    expect(childConsole.advise).not.toHaveBeenCalled()
+  })
+
+  it('sets settings.mode for modes 1-5', () => {
+    commonMode.default.mockReturnValueOnce(4).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+    expect(settings.mode).toBe(4)
+  })
+
+  it('does not throw for modes 1-5 when not first run', () => {
+    state.firstRun = false
+    commonMode.default.mockReturnValueOnce(3).mockReturnValueOnce(0)
+    expect(() =>
+      checkMode({ key: 'a', key2: 'b', mode: 0, version: '1.0.0' }),
+    ).not.toThrow()
+    expect(childConsole.advise).toHaveBeenCalled()
+  })
+
+  it('throws when mode < 0 and version is undefined', () => {
+    commonMode.default.mockReturnValueOnce(-1).mockReturnValueOnce(-1)
+    expect(() =>
+      checkMode({ key: 'a', key2: 'b', mode: -2, version: undefined }),
+    ).toThrow()
+  })
+
+  it('sets settings.mode for mode 0', () => {
+    commonMode.default.mockReturnValueOnce(0).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+    expect(settings.mode).toBe(0)
+  })
+
+  it('sets settings.mode for modes >= 6', () => {
+    commonMode.default.mockReturnValueOnce(8).mockReturnValueOnce(0)
+    checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
+    expect(settings.mode).toBe(8)
+  })
+
+  it('does not set settings.mode when mode < 0', () => {
+    commonMode.default.mockReturnValueOnce(-1).mockReturnValueOnce(-1)
+    try {
+      checkMode({ key: 'a', key2: 'b', mode: -2, version: undefined })
+    } catch {
+      /* expected */
+    }
+    expect(settings.mode).toBe(0)
+  })
+
+  describe('showVersion', () => {
+    it('calls vInfo and sets session when version is undefined', () => {
+      showVersion(6, 0)
+      expect(childConsole.vInfo).toHaveBeenCalled()
+      expect(sessionStorage.getItem('ifr')).not.toBeNull()
+    })
+
+    it('calls vInfo when version is defined but mode increased', () => {
+      showVersion(6, 2, '1.0.0')
+      expect(childConsole.vInfo).toHaveBeenCalled()
+    })
+
+    it('skips when version is defined and mode did not increase', () => {
+      showVersion(6, 6, '1.0.0')
+      expect(childConsole.vInfo).not.toHaveBeenCalled()
+    })
+
+    it('skips when version is defined and oMode <= -1', () => {
+      showVersion(6, -1, '1.0.0')
+      expect(childConsole.vInfo).not.toHaveBeenCalled()
+    })
+
+    it('calls advise(getModeData(3)) when mode < 2', () => {
+      showVersion(1, 0)
+      expect(childConsole.advise).toHaveBeenCalledWith('data3')
+    })
+
+    it('does not call advise when mode >= 2', () => {
+      showVersion(6, 0)
+      expect(childConsole.advise).not.toHaveBeenCalled()
+    })
+
+    it('returns early when session matches VERSION', () => {
+      showVersion(6, 0)
+      childConsole.vInfo.mockClear()
+      showVersion(6, 0)
+      expect(childConsole.vInfo).not.toHaveBeenCalled()
+    })
   })
 })

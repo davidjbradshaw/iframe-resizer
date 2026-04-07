@@ -5,7 +5,11 @@ import { advise, purge, vInfo } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
 
-function showVersion(mode: number, oMode: number, version?: string): void {
+export function showVersion(
+  mode: number,
+  oMode: number,
+  version?: string,
+): void {
   if (!isDef(version) || (oMode > -1 && mode > oMode)) {
     if (sessionStorage.getItem('ifr') === VERSION) return
     vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
@@ -55,12 +59,14 @@ export default function ({
       break
 
     default:
-      showVersion(mode, oMode, version)
+      break
   }
+
+  showVersion(mode, oMode, version)
 
   if (!isDef(version) || !state.firstRun) {
     if (modeData) advise(modeData)
-    if (!state.firstRun)
+    if (mode < 0)
       // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw modeData.split('<br>')[0].replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
   }
