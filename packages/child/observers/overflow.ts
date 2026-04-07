@@ -16,8 +16,9 @@ const logRemoveOverflow = createLogCounter(OVERFLOW, false)
 const logNewlyObserved = createLogNewlyObserved(OVERFLOW)
 const warnAlreadyObserved = createWarnAlreadyObserved(OVERFLOW)
 
-const isHidden = (node: HTMLElement): boolean =>
-  node.hidden || node.offsetParent === null || node.style.display === NONE
+const isHidden = (node: Element): boolean =>
+  node instanceof HTMLElement &&
+  (node.hidden || node.offsetParent === null || node.style.display === NONE)
 
 const createOverflowObserver = (
   callback: (mutated?: boolean) => void,
