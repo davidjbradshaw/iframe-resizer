@@ -17,3 +17,5 @@ example-test
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+example/astro/.astro/
