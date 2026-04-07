@@ -36,7 +36,7 @@ const logRemovedAdded = metaCreateDebugObserved('removed (added)')(MUTATION)
 
 const shouldSkip = (node: Node): boolean =>
   node.nodeType !== Node.ELEMENT_NODE ||
-  IGNORE_TAGS.has(node.tagName.toLowerCase())
+  IGNORE_TAGS.has((node as Element).tagName.toLowerCase())
 
 function addedMutation(mutation: MutationRecord): void {
   const added = mutation.addedNodes

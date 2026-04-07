@@ -49,7 +49,9 @@ const createOverflowObserver = (
       const { boundingClientRect, rootBounds, target } = entry
       if (!rootBounds) continue // guard
       const edge = boundingClientRect[side]
-      const hasOverflow = isOverflowed(edge, rootBounds) && !isHidden(target)
+      const hasOverflow =
+        isOverflowed(edge, rootBounds) &&
+        !(target instanceof HTMLElement && isHidden(target))
 
       setOverflow(target, hasOverflow)
     }

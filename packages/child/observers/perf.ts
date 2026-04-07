@@ -81,7 +81,7 @@ function perfObserver(list: PerformanceObserverEntryList): void {
         PREF_START,
         PREF_END,
       )
-      detail = entry.detail
+      detail = (entry as PerformanceMark).detail
       timings.push(duration)
       if (timings.length > MAX_SAMPLES) timings.shift()
     } catch {

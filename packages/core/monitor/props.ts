@@ -3,7 +3,7 @@ import { sendInfoToIframe, startInfoMonitor, stopInfoMonitor } from './common'
 
 export function getParentProps(iframe: HTMLIFrameElement): string {
   const { scrollWidth, scrollHeight } = document.documentElement
-  const visualViewport =
+  const visualViewport: Partial<VisualViewport> =
     typeof window !== 'undefined' && window.visualViewport
       ? window.visualViewport
       : {}
