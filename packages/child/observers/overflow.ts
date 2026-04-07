@@ -18,7 +18,7 @@ const warnAlreadyObserved = createWarnAlreadyObserved(OVERFLOW)
 
 const isHidden = (node: Element): boolean =>
   node instanceof HTMLElement &&
-  (node.hidden || node.offsetParent === null || node.style.display === NONE)
+  (!!node.hidden || node.offsetParent === null || node.style.display === NONE)
 
 const createOverflowObserver = (
   callback: (mutated?: boolean) => void,
@@ -35,15 +35,18 @@ const createOverflowObserver = (
     threshold: 1,
   }
 
-  const afterReflow = window?.requestAnimationFrame || id
+  const afterReflow = (window?.requestAnimationFrame || id) as (
+    fn: () => void,
+  ) => void
   const emitOverflowDetected = (mutated: boolean = false): void =>
     callback(mutated)
 
   const isOverflowed = (edge: number, rootBounds: DOMRectReadOnly): boolean =>
     edge === 0 || edge > rootBounds[side]
 
-  const setOverflow = (node: Element, hasOverflow: boolean): void =>
+  const setOverflow = (node: Element, hasOverflow: boolean): void => {
     node.toggleAttribute(OVERFLOW_ATTR, hasOverflow)
+  }
 
   function observation(entries: IntersectionObserverEntry[]): void {
     for (const entry of entries) {
@@ -69,7 +72,7 @@ const createOverflowObserver = (
     let counter = 0
 
     for (const node of nodeList) {
-      if (node.nodeType !== Node.ELEMENT_NODE) continue
+      if (!(node instanceof Element)) continue
       if (observed.has(node)) {
         alreadyObserved.add(node)
         continue

@@ -1,7 +1,6 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import {
-  BASE,
   EVENT_CANCEL_TIMER,
   IN_PAGE_LINK,
   SCROLL_TO_OFFSET,
@@ -23,8 +22,8 @@ export function getElementPosition(el: Element): { x: number; y: number } {
   const pagePosition = getPagePosition()
 
   return {
-    x: parseInt(elPosition.left, BASE) + parseInt(pagePosition.x, BASE),
-    y: parseInt(elPosition.top, BASE) + parseInt(pagePosition.y, BASE),
+    x: Math.round(elPosition.left + pagePosition.x),
+    y: Math.round(elPosition.top + pagePosition.y),
   }
 }
 

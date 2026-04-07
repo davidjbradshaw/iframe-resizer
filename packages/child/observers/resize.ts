@@ -25,7 +25,7 @@ export function attachObserverToNonStaticElements(
   let counter = 0
 
   for (const node of nodeList) {
-    if (node.nodeType !== Node.ELEMENT_NODE) continue
+    if (!(node instanceof Element)) continue
 
     const position = getComputedStyle(node)?.position
     if (position === '' || position === 'static') continue

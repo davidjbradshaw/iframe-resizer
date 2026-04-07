@@ -16,6 +16,7 @@
     "packages/angular/**/*.ts",
     "packages/astro/**/*.ts",
     "packages/solid/**/*.ts",
+    "packages/solid/**/*.tsx",
     "packages/common/**/*.ts",
     "packages/core/**/*.ts",
     "packages/child/**/*.ts",

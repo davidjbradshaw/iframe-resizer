@@ -1,7 +1,7 @@
 import { AUTO, NONE } from '../../common/consts'
 import { advise, log } from '../console'
 
-const nodes = (): Element[] => [document.documentElement, document.body]
+const nodes = (): HTMLElement[] => [document.documentElement, document.body]
 const properties = ['min-height', 'min-width', 'max-height', 'max-width']
 
 const blockedStyleSheets = new Set()
@@ -46,19 +46,23 @@ export function getStyleSheetCSSPropertyValue(
   for (const stylesheet of document.styleSheets) {
     try {
       for (const rule of stylesheet.cssRules || []) {
-        if (rule.selectorText && node.matches(rule.selectorText)) {
-          const ruleValue = rule.style[property]
-          if (ruleValue) {
-            const sourceType =
-              stylesheet.ownerNode.tagName === 'STYLE'
-                ? 'an inline <style> block'
-                : `stylesheet (${stylesheet.href})`
+        if (!('selectorText' in rule)) continue
 
-            return {
-              source: sourceType,
-              value: ruleValue,
-            }
-          }
+        const styleRule = rule as CSSStyleRule
+        if (!node.matches(styleRule.selectorText)) continue
+
+        const ruleValue = styleRule.style[property]
+        if (!ruleValue) continue
+
+        const { ownerNode } = stylesheet
+        const sourceType =
+          ownerNode instanceof Element && ownerNode.tagName === 'STYLE'
+            ? 'an inline <style> block'
+            : `stylesheet (${stylesheet.href})`
+
+        return {
+          source: sourceType,
+          value: ruleValue,
         }
       }
     } catch (error) {
