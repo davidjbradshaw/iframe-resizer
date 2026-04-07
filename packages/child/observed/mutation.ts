@@ -8,9 +8,10 @@ import state from '../values/state'
 import observers from './observers'
 
 const getCombinedElementLists = (nodeList: Set<Node>): Set<Element> => {
-  const elements = new Set()
+  const elements = new Set<Element>()
 
   for (const node of nodeList) {
+    if (!(node instanceof Element)) continue
     elements.add(node)
     for (const element of getAllElements(node)) elements.add(element)
   }

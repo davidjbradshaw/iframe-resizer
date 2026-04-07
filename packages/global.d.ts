@@ -22,14 +22,14 @@ declare global {
     parentIFrame: any
 
     // Same-origin message bridge
-    iframeParentListener: (data: any) => void
-    iframeChildListener: (data: string) => void
+    iframeParentListener?: (data: any) => void
+    iframeChildListener?: (data: string) => void
 
     // Test hook
-    mockMsgListener: (...args: any[]) => any
+    mockMsgListener?: (...args: any[]) => any
 
     // AMD
-    define: any
+    define?: any
 
     // jQuery
     jQuery: any

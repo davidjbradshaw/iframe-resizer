@@ -19,7 +19,7 @@ export interface IframeResizerProps {
 /** Methods exposed via defineExpose, accessible on template refs */
 export type IframeResizerMethods = Pick<IFrameObject, 'moveToAnchor' | 'resize' | 'sendMessage'>
 
-export interface IframeResizerEmits {
+export type IframeResizerEmits = {
   onReady: (...args: any[]) => void
   onMessage: (...args: any[]) => void
   onResized: (...args: any[]) => void

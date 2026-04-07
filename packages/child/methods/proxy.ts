@@ -20,7 +20,7 @@ export default function deprecationProxy(
         warnedProps.add(prop)
       }
 
-      const value = target[prop]
+      const value = target[prop as string]
       const descriptor = Object.getOwnPropertyDescriptor(target, prop)
 
       // If property is non-configurable and non-writable, return the actual value

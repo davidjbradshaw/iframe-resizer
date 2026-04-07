@@ -26,6 +26,7 @@
     "vite:beta": "BETA=1 node build-scripts/build-all.js",
     "vite:debug": "DEBUG=1 node build-scripts/build-all.js",
     "vite:watch": "WATCH=1 ROLLUP_WATCH=1 DEBUG=1 node build-scripts/build-all.js",
+    "typecheck": "tsc --noEmit",
     "vite:test": "npm run eslint:fix && TEST=1 node build-scripts/build-all.js",
     "vite:test:ci": "TEST=1 node build-scripts/build-all.js",
     "vite:prod": "npm run eslint:fix && node build-scripts/build-all.js",

@@ -176,9 +176,12 @@
       }
     },
     {
-      "files": ["packages/solid/**/*.tsx", "packages/solid/**/*.jsx"],
+      "files": ["packages/solid/**/*.ts", "packages/solid/**/*.tsx", "packages/solid/**/*.jsx"],
       "plugins": ["solid"],
       "extends": ["plugin:solid/typescript"],
+      "parserOptions": {
+        "project": "./packages/solid/tsconfig.json"
+      },
       "rules": {
         "react/react-in-jsx-scope": 0,
         "react/require-default-props": 0,

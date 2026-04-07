@@ -31,7 +31,7 @@ function iframeResizerChild(): void {
   try {
     // eslint-disable-next-line no-restricted-globals
     if (top?.document?.getElementById('banner')) {
-      state.win = {}
+      state.win = {} as any
 
       // Create test hooks
       window.mockMsgListener = mockMsgListener
