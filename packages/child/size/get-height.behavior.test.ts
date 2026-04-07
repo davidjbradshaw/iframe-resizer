@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import settings from '../values/settings'
 import getHeight from './get-height'
+
+vi.mock('./max-element', () => ({ default: vi.fn(() => 42) }))
 
 describe('child/size/get-height behavior', () => {
   it('enabled() reflects settings.calculateHeight', () => {
@@ -14,5 +16,9 @@ describe('child/size/get-height behavior', () => {
   it('getOffset() returns settings.offsetHeight', () => {
     settings.offsetHeight = 123
     expect(getHeight.getOffset()).toBe(123)
+  })
+
+  it('taggedElement() calls getMaxElement', () => {
+    expect(getHeight.taggedElement()).toBe(42)
   })
 })

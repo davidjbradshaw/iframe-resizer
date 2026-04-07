@@ -126,6 +126,27 @@ describe('Svelte IframeResizer lifecycle', () => {
     unmount(component)
   })
 
+  it('onBeforeClose returns false and warns', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+    })
+    flushSync()
+
+    const result = capturedOptions.onBeforeClose()
+    expect(result).toBe(false)
+    unmount(component)
+  })
+
+  it('logs when log option is set', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: true },
+    })
+    flushSync()
+    unmount(component)
+  })
+
   it('dispatches ready event', () => {
     const events = []
     const component = mount(IframeResizer, {

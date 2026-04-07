@@ -13,13 +13,13 @@ export const PREF_START = '--ifr-start'
 export const PREF_END = '--ifr-end'
 const PREF_MEASURE = '--ifr-measure'
 
-const timings: number[] = []
+export const timings: number[] = []
 
 let detail: any = {}
 let oldAverage = 0
 let timingCheckId: ReturnType<typeof setInterval>
 
-function clearPerfMarks(): void {
+export function clearPerfMarks(): void {
   try {
     performance.clearMarks(PREF_START)
     performance.clearMarks(PREF_END)
@@ -29,7 +29,7 @@ function clearPerfMarks(): void {
   }
 }
 
-function startTimingCheck(): void {
+export function startTimingCheck(): void {
   timingCheckId = setInterval(() => {
     if (timings.length < MIN_SAMPLES) return
     if (detail.hasTags && detail.len < 25) return
@@ -72,7 +72,7 @@ To improve performance add the <b>data-iframe-size</> attribute to the ${detail.
   }, PERF_CHECK_INTERVAL)
 }
 
-function perfObserver(list: PerformanceObserverEntryList): void {
+export function perfObserver(list: PerformanceObserverEntryList): void {
   list.getEntries().forEach((entry) => {
     if (entry.name !== PREF_END) return
     try {

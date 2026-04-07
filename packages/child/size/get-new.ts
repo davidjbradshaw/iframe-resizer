@@ -5,7 +5,7 @@ import getWidth from './get-width'
 
 type Direction = typeof HEIGHT | typeof WIDTH
 
-function callOnBeforeResize(
+export function callOnBeforeResize(
   newSize: number,
   event: string,
   direction: Direction,

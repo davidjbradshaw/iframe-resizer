@@ -124,25 +124,32 @@ describe('child/observers/mutation deeper', () => {
   })
 
   test('throttles mutations when event loop is busy (delay > delayLimit)', () => {
-    let perfNowValue = 0
+    // Defer RAF so we can advance time between mutation and processing
+    let rafCb: () => void
+    globalThis.requestAnimationFrame = (cb) => {
+      rafCb = cb
+      return 1
+    }
 
-    // Control timing to simulate a busy event loop
-    vi.spyOn(performance, 'now').mockImplementation(() => perfNowValue)
+    let nowValue = 0
+    vi.spyOn(performance, 'now').mockImplementation(() => nowValue)
 
     const callback = vi.fn()
     const obs = createMutationObserver(callback)
     const el1 = document.createElement('div')
 
-    // First mutation — captures perfMon
+    // Trigger mutation — perfMon set to 0
     callbacks.cb([{ addedNodes: [el1], removedNodes: [] }])
 
-    // Advance time enough so delay > DELAY (16ms) + DELAY_MARGIN (2ms) but < DELAY_MAX (200ms)
-    perfNowValue = 50 // delay = 50 > 18 (delayLimit) and < 200 (DELAY_MAX)
+    // Simulate busy event loop before RAF fires
+    nowValue = 50
 
-    // Second mutation while the first is still "pending" — this triggers throttle
-    // The first processMutations call sets pending=false, so we need a fresh pending=true
-    callbacks.cb([{ addedNodes: [el1], removedNodes: [] }])
-    // This is the processMutations call that should see delay > delayLimit
+    // Run RAF — processMutations sees delay=50 > delayLimit=18 → throttle
+    rafCb()
+
+    expect(consoleMod.event).toHaveBeenCalledWith('mutationThrottled')
+
+    // Let deferred setTimeout run (delay=0 since perfMon=50=nowValue)
     vi.runAllTimers()
 
     obs.disconnect()

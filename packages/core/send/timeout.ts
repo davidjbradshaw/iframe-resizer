@@ -1,7 +1,7 @@
 import { OBJECT } from '../../common/consts'
 import { advise, event } from '../console'
 
-const getOrigin = (url: string): string | null => {
+export const getOrigin = (url: string): string | null => {
   try {
     return new URL(url).origin
   } catch (error) {
@@ -9,7 +9,7 @@ const getOrigin = (url: string): string | null => {
   }
 }
 
-const allowsScriptsAndOrigin = (sandbox: any): boolean =>
+export const allowsScriptsAndOrigin = (sandbox: any): boolean =>
   typeof sandbox === OBJECT &&
   sandbox.length > 0 &&
   !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))

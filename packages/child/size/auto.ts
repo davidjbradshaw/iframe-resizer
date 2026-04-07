@@ -6,17 +6,17 @@ import state from '../values/state'
 
 const BOUNDING_FORMAT = [HIGHLIGHT, FOREGROUND, HIGHLIGHT]
 
-const prevScrollSize = {
+export const prevScrollSize = {
   height: 0,
   width: 0,
 }
 
-const prevBoundingSize = {
+export const prevBoundingSize = {
   height: 0,
   width: 0,
 }
 
-function getBoundingClientRect(
+export function getBoundingClientRect(
   dimension: string,
   boundingSize: number,
   scrollSize: number,
@@ -26,13 +26,13 @@ function getBoundingClientRect(
   return boundingSize
 }
 
-function getOffset(getDimension: any): number {
+export function getOffset(getDimension: any): number {
   const offset = getDimension.getOffset()
   if (offset !== 0) info(`Page offsetSize: %c${offset}px`, HIGHLIGHT)
   return offset
 }
 
-const getAdjustedScroll = (getDimension: any): number =>
+export const getAdjustedScroll = (getDimension: any): number =>
   getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
 export default function getAutoSize(getDimension: any): number {

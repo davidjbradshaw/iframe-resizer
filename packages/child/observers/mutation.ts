@@ -5,15 +5,15 @@ import { round } from '../../common/utils'
 import { event, info, log } from '../console'
 import { metaCreateDebugObserved } from './utils'
 
-const DELAY = 16 // Corresponds to 60fps
-const DELAY_MARGIN = 2
-const DELAY_MAX = 200
+export const DELAY = 16 // Corresponds to 60fps
+export const DELAY_MARGIN = 2
+export const DELAY_MAX = 200
 const MUTATION = 'Mutation'
 
-const addedNodes = new Set()
-const removedNodes = new Set()
-const removedAddedNodes = new Set()
-const newMutations = []
+export const addedNodes = new Set()
+export const removedNodes = new Set()
+export const removedAddedNodes = new Set()
+export const newMutations: MutationRecord[][] = []
 
 const config = {
   attributes: true,
@@ -34,11 +34,11 @@ const logAdded = metaCreateDebugObserved('added')(MUTATION)
 const logRemovedPage = metaCreateDebugObserved('removed (page)')(MUTATION)
 const logRemovedAdded = metaCreateDebugObserved('removed (added)')(MUTATION)
 
-const shouldSkip = (node: Node): boolean =>
+export const shouldSkip = (node: Node): boolean =>
   node.nodeType !== Node.ELEMENT_NODE ||
   IGNORE_TAGS.has((node as Element).tagName.toLowerCase())
 
-function addedMutation(mutation: MutationRecord): void {
+export function addedMutation(mutation: MutationRecord): void {
   const added = mutation.addedNodes
 
   for (const node of added) {
@@ -47,7 +47,7 @@ function addedMutation(mutation: MutationRecord): void {
   }
 }
 
-function removedMutation(mutation: MutationRecord): void {
+export function removedMutation(mutation: MutationRecord): void {
   const removed = mutation.removedNodes
 
   for (const node of removed) {
@@ -61,7 +61,7 @@ function removedMutation(mutation: MutationRecord): void {
   }
 }
 
-const flatFilterMutations = (mutations: MutationRecord[]): void => {
+export const flatFilterMutations = (mutations: MutationRecord[]): void => {
   info('Mutations:', mutations)
 
   for (const mutation of mutations) {
@@ -75,7 +75,7 @@ const flatFilterMutations = (mutations: MutationRecord[]): void => {
   removedAddedNodes.clear()
 }
 
-function logMutations(): void {
+export function logMutations(): void {
   if (removedNodes.size > 0) {
     log(
       `Detected %c${removedNodes.size} %cremoved element${removedNodes.size > 1 ? 's' : ''}`,
@@ -93,7 +93,7 @@ function logMutations(): void {
   }
 }
 
-const createProcessMutations =
+export const createProcessMutations =
   (
     callback: (mutations: {
       addedNodes: Set<Node>

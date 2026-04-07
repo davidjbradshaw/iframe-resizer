@@ -152,6 +152,12 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(onReady).toHaveBeenCalledWith({ iframe: {} })
   })
 
+  it('logs when log option is set', () => {
+    dispose = render(() => <IframeResizer license="GPLv3" log />, container)
+
+    expect(connectResizer).toHaveBeenCalled()
+  })
+
   it('onBeforeClose returns false and warns', () => {
     dispose = render(() => <IframeResizer license="GPLv3" />, container)
 

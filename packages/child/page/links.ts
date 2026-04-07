@@ -13,12 +13,12 @@ import sendMessage from '../send/message'
 import settings from '../values/settings'
 import state from '../values/state'
 
-const getPagePosition = (): { x: number; y: number } => ({
+export const getPagePosition = (): { x: number; y: number } => ({
   x: document.documentElement.scrollLeft,
   y: document.documentElement.scrollTop,
 })
 
-function getElementPosition(el: Element): { x: number; y: number } {
+export function getElementPosition(el: Element): { x: number; y: number } {
   const elPosition = el.getBoundingClientRect()
   const pagePosition = getPagePosition()
 
@@ -43,7 +43,7 @@ function jumpToTarget(hash: string, target: Element): void {
   sendMessage(jumpPosition.y, jumpPosition.x, SCROLL_TO_OFFSET) // X&Y reversed at sendMessage uses height/width
 }
 
-function findTarget(location: string): void {
+export function findTarget(location: string): void {
   const hash = location.split('#')[1] || location // Remove # if present
   const hashData = decodeURIComponent(hash)
   const target =
@@ -58,7 +58,7 @@ function findTarget(location: string): void {
   sendMessage(0, 0, IN_PAGE_LINK, `#${hash}`)
 }
 
-function checkLocationHash(): void {
+export function checkLocationHash(): void {
   const { hash, href } = window.location
 
   if (hash !== '' && hash !== '#') {
@@ -66,7 +66,7 @@ function checkLocationHash(): void {
   }
 }
 
-function bindAnchors(): void {
+export function bindAnchors(): void {
   for (const link of document.querySelectorAll('a[href^="#"]')) {
     if (link.getAttribute('href') !== '#') {
       addEventListener(link, 'click', (e) => {

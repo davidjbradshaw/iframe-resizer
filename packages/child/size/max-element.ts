@@ -8,7 +8,7 @@ import settings from '../values/settings'
 import state from '../values/state'
 import { getAllElements } from './all'
 
-function getSelectedElements(): Element[] | NodeListOf<Element> {
+export function getSelectedElements(): Element[] | NodeListOf<Element> {
   const { hasOverflow, hasTags, overflowedNodeSet, taggedElements } = state
 
   return hasTags
@@ -18,7 +18,7 @@ function getSelectedElements(): Element[] | NodeListOf<Element> {
       : getAllElements(document.documentElement) // Width resizing may need to check all elements
 }
 
-function findMaxElement(
+export function findMaxElement(
   targetElements: Element[] | NodeListOf<Element>,
   side: string,
 ): { maxEl: Element; maxVal: number } {

@@ -22,6 +22,7 @@ function iframeResizerChild(): void {
   ready()
 
   /* TEST CODE START */
+  /* v8 ignore start */
   function mockMsgListener(msgObject: any): typeof state.win {
     received(msgObject)
     return state.win
@@ -45,6 +46,7 @@ function iframeResizerChild(): void {
     // do nothing
   }
 
+  /* v8 ignore stop */
   /* TEST CODE END */
 }
 

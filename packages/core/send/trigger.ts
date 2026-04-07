@@ -4,13 +4,13 @@ import { INIT_EVENTS, MESSAGE_ID, SEPARATOR } from '../../common/consts'
 import { event as consoleEvent, info, log, warn } from '../console'
 import settings from '../values/settings'
 
-const filterMsg = (msg: string): string =>
+export const filterMsg = (msg: string): string =>
   msg
     .split(SEPARATOR)
     .filter((_, index) => index !== 19)
     .join(SEPARATOR)
 
-function dispatch(calleeMsg: string, msg: string, id: string): void {
+export function dispatch(calleeMsg: string, msg: string, id: string): void {
   function logSent(route: string): void {
     const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
     info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)

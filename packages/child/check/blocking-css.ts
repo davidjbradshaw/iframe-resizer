@@ -6,19 +6,19 @@ const properties = ['min-height', 'min-width', 'max-height', 'max-width']
 
 const blockedStyleSheets = new Set()
 
-const hasCssValue = (value: string): boolean =>
+export const hasCssValue = (value: string): boolean =>
   !!value && value !== '0px' && value !== AUTO && value !== NONE
 
-const getElementName = (node: Element): string =>
+export const getElementName = (node: Element): string =>
   node.tagName ? node.tagName.toLowerCase() : 'unknown'
 
 const getComputedStyle = (node: Element, property: string): string =>
   window.getComputedStyle(node).getPropertyValue(property)
 
-const hasBlockingCSS = (node: Element, property: string): boolean =>
+export const hasBlockingCSS = (node: Element, property: string): boolean =>
   hasCssValue(getComputedStyle(node, property))
 
-function getInlineStyleValue(
+export function getInlineStyleValue(
   node: HTMLElement,
   property: string,
 ): { source: string; value: string } | null {
@@ -28,14 +28,18 @@ function getInlineStyleValue(
     : null
 }
 
-function crossOriginStylesheetError({ href }: { href: string | null }): void {
+export function crossOriginStylesheetError({
+  href,
+}: {
+  href: string | null
+}): void {
   if (blockedStyleSheets.has(href)) return
   log('Unable to access stylesheet:', href)
   blockedStyleSheets.add(href)
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-function getStyleSheetCSSPropertyValue(
+export function getStyleSheetCSSPropertyValue(
   node: Element,
   property: string,
 ): { source: string; value: string } {
@@ -68,7 +72,7 @@ function getStyleSheetCSSPropertyValue(
   }
 }
 
-const getSetCSSPropertyValue = (
+export const getSetCSSPropertyValue = (
   node: HTMLElement,
   property: string,
 ): { source: string; value: string } =>
