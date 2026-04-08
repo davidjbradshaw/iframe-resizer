@@ -22,7 +22,7 @@ export function getInlineStyleValue(
   node: HTMLElement,
   property: string,
 ): { source: string; value: string } | null {
-  const inlineValue = node.style[property]
+  const inlineValue = node.style.getPropertyValue(property)
   return inlineValue
     ? { source: 'an inline style attribute', value: inlineValue }
     : null

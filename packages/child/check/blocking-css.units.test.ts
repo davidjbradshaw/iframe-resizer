@@ -120,7 +120,7 @@ describe('blocking-css exported functions', () => {
       const div = document.createElement('div')
       div.style.minWidth = '100px'
 
-      const result = getInlineStyleValue(div, 'minWidth')
+      const result = getInlineStyleValue(div, 'min-width')
       expect(result).toEqual({
         source: 'an inline style attribute',
         value: '100px',
@@ -130,7 +130,7 @@ describe('blocking-css exported functions', () => {
     test('returns null for element without inline style', () => {
       const div = document.createElement('div')
 
-      const result = getInlineStyleValue(div, 'minWidth')
+      const result = getInlineStyleValue(div, 'min-width')
       expect(result).toBeNull()
     })
   })
@@ -407,7 +407,7 @@ describe('blocking-css exported functions', () => {
         configurable: true,
       })
 
-      const result = getSetCSSPropertyValue(div, 'minWidth')
+      const result = getSetCSSPropertyValue(div, 'min-width')
 
       expect(result).toEqual({
         source: 'an inline style attribute',
@@ -427,7 +427,7 @@ describe('blocking-css exported functions', () => {
       })
 
       const div = document.createElement('div')
-      const result = getSetCSSPropertyValue(div, 'minWidth')
+      const result = getSetCSSPropertyValue(div, 'min-width')
 
       expect(result).toEqual({
         source: 'cross-origin stylesheet',

@@ -20,7 +20,9 @@ export default function resize(
       'parentIframe.resize(customHeight, customWidth) customWidth',
     )
 
-  const valString = `${customHeight === undefined ? '' : customHeight}${customWidth === undefined ? '' : `,${customWidth}`}`
+  const height = customHeight === undefined ? '' : customHeight
+  const width = customWidth === undefined ? '' : `,${customWidth}`
+  const valString = `${height}${width}`
 
   sendSize(
     MANUAL_RESIZE_REQUEST,

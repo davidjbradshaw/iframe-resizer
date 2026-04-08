@@ -48,6 +48,18 @@ describe('child/methods/resize', () => {
     )
   })
 
+  test('sends manual resize with just width', () => {
+    resize(undefined, 200)
+
+    expect(typeAssert).toHaveBeenCalledTimes(1)
+    expect(sendSize).toHaveBeenCalledWith(
+      MANUAL_RESIZE_REQUEST,
+      'parentIframe.resize(,200)',
+      undefined,
+      200,
+    )
+  })
+
   test('sends manual resize with height and zero width', () => {
     resize(100, 0)
 
