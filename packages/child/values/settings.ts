@@ -24,7 +24,7 @@ export interface ChildSettings {
   offsetHeight: number
   offsetWidth: number
   sizeSelector: string
-  targetOrigin: string
+  targetOrigin: string | string[]
   tolerance: number
   widthCalcMode: string
   onBeforeResize:

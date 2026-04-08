@@ -165,4 +165,32 @@ describe('child/send/dispatch', () => {
     expect(v).toBe('https://p')
     expect(log).not.toHaveBeenCalled()
   })
+
+  test('dispatchToParent sends to multiple origins when targetOrigin is array', () => {
+    const origins = ['https://a.com', 'https://b.com', 'https://c.com']
+    settings.targetOrigin = origins
+
+    dispatchToParent('m')
+
+    expect(state.target.postMessage).toHaveBeenCalledTimes(3)
+    for (const [i, origin] of origins.entries()) {
+      expect(state.target.postMessage).toHaveBeenNthCalledWith(
+        i + 1,
+        expect.any(String),
+        origin,
+      )
+    }
+  })
+
+  test('dispatchToParent sends to single origin when targetOrigin is string', () => {
+    settings.targetOrigin = 'https://single.com'
+
+    dispatchToParent('m')
+
+    expect(state.target.postMessage).toHaveBeenCalledTimes(1)
+    expect(state.target.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://single.com',
+    )
+  })
 })

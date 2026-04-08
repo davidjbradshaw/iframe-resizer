@@ -21,7 +21,9 @@ export function displayTimeTaken(triggerEvent: string): void {
   log(timeTaken, HIGHLIGHT)
 }
 
-export function setTargetOrigin(targetOrigin: string | undefined): string {
+export function setTargetOrigin(
+  targetOrigin: string | string[] | undefined,
+): string | string[] {
   if (undefined === targetOrigin) targetOrigin = settings.targetOrigin
   else log(`Message targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
   return targetOrigin
@@ -44,10 +46,12 @@ export function dispatchToParent(
     }
   else {
     assert(target, 'Internal error: postMessage target is undefined')
-    ;(target as Window).postMessage(
-      MESSAGE_ID + message,
-      setTargetOrigin(targetOrigin),
-    )
+    const origins = setTargetOrigin(targetOrigin)
+    const originList = Array.isArray(origins) ? origins : [origins]
+
+    for (const origin of originList) {
+      ;(target as Window).postMessage(MESSAGE_ID + message, origin)
+    }
   }
 
   return true
