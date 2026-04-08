@@ -11,10 +11,18 @@ export function showVersion(
   version?: string,
 ): void {
   if (!isDef(version) || (oMode > -1 && mode > oMode)) {
-    if (sessionStorage.getItem('ifr') === VERSION) return
+    try {
+      if (sessionStorage.getItem('ifr') === VERSION) return
+    } catch {
+      // sessionStorage blocked in some iframe contexts
+    }
     vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
     if (mode < 2) advise(getModeData(3))
-    sessionStorage.setItem('ifr', VERSION)
+    try {
+      sessionStorage.setItem('ifr', VERSION)
+    } catch {
+      // sessionStorage blocked in some iframe contexts
+    }
   }
 }
 

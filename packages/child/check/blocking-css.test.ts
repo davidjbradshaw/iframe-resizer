@@ -192,7 +192,9 @@ describe('child/check/blocking-css', () => {
       cssRules: [
         {
           selectorText: 'html',
-          style: { 'min-width': '200px' },
+          style: {
+            getPropertyValue: (p) => (p === 'min-width' ? '200px' : ''),
+          },
         },
       ],
     }

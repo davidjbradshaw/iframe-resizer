@@ -51,7 +51,7 @@ export function getStyleSheetCSSPropertyValue(
         const styleRule = rule as CSSStyleRule
         if (!node.matches(styleRule.selectorText)) continue
 
-        const ruleValue = styleRule.style[property]
+        const ruleValue = styleRule.style.getPropertyValue(property)
         if (!ruleValue) continue
 
         const { ownerNode } = stylesheet

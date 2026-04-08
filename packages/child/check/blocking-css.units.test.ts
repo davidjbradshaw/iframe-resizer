@@ -186,7 +186,9 @@ describe('blocking-css exported functions', () => {
         cssRules: [
           {
             selectorText: 'div',
-            style: { 'min-height': '300px' },
+            style: {
+              getPropertyValue: (p) => (p === 'min-height' ? '300px' : ''),
+            },
           },
         ],
       }
@@ -216,7 +218,9 @@ describe('blocking-css exported functions', () => {
         cssRules: [
           {
             selectorText: 'div',
-            style: { 'max-width': '500px' },
+            style: {
+              getPropertyValue: (p) => (p === 'max-width' ? '500px' : ''),
+            },
           },
         ],
       }
@@ -303,7 +307,9 @@ describe('blocking-css exported functions', () => {
         cssRules: [
           {
             selectorText: '.no-match-class',
-            style: { 'min-height': '999px' },
+            style: {
+              getPropertyValue: (p) => (p === 'min-height' ? '999px' : ''),
+            },
           },
         ],
       }
@@ -337,7 +343,9 @@ describe('blocking-css exported functions', () => {
         cssRules: [
           {
             selectorText: undefined,
-            style: { 'min-height': '100px' },
+            style: {
+              getPropertyValue: (p) => (p === 'min-height' ? '100px' : ''),
+            },
           },
         ],
       }
@@ -371,7 +379,7 @@ describe('blocking-css exported functions', () => {
         cssRules: [
           {
             selectorText: 'div',
-            style: { 'min-height': '' },
+            style: { getPropertyValue: () => '' },
           },
         ],
       }
