@@ -1,9 +1,9 @@
 import { FUNCTION, PARENT_INFO, PARENT_INFO_STOP } from '../../common/consts'
 import { typeAssert } from '../../common/utils'
-import { deprecateMethod } from '../console'
 import sendMessage from '../send/message'
 import state from '../values/state'
 
+// eslint-disable-next-line import/prefer-default-export
 export function getParentProps(callback: (info: any) => void): () => void {
   typeAssert(
     callback,
@@ -18,11 +18,4 @@ export function getParentProps(callback: (info: any) => void): () => void {
     state.onParentInfo = null
     sendMessage(0, 0, PARENT_INFO_STOP)
   }
-}
-
-export function getParentProperties(
-  callback: (info: any) => void,
-): ReturnType<typeof getParentProps> {
-  deprecateMethod('getParentProperties()', 'getParentProps()')
-  return getParentProps(callback)
 }

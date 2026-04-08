@@ -41,10 +41,6 @@ define(['iframeResizerParent'], (iframeResize) => {
         expect(iframe.iframeResizer.close).toBeDefined()
       })
 
-      it('should create a resize method', () => {
-        expect(iframe.iframeResizer.resize).toBeDefined()
-      })
-
       it('should create a moveToAnchor method', () => {
         expect(iframe.iframeResizer.moveToAnchor).toBeDefined()
       })

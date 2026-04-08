@@ -1,16 +1,4 @@
-import { AUTO, FUNCTION, VERTICAL } from '../../common/consts'
-import { deprecateOption } from '../console'
-import settings from './settings'
-
-const onReadyDeprecated = (messageData: {
-  id: string
-  iframe: HTMLIFrameElement
-}): void => {
-  if (typeof settings[messageData.id].onInit === FUNCTION) {
-    deprecateOption('init()', 'onReady()', '', messageData.id)
-    settings[messageData.id].onInit(messageData)
-  }
-}
+import { AUTO, VERTICAL } from '../../common/consts'
 
 export default Object.freeze({
   autoResize: true,
@@ -22,7 +10,7 @@ export default Object.freeze({
   firstRun: true,
   inPageLinks: false,
   heightCalculationMethod: AUTO,
-  id: 'iFrameResizer', // TODO: v6 change to 'iframeResizer'
+  id: 'iframeResizer',
   log: false,
   logExpand: false,
   license: undefined,
@@ -42,11 +30,10 @@ export default Object.freeze({
 
   onBeforeClose: () => true,
   onAfterClose() {},
-  onInit: false,
   onMessage: null,
   onMouseEnter() {},
   onMouseLeave() {},
-  onReady: onReadyDeprecated,
+  onReady() {},
   onResized() {},
   onScroll: () => true,
 })

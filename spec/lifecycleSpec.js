@@ -38,10 +38,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           id: 'lifecycle2',
           checkOrigin: false,
           onReady: (iframeEl) => {
-            expect(iframeEl.iframeResizer.resize).toBeDefined()
             expect(iframeEl.iframeResizer.sendMessage).toBeDefined()
             expect(iframeEl.iframeResizer.close).toBeDefined()
             expect(iframeEl.iframeResizer.moveToAnchor).toBeDefined()
+            expect(iframeEl.iframeResizer.disconnect).toBeDefined()
             done()
           },
         })[0]
@@ -66,27 +66,6 @@ define(['iframeResizerParent'], (iframeResize) => {
 
         mockMsgFromIFrame(iframe, 'init')
         initComplete = true
-      })
-    })
-
-    describe('onInit (deprecated)', () => {
-      it('should call onInit when provided (deprecated behavior)', (done) => {
-        spyOn(console, 'warn')
-
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'lifecycle4',
-          checkOrigin: false,
-          onInit: (iframeEl) => {
-            expect(iframeEl).toBe(iframe)
-            // Should show deprecation warning
-            expect(console.warn).toHaveBeenCalled()
-            done()
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
       })
     })
 

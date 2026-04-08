@@ -12,7 +12,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     it('should create iframeResizer object and handle double initialization', () => {
-      window.parentIFrame = {
+      window.parentIframe = {
         getId: () => 'getIdTest',
       }
 
@@ -21,7 +21,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       expect(iframe.iframeResizer).toBeDefined()
       expect(result[0].iframeResizer).toBeDefined()
-      delete window.parentIFrame
+      delete window.parentIframe
     })
   })
 })

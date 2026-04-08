@@ -57,7 +57,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     it('mock incoming message to parent', (done) => {
       let called = false
-      window.parentIFrame = {
+      window.parentIframe = {
         moveToAnchor: () => {
           called = true
           tearDown(iframe3)
