@@ -17,6 +17,7 @@
     "packages/**/*.tsx"
   ],
   "exclude": [
-    "packages/**/*.test.*"
+    "packages/**/*.test.*",
+    "packages/solid/**"
   ]
 }
