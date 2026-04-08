@@ -34,6 +34,10 @@ describe('ensureContentPosition', () => {
     vi.clearAllMocks()
   })
 
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   test('resets scroll and logs when scrolled', async () => {
     const { info } = await import('../console')
     const scrollTo = vi.fn()
@@ -45,8 +49,6 @@ describe('ensureContentPosition', () => {
 
     expect(scrollTo).toHaveBeenCalledWith(0, 0)
     expect(info).toHaveBeenCalledWith('Reset iframe scroll position to (0, 0)')
-
-    vi.unstubAllGlobals()
   })
 
   test('resets when scrollX is non-zero', () => {
@@ -58,8 +60,6 @@ describe('ensureContentPosition', () => {
     ensureContentPosition()
 
     expect(scrollTo).toHaveBeenCalledWith(0, 0)
-
-    vi.unstubAllGlobals()
   })
 
   test('does nothing when already at origin', () => {
