@@ -113,7 +113,10 @@ for (const [key, value] of Object.entries(Astro.props)) {
   // Initialize on page load
   initIframeResizers()
 
-  // Support Astro View Transitions
-  document.addEventListener('astro:after-swap', initIframeResizers)
-  document.addEventListener('astro:before-swap', cleanupIframeResizers)
+  // Support Astro View Transitions (guard against duplicate listeners)
+  if (!window.__iframeResizerAstroInstalled) {
+    window.__iframeResizerAstroInstalled = true
+    document.addEventListener('astro:after-swap', initIframeResizers)
+    document.addEventListener('astro:before-swap', cleanupIframeResizers)
+  }
 </script>

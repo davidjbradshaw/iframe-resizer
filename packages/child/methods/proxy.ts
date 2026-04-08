@@ -14,13 +14,13 @@ export default function deprecationProxy(
 
   return new Proxy(target, {
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    get(target: Record<string, any>, prop: string | symbol) {
+    get(target: Record<string, any>, prop: string | symbol, receiver: any) {
       if (!warnedProps.has(prop)) {
         advise(oldObjectName(prop))
         warnedProps.add(prop)
       }
 
-      const value = target[prop as string]
+      const value = Reflect.get(target, prop, receiver)
       const descriptor = Object.getOwnPropertyDescriptor(target, prop)
 
       // If property is non-configurable and non-writable, return the actual value

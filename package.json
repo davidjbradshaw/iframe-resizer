@@ -26,7 +26,7 @@
     "vite:beta": "BETA=1 node build-scripts/build-all.js",
     "vite:debug": "DEBUG=1 node build-scripts/build-all.js",
     "vite:watch": "WATCH=1 ROLLUP_WATCH=1 DEBUG=1 node build-scripts/build-all.js",
-    "typecheck": "tsc --noEmit --skipLibCheck -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "vite:test": "npm run eslint:fix && npm run typecheck && TEST=1 node build-scripts/build-all.js",
     "vite:test:ci": "npm run typecheck && TEST=1 node build-scripts/build-all.js",
     "vite:prod": "npm run eslint:fix && node build-scripts/build-all.js",
@@ -44,7 +44,7 @@
     "test:watch": "vitest",
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
     "test:int:watch": "karma start --browsers Chrome karma.conf.cjs && karma run",
-    "upgrade": "time npm-check-updates -i && npm run build"
+    "upgrade": "time npm-check-updates -i && npm run build:clean"
   },
   "description": "Keep iframes sized to their content.",
   "repository": {

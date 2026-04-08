@@ -1,3 +1,4 @@
+import { babel } from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import strip from '@rollup/plugin-strip'
 import typescript from '@rollup/plugin-typescript'
@@ -30,7 +31,14 @@ export const pluginsBase =
     ]
     const log = [strip({ include: stripInclude, functions: ['purge'] })]
 
-    const base = skipVI ? [commonjs()] : [versionInjector(vi), commonjs()]
+    const babelPlugin = babel({
+      babelHelpers: 'bundled',
+      exclude: 'node_modules/**',
+    })
+
+    const base = skipVI
+      ? [babelPlugin, commonjs()]
+      : [babelPlugin, versionInjector(vi), commonjs()]
 
     return stripLog ? delog.concat(base) : log.concat(base)
   }

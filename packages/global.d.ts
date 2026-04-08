@@ -36,6 +36,9 @@ declare global {
 
     // Chrome detection
     chrome: any
+
+    // Astro view transitions guard
+    __iframeResizerAstroInstalled?: boolean
   }
 
   interface HTMLIFrameElement {

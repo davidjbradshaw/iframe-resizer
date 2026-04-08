@@ -159,7 +159,6 @@ export default function createMutationObserver(
   info('Attached%c MutationObserver%c to body', HIGHLIGHT, FOREGROUND)
 
   return {
-    ...observer,
     disconnect: () => {
       addedNodes.clear()
       removedNodes.clear()

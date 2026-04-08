@@ -5,7 +5,7 @@ import state from '../values/state'
 let prevOverflowedNodeSet = new Set<Element>()
 
 export function filterIgnoredElements(
-  nodeList: NodeListOf<Element>,
+  nodeList: Iterable<Element>,
 ): Set<Element> {
   const filteredNodeSet = new Set<Element>()
   const ignoredNodeSet = new Set<Element>()
