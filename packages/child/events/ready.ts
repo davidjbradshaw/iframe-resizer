@@ -7,11 +7,15 @@ import state from '../values/state'
 // Normally the parent kicks things off when it detects the iframe has loaded.
 // If this script is async-loaded, then tell parent page to retry init.
 let sent = false
-const sendReady = (target: Window): void =>
-  target.postMessage(
-    CHILD_READY_MESSAGE,
-    window?.iframeResizer?.targetOrigin || '*',
-  )
+
+function sendReady(target: Window): void {
+  const origins = window?.iframeResizer?.targetOrigin || '*'
+  const originList = Array.isArray(origins) ? origins : [origins]
+
+  for (const origin of originList) {
+    target.postMessage(CHILD_READY_MESSAGE, origin)
+  }
+}
 
 export default function ready(): void {
   if (document.readyState === 'loading' || !state.firstRun || sent) return
