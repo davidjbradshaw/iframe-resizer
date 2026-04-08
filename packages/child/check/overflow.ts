@@ -35,7 +35,7 @@ export default function checkOverflow(): {
 } {
   const allOverflowedNodes = document.querySelectorAll(`[${OVERFLOW_ATTR}]`)
   const overflowedNodeSet = filterIgnoredElements(allOverflowedNodes)
-  let hasOverflowUpdated = false
+  let hasOverflowUpdated = true
 
   // Not supported in Safari 16 (or esLint!!!)
   // eslint-disable-next-line no-use-extend-native/no-use-extend-native

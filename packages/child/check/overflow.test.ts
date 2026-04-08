@@ -59,7 +59,7 @@ describe('child/check/overflow', () => {
     expect(typeof hasOverflowUpdated).toBe('boolean')
   })
 
-  it('returns hasOverflowUpdated=false when symmetricDifference is unavailable', () => {
+  it('returns hasOverflowUpdated=true when symmetricDifference is unavailable', () => {
     // Simulate environments (e.g. Safari) without Set.prototype.symmetricDifference
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native
     const orig = Set.prototype.symmetricDifference
@@ -72,7 +72,7 @@ describe('child/check/overflow', () => {
 
     const { hasOverflowUpdated } = checkOverflow()
 
-    expect(hasOverflowUpdated).toBe(false)
+    expect(hasOverflowUpdated).toBe(true)
 
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native, no-extend-native
     if (orig) Set.prototype.symmetricDifference = orig
