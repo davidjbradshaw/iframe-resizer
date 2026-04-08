@@ -13,7 +13,7 @@ export default (file, type) => `/*!
  *               Alternatively for commercial use, you can purchase a license from
  *               ${pkg.homepage}/pricing
  *
- *  @description Keep same and cross domain iFrames sized to their content
+ *  @description Keep same and cross domain iframes sized to their content
  *
  *  @author      ${pkg.author.name} <${pkg.author.email}>
  *
