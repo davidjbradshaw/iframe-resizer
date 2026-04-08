@@ -21,13 +21,6 @@ const customConfig = (file) => {
         },
       }
 
-    case 'legacy':
-      return {
-        name: 'iframe-resizer',
-        main,
-        module,
-      }
-
     case 'angular':
       return {
         main,
