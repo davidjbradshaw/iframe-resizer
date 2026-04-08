@@ -18,7 +18,7 @@ function tearDown(iframe) {
   // Wait for queued callbacks (like onReady via isolateUserCode setTimeout)
   // to complete before closing the iframe and removing settings
   if (iframe?.iframeResizer) setTimeout(removeResizer, TEARDOWN_DELAY_MS)
-  window.parentIFrame = undefined
+  window.parentIframe = undefined
 }
 
 function loadIFrame(filename) {
@@ -66,7 +66,7 @@ function spyOnIFramePostMessage(iframe) {
 }
 
 function closeChild(window, done) {
-  window.parentIFrame.close()
+  window.parentIframe.close()
   done()
 }
 

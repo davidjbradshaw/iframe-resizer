@@ -15,14 +15,12 @@ describe('jquery/plugin', () => {
     document.body.innerHTML = ''
   })
 
-  it('registers iframeResize and iFrameResize on jQuery.fn', () => {
+  it('registers iframeResize on jQuery.fn', () => {
     expect(window.$.fn.iframeResize).toBeDefined()
-    expect(window.$.fn.iFrameResize).toBeDefined()
   })
 
-  it('iframeResize and iFrameResize are functions', () => {
+  it('iframeResize is a function', () => {
     expect(typeof window.$.fn.iframeResize).toBe('function')
-    expect(typeof window.$.fn.iFrameResize).toBe('function')
   })
 
   it('filters and processes only iframe elements', () => {
@@ -45,17 +43,5 @@ describe('jquery/plugin', () => {
     const result = $iframe.iframeResize()
 
     expect(result).toBe($iframe)
-  })
-
-  it('deprecated iFrameResize calls iframeResize', () => {
-    document.body.innerHTML = '<iframe id="test"></iframe>'
-
-    const spy = vi.spyOn($.fn, 'iframeResize')
-
-    $('iframe').iFrameResize({ log: false })
-
-    expect(spy).toHaveBeenCalled()
-
-    spy.mockRestore()
   })
 })

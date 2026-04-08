@@ -10,95 +10,6 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    describe('resize() method', () => {
-      it('should trigger resize from parent', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method1',
-          checkOrigin: false,
-          onReady: () => {
-            spyOn(iframe.contentWindow, 'postMessage')
-
-            // Call resize method
-            iframe.iframeResizer.resize()
-
-            setTimeout(() => {
-              // Should have sent resize message
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              const calls = iframe.contentWindow.postMessage.calls.all()
-              const hasResizeMessage = calls.some((call) =>
-                call.args[0].includes('resize'),
-              )
-              expect(hasResizeMessage).toBe(true)
-              done()
-            }, 50)
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-
-      it('should show deprecation warning', (done) => {
-        spyOn(console, 'warn')
-
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method2',
-          checkOrigin: false,
-          onReady: () => {
-            // Call deprecated resize method
-            iframe.iframeResizer.resize()
-
-            setTimeout(() => {
-              // Should have warned about deprecation
-              const warnCalls = console.warn.calls.all()
-              const hasDeprecationWarning = warnCalls.some((call) =>
-                call.args.some(
-                  (arg) =>
-                    typeof arg === 'string' &&
-                    (arg.includes('Deprecated') || arg.includes('resize()')),
-                ),
-              )
-              expect(hasDeprecationWarning).toBe(true)
-              done()
-            }, 50)
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-
-      it('should work multiple times', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method3',
-          checkOrigin: false,
-          onReady: () => {
-            let callCount = 0
-            spyOn(iframe.contentWindow, 'postMessage').and.callFake(() => {
-              callCount++
-            })
-
-            // Call resize multiple times
-            iframe.iframeResizer.resize()
-            iframe.iframeResizer.resize()
-            iframe.iframeResizer.resize()
-
-            setTimeout(() => {
-              // Should have sent multiple messages
-              expect(callCount).toBeGreaterThan(0)
-              done()
-            }, 50)
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-    })
-
     describe('moveToAnchor() method', () => {
       it('should send anchor navigation message', (done) => {
         iframe = iframeResize({
@@ -448,24 +359,6 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
     })
 
-    describe('removeListeners() method (deprecated)', () => {
-      it('should have removeListeners method available', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method18',
-          checkOrigin: false,
-          onReady: (iframeEl) => {
-            // Verify method exists
-            expect(typeof iframeEl.iframeResizer.removeListeners).toBe('function')
-            done()
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-    })
-
     describe('Method chaining and combinations', () => {
       it('should allow calling methods in sequence', (done) => {
         iframe = iframeResize({
@@ -479,7 +372,6 @@ define(['iframeResizerParent'], (iframeResize) => {
             // Call multiple methods
             iframeEl.iframeResizer.sendMessage('test')
             iframeEl.iframeResizer.moveToAnchor('anchor')
-            iframeEl.iframeResizer.resize()
 
             setTimeout(() => {
               // All methods should have been called
@@ -520,50 +412,6 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
     })
 
-    describe('Legacy iFrameResizer property', () => {
-      it('should support legacy property name', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method23',
-          checkOrigin: false,
-          onReady: () => {
-            // Both property names should exist
-            expect(iframe.iframeResizer).toBeDefined()
-            expect(iframe.iFrameResizer).toBeDefined()
-            
-            // Both should reference same object
-            expect(iframe.iframeResizer).toBe(iframe.iFrameResizer)
-            done()
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-
-      it('should work with legacy property name', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method24',
-          checkOrigin: false,
-          onReady: () => {
-            spyOn(iframe.contentWindow, 'postMessage')
-
-            // Use legacy property name
-            iframe.iFrameResizer.sendMessage('legacy test')
-
-            setTimeout(() => {
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
-            }, 50)
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-    })
-
     describe('Method availability', () => {
       it('should have all expected methods', (done) => {
         iframe = iframeResize({
@@ -573,12 +421,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             // Check all methods exist
-            expect(iframe.iframeResizer.resize).toBeDefined()
             expect(iframe.iframeResizer.moveToAnchor).toBeDefined()
             expect(iframe.iframeResizer.sendMessage).toBeDefined()
             expect(iframe.iframeResizer.close).toBeDefined()
             expect(iframe.iframeResizer.disconnect).toBeDefined()
-            expect(iframe.iframeResizer.removeListeners).toBeDefined()
             done()
           },
         })[0]
@@ -594,12 +440,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             // Check all are functions
-            expect(typeof iframe.iframeResizer.resize).toBe('function')
             expect(typeof iframe.iframeResizer.moveToAnchor).toBe('function')
             expect(typeof iframe.iframeResizer.sendMessage).toBe('function')
             expect(typeof iframe.iframeResizer.close).toBe('function')
             expect(typeof iframe.iframeResizer.disconnect).toBe('function')
-            expect(typeof iframe.iframeResizer.removeListeners).toBe('function')
             done()
           },
         })[0]

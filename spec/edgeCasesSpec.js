@@ -552,7 +552,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframeWithId) => {
             // Should have auto-generated ID
             expect(iframeWithId.id).toBeTruthy()
-            expect(iframeWithId.id).toContain('iFrameResizer')
+            expect(iframeWithId.id).toContain('iframeResizer')
             done()
           },
         }, iframeEl)

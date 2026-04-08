@@ -4,7 +4,6 @@ import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
 import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
 import checkCrossDomain from './check/cross-domain'
-import checkDeprecatedAttrs from './check/deprecated-attributes'
 import checkIgnoredElements from './check/ignored-elements'
 import checkMode from './check/mode'
 import checkQuirksMode from './check/quirks-mode'
@@ -74,7 +73,6 @@ function startIframeResizerChild({
     checkCrossDomain,
     checkHeightMode,
     checkWidthMode,
-    checkDeprecatedAttrs,
     checkQuirksMode,
     checkAndSetupTags,
     checkSettings,

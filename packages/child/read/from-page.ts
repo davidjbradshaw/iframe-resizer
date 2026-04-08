@@ -2,12 +2,11 @@ import {
   FUNCTION,
   NUMBER,
   OBJECT,
-  OFFSET,
   OFFSET_SIZE,
   STRING,
 } from '../../common/consts'
 import { checkMode, getKey } from '../../common/mode'
-import { deprecateOption, log } from '../console'
+import { log } from '../console'
 import settings from '../values/settings'
 
 const read =
@@ -34,12 +33,6 @@ function readOffsetSize(data: Record<string, any>): {
   const { calculateHeight, calculateWidth } = settings
   let offsetHeight
   let offsetWidth
-
-  if (typeof data?.offset === NUMBER) {
-    deprecateOption(OFFSET, OFFSET_SIZE)
-    if (calculateHeight) offsetHeight = readNumber(data, OFFSET)
-    if (calculateWidth) offsetWidth = readNumber(data, OFFSET)
-  }
 
   if (typeof data?.offsetSize === NUMBER) {
     if (calculateHeight) offsetHeight = readNumber(data, OFFSET_SIZE)
