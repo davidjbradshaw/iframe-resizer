@@ -59,11 +59,7 @@ const configs = [
             }),
           ],
     },
-    plugins: [
-      typescriptChild(),
-      resolve(),
-      ...pluginsBase(stripLog)(),
-    ],
+    plugins: [typescriptChild(), resolve(), ...pluginsBase(stripLog)()],
   },
   {
     input: 'packages/jquery/plugin.js',
@@ -83,11 +79,7 @@ const configs = [
             }),
           ],
     },
-    plugins: [
-      typescriptParent(),
-      resolve(),
-      ...pluginsBase(stripLog)(),
-    ],
+    plugins: [typescriptParent(), resolve(), ...pluginsBase(stripLog)()],
   },
 ]
 
