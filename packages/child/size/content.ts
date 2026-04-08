@@ -19,6 +19,13 @@ import state from '../values/state'
 import isSizeChangeDetected from './change-detected'
 import { getNewHeight, getNewWidth } from './get-new'
 
+export function ensureContentPosition(): void {
+  if (window.scrollY !== 0 || window.scrollX !== 0) {
+    info('Reset iframe scroll position to (0, 0)')
+    window.scrollTo(0, 0)
+  }
+}
+
 export default function getContentSize(
   triggerEvent: string,
   triggerEventDesc: string,
@@ -26,6 +33,8 @@ export default function getContentSize(
   customWidth?: number,
 ): { height: number; width: number } | null {
   const { heightCalcMode, widthCalcMode } = settings
+
+  ensureContentPosition()
 
   const newHeight = customHeight ?? getNewHeight(heightCalcMode, triggerEvent)
   const newWidth = customWidth ?? getNewWidth(widthCalcMode, triggerEvent)

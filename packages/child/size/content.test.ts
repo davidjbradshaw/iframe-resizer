@@ -12,7 +12,7 @@ import {
   VISIBILITY_OBSERVER,
 } from '../../common/consts'
 import state from '../values/state'
-import getContentSize from './content'
+import getContentSize, { ensureContentPosition } from './content'
 
 vi.mock('../console', () => ({
   info: vi.fn(),
@@ -28,6 +28,53 @@ vi.mock('./get-new', () => ({
 vi.mock('./change-detected', () => ({
   default: vi.fn(),
 }))
+
+describe('ensureContentPosition', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  test('resets scroll and logs when scrolled', async () => {
+    const { info } = await import('../console')
+    const scrollTo = vi.fn()
+    vi.stubGlobal('scrollY', 100)
+    vi.stubGlobal('scrollX', 0)
+    vi.stubGlobal('scrollTo', scrollTo)
+
+    ensureContentPosition()
+
+    expect(scrollTo).toHaveBeenCalledWith(0, 0)
+    expect(info).toHaveBeenCalledWith('Reset iframe scroll position to (0, 0)')
+
+    vi.unstubAllGlobals()
+  })
+
+  test('resets when scrollX is non-zero', () => {
+    const scrollTo = vi.fn()
+    vi.stubGlobal('scrollY', 0)
+    vi.stubGlobal('scrollX', 50)
+    vi.stubGlobal('scrollTo', scrollTo)
+
+    ensureContentPosition()
+
+    expect(scrollTo).toHaveBeenCalledWith(0, 0)
+
+    vi.unstubAllGlobals()
+  })
+
+  test('does nothing when already at origin', () => {
+    const scrollTo = vi.fn()
+    vi.stubGlobal('scrollY', 0)
+    vi.stubGlobal('scrollX', 0)
+    vi.stubGlobal('scrollTo', scrollTo)
+
+    ensureContentPosition()
+
+    expect(scrollTo).not.toHaveBeenCalled()
+
+    vi.unstubAllGlobals()
+  })
+})
 
 describe('child/size/content', () => {
   beforeEach(() => {
