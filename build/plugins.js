@@ -31,16 +31,6 @@ const fixVersion = (file) => {
     case 'child':
       return {}
 
-    // return { additionalDependencies: { 'auto-console-group': pkg.dependencies['auto-console-group'] } }
-    case 'legacy':
-      return {
-        additionalDependencies: {
-          '@iframe-resizer/child': pkg.version,
-          '@iframe-resizer/jquery': pkg.version,
-          '@iframe-resizer/parent': pkg.version,
-        },
-      }
-
     default:
       return { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
   }
