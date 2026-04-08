@@ -5,7 +5,6 @@ import clear from 'rollup-plugin-clear'
 
 import {
   createBanner,
-  injectVersion,
   pluginsBase,
   typescriptChild,
   typescriptParent,
@@ -40,7 +39,6 @@ const configs = [
       clear({ targets: ['js'] }),
       resolve(),
       ...pluginsBase(stripLog)(),
-      ...injectVersion(),
     ],
   },
   {
@@ -65,7 +63,6 @@ const configs = [
       typescriptChild(),
       resolve(),
       ...pluginsBase(stripLog)(),
-      ...injectVersion(),
     ],
   },
   {
@@ -90,7 +87,6 @@ const configs = [
       typescriptParent(),
       resolve(),
       ...pluginsBase(stripLog)(),
-      ...injectVersion(),
     ],
   },
 ]
