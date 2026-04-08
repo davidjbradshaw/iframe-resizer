@@ -32,6 +32,30 @@ describe('child/check/ignored-elements', () => {
     expect(childConsole.warn).toHaveBeenCalled()
   })
 
+  it('warns with singular when exactly one ignored element', () => {
+    vi.spyOn(childConsole, 'warn').mockImplementation(() => {})
+    const el = document.createElement('div')
+    el.dataset.iframeIgnore = ''
+    document.body.append(el)
+
+    checkIgnoredElements()
+
+    expect(childConsole.warn).toHaveBeenCalledWith(
+      expect.stringContaining('element'),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    )
+    expect(childConsole.warn).not.toHaveBeenCalledWith(
+      expect.stringContaining('elements'),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    )
+  })
+
   it('does not warn again when count is unchanged', () => {
     vi.spyOn(childConsole, 'warn').mockImplementation(() => {})
     // Setup elements and call twice within the same test

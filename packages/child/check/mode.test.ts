@@ -178,6 +178,20 @@ describe('child/check/mode', () => {
     expect(settings.mode).toBe(0)
   })
 
+  it('defaults pMode to -1 when key is undefined', () => {
+    commonMode.default.mockReturnValueOnce(0)
+    checkMode({ key2: 'b', mode: 0, version: undefined })
+    // pMode=-1, cMode=0 → mode=0
+    expect(settings.mode).toBe(0)
+  })
+
+  it('defaults cMode to -1 when key2 is undefined', () => {
+    commonMode.default.mockReturnValueOnce(0)
+    checkMode({ key: 'a', mode: 0, version: undefined })
+    // pMode=0, cMode=-1 → mode=0
+    expect(settings.mode).toBe(0)
+  })
+
   describe('showVersion', () => {
     it('calls vInfo and sets session when version is undefined', () => {
       showVersion(6, 0)
