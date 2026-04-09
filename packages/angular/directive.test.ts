@@ -24,14 +24,13 @@ vi.mock('auto-console-group', () => ({
 
 // Mock connectResizer to attach a minimal iframeResizer API and return a resizer
 const disconnect = vi.fn()
-const resize = vi.fn()
 const moveToAnchor = vi.fn()
 const sendMessage = vi.fn()
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn(() => (iframe: any) => {
     // Expose a minimal API similar to production
-    iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+    iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
     return iframe.iframeResizer
   }),
 }))
@@ -44,7 +43,6 @@ describe('Angular IframeResizerDirective', () => {
   beforeEach(async () => {
     // Clear mock calls
     disconnect.mockClear()
-    resize.mockClear()
     moveToAnchor.mockClear()
     sendMessage.mockClear()
     mockGroupLabel.mockClear()
@@ -77,7 +75,6 @@ describe('Angular IframeResizerDirective', () => {
     expect(directive).toBeTruthy()
     expect(typeof directive.ngAfterViewInit).toBe('function')
     expect(typeof directive.ngOnDestroy).toBe('function')
-    expect(typeof directive.resize).toBe('function')
     expect(typeof directive.moveToAnchor).toBe('function')
     expect(typeof directive.sendMessage).toBe('function')
   })
@@ -97,7 +94,6 @@ describe('Angular IframeResizerDirective', () => {
 
     expect(mockIframe.iframeResizer).toBeDefined()
     expect(mockIframe.iframeResizer.disconnect).toBe(disconnect)
-    expect(mockIframe.iframeResizer.resize).toBe(resize)
     expect(mockIframe.iframeResizer.moveToAnchor).toBe(moveToAnchor)
     expect(mockIframe.iframeResizer.sendMessage).toBe(sendMessage)
   })
@@ -107,13 +103,6 @@ describe('Angular IframeResizerDirective', () => {
     directive.ngOnDestroy()
 
     expect(disconnect).toHaveBeenCalledTimes(1)
-  })
-
-  test('resize method calls iframe resizer resize', () => {
-    directive.ngAfterViewInit()
-    directive.resize()
-
-    expect(resize).toHaveBeenCalledTimes(1)
   })
 
   test('moveToAnchor method calls iframe resizer moveToAnchor', () => {
@@ -137,7 +126,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -159,7 +148,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -181,7 +170,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -208,7 +197,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -235,7 +224,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -262,7 +251,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -284,7 +273,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -308,7 +297,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -334,7 +323,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })
@@ -377,12 +366,10 @@ describe('Angular IframeResizerDirective', () => {
 
   test('public methods handle undefined resizer gracefully', () => {
     // Call methods before ngAfterViewInit (when resizer is undefined)
-    expect(() => directive.resize()).not.toThrow()
     expect(() => directive.moveToAnchor('test')).not.toThrow()
     expect(() => directive.sendMessage('test')).not.toThrow()
 
     // Verify the underlying methods were not called
-    expect(resize).not.toHaveBeenCalled()
     expect(moveToAnchor).not.toHaveBeenCalled()
     expect(sendMessage).not.toHaveBeenCalled()
   })
@@ -410,7 +397,7 @@ describe('Angular IframeResizerDirective', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })

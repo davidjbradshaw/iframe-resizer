@@ -106,7 +106,6 @@
 
   defineExpose({
     moveToAnchor: (anchor: string) => resizer.value?.moveToAnchor(anchor),
-    resize: () => resizer.value?.resize(),
     sendMessage: (msg: any, target?: string) =>
       resizer.value?.sendMessage(msg, target),
   })

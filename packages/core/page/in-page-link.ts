@@ -17,6 +17,7 @@ function jumpToTarget(id: string, hash: string, target: HTMLElement): void {
 
 function jumpToParent(id: string, hash: string): void {
   // Check for V4 as well
+  // @ts-expect-error — undocumented V4 backwards compat
   const target = window.parentIframe || window.parentIFrame
 
   if (!target) {

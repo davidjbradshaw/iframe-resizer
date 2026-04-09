@@ -11,15 +11,12 @@ declare global {
   interface Window {
     // Parent IIFE/UMD globals (may not be present on every page)
     iframeResize?: (...args: any[]) => any
-    iFrameResize?: (...args: any[]) => any
 
     // Child page configuration
     iframeResizer: any
-    iFrameResizer: any
 
     // Child public API
     parentIframe: any
-    parentIFrame: any
 
     // Same-origin message bridge
     iframeParentListener?: (data: any) => void
@@ -43,7 +40,6 @@ declare global {
 
   interface HTMLIFrameElement {
     iframeResizer: any
-    iFrameResizer: any
   }
 }
 

@@ -110,10 +110,6 @@ export class IframeResizerDirective {
   }
 
   // parent methods
-  public resize(): void {
-    this.resizer?.resize()
-  }
-
   public moveToAnchor(anchor: string): void {
     this.resizer?.moveToAnchor(anchor)
   }

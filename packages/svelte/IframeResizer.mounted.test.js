@@ -76,17 +76,6 @@ describe('Svelte IframeResizer lifecycle', () => {
     unmount(component)
   })
 
-  it('exposes resize method', () => {
-    const component = mount(IframeResizer, {
-      target,
-      props: { license: 'GPLv3' },
-    })
-    flushSync()
-    component.resize()
-    expect(mockResizer.resize).toHaveBeenCalled()
-    unmount(component)
-  })
-
   it('exposes sendMessage method', () => {
     const component = mount(IframeResizer, {
       target,

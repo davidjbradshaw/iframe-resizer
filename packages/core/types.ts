@@ -24,7 +24,7 @@ export type LogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
 
 export type ScrollOption = boolean | typeof AUTO | typeof OMIT
 
-// --- Resizer object attached to iframe.iFrameResizer ---
+// --- Resizer object attached to iframe.iframeResizer ---
 
 export interface IFrameObject {
   /** Remove the iframe from the page. */
@@ -33,17 +33,15 @@ export interface IFrameObject {
   disconnect(): void
   /** Move the page in the iframe to the specified anchor. */
   moveToAnchor(anchor: string): void
-  /** Tell iframe-resizer to re-measure the iframe. */
-  resize(): void
   /** Send a message to the iframe. */
   sendMessage(message: any, targetOrigin?: string): void
 }
 
 // --- Extended HTMLIFrameElement ---
 
-/** HTMLIFrameElement with the `iFrameResizer` control object attached. */
+/** HTMLIFrameElement with the `iframeResizer` control object attached. */
 export interface IFrameComponent extends HTMLIFrameElement {
-  iFrameResizer: IFrameObject
+  iframeResizer: IFrameObject
 }
 
 // --- Callback event data ---
@@ -124,7 +122,7 @@ export interface IFrameOptions {
   warningTimeout?: number
   /**
    * Called before iframe is closed via parentIFrame.close() or
-   * iframe.iFrameResizer.close() methods. Returning false will prevent
+   * iframe.iframeResizer.close() methods. Returning false will prevent
    * the iframe from closing.
    */
   onBeforeClose?(iframeId: string): boolean | void

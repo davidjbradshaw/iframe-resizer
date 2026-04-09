@@ -21,7 +21,6 @@ describe('core/page/in-page-link', () => {
     vi.clearAllMocks()
     document.body.innerHTML = ''
     delete window.parentIframe
-    delete window.parentIFrame
     Object.defineProperty(window, 'top', { value: window, configurable: true })
     Object.defineProperty(window, 'self', { value: window, configurable: true })
   })
@@ -52,17 +51,6 @@ describe('core/page/in-page-link', () => {
     inPageLink('id', 'http://x/#baz')
 
     expect(moveToAnchor).toHaveBeenCalledWith('baz')
-  })
-
-  test('calls parentIFrame.moveToAnchor (v4 compatibility) when element not found', () => {
-    simulateIframe()
-
-    const moveToAnchor = vi.fn()
-    window.parentIFrame = { moveToAnchor }
-
-    inPageLink('id', 'http://x/#qux')
-
-    expect(moveToAnchor).toHaveBeenCalledWith('qux')
   })
 
   test('logs not found when parentIframe not available in iframe', () => {
