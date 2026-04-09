@@ -65,6 +65,7 @@ export default defineConfig({
         'packages/core/values/page.ts',
         'packages/core/values/settings.ts',
         'packages/parent/esm.ts',
+        'packages/parent/umd.ts',
         'packages/solid/index.ts',
         'packages/svelte/index.js',
       ],

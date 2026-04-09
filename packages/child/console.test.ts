@@ -67,4 +67,12 @@ describe('child/console', () => {
     expect(style2).toContain('font-weight')
     spy.mockRestore()
   })
+
+  it('adviseNow writes directly to console.warn', async () => {
+    const mod = await import('./console')
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mod.adviseNow('test message')
+    expect(spy).toHaveBeenCalledWith('test message')
+    spy.mockRestore()
+  })
 })

@@ -6,13 +6,13 @@ import createIframeResize from './factory'
 vi.mock('@iframe-resizer/core', () => ({ default: vi.fn(() => vi.fn()) }))
 
 describe('createIframeResize - Disconnected iframes', () => {
-  let iFrameResize
+  let iframeResize
   let mockIframe
 
   beforeEach(() => {
     // Reset the module and create a fresh instance
     vi.clearAllMocks()
-    iFrameResize = createIframeResize()
+    iframeResize = createIframeResize()
 
     // Create a mock iframe element
     mockIframe = document.createElement('iframe')
@@ -30,7 +30,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     document.body.append(mockIframe)
 
     // Initialize
-    const result = iFrameResize({}, mockIframe)
+    const result = iframeResize({}, mockIframe)
 
     // Should return the iframe in the array
     expect(result).toHaveLength(1)
@@ -42,7 +42,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     expect(mockIframe.isConnected).toBe(false)
 
     // Initialize - should not throw
-    const result = iFrameResize({}, mockIframe)
+    const result = iframeResize({}, mockIframe)
 
     // Should still return the iframe in the array
     expect(result).toHaveLength(1)
@@ -54,7 +54,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     expect(mockIframe.isConnected).toBe(false)
 
     // Initialize the disconnected iframe
-    iFrameResize({}, mockIframe)
+    iframeResize({}, mockIframe)
 
     // Add a small delay to ensure MutationObserver is set up
     await new Promise((resolve) => {
@@ -81,10 +81,10 @@ describe('createIframeResize - Disconnected iframes', () => {
     iframe2.id = 'iframe-2'
 
     // Initialize first disconnected iframe
-    const result1 = iFrameResize({}, iframe1)
+    const result1 = iframeResize({}, iframe1)
 
     // Initialize second disconnected iframe
-    const result2 = iFrameResize({}, iframe2)
+    const result2 = iframeResize({}, iframe2)
 
     // Each should be in their respective results
     expect(result1).toHaveLength(1)
@@ -95,13 +95,13 @@ describe('createIframeResize - Disconnected iframes', () => {
     const div = document.createElement('div')
 
     expect(() => {
-      iFrameResize({}, div)
+      iframeResize({}, div)
     }).toThrow('Expected <IFRAME> tag, found <DIV>')
   })
 
   it('should throw error for null element', () => {
     expect(() => {
-      iFrameResize({}, null)
+      iframeResize({}, null)
     }).toThrow('iframe is not defined')
   })
 
@@ -109,7 +109,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     const invalidElement = {}
 
     expect(() => {
-      iFrameResize({}, invalidElement)
+      iframeResize({}, invalidElement)
     }).toThrow('Not a valid DOM element')
   })
 
@@ -124,7 +124,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     document.body.append(iframe2)
 
     // Initialize all iframes
-    const result = iFrameResize({})
+    const result = iframeResize({})
 
     // Should return both iframes
     expect(result).toHaveLength(2)
@@ -142,7 +142,7 @@ describe('createIframeResize - Disconnected iframes', () => {
     document.body.append(iframe2)
 
     // Initialize only iframes with the 'resizable' class
-    const result = iFrameResize({}, '.resizable')
+    const result = iframeResize({}, '.resizable')
 
     // Should return only the matching iframe
     expect(result).toHaveLength(1)
@@ -178,7 +178,7 @@ describe('createIframeResize - Disconnected iframes', () => {
 
     // Should throw an error since we're in browser environment (window exists)
     expect(() => {
-      iFrameResize({}, mockIframe)
+      iframeResize({}, mockIframe)
     }).toThrow('document.body is not available')
 
     // Restore document.body
@@ -190,11 +190,11 @@ describe('createIframeResize - Disconnected iframes', () => {
 
   it('should throw error for unexpected data type', () => {
     expect(() => {
-      iFrameResize({}, 123)
+      iframeResize({}, 123)
     }).toThrow('Unexpected data type (number)')
 
     expect(() => {
-      iFrameResize({}, true)
+      iframeResize({}, true)
     }).toThrow('Unexpected data type (boolean)')
   })
 })

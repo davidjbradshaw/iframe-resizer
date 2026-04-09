@@ -22,15 +22,9 @@ describe('child/check/mode', () => {
     vi.spyOn(utils, 'isDef').mockImplementation((v) => v !== undefined)
 
     vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
+    vi.spyOn(childConsole, 'adviseNow').mockImplementation(() => {})
     vi.spyOn(childConsole, 'purge').mockImplementation(() => {})
     vi.spyOn(childConsole, 'vInfo').mockImplementation(() => {})
-
-    // mock sessionStorage
-    const store = new Map()
-    vi.stubGlobal('sessionStorage', {
-      getItem: (k) => store.get(k) || null,
-      setItem: (k, v) => store.set(k, String(v)),
-    })
   })
 
   it('advises and throws sanitized message when mode < 0 and version is defined', () => {
@@ -65,28 +59,13 @@ describe('child/check/mode', () => {
   })
 
   it('advises when mode < 2 and version not defined', () => {
-    // mode=0 hits default case → showVersion, where mode < 2 triggers advise(getModeData(3))
+    // mode=0 hits default case → showVersion, where mode < 2 triggers adviseNow(getModeData(3))
     commonMode.default.mockReturnValueOnce(0).mockReturnValueOnce(0)
 
     checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
 
-    expect(childConsole.advise).toHaveBeenCalled()
+    expect(childConsole.adviseNow).toHaveBeenCalled()
     expect(childConsole.vInfo).toHaveBeenCalled()
-  })
-
-  it('does not advise and warns when session already has correct VERSION', () => {
-    // Need to import VERSION from the actual file
-    vi.mock('../../common/consts', async () => {
-      const actual = await vi.importActual('../../common/consts')
-      return { ...actual, VERSION: 'test-version' }
-    })
-
-    sessionStorage.setItem('ifr', 'test-version')
-
-    checkMode({ key: 'a', key2: 'b', mode: 2, version: undefined })
-
-    // vInfo should not be called since session already has the version
-    expect(childConsole.vInfo).not.toHaveBeenCalled()
   })
 
   it('skips else-if block when version is defined but mode did not increase (oMode <= -1)', () => {
@@ -193,10 +172,9 @@ describe('child/check/mode', () => {
   })
 
   describe('showVersion', () => {
-    it('calls vInfo and sets session when version is undefined', () => {
+    it('calls vInfo when version is undefined', () => {
       showVersion(6, 0)
       expect(childConsole.vInfo).toHaveBeenCalled()
-      expect(sessionStorage.getItem('ifr')).not.toBeNull()
     })
 
     it('calls vInfo when version is defined but mode increased', () => {
@@ -214,21 +192,14 @@ describe('child/check/mode', () => {
       expect(childConsole.vInfo).not.toHaveBeenCalled()
     })
 
-    it('calls advise(getModeData(3)) when mode < 2', () => {
+    it('calls adviseNow(getModeData(3)) when mode < 2', () => {
       showVersion(1, 0)
-      expect(childConsole.advise).toHaveBeenCalledWith('data3')
+      expect(childConsole.adviseNow).toHaveBeenCalledWith('data3')
     })
 
-    it('does not call advise when mode >= 2', () => {
+    it('does not call adviseNow when mode >= 2', () => {
       showVersion(6, 0)
-      expect(childConsole.advise).not.toHaveBeenCalled()
-    })
-
-    it('returns early when session matches VERSION', () => {
-      showVersion(6, 0)
-      childConsole.vInfo.mockClear()
-      showVersion(6, 0)
-      expect(childConsole.vInfo).not.toHaveBeenCalled()
+      expect(childConsole.adviseNow).not.toHaveBeenCalled()
     })
   })
 })

@@ -12,7 +12,7 @@ export default function closeIframe(iframe: HTMLIFrameElement): void {
     return
   }
 
-  log(id, `Removing iFrame: %c${id}`, HIGHLIGHT)
+  log(id, `Removing iframe: %c${id}`, HIGHLIGHT)
 
   try {
     // Catch race condition error with React
