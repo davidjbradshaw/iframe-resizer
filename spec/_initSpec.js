@@ -6,6 +6,8 @@ define(['iframeResizerParent'], (iframeResize) => {
     beforeEach((done) => {
       loadIFrame('iframe600.html')
 
+      let called = false
+
       iframe = iframeResize({
         license: 'GPLv3',
         log: true,
@@ -16,6 +18,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         tolerance: 1,
         direction: 'horizontal',
         onReady: () => {
+          if (called) return
+          called = true
           setTimeout(done, 1)
         },
       })[0]
