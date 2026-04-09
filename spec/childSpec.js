@@ -269,19 +269,14 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     })
 
     describe('performance', () => {
-      it('throttles', (done) => {
-        win.parentIframe.resize(10, 10)
-        win.parentIframe.resize(20, 10)
-        win.parentIframe.resize(30, 10)
-        win.parentIframe.resize(40, 10)
-        win.parentIframe.resize(50, 10)
-        win.parentIframe.resize(60, 10)
+      it('sends resize messages', (done) => {
+        win.parentIframe.resize(100, 200)
         setTimeout(() => {
-          const callCount = msgObject.source.postMessage.calls.count()
-          
-          // Verify throttling occurred - fewer than all 6 calls should be made
-          // Throttling may block all calls or allow some through depending on timing
-          expect(callCount).toBeLessThanOrEqual(6)
+          const resizeCalls = msgObject.source.postMessage.calls
+            .allArgs()
+            .filter((args) => args[0].includes(':manualResize'))
+
+          expect(resizeCalls.length).toBeGreaterThan(0)
           done()
         }, 17)
       })
