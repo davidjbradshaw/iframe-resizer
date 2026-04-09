@@ -121,7 +121,7 @@ export interface IFrameOptions {
   /** Timeout in ms before warning if iframe has not responded. */
   warningTimeout?: number
   /**
-   * Called before iframe is closed via parentIFrame.close() or
+   * Called before iframe is closed via parentIframe.close() or
    * iframe.iframeResizer.close() methods. Returning false will prevent
    * the iframe from closing.
    */
@@ -136,7 +136,7 @@ export interface IFrameOptions {
   onReady?(iframe: IFrameComponent): void
   /**
    * Receive message posted from the iframe with the
-   * parentIFrame.sendMessage() method.
+   * parentIframe.sendMessage() method.
    */
   onMessage?(data: IFrameMessageData): void
   /**
