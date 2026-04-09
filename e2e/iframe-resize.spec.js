@@ -99,16 +99,16 @@ test.describe('iframe-resizer cross-origin handling', () => {
     const iframe = page.locator('iframe')
     await expect(iframe).toBeVisible()
 
-    // Wait for iframe resizer to initialize by checking for the iFrameResizer property
+    // Wait for iframe resizer to initialize by checking for the iframeResizer property
     // This MUST succeed - if it fails, the test should fail
     await page.waitForFunction(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     }, { timeout: 10000 })
     // Verify that iframe resizer initialized successfully
     const hasResizer = await page.evaluate(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     })
     expect(hasResizer).toBeTruthy()
   })
@@ -138,13 +138,13 @@ test.describe('iframe-resizer React example', () => {
     // Wait for iframe resizer to initialize
     await page.waitForFunction(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     }, { timeout: 10000 })
 
     // Verify that iframe resizer initialized successfully
     const hasResizer = await page.evaluate(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     })
     expect(hasResizer).toBeTruthy()
   })
@@ -160,7 +160,7 @@ test.describe('iframe-resizer React example', () => {
     // Wait for iframe resizer to initialize
     await page.waitForFunction(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     }, { timeout: 10000 })
 
     // Get initial iframe height
@@ -214,7 +214,7 @@ test.describe('iframe-resizer React example', () => {
     // Wait for iframe resizer to initialize
     await page.waitForFunction(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     }, { timeout: 10000 })
 
     // Wait a bit for initial resize to complete and message data to be displayed
@@ -243,7 +243,7 @@ test.describe('iframe-resizer React example', () => {
     // Wait for iframe resizer to initialize
     await page.waitForFunction(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     }, { timeout: 10000 })
 
     // Set up a listener for alerts (the onMessage handler triggers an alert)
@@ -272,7 +272,7 @@ test.describe('iframe-resizer React example', () => {
     // Wait for iframe resizer to initialize
     await page.waitForFunction(() => {
       const iframeEl = document.querySelector('iframe')
-      return iframeEl && iframeEl.iFrameResizer !== undefined
+      return iframeEl && iframeEl.iframeResizer !== undefined
     }, { timeout: 10000 })
 
     // Get the iframe element to check height changes
