@@ -1,5 +1,5 @@
 ---
-import type { IFrameOptions } from '@iframe-resizer/core'
+import type { IframeOptions } from '@iframe-resizer/core'
 
 type CallbackProps =
   | 'onBeforeClose'
@@ -11,7 +11,7 @@ type CallbackProps =
   | 'onResized'
   | 'onScroll'
 
-interface Props extends Omit<IFrameOptions, CallbackProps> {
+interface Props extends Omit<IframeOptions, CallbackProps> {
   [key: string]: any
 }
 
@@ -46,7 +46,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
 <iframe data-iframe-resizer={JSON.stringify(resizerOptions)} {...iframeAttrs}></iframe>
 
 <script>
-  import connectResizer, { type IFrameComponent } from '@iframe-resizer/core'
+  import connectResizer, { type IframeComponent } from '@iframe-resizer/core'
 
   const EVENTS = [
     'onReady',
@@ -105,7 +105,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
       .querySelectorAll<HTMLIFrameElement>('iframe[data-iframe-resizer]')
       .forEach((iframe) => {
         if ('iframeResizer' in iframe) {
-          ;(iframe as IFrameComponent).iframeResizer.disconnect()
+          ;(iframe as IframeComponent).iframeResizer.disconnect()
         }
       })
   }

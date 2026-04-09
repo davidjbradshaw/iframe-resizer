@@ -1,4 +1,4 @@
-import type { IFrameOptions } from '@iframe-resizer/core'
+import type { IframeOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 
@@ -37,7 +37,7 @@ export default function IframeResizer(Alpine: Alpine): void {
         evaluated !== null &&
         evaluated !== undefined &&
         typeof evaluated === 'object'
-          ? (evaluated as IFrameOptions)
+          ? (evaluated as IframeOptions)
           : {}
 
       if (
@@ -67,4 +67,4 @@ export default function IframeResizer(Alpine: Alpine): void {
   )
 }
 
-export { type IFrameOptions } from '@iframe-resizer/core'
+export { type IframeOptions } from '@iframe-resizer/core'

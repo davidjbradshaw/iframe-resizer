@@ -2,7 +2,7 @@
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 
   import connectResizer from '@iframe-resizer/core'
-  import type { IFrameObject } from '@iframe-resizer/core'
+  import type { IframeObject } from '@iframe-resizer/core'
   import acg from 'auto-console-group'
 
   const EXPAND = 'expanded'
@@ -33,7 +33,7 @@
   const dispatch = createEventDispatcher()
 
   let iframe: HTMLIFrameElement
-  let resizer: IFrameObject | null = null
+  let resizer: IframeObject | null = null
 
   onMount(() => {
     const consoleGroup = createAutoConsoleGroup()

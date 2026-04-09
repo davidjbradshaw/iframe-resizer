@@ -6,7 +6,7 @@
   import { onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
-  import type { IFrameObject, LogOption } from '@iframe-resizer/core'
+  import type { IframeObject, LogOption } from '@iframe-resizer/core'
   import acg from 'auto-console-group'
 
   const EXPAND = 'expanded'
@@ -67,7 +67,7 @@
   }>()
 
   const iframeRef = ref<HTMLIFrameElement | null>(null)
-  const resizer = ref<IFrameObject | null>(null)
+  const resizer = ref<IframeObject | null>(null)
 
   onMounted(() => {
     const consoleGroup = createAutoConsoleGroup()

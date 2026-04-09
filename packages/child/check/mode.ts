@@ -12,7 +12,7 @@ export function showVersion(
 ): void {
   if (!isDef(version) || (oMode > -1 && mode > oMode)) {
     vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-    if (mode < 2) adviseNow(getModeData(3))
+    if (mode === 0) adviseNow(getModeData(3))
   }
 }
 

@@ -2,12 +2,12 @@
 /* eslint-disable react/require-default-props */
 import type {
   Direction,
-  IFrameComponent,
-  IFrameMessageData,
-  IFrameMouseData,
-  IFrameObject,
-  IFrameResizedData,
-  IFrameScrollData,
+  IframeComponent,
+  IframeMessageData,
+  IframeMouseData,
+  IframeObject,
+  IframeResizedData,
+  IframeScrollData,
   LogOption,
   ScrollOption,
 } from '@iframe-resizer/core'
@@ -25,8 +25,8 @@ import React, {
 import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
 
-export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
-  getElement: () => IFrameComponent
+export type IframeForwardRef = Omit<IframeObject, 'close' | 'disconnect'> & {
+  getElement: () => IframeComponent
   getRef: () => RefObject<HTMLIFrameElement | null>
 }
 
@@ -54,12 +54,12 @@ export type ResizerOptions = {
 
 export type ResizerEvents = {
   onAfterClose?: (iframeId: string) => void
-  onMessage?: (ev: IFrameMessageData) => void
-  onMouseEnter?: (ev: IFrameMouseData) => void
-  onMouseLeave?: (ev: IFrameMouseData) => void
-  onReady?: (iframe: IFrameComponent) => void
-  onResized?: (ev: IFrameResizedData) => void
-  onScroll?: (ev: IFrameScrollData) => boolean
+  onMessage?: (ev: IframeMessageData) => void
+  onMouseEnter?: (ev: IframeMouseData) => void
+  onMouseLeave?: (ev: IframeMouseData) => void
+  onReady?: (iframe: IframeComponent) => void
+  onResized?: (ev: IframeResizedData) => void
+  onScroll?: (ev: IframeScrollData) => boolean
 }
 
 export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
@@ -71,11 +71,11 @@ const createAutoConsoleGroup = esModuleInterop(acg)
 
 function IframeResizer(
   props: IframeResizerProps,
-  ref: React.ForwardedRef<IFrameForwardRef>,
+  ref: React.ForwardedRef<IframeForwardRef>,
 ): ReactElement {
   const { log, logExpand } = props
   const filteredProps = filterIframeAttribs(props)
-  const iframeRef = useRef<IFrameComponent>(null)
+  const iframeRef = useRef<IframeComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
 
   const onBeforeClose = (): boolean => {
@@ -122,6 +122,6 @@ function IframeResizer(
   return <iframe {...filteredProps} ref={iframeRef} />
 }
 
-export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
+export default forwardRef<IframeForwardRef, IframeResizerProps>(IframeResizer)
 
-export { type IFrameComponent, type IFrameObject } from '@iframe-resizer/core'
+export { type IframeComponent, type IframeObject } from '@iframe-resizer/core'
