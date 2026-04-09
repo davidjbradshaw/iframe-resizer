@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 const mockResizer = {
   disconnect: vi.fn(),
   moveToAnchor: vi.fn(),
-  resize: vi.fn(),
   sendMessage: vi.fn(),
 }
 
@@ -95,17 +94,6 @@ describe('Solid IframeResizer lifecycle', () => {
 
     api.moveToAnchor('section-1')
     expect(mockResizer.moveToAnchor).toHaveBeenCalledWith('section-1')
-  })
-
-  it('exposes resize via ref', () => {
-    let api: any
-    dispose = render(
-      () => <IframeResizer license="GPLv3" ref={(r) => (api = r)} />,
-      container,
-    )
-
-    api.resize()
-    expect(mockResizer.resize).toHaveBeenCalled()
   })
 
   it('exposes sendMessage via ref', () => {

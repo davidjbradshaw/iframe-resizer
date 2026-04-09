@@ -21,7 +21,7 @@ const createAutoConsoleGroup = esModuleInterop(acg)
 
 export type IframeResizerMethods = Pick<
   IFrameObject,
-  'moveToAnchor' | 'resize' | 'sendMessage'
+  'moveToAnchor' | 'sendMessage'
 > & {
   getElement: () => IFrameComponent
 }
@@ -149,7 +149,6 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
       setRef({
         getElement: () => iframeEl,
         moveToAnchor: (anchor) => resizer?.moveToAnchor(anchor),
-        resize: () => resizer?.resize(),
         sendMessage: (message, targetOrigin) =>
           resizer?.sendMessage(message, targetOrigin),
       })

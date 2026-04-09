@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const mockResizer = {
   moveToAnchor: vi.fn(),
-  resize: vi.fn(),
   sendMessage: vi.fn(),
   disconnect: vi.fn(),
 }
@@ -50,11 +49,9 @@ describe('Vue iframe-resizer mounted lifecycle', () => {
 
     // Exposed methods delegate to the resizer
     vm.moveToAnchor('a')
-    vm.resize()
     vm.sendMessage('m')
 
     expect(mockResizer.moveToAnchor).toHaveBeenCalledWith('a')
-    expect(mockResizer.resize).toHaveBeenCalled()
     expect(mockResizer.sendMessage).toHaveBeenCalledWith('m', undefined)
   })
 

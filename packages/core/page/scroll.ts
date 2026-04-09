@@ -42,7 +42,7 @@ export function scrollToLink(id: string): void {
 export function scrollBy(messageData: MessageData): void {
   const { id, height, width } = messageData
 
-  // Check for V4 as well
+  // @ts-expect-error — undocumented V4 backwards compat
   const target = window.parentIframe || window.parentIFrame || window
 
   info(
@@ -81,7 +81,8 @@ const scrollRequestFromChild =
 
     const offset = addOffset ? getElementPosition(iframe) : { x: 0, y: 0 }
     const newPosition = calcOffset(offset)
-    const target = window.parentIframe || window.parentIFrame // Check for V4 as well
+    // @ts-expect-error — undocumented V4 backwards compat
+    const target = window.parentIframe || window.parentIFrame
 
     info(
       id,

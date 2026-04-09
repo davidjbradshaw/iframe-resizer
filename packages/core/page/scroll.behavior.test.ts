@@ -41,7 +41,6 @@ describe('core/page/scroll behavior', () => {
     coreConsole.info.mockClear()
     setStoredPagePosition({ x: 0, y: 0 })
     delete window.parentIframe
-    delete window.parentIFrame
   })
 
   it('scrollBy logs and delegates to parentIframe when present', () => {
@@ -64,17 +63,17 @@ describe('core/page/scroll behavior', () => {
     expect(getPagePosition).toHaveBeenCalledWith('frame')
   })
 
-  it('scrollTo uses reposition path when parentIFrame missing', () => {
+  it('scrollTo uses reposition path when parentIframe missing', () => {
     scrollTo({ id: 'x', iframe: { id: 'frame' }, width: 7, height: 8 })
     expect(setStoredPagePosition).toHaveBeenCalledWith({ x: 7, y: 8 })
     expect(unsetPagePosition).not.toHaveBeenCalled()
   })
 
-  it('scrollToOffset adds element offsets and uses parentIFrame path when present', () => {
-    // Provide parentIFrame to use scrollParent path
+  it('scrollToOffset adds element offsets and uses parentIframe path when present', () => {
+    // Provide parentIframe to use scrollParent path
     const target = { scrollToOffset: vi.fn() }
     // eslint-disable-next-line no-undef
-    window.parentIFrame = target
+    window.parentIframe = target
     const iframe = {
       id: 'frame',
       getBoundingClientRect: () => ({ left: 2, top: 3 }),

@@ -90,10 +90,6 @@
     resizer?.moveToAnchor(anchor)
   }
 
-  export function resize() {
-    resizer?.resize()
-  }
-
   export function sendMessage(msg: any, target?: string) {
     resizer?.sendMessage(msg, target)
   }

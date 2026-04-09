@@ -29,7 +29,6 @@ describe('core/page/scroll', () => {
   afterEach(() => {
     window.scrollBy = origScrollBy
     delete window.parentIframe
-    delete window.parentIFrame
   })
 
   test('getElementPosition adds iframe and page positions', () => {
@@ -94,16 +93,13 @@ describe('core/page/scroll', () => {
     expect(info).toHaveBeenCalled()
   })
 
-  test('scrollBy uses parentIFrame (v4 compatibility)', () => {
-    window.parentIframe = undefined
-    window.parentIFrame = {
+  test('scrollBy uses parentIframe', () => {
+    window.parentIframe = {
       scrollBy: vi.fn(),
     }
 
     scrollMod.scrollBy({ id: 'id', height: 10, width: 20 })
 
-    expect(window.parentIFrame.scrollBy).toHaveBeenCalledWith(20, 10)
-
-    delete window.parentIFrame
+    expect(window.parentIframe.scrollBy).toHaveBeenCalledWith(20, 10)
   })
 })

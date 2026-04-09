@@ -65,6 +65,7 @@ export default function readDataFromPage(): Record<string, any> {
   const { mode } = settings
   if (checkMode(mode)) return {}
 
+  // @ts-expect-error — undocumented V4 backwards compat
   const data = window.iframeResizer || window.iFrameResizer
   return isObject(data) ? readData(data) : {}
 }
