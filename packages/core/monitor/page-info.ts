@@ -3,17 +3,17 @@ import { sendInfoToIframe, startInfoMonitor, stopInfoMonitor } from './common'
 
 export function getPageInfo(iframe: HTMLIFrameElement): string {
   const bodyPosition = document.body.getBoundingClientRect()
-  const iFramePosition = iframe.getBoundingClientRect()
+  const iframePosition = iframe.getBoundingClientRect()
   const { scrollY, scrollX, innerHeight, innerWidth } = window
   const { clientHeight, clientWidth } = document.documentElement
 
   return JSON.stringify({
-    iframeHeight: iFramePosition.height,
-    iframeWidth: iFramePosition.width,
+    iframeHeight: iframePosition.height,
+    iframeWidth: iframePosition.width,
     clientHeight: Math.max(clientHeight, innerHeight || 0),
     clientWidth: Math.max(clientWidth, innerWidth || 0),
-    offsetTop: Math.trunc(iFramePosition.top - bodyPosition.top),
-    offsetLeft: Math.trunc(iFramePosition.left - bodyPosition.left),
+    offsetTop: Math.trunc(iframePosition.top - bodyPosition.top),
+    offsetLeft: Math.trunc(iframePosition.left - bodyPosition.left),
     scrollTop: scrollY,
     scrollLeft: scrollX,
     documentHeight: clientHeight,

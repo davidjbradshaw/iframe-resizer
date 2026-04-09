@@ -27,7 +27,7 @@ describe('child/received/index', () => {
 
   test('dispatches to processRequest when message type is known', () => {
     getMessageType.mockReturnValue('known')
-    const evt = { data: '[iFrameSizer]x' }
+    const evt = { data: '[iframeSizer]x' }
     receiver(evt)
 
     expect(processRequest.known).toHaveBeenCalledWith(evt)

@@ -41,7 +41,7 @@ export function dispatchToParent(
       window.parent.iframeParentListener(MESSAGE_ID + message)
     } catch (error) {
       if (checkMode(mode)) sendFailed()
-      else throw error
+      else throw new Error(error)
       return false
     }
   else {

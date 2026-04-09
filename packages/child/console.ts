@@ -38,10 +38,7 @@ export const debug = setupConsoleMethod('debug')
 
 export function vInfo(ver: string, mode: number): void {
   // eslint-disable-next-line no-console
-  console.info(
-    `${id} %ciframe-resizer ${ver}`,
-    enabled || mode < 1 ? BOLD : NORMAL,
-  )
+  console.info(`%ciframe-resizer ${ver}`, enabled || mode < 1 ? BOLD : NORMAL)
 }
 
 export const {
@@ -58,6 +55,9 @@ export const {
 const formatAdvise = createFormatAdvise(identity)
 export const advise = (...args: any[]): void =>
   childConsole.warn(...args.map(formatAdvise))
+export const adviseNow = (...args: any[]): void =>
+  // eslint-disable-next-line no-console
+  console.warn(...args.map(formatAdvise))
 
 const deprecateAdvise = deprecate((_, msg) => advise(msg))
 export const deprecateMethod = deprecateAdvise('Method')

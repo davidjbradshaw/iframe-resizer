@@ -1,7 +1,7 @@
 import { VERSION } from '../../common/consts'
 import setMode, { getModeData, getModeLabel } from '../../common/mode'
 import { isDef } from '../../common/utils'
-import { advise, purge, vInfo } from '../console'
+import { advise, adviseNow, purge, vInfo } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
 
@@ -11,18 +11,8 @@ export function showVersion(
   version?: string,
 ): void {
   if (!isDef(version) || (oMode > -1 && mode > oMode)) {
-    try {
-      if (sessionStorage.getItem('ifr') === VERSION) return
-    } catch {
-      // sessionStorage blocked in some iframe contexts
-    }
     vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-    if (mode < 2) advise(getModeData(3))
-    try {
-      sessionStorage.setItem('ifr', VERSION)
-    } catch {
-      // sessionStorage blocked in some iframe contexts
-    }
+    if (mode < 2) adviseNow(getModeData(3))
   }
 }
 
@@ -70,13 +60,15 @@ export default function ({
       break
   }
 
-  showVersion(mode, oMode, version)
+  if (mode >= 0) showVersion(mode, oMode, version)
 
   if (!isDef(version) || !state.firstRun) {
     if (modeData) advise(modeData)
-    if (mode < 0)
+    if (mode < 0) {
+      advise(getModeData(9))
       // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw modeData.split('<br>')[0].replace(/<\/?[a-z][^>]*>|<\/>/gi, '')
+    }
   }
 
   settings.mode = mode

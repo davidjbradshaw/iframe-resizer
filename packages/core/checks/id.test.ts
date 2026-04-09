@@ -11,7 +11,7 @@ describe('core/checks/id', () => {
     const iframe = document.createElement('iframe')
     const id = ensureHasId(iframe, { id: 'x' })
 
-    expect(id).toMatch(/^(x|iFrameResizer)/) // new id created based on defaults or option
+    expect(id).toMatch(/^(x|iframeResizer)/) // new id created based on defaults or option
     expect(iframe.id).toBe(id)
   })
 
@@ -22,7 +22,7 @@ describe('core/checks/id', () => {
 
     expect(() => ensureHasId(iframe)).toThrow(TypeError)
     expect(() => ensureHasId(iframe)).toThrow(
-      'Invalid id for iFrame. Expected String',
+      'Invalid id for iframe. Expected String',
     )
   })
 

@@ -40,7 +40,7 @@ declare module '@iframe-resizer/child' {
       onMessage?(message: any): void
 
       /**
-       * This function is called once iFrame-Resizer has been initialized after receiving a call from the parent page.
+       * This function is called once iframe-Resizer has been initialized after receiving a call from the parent page.
        */
       onReady?(): void
     }
@@ -48,22 +48,22 @@ declare module '@iframe-resizer/child' {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     interface IFramePage {
       /**
-       * Turn autoResizing of the iFrame on and off. Returns bool of current state.
+       * Turn autoResizing of the iframe on and off. Returns bool of current state.
        */
       autoResize(resize?: boolean): boolean
 
       /**
-       * Remove the iFrame from the parent page.
+       * Remove the iframe from the parent page.
        */
       close(): void
 
       /**
-       * Returns the ID of the iFrame that the page is contained in.
+       * Returns the ID of the iframe that the page is contained in.
        */
       getId(): string
 
       /**
-       * Returns the origin of the parent page that the iFrame is contained in.
+       * Returns the origin of the parent page that the iframe is contained in.
        */
       getParentOrigin(): string
 
@@ -92,7 +92,7 @@ declare module '@iframe-resizer/child' {
       scrollTo(x: number, y: number): void
 
       /**
-       * Scroll the parent page to the coordinates x and y relative to the position of the iFrame.
+       * Scroll the parent page to the coordinates x and y relative to the position of the iframe.
        */
       scrollToOffset(x: number, y: number): void
 
@@ -114,7 +114,7 @@ declare module '@iframe-resizer/child' {
       setTargetOrigin(targetOrigin: string): void
 
       /**
-       * Manually force iFrame to resize. To use passed arguments you need first to disable the `autoResize` option to
+       * Manually force iframe to resize. To use passed arguments you need first to disable the `autoResize` option to
        * prevent auto resizing and enable the `sizeWidth` option if you wish to set the width.
        */
       resize(customHeight?: string, customWidth?: string): void
@@ -160,7 +160,7 @@ declare module '@iframe-resizer/child' {
 
   global {
     interface Window {
-      iFrameResizer: iframeResizer.IFramePageOptions
+      iframeResizer: iframeResizer.IFramePageOptions
       parentIFrame: iframeResizer.IFramePage
     }
   }

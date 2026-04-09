@@ -2,7 +2,6 @@ import { INIT, VERSION } from '../common/consts'
 import { id, once } from '../common/utils'
 import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
-import { checkHeightMode, checkWidthMode } from './check/calculation-mode'
 import checkCrossDomain from './check/cross-domain'
 import checkIgnoredElements from './check/ignored-elements'
 import checkMode from './check/mode'
@@ -71,8 +70,6 @@ function startIframeResizerChild({
   const setup = [
     checkIgnoredElements,
     checkCrossDomain,
-    checkHeightMode,
-    checkWidthMode,
     checkQuirksMode,
     checkAndSetupTags,
     checkSettings,

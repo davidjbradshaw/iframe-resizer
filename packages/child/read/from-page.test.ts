@@ -6,7 +6,7 @@ describe('child/read/from-page', () => {
   beforeEach(() => {
     // reset page object
     delete window.iframeResizer
-    delete window.iFrameResizer
+    delete window.iframeResizer
     settings.mode = 0
     settings.calculateHeight = true
     settings.calculateWidth = false
@@ -96,8 +96,8 @@ describe('child/read/from-page', () => {
     expect(out).toEqual({})
   })
 
-  test('reads from window.iFrameResizer (capital F)', async () => {
-    window.iFrameResizer = {
+  test('reads from window.iframeResizer (capital F)', async () => {
+    window.iframeResizer = {
       targetOrigin: 'https://test.com',
     }
 

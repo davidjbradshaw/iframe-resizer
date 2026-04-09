@@ -62,7 +62,7 @@ function sendInit(id: string, initChild: () => void): void {
 
 // We have to call trigger twice, as we can not be sure if all
 // iframes have completed loading when this code runs. The
-// event listener also catches the page changing in the iFrame.
+// event listener also catches the page changing in the iframe.
 export default function init(id: string, message: string): void {
   const createInitChild = (eventType: string) => (): void => {
     if (!settings[id]) return // iframe removed before load event

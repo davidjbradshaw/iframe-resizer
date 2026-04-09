@@ -16,7 +16,7 @@ export default function ensureHasId(
   let { id } = iframe
 
   if (id && !isString(id)) {
-    throw new TypeError('Invalid id for iFrame. Expected String')
+    throw new TypeError('Invalid id for iframe. Expected String')
   }
 
   if (!id || id === '') {
