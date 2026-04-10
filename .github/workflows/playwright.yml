@@ -41,6 +41,9 @@ jobs:
     - name: Build project
       run: node build-scripts/build-all.js
 
+    - name: Create js-dist symlink for example builds
+      run: ln -s js js-dist
+
     - name: Build React example for e2e tests
       run: |
         cd example/react
