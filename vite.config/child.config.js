@@ -1,5 +1,5 @@
+import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
-import dts from 'vite-plugin-dts'
 
 import { createPluginsProd } from './shared/plugins.js'
 
@@ -25,11 +25,15 @@ export default defineConfig({
     sourcemap: process.env.BETA || false,
   },
   plugins: [
-    dts({
-      include: ['packages/global.d.ts', 'packages/child/**/*.ts'],
-      exclude: ['packages/child/**/*.test.*'],
-      outDir: 'dist/child',
-    }),
     ...createPluginsProd('child'),
+    copy({
+      hook: 'closeBundle',
+      targets: [
+        {
+          src: 'packages/child/index.d.ts',
+          dest: 'dist/child/',
+        },
+      ],
+    }),
   ],
 })
