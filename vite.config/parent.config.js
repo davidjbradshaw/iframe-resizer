@@ -1,7 +1,10 @@
+import { existsSync, renameSync } from 'node:fs'
+
 import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { commonAlias, createPluginsProd } from './shared/plugins.js'
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -13,6 +16,7 @@ const filterDeps = (contents) => {
 }
 
 export default defineConfig({
+  resolve: { alias: [commonAlias] },
   build: {
     lib: {
       entry: './packages/parent/esm.ts',
@@ -35,14 +39,21 @@ export default defineConfig({
     sourcemap: process.env.BETA || false,
   },
   plugins: [
+    dts({
+      include: ['packages/parent/esm.ts', 'packages/parent/factory.ts'],
+      outDir: 'dist/parent',
+      entryRoot: 'packages/parent',
+      rollupTypes: true,
+      afterBuild: () => {
+        const src = 'dist/parent/index.esm.d.ts'
+        const dest = 'dist/parent/index.d.ts'
+        if (existsSync(src)) renameSync(src, dest)
+      },
+    }),
     ...createPluginsProd('parent'),
     copy({
       hook: 'closeBundle',
       targets: [
-        {
-          src: 'packages/parent/index.d.ts',
-          dest: 'dist/parent/',
-        },
         {
           src: 'dist/parent/package.json',
           dest: 'dist/parent/',

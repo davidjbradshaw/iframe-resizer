@@ -1,9 +1,12 @@
+import { existsSync, renameSync } from 'node:fs'
+
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { commonAlias, createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
+  resolve: { alias: [commonAlias] },
   build: {
     lib: {
       entry: './packages/core/index.ts',
@@ -36,7 +39,6 @@ export default defineConfig({
       entryRoot: 'packages/core',
       rollupTypes: true,
       afterBuild: () => {
-        const { renameSync, existsSync } = require('node:fs')
         const src = 'dist/core/index.esm.d.ts'
         const dest = 'dist/core/index.d.ts'
         if (existsSync(src)) renameSync(src, dest)

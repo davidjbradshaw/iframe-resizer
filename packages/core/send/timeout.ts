@@ -1,4 +1,5 @@
-import { OBJECT } from '../../common/consts'
+import { OBJECT } from '@iframe-resizer/common/consts'
+
 import { advise, event } from '../console'
 
 export const getOrigin = (url: string): string | null => {

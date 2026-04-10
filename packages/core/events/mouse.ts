@@ -1,4 +1,5 @@
-import { SEPARATOR } from '../../common/consts'
+import { SEPARATOR } from '@iframe-resizer/common/consts'
+
 import getMessageBody from '../received/message'
 import type { MessageData } from '../types'
 import on from './wrapper'

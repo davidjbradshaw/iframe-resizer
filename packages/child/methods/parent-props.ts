@@ -1,5 +1,10 @@
-import { FUNCTION, PARENT_INFO, PARENT_INFO_STOP } from '../../common/consts'
-import { typeAssert } from '../../common/utils'
+import {
+  FUNCTION,
+  PARENT_INFO,
+  PARENT_INFO_STOP,
+} from '@iframe-resizer/common/consts'
+import { typeAssert } from '@iframe-resizer/common/utils'
+
 import sendMessage from '../send/message'
 import state from '../values/state'
 

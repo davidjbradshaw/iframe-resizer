@@ -1,4 +1,9 @@
-import { HEIGHT_EDGE, OVERFLOW_OBSERVER, WIDTH_EDGE } from '../../common/consts'
+import {
+  HEIGHT_EDGE,
+  OVERFLOW_OBSERVER,
+  WIDTH_EDGE,
+} from '@iframe-resizer/common/consts'
+
 import checkOverflow from '../check/overflow'
 import { info } from '../console'
 import createOverflowObserver from '../observers/overflow'

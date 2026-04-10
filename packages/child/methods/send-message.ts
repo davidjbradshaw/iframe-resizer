@@ -1,5 +1,6 @@
-import { MESSAGE, STRING } from '../../common/consts'
-import { typeAssert } from '../../common/utils'
+import { MESSAGE, STRING } from '@iframe-resizer/common/consts'
+import { typeAssert } from '@iframe-resizer/common/utils'
+
 import sendMessage from '../send/message'
 
 export default function (msg: any, targetOrigin?: string): void {

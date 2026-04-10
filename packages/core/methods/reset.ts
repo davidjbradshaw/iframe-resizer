@@ -1,4 +1,5 @@
-import { INIT, RESET } from '../../common/consts'
+import { INIT, RESET } from '@iframe-resizer/common/consts'
+
 import { log } from '../console'
 import setSize from '../events/size'
 import { getPagePosition } from '../page/position'

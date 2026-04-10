@@ -1,4 +1,5 @@
-import { isString } from '../../common/utils'
+import { isString } from '@iframe-resizer/common/utils'
+
 import { event as consoleEvent, log } from '../console'
 import defaults from '../values/defaults'
 

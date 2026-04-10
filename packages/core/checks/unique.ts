@@ -1,4 +1,5 @@
-import { NEW_LINE } from '../../common/consts'
+import { NEW_LINE } from '@iframe-resizer/common/consts'
+
 import { advise } from '../console'
 
 const shownDuplicateIdWarning: Record<string, boolean> = {}

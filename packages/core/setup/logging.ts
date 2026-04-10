@@ -5,8 +5,9 @@ import {
   LOG_DISABLED,
   LOG_EXPANDED,
   LOG_OPTIONS,
-} from '../../common/consts'
-import { hasOwn, isString } from '../../common/utils'
+} from '@iframe-resizer/common/consts'
+import { hasOwn, isString } from '@iframe-resizer/common/utils'
+
 import { enableVInfo } from '../checks/mode'
 import { error, setupConsole } from '../console'
 import defaults from '../values/defaults'

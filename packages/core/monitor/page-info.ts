@@ -1,4 +1,5 @@
-import { PAGE_INFO } from '../../common/consts'
+import { PAGE_INFO } from '@iframe-resizer/common/consts'
+
 import { sendInfoToIframe, startInfoMonitor, stopInfoMonitor } from './common'
 
 export function getPageInfo(iframe: HTMLIFrameElement): string {

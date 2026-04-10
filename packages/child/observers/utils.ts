@@ -1,6 +1,6 @@
+import { NEW_LINE } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
-import { NEW_LINE } from '../../common/consts'
 import { debug, error, info } from '../console'
 
 export const metaCreateDebugObserved =

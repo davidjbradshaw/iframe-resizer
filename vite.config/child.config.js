@@ -1,9 +1,10 @@
 import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { commonAlias, createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
+  resolve: { alias: [commonAlias] },
   build: {
     lib: {
       entry: './packages/child/index.ts',

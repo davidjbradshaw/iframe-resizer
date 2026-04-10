@@ -1,4 +1,5 @@
-import { AUTO, NONE } from '../../common/consts'
+import { AUTO, NONE } from '@iframe-resizer/common/consts'
+
 import { advise, log } from '../console'
 
 const nodes = (): HTMLElement[] => [document.documentElement, document.body]

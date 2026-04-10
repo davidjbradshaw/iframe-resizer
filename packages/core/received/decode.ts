@@ -1,4 +1,5 @@
-import { MESSAGE_ID_LENGTH } from '../../common/consts'
+import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
+
 import type { MessageData } from '../types'
 import settings from '../values/settings'
 

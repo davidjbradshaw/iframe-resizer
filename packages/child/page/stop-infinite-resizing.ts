@@ -1,6 +1,6 @@
+import { AUTO, HEIGHT } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { AUTO, HEIGHT } from '../../common/consts'
 import { log } from '../console'
 
 const IMPORTANT = 'important'

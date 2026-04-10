@@ -1,6 +1,6 @@
+import { BOTH, HORIZONTAL, NONE, VERTICAL } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { BOTH, HORIZONTAL, NONE, VERTICAL } from '../../common/consts'
 import { log } from '../console'
 import settings from '../values/settings'
 

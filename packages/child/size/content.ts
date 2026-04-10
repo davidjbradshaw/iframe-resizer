@@ -1,5 +1,3 @@
-import { HIGHLIGHT } from 'auto-console-group'
-
 import {
   ENABLE,
   INIT,
@@ -12,7 +10,9 @@ import {
   SET_OFFSET_SIZE,
   SIZE_CHANGE_DETECTED,
   VISIBILITY_OBSERVER,
-} from '../../common/consts'
+} from '@iframe-resizer/common/consts'
+import { HIGHLIGHT } from 'auto-console-group'
+
 import { info, log, purge } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'

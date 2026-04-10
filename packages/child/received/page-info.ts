@@ -1,5 +1,6 @@
-import { PAGE_INFO } from '../../common/consts'
-import { isolateUserCode } from '../../common/utils'
+import { PAGE_INFO } from '@iframe-resizer/common/consts'
+import { isolateUserCode } from '@iframe-resizer/common/utils'
+
 import { log } from '../console'
 import state from '../values/state'
 import { getData, notExpected, parse, parseFrozen } from './utils'

@@ -3,8 +3,9 @@ import {
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
-} from '../../common/consts'
-import { typeAssert } from '../../common/utils'
+} from '@iframe-resizer/common/consts'
+import { typeAssert } from '@iframe-resizer/common/utils'
+
 import sendMessage from '../send/message'
 
 const createScrollMethod =

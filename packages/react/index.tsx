@@ -1,5 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable react/require-default-props */
+import { esModuleInterop } from '@iframe-resizer/common/utils'
 import type {
   IframeComponent,
   IframeObject,
@@ -16,7 +17,6 @@ import React, {
   useRef,
 } from 'react'
 
-import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
 
 export type IframeForwardRef = Omit<IframeObject, 'close' | 'disconnect'> & {

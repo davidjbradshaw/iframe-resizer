@@ -1,5 +1,6 @@
-import { LABEL } from '../common/consts'
-import { isObject } from '../common/utils'
+import { LABEL } from '@iframe-resizer/common/consts'
+import { isObject } from '@iframe-resizer/common/utils'
+
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
 import { errorBoundary, event as consoleEvent, warn } from './console'
@@ -7,7 +8,6 @@ import setupEventListenersOnce from './listeners'
 import setupIframe from './setup'
 import setupLogging from './setup/logging'
 
-export { LOG_COLLAPSED, LOG_DISABLED, LOG_EXPANDED } from '../common/consts'
 export type {
   Direction,
   IframeComponent,
@@ -21,6 +21,11 @@ export type {
   MessageData,
   ScrollOption,
 } from './types'
+export {
+  LOG_COLLAPSED,
+  LOG_DISABLED,
+  LOG_EXPANDED,
+} from '@iframe-resizer/common/consts'
 
 export default function connectResizer(
   options: Record<string, any>,
