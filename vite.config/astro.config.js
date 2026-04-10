@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -15,7 +15,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['@iframe-resizer/core', 'auto-console-group'],
     },
-    minify: 'esbuild',
+    ...terserWithBanner('astro'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [

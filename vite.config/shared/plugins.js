@@ -137,3 +137,6 @@ export const typescriptChild = () =>
 // Export createBanner for use in browser/test builds
 
 export { default as createBanner } from './banner.js'
+
+// Terser config for Vite lib builds — minifies and adds banner
+export { default as terserWithBanner } from './terser.js'

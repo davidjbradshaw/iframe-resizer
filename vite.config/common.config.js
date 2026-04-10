@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -15,7 +15,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['auto-console-group'],
     },
-    minify: 'esbuild',
+    ...terserWithBanner('common'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [
@@ -25,6 +25,13 @@ export default defineConfig({
       exclude: ['packages/common/**/*.test.*'],
       outDir: 'dist/common',
       entryRoot: 'packages/common',
+      rollupTypes: true,
+      afterBuild: async () => {
+        const { existsSync, renameSync } = await import('node:fs')
+        const src = 'dist/common/index.esm.d.ts'
+        const dest = 'dist/common/index.d.ts'
+        if (existsSync(src)) renameSync(src, dest)
+      },
     }),
     ...createPluginsProd('common'),
   ],

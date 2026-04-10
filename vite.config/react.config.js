@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   resolve: {
@@ -24,7 +24,7 @@ export default defineConfig({
         'react-dom',
       ],
     },
-    minify: 'esbuild',
+    ...terserWithBanner('react'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [

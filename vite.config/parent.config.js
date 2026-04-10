@@ -4,7 +4,7 @@ import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -41,7 +41,7 @@ export default defineConfig({
         },
       },
     },
-    minify: 'esbuild',
+    ...terserWithBanner('parent'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [

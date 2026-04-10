@@ -1,7 +1,7 @@
 import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   resolve: {
@@ -24,7 +24,7 @@ export default defineConfig({
         },
       },
     },
-    minify: 'esbuild',
+    ...terserWithBanner('child'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [

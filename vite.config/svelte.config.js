@@ -1,7 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { defineConfig } from 'vite'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -20,7 +20,7 @@ export default defineConfig({
         id === '@iframe-resizer/core' ||
         id === 'auto-console-group',
     },
-    minify: 'esbuild',
+    ...terserWithBanner('svelte'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [

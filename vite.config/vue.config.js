@@ -2,7 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -24,7 +24,7 @@ export default defineConfig({
         },
       },
     },
-    minify: 'esbuild',
+    ...terserWithBanner('vue'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [

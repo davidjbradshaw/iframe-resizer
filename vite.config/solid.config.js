@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import solid from 'vite-plugin-solid'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -20,7 +20,7 @@ export default defineConfig({
         id === '@iframe-resizer/core' ||
         id === 'auto-console-group',
     },
-    minify: 'esbuild',
+    ...terserWithBanner('solid'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [solid(), ...createPluginsProd('solid')],
