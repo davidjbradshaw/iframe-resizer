@@ -36,6 +36,7 @@ export default defineConfig({
       },
     }),
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/vue/**/*.ts'],
       exclude: ['packages/vue/**/*.vue'],
       outDir: 'dist/vue',
