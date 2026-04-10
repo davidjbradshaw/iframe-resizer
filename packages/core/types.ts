@@ -66,8 +66,9 @@ export interface IframeMessageData {
 }
 
 export interface IframeScrollData {
-  x: number
-  y: number
+  iframe: IframeComponent
+  top: number
+  left: number
 }
 
 // --- Options ---
