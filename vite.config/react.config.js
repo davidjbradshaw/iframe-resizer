@@ -14,12 +14,13 @@ export default defineConfig({
     outDir: 'dist/react',
     emptyOutDir: false,
     rollupOptions: {
-      external: [
-        'react',
-        'react-dom',
-        '@iframe-resizer/core',
-        'auto-console-group',
-      ],
+      external: (id) =>
+        [
+          'react',
+          'react-dom',
+          '@iframe-resizer/core',
+          'auto-console-group',
+        ].includes(id) || id.startsWith('@iframe-resizer/common/'),
     },
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,

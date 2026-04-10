@@ -14,7 +14,12 @@ export default defineConfig({
     outDir: 'dist/angular',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['@iframe-resizer/core', 'auto-console-group', '@angular/core'],
+      external: (id) =>
+        [
+          '@iframe-resizer/core',
+          'auto-console-group',
+          '@angular/core',
+        ].includes(id) || id.startsWith('@iframe-resizer/common/'),
     },
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,

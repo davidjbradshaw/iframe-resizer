@@ -14,7 +14,10 @@ export default defineConfig({
     outDir: 'dist/alpine',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['@iframe-resizer/core', 'auto-console-group', 'alpinejs'],
+      external: (id) =>
+        ['@iframe-resizer/core', 'auto-console-group', 'alpinejs'].includes(
+          id,
+        ) || id.startsWith('@iframe-resizer/common/'),
     },
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,

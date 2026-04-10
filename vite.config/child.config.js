@@ -15,7 +15,8 @@ export default defineConfig({
     outDir: 'dist/child',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['auto-console-group'],
+      external: (id) =>
+        id === 'auto-console-group' || id.startsWith('@iframe-resizer/common/'),
       output: {
         globals: {
           'auto-console-group': 'acg',

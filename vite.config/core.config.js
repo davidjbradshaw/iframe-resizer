@@ -17,7 +17,8 @@ export default defineConfig({
     outDir: 'dist/core',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['auto-console-group'],
+      external: (id) =>
+        id === 'auto-console-group' || id.startsWith('@iframe-resizer/common/'),
       output: {
         exports: 'named',
         globals: {

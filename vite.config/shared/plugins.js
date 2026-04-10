@@ -44,14 +44,23 @@ export const pluginsBase =
   }
 
 const fixVersion = (file) => {
+  const common = { '@iframe-resizer/common': pkg.version }
+
   switch (file) {
     case 'common':
-    case 'core':
-    case 'child':
       return {}
 
+    case 'core':
+    case 'child':
+      return { additionalDependencies: common }
+
     default:
-      return { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+      return {
+        additionalDependencies: {
+          ...common,
+          '@iframe-resizer/core': pkg.version,
+        },
+      }
   }
 }
 

@@ -27,7 +27,10 @@ export default defineConfig({
     outDir: 'dist/parent',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['@iframe-resizer/core', 'auto-console-group'],
+      external: (id) =>
+        id === '@iframe-resizer/core' ||
+        id === 'auto-console-group' ||
+        id.startsWith('@iframe-resizer/common/'),
       output: {
         globals: {
           '@iframe-resizer/core': 'connectResizer',

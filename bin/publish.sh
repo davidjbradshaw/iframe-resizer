@@ -43,7 +43,9 @@ npm install
 npm test
 npm run build:$1
 
-cd dist/parent
+cd dist/common
+npm publish --tag $1 --access public
+cd ../parent
 npm publish --tag $1 --access public
 cd ../child
 npm publish --tag $1 --access public
@@ -58,6 +60,8 @@ npm publish --tag $1 --access public
 cd ../svelte
 npm publish --tag $1 --access public
 cd ../alpine
+npm publish --tag $1 --access public
+cd ../solid
 npm publish --tag $1 --access public
 cd ../angular
 npm publish --tag $1 --access public
