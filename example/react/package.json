@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/child": "^5.5.0-beta.3",
-    "@iframe-resizer/core": "file:../../dist/core",
-    "@iframe-resizer/react": "file:../../dist/react",
+    "@iframe-resizer/child": "6.0.0-beta.7",
+    "@iframe-resizer/core": "6.0.0-beta.7",
+    "@iframe-resizer/react": "6.0.0-beta.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

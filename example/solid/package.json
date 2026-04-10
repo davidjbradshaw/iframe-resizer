@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/core": "file:../../dist/core",
-    "@iframe-resizer/solid": "file:../../dist/solid",
+    "@iframe-resizer/core": "6.0.0-beta.7",
+    "@iframe-resizer/solid": "6.0.0-beta.7",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {

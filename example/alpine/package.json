@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/alpine": "file:../../dist/alpine",
-    "@iframe-resizer/core": "file:../../dist/core",
+    "@iframe-resizer/alpine": "6.0.0-beta.7",
+    "@iframe-resizer/core": "6.0.0-beta.7",
     "alpinejs": "^3.14.0"
   },
   "devDependencies": {
