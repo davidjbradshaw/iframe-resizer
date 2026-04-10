@@ -1,11 +1,14 @@
 import { LABEL, OBJECT, STRING, UNDEFINED } from '@iframe-resizer/common/consts'
-import connectResizer, { type IframeOptions } from '@iframe-resizer/core'
+import connectResizer, {
+  type IframeComponent,
+  type IframeOptions,
+} from '@iframe-resizer/core'
 
 const id = `[${LABEL}] `
 
 export default function createIframeResize() {
   let connectWithOptions: (iframe: HTMLIFrameElement) => any
-  let iframes: HTMLIFrameElement[]
+  let iframes: IframeComponent[]
 
   function setupDisconnectedIframe(element: HTMLIFrameElement): void {
     const observer = new MutationObserver(() => {
@@ -34,19 +37,19 @@ export default function createIframeResize() {
 
       case !element.isConnected:
         setupDisconnectedIframe(element)
-        iframes.push(element)
+        iframes.push(element as IframeComponent)
         break
 
       default:
         connectWithOptions(element)
-        iframes.push(element)
+        iframes.push(element as IframeComponent)
     }
   }
 
   return function (
     options: IframeOptions,
     target?: string | HTMLElement,
-  ): readonly HTMLIFrameElement[] {
+  ): readonly IframeComponent[] {
     if (typeof window === UNDEFINED) return [] // don't run for server side render
 
     // Check if document.body exists in browser environment
