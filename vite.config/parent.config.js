@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve'
+import typescript from '@rollup/plugin-typescript'
 import copy from 'rollup-plugin-copy'
 
 import { output } from './shared/output.js'
@@ -30,7 +31,18 @@ export default [
     output: [output('parent')('esm'), output('parent')('cjs')],
     external: ['@iframe-resizer/core', 'auto-console-group'],
     plugins: [
-      typescriptParent(),
+      typescript({
+        tsconfig: './tsconfig.build.json',
+        include: [
+          'packages/global.d.ts',
+          'packages/common/**/*.ts',
+          'packages/core/**/*.ts',
+          'packages/parent/**/*.ts',
+        ],
+        exclude: ['**/*.test.*'],
+        declaration: true,
+        declarationDir: 'dist/parent',
+      }),
       ...createPluginsProd('parent'),
       copy({
         hook: 'closeBundle',

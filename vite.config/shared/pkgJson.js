@@ -6,6 +6,7 @@ const customConfig = (file) => {
   const entryPoints = {
     main,
     module,
+    types,
     browser: `index.umd.js`,
   }
 
@@ -109,13 +110,6 @@ const customConfig = (file) => {
       return {
         ...entryPoints,
         types,
-      }
-
-    case 'parent':
-    case 'child':
-      return {
-        ...entryPoints,
-        types: `iframe-resizer.${file}.d.ts`,
       }
 
     default:
