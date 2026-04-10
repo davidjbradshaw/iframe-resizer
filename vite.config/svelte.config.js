@@ -6,7 +6,7 @@ import { createPluginsProd } from './shared/plugins.js'
 export default defineConfig({
   build: {
     lib: {
-      entry: './packages/svelte/index.js',
+      entry: './packages/svelte/index.ts',
       name: 'IframeResizer',
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,
