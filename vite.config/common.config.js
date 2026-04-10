@@ -21,15 +21,17 @@ export default defineConfig({
       output: {
         format: 'es',
         entryFileNames: '[name].js',
+        preserveModules: false,
       },
       external: ['auto-console-group'],
+      treeshake: false,
     },
-    minify: 'esbuild',
+    minify: false,
     sourcemap: process.env.BETA || false,
   },
   plugins: [
     dts({
-      include: ['packages/common/**/*.ts'],
+      include: ['packages/global.d.ts', 'packages/common/**/*.ts'],
       exclude: ['packages/common/**/*.test.*'],
       outDir: 'dist/common',
       entryRoot: 'packages/common',
