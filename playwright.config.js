@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/extensions
+import './e2e/setup-js-dist.js'
+
 import { defineConfig, devices } from '@playwright/test'
 
 /**
@@ -6,6 +9,7 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './e2e',
+  globalTeardown: './e2e/teardown-js-dist.js',
 
   /* Run tests in files in parallel */
   fullyParallel: true,

@@ -9,10 +9,6 @@
       type="text/javascript"
       src="../../../js-dist/iframe-resizer.child.js"
     ></script>
-    <!-- <script
-      type="text/javascript"
-      src="../../dist/legacy/js/iframeResizer.contentWindow.js"
-    ></script> -->
     <script>
       function toggle() {
         const { style } = document.getElementsByTagName('p')[1]
@@ -39,7 +35,7 @@
         style.opacity = '0.7'
         style.position = 'absolute'
         style.top = `${document.body.scrollHeight - 10}px`
-        
+
         div.innerContent = 'Overflowing content'
         document.body.lastChild.append(div)
         return false
