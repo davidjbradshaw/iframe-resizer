@@ -67,7 +67,7 @@ export default defineConfig({
         'packages/parent/esm.ts',
         'packages/parent/umd.ts',
         'packages/solid/index.ts',
-        'packages/svelte/index.js',
+        'packages/svelte/index.ts',
       ],
     },
   },

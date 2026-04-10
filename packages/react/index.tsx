@@ -1,15 +1,9 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable react/require-default-props */
 import type {
-  Direction,
   IframeComponent,
-  IframeMessageData,
-  IframeMouseData,
   IframeObject,
-  IframeResizedData,
-  IframeScrollData,
-  LogOption,
-  ScrollOption,
+  IframeOptions,
 } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -35,36 +29,8 @@ type IframeProps = React.DetailedHTMLProps<
   HTMLIFrameElement
 >
 
-export type ResizerOptions = {
-  bodyBackground?: string | null
-  bodyMargin?: string | number | null
-  bodyPadding?: string | number | null
-  checkOrigin?: boolean | string[]
-  direction?: Direction
-  inPageLinks?: boolean
-  license: string
-  log?: LogOption
-  logExpand?: boolean
-  offsetSize?: number
-  scrolling?: ScrollOption
-  tolerance?: number
-  waitForLoad?: boolean
-  warningTimeout?: number
-}
-
-export type ResizerEvents = {
-  onAfterClose?: (iframeId: string) => void
-  onMessage?: (ev: IframeMessageData) => void
-  onMouseEnter?: (ev: IframeMouseData) => void
-  onMouseLeave?: (ev: IframeMouseData) => void
-  onReady?: (iframe: IframeComponent) => void
-  onResized?: (ev: IframeResizedData) => void
-  onScroll?: (ev: IframeScrollData) => boolean
-}
-
 export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
-  ResizerOptions &
-  ResizerEvents
+  Omit<IframeOptions, 'id' | 'onBeforeClose'>
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
@@ -110,7 +76,6 @@ function IframeResizer(
   useImperativeHandle(ref, () => ({
     getRef: () => iframeRef,
     getElement: () => iframeRef.current,
-    resize: () => iframeRef.current.iframeResizer.resize(),
     moveToAnchor: (anchor: string) =>
       iframeRef.current.iframeResizer.moveToAnchor(anchor),
     sendMessage: (message: string, targetOrigin?: string) => {
@@ -124,4 +89,12 @@ function IframeResizer(
 
 export default forwardRef<IframeForwardRef, IframeResizerProps>(IframeResizer)
 
-export { type IframeComponent, type IframeObject } from '@iframe-resizer/core'
+export {
+  type IframeComponent,
+  type IframeMessageData,
+  type IframeMouseData,
+  type IframeObject,
+  type IframeOptions,
+  type IframeResizedData,
+  type IframeScrollData,
+} from '@iframe-resizer/core'

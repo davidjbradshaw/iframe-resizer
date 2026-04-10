@@ -121,6 +121,10 @@ export class IframeResizerDirective {
 
 export {
   type IframeComponent,
+  type IframeMessageData,
+  type IframeMouseData,
   type IframeObject,
   type IframeOptions,
+  type IframeResizedData,
+  type IframeScrollData,
 } from '@iframe-resizer/core'

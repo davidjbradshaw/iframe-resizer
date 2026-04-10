@@ -67,4 +67,12 @@ export default function IframeResizer(Alpine: Alpine): void {
   )
 }
 
-export { type IframeOptions } from '@iframe-resizer/core'
+export type {
+  IframeComponent,
+  IframeMessageData,
+  IframeMouseData,
+  IframeObject,
+  IframeOptions,
+  IframeResizedData,
+  IframeScrollData,
+} from '@iframe-resizer/core'

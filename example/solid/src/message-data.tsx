@@ -1,7 +1,7 @@
-import type { MessageEvent, ResizedEvent } from './types'
+import type { IframeMessageData, IframeResizedData } from '@iframe-resizer/solid'
 
 type Props = {
-  data?: ResizedEvent | MessageEvent
+  data?: IframeResizedData | IframeMessageData
 }
 
 const MessageData = (props: Props) =>

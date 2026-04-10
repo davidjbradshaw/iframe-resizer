@@ -1,19 +1,22 @@
 import { useRef, useState } from 'react'
-import IframeResizer from '@iframe-resizer/react'
+import IframeResizer, {
+  type IframeForwardRef,
+  type IframeMessageData,
+  type IframeResizedData,
+} from '@iframe-resizer/react'
 
 import MessageData from './message-data'
-import { ResizedEvent, MessageEvent } from './iframe-events'
 
 import './App.css'
 
 function App() {
-  const iframeRef = useRef<IframeResizer.IFrameForwardRef>(null)
-  const [messageData, setMessageData] = useState<ResizedEvent | MessageEvent>()
+  const iframeRef = useRef<IframeForwardRef>(null)
+  const [messageData, setMessageData] = useState<IframeResizedData | IframeMessageData>()
   const [show, setShow] = useState(true)
 
-  const onResized = (data: ResizedEvent) => setMessageData(data)
+  const onResized = (data: IframeResizedData) => setMessageData(data)
 
-  const onMessage = (data: MessageEvent) => {
+  const onMessage = (data: IframeMessageData) => {
     setMessageData(data)
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
     iframeRef.current?.sendMessage('Hello back from the parent page')
