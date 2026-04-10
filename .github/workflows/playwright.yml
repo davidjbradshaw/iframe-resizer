@@ -39,7 +39,7 @@ jobs:
       run: npx playwright install --with-deps chromium
 
     - name: Build project
-      run: node build-scripts/build-all.js
+      run: TEST=1 node build-scripts/build-all.js
 
     - name: Create js-dist symlink for example builds
       run: ln -s js js-dist
