@@ -25,7 +25,7 @@
   export let direction: string | undefined = undefined
   export let log: LogOption | undefined = undefined
   export let inPageLinks: boolean | undefined = undefined
-  export let offset: number | undefined = undefined
+  export let offsetSize: number | undefined = undefined
   export let scrolling: boolean | undefined = undefined
   export let tolerance: number | undefined = undefined
   export let warningTimeout: number | undefined = undefined
@@ -47,7 +47,7 @@
       direction,
       log,
       inPageLinks,
-      offset,
+      offsetSize,
       scrolling,
       tolerance,
       warningTimeout,

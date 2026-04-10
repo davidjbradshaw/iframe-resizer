@@ -72,7 +72,7 @@ describe('core/listeners', () => {
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
 
-    expect(() => listener({ data: '[iframeSizer]x' })).toThrow(
+    expect(() => listener({ data: '[iFrameSizer]x' })).toThrow(
       /No settings for nope/,
     )
   })
@@ -88,7 +88,7 @@ describe('core/listeners', () => {
     const { default: setup } = await import('./listeners')
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
-    const evt = { data: '[iframeSizer]payload' }
+    const evt = { data: '[iFrameSizer]payload' }
     listener(evt)
 
     expect(s.lastMessage).toBe(evt.data)
@@ -109,7 +109,7 @@ describe('core/listeners', () => {
     const { default: setup } = await import('./listeners')
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
-    listener({ data: '[iframeSizer]x' })
+    listener({ data: '[iFrameSizer]x' })
 
     expect(routeMessage).not.toHaveBeenCalled()
   })
@@ -136,7 +136,7 @@ describe('core/listeners', () => {
     const { default: setup } = await import('./listeners')
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
-    listener({ data: '[iframeSizer]x' })
+    listener({ data: '[iFrameSizer]x' })
 
     expect(routeMessage).not.toHaveBeenCalled()
   })
@@ -153,7 +153,7 @@ describe('core/listeners', () => {
     const { default: setup } = await import('./listeners')
     setup()
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
-    listener({ data: '[iframeSizer]x' })
+    listener({ data: '[iFrameSizer]x' })
 
     expect(routeMessage).not.toHaveBeenCalled()
   })
@@ -175,7 +175,7 @@ describe('core/listeners', () => {
     setup()
 
     // Call iframeParentListener
-    window.iframeParentListener('[iframeSizer]test')
+    window.iframeParentListener('[iFrameSizer]test')
 
     // Fast-forward timers
     vi.runAllTimers()

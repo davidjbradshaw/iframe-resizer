@@ -21,16 +21,16 @@ it('notExpected calls sendMessage with typeStop', async () => {
 
 it('getData extracts payload after separator', async () => {
   const { getData } = await import('./utils')
-  const data = '[iframeSizer]type:payload:rest'
+  const data = '[iFrameSizer]type:payload:rest'
   expect(getData({ data })).toBe('payload:rest')
 })
 
 it('getMessageType returns INIT for init messages, else extracted type', async () => {
   const { getMessageType } = await import('./utils')
-  expect(getMessageType({ data: '[iframeSizer]resize:payload:true' })).toBe(
+  expect(getMessageType({ data: '[iFrameSizer]resize:payload:true' })).toBe(
     'init',
   )
 
   const { getMessageType: getMsgType2 } = await import('./utils')
-  expect(getMsgType2({ data: '[iframeSizer]resize:payload' })).toBe('resize')
+  expect(getMsgType2({ data: '[iFrameSizer]resize:payload' })).toBe('resize')
 })

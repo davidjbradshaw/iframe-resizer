@@ -54,7 +54,7 @@
       default: undefined,
     },
     inPageLinks: Boolean,
-    offset: Number,
+    offsetSize: Number,
     scrolling: Boolean,
     tolerance: Number,
     warningTimeout: Number,
