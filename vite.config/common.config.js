@@ -31,6 +31,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/common/**/*.ts'],
       exclude: ['packages/common/**/*.test.*'],
       outDir: 'dist/common',

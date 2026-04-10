@@ -40,6 +40,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: ['packages/parent/esm.ts', 'packages/parent/factory.ts'],
       outDir: 'dist/parent',
       entryRoot: 'packages/parent',

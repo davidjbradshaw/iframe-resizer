@@ -21,6 +21,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/angular/**/*.ts'],
       exclude: ['packages/angular/**/*.test.*'],
       outDir: 'dist/angular',
