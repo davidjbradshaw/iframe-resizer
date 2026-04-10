@@ -1,5 +1,6 @@
 # This workflow runs Playwright e2e tests
 # For more information see: https://playwright.dev/docs/ci
+# Uses local build artifacts (js/ and dist/) for testing
 
 name: Playwright
 
