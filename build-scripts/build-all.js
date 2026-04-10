@@ -12,7 +12,7 @@ const { DEBUG, TEST } = process.env
 const packages = [
   { name: 'core', type: 'vite' },
   { name: 'child', type: 'vite' },
-  { name: 'parent', type: 'rollup' },
+  { name: 'parent', type: 'vite' },
   { name: 'react', type: 'vite' },
   { name: 'vue', type: 'vite', postBuild: true },
   { name: 'svelte', type: 'vite', postBuild: true },

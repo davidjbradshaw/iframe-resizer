@@ -106,10 +106,11 @@ const customConfig = (file) => {
         },
       }
 
-    case 'core':
+    case 'jquery':
       return {
-        ...entryPoints,
-        types,
+        main,
+        module,
+        browser: 'index.umd.js',
       }
 
     default:
