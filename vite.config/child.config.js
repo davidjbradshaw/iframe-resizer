@@ -1,4 +1,3 @@
-import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 
 import { createPluginsProd } from './shared/plugins.js'
@@ -24,17 +23,5 @@ export default defineConfig({
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,
   },
-  plugins: [
-    ...createPluginsProd('child'),
-    copy({
-      hook: 'closeBundle',
-      targets: [
-        {
-          src: 'packages/child/index.d.ts',
-          dest: 'dist/child/',
-          rename: 'iframe-resizer.child.d.ts',
-        },
-      ],
-    }),
-  ],
+  plugins: [...createPluginsProd('child')],
 })

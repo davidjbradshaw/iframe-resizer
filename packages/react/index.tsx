@@ -78,7 +78,7 @@ function IframeResizer(
     getElement: () => iframeRef.current,
     moveToAnchor: (anchor: string) =>
       iframeRef.current.iframeResizer.moveToAnchor(anchor),
-    sendMessage: (message: string, targetOrigin?: string) => {
+    sendMessage: (message: any, targetOrigin?: string) => {
       iframeRef.current.iframeResizer.sendMessage(message, targetOrigin)
     },
   }))

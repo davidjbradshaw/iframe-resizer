@@ -114,7 +114,7 @@ export class IframeResizerDirective {
     this.resizer?.moveToAnchor(anchor)
   }
 
-  public sendMessage(message: string, targetOrigin?: string): void {
+  public sendMessage(message: any, targetOrigin?: string): void {
     this.resizer?.sendMessage(message, targetOrigin)
   }
 }

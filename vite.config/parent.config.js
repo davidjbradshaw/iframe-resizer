@@ -36,11 +36,6 @@ export default [
         hook: 'closeBundle',
         targets: [
           {
-            src: 'packages/parent/index.d.ts',
-            dest: 'dist/parent/',
-            rename: 'iframe-resizer.parent.d.ts',
-          },
-          {
             src: 'dist/parent/package.json',
             dest: 'dist/parent/',
             transform: filterDeps,
