@@ -1,6 +1,6 @@
+import { VERSION } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { VERSION } from '../../common/consts'
 import { advise, log } from '../console'
 
 export default function checkVersion(

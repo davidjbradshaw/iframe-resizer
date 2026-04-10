@@ -6,8 +6,9 @@ import {
   MIN_SIZE,
   ONLOAD,
   RESET_REQUIRED_METHODS,
-} from '../../common/consts'
-import { addEventListener } from '../../common/listeners'
+} from '@iframe-resizer/common/consts'
+import { addEventListener } from '@iframe-resizer/common/listeners'
+
 import { event as consoleEvent, info } from '../console'
 import resetIframe from '../methods/reset'
 import warnOnNoResponse from '../send/timeout'

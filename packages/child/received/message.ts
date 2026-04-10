@@ -1,6 +1,6 @@
+import { isolateUserCode } from '@iframe-resizer/common/utils'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { isolateUserCode } from '../../common/utils'
 import { log } from '../console'
 import settings from '../values/settings'
 import { getData, parse, parseFrozen } from './utils'

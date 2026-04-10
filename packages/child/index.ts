@@ -1,4 +1,9 @@
-import { MESSAGE, READY_STATE_CHANGE, UNDEFINED } from '../common/consts'
+import {
+  MESSAGE,
+  READY_STATE_CHANGE,
+  UNDEFINED,
+} from '@iframe-resizer/common/consts'
+
 import { event as consoleEvent, warn } from './console'
 import { addEventListener, removeEventListener } from './events/listeners'
 import ready from './events/ready'

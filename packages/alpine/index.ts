@@ -1,8 +1,7 @@
+import { esModuleInterop } from '@iframe-resizer/common/utils'
 import type { IframeOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-
-import { esModuleInterop } from '../common/utils'
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)

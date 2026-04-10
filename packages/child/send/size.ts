@@ -1,6 +1,9 @@
+import {
+  IGNORE_DISABLE_RESIZE,
+  OVERFLOW_OBSERVER,
+} from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { IGNORE_DISABLE_RESIZE, OVERFLOW_OBSERVER } from '../../common/consts'
 import {
   debug,
   endAutoGroup,

@@ -1,6 +1,6 @@
+import { HEIGHT, MIN_SIZE } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { HEIGHT, MIN_SIZE } from '../../common/consts'
 import { info } from '../console'
 import state from '../values/state'
 

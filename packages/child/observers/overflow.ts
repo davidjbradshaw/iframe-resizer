@@ -1,7 +1,7 @@
+import { HEIGHT_EDGE, NONE, OVERFLOW_ATTR } from '@iframe-resizer/common/consts'
+import { id } from '@iframe-resizer/common/utils'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { HEIGHT_EDGE, NONE, OVERFLOW_ATTR } from '../../common/consts'
-import { id } from '../../common/utils'
 import { info } from '../console'
 import {
   createDetachObservers,

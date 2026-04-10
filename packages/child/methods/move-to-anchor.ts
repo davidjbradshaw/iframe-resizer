@@ -1,5 +1,6 @@
-import { STRING } from '../../common/consts'
-import { typeAssert } from '../../common/utils'
+import { STRING } from '@iframe-resizer/common/consts'
+import { typeAssert } from '@iframe-resizer/common/utils'
+
 import state from '../values/state'
 
 export default function moveToAnchor(anchor: string): void {

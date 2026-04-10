@@ -1,4 +1,5 @@
-import { PARENT_RESIZE_REQUEST } from '../../common/consts'
+import { PARENT_RESIZE_REQUEST } from '@iframe-resizer/common/consts'
+
 import { log } from '../console'
 import sendSize from '../send/size'
 

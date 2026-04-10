@@ -1,11 +1,11 @@
-import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
-
 import {
   EVENT_CANCEL_TIMER,
   IN_PAGE_LINK,
   SCROLL_TO_OFFSET,
-} from '../../common/consts'
-import { checkMode, getModeData } from '../../common/mode'
+} from '@iframe-resizer/common/consts'
+import { checkMode, getModeData } from '@iframe-resizer/common/mode'
+import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
+
 import { advise, log } from '../console'
 import { addEventListener } from '../events/listeners'
 import sendMessage from '../send/message'

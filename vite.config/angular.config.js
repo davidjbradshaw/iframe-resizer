@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { commonAlias, createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
+  resolve: { alias: [commonAlias] },
   build: {
     lib: {
       entry: './packages/angular/directive.ts',

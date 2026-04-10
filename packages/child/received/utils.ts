@@ -1,4 +1,5 @@
-import { INIT, SEPARATOR } from '../../common/consts'
+import { INIT, SEPARATOR } from '@iframe-resizer/common/consts'
+
 import sendMessage from '../send/message'
 import { isInitMessage } from './is'
 

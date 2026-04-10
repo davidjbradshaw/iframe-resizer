@@ -1,4 +1,5 @@
-import { NUMBER } from '../../common/consts'
+import { NUMBER } from '@iframe-resizer/common/consts'
+
 import settings from '../values/settings'
 
 const ZERO = '0'

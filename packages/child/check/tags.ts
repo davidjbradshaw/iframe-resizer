@@ -1,6 +1,6 @@
+import { SIZE_ATTR } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { SIZE_ATTR } from '../../common/consts'
 import { log } from '../console'
 import state from '../values/state'
 

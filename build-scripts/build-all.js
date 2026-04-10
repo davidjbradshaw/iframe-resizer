@@ -10,6 +10,7 @@ const root = join(__dirname, '..')
 const { DEBUG, TEST } = process.env
 
 const packages = [
+  { name: 'common', type: 'vite' },
   { name: 'core', type: 'vite' },
   { name: 'child', type: 'vite' },
   { name: 'parent', type: 'vite' },

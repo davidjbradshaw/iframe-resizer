@@ -1,5 +1,3 @@
-import { HIGHLIGHT } from 'auto-console-group'
-
 import {
   AUTO_RESIZE,
   BEFORE_UNLOAD,
@@ -18,7 +16,9 @@ import {
   SCROLL_TO,
   SCROLL_TO_OFFSET,
   TITLE,
-} from '../common/consts'
+} from '@iframe-resizer/common/consts'
+import { HIGHLIGHT } from 'auto-console-group'
+
 import checkSameDomain from './checks/origin'
 import checkVersion from './checks/version'
 import { info, log, warn } from './console'

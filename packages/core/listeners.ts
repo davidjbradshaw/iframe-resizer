@@ -1,6 +1,12 @@
-import { CHILD_READY_MESSAGE, MESSAGE, PARENT, STRING } from '../common/consts'
-import { addEventListener } from '../common/listeners'
-import { once } from '../common/utils'
+import {
+  CHILD_READY_MESSAGE,
+  MESSAGE,
+  PARENT,
+  STRING,
+} from '@iframe-resizer/common/consts'
+import { addEventListener } from '@iframe-resizer/common/listeners'
+import { once } from '@iframe-resizer/common/utils'
+
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'
 import decodeMessage from './received/decode'

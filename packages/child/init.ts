@@ -1,5 +1,6 @@
-import { INIT, VERSION } from '../common/consts'
-import { id, once } from '../common/utils'
+import { INIT, VERSION } from '@iframe-resizer/common/consts'
+import { id, once } from '@iframe-resizer/common/utils'
+
 import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
 import checkCrossDomain from './check/cross-domain'

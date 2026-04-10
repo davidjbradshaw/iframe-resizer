@@ -1,6 +1,6 @@
+import { VISIBILITY_OBSERVER } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { VISIBILITY_OBSERVER } from '../../common/consts'
 import { log } from '../console'
 import sendSize from '../send/size'
 import state from '../values/state'

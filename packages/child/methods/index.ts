@@ -1,4 +1,5 @@
-import { CLOSE } from '../../common/consts'
+import { CLOSE } from '@iframe-resizer/common/consts'
+
 import { resetIframe } from '../page/reset'
 import APIsendMessage from '../send/message'
 import settings from '../values/settings'

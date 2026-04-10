@@ -1,5 +1,6 @@
-import { FUNCTION } from '../../common/consts'
-import { isolateUserCode } from '../../common/utils'
+import { FUNCTION } from '@iframe-resizer/common/consts'
+import { isolateUserCode } from '@iframe-resizer/common/utils'
+
 import { warn } from '../console'
 import settings from '../values/settings'
 
