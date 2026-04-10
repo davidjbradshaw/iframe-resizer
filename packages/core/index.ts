@@ -46,6 +46,6 @@ export default function connectResizer(
       errorBoundary(id, setupIframe)(iframe, options)
     }
 
-    return iframe?.iframeResizer
+    return (iframe as any)?.iframeResizer
   }
 }
