@@ -23,14 +23,17 @@ function checkDistDirectories() {
       if (!isDev) {
         const distVuePath = path.resolve(__dirname, '../../dist/vue')
         const distCorePath = path.resolve(__dirname, '../../dist/core')
-        
+        const distCommonPath = path.resolve(__dirname, '../../dist/common')
+
         const vueExists = fs.existsSync(distVuePath)
         const coreExists = fs.existsSync(distCorePath)
-        
-        if (!vueExists || !coreExists) {
+        const commonExists = fs.existsSync(distCommonPath)
+
+        if (!vueExists || !coreExists || !commonExists) {
           const missing = []
           if (!vueExists) missing.push('dist/vue')
           if (!coreExists) missing.push('dist/core')
+          if (!commonExists) missing.push('dist/common')
           
           throw new Error(
             `\n\n` +
@@ -74,7 +77,10 @@ export default defineConfig({
       '@iframe-resizer/vue/sfc': path.resolve(__dirname, '../../packages/vue/iframe-resizer.vue'),
       '@iframe-resizer/core': path.resolve(__dirname, '../../packages/core/index.ts'),
       '@iframe-resizer/child': path.resolve(__dirname, '../../packages/child/index.ts'),
-    } : {},
+      '@iframe-resizer/common': path.resolve(__dirname, '../../packages/common/index.ts'),
+    } : {
+      '@iframe-resizer/common': path.resolve(__dirname, '../../dist/common/index.esm.js'),
+    },
     dedupe: ['@iframe-resizer/core', 'auto-console-group'],
   },
   optimizeDeps: {

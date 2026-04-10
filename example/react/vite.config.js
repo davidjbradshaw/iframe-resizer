@@ -23,14 +23,17 @@ function checkDistDirectories() {
       if (!isDev) {
         const distReactPath = path.resolve(__dirname, '../../dist/react')
         const distCorePath = path.resolve(__dirname, '../../dist/core')
-        
+        const distCommonPath = path.resolve(__dirname, '../../dist/common')
+
         const reactExists = fs.existsSync(distReactPath)
         const coreExists = fs.existsSync(distCorePath)
-        
-        if (!reactExists || !coreExists) {
+        const commonExists = fs.existsSync(distCommonPath)
+
+        if (!reactExists || !coreExists || !commonExists) {
           const missing = []
           if (!reactExists) missing.push('dist/react')
           if (!coreExists) missing.push('dist/core')
+          if (!commonExists) missing.push('dist/common')
           
           throw new Error(
             `\n\n` +
@@ -74,7 +77,10 @@ export default defineConfig({
       '@iframe-resizer/react': path.resolve(__dirname, '../../packages/react/index.tsx'),
       '@iframe-resizer/core': path.resolve(__dirname, '../../packages/core/index.ts'),
       '@iframe-resizer/child': path.resolve(__dirname, '../../packages/child/index.ts'),
-    } : {},
+      '@iframe-resizer/common': path.resolve(__dirname, '../../packages/common/index.ts'),
+    } : {
+      '@iframe-resizer/common': path.resolve(__dirname, '../../dist/common/index.esm.js'),
+    },
     dedupe: ['@iframe-resizer/core', 'auto-console-group'],
   },
   optimizeDeps: {
