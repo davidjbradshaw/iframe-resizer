@@ -8,7 +8,7 @@ const id = `[${LABEL}] `
 
 export default function createIframeResize() {
   let connectWithOptions: (iframe: HTMLIFrameElement) => any
-  let iframes: IframeComponent[]
+  let iframes: HTMLIFrameElement[]
 
   function setupDisconnectedIframe(element: HTMLIFrameElement): void {
     const observer = new MutationObserver(() => {
@@ -37,12 +37,12 @@ export default function createIframeResize() {
 
       case !element.isConnected:
         setupDisconnectedIframe(element)
-        iframes.push(element as IframeComponent)
+        iframes.push(element)
         break
 
       default:
         connectWithOptions(element)
-        iframes.push(element as IframeComponent)
+        iframes.push(element)
     }
   }
 
@@ -76,6 +76,6 @@ export default function createIframeResize() {
         throw new TypeError(`${id}Unexpected data type (${typeof target})`)
     }
 
-    return Object.freeze(iframes)
+    return Object.freeze(iframes) as readonly IframeComponent[]
   }
 }
