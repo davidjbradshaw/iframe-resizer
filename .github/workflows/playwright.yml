@@ -38,7 +38,7 @@ jobs:
       run: npx playwright install --with-deps chromium
 
     - name: Build project
-      run: npm run build:dev
+      run: node build-scripts/build-all.js
 
     - name: Build React example for e2e tests
       run: |
