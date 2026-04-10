@@ -115,6 +115,7 @@ const customConfig = (file) => {
 
     case 'common':
       return {
+        type: 'module',
         exports: {
           './consts': { types: './consts.d.ts', default: './consts.js' },
           './deprecate': {

@@ -45,6 +45,7 @@ export const pluginsBase =
 
 const fixVersion = (file) => {
   switch (file) {
+    case 'common':
     case 'core':
     case 'child':
       return {}

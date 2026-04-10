@@ -34,6 +34,6 @@ export default defineConfig({
       outDir: 'dist/common',
       entryRoot: 'packages/common',
     }),
-    ...createPluginsProd('common', { skipVersionInjector: true }),
+    ...createPluginsProd('common'),
   ],
 })
