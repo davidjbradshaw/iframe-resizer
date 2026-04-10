@@ -1,7 +1,12 @@
-import { BOLD, LABEL, PARENT } from '@iframe-resizer/common/consts'
-import deprecate from '@iframe-resizer/common/deprecate'
-import createFormatAdvise from '@iframe-resizer/common/format-advise'
-import { esModuleInterop, id as identity } from '@iframe-resizer/common/utils'
+import {
+  BOLD,
+  createFormatAdvise,
+  deprecate,
+  esModuleInterop,
+  id as identity,
+  LABEL,
+  PARENT,
+} from '@iframe-resizer/common'
 import acg, { NORMAL } from 'auto-console-group'
 
 import settings from './values/settings'

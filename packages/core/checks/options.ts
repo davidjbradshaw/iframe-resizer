@@ -4,7 +4,7 @@ import {
   HORIZONTAL,
   NONE,
   VERTICAL,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 
 import { advise } from '../console'
 

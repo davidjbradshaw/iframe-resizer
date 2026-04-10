@@ -10,7 +10,7 @@ import {
   SET_OFFSET_SIZE,
   SIZE_CHANGE_DETECTED,
   VISIBILITY_OBSERVER,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { info, log, purge } from '../console'

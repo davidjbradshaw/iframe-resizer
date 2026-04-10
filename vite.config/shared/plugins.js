@@ -137,6 +137,3 @@ export const typescriptChild = () =>
 // Export createBanner for use in browser/test builds
 
 export { default as createBanner } from './banner.js'
-
-// Resolve @iframe-resizer/common/* to source for Vite builds
-export { commonAlias } from './common-alias.js'

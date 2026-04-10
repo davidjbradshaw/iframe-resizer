@@ -2,7 +2,7 @@ import {
   HEIGHT_EDGE,
   OVERFLOW_OBSERVER,
   WIDTH_EDGE,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 
 import checkOverflow from '../check/overflow'
 import { info } from '../console'

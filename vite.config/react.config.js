@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { commonAlias, createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
-  resolve: { alias: [commonAlias] },
+  resolve: {
+    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
+  },
   build: {
     lib: {
       entry: './packages/react/index.tsx',
@@ -14,13 +16,13 @@ export default defineConfig({
     outDir: 'dist/react',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        [
-          'react',
-          'react-dom',
-          '@iframe-resizer/core',
-          'auto-console-group',
-        ].includes(id) || id.startsWith('@iframe-resizer/common/'),
+      external: [
+        '@iframe-resizer/common',
+        '@iframe-resizer/core',
+        'auto-console-group',
+        'react',
+        'react-dom',
+      ],
     },
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,

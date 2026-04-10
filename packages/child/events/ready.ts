@@ -1,4 +1,4 @@
-import { CHILD_READY_MESSAGE } from '@iframe-resizer/common/consts'
+import { CHILD_READY_MESSAGE } from '@iframe-resizer/common'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, log } from '../console'

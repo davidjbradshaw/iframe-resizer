@@ -1,4 +1,4 @@
-import { PAGE_INFO } from '@iframe-resizer/common/consts'
+import { PAGE_INFO } from '@iframe-resizer/common'
 
 import { sendInfoToIframe, startInfoMonitor, stopInfoMonitor } from './common'
 

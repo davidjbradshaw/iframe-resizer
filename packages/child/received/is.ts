@@ -2,7 +2,7 @@ import {
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
   SEPARATOR,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 
 const IFRAME_RESIZE = 'iframeResize'
 

@@ -1,4 +1,4 @@
-import { NUMBER } from '@iframe-resizer/common/consts'
+import { NUMBER } from '@iframe-resizer/common'
 
 import settings from '../values/settings'
 

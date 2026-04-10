@@ -1,4 +1,4 @@
-import { MOUSE_ENTER, MOUSE_LEAVE } from '@iframe-resizer/common/consts'
+import { MOUSE_ENTER, MOUSE_LEAVE } from '@iframe-resizer/common'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'

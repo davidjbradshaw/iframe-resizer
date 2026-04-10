@@ -1,5 +1,4 @@
-import { PARENT_INFO } from '@iframe-resizer/common/consts'
-import { isolateUserCode } from '@iframe-resizer/common/utils'
+import { isolateUserCode, PARENT_INFO } from '@iframe-resizer/common'
 
 import { log } from '../console'
 import state from '../values/state'

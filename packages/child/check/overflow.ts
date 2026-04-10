@@ -1,8 +1,4 @@
-import {
-  FUNCTION,
-  IGNORE_ATTR,
-  OVERFLOW_ATTR,
-} from '@iframe-resizer/common/consts'
+import { FUNCTION, IGNORE_ATTR, OVERFLOW_ATTR } from '@iframe-resizer/common'
 
 import { endAutoGroup, event as consoleEvent, info } from '../console'
 import state from '../values/state'

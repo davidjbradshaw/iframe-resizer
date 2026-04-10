@@ -115,26 +115,9 @@ const customConfig = (file) => {
 
     case 'common':
       return {
-        type: 'module',
-        exports: {
-          './consts': { types: './consts.d.ts', default: './consts.js' },
-          './deprecate': {
-            types: './deprecate.d.ts',
-            default: './deprecate.js',
-          },
-          './format-advise': {
-            types: './format-advise.d.ts',
-            default: './format-advise.js',
-          },
-          './listeners': {
-            types: './listeners.d.ts',
-            default: './listeners.js',
-          },
-          './modal': { types: './modal.d.ts', default: './modal.js' },
-          './mode': { types: './mode.d.ts', default: './mode.js' },
-          './pubSub': { types: './pubSub.d.ts', default: './pubSub.js' },
-          './utils': { types: './utils.d.ts', default: './utils.js' },
-        },
+        main,
+        module,
+        types,
       }
 
     default:

@@ -3,8 +3,8 @@ import {
   BOOLEAN,
   ENABLE,
   NONE,
-} from '@iframe-resizer/common/consts'
-import { typeAssert } from '@iframe-resizer/common/utils'
+  typeAssert,
+} from '@iframe-resizer/common'
 
 import { advise, event as consoleEvent } from '../console'
 import sendMessage from '../send/message'

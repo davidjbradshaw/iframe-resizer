@@ -1,6 +1,10 @@
-import { VERSION } from '@iframe-resizer/common/consts'
-import setMode, { getModeData, getModeLabel } from '@iframe-resizer/common/mode'
-import { isDef } from '@iframe-resizer/common/utils'
+import {
+  getModeData,
+  getModeLabel,
+  isDef,
+  setMode,
+  VERSION,
+} from '@iframe-resizer/common'
 
 import { advise, adviseNow, purge, vInfo } from '../console'
 import settings from '../values/settings'

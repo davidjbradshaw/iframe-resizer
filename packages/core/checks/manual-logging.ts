@@ -4,7 +4,7 @@ import {
   LOG_COLLAPSED,
   LOG_DISABLED,
   LOG_EXPANDED,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 
 export default function (options: Record<string, any>): void {
   const { search } = window.location

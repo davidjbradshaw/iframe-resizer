@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { commonAlias, createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
-  resolve: { alias: [commonAlias] },
+  resolve: {
+    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
+  },
   build: {
     lib: {
       entry: './packages/angular/directive.ts',
@@ -14,12 +16,12 @@ export default defineConfig({
     outDir: 'dist/angular',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        [
-          '@iframe-resizer/core',
-          'auto-console-group',
-          '@angular/core',
-        ].includes(id) || id.startsWith('@iframe-resizer/common/'),
+      external: [
+        '@angular/core',
+        '@iframe-resizer/common',
+        '@iframe-resizer/core',
+        'auto-console-group',
+      ],
     },
     minify: 'esbuild',
     sourcemap: process.env.BETA || false,

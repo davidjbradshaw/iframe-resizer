@@ -1,5 +1,4 @@
-import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
-import { isIframe } from '@iframe-resizer/common/utils'
+import { isIframe, MESSAGE_ID, MESSAGE_ID_LENGTH } from '@iframe-resizer/common'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log, warn } from '../console'

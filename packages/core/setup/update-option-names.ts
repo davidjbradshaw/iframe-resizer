@@ -1,9 +1,9 @@
 import {
+  hasOwn,
   OFFSET,
   OFFSET_SIZE,
   REMOVED_NEXT_VERSION,
-} from '@iframe-resizer/common/consts'
-import { hasOwn } from '@iframe-resizer/common/utils'
+} from '@iframe-resizer/common'
 
 import { advise } from '../console'
 import settings from '../values/settings'

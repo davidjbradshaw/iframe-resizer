@@ -1,5 +1,4 @@
-import { MESSAGE, STRING } from '@iframe-resizer/common/consts'
-import { typeAssert } from '@iframe-resizer/common/utils'
+import { MESSAGE, STRING, typeAssert } from '@iframe-resizer/common'
 
 import trigger from '../send/trigger'
 import settings from '../values/settings'

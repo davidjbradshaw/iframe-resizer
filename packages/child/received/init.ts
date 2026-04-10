@@ -2,7 +2,7 @@ import {
   EVENT_CANCEL_TIMER,
   MESSAGE_ID_LENGTH,
   SEPARATOR,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 
 import { log } from '../console'
 import init from '../init'

@@ -1,4 +1,4 @@
-import { round } from '@iframe-resizer/common/utils'
+import { round } from '@iframe-resizer/common'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { advise, event, info, log } from '../console'

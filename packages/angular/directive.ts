@@ -9,7 +9,7 @@ import {
   Input,
   Output,
 } from '@angular/core'
-import { esModuleInterop } from '@iframe-resizer/common/utils'
+import { esModuleInterop } from '@iframe-resizer/common'
 import type {
   IframeComponent,
   IframeMessageData,

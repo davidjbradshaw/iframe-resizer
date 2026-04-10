@@ -1,4 +1,4 @@
-import { NEW_LINE } from '@iframe-resizer/common/consts'
+import { NEW_LINE } from '@iframe-resizer/common'
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
 import { debug, error, info } from '../console'

@@ -1,4 +1,4 @@
-import { AUTO, NONE } from '@iframe-resizer/common/consts'
+import { AUTO, NONE } from '@iframe-resizer/common'
 
 import { advise, log } from '../console'
 

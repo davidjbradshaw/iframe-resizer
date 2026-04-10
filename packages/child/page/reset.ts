@@ -1,4 +1,4 @@
-import { HEIGHT_CALC_MODE_DEFAULT } from '@iframe-resizer/common/consts'
+import { HEIGHT_CALC_MODE_DEFAULT } from '@iframe-resizer/common'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { debug, log } from '../console'

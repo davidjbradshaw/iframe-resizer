@@ -1,4 +1,4 @@
-import { esModuleInterop } from '@iframe-resizer/common/utils'
+import { esModuleInterop } from '@iframe-resizer/common'
 import type { IframeOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'

@@ -1,5 +1,4 @@
-import setMode from '@iframe-resizer/common/mode'
-import { hasOwn } from '@iframe-resizer/common/utils'
+import { hasOwn, setMode } from '@iframe-resizer/common'
 
 import checkOptions from '../checks/options'
 import checkWarningTimeout from '../checks/warning-timeout'

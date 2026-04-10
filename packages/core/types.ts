@@ -12,7 +12,7 @@ import {
   NONE,
   OMIT,
   VERTICAL,
-} from '@iframe-resizer/common/consts'
+} from '@iframe-resizer/common'
 
 export type Direction =
   | typeof VERTICAL

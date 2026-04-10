@@ -8,10 +8,7 @@
     "skipLibCheck": true,
     "allowJs": true,
     "strict": false,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "paths": {
-      "@iframe-resizer/common/*": ["./packages/common/*"]
-    }
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
   },
   "include": [
     "packages/global.d.ts",

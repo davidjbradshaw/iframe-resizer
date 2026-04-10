@@ -3,10 +3,12 @@ import { existsSync, renameSync } from 'node:fs'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { commonAlias, createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
-  resolve: { alias: [commonAlias] },
+  resolve: {
+    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
+  },
   build: {
     lib: {
       entry: './packages/core/index.ts',
@@ -17,8 +19,7 @@ export default defineConfig({
     outDir: 'dist/core',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        id === 'auto-console-group' || id.startsWith('@iframe-resizer/common/'),
+      external: ['@iframe-resizer/common', 'auto-console-group'],
       output: {
         exports: 'named',
         globals: {

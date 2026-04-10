@@ -1,5 +1,4 @@
-import { READY_STATE_CHANGE } from '@iframe-resizer/common/consts'
-import { isolateUserCode } from '@iframe-resizer/common/utils'
+import { isolateUserCode, READY_STATE_CHANGE } from '@iframe-resizer/common'
 
 import { addEventListener } from '../events/listeners'
 

@@ -1,4 +1,4 @@
-import { AUTO, VERTICAL } from '@iframe-resizer/common/consts'
+import { AUTO, VERTICAL } from '@iframe-resizer/common'
 
 export default Object.freeze({
   autoResize: true,

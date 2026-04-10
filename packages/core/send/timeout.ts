@@ -1,4 +1,4 @@
-import { OBJECT } from '@iframe-resizer/common/consts'
+import { OBJECT } from '@iframe-resizer/common'
 
 import { advise, event } from '../console'
 

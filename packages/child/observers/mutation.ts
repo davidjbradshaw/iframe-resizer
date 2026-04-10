@@ -1,9 +1,9 @@
 import {
   IGNORE_ATTR,
   IGNORE_TAGS,
+  round,
   SIZE_ATTR,
-} from '@iframe-resizer/common/consts'
-import { round } from '@iframe-resizer/common/utils'
+} from '@iframe-resizer/common'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event, info, log } from '../console'

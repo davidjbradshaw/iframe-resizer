@@ -1,4 +1,4 @@
-import { MUTATION_OBSERVER } from '@iframe-resizer/common/consts'
+import { MUTATION_OBSERVER } from '@iframe-resizer/common'
 
 import checkOverflow from '../check/overflow'
 import checkAndSetupTags from '../check/tags'

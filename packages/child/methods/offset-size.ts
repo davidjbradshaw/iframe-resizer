@@ -1,5 +1,4 @@
-import { NUMBER, SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
-import { typeAssert } from '@iframe-resizer/common/utils'
+import { NUMBER, SET_OFFSET_SIZE, typeAssert } from '@iframe-resizer/common'
 
 import sendSize from '../send/size'
 import settings from '../values/settings'

@@ -1,6 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable react/require-default-props */
-import { esModuleInterop } from '@iframe-resizer/common/utils'
+import { esModuleInterop } from '@iframe-resizer/common'
 import type {
   IframeComponent,
   IframeObject,

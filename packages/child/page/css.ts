@@ -1,4 +1,4 @@
-import { NULL } from '@iframe-resizer/common/consts'
+import { NULL } from '@iframe-resizer/common'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { info, warn } from '../console'

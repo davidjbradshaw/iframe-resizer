@@ -1,10 +1,12 @@
 import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 
-import { commonAlias, createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd } from './shared/plugins.js'
 
 export default defineConfig({
-  resolve: { alias: [commonAlias] },
+  resolve: {
+    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
+  },
   build: {
     lib: {
       entry: './packages/child/index.ts',
@@ -15,8 +17,7 @@ export default defineConfig({
     outDir: 'dist/child',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        id === 'auto-console-group' || id.startsWith('@iframe-resizer/common/'),
+      external: ['@iframe-resizer/common', 'auto-console-group'],
       output: {
         globals: {
           'auto-console-group': 'acg',

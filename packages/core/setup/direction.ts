@@ -1,4 +1,4 @@
-import { BOTH, HORIZONTAL, NONE, VERTICAL } from '@iframe-resizer/common/consts'
+import { BOTH, HORIZONTAL, NONE, VERTICAL } from '@iframe-resizer/common'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'

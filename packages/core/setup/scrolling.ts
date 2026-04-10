@@ -1,4 +1,4 @@
-import { AUTO, HIDDEN, OMIT } from '@iframe-resizer/common/consts'
+import { AUTO, HIDDEN, OMIT } from '@iframe-resizer/common'
 
 import { log } from '../console'
 import settings from '../values/settings'

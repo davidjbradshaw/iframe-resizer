@@ -3,8 +3,8 @@ import {
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
-} from '@iframe-resizer/common/consts'
-import { typeAssert } from '@iframe-resizer/common/utils'
+  typeAssert,
+} from '@iframe-resizer/common'
 
 import sendMessage from '../send/message'
 

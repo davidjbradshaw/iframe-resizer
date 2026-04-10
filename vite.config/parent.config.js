@@ -4,7 +4,7 @@ import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { commonAlias, createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd } from './shared/plugins.js'
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -16,7 +16,9 @@ const filterDeps = (contents) => {
 }
 
 export default defineConfig({
-  resolve: { alias: [commonAlias] },
+  resolve: {
+    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
+  },
   build: {
     lib: {
       entry: './packages/parent/esm.ts',
@@ -27,10 +29,11 @@ export default defineConfig({
     outDir: 'dist/parent',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        id === '@iframe-resizer/core' ||
-        id === 'auto-console-group' ||
-        id.startsWith('@iframe-resizer/common/'),
+      external: [
+        '@iframe-resizer/common',
+        '@iframe-resizer/core',
+        'auto-console-group',
+      ],
       output: {
         globals: {
           '@iframe-resizer/core': 'connectResizer',

@@ -1,5 +1,4 @@
-import { STRING } from '@iframe-resizer/common/consts'
-import { typeAssert } from '@iframe-resizer/common/utils'
+import { STRING, typeAssert } from '@iframe-resizer/common'
 
 import state from '../values/state'
 

@@ -1,5 +1,4 @@
-import { INIT, VERSION } from '@iframe-resizer/common/consts'
-import { id, once } from '@iframe-resizer/common/utils'
+import { id, INIT, once, VERSION } from '@iframe-resizer/common'
 
 import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'

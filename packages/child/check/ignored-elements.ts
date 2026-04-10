@@ -1,4 +1,4 @@
-import { IGNORE_ATTR } from '@iframe-resizer/common/consts'
+import { IGNORE_ATTR } from '@iframe-resizer/common'
 import { BOLD, NORMAL } from 'auto-console-group'
 
 import { warn } from '../console'

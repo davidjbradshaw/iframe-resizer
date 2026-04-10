@@ -1,4 +1,4 @@
-import { INIT, RESET } from '@iframe-resizer/common/consts'
+import { INIT, RESET } from '@iframe-resizer/common'
 
 import { log } from '../console'
 import setSize from '../events/size'

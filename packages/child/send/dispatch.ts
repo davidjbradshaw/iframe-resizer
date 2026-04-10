@@ -1,6 +1,11 @@
-import { INIT, MESSAGE_ID } from '@iframe-resizer/common/consts'
-import { checkMode, getModeData } from '@iframe-resizer/common/mode'
-import { once, round } from '@iframe-resizer/common/utils'
+import {
+  checkMode,
+  getModeData,
+  INIT,
+  MESSAGE_ID,
+  once,
+  round,
+} from '@iframe-resizer/common'
 import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 
 import { advise, assert, info, log } from '../console'
