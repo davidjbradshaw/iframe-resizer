@@ -34,6 +34,13 @@ export default defineConfig({
       ],
       outDir: 'dist/core',
       entryRoot: 'packages/core',
+      rollupTypes: true,
+      afterBuild: () => {
+        const { renameSync, existsSync } = require('node:fs')
+        const src = 'dist/core/index.esm.d.ts'
+        const dest = 'dist/core/index.d.ts'
+        if (existsSync(src)) renameSync(src, dest)
+      },
     }),
     ...createPluginsProd('core'),
   ],
