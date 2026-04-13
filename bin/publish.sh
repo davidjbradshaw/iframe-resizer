@@ -71,7 +71,7 @@ then
 fi
 
 echo "Updating example dependencies"
-bin/update-examples.sh
+bin/update-examples.sh --minor
 
 echo "Updating GitHub build"
 rm -v iframe-resizer.zip
