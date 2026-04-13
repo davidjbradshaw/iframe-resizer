@@ -41,9 +41,6 @@ jobs:
     - name: Build project
       run: TEST=1 node build-scripts/build-all.js
 
-    - name: Create js-dist symlink for example builds
-      run: ln -s js js-dist
-
     - name: Link dist packages globally
       run: |
         for pkg in common core child parent react vue; do
@@ -63,6 +60,9 @@ jobs:
         npm install
         npm link @iframe-resizer/common @iframe-resizer/core @iframe-resizer/vue
         npm run build
+
+    - name: Create js-dist symlink for e2e tests
+      run: ln -s js js-dist
 
     - name: Run Playwright tests
       run: npm run test:e2e
