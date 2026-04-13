@@ -9,7 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@iframe-resizer/astro": "6.0.0-beta.8",
-    "astro": "^5.5.0"
+    "@iframe-resizer/astro": "^6.0.0-beta.9",
+    "astro": "^6.1.5"
   }
 }
