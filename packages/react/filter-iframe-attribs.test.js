@@ -1,4 +1,5 @@
-import { AUTO } from '../common/consts'
+import { AUTO } from '@iframe-resizer/common/consts'
+
 import filterIframeAttribs from './filter-iframe-attribs'
 
 describe('filterIframeAttribs', () => {

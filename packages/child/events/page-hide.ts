@@ -1,4 +1,5 @@
-import { BEFORE_UNLOAD, invoke, lower, PAGE_HIDE } from '@iframe-resizer/common'
+import { invoke, lower } from '@iframe-resizer/common'
+import { BEFORE_UNLOAD, PAGE_HIDE } from '@iframe-resizer/common/consts'
 
 import { event as consoleEvent, info } from '../console'
 import sendMessage from '../send/message'

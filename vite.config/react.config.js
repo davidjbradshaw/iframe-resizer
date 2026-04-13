@@ -4,9 +4,6 @@ import dts from 'vite-plugin-dts'
 import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
-  resolve: {
-    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
-  },
   build: {
     lib: {
       entry: './packages/react/index.tsx',
@@ -17,7 +14,7 @@ export default defineConfig({
     emptyOutDir: false,
     rollupOptions: {
       external: [
-        '@iframe-resizer/common',
+        /^@iframe-resizer\/common/,
         '@iframe-resizer/core',
         'auto-console-group',
         'react',

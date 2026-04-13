@@ -11,7 +11,7 @@ import {
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
-} from '../common/consts'
+} from '@iframe-resizer/common/consts'
 
 vi.mock('./console', () => ({ info: vi.fn(), log: vi.fn(), warn: vi.fn() }))
 vi.mock('./events/message', () => ({ onMessage: vi.fn(() => 'body') }))

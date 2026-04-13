@@ -26,7 +26,7 @@ const { default: routeMessage } = await import('./router')
 const { default: iframeReady } = await import('./send/ready')
 const preflight = await import('./received/preflight')
 const { debug, event: consoleEvent } = await import('./console')
-const { CHILD_READY_MESSAGE } = await import('../common/consts')
+const { CHILD_READY_MESSAGE } = await import('@iframe-resizer/common/consts')
 
 describe('core/listeners', () => {
   beforeEach(async () => {

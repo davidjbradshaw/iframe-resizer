@@ -1,6 +1,6 @@
+import { MUTATION_OBSERVER } from '@iframe-resizer/common/consts'
 import { describe, expect, test, vi } from 'vitest'
 
-import { MUTATION_OBSERVER } from '../../common/consts'
 import mutationObserved from './mutation'
 
 vi.mock('../console', () => ({

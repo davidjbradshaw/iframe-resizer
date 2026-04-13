@@ -10,10 +10,10 @@ const root = join(__dirname, '..')
 const { DEBUG, TEST } = process.env
 
 const packages = [
-  { name: 'common', type: 'vite' },
-  { name: 'core', type: 'vite' },
-  { name: 'child', type: 'vite' },
-  { name: 'parent', type: 'vite' },
+  { name: 'common', type: 'vite', postBuild: true },
+  { name: 'core', type: 'vite', postBuild: true },
+  { name: 'child', type: 'vite', postBuild: true },
+  { name: 'parent', type: 'vite', postBuild: true },
   { name: 'react', type: 'vite' },
   { name: 'vue', type: 'vite', postBuild: true },
   { name: 'svelte', type: 'vite', postBuild: true },

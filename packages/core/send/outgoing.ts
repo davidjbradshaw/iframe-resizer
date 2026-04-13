@@ -1,4 +1,4 @@
-import { CHILD, SEPARATOR } from '@iframe-resizer/common'
+import { CHILD, SEPARATOR } from '@iframe-resizer/common/consts'
 
 import page from '../values/page'
 import settings from '../values/settings'

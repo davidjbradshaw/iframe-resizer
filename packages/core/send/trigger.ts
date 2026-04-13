@@ -1,4 +1,8 @@
-import { INIT_EVENTS, MESSAGE_ID, SEPARATOR } from '@iframe-resizer/common'
+import {
+  INIT_EVENTS,
+  MESSAGE_ID,
+  SEPARATOR,
+} from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, info, log, warn } from '../console'

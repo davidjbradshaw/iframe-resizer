@@ -1,4 +1,5 @@
-import { HEIGHT_EDGE, id, NONE, OVERFLOW_ATTR } from '@iframe-resizer/common'
+import { id } from '@iframe-resizer/common'
+import { HEIGHT_EDGE, NONE, OVERFLOW_ATTR } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'

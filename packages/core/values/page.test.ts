@@ -1,6 +1,6 @@
+import { VERSION } from '@iframe-resizer/common/consts'
 import { describe, expect, it } from 'vitest'
 
-import { VERSION } from '../../common/consts'
 import page from './page'
 
 describe('core/values/page', () => {

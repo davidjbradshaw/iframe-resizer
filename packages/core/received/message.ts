@@ -1,4 +1,4 @@
-import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '@iframe-resizer/common'
+import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '@iframe-resizer/common/consts'
 
 import settings from '../values/settings'
 

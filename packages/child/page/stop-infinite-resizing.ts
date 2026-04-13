@@ -1,4 +1,4 @@
-import { AUTO, HEIGHT } from '@iframe-resizer/common'
+import { AUTO, HEIGHT } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'

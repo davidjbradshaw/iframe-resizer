@@ -1,8 +1,5 @@
-import {
-  MANUAL_RESIZE_REQUEST,
-  NUMBER,
-  typeAssert,
-} from '@iframe-resizer/common'
+import { typeAssert } from '@iframe-resizer/common'
+import { MANUAL_RESIZE_REQUEST, NUMBER } from '@iframe-resizer/common/consts'
 
 import sendSize from '../send/size'
 

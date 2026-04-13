@@ -1,4 +1,5 @@
-import { isObject, LABEL } from '@iframe-resizer/common'
+import { isObject } from '@iframe-resizer/common'
+import { LABEL } from '@iframe-resizer/common/consts'
 
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
@@ -24,7 +25,7 @@ export {
   LOG_COLLAPSED,
   LOG_DISABLED,
   LOG_EXPANDED,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 export default function connectResizer(
   options: Record<string, any>,

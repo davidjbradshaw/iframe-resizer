@@ -1,4 +1,4 @@
-import { HEIGHT, MIN_SIZE, WIDTH } from '@iframe-resizer/common'
+import { HEIGHT, MIN_SIZE, WIDTH } from '@iframe-resizer/common/consts'
 
 import settings from '../values/settings'
 import getHeight from './get-height'

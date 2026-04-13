@@ -1,4 +1,5 @@
-import { STRING, typeAssert } from '@iframe-resizer/common'
+import { typeAssert } from '@iframe-resizer/common'
+import { STRING } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'

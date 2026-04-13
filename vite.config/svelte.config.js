@@ -14,11 +14,12 @@ export default defineConfig({
     outDir: 'dist/svelte',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        id === 'svelte' ||
-        id.startsWith('svelte/') ||
-        id === '@iframe-resizer/core' ||
-        id === 'auto-console-group',
+      external: [
+        /^@iframe-resizer\/common/,
+        /^svelte/,
+        '@iframe-resizer/core',
+        'auto-console-group',
+      ],
     },
     ...terserWithBanner('svelte'),
     sourcemap: process.env.BETA || false,

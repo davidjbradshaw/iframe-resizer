@@ -1,6 +1,6 @@
+import { VERSION } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { VERSION } from '../../common/consts'
 import * as coreConsole from '../console'
 import checkVersion from './version'
 

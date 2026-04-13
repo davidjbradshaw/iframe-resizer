@@ -14,11 +14,12 @@ export default defineConfig({
     outDir: 'dist/solid',
     emptyOutDir: false,
     rollupOptions: {
-      external: (id) =>
-        id === 'solid-js' ||
-        id.startsWith('solid-js/') ||
-        id === '@iframe-resizer/core' ||
-        id === 'auto-console-group',
+      external: [
+        /^@iframe-resizer\/common/,
+        /^solid-js/,
+        '@iframe-resizer/core',
+        'auto-console-group',
+      ],
     },
     ...terserWithBanner('solid'),
     sourcemap: process.env.BETA || false,

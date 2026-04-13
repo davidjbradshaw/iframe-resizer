@@ -1,11 +1,10 @@
+import { addEventListener, once } from '@iframe-resizer/common'
 import {
-  addEventListener,
   CHILD_READY_MESSAGE,
   MESSAGE,
-  once,
   PARENT,
   STRING,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'

@@ -1,10 +1,5 @@
-import {
-  addEventListener,
-  LOAD,
-  removeEventListener,
-  RESIZE,
-  SCROLL,
-} from '@iframe-resizer/common'
+import { addEventListener, removeEventListener } from '@iframe-resizer/common'
+import { LOAD, RESIZE, SCROLL } from '@iframe-resizer/common/consts'
 
 import { event, log } from '../console'
 import trigger from '../send/trigger'

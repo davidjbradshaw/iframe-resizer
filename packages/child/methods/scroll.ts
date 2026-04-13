@@ -1,10 +1,10 @@
+import { typeAssert } from '@iframe-resizer/common'
 import {
   NUMBER,
   SCROLL_BY,
   SCROLL_TO,
   SCROLL_TO_OFFSET,
-  typeAssert,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 import sendMessage from '../send/message'
 

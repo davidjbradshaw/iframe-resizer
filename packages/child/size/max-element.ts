@@ -1,4 +1,5 @@
-import { capitalizeFirstLetter, MIN_SIZE } from '@iframe-resizer/common'
+import { capitalizeFirstLetter } from '@iframe-resizer/common'
+import { MIN_SIZE } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'

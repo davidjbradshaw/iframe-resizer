@@ -1,10 +1,9 @@
+import { checkMode, getModeData } from '@iframe-resizer/common'
 import {
-  checkMode,
   EVENT_CANCEL_TIMER,
-  getModeData,
   IN_PAGE_LINK,
   SCROLL_TO_OFFSET,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { advise, log } from '../console'

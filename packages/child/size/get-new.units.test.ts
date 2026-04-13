@@ -1,6 +1,6 @@
+import { HEIGHT, MIN_SIZE, WIDTH } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { HEIGHT, MIN_SIZE, WIDTH } from '../../common/consts'
 import settings from '../values/settings'
 import { callOnBeforeResize } from './get-new'
 

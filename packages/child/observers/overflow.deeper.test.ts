@@ -1,6 +1,6 @@
+import { OVERFLOW_ATTR } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { OVERFLOW_ATTR } from '../../common/consts'
 import * as consoleMod from '../console'
 import createOverflowObserver from './overflow'
 

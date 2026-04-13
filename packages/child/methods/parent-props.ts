@@ -1,9 +1,9 @@
+import { typeAssert } from '@iframe-resizer/common'
 import {
   FUNCTION,
   PARENT_INFO,
   PARENT_INFO_STOP,
-  typeAssert,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 import sendMessage from '../send/message'
 import state from '../values/state'

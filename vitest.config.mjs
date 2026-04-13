@@ -15,6 +15,7 @@ export default defineConfig({
   resolve: {
     conditions: ['browser'],
     alias: {
+      '@iframe-resizer/common/consts': r('packages/common/consts.ts'),
       '@iframe-resizer/common': r('packages/common/index.ts'),
       '@iframe-resizer/jquery': r('packages/jquery/plugin.js'),
       '@iframe-resizer/child': r('packages/child/index.ts'),

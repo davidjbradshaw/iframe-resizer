@@ -1,4 +1,4 @@
-import { RESIZE } from '@iframe-resizer/common'
+import { RESIZE } from '@iframe-resizer/common/consts'
 
 import trigger from '../send/trigger'
 import settings from '../values/settings'

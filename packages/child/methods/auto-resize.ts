@@ -1,10 +1,10 @@
+import { typeAssert } from '@iframe-resizer/common'
 import {
   AUTO_RESIZE,
   BOOLEAN,
   ENABLE,
   NONE,
-  typeAssert,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 import { advise, event as consoleEvent } from '../console'
 import sendMessage from '../send/message'

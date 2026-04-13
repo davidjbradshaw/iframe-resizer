@@ -1,5 +1,3 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
-
 import {
   ENABLE,
   INIT,
@@ -10,7 +8,9 @@ import {
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
   VISIBILITY_OBSERVER,
-} from '../../common/consts'
+} from '@iframe-resizer/common/consts'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
 import state from '../values/state'
 import getContentSize, { ensureContentPosition } from './content'
 

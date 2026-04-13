@@ -1,4 +1,4 @@
-import { HEIGHT, HEIGHT_EDGE } from '@iframe-resizer/common'
+import { HEIGHT, HEIGHT_EDGE } from '@iframe-resizer/common/consts'
 
 import settings from '../values/settings'
 import getAutoSize from './auto'

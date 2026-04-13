@@ -1,5 +1,5 @@
+import { addEventListener } from '@iframe-resizer/common'
 import {
-  addEventListener,
   INIT,
   INIT_FROM_IFRAME,
   LAZY,
@@ -7,7 +7,7 @@ import {
   MIN_SIZE,
   ONLOAD,
   RESET_REQUIRED_METHODS,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 import { event as consoleEvent, info } from '../console'
 import resetIframe from '../methods/reset'

@@ -3,8 +3,8 @@ import {
   getModeLabel,
   isDef,
   setMode,
-  VERSION,
 } from '@iframe-resizer/common'
+import { VERSION } from '@iframe-resizer/common/consts'
 
 import { advise, adviseNow, purge, vInfo } from '../console'
 import settings from '../values/settings'

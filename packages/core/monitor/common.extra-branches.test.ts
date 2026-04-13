@@ -20,7 +20,7 @@ global.ResizeObserver = MockResizeObserver
 import { addEventListener, removeEventListener } from '../../common/listeners'
 import settings from '../values/settings'
 import { startInfoMonitor } from './common'
-import { LOAD } from '../../common/consts'
+import { LOAD } from '@iframe-resizer/common/consts'
 
 describe('core/monitor/common extra branches', () => {
   beforeEach(() => {

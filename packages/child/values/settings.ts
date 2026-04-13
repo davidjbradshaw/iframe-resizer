@@ -1,4 +1,4 @@
-import { AUTO } from '@iframe-resizer/common'
+import { AUTO } from '@iframe-resizer/common/consts'
 
 import { warn } from '../console'
 

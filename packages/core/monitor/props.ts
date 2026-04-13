@@ -1,4 +1,4 @@
-import { PARENT_INFO } from '@iframe-resizer/common'
+import { PARENT_INFO } from '@iframe-resizer/common/consts'
 
 import { sendInfoToIframe, startInfoMonitor, stopInfoMonitor } from './common'
 

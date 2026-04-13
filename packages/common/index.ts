@@ -1,4 +1,3 @@
-export * from './consts'
 export { default as deprecate } from './deprecate'
 export { default as createFormatAdvise } from './format-advise'
 export * from './listeners'

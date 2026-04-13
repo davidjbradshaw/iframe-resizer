@@ -1,3 +1,4 @@
+import { esModuleInterop } from '@iframe-resizer/common'
 import type {
   Direction,
   IframeComponent,
@@ -14,9 +15,6 @@ import acg from 'auto-console-group'
 import type { ComponentProps, JSX } from 'solid-js'
 import { onCleanup, onMount, splitProps } from 'solid-js'
 
-// Deal with UMD not converting default exports to named exports
-// eslint-disable-next-line no-underscore-dangle
-const esModuleInterop = (mod: any): any => (mod?.__esModule ? mod.default : mod)
 const createAutoConsoleGroup = esModuleInterop(acg)
 
 export type IframeResizerMethods = Pick<

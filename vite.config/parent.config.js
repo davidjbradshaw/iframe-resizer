@@ -16,30 +16,21 @@ const filterDeps = (contents) => {
 }
 
 export default defineConfig({
-  resolve: {
-    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
-  },
   build: {
     lib: {
       entry: './packages/parent/esm.ts',
       name: 'iframeResize',
-      formats: ['umd', 'es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,
+      formats: ['es', 'cjs'],
+      fileName: (format) => `index.${format === 'es' ? 'esm' : 'cjs'}.js`,
     },
     outDir: 'dist/parent',
     emptyOutDir: false,
     rollupOptions: {
       external: [
-        '@iframe-resizer/common',
+        /^@iframe-resizer\/common/,
         '@iframe-resizer/core',
         'auto-console-group',
       ],
-      output: {
-        globals: {
-          '@iframe-resizer/core': 'connectResizer',
-          'auto-console-group': 'acg',
-        },
-      },
     },
     ...terserWithBanner('parent'),
     sourcemap: process.env.BETA || false,

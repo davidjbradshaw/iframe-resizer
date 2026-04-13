@@ -1,4 +1,4 @@
-import { FALSE, VERSION } from '@iframe-resizer/common'
+import { FALSE, VERSION } from '@iframe-resizer/common/consts'
 
 import { advise } from '../console'
 

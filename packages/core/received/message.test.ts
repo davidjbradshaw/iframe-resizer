@@ -1,6 +1,6 @@
+import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '@iframe-resizer/common/consts'
 import { describe, expect, test } from 'vitest'
 
-import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '../../common/consts'
 import settings from '../values/settings'
 import getMessageBody from './message'
 

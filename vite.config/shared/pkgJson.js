@@ -7,7 +7,6 @@ const customConfig = (file) => {
     main,
     module,
     types,
-    browser: `index.umd.js`,
   }
 
   switch (file) {
@@ -52,8 +51,12 @@ const customConfig = (file) => {
         main: 'index.umd.js',
         module,
         types,
-        browser: {
-          './sfc': 'iframe-resizer.vue',
+        exports: {
+          '.': {
+            import: `./${module}`,
+            require: './index.umd.js',
+          },
+          './sfc': './iframe-resizer.vue',
         },
         peerDependencies: {
           vue: '^3.3.0',
@@ -118,6 +121,13 @@ const customConfig = (file) => {
         main,
         module,
         types,
+        exports: {
+          '.': { import: `./${module}`, require: `./${main}` },
+          './consts': {
+            import: './consts.esm.js',
+            require: './consts.cjs.js',
+          },
+        },
       }
 
     default:

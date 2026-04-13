@@ -1,6 +1,6 @@
+import { BOTH, HORIZONTAL, NONE, VERTICAL } from '@iframe-resizer/common/consts'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
-import { BOTH, HORIZONTAL, NONE, VERTICAL } from '../../common/consts'
 import settings from '../values/settings'
 import setDirection from './direction'
 

@@ -9,13 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/alpine": "6.0.0-beta.7",
-    "@iframe-resizer/common": "6.0.0-beta.7",
-    "@iframe-resizer/core": "6.0.0-beta.7",
+    "@iframe-resizer/alpine": "6.0.0-beta.8",
     "alpinejs": "^3.14.0"
   },
   "devDependencies": {
-    "vite": "^7.0.0",
-    "@rollup/plugin-replace": "^6.0.0"
+    "vite": "^7.0.0"
   }
 }

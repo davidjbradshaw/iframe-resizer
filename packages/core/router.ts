@@ -16,7 +16,7 @@ import {
   SCROLL_TO,
   SCROLL_TO_OFFSET,
   TITLE,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import checkSameDomain from './checks/origin'

@@ -1,7 +1,11 @@
 /* eslint import/first: 0, simple-import-sort/imports: 0, import/named: 0 */
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 
-import { HEIGHT_EDGE, OVERFLOW_OBSERVER, WIDTH_EDGE } from '../../common/consts'
+import {
+  HEIGHT_EDGE,
+  OVERFLOW_OBSERVER,
+  WIDTH_EDGE,
+} from '@iframe-resizer/common/consts'
 
 vi.mock('../values/state', () => {
   const state = { hasOverflow: false }

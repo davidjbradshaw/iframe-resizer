@@ -1,4 +1,4 @@
-import { LABEL, OBJECT, STRING, UNDEFINED } from '@iframe-resizer/common'
+import { LABEL, OBJECT, STRING, UNDEFINED } from '@iframe-resizer/common/consts'
 import connectResizer, {
   type IframeComponent,
   type IframeOptions,

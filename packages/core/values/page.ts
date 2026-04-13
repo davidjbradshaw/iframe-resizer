@@ -1,4 +1,4 @@
-import { VERSION } from '@iframe-resizer/common'
+import { VERSION } from '@iframe-resizer/common/consts'
 
 interface PageState {
   position: { x: number; y: number } | null

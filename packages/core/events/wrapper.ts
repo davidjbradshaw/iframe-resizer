@@ -1,4 +1,5 @@
-import { FUNCTION, isolateUserCode } from '@iframe-resizer/common'
+import { isolateUserCode } from '@iframe-resizer/common'
+import { FUNCTION } from '@iframe-resizer/common/consts'
 
 import { warn } from '../console'
 import settings from '../values/settings'

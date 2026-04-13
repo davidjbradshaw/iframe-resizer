@@ -1,4 +1,4 @@
-import { VERSION } from '@iframe-resizer/common'
+import { VERSION } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { advise, log } from '../console'

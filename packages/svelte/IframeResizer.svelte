@@ -2,17 +2,10 @@
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 
   import connectResizer from '@iframe-resizer/core'
-  import type { IframeObject } from '@iframe-resizer/core'
+  import type { IframeObject, LogOption } from '@iframe-resizer/core'
+  import { esModuleInterop } from '@iframe-resizer/common'
+  import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
-
-  const EXPAND = 'expanded'
-  const COLLAPSE = 'collapsed'
-
-  type LogOption = 'expanded' | 'collapsed' | boolean | -1
-
-  const esModuleInterop = (mod: any) =>
-    // eslint-disable-next-line no-underscore-dangle
-    mod?.__esModule ? mod.default : mod
 
   // Deal with UMD not converting default exports to named exports
   const createAutoConsoleGroup = esModuleInterop(acg)

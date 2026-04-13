@@ -4,25 +4,17 @@ import { defineConfig } from 'vite'
 import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
-  resolve: {
-    alias: { '@iframe-resizer/common': './packages/common/index.ts' },
-  },
   build: {
     lib: {
       entry: './packages/child/index.ts',
       name: 'iframeResizerChild',
-      formats: ['umd', 'es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,
+      formats: ['es', 'cjs'],
+      fileName: (format) => `index.${format === 'es' ? 'esm' : 'cjs'}.js`,
     },
     outDir: 'dist/child',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['@iframe-resizer/common', 'auto-console-group'],
-      output: {
-        globals: {
-          'auto-console-group': 'acg',
-        },
-      },
+      external: [/^@iframe-resizer\/common/, 'auto-console-group'],
     },
     ...terserWithBanner('child'),
     sourcemap: process.env.BETA || false,

@@ -1,4 +1,4 @@
-import { IGNORE_TAGS } from '@iframe-resizer/common'
+import { IGNORE_TAGS } from '@iframe-resizer/common/consts'
 
 const addNot = (tagName: string): string => `:not(${tagName})`
 const selector = `* ${Array.from(IGNORE_TAGS).map(addNot).join('')}`

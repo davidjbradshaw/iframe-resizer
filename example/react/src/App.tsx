@@ -31,7 +31,7 @@ function App() {
           <IframeResizer
             license="GPLv3"
             log
-            forwardRef={iframeRef}
+            ref={iframeRef}
             inPageLinks
             onMessage={onMessage}
             onResized={onResized}

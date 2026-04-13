@@ -1,13 +1,12 @@
+import { hasOwn, isString } from '@iframe-resizer/common'
 import {
   COLLAPSE,
   EXPAND,
-  hasOwn,
-  isString,
   LOG_COLLAPSED,
   LOG_DISABLED,
   LOG_EXPANDED,
   LOG_OPTIONS,
-} from '@iframe-resizer/common'
+} from '@iframe-resizer/common/consts'
 
 import { enableVInfo } from '../checks/mode'
 import { error, setupConsole } from '../console'

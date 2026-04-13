@@ -1,6 +1,5 @@
+import { INIT } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-
-import { INIT } from '../../common/consts'
 
 vi.mock('../../common/mode', async (importOriginal) => {
   const actual = await importOriginal()
