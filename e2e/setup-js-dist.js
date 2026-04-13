@@ -1,9 +1,12 @@
-import { existsSync, lstatSync, symlinkSync, unlinkSync } from 'node:fs'
+import { existsSync, lstatSync, rmSync, symlinkSync, unlinkSync } from 'node:fs'
 
-// Symlink js-dist → js so example HTML pages load the current dev build
-if (existsSync('js-dist') && lstatSync('js-dist').isSymbolicLink()) {
-  unlinkSync('js-dist')
+// Replace js-dist (directory or symlink) with symlink → js
+// so example HTML pages load the current dev build
+if (existsSync('js-dist')) {
+  if (lstatSync('js-dist').isSymbolicLink()) {
+    unlinkSync('js-dist')
+  } else {
+    rmSync('js-dist', { recursive: true })
+  }
 }
-if (!existsSync('js-dist')) {
-  symlinkSync('js', 'js-dist')
-}
+symlinkSync('js', 'js-dist')
