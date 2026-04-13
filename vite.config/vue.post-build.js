@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export default async function vuePostBuild() {
   const root = join(__dirname, '..')
 
-  // Build UMD separately (no externals, self-contained for browser)
+  // Build UMD separately (only vue is external, everything else bundled in)
   await build({
     configFile: false,
     plugins: [vue()],

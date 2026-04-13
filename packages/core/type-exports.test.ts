@@ -32,7 +32,10 @@ describe('type re-exports', () => {
       const source = readFileSync(resolve(__dirname, '..', pkg, file), 'utf8')
 
       for (const typeName of TYPE_EXPORTS) {
-        expect(source).toContain(typeName)
+        expect(
+          source,
+          `${typeName} should be exported from @iframe-resizer/${pkg}`,
+        ).toMatch(new RegExp(`export[^}]*\\b${typeName}\\b`))
       }
     })
   }
