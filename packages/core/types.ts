@@ -69,6 +69,10 @@ export interface IframeScrollData {
   iframe: IframeComponent
   top: number
   left: number
+  /** @deprecated Use `left` instead. */
+  x: number
+  /** @deprecated Use `top` instead. */
+  y: number
 }
 
 // --- Options ---
