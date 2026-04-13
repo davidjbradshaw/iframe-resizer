@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/example/react/dist/',
+  resolve: {
+    preserveSymlinks: true,
+  },
 })
