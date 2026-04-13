@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
+import serveChild from '../shared/serve-child.js'
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [serveChild()],
   base: '/example/alpine/dist/',
 })

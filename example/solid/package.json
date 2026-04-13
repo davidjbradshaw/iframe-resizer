@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iframe-resizer/child": "^6.0.0-beta.9",
     "@iframe-resizer/solid": "^6.0.0-beta.9",
     "solid-js": "^1.9.12"
   },
