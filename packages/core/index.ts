@@ -10,17 +10,16 @@ import setupLogging from './setup/logging'
 import type { IframeComponent, IframeObject, IframeOptions } from './types'
 
 export type {
-  Direction,
   IframeComponent,
+  IframeDirection,
+  IframeLogOption,
   IframeMessageData,
   IframeMouseData,
   IframeObject,
   IframeOptions,
   IframeResizedData,
   IframeScrollData,
-  LogOption,
-  MessageData,
-  ScrollOption,
+  IframeScrollOption,
 } from './types'
 export {
   LOG_COLLAPSED,

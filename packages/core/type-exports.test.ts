@@ -8,17 +8,22 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const TYPE_EXPORTS = [
   'IframeComponent',
+  'IframeDirection',
+  'IframeLogOption',
   'IframeMessageData',
   'IframeMouseData',
   'IframeObject',
   'IframeOptions',
   'IframeResizedData',
   'IframeScrollData',
+  'IframeScrollOption',
 ]
 
 const PACKAGES: Record<string, string> = {
   alpine: 'index.ts',
   angular: 'directive.ts',
+  astro: 'index.ts',
+  parent: 'esm.ts',
   react: 'index.tsx',
   solid: 'index.ts',
   svelte: 'index.ts',

@@ -1,14 +1,14 @@
 import { esModuleInterop } from '@iframe-resizer/common'
 import type {
-  Direction,
   IframeComponent,
+  IframeDirection,
+  IframeLogOption,
   IframeMessageData,
   IframeMouseData,
   IframeObject,
   IframeResizedData,
   IframeScrollData,
-  LogOption,
-  ScrollOption,
+  IframeScrollOption,
 } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -30,11 +30,11 @@ export type IframeResizerProps = {
   bodyMargin?: string | number | null
   bodyPadding?: string | number | null
   checkOrigin?: boolean | string[]
-  direction?: Direction
+  direction?: IframeDirection
   inPageLinks?: boolean
-  log?: LogOption
+  log?: IframeLogOption
   offsetSize?: number
-  scrolling?: ScrollOption
+  scrolling?: IframeScrollOption
   tolerance?: number
   waitForLoad?: boolean
   warningTimeout?: number

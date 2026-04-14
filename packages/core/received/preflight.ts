@@ -9,11 +9,11 @@ import settings from '../values/settings'
 const ABOVE_TYPES: Record<string, number> = { true: 1, false: 1, undefined: 1 }
 
 export function checkIframeExists(messageData: MessageData): boolean {
-  const { id, msg, iframe } = messageData
+  const { id, message, iframe } = messageData
   const detectedIframe = isIframe(iframe)
 
   if (!detectedIframe) {
-    log(id, `Received: %c${msg}`, HIGHLIGHT)
+    log(id, `Received: %c${message}`, HIGHLIGHT)
     warn(id, `The target iframe was not found.`)
   }
 

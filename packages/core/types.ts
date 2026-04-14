@@ -14,15 +14,15 @@ import {
   VERTICAL,
 } from '@iframe-resizer/common/consts'
 
-export type Direction =
+export type IframeDirection =
   | typeof VERTICAL
   | typeof HORIZONTAL
   | typeof NONE
   | typeof BOTH
 
-export type LogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
+export type IframeLogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
 
-export type ScrollOption = boolean | typeof AUTO | typeof OMIT
+export type IframeScrollOption = boolean | typeof AUTO | typeof OMIT
 
 // --- Resizer object attached to iframe.iframeResizer ---
 
@@ -100,7 +100,7 @@ export interface IframeOptions {
    */
   checkOrigin?: boolean | string[]
   /** Set the resizing direction of the iframe. */
-  direction?: Direction
+  direction?: IframeDirection
   /** Custom iframe id. */
   id?: string
   /**
@@ -111,11 +111,11 @@ export interface IframeOptions {
   /** Set iframe-resizer license key. */
   license: string
   /** Enable/disable console logging. */
-  log?: LogOption
+  log?: IframeLogOption
   /** Set offset size of iframe content. */
   offsetSize?: number
   /** Enable scroll bars in the iframe. */
-  scrolling?: ScrollOption
+  scrolling?: IframeScrollOption
   /**
    * Set the number of pixels the iframe content size has to change by,
    * before triggering a resize of the iframe.
@@ -161,12 +161,10 @@ export interface IframeOptions {
 
 export interface MessageData {
   id: string
-  iframe: HTMLIFrameElement
+  iframe: IframeComponent
   height: number
   width: number
   type: string
-  msg?: string
   message?: string
   mode?: string
-  [key: string]: any
 }

@@ -59,6 +59,6 @@ function iframeListener(
 export default once(() => {
   addEventListener(window, MESSAGE, iframeListener as EventListener)
   addEventListener(document, 'visibilitychange', tabVisible)
-  window.iframeParentListener = (data: string) =>
+  ;(window as any).iframeParentListener = (data: string) =>
     setTimeout(() => iframeListener({ data, sameOrigin: true }))
 })

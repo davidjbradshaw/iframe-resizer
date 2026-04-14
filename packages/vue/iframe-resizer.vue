@@ -6,7 +6,7 @@
   import { onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
-  import type { IframeObject, LogOption } from '@iframe-resizer/core'
+  import type { IframeLogOption, IframeObject } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
@@ -30,8 +30,8 @@
     },
     direction: String,
     log: {
-      type: [String, Boolean, Number] as PropType<LogOption>,
-      validator: (value: LogOption) => {
+      type: [String, Boolean, Number] as PropType<IframeLogOption>,
+      validator: (value: IframeLogOption) => {
         switch (value) {
           case COLLAPSE:
           case EXPAND:

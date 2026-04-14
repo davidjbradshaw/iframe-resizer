@@ -43,7 +43,6 @@ export default function decodeMessage(msg: string): MessageData {
     height: height + paddingAndBorder,
     width: Number(data[2]),
     type: data[3],
-    msg: data[4],
     message: data[4],
   }
 

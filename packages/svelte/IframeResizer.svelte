@@ -2,7 +2,7 @@
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 
   import connectResizer from '@iframe-resizer/core'
-  import type { IframeObject, LogOption } from '@iframe-resizer/core'
+  import type { IframeLogOption, IframeObject } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
@@ -16,7 +16,7 @@
   export let bodyPadding: string | undefined = undefined
   export let checkOrigin: boolean | undefined = undefined
   export let direction: string | undefined = undefined
-  export let log: LogOption | undefined = undefined
+  export let log: IframeLogOption | undefined = undefined
   export let inPageLinks: boolean | undefined = undefined
   export let offsetSize: number | undefined = undefined
   export let scrolling: boolean | undefined = undefined
