@@ -1,13 +1,16 @@
 import { LABEL, OBJECT, STRING, UNDEFINED } from '@iframe-resizer/common/consts'
 import connectResizer, {
   type IframeComponent,
+  type IframeObject,
   type IframeOptions,
 } from '@iframe-resizer/core'
 
 const id = `[${LABEL}] `
 
 export default function createIframeResize() {
-  let connectWithOptions: (iframe: HTMLIFrameElement) => any
+  let connectWithOptions: (
+    iframe: HTMLIFrameElement,
+  ) => IframeObject | undefined
   let iframes: HTMLIFrameElement[]
 
   function setupDisconnectedIframe(element: HTMLIFrameElement): void {
@@ -22,27 +25,28 @@ export default function createIframeResize() {
     observer.observe(document.body, { childList: true, subtree: true })
   }
 
-  function setup(element: any): void {
+  function setup(el: Element | HTMLElement): void {
     switch (true) {
-      case !element:
+      case !el:
         throw new TypeError(`${id}iframe is not defined`)
 
-      case !element.tagName:
+      case !el.tagName:
         throw new TypeError(`${id}Not a valid DOM element`)
 
-      case element.tagName.toUpperCase() !== 'IFRAME':
-        throw new TypeError(
-          `${id}Expected <IFRAME> tag, found <${element.tagName}>`,
-        )
+      case el.tagName.toUpperCase() !== 'IFRAME':
+        throw new TypeError(`${id}Expected <IFRAME> tag, found <${el.tagName}>`)
 
-      case !element.isConnected:
-        setupDisconnectedIframe(element)
-        iframes.push(element)
-        break
+      default: {
+        const iframe = el as HTMLIFrameElement
 
-      default:
-        connectWithOptions(element)
-        iframes.push(element)
+        if (iframe.isConnected) {
+          connectWithOptions(iframe)
+        } else {
+          setupDisconnectedIframe(iframe)
+        }
+
+        iframes.push(iframe)
+      }
     }
   }
 
@@ -69,7 +73,7 @@ export default function createIframeResize() {
         break
 
       case OBJECT:
-        setup(target)
+        setup(target as HTMLElement)
         break
 
       default:

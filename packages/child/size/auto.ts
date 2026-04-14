@@ -4,6 +4,15 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 import { info } from '../console'
 import state from '../values/state'
 
+interface GetDimension {
+  label: string
+  enabled: () => boolean
+  getOffset: () => number
+  boundingClientRect: () => number
+  documentElementScroll: () => number
+  taggedElement: () => number
+}
+
 const BOUNDING_FORMAT = [HIGHLIGHT, FOREGROUND, HIGHLIGHT]
 
 export const prevScrollSize = {
@@ -26,16 +35,16 @@ export function getBoundingClientRect(
   return boundingSize
 }
 
-export function getOffset(getDimension: any): number {
+export function getOffset(getDimension: GetDimension): number {
   const offset = getDimension.getOffset()
   if (offset !== 0) info(`Page offsetSize: %c${offset}px`, HIGHLIGHT)
   return offset
 }
 
-export const getAdjustedScroll = (getDimension: any): number =>
+export const getAdjustedScroll = (getDimension: GetDimension): number =>
   getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
 
-export default function getAutoSize(getDimension: any): number {
+export default function getAutoSize(getDimension: GetDimension): number {
   const { hasOverflow, hasTags, triggerLocked } = state
   const dimension = getDimension.label
   const isHeight = dimension === HEIGHT

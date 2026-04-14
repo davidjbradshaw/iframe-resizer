@@ -67,7 +67,10 @@ const scrollRequestFromChild =
       scrollToLink(id)
     }
 
-    function scrollParent(target: any, newPosition: Position): void {
+    function scrollParent(
+      target: Record<string, (x: number, y: number) => void>,
+      newPosition: Position,
+    ): void {
       target[`scrollTo${addOffset ? 'Offset' : ''}`](
         newPosition.x,
         newPosition.y,

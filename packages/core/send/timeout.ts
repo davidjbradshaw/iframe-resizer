@@ -10,7 +10,7 @@ export const getOrigin = (url: string): string | null => {
   }
 }
 
-export const allowsScriptsAndOrigin = (sandbox: any): boolean =>
+export const allowsScriptsAndOrigin = (sandbox: DOMTokenList): boolean =>
   typeof sandbox === OBJECT &&
   sandbox.length > 0 &&
   !(sandbox.contains('allow-scripts') && sandbox.contains('allow-same-origin'))

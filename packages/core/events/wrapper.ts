@@ -4,7 +4,7 @@ import { FUNCTION } from '@iframe-resizer/common/consts'
 import { warn } from '../console'
 import settings from '../values/settings'
 
-function on(iframeId: string, funcName: string, val: any): any {
+function on(iframeId: string, funcName: string, val: unknown): unknown {
   if (!settings[iframeId]) return null
 
   const func = settings[iframeId][funcName]
