@@ -52,7 +52,7 @@ export default function createIframeResize() {
 
   return function (
     options: IframeOptions,
-    target?: string | HTMLElement,
+    target?: string | HTMLIFrameElement,
   ): readonly IframeComponent[] {
     if (typeof window === UNDEFINED) return [] // don't run for server side render
 
@@ -73,7 +73,7 @@ export default function createIframeResize() {
         break
 
       case OBJECT:
-        setup(target as HTMLElement)
+        setup(target as HTMLIFrameElement)
         break
 
       default:
