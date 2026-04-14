@@ -7,7 +7,7 @@ import { errorBoundary, event as consoleEvent, warn } from './console'
 import setupEventListenersOnce from './listeners'
 import setupIframe from './setup'
 import setupLogging from './setup/logging'
-import type { IframeComponent, IframeObject } from './types'
+import type { IframeComponent, IframeObject, IframeOptions } from './types'
 
 export type {
   Direction,
@@ -29,7 +29,7 @@ export {
 } from '@iframe-resizer/common/consts'
 
 export default function connectResizer(
-  options: Record<string, any>,
+  options: IframeOptions,
 ): (iframe: HTMLIFrameElement) => IframeObject | undefined {
   if (!isObject(options)) throw new TypeError('Options is not an object')
 

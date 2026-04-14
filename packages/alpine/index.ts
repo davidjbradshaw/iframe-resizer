@@ -51,7 +51,7 @@ export default function IframeResizer(Alpine: Alpine): void {
 
       const resizer = connectResizer({
         waitForLoad: true,
-        ...options,
+        ...(options as IframeOptions),
         onBeforeClose: () => {
           consoleGroup.event('close')
           consoleGroup.warn(

@@ -46,7 +46,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
 <iframe data-iframe-resizer={JSON.stringify(resizerOptions)} {...iframeAttrs}></iframe>
 
 <script>
-  import connectResizer, { type IframeComponent } from '@iframe-resizer/core'
+  import connectResizer, { type IframeComponent, type IframeOptions } from '@iframe-resizer/core'
 
   const EVENTS = [
     'onReady',
@@ -93,7 +93,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
         const eventHandlers = createEventDispatcher(iframe)
 
         connectResizer({
-          ...options,
+          ...options as IframeOptions,
           ...eventHandlers,
           onBeforeClose: () => false,
         })(iframe)

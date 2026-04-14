@@ -154,7 +154,7 @@ export interface IframeOptions {
    * If this function returns false, it will stop the library from
    * repositioning the page, so that you can implement your own scrolling.
    */
-  onScroll?(data: IframeScrollData): boolean
+  onScroll?(data: IframeScrollData): boolean | void
 }
 
 // --- Internal message data (used across core event handlers) ---
