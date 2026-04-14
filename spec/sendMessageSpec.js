@@ -53,7 +53,11 @@ define(['iframeResizerParent'], (iframeResize) => {
         },
       })[0]
 
-      mockMsgFromIFrame(iframe, 'message:"test:test"')
+      mockMsgFromIFrame(iframe, 'init')
+
+      setTimeout(() => {
+        mockMsgFromIFrame(iframe, 'message:"test:test"')
+      }, 50)
     })
 
     it('send message and get response', (done) => {
