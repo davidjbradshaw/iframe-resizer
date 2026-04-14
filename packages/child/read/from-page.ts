@@ -1,11 +1,12 @@
+import { checkMode, getKey } from '@iframe-resizer/common'
 import {
   FUNCTION,
   NUMBER,
   OBJECT,
   OFFSET_SIZE,
   STRING,
-} from '../../common/consts'
-import { checkMode, getKey } from '../../common/mode'
+} from '@iframe-resizer/common/consts'
+
 import { log } from '../console'
 import settings from '../values/settings'
 

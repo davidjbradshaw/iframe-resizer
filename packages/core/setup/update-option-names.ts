@@ -1,5 +1,10 @@
-import { OFFSET, OFFSET_SIZE, REMOVED_NEXT_VERSION } from '../../common/consts'
-import { hasOwn } from '../../common/utils'
+import { hasOwn } from '@iframe-resizer/common'
+import {
+  OFFSET,
+  OFFSET_SIZE,
+  REMOVED_NEXT_VERSION,
+} from '@iframe-resizer/common/consts'
+
 import { advise } from '../console'
 import settings from '../values/settings'
 

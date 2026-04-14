@@ -31,7 +31,7 @@ export default (formatLogMessage: FormatLogMessageFn) =>
   (message: unknown): void =>
     formatLogMessage(
       isString(message)
-        ? window.chrome
+        ? (window as any).chrome
           ? encode(message)
           : filter(message)
         : message,

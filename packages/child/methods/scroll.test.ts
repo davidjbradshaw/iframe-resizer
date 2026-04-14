@@ -1,6 +1,10 @@
+import {
+  SCROLL_BY,
+  SCROLL_TO,
+  SCROLL_TO_OFFSET,
+} from '@iframe-resizer/common/consts'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { SCROLL_BY, SCROLL_TO, SCROLL_TO_OFFSET } from '../../common/consts'
 import * as sendMessage from '../send/message'
 import { scrollBy, scrollTo, scrollToOffset } from './scroll'
 

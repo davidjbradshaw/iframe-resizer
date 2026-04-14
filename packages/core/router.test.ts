@@ -1,5 +1,3 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-
 import {
   AUTO_RESIZE,
   BEFORE_UNLOAD,
@@ -9,7 +7,8 @@ import {
   PARENT_INFO_STOP,
   RESET,
   TITLE,
-} from '../common/consts'
+} from '@iframe-resizer/common/consts'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('./checks/origin', () => ({ default: vi.fn() }))
 vi.mock('./checks/version', () => ({ default: vi.fn() }))

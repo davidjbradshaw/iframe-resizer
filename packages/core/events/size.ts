@@ -1,6 +1,6 @@
+import { HEIGHT, WIDTH } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { HEIGHT, WIDTH } from '../../common/consts'
 import { info } from '../console'
 import type { MessageData } from '../types'
 import settings from '../values/settings'

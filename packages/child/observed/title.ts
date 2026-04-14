@@ -1,6 +1,6 @@
+import { TITLE } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { TITLE } from '../../common/consts'
 import { log } from '../console'
 import sendMessage from '../send/message'
 

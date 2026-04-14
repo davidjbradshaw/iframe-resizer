@@ -1,6 +1,6 @@
+import { HEIGHT_CALC_MODE_DEFAULT } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { HEIGHT_CALC_MODE_DEFAULT } from '../../common/consts'
 import { debug, log } from '../console'
 import sendMessage from '../send/message'
 import { getHeight, getWidth } from '../size'

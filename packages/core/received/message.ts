@@ -1,4 +1,5 @@
-import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '../../common/consts'
+import { MESSAGE_HEADER_LENGTH, SEPARATOR } from '@iframe-resizer/common/consts'
+
 import settings from '../values/settings'
 
 export default function getMessageBody(id: string, offset: number): string {

@@ -3,6 +3,21 @@
 VERSION=`node bin/getVersion.js  2>/dev/null`
 YEAR=`date +%y`
 
+PACKAGES=(
+  common
+  core
+  alpine
+  angular
+  astro
+  child
+  jquery
+  parent
+  react
+  solid
+  svelte
+  vue
+)
+
 if [ -z "$1" ]; then
     echo "Build type not specified"
     echo
@@ -43,35 +58,22 @@ npm install
 npm test
 npm run build:$1
 
-cd dist/parent
-npm publish --tag $1 --access public
-cd ../child
-npm publish --tag $1 --access public
-cd ../core
-npm publish --tag $1 --access public
-cd ../jquery
-npm publish --tag $1 --access public
-cd ../react
-npm publish --tag $1 --access public
-cd ../vue
-npm publish --tag $1 --access public
-cd ../svelte
-npm publish --tag $1 --access public
-cd ../alpine
-npm publish --tag $1 --access public
-cd ../angular
-npm publish --tag $1 --access public
-cd ../astro
-npm publish --tag $1 --access public
+for pkg in "${PACKAGES[@]}"; do
+  echo "Publishing @iframe-resizer/$pkg"
+  cd "dist/$pkg"
+  npm publish --tag $1 --access public
+  cd ../..
+done
 
 if [ $1 != "latest" ]
 then
   exit 0
 fi
 
-echo "Updating GitHub build"
+echo "Updating example dependencies"
+bin/update-examples.sh --minor
 
-cd ../..
+echo "Updating GitHub build"
 rm -v iframe-resizer.zip
 zip iframe-resizer.zip js/**
 

@@ -6,7 +6,6 @@ describe('child/read/from-page', () => {
   beforeEach(() => {
     // reset page object
     delete window.iframeResizer
-    delete window.iframeResizer
     settings.mode = 0
     settings.calculateHeight = true
     settings.calculateWidth = false

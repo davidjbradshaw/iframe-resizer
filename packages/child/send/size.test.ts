@@ -32,7 +32,7 @@ const state = (await import('../values/state')).default
 const dispatch = (await import('./dispatch')).default
 const sendSize = (await import('./size')).default
 const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST } =
-  await import('../../common/consts')
+  await import('@iframe-resizer/common/consts')
 
 describe('child/send/size', () => {
   const origRAF = globalThis.requestAnimationFrame

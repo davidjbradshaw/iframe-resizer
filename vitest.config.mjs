@@ -15,6 +15,8 @@ export default defineConfig({
   resolve: {
     conditions: ['browser'],
     alias: {
+      '@iframe-resizer/common/consts': r('packages/common/consts.ts'),
+      '@iframe-resizer/common': r('packages/common/index.ts'),
       '@iframe-resizer/jquery': r('packages/jquery/plugin.js'),
       '@iframe-resizer/child': r('packages/child/index.ts'),
       '@iframe-resizer/parent': r('packages/parent/factory.ts'),
@@ -67,7 +69,7 @@ export default defineConfig({
         'packages/parent/esm.ts',
         'packages/parent/umd.ts',
         'packages/solid/index.ts',
-        'packages/svelte/index.js',
+        'packages/svelte/index.ts',
       ],
     },
   },

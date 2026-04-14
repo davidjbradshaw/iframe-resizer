@@ -21,14 +21,13 @@ vi.mock('auto-console-group', () => ({
 
 // Mock connectResizer to attach a minimal iframeResizer API and return a resizer
 const disconnect = vi.fn()
-const resize = vi.fn()
 const moveToAnchor = vi.fn()
 const sendMessage = vi.fn()
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn(() => (iframe: any) => {
     // Expose a minimal API similar to production
-    iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+    iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
     return iframe.iframeResizer
   }),
 }))
@@ -42,7 +41,6 @@ describe('React IframeResizer component', () => {
     document.body.append(container)
     root = createRoot(container)
     disconnect.mockClear()
-    resize.mockClear()
     moveToAnchor.mockClear()
     sendMessage.mockClear()
   })
@@ -69,16 +67,13 @@ describe('React IframeResizer component', () => {
     // Imperative API
     expect(typeof fRef.current.getRef).toBe('function')
     expect(typeof fRef.current.getElement).toBe('function')
-    expect(typeof fRef.current.resize).toBe('function')
     expect(typeof fRef.current.moveToAnchor).toBe('function')
     expect(typeof fRef.current.sendMessage).toBe('function')
 
     // Calls through to underlying iframeResizer methods
-    fRef.current.resize()
     fRef.current.moveToAnchor('section-1')
     fRef.current.sendMessage({ hello: 'world' }, '*')
 
-    expect(resize).toHaveBeenCalledTimes(1)
     expect(moveToAnchor).toHaveBeenCalledWith('section-1')
     expect(sendMessage).toHaveBeenCalledWith({ hello: 'world' }, '*')
 
@@ -122,7 +117,7 @@ describe('React IframeResizer component', () => {
     connectResizer.mockImplementation((options: any) => {
       capturedOptions = options
       return (iframe: any) => {
-        iframe.iframeResizer = { disconnect, resize, moveToAnchor, sendMessage }
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
     })

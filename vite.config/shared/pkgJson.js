@@ -6,7 +6,7 @@ const customConfig = (file) => {
   const entryPoints = {
     main,
     module,
-    browser: `index.umd.js`,
+    types,
   }
 
   switch (file) {
@@ -51,8 +51,12 @@ const customConfig = (file) => {
         main: 'index.umd.js',
         module,
         types,
-        browser: {
-          './sfc': 'iframe-resizer.vue',
+        exports: {
+          '.': {
+            import: `./${module}`,
+            require: './index.umd.js',
+          },
+          './sfc': './iframe-resizer.vue',
         },
         peerDependencies: {
           vue: '^3.3.0',
@@ -105,17 +109,25 @@ const customConfig = (file) => {
         },
       }
 
-    case 'core':
+    case 'jquery':
       return {
-        ...entryPoints,
-        types,
+        main,
+        module,
+        browser: 'index.umd.js',
       }
 
-    case 'parent':
-    case 'child':
+    case 'common':
       return {
-        ...entryPoints,
-        types: `iframe-resizer.${file}.d.ts`,
+        main,
+        module,
+        types,
+        exports: {
+          '.': { import: `./${module}`, require: `./${main}` },
+          './consts': {
+            import: './consts.esm.js',
+            require: './consts.cjs.js',
+          },
+        },
       }
 
     default:

@@ -1,6 +1,6 @@
+import { MESSAGE_ID } from '@iframe-resizer/common/consts'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { MESSAGE_ID } from '../../common/consts'
 import settings from '../values/settings'
 import * as preflight from './preflight'
 

@@ -1,7 +1,7 @@
+import { isIframe } from '@iframe-resizer/common'
+import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '../../common/consts'
-import { isIframe } from '../../common/utils'
 import { log, warn } from '../console'
 import type { MessageData } from '../types'
 import settings from '../values/settings'

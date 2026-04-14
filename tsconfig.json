@@ -17,6 +17,7 @@
     "packages/astro/**/*.ts",
     "packages/solid/**/*.ts",
     "packages/solid/**/*.tsx",
+    "packages/svelte/**/*.ts",
     "packages/common/**/*.ts",
     "packages/core/**/*.ts",
     "packages/child/**/*.ts",

@@ -1,6 +1,11 @@
-import { VERSION } from '../../common/consts'
-import setMode, { getModeData, getModeLabel } from '../../common/mode'
-import { isDef } from '../../common/utils'
+import {
+  getModeData,
+  getModeLabel,
+  isDef,
+  setMode,
+} from '@iframe-resizer/common'
+import { VERSION } from '@iframe-resizer/common/consts'
+
 import { advise, adviseNow, purge, vInfo } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
@@ -12,7 +17,7 @@ export function showVersion(
 ): void {
   if (!isDef(version) || (oMode > -1 && mode > oMode)) {
     vInfo(`v${VERSION} (${getModeLabel(mode)})`, mode)
-    if (mode < 2) adviseNow(getModeData(3))
+    if (mode === 0) adviseNow(getModeData(3))
   }
 }
 

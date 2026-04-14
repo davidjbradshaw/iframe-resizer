@@ -5,7 +5,7 @@ vi.mock('../send/size', () => ({ default: vi.fn() }))
 
 const { typeAssert } = await import('../../common/utils')
 const sendSize = (await import('../send/size')).default
-const { MANUAL_RESIZE_REQUEST } = await import('../../common/consts')
+const { MANUAL_RESIZE_REQUEST } = await import('@iframe-resizer/common/consts')
 const resize = (await import('./resize')).default
 
 describe('child/methods/resize', () => {

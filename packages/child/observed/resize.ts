@@ -1,5 +1,6 @@
-import { RESIZE_OBSERVER } from '../../common/consts'
-import { getElementName } from '../../common/utils'
+import { getElementName } from '@iframe-resizer/common'
+import { RESIZE_OBSERVER } from '@iframe-resizer/common/consts'
+
 import createResizeObserver from '../observers/resize'
 import sendSize from '../send/size'
 import observers from './observers'

@@ -1,6 +1,6 @@
+import { MOUSE_ENTER, MOUSE_LEAVE } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { MOUSE_ENTER, MOUSE_LEAVE } from '../../common/consts'
 import { log } from '../console'
 import sendMessage from '../send/message'
 import { addEventListener } from './listeners'

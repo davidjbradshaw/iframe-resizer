@@ -1,6 +1,6 @@
+import { round } from '@iframe-resizer/common'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
-import { round } from '../../common/utils'
 import { advise, event, info, log } from '../console'
 
 const SECOND = 1000

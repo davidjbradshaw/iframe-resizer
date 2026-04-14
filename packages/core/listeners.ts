@@ -1,6 +1,11 @@
-import { CHILD_READY_MESSAGE, MESSAGE, PARENT, STRING } from '../common/consts'
-import { addEventListener } from '../common/listeners'
-import { once } from '../common/utils'
+import { addEventListener, once } from '@iframe-resizer/common'
+import {
+  CHILD_READY_MESSAGE,
+  MESSAGE,
+  PARENT,
+  STRING,
+} from '@iframe-resizer/common/consts'
+
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'
 import decodeMessage from './received/decode'
@@ -54,6 +59,6 @@ function iframeListener(
 export default once(() => {
   addEventListener(window, MESSAGE, iframeListener as EventListener)
   addEventListener(document, 'visibilitychange', tabVisible)
-  window.iframeParentListener = (data: any) =>
+  ;(window as any).iframeParentListener = (data: any) =>
     setTimeout(() => iframeListener({ data, sameOrigin: true }))
 })

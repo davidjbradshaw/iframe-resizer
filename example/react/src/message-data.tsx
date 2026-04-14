@@ -1,7 +1,7 @@
-import { ResizedEvent, MessageEvent } from './iframe-events'
+import type { IframeMessageData, IframeResizedData } from '@iframe-resizer/react'
 
 type MessageDataProps = {
-  data?: ResizedEvent | MessageEvent
+  data?: IframeResizedData | IframeMessageData
 }
 
 const MessageData = ({ data }: MessageDataProps) =>

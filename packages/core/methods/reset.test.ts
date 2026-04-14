@@ -9,7 +9,7 @@ const { log } = await import('../console')
 const setSize = (await import('../events/size')).default
 const { getPagePosition } = await import('../page/position')
 const trigger = (await import('../send/trigger')).default
-const { INIT, RESET } = await import('../../common/consts')
+const { INIT, RESET } = await import('@iframe-resizer/common/consts')
 const { default: resetIframe } = await import('./reset')
 
 describe('core/methods/reset', () => {

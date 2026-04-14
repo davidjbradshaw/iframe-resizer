@@ -1,6 +1,6 @@
+import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { MESSAGE_ID_LENGTH } from '../../common/consts'
 import settings from '../values/settings'
 import decodeMessage, { getBorderEnds, getPaddingEnds } from './decode'
 

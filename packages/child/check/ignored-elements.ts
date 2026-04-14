@@ -1,6 +1,6 @@
+import { IGNORE_ATTR } from '@iframe-resizer/common/consts'
 import { BOLD, NORMAL } from 'auto-console-group'
 
-import { IGNORE_ATTR } from '../../common/consts'
 import { warn } from '../console'
 
 let ignoredElementsCount = 0

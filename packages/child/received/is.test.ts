@@ -11,7 +11,7 @@ describe('child/received/is', () => {
   })
 
   it('detects messages intended for iframe-resizer', async () => {
-    const { MESSAGE_ID } = await import('../../common/consts')
+    const { MESSAGE_ID } = await import('@iframe-resizer/common/consts')
     const mod = await import('./is')
     expect(mod.isMessageForUs(EVENT(`${MESSAGE_ID}:x:y`))).toBe(true)
     expect(mod.isMessageForUs(EVENT('other:x:y'))).toBe(false)
@@ -30,7 +30,8 @@ describe('child/received/is', () => {
   })
 
   it('identifies init message by boolean flag in third segment', async () => {
-    const { SEPARATOR, MESSAGE_ID } = await import('../../common/consts')
+    const { SEPARATOR, MESSAGE_ID } =
+      await import('@iframe-resizer/common/consts')
     const mod = await import('./is')
     expect(
       mod.isInitMessage(EVENT(`${MESSAGE_ID}${SEPARATOR}x${SEPARATOR}true`)),

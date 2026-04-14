@@ -1,9 +1,12 @@
+import {
+  createFormatAdvise,
+  deprecate,
+  esModuleInterop,
+  id as identity,
+} from '@iframe-resizer/common'
+import { BOLD, LABEL, PARENT } from '@iframe-resizer/common/consts'
 import acg, { NORMAL } from 'auto-console-group'
 
-import { BOLD, LABEL, PARENT } from '../common/consts'
-import deprecate from '../common/deprecate'
-import createFormatAdvise from '../common/format-advise'
-import { esModuleInterop, id as identity } from '../common/utils'
 import settings from './values/settings'
 
 // Deal with UMD not converting default exports to named exports

@@ -1,4 +1,5 @@
-import { FALSE, VERSION } from '../../common/consts'
+import { FALSE, VERSION } from '@iframe-resizer/common/consts'
+
 import { advise } from '../console'
 
 const LEGACY = `<rb>Legacy version detected on parent page</>

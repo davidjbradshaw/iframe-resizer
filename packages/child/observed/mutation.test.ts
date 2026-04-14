@@ -1,6 +1,8 @@
 import { describe, expect, test, vi } from 'vitest'
 
-vi.mock('../../common/consts', () => ({ MUTATION_OBSERVER: 'mutation' }))
+vi.mock('@iframe-resizer/common/consts', () => ({
+  MUTATION_OBSERVER: 'mutation',
+}))
 vi.mock('../check/overflow', () => ({
   default: vi.fn(() => ({
     hasOverflowUpdated: true,

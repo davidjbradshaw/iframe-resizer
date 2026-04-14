@@ -1,4 +1,5 @@
-import { AUTO } from '../common/consts'
+import { AUTO } from '@iframe-resizer/common/consts'
+
 import filterIframeAttribs from './filter-iframe-attribs'
 
 describe('filterIframeAttribs', () => {
@@ -12,17 +13,19 @@ describe('filterIframeAttribs', () => {
       direction: 'vertical',
       inPageLinks: true,
       log: true,
-      offset: 10,
-      offsetHeight: 100,
-      offsetWidth: 200,
+      logExpand: false,
+      offsetSize: 10,
       scrolling: AUTO,
       tolerance: 5,
-      warningTimeout: 3000,
       waitForLoad: true,
+      warningTimeout: 3000,
       onAfterClose: vi.fn(),
-      onReady: vi.fn(),
       onMessage: vi.fn(),
+      onMouseEnter: vi.fn(),
+      onMouseLeave: vi.fn(),
+      onReady: vi.fn(),
       onResized: vi.fn(),
+      onScroll: vi.fn(),
       customProp1: 'value1',
       customProp2: 'value2',
     }

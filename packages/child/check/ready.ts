@@ -1,5 +1,6 @@
-import { READY_STATE_CHANGE } from '../../common/consts'
-import { isolateUserCode } from '../../common/utils'
+import { isolateUserCode } from '@iframe-resizer/common'
+import { READY_STATE_CHANGE } from '@iframe-resizer/common/consts'
+
 import { addEventListener } from '../events/listeners'
 
 const COMPLETE = 'complete'

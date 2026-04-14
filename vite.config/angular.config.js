@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -13,16 +13,23 @@ export default defineConfig({
     outDir: 'dist/angular',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['@iframe-resizer/core', 'auto-console-group', '@angular/core'],
+      external: [
+        /^@iframe-resizer\/common/,
+        '@angular/core',
+        '@iframe-resizer/core',
+        'auto-console-group',
+      ],
     },
-    minify: 'esbuild',
+    ...terserWithBanner('angular'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/angular/**/*.ts'],
       exclude: ['packages/angular/**/*.test.*'],
       outDir: 'dist/angular',
+      entryRoot: 'packages/angular',
     }),
     ...createPluginsProd('angular'),
   ],

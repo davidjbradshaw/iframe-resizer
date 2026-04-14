@@ -19,7 +19,7 @@ describe('child/received/message', () => {
 
   test('parses message body and calls user onMessage', async () => {
     const { default: message } = await import('./message')
-    message({ data: '[iframeSizer]:x' })
+    message({ data: '[iFrameSizer]:x' })
 
     expect(settings.onMessage).toHaveBeenCalledWith({ a: 1 })
   })

@@ -5,7 +5,7 @@ vi.mock('../send/message', () => ({ default: vi.fn() }))
 
 const { typeAssert } = await import('../../common/utils')
 const sendMessage = (await import('../send/message')).default
-const { MESSAGE } = await import('../../common/consts')
+const { MESSAGE } = await import('@iframe-resizer/common/consts')
 const send = (await import('./send-message')).default
 
 describe('child/methods/send-message', () => {

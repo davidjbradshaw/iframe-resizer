@@ -1,4 +1,5 @@
-import { PARENT_INFO } from '../../common/consts'
+import { PARENT_INFO } from '@iframe-resizer/common/consts'
+
 import { sendInfoToIframe, startInfoMonitor, stopInfoMonitor } from './common'
 
 export function getParentProps(iframe: HTMLIFrameElement): string {

@@ -5,7 +5,7 @@ vi.mock('../send/message', () => ({ default: vi.fn() }))
 
 const { log } = await import('../console')
 const sendMessage = (await import('../send/message')).default
-const { TITLE } = await import('../../common/consts')
+const { TITLE } = await import('@iframe-resizer/common/consts')
 const titleChanged = (await import('./title')).default
 
 describe('child/observed/title', () => {

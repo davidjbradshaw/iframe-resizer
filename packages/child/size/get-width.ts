@@ -1,4 +1,5 @@
-import { WIDTH, WIDTH_EDGE } from '../../common/consts'
+import { WIDTH, WIDTH_EDGE } from '@iframe-resizer/common/consts'
+
 import settings from '../values/settings'
 import getAutoSize from './auto'
 import getMaxElement from './max-element'

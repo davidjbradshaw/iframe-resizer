@@ -1,6 +1,8 @@
-import connectResizer from '@iframe-resizer/core'
-
-import { LABEL, OBJECT, STRING, UNDEFINED } from '../common/consts'
+import { LABEL, OBJECT, STRING, UNDEFINED } from '@iframe-resizer/common/consts'
+import connectResizer, {
+  type IframeComponent,
+  type IframeOptions,
+} from '@iframe-resizer/core'
 
 const id = `[${LABEL}] `
 
@@ -45,9 +47,9 @@ export default function createIframeResize() {
   }
 
   return function (
-    options: Record<string, any>,
+    options: IframeOptions,
     target?: string | HTMLElement,
-  ): readonly HTMLIFrameElement[] {
+  ): readonly IframeComponent[] {
     if (typeof window === UNDEFINED) return [] // don't run for server side render
 
     // Check if document.body exists in browser environment
@@ -74,6 +76,6 @@ export default function createIframeResize() {
         throw new TypeError(`${id}Unexpected data type (${typeof target})`)
     }
 
-    return Object.freeze(iframes)
+    return Object.freeze(iframes) as readonly IframeComponent[]
   }
 }

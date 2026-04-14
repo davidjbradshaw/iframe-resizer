@@ -1,8 +1,10 @@
-import resolve from '@rollup/plugin-node-resolve'
-import copy from 'rollup-plugin-copy'
+import { existsSync, renameSync } from 'node:fs'
 
-import { output } from './shared/output.js'
-import { createPluginsProd, typescriptParent } from './shared/plugins.js'
+import copy from 'rollup-plugin-copy'
+import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
+
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -13,40 +15,49 @@ const filterDeps = (contents) => {
   return JSON.stringify(pkg, null, 2)
 }
 
-export default [
-  // UMD build (bundles dependencies)
-  {
-    input: 'packages/parent/umd.ts',
-    output: {
+export default defineConfig({
+  build: {
+    lib: {
+      entry: './packages/parent/esm.ts',
       name: 'iframeResize',
-      ...output('parent')('umd'),
+      formats: ['es', 'cjs'],
+      fileName: (format) => `index.${format === 'es' ? 'esm' : 'cjs'}.js`,
     },
-    plugins: [typescriptParent(), ...createPluginsProd('parent'), resolve()],
+    outDir: 'dist/parent',
+    emptyOutDir: false,
+    rollupOptions: {
+      external: [
+        /^@iframe-resizer\/common/,
+        '@iframe-resizer/core',
+        'auto-console-group',
+      ],
+    },
+    ...terserWithBanner('parent'),
+    sourcemap: process.env.BETA || false,
   },
-
-  // ESM + CJS build (external dependencies)
-  {
-    input: 'packages/parent/esm.ts',
-    output: [output('parent')('esm'), output('parent')('cjs')],
-    external: ['@iframe-resizer/core', 'auto-console-group'],
-    plugins: [
-      typescriptParent(),
-      ...createPluginsProd('parent'),
-      copy({
-        hook: 'closeBundle',
-        targets: [
-          {
-            src: 'packages/parent/index.d.ts',
-            dest: 'dist/parent/',
-            rename: 'iframe-resizer.parent.d.ts',
-          },
-          {
-            src: 'dist/parent/package.json',
-            dest: 'dist/parent/',
-            transform: filterDeps,
-          },
-        ],
-      }),
-    ],
-  },
-]
+  plugins: [
+    dts({
+      tsconfigPath: './tsconfig.build.json',
+      include: ['packages/parent/esm.ts', 'packages/parent/factory.ts'],
+      outDir: 'dist/parent',
+      entryRoot: 'packages/parent',
+      rollupTypes: true,
+      afterBuild: () => {
+        const src = 'dist/parent/index.esm.d.ts'
+        const dest = 'dist/parent/index.d.ts'
+        if (existsSync(src)) renameSync(src, dest)
+      },
+    }),
+    ...createPluginsProd('parent'),
+    copy({
+      hook: 'closeBundle',
+      targets: [
+        {
+          src: 'dist/parent/package.json',
+          dest: 'dist/parent/',
+          transform: filterDeps,
+        },
+      ],
+    }),
+  ],
+})

@@ -31,7 +31,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
     let log = true
 
-    const id = 'parentIFrameTests'
+    const id = 'parentIframeTests'
     const childMsg =
       '8:true:' +
       log +
@@ -65,7 +65,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         setTimeout(() => {
           // Verify autoResize message was sent to parent
           expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-            '[iFrameSizer]parentIFrameTests:0:0:autoResize:true',
+            '[iFrameSizer]parentIframeTests:0:0:autoResize:true',
             '*',
           )
           done()
@@ -80,7 +80,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIframe.moveToAnchor('foo')
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo',
+          '[iFrameSizer]parentIframeTests:0:0:inPageLink:#foo',
           '*',
         )
         win.parentIframe.moveToAnchor('bar')
@@ -127,7 +127,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         })
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:0:0:parentInfo',
+          '[iFrameSizer]parentIframeTests:0:0:parentInfo',
           '*',
         )
         mockMsgListener(
@@ -145,7 +145,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         unsub()
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:0:0:parentInfoStop',
+          '[iFrameSizer]parentIframeTests:0:0:parentInfoStop',
           '*',
         )
       })
@@ -154,7 +154,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIframe.scrollTo(10, 10)
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:10:10:scrollTo',
+          '[iFrameSizer]parentIframeTests:10:10:scrollTo',
           '*',
         )
       })
@@ -163,7 +163,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIframe.scrollToOffset(10, 10)
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:10:10:scrollToOffset',
+          '[iFrameSizer]parentIframeTests:10:10:scrollToOffset',
           '*',
         )
       })
@@ -172,7 +172,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIframe.sendMessage('foo:bar')
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:0:0:message:"foo:bar"',
+          '[iFrameSizer]parentIframeTests:0:0:message:"foo:bar"',
           '*',
         )
       })
@@ -181,7 +181,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         win.parentIframe.sendMessage({ foo: 'bar' }, 'http://foo.bar:1337')
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:0:0:message:{"foo":"bar"}',
+          '[iFrameSizer]parentIframeTests:0:0:message:{"foo":"bar"}',
           'http://foo.bar:1337',
         )
       })
@@ -197,7 +197,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         setTimeout(() => {
           // resize() sends 'manualResize' type (not 'size') to distinguish from auto-resize
           expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-            '[iFrameSizer]parentIFrameTests:10:10:manualResize',
+            '[iFrameSizer]parentIframeTests:10:10:manualResize',
             targetOrigin,
           )
 
@@ -251,7 +251,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('moveToAnchor:foo'))
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
-          '[iFrameSizer]parentIFrameTests:0:0:inPageLink:#foo',
+          '[iFrameSizer]parentIframeTests:0:0:inPageLink:#foo',
           '*',
         )
       })

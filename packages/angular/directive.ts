@@ -9,18 +9,17 @@ import {
   Input,
   Output,
 } from '@angular/core'
+import { esModuleInterop } from '@iframe-resizer/common'
 import type {
-  IFrameComponent,
-  IFrameMessageData,
-  IFrameMouseData,
-  IFrameObject,
-  IFrameOptions,
-  IFrameResizedData,
+  IframeComponent,
+  IframeMessageData,
+  IframeMouseData,
+  IframeObject,
+  IframeOptions,
+  IframeResizedData,
 } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-
-import { esModuleInterop } from '../common/utils'
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
@@ -30,33 +29,33 @@ const createAutoConsoleGroup = esModuleInterop(acg)
   standalone: true,
 })
 export class IframeResizerDirective {
-  private resizer?: IFrameObject
+  private resizer?: IframeObject
 
   private consoleGroup = createAutoConsoleGroup()
 
-  @Output() onReady = new EventEmitter<IFrameComponent>()
+  @Output() onReady = new EventEmitter<IframeComponent>()
 
-  @Output() onBeforeClose = new EventEmitter<IFrameComponent>()
+  @Output() onBeforeClose = new EventEmitter<IframeComponent>()
 
-  @Output() onMessage = new EventEmitter<IFrameMessageData>()
+  @Output() onMessage = new EventEmitter<IframeMessageData>()
 
-  @Output() onMouseEnter = new EventEmitter<IFrameMouseData>()
+  @Output() onMouseEnter = new EventEmitter<IframeMouseData>()
 
-  @Output() onMouseLeave = new EventEmitter<IFrameMouseData>()
+  @Output() onMouseLeave = new EventEmitter<IframeMouseData>()
 
-  @Output() onResized = new EventEmitter<IFrameResizedData>()
+  @Output() onResized = new EventEmitter<IframeResizedData>()
 
   @Output() onScroll = new EventEmitter<{
-    iframe: IFrameComponent
+    iframe: IframeComponent
     top: number
     left: number
   }>()
 
-  get iframeResizer(): IFrameObject | undefined {
+  get iframeResizer(): IframeObject | undefined {
     return this.resizer
   }
 
-  @Input() options: IFrameOptions & { logExpand?: boolean } = {
+  @Input() options: IframeOptions & { logExpand?: boolean } = {
     license: '',
   }
 
@@ -85,18 +84,18 @@ export class IframeResizerDirective {
         return false
       },
 
-      onMessage: (event: IFrameMessageData) => this.onMessage.next(event),
+      onMessage: (event: IframeMessageData) => this.onMessage.next(event),
 
-      onMouseEnter: (event: IFrameMouseData) => this.onMouseEnter.next(event),
+      onMouseEnter: (event: IframeMouseData) => this.onMouseEnter.next(event),
 
-      onMouseLeave: (event: IFrameMouseData) => this.onMouseLeave.next(event),
+      onMouseLeave: (event: IframeMouseData) => this.onMouseLeave.next(event),
 
-      onReady: (iframe: IFrameComponent) => this.onReady.next(iframe),
+      onReady: (iframe: IframeComponent) => this.onReady.next(iframe),
 
-      onResized: (event: IFrameResizedData) => this.onResized.next(event),
+      onResized: (event: IframeResizedData) => this.onResized.next(event),
 
       onScroll: (event: {
-        iframe: IFrameComponent
+        iframe: IframeComponent
         top: number
         left: number
       }) => this.onScroll.next(event),
@@ -114,13 +113,17 @@ export class IframeResizerDirective {
     this.resizer?.moveToAnchor(anchor)
   }
 
-  public sendMessage(message: string, targetOrigin?: string): void {
+  public sendMessage(message: any, targetOrigin?: string): void {
     this.resizer?.sendMessage(message, targetOrigin)
   }
 }
 
 export {
-  type IFrameComponent,
-  type IFrameObject,
-  type IFrameOptions,
+  type IframeComponent,
+  type IframeMessageData,
+  type IframeMouseData,
+  type IframeObject,
+  type IframeOptions,
+  type IframeResizedData,
+  type IframeScrollData,
 } from '@iframe-resizer/core'

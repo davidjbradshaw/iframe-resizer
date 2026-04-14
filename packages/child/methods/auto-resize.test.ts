@@ -12,7 +12,7 @@ const { advise, event: consoleEvent } = await import('../console')
 const sendMessage = (await import('../send/message')).default
 const sendSize = (await import('../send/size')).default
 const settings = (await import('../values/settings')).default
-const { AUTO_RESIZE, ENABLE } = await import('../../common/consts')
+const { AUTO_RESIZE, ENABLE } = await import('@iframe-resizer/common/consts')
 const autoResize = (await import('./auto-resize')).default
 
 describe('child/methods/auto-resize', () => {

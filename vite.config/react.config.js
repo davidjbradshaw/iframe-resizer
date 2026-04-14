@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -14,17 +14,19 @@ export default defineConfig({
     emptyOutDir: false,
     rollupOptions: {
       external: [
-        'react',
-        'react-dom',
+        /^@iframe-resizer\/common/,
         '@iframe-resizer/core',
         'auto-console-group',
+        'react',
+        'react-dom',
       ],
     },
-    minify: 'esbuild',
+    ...terserWithBanner('react'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: [
         'packages/global.d.ts',
         'packages/react/**/*.ts',

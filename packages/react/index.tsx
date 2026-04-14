@@ -1,15 +1,10 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable react/require-default-props */
+import { esModuleInterop } from '@iframe-resizer/common'
 import type {
-  Direction,
-  IFrameComponent,
-  IFrameMessageData,
-  IFrameMouseData,
-  IFrameObject,
-  IFrameResizedData,
-  IFrameScrollData,
-  LogOption,
-  ScrollOption,
+  IframeComponent,
+  IframeObject,
+  IframeOptions,
 } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -22,11 +17,10 @@ import React, {
   useRef,
 } from 'react'
 
-import { esModuleInterop } from '../common/utils'
 import filterIframeAttribs from './filter-iframe-attribs'
 
-export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
-  getElement: () => IFrameComponent
+export type IframeForwardRef = Omit<IframeObject, 'close' | 'disconnect'> & {
+  getElement: () => IframeComponent
   getRef: () => RefObject<HTMLIFrameElement | null>
 }
 
@@ -35,47 +29,19 @@ type IframeProps = React.DetailedHTMLProps<
   HTMLIFrameElement
 >
 
-export type ResizerOptions = {
-  bodyBackground?: string | null
-  bodyMargin?: string | number | null
-  bodyPadding?: string | number | null
-  checkOrigin?: boolean | string[]
-  direction?: Direction
-  inPageLinks?: boolean
-  license: string
-  log?: LogOption
-  logExpand?: boolean
-  offsetSize?: number
-  scrolling?: ScrollOption
-  tolerance?: number
-  waitForLoad?: boolean
-  warningTimeout?: number
-}
-
-export type ResizerEvents = {
-  onAfterClose?: (iframeId: string) => void
-  onMessage?: (ev: IFrameMessageData) => void
-  onMouseEnter?: (ev: IFrameMouseData) => void
-  onMouseLeave?: (ev: IFrameMouseData) => void
-  onReady?: (iframe: IFrameComponent) => void
-  onResized?: (ev: IFrameResizedData) => void
-  onScroll?: (ev: IFrameScrollData) => boolean
-}
-
 export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
-  ResizerOptions &
-  ResizerEvents
+  Omit<IframeOptions, 'id' | 'onBeforeClose'>
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
 
 function IframeResizer(
   props: IframeResizerProps,
-  ref: React.ForwardedRef<IFrameForwardRef>,
+  ref: React.ForwardedRef<IframeForwardRef>,
 ): ReactElement {
   const { log, logExpand } = props
   const filteredProps = filterIframeAttribs(props)
-  const iframeRef = useRef<IFrameComponent>(null)
+  const iframeRef = useRef<IframeComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
 
   const onBeforeClose = (): boolean => {
@@ -110,10 +76,9 @@ function IframeResizer(
   useImperativeHandle(ref, () => ({
     getRef: () => iframeRef,
     getElement: () => iframeRef.current,
-    resize: () => iframeRef.current.iframeResizer.resize(),
     moveToAnchor: (anchor: string) =>
       iframeRef.current.iframeResizer.moveToAnchor(anchor),
-    sendMessage: (message: string, targetOrigin?: string) => {
+    sendMessage: (message: any, targetOrigin?: string) => {
       iframeRef.current.iframeResizer.sendMessage(message, targetOrigin)
     },
   }))
@@ -122,6 +87,14 @@ function IframeResizer(
   return <iframe {...filteredProps} ref={iframeRef} />
 }
 
-export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
+export default forwardRef<IframeForwardRef, IframeResizerProps>(IframeResizer)
 
-export { type IFrameComponent, type IFrameObject } from '@iframe-resizer/core'
+export {
+  type IframeComponent,
+  type IframeMessageData,
+  type IframeMouseData,
+  type IframeObject,
+  type IframeOptions,
+  type IframeResizedData,
+  type IframeScrollData,
+} from '@iframe-resizer/core'

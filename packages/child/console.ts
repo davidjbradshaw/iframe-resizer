@@ -1,9 +1,11 @@
+import {
+  createFormatAdvise,
+  deprecate,
+  esModuleInterop,
+  id as identity,
+} from '@iframe-resizer/common'
+import { BOLD, LABEL } from '@iframe-resizer/common/consts'
 import acg, { NORMAL } from 'auto-console-group'
-
-import { BOLD, LABEL } from '../common/consts'
-import deprecate from '../common/deprecate'
-import createFormatAdvise from '../common/format-advise'
-import { esModuleInterop, id as identity } from '../common/utils'
 
 let enabled = true
 let id = LABEL

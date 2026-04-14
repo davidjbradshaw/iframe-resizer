@@ -1,8 +1,7 @@
-import type { IFrameOptions } from '@iframe-resizer/core'
+import { esModuleInterop } from '@iframe-resizer/common'
+import type { IframeOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
-
-import { esModuleInterop } from '../common/utils'
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
@@ -37,7 +36,7 @@ export default function IframeResizer(Alpine: Alpine): void {
         evaluated !== null &&
         evaluated !== undefined &&
         typeof evaluated === 'object'
-          ? (evaluated as IFrameOptions)
+          ? (evaluated as IframeOptions)
           : {}
 
       if (
@@ -67,4 +66,12 @@ export default function IframeResizer(Alpine: Alpine): void {
   )
 }
 
-export { type IFrameOptions } from '@iframe-resizer/core'
+export type {
+  IframeComponent,
+  IframeMessageData,
+  IframeMouseData,
+  IframeObject,
+  IframeOptions,
+  IframeResizedData,
+  IframeScrollData,
+} from '@iframe-resizer/core'

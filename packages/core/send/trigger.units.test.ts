@@ -1,6 +1,5 @@
+import { SEPARATOR } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-
-import { SEPARATOR } from '../../common/consts'
 
 vi.mock('../console', () => ({
   event: vi.fn(),

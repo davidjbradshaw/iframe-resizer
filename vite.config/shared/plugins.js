@@ -44,13 +44,23 @@ export const pluginsBase =
   }
 
 const fixVersion = (file) => {
+  const common = { '@iframe-resizer/common': pkg.version }
+
   switch (file) {
-    case 'core':
-    case 'child':
+    case 'common':
       return {}
 
+    case 'core':
+    case 'child':
+      return { additionalDependencies: common }
+
     default:
-      return { additionalDependencies: { '@iframe-resizer/core': pkg.version } }
+      return {
+        additionalDependencies: {
+          ...common,
+          '@iframe-resizer/core': pkg.version,
+        },
+      }
   }
 }
 
@@ -127,3 +137,6 @@ export const typescriptChild = () =>
 // Export createBanner for use in browser/test builds
 
 export { default as createBanner } from './banner.js'
+
+// Terser config for Vite lib builds — minifies and adds banner
+export { default as terserWithBanner } from './terser.js'

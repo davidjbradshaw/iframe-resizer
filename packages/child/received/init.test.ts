@@ -38,7 +38,8 @@ describe('child/received/init', () => {
   })
 
   it('processes init data when ready and updates state', async () => {
-    const { MESSAGE_ID_LENGTH, SEPARATOR } = await import('../../common/consts')
+    const { MESSAGE_ID_LENGTH, SEPARATOR } =
+      await import('@iframe-resizer/common/consts')
     const mod = await import('./init')
 
     const original = Object.getOwnPropertyDescriptor(document, 'readyState')

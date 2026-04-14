@@ -1,7 +1,7 @@
 /* eslint import/extensions: 0 */
+import { IN_PAGE_LINK, SCROLL_TO_OFFSET } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { IN_PAGE_LINK, SCROLL_TO_OFFSET } from '../../common/consts'
 import sendMessage from '../send/message'
 import settings from '../values/settings'
 import state from '../values/state'

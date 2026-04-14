@@ -1,6 +1,6 @@
+import { NULL } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { NULL } from '../../common/consts'
 import { info, warn } from '../console'
 
 export function checkCSS(attr: string, value: string): string {

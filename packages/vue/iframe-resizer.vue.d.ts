@@ -1,23 +1,9 @@
 import type { DefineComponent } from 'vue'
-import type { IFrameObject } from '@iframe-resizer/core'
+import type { IframeObject, IframeOptions } from '@iframe-resizer/core'
 
-export interface IframeResizerProps {
-  license: string
-  bodyBackground?: string
-  bodyMargin?: string
-  bodyPadding?: string
-  checkOrigin?: boolean
-  direction?: string
-  log?: 'expanded' | 'collapsed' | boolean | number
-  inPageLinks?: boolean
-  offset?: number
-  scrolling?: boolean
-  tolerance?: number
-  warningTimeout?: number
-}
+export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'>
 
-/** Methods exposed via defineExpose, accessible on template refs */
-export type IframeResizerMethods = Pick<IFrameObject, 'moveToAnchor' | 'resize' | 'sendMessage'>
+export type IframeResizerMethods = Pick<IframeObject, 'moveToAnchor' | 'sendMessage'>
 
 export type IframeResizerEmits = {
   onReady: (...args: any[]) => void

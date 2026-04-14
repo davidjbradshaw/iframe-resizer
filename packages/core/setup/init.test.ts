@@ -16,7 +16,8 @@ const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
 const settings = (await import('../values/settings')).default
 const init = (await import('./init')).default
-const { INIT, INIT_FROM_IFRAME, ONLOAD } = await import('../../common/consts')
+const { INIT, INIT_FROM_IFRAME, ONLOAD } =
+  await import('@iframe-resizer/common/consts')
 
 describe('core/setup/init', () => {
   beforeEach(() => {

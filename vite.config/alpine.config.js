@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd } from './shared/plugins.js'
+import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -13,16 +13,23 @@ export default defineConfig({
     outDir: 'dist/alpine',
     emptyOutDir: false,
     rollupOptions: {
-      external: ['@iframe-resizer/core', 'auto-console-group', 'alpinejs'],
+      external: [
+        /^@iframe-resizer\/common/,
+        '@iframe-resizer/core',
+        'auto-console-group',
+        'alpinejs',
+      ],
     },
-    minify: 'esbuild',
+    ...terserWithBanner('alpine'),
     sourcemap: process.env.BETA || false,
   },
   plugins: [
     dts({
+      tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/alpine/**/*.ts'],
       exclude: ['packages/alpine/**/*.test.*'],
       outDir: 'dist/alpine',
+      entryRoot: 'packages/alpine',
     }),
     ...createPluginsProd('alpine'),
   ],
