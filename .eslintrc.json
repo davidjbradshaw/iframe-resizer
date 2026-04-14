@@ -19,7 +19,7 @@
   "globals": {
     "location": true,
     "iframeResize": true,
-    "parentIFrame": true
+    "parentIframe": true
   },
   "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
   "rules": {
