@@ -11,5 +11,3 @@ test-js/
 js-dist/
 packages/**/dist/
 packages/common/mode.js
-vite-build.js
-vite.config.js
