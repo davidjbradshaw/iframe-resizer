@@ -1,7 +1,7 @@
+import * as utils from '@iframe-resizer/common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as commonMode from '../../common/mode'
-import * as utils from '../../common/utils'
 import * as childConsole from '../console'
 import settings from '../values/settings'
 import state from '../values/state'

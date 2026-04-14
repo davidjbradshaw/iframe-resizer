@@ -10,7 +10,7 @@ describe('child/check/ready', () => {
       configurable: true,
       get: () => 'complete',
     })
-    vi.doMock('../../common/utils', () => ({
+    vi.doMock('@iframe-resizer/common', () => ({
       isolateUserCode: vi.fn((fn) => fn()),
     }))
     vi.doMock('../events/listeners', () => ({
@@ -20,7 +20,7 @@ describe('child/check/ready', () => {
     const { default: checkReadyYet } = await import('./ready')
     const cb = vi.fn()
     checkReadyYet(cb)
-    const mockedUtils = await import('../../common/utils')
+    const mockedUtils = await import('@iframe-resizer/common')
     const mockedListeners = await import('../events/listeners')
 
     expect(mockedUtils.isolateUserCode).toHaveBeenCalledWith(cb)
@@ -32,7 +32,7 @@ describe('child/check/ready', () => {
       configurable: true,
       get: () => 'interactive',
     })
-    vi.doMock('../../common/utils', () => ({
+    vi.doMock('@iframe-resizer/common', () => ({
       isolateUserCode: vi.fn((fn) => fn()),
     }))
     vi.doMock('../events/listeners', () => ({
@@ -55,7 +55,7 @@ describe('child/check/ready', () => {
       configurable: true,
       get: () => readyStateValue,
     })
-    vi.doMock('../../common/utils', () => ({
+    vi.doMock('@iframe-resizer/common', () => ({
       isolateUserCode: vi.fn((fn) => fn()),
     }))
     vi.doMock('../events/listeners', () => ({
@@ -65,7 +65,7 @@ describe('child/check/ready', () => {
     }))
     vi.resetModules()
     const { default: checkReadyYet } = await import('./ready')
-    const mockedUtils = await import('../../common/utils')
+    const mockedUtils = await import('@iframe-resizer/common')
     const cb = vi.fn()
 
     checkReadyYet(cb)
@@ -82,7 +82,7 @@ describe('child/check/ready', () => {
       configurable: true,
       get: () => 'interactive',
     })
-    vi.doMock('../../common/utils', () => ({
+    vi.doMock('@iframe-resizer/common', () => ({
       isolateUserCode: vi.fn((fn) => fn()),
     }))
     vi.doMock('../events/listeners', () => ({

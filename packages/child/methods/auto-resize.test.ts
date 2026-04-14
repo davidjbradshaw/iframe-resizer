@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../../common/utils', () => ({ typeAssert: vi.fn() }))
+vi.mock('@iframe-resizer/common', () => ({ typeAssert: vi.fn() }))
 vi.mock('../console', () => ({ advise: vi.fn(), event: vi.fn() }))
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))

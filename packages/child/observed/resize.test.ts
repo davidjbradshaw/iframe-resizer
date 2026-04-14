@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 
-vi.mock('../../common/utils', () => ({ getElementName: () => 'DIV' }))
+vi.mock('@iframe-resizer/common', () => ({ getElementName: () => 'DIV' }))
 vi.mock('../observers/resize', () => ({
   default: vi.fn((cb) => ({
     attachObserverToNonStaticElements: vi.fn(),

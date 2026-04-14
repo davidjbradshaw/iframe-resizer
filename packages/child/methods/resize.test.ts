@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../../common/utils', () => ({ typeAssert: vi.fn() }))
+vi.mock('@iframe-resizer/common', () => ({ typeAssert: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
 
-const { typeAssert } = await import('../../common/utils')
+const { typeAssert } = await import('@iframe-resizer/common')
 const sendSize = (await import('../send/size')).default
 const { MANUAL_RESIZE_REQUEST } = await import('@iframe-resizer/common/consts')
 const resize = (await import('./resize')).default

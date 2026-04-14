@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../common/utils', () => ({ once: (fn) => fn }))
-vi.mock('../common/listeners', () => ({ addEventListener: vi.fn() }))
+vi.mock('@iframe-resizer/common', () => ({
+  once: (fn) => fn,
+  addEventListener: vi.fn(),
+}))
 vi.mock('./events/visible', () => ({ default: vi.fn() }))
 vi.mock('./console', () => ({
   debug: vi.fn(),
@@ -21,7 +23,7 @@ vi.mock('./router', () => ({ default: vi.fn() }))
 vi.mock('./send/ready', () => ({ default: vi.fn() }))
 vi.mock('./values/settings', () => ({ default: {} }))
 
-const { addEventListener } = await import('../common/listeners')
+const { addEventListener } = await import('@iframe-resizer/common')
 const { default: routeMessage } = await import('./router')
 const { default: iframeReady } = await import('./send/ready')
 const preflight = await import('./received/preflight')

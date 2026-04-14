@@ -9,7 +9,7 @@ vi.mock('./utils', () => ({
   parseFrozen: (s) => Object.freeze(JSON.parse(s)),
 }))
 vi.mock('../console', () => ({ log: vi.fn() }))
-vi.mock('../../common/utils', () => ({
+vi.mock('@iframe-resizer/common', () => ({
   isolateUserCode: (fn, arg) => fn?.(arg),
 }))
 

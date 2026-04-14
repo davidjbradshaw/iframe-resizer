@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../../common/mode', () => ({ default: vi.fn(() => 0) }))
-vi.mock('../../common/utils', () => ({
+vi.mock('@iframe-resizer/common', () => ({
   hasOwn: (o, k) => Object.prototype.hasOwnProperty.call(o, k),
+  setMode: vi.fn(() => 0),
 }))
 vi.mock('../checks/options', () => ({ default: vi.fn((_id, opts) => opts) }))
 vi.mock('../checks/warning-timeout', () => ({ default: vi.fn() }))

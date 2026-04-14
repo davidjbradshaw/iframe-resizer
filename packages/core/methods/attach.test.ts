@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../../common/utils', () => ({ typeAssert: vi.fn() }))
+vi.mock('@iframe-resizer/common', () => ({ typeAssert: vi.fn() }))
 vi.mock('../send/trigger', () => ({ default: vi.fn() }))
 vi.mock('./close', () => ({ default: vi.fn() }))
 vi.mock('./disconnect', () => ({ default: vi.fn() }))
@@ -8,7 +8,7 @@ vi.mock('../values/settings', () => ({ default: {} }))
 
 const { default: attachMethods } = await import('./attach')
 const { default: trigger } = await import('../send/trigger')
-const { typeAssert } = await import('../../common/utils')
+const { typeAssert } = await import('@iframe-resizer/common')
 const closeIframe = (await import('./close')).default
 const disconnect = (await import('./disconnect')).default
 const settings = (await import('../values/settings')).default
