@@ -11,7 +11,7 @@ export default function serveChild() {
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.url === '/iframe-resizer.child.js') {
+        if (req.url === '/js-dist/iframe-resizer.child.js') {
           res.setHeader('Content-Type', 'application/javascript')
           res.end(readFileSync(childPath))
           return

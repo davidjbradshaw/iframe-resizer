@@ -21,7 +21,7 @@
     id="myframe"
     src="child/frame.content.html"
     license="GPLv3"
-    log
+    log="collapsed"
     inPageLinks
     @on-message="onMessage"
     @on-resized="onResized"
