@@ -67,10 +67,12 @@ export function checkLocationHash(): void {
 
 export function bindAnchors(): void {
   for (const link of document.querySelectorAll('a[href^="#"]')) {
-    if (link.getAttribute('href') !== '#') {
+    const href = link.getAttribute('href')
+
+    if (href && href !== '#') {
       addEventListener(link, 'click', (e) => {
         e.preventDefault()
-        findTarget(link.getAttribute('href'))
+        findTarget(href)
       })
     }
   }
