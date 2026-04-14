@@ -130,12 +130,16 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
         )
         return false
       },
-      onReady,
-      onMessage,
-      onResized,
-      onScroll,
-      onMouseEnter,
-      onMouseLeave,
+      ...Object.fromEntries(
+        Object.entries({
+          onReady,
+          onMessage,
+          onResized,
+          onScroll,
+          onMouseEnter,
+          onMouseLeave,
+        }).filter(([, v]) => v !== undefined),
+      ),
     }
 
     const resizer = connectResizer(options)(iframeEl)
