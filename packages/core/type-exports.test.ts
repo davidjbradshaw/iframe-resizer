@@ -53,19 +53,22 @@ describe('type re-exports', () => {
   for (const [pkg, file] of Object.entries(SFC_DECLARATIONS)) {
     const dtsPath = resolve(__dirname, '../../dist', pkg, file)
 
-    it.skipIf(!existsSync(dtsPath))(`@iframe-resizer/${pkg} .d.ts exports option types`, () => {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const source = readFileSync(dtsPath, 'utf8')
+    it.skipIf(!existsSync(dtsPath))(
+      `@iframe-resizer/${pkg} .d.ts exports option types`,
+      () => {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        const source = readFileSync(dtsPath, 'utf8')
 
-      for (const typeName of [
-        'IframeDirection',
-        'IframeLogOption',
-        'IframeScrollOption',
-      ]) {
-        expect(source, `${typeName} should be exported from ${file}`).toMatch(
-          new RegExp(`\\b${typeName}\\b`),
-        )
-      }
-    })
+        for (const typeName of [
+          'IframeDirection',
+          'IframeLogOption',
+          'IframeScrollOption',
+        ]) {
+          expect(source, `${typeName} should be exported from ${file}`).toMatch(
+            new RegExp(`\\b${typeName}\\b`),
+          )
+        }
+      },
+    )
   }
 })

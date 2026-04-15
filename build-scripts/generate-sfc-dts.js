@@ -31,6 +31,14 @@ const OPTION_TYPES = [
   ...typesSource.matchAll(/^export type (Iframe\w+)\s*=/gm),
 ].map((m) => m[1])
 
+if (typeExports.length === 0) {
+  throw new Error('No Iframe* type exports found in core/index.ts')
+}
+
+if (OPTION_TYPES.length === 0) {
+  throw new Error('No Iframe* type aliases found in core/types.ts')
+}
+
 function generateVue() {
   // Vue needs the callback data types for emit signatures
   const vueTypes = typeExports.filter(
@@ -100,8 +108,14 @@ export default IframeResizer
 }
 
 export default function generateSfcDts() {
-  writeFileSync('dist/vue/iframe-resizer.vue.d.ts', generateVue())
-  writeFileSync('dist/svelte/IframeResizer.svelte.d.ts', generateSvelte())
+  writeFileSync(
+    resolve(__dirname, '../dist/vue/iframe-resizer.vue.d.ts'),
+    generateVue(),
+  )
+  writeFileSync(
+    resolve(__dirname, '../dist/svelte/IframeResizer.svelte.d.ts'),
+    generateSvelte(),
+  )
   console.log('Generated SFC type declarations')
 }
 
