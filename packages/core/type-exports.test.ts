@@ -60,10 +60,9 @@ describe('type re-exports', () => {
         'IframeLogOption',
         'IframeScrollOption',
       ]) {
-        expect(
-          source,
-          `${typeName} should be exported from ${file}`,
-        ).toMatch(new RegExp(`\\b${typeName}\\b`))
+        expect(source, `${typeName} should be exported from ${file}`).toMatch(
+          new RegExp(`\\b${typeName}\\b`),
+        )
       }
     })
   }
