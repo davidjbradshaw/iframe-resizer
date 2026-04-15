@@ -53,7 +53,10 @@ describe('type re-exports', () => {
   for (const [pkg, file] of Object.entries(SFC_DECLARATIONS)) {
     it(`@iframe-resizer/${pkg} .d.ts exports option types`, () => {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const source = readFileSync(resolve(__dirname, '..', pkg, file), 'utf8')
+      const source = readFileSync(
+        resolve(__dirname, '../../dist', pkg, file),
+        'utf8',
+      )
 
       for (const typeName of [
         'IframeDirection',

@@ -1,25 +1,3 @@
 import { SvelteComponent } from 'svelte'
-import type {
-  IframeDirection,
-  IframeLogOption,
-  IframeOptions,
-  IframeScrollOption,
-} from '@iframe-resizer/core'
-
-export type { IframeDirection, IframeLogOption, IframeScrollOption }
-
-export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'> & {
-  [key: string]: any
-}
-
-export interface IframeResizerMethods {
-  moveToAnchor(anchor: string): void
-  sendMessage(msg: any, target?: string): void
-}
-
-declare class IframeResizer extends SvelteComponent<IframeResizerProps> {
-  moveToAnchor(anchor: string): void
-  sendMessage(msg: any, target?: string): void
-}
-
+declare class IframeResizer extends SvelteComponent {}
 export default IframeResizer
