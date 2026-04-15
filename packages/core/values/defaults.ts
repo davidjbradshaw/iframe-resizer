@@ -30,7 +30,10 @@ export default Object.freeze({
 
   onBeforeClose: () => true,
   onAfterClose() {},
-  onMessage: null,
+  onMessage() {
+    // eslint-disable-next-line no-console
+    console.warn('', 'onMessage function not defined')
+  },
   onMouseEnter() {},
   onMouseLeave() {},
   onReady() {},

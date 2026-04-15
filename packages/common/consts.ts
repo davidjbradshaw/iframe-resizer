@@ -1,6 +1,8 @@
 export const VERSION = '[VI]{version}[/VI]'
 export const LABEL = 'iframeResizer'
 export const SEPARATOR = ':'
+
+// Wire protocol strings — frozen for backward compatibility, do not "fix" the iFrame casing
 export const CHILD_READY_MESSAGE = '[iFrameResizerChild]Ready'
 
 export const AUTO_RESIZE = 'autoResize'
@@ -101,7 +103,8 @@ export const OMIT = 'omit'
 export const NO_CHANGE = 'No change in content size detected'
 
 export const MESSAGE_HEADER_LENGTH = MESSAGE.length
-export const MESSAGE_ID = '[iFrameSizer]' // Must match iframe msg ID
+// Wire protocol string — frozen for backward compatibility, do not "fix" the iFrame casing
+export const MESSAGE_ID = '[iFrameSizer]'
 export const MESSAGE_ID_LENGTH = MESSAGE_ID.length
 export const RESET_REQUIRED_METHODS = Object.freeze({
   max: 1,

@@ -1,14 +1,25 @@
 import type { DefineComponent } from 'vue'
-import type { IframeObject, IframeOptions } from '@iframe-resizer/core'
+import type {
+  IframeComponent,
+  IframeDirection,
+  IframeLogOption,
+  IframeMessageData,
+  IframeObject,
+  IframeOptions,
+  IframeResizedData,
+  IframeScrollOption,
+} from '@iframe-resizer/core'
+
+export type { IframeDirection, IframeLogOption, IframeScrollOption }
 
 export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'>
 
 export type IframeResizerMethods = Pick<IframeObject, 'moveToAnchor' | 'sendMessage'>
 
 export type IframeResizerEmits = {
-  onReady: (...args: any[]) => void
-  onMessage: (...args: any[]) => void
-  onResized: (...args: any[]) => void
+  onReady: (iframe: IframeComponent) => void
+  onMessage: (data: IframeMessageData) => void
+  onResized: (data: IframeResizedData) => void
 }
 
 declare const IframeResizer: DefineComponent<

@@ -249,8 +249,19 @@ describe('utils.js', () => {
   })
 
   describe('isSafari', () => {
-    test('should be a boolean', () => {
-      expect(typeof isSafari).toBe('boolean')
+    test('should return a boolean', () => {
+      expect(typeof isSafari()).toBe('boolean')
+    })
+
+    test('should return false when navigator is undefined', () => {
+      const original = globalThis.navigator
+      // @ts-expect-error -- simulating SSR
+      delete globalThis.navigator
+      expect(isSafari()).toBe(false)
+      Object.defineProperty(globalThis, 'navigator', {
+        value: original,
+        configurable: true,
+      })
     })
   })
 

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import defaults from './defaults'
 
@@ -21,5 +21,12 @@ describe('core/values/defaults', () => {
     expect(defaults.onMouseLeave()).toBeUndefined()
     expect(defaults.onResized()).toBeUndefined()
     expect(defaults.onScroll()).toBe(true)
+  })
+
+  it('onMessage warns when not defined by user', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    defaults.onMessage()
+    expect(spy).toHaveBeenCalledWith('', 'onMessage function not defined')
+    spy.mockRestore()
   })
 })

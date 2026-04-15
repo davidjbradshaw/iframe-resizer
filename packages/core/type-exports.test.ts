@@ -30,6 +30,11 @@ const PACKAGES: Record<string, string> = {
   vue: 'index.ts',
 }
 
+const SFC_DECLARATIONS: Record<string, string> = {
+  svelte: 'IframeResizer.svelte.d.ts',
+  vue: 'iframe-resizer.vue.d.ts',
+}
+
 describe('type re-exports', () => {
   for (const [pkg, file] of Object.entries(PACKAGES)) {
     it(`@iframe-resizer/${pkg} re-exports all shared types`, () => {
@@ -41,6 +46,23 @@ describe('type re-exports', () => {
           source,
           `${typeName} should be exported from @iframe-resizer/${pkg}`,
         ).toMatch(new RegExp(`export[^}]*\\b${typeName}\\b`))
+      }
+    })
+  }
+
+  for (const [pkg, file] of Object.entries(SFC_DECLARATIONS)) {
+    it(`@iframe-resizer/${pkg} .d.ts exports option types`, () => {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      const source = readFileSync(resolve(__dirname, '..', pkg, file), 'utf8')
+
+      for (const typeName of [
+        'IframeDirection',
+        'IframeLogOption',
+        'IframeScrollOption',
+      ]) {
+        expect(source, `${typeName} should be exported from ${file}`).toMatch(
+          new RegExp(`\\b${typeName}\\b`),
+        )
       }
     })
   }
