@@ -1,11 +1,16 @@
 import type { DefineComponent } from 'vue'
 import type {
   IframeComponent,
+  IframeDirection,
+  IframeLogOption,
   IframeMessageData,
   IframeObject,
   IframeOptions,
   IframeResizedData,
+  IframeScrollOption,
 } from '@iframe-resizer/core'
+
+export type { IframeDirection, IframeLogOption, IframeScrollOption }
 
 export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'>
 

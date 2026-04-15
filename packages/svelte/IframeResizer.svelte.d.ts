@@ -1,5 +1,12 @@
 import { SvelteComponent } from 'svelte'
-import type { IframeOptions } from '@iframe-resizer/core'
+import type {
+  IframeDirection,
+  IframeLogOption,
+  IframeOptions,
+  IframeScrollOption,
+} from '@iframe-resizer/core'
+
+export type { IframeDirection, IframeLogOption, IframeScrollOption }
 
 export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'> & {
   [key: string]: any
