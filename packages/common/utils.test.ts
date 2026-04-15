@@ -249,8 +249,8 @@ describe('utils.js', () => {
   })
 
   describe('isSafari', () => {
-    test('should be a boolean', () => {
-      expect(typeof isSafari).toBe('boolean')
+    test('should return a boolean', () => {
+      expect(typeof isSafari()).toBe('boolean')
     })
   })
 

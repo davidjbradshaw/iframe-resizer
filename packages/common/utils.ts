@@ -9,9 +9,9 @@ export const isObject = (value: unknown): value is Record<string, unknown> =>
 export const isString = (value: unknown): value is string =>
   typeof value === STRING
 
-export const isSafari: boolean = /^((?!chrome|android).)*safari/i.test(
-  navigator.userAgent,
-)
+export const isSafari = (): boolean =>
+  typeof navigator !== 'undefined' &&
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export function isIframe(element: unknown): element is HTMLIFrameElement {
   if (!isObject(element)) return false
