@@ -54,16 +54,6 @@ export default async function vuePostBuild() {
 
     copyFileSync(sfcSource, sfcDest)
 
-    // Copy SFC type declarations
-    const dtsSource = join(root, 'packages/vue/iframe-resizer.vue.d.ts')
-    const dtsDest = join(root, 'dist/vue/iframe-resizer.vue.d.ts')
-
-    if (!existsSync(dtsSource)) {
-      throw new Error(`Type declaration file not found: ${dtsSource}`)
-    }
-
-    copyFileSync(dtsSource, dtsDest)
-
     // Fix import paths in generated JS files
     const files = ['index.umd.js', 'index.esm.js', 'index.cjs.js']
     for (const file of files) {

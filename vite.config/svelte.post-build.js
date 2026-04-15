@@ -18,16 +18,6 @@ export default async function sveltePostBuild() {
 
     copyFileSync(svelteSource, svelteDest)
 
-    // Copy Svelte component type declarations
-    const dtsSource = join(root, 'packages/svelte/IframeResizer.svelte.d.ts')
-    const dtsDest = join(root, 'dist/svelte/IframeResizer.svelte.d.ts')
-
-    if (!existsSync(dtsSource)) {
-      throw new Error(`Type declaration file not found: ${dtsSource}`)
-    }
-
-    copyFileSync(dtsSource, dtsDest)
-
     // Write index.d.ts that re-exports from the component
     const indexDts = join(root, 'dist/svelte/index.d.ts')
     writeFileSync(

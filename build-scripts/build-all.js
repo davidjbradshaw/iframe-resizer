@@ -59,6 +59,10 @@ async function buildAll() {
       console.log(`Building ${pkg.name}...`)
       await buildPackage(pkg)
     }
+
+    console.log('\nGenerating SFC type declarations...')
+    const { default: generateSfcDts } = await import('./generate-sfc-dts.js')
+    generateSfcDts()
   }
 
   console.log('\nBuilding browser bundles...')
