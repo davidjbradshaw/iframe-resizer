@@ -42,7 +42,7 @@ jobs:
       run: TEST=1 node build-scripts/build-all.js
 
     - name: Build e2e framework apps
-      run: build-scripts/build-e2e-examples.sh
+      run: bash build-scripts/build-e2e-examples.sh
 
     - name: Run Playwright tests
       run: npm run test:e2e
