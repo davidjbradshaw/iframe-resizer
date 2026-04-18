@@ -35,7 +35,7 @@ if (OPTION_TYPES.length === 0) {
   throw new Error('No IFrame* type aliases found in core/types.ts')
 }
 
-function generateVue() {
+export function generateVue() {
   // Vue needs the callback data types for emit signatures
   const vueTypes = typeExports.filter(
     (t) => t !== 'IFrameScrollData' && t !== 'IFrameMouseData',
@@ -73,7 +73,7 @@ export default IframeResizer
 `
 }
 
-function generateSvelte() {
+export function generateSvelte() {
   const svelteBase = 'SvelteComponent'
   const classDecl = `declare class IframeResizer extends ${svelteBase}<IframeResizerProps>`
 

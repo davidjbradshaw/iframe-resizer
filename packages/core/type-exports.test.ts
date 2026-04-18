@@ -1,8 +1,13 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { describe, expect, it } from 'vitest'
+
+import {
+  generateSvelte,
+  generateVue,
+} from '../../build-scripts/generate-sfc-dts.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -30,9 +35,9 @@ const PACKAGES: Record<string, string> = {
   vue: 'index.ts',
 }
 
-const SFC_DECLARATIONS: Record<string, string> = {
-  svelte: 'IframeResizer.svelte.d.ts',
-  vue: 'iframe-resizer.vue.d.ts',
+const SFC_GENERATORS: Record<string, () => string> = {
+  svelte: generateSvelte,
+  vue: generateVue,
 }
 
 const STAR_EXPORT = /export\s+type\s+\*\s+from\s+["']@iframe-resizer\/core["']/
@@ -54,25 +59,20 @@ describe('type re-exports', () => {
     })
   }
 
-  for (const [pkg, file] of Object.entries(SFC_DECLARATIONS)) {
-    const dtsPath = resolve(__dirname, '../../dist', pkg, file)
+  for (const [pkg, generate] of Object.entries(SFC_GENERATORS)) {
+    it(`@iframe-resizer/${pkg} .d.ts exports option types`, () => {
+      const source = generate()
 
-    it.skipIf(!existsSync(dtsPath))(
-      `@iframe-resizer/${pkg} .d.ts exports option types`,
-      () => {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
-        const source = readFileSync(dtsPath, 'utf8')
-
-        for (const typeName of [
-          'IFrameDirection',
-          'IFrameLogOption',
-          'IFrameScrollOption',
-        ]) {
-          expect(source, `${typeName} should be exported from ${file}`).toMatch(
-            new RegExp(`\\b${typeName}\\b`),
-          )
-        }
-      },
-    )
+      for (const typeName of [
+        'IFrameDirection',
+        'IFrameLogOption',
+        'IFrameScrollOption',
+      ]) {
+        expect(
+          source,
+          `${typeName} should be exported from ${pkg} .d.ts`,
+        ).toMatch(new RegExp(`\\b${typeName}\\b`))
+      }
+    })
   }
 })
