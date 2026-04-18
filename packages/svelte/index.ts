@@ -5,14 +5,14 @@ import IframeResizer from './IframeResizer.svelte'
 export default IframeResizer
 
 export type {
-  IframeComponent,
-  IframeDirection,
-  IframeLogOption,
-  IframeMessageData,
-  IframeMouseData,
-  IframeObject,
-  IframeOptions,
-  IframeResizedData,
-  IframeScrollData,
-  IframeScrollOption,
+  IFrameComponent,
+  IFrameDirection,
+  IFrameLogOption,
+  IFrameMessageData,
+  IFrameMouseData,
+  IFrameObject,
+  IFrameOptions,
+  IFrameResizedData,
+  IFrameScrollData,
+  IFrameScrollOption,
 } from '@iframe-resizer/core'

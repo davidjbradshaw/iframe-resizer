@@ -18,31 +18,31 @@ const coreIndex = readFileSync(
 )
 
 // Extract type names from: export type { Foo, Bar, ... } from './types'
-const typeExports = [...coreIndex.matchAll(/^\s+(Iframe\w+),?$/gm)]
+const typeExports = [...coreIndex.matchAll(/^\s+(IFrame\w+),?$/gm)]
   .map((m) => m[1])
   .filter(Boolean)
 
-// Read types.ts to find which Iframe* are type aliases (not interfaces)
+// Read types.ts to find which IFrame* are type aliases (not interfaces)
 const typesSource = readFileSync(
   resolve(__dirname, '../packages/core/types.ts'),
   'utf8',
 )
 const OPTION_TYPES = [
-  ...typesSource.matchAll(/^export type (Iframe\w+)\s*=/gm),
+  ...typesSource.matchAll(/^export type (IFrame\w+)\s*=/gm),
 ].map((m) => m[1])
 
 if (typeExports.length === 0) {
-  throw new Error('No Iframe* type exports found in core/index.ts')
+  throw new Error('No IFrame* type exports found in core/index.ts')
 }
 
 if (OPTION_TYPES.length === 0) {
-  throw new Error('No Iframe* type aliases found in core/types.ts')
+  throw new Error('No IFrame* type aliases found in core/types.ts')
 }
 
 function generateVue() {
   // Vue needs the callback data types for emit signatures
   const vueTypes = typeExports.filter(
-    (t) => t !== 'IframeScrollData' && t !== 'IframeMouseData',
+    (t) => t !== 'IFrameScrollData' && t !== 'IFrameMouseData',
   )
 
   return `import type { DefineComponent } from 'vue'
@@ -52,14 +52,14 @@ ${vueTypes.map((t) => `  ${t},`).join('\n')}
 
 export type { ${OPTION_TYPES.join(', ')} }
 
-export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'>
+export type IframeResizerProps = Omit<IFrameOptions, 'id' | 'onBeforeClose'>
 
-export type IframeResizerMethods = Pick<IframeObject, 'moveToAnchor' | 'sendMessage'>
+export type IframeResizerMethods = Pick<IFrameObject, 'moveToAnchor' | 'sendMessage'>
 
 export type IframeResizerEmits = {
-  onReady: (iframe: IframeComponent) => void
-  onMessage: (data: IframeMessageData) => void
-  onResized: (data: IframeResizedData) => void
+  onReady: (iframe: IFrameComponent) => void
+  onMessage: (data: IFrameMessageData) => void
+  onResized: (data: IFrameResizedData) => void
 }
 
 declare const IframeResizer: DefineComponent<
@@ -84,12 +84,12 @@ function generateSvelte() {
   return `import { SvelteComponent } from 'svelte'
 import type {
 ${OPTION_TYPES.map((t) => `  ${t},`).join('\n')}
-  IframeOptions,
+  IFrameOptions,
 } from '@iframe-resizer/core'
 
 export type { ${OPTION_TYPES.join(', ')} }
 
-export type IframeResizerProps = Omit<IframeOptions, 'id' | 'onBeforeClose'> & {
+export type IframeResizerProps = Omit<IFrameOptions, 'id' | 'onBeforeClose'> & {
   [key: string]: any
 }
 

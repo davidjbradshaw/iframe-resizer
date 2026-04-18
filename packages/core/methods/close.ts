@@ -2,10 +2,10 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import { log, warn } from '../console'
 import on from '../events/wrapper'
-import type { IframeComponent } from '../types'
+import type { IFrameComponent } from '../types'
 import disconnect from './disconnect'
 
-export default function closeIframe(iframe: IframeComponent): void {
+export default function closeIframe(iframe: IFrameComponent): void {
   const { id } = iframe
 
   if (on(id, 'onBeforeClose', id) === false) {

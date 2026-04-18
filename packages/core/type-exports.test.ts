@@ -7,16 +7,16 @@ import { describe, expect, it } from 'vitest'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const TYPE_EXPORTS = [
-  'IframeComponent',
-  'IframeDirection',
-  'IframeLogOption',
-  'IframeMessageData',
-  'IframeMouseData',
-  'IframeObject',
-  'IframeOptions',
-  'IframeResizedData',
-  'IframeScrollData',
-  'IframeScrollOption',
+  'IFrameComponent',
+  'IFrameDirection',
+  'IFrameLogOption',
+  'IFrameMessageData',
+  'IFrameMouseData',
+  'IFrameObject',
+  'IFrameOptions',
+  'IFrameResizedData',
+  'IFrameScrollData',
+  'IFrameScrollOption',
 ]
 
 const PACKAGES: Record<string, string> = {
@@ -60,9 +60,9 @@ describe('type re-exports', () => {
         const source = readFileSync(dtsPath, 'utf8')
 
         for (const typeName of [
-          'IframeDirection',
-          'IframeLogOption',
-          'IframeScrollOption',
+          'IFrameDirection',
+          'IFrameLogOption',
+          'IFrameScrollOption',
         ]) {
           expect(source, `${typeName} should be exported from ${file}`).toMatch(
             new RegExp(`\\b${typeName}\\b`),

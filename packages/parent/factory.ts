@@ -1,8 +1,8 @@
 import { LABEL, OBJECT, STRING, UNDEFINED } from '@iframe-resizer/common/consts'
 import connectResizer, {
-  type IframeComponent,
-  type IframeObject,
-  type IframeOptions,
+  type IFrameComponent,
+  type IFrameObject,
+  type IFrameOptions,
 } from '@iframe-resizer/core'
 
 const id = `[${LABEL}] `
@@ -10,7 +10,7 @@ const id = `[${LABEL}] `
 export default function createIframeResize() {
   let connectWithOptions: (
     iframe: HTMLIFrameElement,
-  ) => IframeObject | undefined
+  ) => IFrameObject | undefined
   let iframes: HTMLIFrameElement[]
 
   function setupDisconnectedIframe(element: HTMLIFrameElement): void {
@@ -51,9 +51,9 @@ export default function createIframeResize() {
   }
 
   return function (
-    options: IframeOptions,
+    options: IFrameOptions,
     target?: string | HTMLIFrameElement,
-  ): readonly IframeComponent[] {
+  ): readonly IFrameComponent[] {
     if (typeof window === UNDEFINED) return [] // don't run for server side render
 
     // Check if document.body exists in browser environment
@@ -80,6 +80,6 @@ export default function createIframeResize() {
         throw new TypeError(`${id}Unexpected data type (${typeof target})`)
     }
 
-    return Object.freeze(iframes) as readonly IframeComponent[]
+    return Object.freeze(iframes) as readonly IFrameComponent[]
   }
 }
