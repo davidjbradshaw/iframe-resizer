@@ -37,7 +37,7 @@
         style.top = `${document.body.scrollHeight - 10}px`
 
         div.textContent = 'Overflowing content'
-        document.body.lastChild.append(div)
+        document.body.lastElementChild.append(div)
         return false
       }
     </script>
@@ -64,7 +64,7 @@
 
   <body>
     <b>iFrame</b>
-    <a href="#" onclick="toggle()">Toggle content</a>
+    <a href="#" onclick="toggle(); return false">Toggle content</a>
     &nbsp;
     <a
       href="#"

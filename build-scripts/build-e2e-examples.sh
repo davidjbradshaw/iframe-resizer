@@ -14,6 +14,7 @@ for name in react vue; do
   npm run build
 
   # Add child pages from fixtures
+  rm -rf "$ROOT/e2e/fixtures/$name/child"
   cp -r "$ROOT/e2e/fixtures/child" "$ROOT/e2e/fixtures/$name/child"
 
   cd "$ROOT"
