@@ -35,7 +35,7 @@ const SFC_DECLARATIONS: Record<string, string> = {
   vue: 'iframe-resizer.vue.d.ts',
 }
 
-const STAR_EXPORT = /export\s+type\s+\*\s+from\s+['"]@iframe-resizer\/core['"]/
+const STAR_EXPORT = /export\s+type\s+\*\s+from\s+["']@iframe-resizer\/core["']/
 
 describe('type re-exports', () => {
   for (const [pkg, file] of Object.entries(PACKAGES)) {
