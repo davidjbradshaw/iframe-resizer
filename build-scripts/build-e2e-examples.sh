@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Build e2e framework apps into e2e/fixtures/
 # These are self-contained apps in e2e/apps/ that use dist/ packages
@@ -9,7 +10,7 @@ for name in react vue; do
   echo "=== Building e2e/$name ==="
   cd "$ROOT/e2e/apps/$name"
 
-  npm install --silent 2>/dev/null
+  npm install
   npm run build
 
   # Add child pages from fixtures

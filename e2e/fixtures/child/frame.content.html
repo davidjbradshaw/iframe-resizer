@@ -19,7 +19,7 @@
     <script>
       window.iframeResizer = {
         onMessage(message) {
-          alert(message, parentIframe.getId())
+          alert(`${message} ${parentIframe.getId()}`)
         },
       }
     </script>
