@@ -3,14 +3,14 @@ import createIframeResize from './factory'
 export default createIframeResize()
 
 export type {
-  IframeComponent,
-  IframeDirection,
-  IframeLogOption,
-  IframeMessageData,
-  IframeMouseData,
-  IframeObject,
-  IframeOptions,
-  IframeResizedData,
-  IframeScrollData,
-  IframeScrollOption,
+  IFrameComponent,
+  IFrameDirection,
+  IFrameLogOption,
+  IFrameMessageData,
+  IFrameMouseData,
+  IFrameObject,
+  IFrameOptions,
+  IFrameResizedData,
+  IFrameScrollData,
+  IFrameScrollOption,
 } from '@iframe-resizer/core'

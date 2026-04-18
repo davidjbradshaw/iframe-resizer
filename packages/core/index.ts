@@ -7,19 +7,19 @@ import { errorBoundary, event as consoleEvent, warn } from './console'
 import setupEventListenersOnce from './listeners'
 import setupIframe from './setup'
 import setupLogging from './setup/logging'
-import type { IframeComponent, IframeObject, IframeOptions } from './types'
+import type { IFrameComponent, IFrameObject, IFrameOptions } from './types'
 
 export type {
-  IframeComponent,
-  IframeDirection,
-  IframeLogOption,
-  IframeMessageData,
-  IframeMouseData,
-  IframeObject,
-  IframeOptions,
-  IframeResizedData,
-  IframeScrollData,
-  IframeScrollOption,
+  IFrameComponent,
+  IFrameDirection,
+  IFrameLogOption,
+  IFrameMessageData,
+  IFrameMouseData,
+  IFrameObject,
+  IFrameOptions,
+  IFrameResizedData,
+  IFrameScrollData,
+  IFrameScrollOption,
 } from './types'
 export {
   LOG_COLLAPSED,
@@ -28,8 +28,8 @@ export {
 } from '@iframe-resizer/common/consts'
 
 export default function connectResizer(
-  options: IframeOptions,
-): (iframe: HTMLIFrameElement) => IframeObject | undefined {
+  options: IFrameOptions,
+): (iframe: HTMLIFrameElement) => IFrameObject | undefined {
   if (!isObject(options)) throw new TypeError('Options is not an object')
 
   setupEventListenersOnce()
@@ -46,6 +46,6 @@ export default function connectResizer(
       errorBoundary(id, setupIframe)(iframe, options)
     }
 
-    return (iframe as IframeComponent).iframeResizer
+    return (iframe as IFrameComponent).iframeResizer
   }
 }

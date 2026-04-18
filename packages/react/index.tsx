@@ -2,9 +2,9 @@
 /* eslint-disable react/require-default-props */
 import { esModuleInterop } from '@iframe-resizer/common'
 import type {
-  IframeComponent,
-  IframeObject,
-  IframeOptions,
+  IFrameComponent,
+  IFrameObject,
+  IFrameOptions,
 } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -19,8 +19,8 @@ import React, {
 
 import filterIframeAttribs from './filter-iframe-attribs'
 
-export type IframeForwardRef = Omit<IframeObject, 'close' | 'disconnect'> & {
-  getElement: () => IframeComponent
+export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
+  getElement: () => IFrameComponent
   getRef: () => RefObject<HTMLIFrameElement | null>
 }
 
@@ -30,18 +30,18 @@ type IframeProps = React.DetailedHTMLProps<
 >
 
 export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
-  Omit<IframeOptions, 'id' | 'onBeforeClose'>
+  Omit<IFrameOptions, 'id' | 'onBeforeClose'>
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
 
 function IframeResizer(
   props: IframeResizerProps,
-  ref: React.ForwardedRef<IframeForwardRef>,
+  ref: React.ForwardedRef<IFrameForwardRef>,
 ): ReactElement {
   const { log, logExpand } = props
   const filteredProps = filterIframeAttribs(props)
-  const iframeRef = useRef<IframeComponent>(null)
+  const iframeRef = useRef<IFrameComponent>(null)
   const consoleGroup = createAutoConsoleGroup()
 
   const onBeforeClose = (): boolean => {
@@ -87,17 +87,17 @@ function IframeResizer(
   return <iframe {...filteredProps} ref={iframeRef} />
 }
 
-export default forwardRef<IframeForwardRef, IframeResizerProps>(IframeResizer)
+export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
 
 export {
-  type IframeComponent,
-  type IframeDirection,
-  type IframeLogOption,
-  type IframeMessageData,
-  type IframeMouseData,
-  type IframeObject,
-  type IframeOptions,
-  type IframeResizedData,
-  type IframeScrollData,
-  type IframeScrollOption,
+  type IFrameComponent,
+  type IFrameDirection,
+  type IFrameLogOption,
+  type IFrameMessageData,
+  type IFrameMouseData,
+  type IFrameObject,
+  type IFrameOptions,
+  type IFrameResizedData,
+  type IFrameScrollData,
+  type IFrameScrollOption,
 } from '@iframe-resizer/core'

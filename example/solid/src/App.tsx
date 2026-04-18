@@ -1,8 +1,8 @@
 import { createSignal, Show } from 'solid-js'
 import IframeResizer from '@iframe-resizer/solid'
 import type {
-  IframeMessageData,
-  IframeResizedData,
+  IFrameMessageData,
+  IFrameResizedData,
 } from '@iframe-resizer/solid'
 import type { IframeResizerMethods } from '@iframe-resizer/solid'
 
@@ -12,12 +12,12 @@ import './App.css'
 
 function App() {
   let iframeApi: IframeResizerMethods | undefined
-  const [messageData, setMessageData] = createSignal<IframeResizedData | IframeMessageData>()
+  const [messageData, setMessageData] = createSignal<IFrameResizedData | IFrameMessageData>()
   const [show, setShow] = createSignal(true)
 
-  const onResized = (data: IframeResizedData) => setMessageData(data)
+  const onResized = (data: IFrameResizedData) => setMessageData(data)
 
-  const onMessage = (data: IframeMessageData) => {
+  const onMessage = (data: IFrameMessageData) => {
     setMessageData(data)
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
     iframeApi?.sendMessage('Hello back from the parent page')
