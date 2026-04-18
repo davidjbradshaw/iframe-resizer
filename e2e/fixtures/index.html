@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="https://iframe-resizer.com/favicon.ico" />
     <title>Iframe-Resizer Examples</title>
     <meta name="description" content="iFrame message passing test" />
     <meta name="viewport" content="width=device-width" />
@@ -102,7 +101,8 @@
         },
       })
 
-      function toggle() {
+      function toggle(event) {
+        event.preventDefault()
         const iframes = document.querySelectorAll('iframe')
         const iframe = iframes[0]
 
