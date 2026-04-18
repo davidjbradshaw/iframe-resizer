@@ -2,7 +2,7 @@ import { HEIGHT, WIDTH } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'
-import type { MessageData } from '../types'
+import type { MessageData } from '../message-data'
 import settings from '../values/settings'
 
 function setDimension(dimension: string, messageData: MessageData): void {

@@ -35,7 +35,7 @@ import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import getMessageBody from './received/message'
 import firstRun from './setup/first-run'
-import type { MessageData } from './types'
+import type { MessageData } from './message-data'
 import settings from './values/settings'
 
 export default function routeMessage(messageData: MessageData): void {

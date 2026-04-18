@@ -2,7 +2,7 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'
 import on from '../events/wrapper'
-import type { MessageData } from '../types'
+import type { MessageData } from '../message-data'
 import settings from '../values/settings'
 import {
   getPagePosition,
