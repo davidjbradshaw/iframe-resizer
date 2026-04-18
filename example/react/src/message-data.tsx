@@ -1,7 +1,7 @@
-import type { IframeMessageData, IframeResizedData } from '@iframe-resizer/react'
+import type { IFrameMessageData, IFrameResizedData } from '@iframe-resizer/react'
 
 type MessageDataProps = {
-  data?: IframeResizedData | IframeMessageData
+  data?: IFrameResizedData | IFrameMessageData
 }
 
 const MessageData = ({ data }: MessageDataProps) =>

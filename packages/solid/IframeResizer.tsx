@@ -1,14 +1,14 @@
 import { esModuleInterop } from '@iframe-resizer/common'
 import type {
-  IframeComponent,
-  IframeDirection,
-  IframeLogOption,
-  IframeMessageData,
-  IframeMouseData,
-  IframeObject,
-  IframeResizedData,
-  IframeScrollData,
-  IframeScrollOption,
+  IFrameComponent,
+  IFrameDirection,
+  IFrameLogOption,
+  IFrameMessageData,
+  IFrameMouseData,
+  IFrameObject,
+  IFrameResizedData,
+  IFrameScrollData,
+  IFrameScrollOption,
 } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -18,10 +18,10 @@ import { onCleanup, onMount, splitProps } from 'solid-js'
 const createAutoConsoleGroup = esModuleInterop(acg)
 
 export type IframeResizerMethods = Pick<
-  IframeObject,
+  IFrameObject,
   'moveToAnchor' | 'sendMessage'
 > & {
-  getElement: () => IframeComponent
+  getElement: () => IFrameComponent
 }
 
 export type IframeResizerProps = {
@@ -30,20 +30,20 @@ export type IframeResizerProps = {
   bodyMargin?: string | number | null
   bodyPadding?: string | number | null
   checkOrigin?: boolean | string[]
-  direction?: IframeDirection
+  direction?: IFrameDirection
   inPageLinks?: boolean
-  log?: IframeLogOption
+  log?: IFrameLogOption
   offsetSize?: number
-  scrolling?: IframeScrollOption
+  scrolling?: IFrameScrollOption
   tolerance?: number
   waitForLoad?: boolean
   warningTimeout?: number
-  onReady?: (iframe: IframeComponent) => void
-  onMessage?: (data: IframeMessageData) => void
-  onResized?: (data: IframeResizedData) => void
-  onScroll?: (data: IframeScrollData) => boolean
-  onMouseEnter?: (data: IframeMouseData) => void
-  onMouseLeave?: (data: IframeMouseData) => void
+  onReady?: (iframe: IFrameComponent) => void
+  onMessage?: (data: IFrameMessageData) => void
+  onResized?: (data: IFrameResizedData) => void
+  onScroll?: (data: IFrameScrollData) => boolean
+  onMouseEnter?: (data: IFrameMouseData) => void
+  onMouseLeave?: (data: IFrameMouseData) => void
   ref?: (methods: IframeResizerMethods) => void
 } & Omit<
   ComponentProps<'iframe'>,
@@ -74,7 +74,7 @@ const RESIZER_KEYS = [
 ] as const
 
 export default function IframeResizer(props: IframeResizerProps): JSX.Element {
-  let iframeEl!: IframeComponent
+  let iframeEl!: IFrameComponent
   const [local, iframeProps] = splitProps(props, RESIZER_KEYS)
   const consoleGroup = createAutoConsoleGroup()
 

@@ -4,15 +4,4 @@ import IframeResizer from './IframeResizer.svelte'
 // eslint-disable-next-line unicorn/prefer-export-from
 export default IframeResizer
 
-export type {
-  IframeComponent,
-  IframeDirection,
-  IframeLogOption,
-  IframeMessageData,
-  IframeMouseData,
-  IframeObject,
-  IframeOptions,
-  IframeResizedData,
-  IframeScrollData,
-  IframeScrollOption,
-} from '@iframe-resizer/core'
+export type * from '@iframe-resizer/core'

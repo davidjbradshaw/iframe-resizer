@@ -14,19 +14,19 @@ import {
   VERTICAL,
 } from '@iframe-resizer/common/consts'
 
-export type IframeDirection =
+export type IFrameDirection =
   | typeof VERTICAL
   | typeof HORIZONTAL
   | typeof NONE
   | typeof BOTH
 
-export type IframeLogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
+export type IFrameLogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
 
-export type IframeScrollOption = boolean | typeof AUTO | typeof OMIT
+export type IFrameScrollOption = boolean | typeof AUTO | typeof OMIT
 
 // --- Resizer object attached to iframe.iframeResizer ---
 
-export interface IframeObject {
+export interface IFrameObject {
   /** Remove the iframe from the page. */
   close(): void
   /** Disconnect iframe-resizer from the iframe. */
@@ -40,33 +40,33 @@ export interface IframeObject {
 // --- Extended HTMLIFrameElement ---
 
 /** HTMLIFrameElement with the `iframeResizer` control object attached. */
-export interface IframeComponent extends HTMLIFrameElement {
-  iframeResizer: IframeObject
+export interface IFrameComponent extends HTMLIFrameElement {
+  iframeResizer: IFrameObject
 }
 
 // --- Callback event data ---
 
-export interface IframeMouseData {
-  iframe: IframeComponent
+export interface IFrameMouseData {
+  iframe: IFrameComponent
   screenX: number
   screenY: number
   type: string
 }
 
-export interface IframeResizedData {
-  iframe: IframeComponent
+export interface IFrameResizedData {
+  iframe: IFrameComponent
   height: number
   width: number
   type: string
 }
 
-export interface IframeMessageData {
-  iframe: IframeComponent
+export interface IFrameMessageData {
+  iframe: IFrameComponent
   message: any
 }
 
-export interface IframeScrollData {
-  iframe: IframeComponent
+export interface IFrameScrollData {
+  iframe: IFrameComponent
   top: number
   left: number
   /** @deprecated Use `left` instead. */
@@ -77,7 +77,7 @@ export interface IframeScrollData {
 
 // --- Options ---
 
-export interface IframeOptions {
+export interface IFrameOptions {
   /** Override the body background style in the iframe. */
   bodyBackground?: string | null
   /**
@@ -100,7 +100,7 @@ export interface IframeOptions {
    */
   checkOrigin?: boolean | string[]
   /** Set the resizing direction of the iframe. */
-  direction?: IframeDirection
+  direction?: IFrameDirection
   /** Custom iframe id. */
   id?: string
   /**
@@ -111,11 +111,11 @@ export interface IframeOptions {
   /** Set iframe-resizer license key. */
   license: string
   /** Enable/disable console logging. */
-  log?: IframeLogOption
+  log?: IFrameLogOption
   /** Set offset size of iframe content. */
   offsetSize?: number
   /** Enable scroll bars in the iframe. */
-  scrolling?: IframeScrollOption
+  scrolling?: IFrameScrollOption
   /**
    * Set the number of pixels the iframe content size has to change by,
    * before triggering a resize of the iframe.
@@ -134,37 +134,25 @@ export interface IframeOptions {
   /** Called after iframe is closed. */
   onAfterClose?(iframeId: string): void
   /** Called when pointer enters the iframe. */
-  onMouseEnter?(data: IframeMouseData): void
+  onMouseEnter?(data: IFrameMouseData): void
   /** Called when pointer leaves the iframe. */
-  onMouseLeave?(data: IframeMouseData): void
+  onMouseLeave?(data: IFrameMouseData): void
   /** Called when iframe-resizer has been initialized. */
-  onReady?(iframe: IframeComponent): void
+  onReady?(iframe: IFrameComponent): void
   /**
    * Receive message posted from the iframe with the
    * parentIframe.sendMessage() method.
    */
-  onMessage?(data: IframeMessageData): void
+  onMessage?(data: IFrameMessageData): void
   /**
    * Called after iframe resized. Passes event data containing the iframe,
    * height, width and the type of event that triggered the resize.
    */
-  onResized?(data: IframeResizedData): void
+  onResized?(data: IFrameResizedData): void
   /**
    * Called before the page is repositioned after a request from the iframe.
    * If this function returns false, it will stop the library from
    * repositioning the page, so that you can implement your own scrolling.
    */
-  onScroll?(data: IframeScrollData): boolean | void
-}
-
-// --- Internal message data (used across core event handlers) ---
-
-export interface MessageData {
-  id: string
-  iframe: IframeComponent
-  height: number
-  width: number
-  type: string
-  message?: string
-  mode?: string
+  onScroll?(data: IFrameScrollData): boolean | void
 }

@@ -1,5 +1,5 @@
 import { esModuleInterop } from '@iframe-resizer/common'
-import type { IframeOptions } from '@iframe-resizer/core'
+import type { IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 
@@ -36,7 +36,7 @@ export default function IframeResizer(Alpine: Alpine): void {
         evaluated !== null &&
         evaluated !== undefined &&
         typeof evaluated === 'object'
-          ? (evaluated as IframeOptions)
+          ? (evaluated as IFrameOptions)
           : {}
 
       if (
@@ -51,7 +51,7 @@ export default function IframeResizer(Alpine: Alpine): void {
 
       const resizer = connectResizer({
         waitForLoad: true,
-        ...(options as IframeOptions),
+        ...(options as IFrameOptions),
         onBeforeClose: () => {
           consoleGroup.event('close')
           consoleGroup.warn(
@@ -66,15 +66,4 @@ export default function IframeResizer(Alpine: Alpine): void {
   )
 }
 
-export type {
-  IframeComponent,
-  IframeDirection,
-  IframeLogOption,
-  IframeMessageData,
-  IframeMouseData,
-  IframeObject,
-  IframeOptions,
-  IframeResizedData,
-  IframeScrollData,
-  IframeScrollOption,
-} from '@iframe-resizer/core'
+export type * from '@iframe-resizer/core'

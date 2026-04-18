@@ -7,11 +7,11 @@
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type {
-    IframeComponent,
-    IframeLogOption,
-    IframeMessageData,
-    IframeObject,
-    IframeResizedData,
+    IFrameComponent,
+    IFrameLogOption,
+    IFrameMessageData,
+    IFrameObject,
+    IFrameResizedData,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
@@ -36,8 +36,8 @@
     },
     direction: String,
     log: {
-      type: [String, Boolean, Number] as PropType<IframeLogOption>,
-      validator: (value: IframeLogOption) => {
+      type: [String, Boolean, Number] as PropType<IFrameLogOption>,
+      validator: (value: IFrameLogOption) => {
         switch (value) {
           case COLLAPSE:
           case EXPAND:
@@ -62,13 +62,13 @@
   })
 
   const emit = defineEmits<{
-    onReady: [iframe: IframeComponent]
-    onMessage: [data: IframeMessageData]
-    onResized: [data: IframeResizedData]
+    onReady: [iframe: IFrameComponent]
+    onMessage: [data: IFrameMessageData]
+    onResized: [data: IFrameResizedData]
   }>()
 
   const iframeRef = ref<HTMLIFrameElement | null>(null)
-  const resizer = ref<IframeObject | null>(null)
+  const resizer = ref<IFrameObject | null>(null)
 
   onMounted(() => {
     const consoleGroup = createAutoConsoleGroup()
@@ -85,9 +85,9 @@
         consoleGroup.warn('Close method is disabled, use Vue to remove iframe')
         return false
       },
-      onReady: (iframe: IframeComponent) => emit('onReady', iframe),
-      onMessage: (data: IframeMessageData) => emit('onMessage', data),
-      onResized: (data: IframeResizedData) => emit('onResized', data),
+      onReady: (iframe: IFrameComponent) => emit('onReady', iframe),
+      onMessage: (data: IFrameMessageData) => emit('onMessage', data),
+      onResized: (data: IFrameResizedData) => emit('onResized', data),
     }
 
     consoleGroup.label(`vue(${iframe.id})`)
