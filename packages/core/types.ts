@@ -156,15 +156,3 @@ export interface IFrameOptions {
    */
   onScroll?(data: IFrameScrollData): boolean | void
 }
-
-// --- Internal message data (used across core event handlers) ---
-
-export interface MessageData {
-  id: string
-  iframe: IFrameComponent
-  height: number
-  width: number
-  type: string
-  message?: string
-  mode?: string
-}

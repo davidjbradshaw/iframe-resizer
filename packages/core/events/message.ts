@@ -1,7 +1,7 @@
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'
-import type { MessageData } from '../types'
+import type { MessageData } from '../message-data'
 import on from './wrapper'
 
 // eslint-disable-next-line import/prefer-default-export

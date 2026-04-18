@@ -35,11 +35,15 @@ const SFC_DECLARATIONS: Record<string, string> = {
   vue: 'iframe-resizer.vue.d.ts',
 }
 
+const STAR_EXPORT = /export\s+type\s+\*\s+from\s+['"]@iframe-resizer\/core['"]/
+
 describe('type re-exports', () => {
   for (const [pkg, file] of Object.entries(PACKAGES)) {
     it(`@iframe-resizer/${pkg} re-exports all shared types`, () => {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       const source = readFileSync(resolve(__dirname, '..', pkg, file), 'utf8')
+
+      if (STAR_EXPORT.test(source)) return
 
       for (const typeName of TYPE_EXPORTS) {
         expect(

@@ -1,7 +1,7 @@
 import { SEPARATOR } from '@iframe-resizer/common/consts'
 
 import getMessageBody from '../received/message'
-import type { MessageData } from '../types'
+import type { MessageData } from '../message-data'
 import on from './wrapper'
 
 export default function onMouse(event: string, messageData: MessageData): void {

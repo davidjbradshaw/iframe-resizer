@@ -89,15 +89,4 @@ function IframeResizer(
 
 export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
 
-export {
-  type IFrameComponent,
-  type IFrameDirection,
-  type IFrameLogOption,
-  type IFrameMessageData,
-  type IFrameMouseData,
-  type IFrameObject,
-  type IFrameOptions,
-  type IFrameResizedData,
-  type IFrameScrollData,
-  type IFrameScrollOption,
-} from '@iframe-resizer/core'
+export type * from '@iframe-resizer/core'

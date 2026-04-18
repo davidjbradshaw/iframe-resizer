@@ -1,5 +1,5 @@
 import { setPagePosition } from '../page/position'
-import type { MessageData } from '../types'
+import type { MessageData } from '../message-data'
 import setSize from './size'
 import on from './wrapper'
 

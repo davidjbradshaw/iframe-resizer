@@ -1,6 +1,6 @@
 import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 
-import type { MessageData } from '../types'
+import type { MessageData } from '../message-data'
 import settings from '../values/settings'
 
 export function getPaddingEnds(compStyle: CSSStyleDeclaration): number {

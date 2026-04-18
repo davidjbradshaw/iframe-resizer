@@ -9,18 +9,7 @@ import setupIframe from './setup'
 import setupLogging from './setup/logging'
 import type { IFrameComponent, IFrameObject, IFrameOptions } from './types'
 
-export type {
-  IFrameComponent,
-  IFrameDirection,
-  IFrameLogOption,
-  IFrameMessageData,
-  IFrameMouseData,
-  IFrameObject,
-  IFrameOptions,
-  IFrameResizedData,
-  IFrameScrollData,
-  IFrameScrollOption,
-} from './types'
+export type * from './types'
 export {
   LOG_COLLAPSED,
   LOG_DISABLED,

@@ -3,7 +3,7 @@
 /**
  * Generates .d.ts files for SFC components (Vue, Svelte).
  *
- * Reads the type exports from core/index.ts so the SFC declarations
+ * Reads the public type names from core/types.ts so the SFC declarations
  * stay in sync automatically.
  */
 
@@ -12,27 +12,23 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const coreIndex = readFileSync(
-  resolve(__dirname, '../packages/core/index.ts'),
-  'utf8',
-)
-
-// Extract type names from: export type { Foo, Bar, ... } from './types'
-const typeExports = [...coreIndex.matchAll(/^\s+(IFrame\w+),?$/gm)]
-  .map((m) => m[1])
-  .filter(Boolean)
-
-// Read types.ts to find which IFrame* are type aliases (not interfaces)
 const typesSource = readFileSync(
   resolve(__dirname, '../packages/core/types.ts'),
   'utf8',
 )
+
+// Every public IFrame* name (type aliases + interfaces)
+const typeExports = [
+  ...typesSource.matchAll(/^export (?:type|interface) (IFrame\w+)\b/gm),
+].map((m) => m[1])
+
+// Just the type aliases (needed separately for SFC re-exports)
 const OPTION_TYPES = [
   ...typesSource.matchAll(/^export type (IFrame\w+)\s*=/gm),
 ].map((m) => m[1])
 
 if (typeExports.length === 0) {
-  throw new Error('No IFrame* type exports found in core/index.ts')
+  throw new Error('No IFrame* type exports found in core/types.ts')
 }
 
 if (OPTION_TYPES.length === 0) {
