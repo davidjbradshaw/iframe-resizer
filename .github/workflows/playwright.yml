@@ -41,37 +41,11 @@ jobs:
     - name: Build project
       run: TEST=1 node build-scripts/build-all.js
 
-    - name: Build React example for e2e tests
-      run: |
-        cd example/react
-        npm install
-        for pkg in common core react; do
-          rm -rf node_modules/@iframe-resizer/$pkg
-          ln -s ../../../../dist/$pkg node_modules/@iframe-resizer/$pkg
-        done
-        npm run build
-
-    - name: Build Vue example for e2e tests
-      run: |
-        cd example/vue
-        npm install
-        for pkg in common core vue; do
-          rm -rf node_modules/@iframe-resizer/$pkg
-          ln -s ../../../../dist/$pkg node_modules/@iframe-resizer/$pkg
-        done
-        npm run build
-
-    - name: Replace js-dist with symlink to js for e2e tests
-      run: rm -rf js-dist && ln -s js js-dist
+    - name: Build e2e framework apps
+      run: build-scripts/build-e2e-examples.sh
 
     - name: Run Playwright tests
       run: npm run test:e2e
-
-    - name: Unlink dist packages from examples
-      if: always()
-      run: |
-        cd example/react && npm install
-        cd ../vue && npm install
 
     - name: Upload test results
       uses: actions/upload-artifact@v7

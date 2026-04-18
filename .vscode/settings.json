@@ -19,6 +19,7 @@
     "javascripts",
     "logcapture",
     "Loggable",
+    "networkidle",
     "sarif",
     "scanjs",
     "sonarjs"
