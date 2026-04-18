@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test'
 test.describe('iframe-resizer basic functionality', () => {
   test('should load parent page with iframe', async ({ page }) => {
     // Navigate to the example page
-    await page.goto('/example/html/index.html')
+    await page.goto('/e2e/fixtures/index.html')
 
     // Wait for page to load
     await page.waitForLoadState('networkidle')
@@ -21,7 +21,7 @@ test.describe('iframe-resizer basic functionality', () => {
 
   test('should resize iframe when content changes', async ({ page }) => {
     // Navigate to the example page
-    await page.goto('/example/html/index.html')
+    await page.goto('/e2e/fixtures/index.html')
     await page.waitForLoadState('networkidle')
 
     // Get initial iframe dimensions
@@ -38,7 +38,7 @@ test.describe('iframe-resizer basic functionality', () => {
 
   test('should handle iframe messaging', async ({ page }) => {
     // Navigate to the example page
-    await page.goto('/example/html/index.html')
+    await page.goto('/e2e/fixtures/index.html')
     await page.waitForLoadState('networkidle')
 
     // Get the iframe
@@ -54,7 +54,7 @@ test.describe('iframe-resizer basic functionality', () => {
 
   test('should work with multiple iframes', async ({ page }) => {
     // Navigate to the two iframes example
-    await page.goto('/example/html/two.html')
+    await page.goto('/e2e/fixtures/two.html')
     await page.waitForLoadState('networkidle')
     // Check that both iframes are present
     const iframes = page.locator('iframe')
@@ -74,7 +74,7 @@ test.describe('iframe-resizer basic functionality', () => {
 
   test('should handle iframe with jQuery', async ({ page }) => {
     // Navigate to the jQuery example
-    await page.goto('/example/html/jquery.html')
+    await page.goto('/e2e/fixtures/jquery.html')
     await page.waitForLoadState('networkidle')
 
     // Check that page loaded
@@ -92,7 +92,7 @@ test.describe('iframe-resizer basic functionality', () => {
 
 test.describe('iframe-resizer cross-origin handling', () => {
   test('should handle same-origin iframes', async ({ page }) => {
-    await page.goto('/example/html/index.html')
+    await page.goto('/e2e/fixtures/index.html')
     await page.waitForLoadState('networkidle')
 
     // Wait for iframe to be present
@@ -116,7 +116,7 @@ test.describe('iframe-resizer cross-origin handling', () => {
 
 test.describe('iframe-resizer React example', () => {
   test('should load React example', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Check that root element exists
@@ -128,7 +128,7 @@ test.describe('iframe-resizer React example', () => {
   })
 
   test('should initialize iframe with iframe-resizer', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Wait for iframe to be present
@@ -150,7 +150,7 @@ test.describe('iframe-resizer React example', () => {
   })
 
   test('should resize iframe based on content', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Get iframe element
@@ -171,7 +171,7 @@ test.describe('iframe-resizer React example', () => {
   })
 
   test('should handle show/hide button', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Initially iframe should be visible
@@ -204,7 +204,7 @@ test.describe('iframe-resizer React example', () => {
   })
 
   test('should display message data', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Wait for iframe to initialize
@@ -233,7 +233,7 @@ test.describe('iframe-resizer React example', () => {
   })
 
   test('should handle iframe messaging', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Wait for iframe to be present
@@ -262,7 +262,7 @@ test.describe('iframe-resizer React example', () => {
   })
 
   test('should interact with iframe controls', async ({ page }) => {
-    await page.goto('/example/react/dist/index.html')
+    await page.goto('/e2e/fixtures/react/index.html')
     await page.waitForLoadState('networkidle')
 
     // Wait for iframe to be present
@@ -299,7 +299,7 @@ test.describe('iframe-resizer React example', () => {
 
 test.describe('iframe-resizer Vue example', () => {
   test('should load Vue example', async ({ page }) => {
-    await page.goto('/example/vue/dist/')
+    await page.goto('/e2e/fixtures/vue/')
     await page.waitForLoadState('networkidle')
     
     // Check that app element exists
@@ -312,7 +312,7 @@ test.describe('iframe-resizer Vue example', () => {
   })
 
   test('should initialize iframe with iframe-resizer', async ({ page }) => {
-    await page.goto('/example/vue/dist/')
+    await page.goto('/e2e/fixtures/vue/')
     await page.waitForLoadState('networkidle')
     
     // Wait for iframe to be present
@@ -327,7 +327,7 @@ test.describe('iframe-resizer Vue example', () => {
   })
 
   test('should resize iframe based on content', async ({ page }) => {
-    await page.goto('/example/vue/dist/')
+    await page.goto('/e2e/fixtures/vue/')
     await page.waitForLoadState('networkidle')
     
     const iframeElement = page.locator('iframe')

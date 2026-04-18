@@ -42,8 +42,8 @@ const l = (l: string): string => {
     '<iy><yi>Zvsv spjluzl kvlz uva zbwwvya jyvzz-kvthpu</><iy><iy>Av bzl <p>pmyhtl-ylzpgly</> dpao jyvzz kvthpu pmyhtlz fvb ullk lpaoly aol Wyvmlzzpvuhs vy Ibzpulzz spjluzlz. Mvy klahpsz vu bwnyhkl wypjpun wslhzl jvuahja pumv@pmyhtl-ylzpgly.jvt.',
     'Pu whnl spurpun ylxbpylz h Wyvmlzzpvuhs vy Ibzpulzz spjluzl. Wslhzl zll <b>oaawz://pmyhtl-ylzpgly.jvt/wypjpun</> mvy tvyl klahpsz.',
     '<yi>Clyzpvu 5 rlf klaljalk</><iy><iy>Fvb hyl jbyyluasf bzpun h spjluzl rlf mvy aol wylcpvbz clyzpvu vm <p>pmyhtl-ylzpgly</>.</><iy><iy>Av bwnyhkl av <i>Clyzpvu 6</> fvb jhu bzl aol <i>mpyza 11 johyhjalyz vm fvb spjluzl rlf</> av nla h 60% kpzjvbua ha oaawz://pmyhtl-ylzpgly.jvt/wypjpun.',
-    '<yi>Clyzpvu 5 rlf klaljalk</><iy><iy>Fvb hyl jbyyluasf bzpun h spjluzl rlf mvy aol wylcpvbz clyzpvu vm <p>pmyhtl-ylzpgly</>.<iy><iy>Av bwnyhkl av <i>Clyzpvu 6</> vm <p>pmyhtl-ylzpgly</> wslhzl kvdusvhk aol shalza rlf myvt oaawz://pmyhtl-ylzpgly.jvt/tf-vyklyz.',
-    '<yi> VLT rlf lewpylk</><iy><iy>Aol spjluzl rlf fvb hyl bzpun mvy <p>pmyhtl-ylzpgly</> pz myvt h wypvy flhy huk ohz lewpylk. Hu bwkhalk rlf pz ylslhzlk vu aol mpyza vm Uvcltily lhjo flhy.<iy><iy>Wslhzl kvdusvhk aol shalza rlf myvt oaawz://pmyhtl-ylzpgly.jvt/tf-vyklyz.',
+    '<yi>Clyzpvu 5 rlf klaljalk</><iy><iy>Fvb hyl jbyyluasf bzpun h spjluzl rlf mvy aol wylcpvbz clyzpvu vm <p>pmyhtl-ylzpgly</>.<iy><iy>Av bwnyhkl av <i>Clyzpvu 6</> vm <p>pmyhtl-ylzpgly</> wslhzl kvdusvhk aol shalza rlf myvt:<iy><iy>oaawz://pmyhtl-ylzpgly.jvt/tf-vyklyz',
+    '<yi> VLT rlf lewpylk</><iy><iy>Aol spjluzl rlf fvb hyl bzpun mvy <p>pmyhtl-ylzpgly</> pz myvt h wypvy flhy huk ohz lewpylk. Hu bwkhalk rlf pz ylslhzlk vu aol mpyza vm Uvcltily lhjo flhy.<iy><iy>Wslhzl kvdusvhk aol shalza rlf myvt:<iy><iy>oaawz://pmyhtl-ylzpgly.jvt/tf-vyklyz',
     '<yi>Bzl dpao slnhjf jspluaz</><iy><iy>Dolu bzpun <p>pmyhtl-ylzpgly</> jopsk whjrhnl dpao hu vskly clyzpvu vm aol whylua, fvb jhu zla aol spjluzl rlf pu aol pmyhtl. Mvy klahpsz vu ovd av zla aopz bw, wslhzl zll aol kvjbtluahapvu ha:<iy><iy>oaawz://pmyhtl-ylzpgly.jvt/zlabw/jopsk/#spjluzl',
   ],
   r = (arr: Array<string>): string[] => [

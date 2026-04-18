@@ -19,3 +19,6 @@ example-test
 /playwright/.cache/
 
 example/astro/.astro/
+e2e/fixtures/react/
+e2e/fixtures/vue/
+e2e/apps/*/node_modules/
