@@ -18,6 +18,20 @@ export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
     await assertChildText(page, '#last-message', 'test-msg')
   })
 
+  test('getVersion returns parent and child versions', async ({ page }) => {
+    await page.goto(baseUrl)
+    await page.waitForLoadState('networkidle')
+    await waitForResizer(page)
+
+    const version = await page.evaluate(() =>
+      document.querySelector('iframe').iframeResizer.getVersion(),
+    )
+    expect(version.parent).toBeTruthy()
+    expect(version.child).toBeTruthy()
+    expect(version.parent).not.toBe('unknown')
+    expect(version.child).not.toBe('unknown')
+  })
+
   test('moveToAnchor scrolls to named anchor', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
