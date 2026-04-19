@@ -7,5 +7,9 @@
     "strict": false,
     "skipLibCheck": true,
     "lib": ["ES2022", "DOM"]
-  }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  },
+  "include": ["src/**/*.ts"]
 }
