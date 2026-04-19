@@ -1,3 +1,4 @@
+import { OVERFLOW_OBSERVER } from '@iframe-resizer/common/consts'
 import { describe, expect, test, vi } from 'vitest'
 
 let overflowCallback: () => void
@@ -35,9 +36,6 @@ describe('child/observed/overflow', () => {
     // invoke the callback the observer would trigger
     overflowCallback()
 
-    expect(sendSize).toHaveBeenCalledWith(
-      'overflowObserver',
-      'Overflow updated',
-    )
+    expect(sendSize).toHaveBeenCalledWith(OVERFLOW_OBSERVER, 'Overflow updated')
   })
 })

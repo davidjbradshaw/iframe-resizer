@@ -4,7 +4,7 @@ import { HIGHLIGHT } from 'auto-console-group'
 import { info, warn } from '../console'
 
 export function checkCSS(attr: string, value: string): string {
-  if (value.includes('-')) {
+  if (/(?:^|[\s,])-/.test(value)) {
     warn(`Negative CSS value ignored for ${attr}`)
     value = ''
   }

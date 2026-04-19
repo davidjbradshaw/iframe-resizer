@@ -26,8 +26,11 @@ vi.mock('auto-console-group', () => ({
   NORMAL: 'font-weight: normal;',
 }))
 
-// Stub format-advise to pass-through
-vi.mock('../common/format-advise', () => ({ default: () => (x) => x }))
+// Stub createFormatAdvise to pass-through
+vi.mock('@iframe-resizer/common', async (importOriginal) => ({
+  ...(await importOriginal()),
+  createFormatAdvise: () => (x) => x,
+}))
 
 describe('child/console', () => {
   beforeEach(() => {
