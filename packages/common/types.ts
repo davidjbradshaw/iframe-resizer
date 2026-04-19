@@ -1,4 +1,6 @@
+export type SemVer = `${number}.${number}.${number}${string}`
+
 export interface IFrameVersion {
-  child: string
-  parent: string
+  child: SemVer | 'legacy'
+  parent: SemVer | 'legacy'
 }
