@@ -1,11 +1,13 @@
 import type { IFrameVersion } from '@iframe-resizer/common'
-import { VERSION } from '@iframe-resizer/common/consts'
+import { FALSE, VERSION } from '@iframe-resizer/common/consts'
 
 import settings from '../values/settings'
 
 export default function getVersion(): IFrameVersion {
+  const { version } = settings
+
   return {
     child: VERSION,
-    parent: settings.version || 'unknown',
+    parent: !version || version === FALSE ? 'legacy' : version,
   }
 }
