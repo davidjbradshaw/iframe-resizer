@@ -20,6 +20,7 @@ import React, {
 import filterIframeAttribs from './filter-iframe-attribs'
 
 export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
+  /** @deprecated Use getRef() instead */
   getElement: () => IFrameComponent
   getRef: () => RefObject<HTMLIFrameElement | null>
 }
