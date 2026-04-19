@@ -3,6 +3,7 @@
  * Canonical source of truth for the parent-side public API.
  */
 
+import type { IFrameVersion } from '@iframe-resizer/common'
 import {
   AUTO,
   BOTH,
@@ -31,6 +32,8 @@ export interface IFrameObject {
   close(): void
   /** Disconnect iframe-resizer from the iframe. */
   disconnect(): void
+  /** Returns the child and parent iframe-resizer versions. */
+  getVersion(): IFrameVersion
   /** Move the page in the iframe to the specified anchor. */
   moveToAnchor(anchor: string): void
   /** Send a message to the iframe. */
@@ -65,7 +68,7 @@ export interface IFrameMessageData {
   message: any
 }
 
-export type { IFrameVersion } from '@iframe-resizer/common'
+export type { IFrameVersion }
 
 export interface IFrameScrollData {
   iframe: IFrameComponent

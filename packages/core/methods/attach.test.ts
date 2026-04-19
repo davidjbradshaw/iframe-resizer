@@ -47,6 +47,26 @@ describe('core/methods/attach', () => {
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
   })
 
+  test('getVersion returns parent and child versions', () => {
+    const iframe = { id: 'if1' }
+    settings.if1 = { iframe, childVersion: '1.2.3' }
+
+    attachMethods('if1')
+
+    const version = iframe.iframeResizer.getVersion()
+    expect(version.parent).toBeTruthy()
+    expect(version.child).toBe('1.2.3')
+  })
+
+  test('getVersion returns unknown when child version not set', () => {
+    const iframe = { id: 'if1' }
+    settings.if1 = { iframe }
+
+    attachMethods('if1')
+
+    expect(iframe.iframeResizer.getVersion().child).toBe('unknown')
+  })
+
   test('does nothing when settings[id] does not exist', () => {
     const iframe = { id: 'missing' }
 
