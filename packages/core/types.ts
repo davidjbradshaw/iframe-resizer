@@ -65,6 +65,8 @@ export interface IFrameMessageData {
   message: any
 }
 
+export type { IFrameVersion } from '@iframe-resizer/common'
+
 export interface IFrameScrollData {
   iframe: IFrameComponent
   top: number

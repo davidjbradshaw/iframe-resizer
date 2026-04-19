@@ -34,7 +34,8 @@
       Before resize: <span id="before-resize">none</span> |
       getId: <span id="get-id">unknown</span> |
       getParentOrigin: <span id="get-origin">unknown</span> |
-      getParentProps: <span id="get-props">unknown</span>
+      getParentProps: <span id="get-props">unknown</span> |
+      getVersion: <span id="get-versions">unknown</span>
     </div>
 
     <!-- Test controls -->
@@ -43,6 +44,7 @@
       <a href="#" id="btn-get-id" onclick="document.getElementById('get-id').textContent = parentIframe.getId(); return false">getId</a>
       <a href="#" id="btn-get-origin" onclick="document.getElementById('get-origin').textContent = parentIframe.getParentOrigin(); return false">getParentOrigin</a>
       <a href="#" id="btn-get-props" onclick="parentIframe.getParentProps(function(d) { document.getElementById('get-props').textContent = JSON.stringify(d).slice(0, 50) }); return false">getParentProps</a>
+      <a href="#" id="btn-get-versions" onclick="document.getElementById('get-versions').textContent = JSON.stringify(parentIframe.getVersion()); return false">getVersion</a>
       <a href="#" id="btn-resize" onclick="parentIframe.autoResize(false); parentIframe.resize(200); return false">resize(200)</a>
       <a href="#" id="btn-resize-both" onclick="parentIframe.resize(200, 400); return false">resize(200,400)</a>
       <a href="#" id="btn-scroll-to" onclick="parentIframe.scrollTo(0, 100); return false">scrollTo</a>

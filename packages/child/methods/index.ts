@@ -5,6 +5,7 @@ import APIsendMessage from '../send/message'
 import settings from '../values/settings'
 import state from '../values/state'
 import autoResize from './auto-resize'
+import getVersion from './get-version'
 import moveToAnchor from './move-to-anchor'
 import setOffsetSize from './offset-size'
 import { getParentOrigin, setTargetOrigin } from './origin'
@@ -27,6 +28,7 @@ export default function setupPublicMethods(): void {
     getId,
     getParentOrigin,
     getParentProps,
+    getVersion,
     moveToAnchor,
     reset,
     setOffsetSize,
