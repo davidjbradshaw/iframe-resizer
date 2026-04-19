@@ -77,6 +77,7 @@ function IframeResizer(
   useImperativeHandle(ref, () => ({
     getRef: () => iframeRef,
     getElement: () => iframeRef.current,
+    getVersion: () => iframeRef.current.iframeResizer.getVersion(),
     moveToAnchor: (anchor: string) =>
       iframeRef.current.iframeResizer.moveToAnchor(anchor),
     sendMessage: (message: any, targetOrigin?: string) => {

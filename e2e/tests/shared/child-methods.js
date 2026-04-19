@@ -114,8 +114,8 @@ export function childTests(baseUrl) {
     const parsed = JSON.parse(versions)
     expect(parsed.child).toBeTruthy()
     expect(parsed.parent).toBeTruthy()
-    expect(parsed.child).not.toBe('unknown')
-    expect(parsed.parent).not.toBe('unknown')
+    expect(parsed.child).not.toBe('legacy')
+    expect(parsed.parent).not.toBe('legacy')
   })
 
   test('sendMessage from child reaches parent', async ({ page }) => {

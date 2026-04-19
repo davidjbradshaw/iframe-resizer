@@ -28,8 +28,8 @@ export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
     )
     expect(version.parent).toBeTruthy()
     expect(version.child).toBeTruthy()
-    expect(version.parent).not.toBe('unknown')
-    expect(version.child).not.toBe('unknown')
+    expect(version.parent).not.toBe('legacy')
+    expect(version.child).not.toBe('legacy')
   })
 
   test('moveToAnchor scrolls to named anchor', async ({ page }) => {
