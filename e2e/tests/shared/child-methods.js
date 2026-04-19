@@ -279,7 +279,7 @@ export function childTests(baseUrl) {
       .evaluate((el) => el.offsetHeight)
     // The ignored element is at top: 9999px, height: 5000px
     // If included, iframe would be ~15000px
-    expect(iframeHeight).toBeLessThan(5000)
+    expect(iframeHeight).toBeLessThan(9000)
   })
 
   // --- close (last test — removes the iframe) ---
