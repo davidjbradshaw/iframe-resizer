@@ -13,6 +13,13 @@ if [ ! -d "$APP_DIR" ]; then
   exit 0
 fi
 
+# Skip if tests are marked as skipped
+SPEC="$ROOT/e2e/tests/$FRAMEWORK.spec.js"
+if [ -f "$SPEC" ] && grep -q "describe.skip" "$SPEC"; then
+  echo "Tests for $FRAMEWORK are skipped (skipping build)"
+  exit 0
+fi
+
 echo "Building e2e/$FRAMEWORK..."
 cd "$APP_DIR"
 
