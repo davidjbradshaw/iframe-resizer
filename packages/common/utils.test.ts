@@ -6,14 +6,10 @@ import {
   hasOwn,
   id,
   invoke,
-  isDarkModeEnabled,
   isDef,
-  isElement,
   isIframe,
-  isNumber,
   isObject,
   isolateUserCode,
-  isSafari,
   isString,
   lower,
   once,
@@ -22,18 +18,6 @@ import {
 } from './utils'
 
 describe('utils.js', () => {
-  describe('isNumber', () => {
-    test('should return true for valid numbers', () => {
-      expect(isNumber(42)).toBe(true)
-      expect(isNumber(3.14)).toBe(true)
-    })
-
-    test('should return false for invalid numbers', () => {
-      expect(isNumber(NaN)).toBe(false)
-      expect(isNumber('42')).toBe(false)
-    })
-  })
-
   describe('once', () => {
     test('should call the function only once', () => {
       const mockFn = vi.fn()
@@ -43,24 +27,6 @@ describe('utils.js', () => {
       wrappedFn()
 
       expect(mockFn).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('isDarkModeEnabled', () => {
-    test('should return true if dark mode is enabled', () => {
-      window.matchMedia = vi.fn().mockImplementation((query) => ({
-        matches: query === '(prefers-color-scheme: dark)',
-      }))
-
-      expect(isDarkModeEnabled()).toBe(true)
-    })
-
-    test('should return false if dark mode is not enabled', () => {
-      window.matchMedia = vi.fn().mockImplementation(() => ({
-        matches: false,
-      }))
-
-      expect(isDarkModeEnabled()).toBe(false)
     })
   })
 
@@ -207,18 +173,6 @@ describe('utils.js', () => {
     })
   })
 
-  describe('isElement', () => {
-    test('should return true for element nodes', () => {
-      const element = document.createElement('div')
-      expect(isElement(element)).toBe(true)
-    })
-
-    test('should return false for non-element nodes', () => {
-      const textNode = document.createTextNode('text')
-      expect(isElement(textNode)).toBe(false)
-    })
-  })
-
   describe('isObject', () => {
     test('should return true for objects', () => {
       expect(isObject({})).toBe(true)
@@ -245,23 +199,6 @@ describe('utils.js', () => {
       expect(isString(null)).toBe(false)
       expect(isString()).toBe(false)
       expect(isString({})).toBe(false)
-    })
-  })
-
-  describe('isSafari', () => {
-    test('should return a boolean', () => {
-      expect(typeof isSafari()).toBe('boolean')
-    })
-
-    test('should return false when navigator is undefined', () => {
-      const original = globalThis.navigator
-      // @ts-expect-error -- simulating SSR
-      delete globalThis.navigator
-      expect(isSafari()).toBe(false)
-      Object.defineProperty(globalThis, 'navigator', {
-        value: original,
-        configurable: true,
-      })
     })
   })
 
@@ -352,17 +289,6 @@ describe('utils.js', () => {
       const result = wrappedFn(5, 3)
       expect(result).toBe(8)
       expect(mockFn).toHaveBeenCalledWith(5, 3)
-    })
-  })
-
-  describe('isDarkModeEnabled - edge cases', () => {
-    test('should return undefined when matchMedia is undefined', () => {
-      const originalMatchMedia = window.matchMedia
-      window.matchMedia = undefined
-
-      expect(isDarkModeEnabled()).toBe(undefined)
-
-      window.matchMedia = originalMatchMedia
     })
   })
 

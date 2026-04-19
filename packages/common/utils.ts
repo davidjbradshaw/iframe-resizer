@@ -1,17 +1,9 @@
 import { OBJECT, STRING } from './consts'
 
-export const isElement = (node: Node): boolean =>
-  node.nodeType === Node.ELEMENT_NODE
-export const isNumber = (value: unknown): value is number =>
-  typeof value === 'number' && !Number.isNaN(value)
 export const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === OBJECT && value !== null
 export const isString = (value: unknown): value is string =>
   typeof value === STRING
-
-export const isSafari = (): boolean =>
-  typeof navigator !== 'undefined' &&
-  /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export function isIframe(element: unknown): element is HTMLIFrameElement {
   if (!isObject(element)) return false
@@ -47,9 +39,6 @@ const hasOwnFallback = (o: object, k: PropertyKey): boolean =>
 
 export const hasOwn = (o: object, k: PropertyKey): boolean =>
   Object.hasOwn ? Object.hasOwn(o, k) : hasOwnFallback(o, k)
-
-export const isDarkModeEnabled = (): boolean =>
-  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const id = <T>(x: T): T => x
 
