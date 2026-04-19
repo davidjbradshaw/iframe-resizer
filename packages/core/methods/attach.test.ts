@@ -58,13 +58,13 @@ describe('core/methods/attach', () => {
     expect(version.child).toBe('1.2.3')
   })
 
-  test('getVersion returns unknown when child version not set', () => {
+  test('getVersion returns legacy when child version not set', () => {
     const iframe = { id: 'if1' }
     settings.if1 = { iframe }
 
     attachMethods('if1')
 
-    expect(iframe.iframeResizer.getVersion().child).toBe('unknown')
+    expect(iframe.iframeResizer.getVersion().child).toBe('legacy')
   })
 
   test('does nothing when settings[id] does not exist', () => {
