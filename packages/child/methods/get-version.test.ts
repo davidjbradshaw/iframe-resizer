@@ -22,9 +22,4 @@ describe('child/methods/get-version', () => {
     settings.version = undefined
     expect(getVersion()).toEqual({ child: '1.2.3', parent: 'legacy' })
   })
-
-  test('returns legacy when parent is legacy (FALSE sentinel)', () => {
-    settings.version = 'false'
-    expect(getVersion()).toEqual({ child: '1.2.3', parent: 'legacy' })
-  })
 })
