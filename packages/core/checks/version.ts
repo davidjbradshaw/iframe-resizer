@@ -2,11 +2,13 @@ import { VERSION } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { advise, log } from '../console'
+import settings from '../values/settings'
 
 export default function checkVersion(
   id: string,
   version: string | undefined,
 ): void {
+  if (settings[id]) settings[id].childVersion = version
   if (version === VERSION) return
   if (version === undefined) {
     advise(
