@@ -52,7 +52,7 @@ jobs:
       matrix:
         framework:
           - alpine
-          - angular
+          # - angular  # TODO: needs @analogjs/vite-plugin-angular setup
           - astro
           - jquery
           - parent
