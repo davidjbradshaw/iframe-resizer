@@ -8,14 +8,14 @@ import { IframeResizerDirective } from '@iframe-resizer/angular'
   template: `
     <h2>@iframe-resizer/angular example</h2>
     <iframe
-      iframeResizer
+      iframe-resizer
       [options]="{
         license: 'GPLv3',
         log: true,
         inPageLinks: true
       }"
       id="myIframe"
-      src="child/frame.content.html"
+      src="child/frame.test.html"
       style="width: 100%; height: 100vh"
       (onMessage)="onMessage($event)"
       (onResized)="onResized($event)"
