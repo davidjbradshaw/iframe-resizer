@@ -22,7 +22,7 @@ import filterIframeAttribs from './filter-iframe-attribs'
 export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
   /** @deprecated Use getRef() instead */
   getElement: () => IFrameComponent
-  getRef: () => RefObject<HTMLIFrameElement | null>
+  getRef: () => RefObject<IFrameComponent | null>
 }
 
 type IframeProps = React.DetailedHTMLProps<
@@ -43,7 +43,14 @@ function IframeResizer(
   const { log, logExpand } = props
   const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef<IFrameComponent>(null)
-  const consoleGroup = createAutoConsoleGroup()
+  const consoleGroupRef =
+    useRef<ReturnType<typeof createAutoConsoleGroup>>(null)
+
+  if (!consoleGroupRef.current) {
+    consoleGroupRef.current = createAutoConsoleGroup()
+  }
+
+  const consoleGroup = consoleGroupRef.current
 
   const onBeforeClose = (): boolean => {
     consoleGroup.event('close')
@@ -58,12 +65,11 @@ function IframeResizer(
   // deal with changes to the element and does not need recalling
   useEffect(() => {
     const iframe = iframeRef.current
-    const resizerOptions = { ...props, onBeforeClose }
 
     consoleGroup.label(`react(${iframe.id})`)
     consoleGroup.event('setup')
 
-    const resizer = connectResizer(resizerOptions)(iframe)
+    const resizer = connectResizer({ ...props, onBeforeClose })(iframe)
 
     consoleGroup.expand(logExpand)
     if (log) consoleGroup.log('Created React component')
@@ -74,16 +80,20 @@ function IframeResizer(
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useImperativeHandle(ref, () => ({
-    getRef: () => iframeRef,
-    getElement: () => iframeRef.current,
-    getVersion: () => iframeRef.current.iframeResizer.getVersion(),
-    moveToAnchor: (anchor: string) =>
-      iframeRef.current.iframeResizer.moveToAnchor(anchor),
-    sendMessage: (message: any, targetOrigin?: string) => {
-      iframeRef.current.iframeResizer.sendMessage(message, targetOrigin)
-    },
-  }))
+  useImperativeHandle(
+    ref,
+    () => ({
+      getRef: () => iframeRef,
+      getElement: () => iframeRef.current,
+      getVersion: () => iframeRef.current.iframeResizer.getVersion(),
+      moveToAnchor: (anchor: string) =>
+        iframeRef.current.iframeResizer.moveToAnchor(anchor),
+      sendMessage: (message: any, targetOrigin?: string) => {
+        iframeRef.current.iframeResizer.sendMessage(message, targetOrigin)
+      },
+    }),
+    [],
+  )
 
   // eslint-disable-next-line jsx-a11y/iframe-has-title
   return <iframe {...filteredProps} ref={iframeRef} />
