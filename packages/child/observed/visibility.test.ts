@@ -1,3 +1,4 @@
+import { VISIBILITY_OBSERVER } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('../console', () => ({ log: vi.fn() }))
@@ -20,7 +21,7 @@ describe('child/observed/visibility', () => {
     expect(log).toHaveBeenCalled()
     expect(state.isHidden).toBe(false)
     expect(sendSize).toHaveBeenCalledWith(
-      'visibilityObserver',
+      VISIBILITY_OBSERVER,
       'Visibility changed',
     )
   })
@@ -31,7 +32,7 @@ describe('child/observed/visibility', () => {
     expect(log).toHaveBeenCalled()
     expect(state.isHidden).toBe(true)
     expect(sendSize).toHaveBeenCalledWith(
-      'visibilityObserver',
+      VISIBILITY_OBSERVER,
       'Visibility changed',
     )
   })
