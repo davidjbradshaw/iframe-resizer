@@ -1,0 +1,26 @@
+{
+  "name": "e2e-angular",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@angular/common": "^16.2.0",
+    "@angular/compiler": "^16.2.0",
+    "@angular/core": "^16.2.0",
+    "@angular/platform-browser": "^16.2.0",
+    "@angular/platform-browser-dynamic": "^16.2.0",
+    "@iframe-resizer/angular": "file:../../../dist/angular",
+    "@iframe-resizer/common": "file:../../../dist/common",
+    "@iframe-resizer/core": "file:../../../dist/core",
+    "rxjs": "^7.8.0",
+    "zone.js": "^0.13.0"
+  },
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^1.15.0",
+    "@angular/compiler-cli": "^16.2.0",
+    "typescript": "~5.1.0",
+    "vite": "^7.3.2"
+  }
+}
