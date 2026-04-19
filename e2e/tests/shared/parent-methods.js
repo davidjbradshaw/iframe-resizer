@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { assertChildText, waitForResizer } from './utils.js'
+import { assertChildText, waitForResizer } from './utils'
 
 /**
  * Shared parent-side method tests.
@@ -26,9 +26,7 @@ export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
     const scrollBefore = await page.evaluate(() => window.scrollY)
 
     await page.evaluate(() => {
-      document
-        .querySelector('iframe')
-        .iframeResizer.moveToAnchor('test-anchor')
+      document.querySelector('iframe').iframeResizer.moveToAnchor('test-anchor')
     })
 
     await page.waitForFunction(
