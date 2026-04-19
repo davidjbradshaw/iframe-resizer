@@ -22,6 +22,7 @@ const TYPE_EXPORTS = [
   'IFrameResizedData',
   'IFrameScrollData',
   'IFrameScrollOption',
+  'IFrameVersion',
 ]
 
 const PACKAGES: Record<string, string> = {

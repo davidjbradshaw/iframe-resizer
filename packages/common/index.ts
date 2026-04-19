@@ -8,4 +8,5 @@ export {
   getModeLabel,
   default as setMode,
 } from './mode'
+export type { IFrameVersion } from './types'
 export * from './utils'

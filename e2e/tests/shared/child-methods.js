@@ -100,6 +100,33 @@ export function childTests(baseUrl) {
     expect(props).toContain('iframe')
   })
 
+  test('getVersion returns child and parent versions', async ({ page }) => {
+    await page.goto(baseUrl)
+    await page.waitForLoadState('networkidle')
+    await waitForResizer(page)
+
+    await page.frameLocator('iframe').locator('#btn-get-versions').click()
+
+    await page.waitForFunction(
+      () => {
+        const iframe = document.querySelector('iframe')
+        const el = iframe?.contentDocument?.querySelector('#get-versions')
+        return el?.textContent !== 'unknown'
+      },
+      { timeout: 5000 },
+    )
+
+    const versions = await page
+      .frameLocator('iframe')
+      .locator('#get-versions')
+      .textContent()
+    const parsed = JSON.parse(versions)
+    expect(parsed.child).toBeTruthy()
+    expect(parsed.parent).toBeTruthy()
+    expect(parsed.child).not.toBe('unknown')
+    expect(parsed.parent).not.toBe('unknown')
+  })
+
   test('sendMessage from child reaches parent', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
