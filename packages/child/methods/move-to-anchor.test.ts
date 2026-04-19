@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import state from '../values/state'
-import moveToAnchor from './move-to-anchor'
+vi.mock('../console', () => ({ advise: vi.fn() }))
+
+const { advise } = await import('../console')
+const state = (await import('../values/state')).default
+const moveToAnchor = (await import('./move-to-anchor')).default
 
 describe('child/methods/move-to-anchor', () => {
   beforeEach(() => {
@@ -16,5 +19,11 @@ describe('child/methods/move-to-anchor', () => {
 
   it('throws TypeError when anchor is not a string', () => {
     expect(() => moveToAnchor(123)).toThrowError(TypeError)
+  })
+
+  it('advises when inPageLinks is not enabled', () => {
+    state.inPageLinks = undefined
+    moveToAnchor('section-1')
+    expect(advise).toHaveBeenCalledWith(expect.stringContaining('inPageLinks'))
   })
 })
