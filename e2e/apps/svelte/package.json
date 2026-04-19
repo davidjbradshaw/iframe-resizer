@@ -1,0 +1,18 @@
+{
+  "name": "e2e-svelte",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@iframe-resizer/svelte": "file:../../../dist/svelte",
+    "@iframe-resizer/common": "file:../../../dist/common",
+    "@iframe-resizer/core": "file:../../../dist/core",
+    "svelte": "^5.55.3"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "vite": "^7.3.2"
+  }
+}

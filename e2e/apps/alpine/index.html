@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alpine E2E Test</title>
+  </head>
+  <body>
+    <div
+      x-data="{
+        messageData: null,
+        get iframeOptions() {
+          const self = this
+          return {
+            license: 'GPLv3',
+            log: true,
+            inPageLinks: true,
+            onResized(data) { self.messageData = data },
+            onMessage(data) {
+              self.messageData = data
+              alert('Message from frame ' + data.iframe.id + ': ' + data.message)
+              data.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+            }
+          }
+        }
+      }"
+    >
+      <h2>@iframe-resizer/alpine example</h2>
+
+      <iframe
+        x-iframe-resizer="iframeOptions"
+        id="myIframe"
+        src="child/frame.test.html"
+        style="width: 100%; height: 100vh"
+      ></iframe>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

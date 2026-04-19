@@ -22,3 +22,9 @@ example/astro/.astro/
 e2e/fixtures/react/
 e2e/fixtures/vue/
 e2e/apps/*/node_modules/
+e2e/fixtures/alpine/
+e2e/fixtures/angular/
+e2e/fixtures/astro/
+e2e/fixtures/solid/
+e2e/fixtures/svelte/
+e2e/apps/*/node_modules/

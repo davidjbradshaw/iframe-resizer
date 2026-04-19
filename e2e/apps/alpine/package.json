@@ -1,0 +1,17 @@
+{
+  "name": "e2e-alpine",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@iframe-resizer/alpine": "file:../../../dist/alpine",
+    "@iframe-resizer/common": "file:../../../dist/common",
+    "@iframe-resizer/core": "file:../../../dist/core",
+    "alpinejs": "^3.15.11"
+  },
+  "devDependencies": {
+    "vite": "^7.3.2"
+  }
+}

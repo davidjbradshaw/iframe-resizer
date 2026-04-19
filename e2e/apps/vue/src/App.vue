@@ -19,7 +19,7 @@
   <h2>@iframe-resizer/vue example</h2>
   <IframeResizer
     id="myframe"
-    src="child/frame.content.html"
+    src="child/frame.test.html"
     license="GPLv3"
     log="collapsed"
     inPageLinks

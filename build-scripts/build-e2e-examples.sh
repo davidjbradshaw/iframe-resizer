@@ -1,23 +1,20 @@
 #!/bin/bash
-set -euo pipefail
 
-# Build e2e framework apps into e2e/fixtures/
-# These are self-contained apps in e2e/apps/ that use dist/ packages
+# Build all e2e framework apps
+# For CI, each framework is built individually via build-e2e-app.sh
+# This script is for local use - builds all at once
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+FAILED=0
 
-for name in react vue; do
-  echo "=== Building e2e/$name ==="
-  cd "$ROOT/e2e/apps/$name"
-
-  npm install
-  npm run build
-
-  # Add child pages from fixtures
-  rm -rf "$ROOT/e2e/fixtures/$name/child"
-  cp -r "$ROOT/e2e/fixtures/child" "$ROOT/e2e/fixtures/$name/child"
-
-  cd "$ROOT"
+for dir in "$ROOT"/e2e/apps/*/; do
+  name=$(basename "$dir")
+  if ! bash "$ROOT/build-scripts/build-e2e-app.sh" "$name"; then
+    echo "WARNING: $name build failed"
+    FAILED=$((FAILED + 1))
+  fi
 done
 
-echo "Done"
+if [ $FAILED -gt 0 ]; then
+  echo "$FAILED framework(s) failed to build"
+fi
