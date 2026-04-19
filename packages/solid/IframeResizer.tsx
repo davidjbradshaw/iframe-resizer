@@ -36,7 +36,6 @@ export type IframeResizerProps = {
   offsetSize?: number
   scrolling?: IFrameScrollOption
   tolerance?: number
-  waitForLoad?: boolean
   warningTimeout?: number
   onReady?: (iframe: IFrameComponent) => void
   onMessage?: (data: IFrameMessageData) => void
@@ -62,7 +61,6 @@ const RESIZER_KEYS = [
   'offsetSize',
   'scrolling',
   'tolerance',
-  'waitForLoad',
   'warningTimeout',
   'onReady',
   'onMessage',
@@ -91,7 +89,6 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
       offsetSize,
       scrolling,
       tolerance,
-      waitForLoad,
       warningTimeout,
       onReady,
       onMessage,
@@ -123,7 +120,6 @@ export default function IframeResizer(props: IframeResizerProps): JSX.Element {
           warningTimeout,
         }).filter(([, v]) => v !== undefined),
       ),
-      waitForLoad: waitForLoad ?? true,
       onBeforeClose: () => {
         consoleGroup.warn(
           'Close method is disabled, use Solid to remove the iframe.',

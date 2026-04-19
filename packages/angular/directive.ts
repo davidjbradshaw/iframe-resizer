@@ -74,7 +74,6 @@ export class IframeResizerDirective {
 
     this.resizer = connectResizer({
       ...this.options,
-      waitForLoad: true,
 
       onBeforeClose: () => {
         this.consoleGroup.event('close')

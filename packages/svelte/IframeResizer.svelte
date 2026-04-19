@@ -50,8 +50,6 @@
       ...Object.fromEntries(
         Object.entries(props).filter(([, value]) => value !== undefined),
       ),
-      waitForLoad: true,
-
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
         consoleGroup.warn(
