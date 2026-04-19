@@ -136,6 +136,13 @@
       }
     },
     {
+      "files": ["e2e/**/*.js"],
+      "rules": {
+        "import/extensions": 0,
+        "import/prefer-default-export": 0
+      }
+    },
+    {
       "files": ["spec/**"],
       "globals": {
         "jasmine": true,

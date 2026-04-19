@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { assertChildText, waitForResizer } from './utils.js'
+import { assertChildText, waitForResizer } from './utils'
 
 /**
  * Shared child-side tests — events, methods, page events, and attributes.
@@ -229,7 +229,9 @@ export function childTests(baseUrl) {
     await waitForResizer(page)
 
     await page.waitForFunction(
-      () => document.querySelector('iframe')?.getAttribute('title') === 'E2E Test Child',
+      () =>
+        document.querySelector('iframe')?.getAttribute('title') ===
+        'E2E Test Child',
     )
 
     const title = await page.locator('iframe').getAttribute('title')

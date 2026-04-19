@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { waitForResizer } from './utils.js'
+import { waitForResizer } from './utils'
 
 /**
  * Shared parent-side event handler tests.
