@@ -61,19 +61,10 @@ export function childTests(baseUrl) {
 
     await page.frameLocator('iframe').locator('#btn-get-origin').click()
 
-    await page.waitForFunction(
-      () => {
-        const iframe = document.querySelector('iframe')
-        const el = iframe?.contentDocument?.querySelector('#get-origin')
-        return el?.textContent !== 'unknown'
-      },
-      { timeout: 5000 },
-    )
+    const originLocator = page.frameLocator('iframe').locator('#get-origin')
+    await expect(originLocator).not.toHaveText('unknown', { timeout: 5000 })
 
-    const origin = await page
-      .frameLocator('iframe')
-      .locator('#get-origin')
-      .textContent()
+    const origin = await originLocator.textContent()
     expect(origin).toContain('localhost')
   })
 

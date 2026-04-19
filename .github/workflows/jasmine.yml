@@ -15,7 +15,7 @@ on:
 
 jobs:
   integration-tests:
-    name: Run integration tests on Karma
+    name: Integration tests on Karma
     runs-on: ubuntu-latest
 
     strategy:
