@@ -18,7 +18,8 @@ export default function attachMethods(id: string): void {
 
       getVersion(): IFrameVersion {
         return {
-          child: settings[id]?.childVersion || 'legacy',
+          child:
+            (settings[id]?.childVersion as IFrameVersion['child']) || 'legacy',
           parent: VERSION,
         }
       },

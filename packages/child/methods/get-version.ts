@@ -6,6 +6,6 @@ import settings from '../values/settings'
 export default function getVersion(): IFrameVersion {
   return {
     child: VERSION,
-    parent: settings.version || 'legacy',
+    parent: (settings.version as IFrameVersion['parent']) || 'legacy',
   }
 }

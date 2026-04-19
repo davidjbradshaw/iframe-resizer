@@ -1,4 +1,4 @@
-export const VERSION = '[VI]{version}[/VI]'
+export const VERSION = '[VI]{version}[/VI]' as import('./types').SemVer
 export const LABEL = 'iframeResizer'
 export const SEPARATOR = ':'
 
