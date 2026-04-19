@@ -1,12 +1,12 @@
 import { Component } from '@angular/core'
-import { IframeResizerDirective } from '@iframe-resizer/angular'
+import { IframeResizerDirective } from './iframe-resizer.directive'
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [IframeResizerDirective],
   template: `
-    <h2>@iframe-resizer/angular example</h2>
+    <h2>iframe-resizer/angular example</h2>
     <iframe
       iframe-resizer
       [options]="{

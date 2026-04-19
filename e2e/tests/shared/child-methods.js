@@ -289,16 +289,19 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    await page.evaluate(() => {
+    // Framework wrappers block close, vanilla removes iframe
+    const iframeRemoved = await page.evaluate(() => {
       const iframe = document.querySelector('iframe')
-      try {
-        iframe.iframeResizer.close()
-      } catch {
-        // Framework wrappers block close
-      }
+      iframe.iframeResizer.close()
+      return document.querySelector('iframe') === null
     })
 
-    await page.waitForTimeout(500)
-    // Just verify no crash
+    if (iframeRemoved) {
+      // Vanilla parent — iframe was removed
+      await expect(page.locator('iframe')).toHaveCount(0)
+    } else {
+      // Framework wrapper — iframe should still be present
+      await expect(page.locator('iframe')).toBeVisible()
+    }
   })
 }
