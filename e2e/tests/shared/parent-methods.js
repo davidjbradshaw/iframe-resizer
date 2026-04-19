@@ -1,13 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const INIT_TIMEOUT = 10000
-
-async function waitForResizer(page) {
-  await page.waitForFunction(
-    () => document.querySelector('iframe')?.iframeResizer !== undefined,
-    { timeout: INIT_TIMEOUT },
-  )
-}
+import { assertChildText, waitForResizer } from './utils.js'
 
 /**
  * Shared parent-side method tests.
@@ -22,13 +15,7 @@ export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
       document.querySelector('iframe').iframeResizer.sendMessage('test-msg')
     })
 
-    await page.waitForTimeout(500)
-
-    const received = await page
-      .frameLocator('iframe')
-      .locator('#last-message')
-      .textContent()
-    expect(received).toBe('test-msg')
+    await assertChildText(page, '#last-message', 'test-msg')
   })
 
   test('moveToAnchor scrolls to named anchor', async ({ page }) => {
@@ -36,13 +23,19 @@ export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
+    const scrollBefore = await page.evaluate(() => window.scrollY)
+
     await page.evaluate(() => {
       document
         .querySelector('iframe')
         .iframeResizer.moveToAnchor('test-anchor')
     })
 
-    await page.waitForTimeout(500)
+    await page.waitForFunction(
+      (prev) => window.scrollY !== prev,
+      scrollBefore,
+      { timeout: 5000 },
+    )
   })
 
   if (hasDisconnect) {

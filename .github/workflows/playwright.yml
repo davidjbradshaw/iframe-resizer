@@ -42,7 +42,7 @@ jobs:
         retention-days: 1
 
   e2e:
-    name: E2E ${{ matrix.framework }}
+    name: ${{ matrix.framework }}
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -1,13 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const INIT_TIMEOUT = 10000
-
-async function waitForResizer(page) {
-  await page.waitForFunction(
-    () => document.querySelector('iframe')?.iframeResizer !== undefined,
-    { timeout: INIT_TIMEOUT },
-  )
-}
+import { waitForResizer } from './utils.js'
 
 /**
  * Shared parent-side event handler tests.
@@ -41,13 +34,14 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    page.on('dialog', async (dialog) => {
-      expect(dialog.type()).toBe('alert')
-      await dialog.accept()
-    })
+    // Some frameworks show alerts, some use custom events
+    page.on('dialog', (dialog) => dialog.accept())
 
     await page.frameLocator('iframe').locator('#btn-send-message').click()
     await page.waitForTimeout(500)
+
+    // Verify iframe still functional
+    await expect(page.locator('iframe')).toBeVisible()
   })
 
   test('onScroll callback is invoked', async ({ page }) => {
@@ -55,8 +49,17 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
+    const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-to').click()
-    await page.waitForTimeout(500)
+
+    await page.waitForFunction(
+      (prev) => window.scrollY !== prev,
+      scrollBefore,
+      { timeout: 5000 },
+    )
+
+    const scrollAfter = await page.evaluate(() => window.scrollY)
+    expect(scrollAfter).not.toBe(scrollBefore)
   })
 
   if (blocksClose) {
@@ -66,9 +69,9 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
       await waitForResizer(page)
 
       await page.frameLocator('iframe').locator('#btn-close').click()
-      await page.waitForTimeout(500)
 
-      // iframe should still be present
+      // Wait a beat then verify iframe is still present
+      await page.waitForTimeout(500)
       await expect(page.locator('iframe')).toBeVisible()
     })
   }

@@ -1,13 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const INIT_TIMEOUT = 10000
-
-async function waitForResizer(page) {
-  await page.waitForFunction(
-    () => document.querySelector('iframe')?.iframeResizer !== undefined,
-    { timeout: INIT_TIMEOUT },
-  )
-}
+import { assertChildText, waitForResizer } from './utils.js'
 
 /**
  * Shared child-side tests — events, methods, page events, and attributes.
@@ -20,11 +13,7 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    const status = await page
-      .frameLocator('iframe')
-      .locator('#ready-status')
-      .textContent()
-    expect(status).toBe('ready')
+    await assertChildText(page, '#ready-status', 'ready')
   })
 
   test('onMessage receives data from parent', async ({ page }) => {
@@ -35,13 +24,8 @@ export function childTests(baseUrl) {
     await page.evaluate(() => {
       document.querySelector('iframe').iframeResizer.sendMessage('parent-msg')
     })
-    await page.waitForTimeout(500)
 
-    const received = await page
-      .frameLocator('iframe')
-      .locator('#last-message')
-      .textContent()
-    expect(received).toBe('parent-msg')
+    await assertChildText(page, '#last-message', 'parent-msg')
   })
 
   // --- Child methods ---
@@ -52,7 +36,15 @@ export function childTests(baseUrl) {
     await waitForResizer(page)
 
     await page.frameLocator('iframe').locator('#btn-get-id').click()
-    await page.waitForTimeout(200)
+
+    await page.waitForFunction(
+      () => {
+        const iframe = document.querySelector('iframe')
+        const el = iframe?.contentDocument?.querySelector('#get-id')
+        return el?.textContent !== 'unknown'
+      },
+      { timeout: 5000 },
+    )
 
     const id = await page
       .frameLocator('iframe')
@@ -68,7 +60,15 @@ export function childTests(baseUrl) {
     await waitForResizer(page)
 
     await page.frameLocator('iframe').locator('#btn-get-origin').click()
-    await page.waitForTimeout(200)
+
+    await page.waitForFunction(
+      () => {
+        const iframe = document.querySelector('iframe')
+        const el = iframe?.contentDocument?.querySelector('#get-origin')
+        return el?.textContent !== 'unknown'
+      },
+      { timeout: 5000 },
+    )
 
     const origin = await page
       .frameLocator('iframe')
@@ -83,13 +83,20 @@ export function childTests(baseUrl) {
     await waitForResizer(page)
 
     await page.frameLocator('iframe').locator('#btn-get-props').click()
-    await page.waitForTimeout(500)
+
+    await page.waitForFunction(
+      () => {
+        const iframe = document.querySelector('iframe')
+        const el = iframe?.contentDocument?.querySelector('#get-props')
+        return el?.textContent !== 'unknown'
+      },
+      { timeout: 5000 },
+    )
 
     const props = await page
       .frameLocator('iframe')
       .locator('#get-props')
       .textContent()
-    expect(props).not.toBe('unknown')
     expect(props).toContain('iframe')
   })
 
@@ -98,12 +105,12 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    page.on('dialog', async (dialog) => {
-      await dialog.accept()
-    })
+    page.on('dialog', (dialog) => dialog.accept())
 
     await page.frameLocator('iframe').locator('#btn-send-message').click()
     await page.waitForTimeout(500)
+
+    await expect(page.locator('iframe')).toBeVisible()
   })
 
   test('resize sets iframe dimensions', async ({ page }) => {
@@ -112,12 +119,20 @@ export function childTests(baseUrl) {
     await waitForResizer(page)
 
     await page.frameLocator('iframe').locator('#btn-resize').click()
-    await page.waitForTimeout(1000)
+
+    await page.waitForFunction(
+      () => {
+        const iframe = document.querySelector('iframe')
+        return iframe && Math.abs(iframe.offsetHeight - 200) < 20
+      },
+      { timeout: 5000 },
+    )
 
     const height = await page
       .locator('iframe')
       .evaluate((el) => el.offsetHeight)
-    expect(height).toBeGreaterThan(0)
+    expect(height).toBeGreaterThan(180)
+    expect(height).toBeLessThan(220)
   })
 
   test('scrollTo triggers parent scroll', async ({ page }) => {
@@ -125,8 +140,14 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
+    const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-to').click()
-    await page.waitForTimeout(500)
+
+    await page.waitForFunction(
+      (prev) => window.scrollY !== prev,
+      scrollBefore,
+      { timeout: 5000 },
+    )
   })
 
   test('scrollBy triggers parent scroll', async ({ page }) => {
@@ -134,8 +155,14 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
+    const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-by').click()
-    await page.waitForTimeout(500)
+
+    await page.waitForFunction(
+      (prev) => window.scrollY !== prev,
+      scrollBefore,
+      { timeout: 5000 },
+    )
   })
 
   test('scrollToOffset triggers parent scroll', async ({ page }) => {
@@ -143,17 +170,29 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
+    const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-offset').click()
-    await page.waitForTimeout(500)
+
+    await page.waitForFunction(
+      (prev) => window.scrollY !== prev,
+      scrollBefore,
+      { timeout: 5000 },
+    )
   })
 
-  test('moveToAnchor from child', async ({ page }) => {
+  test('moveToAnchor from child scrolls parent', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
+    const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-move-anchor').click()
-    await page.waitForTimeout(500)
+
+    await page.waitForFunction(
+      (prev) => window.scrollY !== prev,
+      scrollBefore,
+      { timeout: 5000 },
+    )
   })
 
   // --- Page events ---
@@ -168,12 +207,33 @@ export function childTests(baseUrl) {
       .evaluate((el) => el.offsetHeight)
 
     await page.frameLocator('iframe').locator('#btn-toggle').click()
-    await page.waitForTimeout(1000)
+
+    await page.waitForFunction(
+      (prev) => {
+        const iframe = document.querySelector('iframe')
+        return iframe && iframe.offsetHeight !== prev
+      },
+      initialHeight,
+      { timeout: 5000 },
+    )
 
     const newHeight = await page
       .locator('iframe')
       .evaluate((el) => el.offsetHeight)
     expect(newHeight).not.toBe(initialHeight)
+  })
+
+  test('initial title syncs to iframe attribute', async ({ page }) => {
+    await page.goto(baseUrl)
+    await page.waitForLoadState('networkidle')
+    await waitForResizer(page)
+
+    await page.waitForFunction(
+      () => document.querySelector('iframe')?.getAttribute('title') === 'E2E Test Child',
+    )
+
+    const title = await page.locator('iframe').getAttribute('title')
+    expect(title).toBe('E2E Test Child')
   })
 
   test('title change syncs to iframe attribute', async ({ page }) => {
@@ -227,19 +287,16 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    // For framework wrappers, close is blocked
-    // For vanilla parent, close removes the iframe
-    const blocksClose = await page.evaluate(() => {
+    await page.evaluate(() => {
       const iframe = document.querySelector('iframe')
       try {
         iframe.iframeResizer.close()
-        return document.querySelector('iframe') !== null
       } catch {
-        return true
+        // Framework wrappers block close
       }
     })
 
-    // Just verify no crash - frameworks block close, vanilla removes
-    expect(typeof blocksClose).toBe('boolean')
+    await page.waitForTimeout(500)
+    // Just verify no crash
   })
 }
