@@ -2,6 +2,8 @@
  * Type definitions for @iframe-resizer/child
  */
 
+import type { IFrameVersion } from '@iframe-resizer/common'
+
 /** Configuration options set via window.iframeResizer before loading the child script. */
 export interface PageOptions {
   /** Restrict which elements are checked for resizing. */
@@ -58,6 +60,8 @@ export interface ParentIframe {
   close(): void
   /** Returns the ID of the iframe. */
   getId(): string
+  /** Returns the child and parent iframe-resizer versions. */
+  getVersion(): IFrameVersion
   /** Returns the origin of the parent page. */
   getParentOrigin(): string
   /**
