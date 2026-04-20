@@ -9,7 +9,7 @@
  *
  */
 
-import { once } from './utils'
+import { once } from './functional'
 
 // Show licensing modal
 export default once(() => {

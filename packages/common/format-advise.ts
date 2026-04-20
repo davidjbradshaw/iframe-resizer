@@ -2,7 +2,7 @@
 /* eslint-disable security/detect-non-literal-regexp */
 
 import { NEW_LINE } from './consts'
-import { isString } from './utils'
+import { isString } from './type-check'
 
 const TAGS = {
   br: '\n',
