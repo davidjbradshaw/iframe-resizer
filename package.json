@@ -3,7 +3,7 @@
   "version": "6.0.0-beta.10",
   "private": true,
   "type": "module",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-only",
   "homepage": "https://iframe-resizer.com",
   "author": {
     "name": "David J. Bradshaw",
@@ -16,7 +16,6 @@
     "build:beta": "time npm run vite:beta",
     "build:dev": "time npm run vite:debug",
     "build:prod": "time npm run vite:prod",
-    "build:latest": "time npm run vite:prod",
     "build:test": "time npm run test",
     "eslint": "eslint packages/ build-scripts/ vite.config/ *.js *.cjs *.mjs --ext .js,.jsx,.mjs,.cjs,.ts,.tsx --color",
     "eslint:fix": "npm run eslint -- --fix",
@@ -29,7 +28,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "vite:test": "npm run eslint:fix && npm run typecheck && TEST=1 node build-scripts/build-all.js",
     "vite:test:ci": "npm run typecheck && TEST=1 node build-scripts/build-all.js",
-    "vite:prod": "npm run eslint:fix && node build-scripts/build-all.js",
+    "vite:prod": "npm run eslint:fix && npm run typecheck && node build-scripts/build-all.js",
     "test:all": "npm run vite:test && npm run test:e2e && npm run test:int && npm run test:unit",
     "test:all:ci": "npm run vite:test:ci && npm run test:e2e && npm run test:int && npm run test:unit",
     "test": "time npm run test:all",
@@ -43,7 +42,7 @@
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
-    "test:int:watch": "karma start --browsers Chrome karma.conf.cjs && karma run",
+    "test:int:watch": "karma start --browsers Chrome karma.conf.cjs",
     "upgrade": "time npm-check-updates -i && npm run build:clean"
   },
   "description": "Keep iframes sized to their content.",
@@ -51,7 +50,6 @@
     "type": "git",
     "url": "git+https://github.com/davidjbradshaw/iframe-resizer.git"
   },
-  "github": "https://github.com/davidjbradshaw/iframe-resizer",
   "funding": {
     "type": "individual",
     "url": "https://iframe-resizer.com/pricing/"
@@ -63,8 +61,7 @@
     "@iframe-resizer/core": "file:./packages/core/",
     "@iframe-resizer/parent": "file:./packages/parent/",
     "@iframe-resizer/react": "file:./packages/react/",
-    "auto-console-group": "1.3.0",
-    "react": "^19.2.4"
+    "auto-console-group": "1.3.0"
   },
   "devDependencies": {
     "@angular/core": "^16.0.0",
@@ -147,6 +144,7 @@
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
     "prettier": "^3.8.1",
+    "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "requirejs": "^2.3.8",
     "rollup": "^4.57.1",
@@ -157,7 +155,6 @@
     "rollup-plugin-generate-package-json": "^3.2.0",
     "rollup-plugin-strip-code": "^0.2.8",
     "rollup-plugin-version-injector": "^1.3.3",
-    "rollup-plugin-vue": "^6.0.0",
     "solid-js": "^1.9.0",
     "svelte": "^5.53.3",
     "tslib": "^2.8.1",
