@@ -12,23 +12,15 @@ on:
     branches: [ "master", "dev" ]
 
 jobs:
-
   build:
     name: Unit tests
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v6
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v6
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22.x
         cache: 'npm'
     - run: npm ci
-  #    - run: npm run build:prod --if-present
     - run: npm run test:unit
