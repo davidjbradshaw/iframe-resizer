@@ -74,13 +74,11 @@ When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes
 
 ## Version 6
 
-Version 6 expands the framework ecosystem with new official packages for **Svelte**, **Solid.js**, **Astro**, and **Alpine.js**, and migrates the React and Vue packages to **TypeScript**.
+Version 6 fully ports the codebase to **TypeScript**, delivering consistent type definitions across all packages and improved editor support.
 
-Other notable changes in this release:
+The framework ecosystem expands with official packages for **Svelte**, **Solid**, **Astro**, and **Alpine**, joining the existing React, Vue, Angular, and jQuery integrations.
 
-- **React**: The custom `forwardRef` prop has been replaced with the standard `React.forwardRef()` pattern — change `forwardRef={ref}` to `ref={ref}`
-- **Vue**: Vue 2 support has been dropped; the package now requires Vue 3
-- **Simplified sizing**: Custom height/width calculation methods have been removed in favour of automatic mode, which selects the optimal method for your page
+The child page script has been hardened for cross-origin and SSR environments, with improved same-origin optimisation that bypasses `postMessage` entirely when parent and child share an origin.
 
 If you are upgrading from a previous version, please see the [Upgrade Guide](https://iframe-resizer.com/upgrade).
 
