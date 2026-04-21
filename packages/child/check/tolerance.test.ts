@@ -28,7 +28,7 @@ describe('child/check/tolerance', () => {
     expect(tolerance(8, 10)).toBe(false)
   })
 
-  it('returns true when values are identical and tolerance is 0', () => {
+  it('returns false when values are identical and tolerance is 0', () => {
     settings.tolerance = 0
 
     expect(tolerance(10, 10)).toBe(false)

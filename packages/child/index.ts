@@ -16,9 +16,9 @@ function iframeResizerChild(): void {
     return
   }
 
-  window.iframeChildListener = ((data: any) => {
+  window.iframeChildListener = (data: any) => {
     setTimeout(() => received({ data, sameOrigin: true }))
-  }) as typeof window.iframeChildListener
+  }
   consoleEvent('listen')
   addEventListener(window, MESSAGE, received)
   addEventListener(document, READY_STATE_CHANGE, ready)

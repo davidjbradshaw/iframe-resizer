@@ -24,6 +24,7 @@ describe('child/methods/offset-size', () => {
   })
 
   it('throws TypeError for non-number argument', () => {
+    // @ts-expect-error testing runtime type check with wrong type
     expect(() => setOffsetSize('abc')).toThrow(TypeError)
   })
 })

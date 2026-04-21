@@ -18,6 +18,7 @@ describe('child/methods/move-to-anchor', () => {
   })
 
   it('throws TypeError when anchor is not a string', () => {
+    // @ts-expect-error testing runtime type check with wrong type
     expect(() => moveToAnchor(123)).toThrowError(TypeError)
   })
 
