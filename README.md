@@ -74,11 +74,9 @@ When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes
 
 ## Version 6
 
-Version 6 fully ports the codebase to **TypeScript**, delivering consistent type definitions across all packages and improved editor support.
+Version 6 fully ports the codebase to **TypeScript**, and replaces the old _@definitelyTyped_ based types with consistent type definitions that now cover all packages in full.
 
-The framework ecosystem expands with official packages for **Svelte**, **Solid**, **Astro**, and **Alpine**, joining the existing React, Vue, Angular, and jQuery integrations.
-
-The child page script has been hardened for cross-origin and SSR environments, with improved same-origin optimisation that bypasses `postMessage` entirely when parent and child share an origin.
+The framework ecosystem expands with official packages for **Svelte**, **Solid**, **Astro**, and **Alpine**, joining the existing React, Vue, Angular, and jQuery integrations. Same-origin iframes now bypass `postMessage` entirely for improved performance.
 
 If you are upgrading from a previous version, please see the [Upgrade Guide](https://iframe-resizer.com/upgrade).
 
