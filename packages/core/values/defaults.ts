@@ -18,7 +18,7 @@ export default Object.freeze({
   offsetHeight: null,
   offsetWidth: null,
   postMessageTarget: null,
-  sameDomain: false,
+  sameOrigin: true,
   scrolling: false,
   sizeHeight: true,
   // sizeSelector: '',

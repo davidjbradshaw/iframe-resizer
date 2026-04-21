@@ -70,6 +70,8 @@ export default function init(id: string, message: string): void {
 
     const { firstRun, iframe } = settings[id]
 
+    if (firstRun) settings[id].sameOrigin = true
+
     trigger(eventType, message, id)
     if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
