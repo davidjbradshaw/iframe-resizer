@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>E2E Test Child</title>
+    <script type="text/javascript" src="/dist/child/index.umd.js"></script>
+    <script>
+      window.iframeResizer = {
+        onReady() {
+          document.getElementById('ready-status').textContent = 'ready'
+        },
+        onMessage(message) {
+          document.getElementById('last-message').textContent = message
+        },
+        onBeforeResize(newSize) {
+          document.getElementById('before-resize').textContent = newSize
+          return newSize
+        },
+      }
+    </script>
+    <style>
+      body { margin: 8px; font-family: sans-serif; }
+      #test-controls a { display: inline-block; margin: 2px 4px; }
+      .test-output { background: #f0f0f0; padding: 4px; margin: 4px 0; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h3>E2E Test Child Page</h3>
+
+    <!-- Test status indicators -->
+    <div class="test-output">
+      Ready: <span id="ready-status">pending</span> |
+      Last message: <span id="last-message">none</span> |
+      Before resize: <span id="before-resize">none</span> |
+      getId: <span id="get-id">unknown</span> |
+      getParentOrigin: <span id="get-origin">unknown</span> |
+      getParentProps: <span id="get-props">unknown</span> |
+      getVersion: <span id="get-versions">unknown</span>
+    </div>
+
+    <!-- Test controls -->
+    <div id="test-controls">
+      <a href="#" id="btn-send-message" onclick="parentIframe.sendMessage('hello from child'); return false">sendMessage</a>
+      <a href="#" id="btn-get-id" onclick="document.getElementById('get-id').textContent = parentIframe.getId(); return false">getId</a>
+      <a href="#" id="btn-get-origin" onclick="document.getElementById('get-origin').textContent = parentIframe.getParentOrigin(); return false">getParentOrigin</a>
+      <a href="#" id="btn-get-props" onclick="parentIframe.getParentProps(function(d) { document.getElementById('get-props').textContent = JSON.stringify(d).slice(0, 50) }); return false">getParentProps</a>
+      <a href="#" id="btn-get-versions" onclick="document.getElementById('get-versions').textContent = JSON.stringify(parentIframe.getVersion()); return false">getVersion</a>
+      <a href="#" id="btn-resize" onclick="parentIframe.autoResize(false); parentIframe.resize(200); return false">resize(200)</a>
+      <a href="#" id="btn-resize-both" onclick="parentIframe.resize(200, 400); return false">resize(200,400)</a>
+      <a href="#" id="btn-scroll-to" onclick="parentIframe.scrollTo(0, 100); return false">scrollTo</a>
+      <a href="#" id="btn-scroll-by" onclick="parentIframe.scrollBy(0, 50); return false">scrollBy</a>
+      <a href="#" id="btn-scroll-offset" onclick="parentIframe.scrollToOffset(0, 50); return false">scrollToOffset</a>
+      <a href="#" id="btn-move-anchor" onclick="parentIframe.moveToAnchor('test-anchor'); return false">moveToAnchor</a>
+      <a href="#" id="btn-close" onclick="parentIframe.close(); return false">close</a>
+      <a href="#" id="btn-toggle" onclick="document.getElementById('toggle-content').style.display = document.getElementById('toggle-content').style.display === 'none' ? '' : 'none'; return false">toggleContent</a>
+      <a href="#" id="btn-change-title" onclick="document.title = 'Updated Title'; return false">changeTitle</a>
+    </div>
+
+    <!-- Content for resize testing -->
+    <div id="toggle-content">
+      <p>This content can be toggled to test resize detection.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+    </div>
+
+    <!-- Anchor for moveToAnchor testing -->
+    <div style="height: 500px"></div>
+    <a name="test-anchor" id="test-anchor"></a>
+    <p>Anchor target</p>
+
+    <!-- Attribute testing -->
+    <div data-iframe-size style="padding: 10px; background: #eef">
+      This div has data-iframe-size attribute
+    </div>
+
+    <div data-iframe-ignore style="position: absolute; top: 9999px; height: 5000px; background: #fee">
+      This div has data-iframe-ignore attribute (should not affect size)
+    </div>
+  </body>
+</html>

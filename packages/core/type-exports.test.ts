@@ -34,6 +34,7 @@ const PACKAGES: Record<string, string> = {
   solid: 'index.ts',
   svelte: 'index.ts',
   vue: 'index.ts',
+  'web-component': 'index.ts',
 }
 
 const SFC_GENERATORS: Record<string, () => string> = {

@@ -19,6 +19,7 @@ const packages = [
   { name: 'svelte', type: 'vite', postBuild: true },
   { name: 'solid', type: 'vite', postBuild: true },
   { name: 'alpine', type: 'vite' },
+  { name: 'web-component', type: 'vite' },
   { name: 'angular', type: 'vite' },
   { name: 'astro', type: 'vite', postBuild: true },
   { name: 'jquery', type: 'rollup' },

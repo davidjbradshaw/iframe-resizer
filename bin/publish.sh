@@ -16,6 +16,7 @@ PACKAGES=(
   solid
   svelte
   vue
+  web-component
 )
 
 if [ -z "$1" ]; then

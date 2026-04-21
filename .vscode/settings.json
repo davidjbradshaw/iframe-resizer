@@ -2,6 +2,10 @@
   "cSpell.words": [
     "alpinejs",
     "Automagically",
+    "bodybackground",
+    "bodymargin",
+    "bodypadding",
+    "checkorigin",
     "chorizontal",
     "ciframe",
     "cnone",
@@ -16,13 +20,16 @@
     "initialisation",
     "Initialised",
     "Initialising",
+    "inpagelinks",
     "javascripts",
     "logcapture",
     "Loggable",
     "networkidle",
+    "offsetsize",
     "sarif",
     "scanjs",
-    "sonarjs"
+    "sonarjs",
+    "warningtimeout"
   ],
   "chat.tools.terminal.autoApprove": {
     "npm run -s test:unit:cov": true,

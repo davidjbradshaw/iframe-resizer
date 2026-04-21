@@ -22,6 +22,7 @@
     "packages/core/**/*.ts",
     "packages/child/**/*.ts",
     "packages/parent/**/*.ts",
+    "packages/web-component/**/*.ts",
     "packages/vue/**/*.ts",
     "packages/vue/**/*.vue",
     "packages/react/**/*.ts",

@@ -109,6 +109,13 @@ const customConfig = (file) => {
         },
       }
 
+    case 'web-component':
+      return {
+        main,
+        module,
+        types,
+      }
+
     case 'jquery':
       return {
         main,

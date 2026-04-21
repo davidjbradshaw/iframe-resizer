@@ -48,6 +48,7 @@ and API documentation. This includes versions for:
 * **[Solid](https://iframe-resizer.com/frameworks/solid)**
 * **[Astro](https://iframe-resizer.com/frameworks/astro)**
 * **[Alpine](https://iframe-resizer.com/frameworks/alpine)**
+* **[Web Components](https://iframe-resizer.com/frameworks/web-component)**
 * **[jQuery](https://iframe-resizer.com/frameworks/jquery)**
 
 Along with setup guides for:
@@ -76,7 +77,7 @@ When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes
 
 Version 6 fully ports the codebase to **TypeScript**, and replaces the old _@definitelyTyped_ based types with consistent type definitions that now cover all packages in full.
 
-The framework ecosystem expands with official packages for **Svelte**, **Solid**, **Astro**, and **Alpine**, joining the existing React, Vue, Angular, and jQuery integrations.
+The framework ecosystem expands with official packages for **Svelte**, **Solid**, **Astro**, **Alpine**, and **Web Components**, joining the existing React, Vue, Angular, and jQuery integrations.
 
 This release also includes further improvements to performance, security, and accessibility.
 

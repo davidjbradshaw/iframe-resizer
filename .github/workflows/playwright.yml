@@ -60,6 +60,7 @@ jobs:
           - solid
           - svelte
           - vue
+          - web-component
 
     steps:
     - uses: actions/checkout@v6
