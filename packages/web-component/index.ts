@@ -41,16 +41,7 @@ const BOOLEAN_ATTRS = new Set([
   'scrolling',
 ])
 
-const EVENT_NAMES = [
-  'onReady',
-  'onMessage',
-  'onResized',
-  'onScroll',
-  'onMouseEnter',
-  'onMouseLeave',
-] as const
-
-const EVENT_MAP: Record<string, string> = {
+const EVENTS: Record<string, string> = {
   onReady: 'iframe-resizer:ready',
   onMessage: 'iframe-resizer:message',
   onResized: 'iframe-resizer:resized',
@@ -125,10 +116,10 @@ export class IframeResizerElement extends HTMLBase {
 
     const eventHandlers: Record<string, (data: unknown) => void> = {}
 
-    for (const event of EVENT_NAMES) {
-      eventHandlers[event] = (data: unknown) => {
+    for (const [callback, eventName] of Object.entries(EVENTS)) {
+      eventHandlers[callback] = (data: unknown) => {
         this.dispatchEvent(
-          new CustomEvent(EVENT_MAP[event], {
+          new CustomEvent(eventName, {
             detail: data,
             bubbles: true,
           }),
