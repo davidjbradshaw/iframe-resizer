@@ -9,9 +9,11 @@ export default (file, type) => `/*!
  *
  *  @module      iframe-resizer/${file} ${pkg.version} (${type}) ${type === 'iife' ? '' : `- ${today}`}
  *
- *  @license     ${pkg.license} For use with GPL compliant sites (fully published front & backend source code)
- *               Alternatively for commercial use, you can purchase a license from
- *               ${pkg.homepage}/pricing
+ *  @license     ${pkg.license} For use with GPL compliant sites
+ *               (fully published front & backend source code)
+ *
+ *               Alternatively for commercial use, you can purchase
+ *               a license from ${pkg.homepage}/pricing
  *
  *  @description Keep same and cross domain iframes sized to their content
  *

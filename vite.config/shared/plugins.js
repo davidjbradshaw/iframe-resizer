@@ -127,6 +127,13 @@ export const typescriptParent = () =>
     exclude: TS_EXCLUDE,
   })
 
+export const typescriptWebComponent = () =>
+  typescript({
+    tsconfig: TS_CONFIG,
+    include: [TS_GLOBAL, TS_COMMON, TS_CORE, 'packages/web-component/**/*.ts'],
+    exclude: TS_EXCLUDE,
+  })
+
 export const typescriptChild = () =>
   typescript({
     tsconfig: TS_CONFIG,
