@@ -26,7 +26,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have attempted to send messages
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -49,7 +49,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have sent messages
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -74,7 +74,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -99,7 +99,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -130,7 +130,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -163,7 +163,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 // Call count should not have increased much after stop
                 const afterStopCount = initialCallCount
                 expect(afterStopCount).toBeLessThanOrEqual(afterStartCount + 2)
-                done()
+                setTimeout(done, 1)
               }, 100)
             }, 100)
           },
@@ -198,7 +198,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                     expect(
                       iframe.contentWindow.postMessage.calls.count(),
                     ).toBeGreaterThan(0)
-                    done()
+                    setTimeout(done, 1)
                   }, 50)
                 }, 50)
               }, 50)
@@ -228,7 +228,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -253,7 +253,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -278,7 +278,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -313,7 +313,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
                 // Stop monitoring
                 mockMsgFromIFrame(iframe, 'parentInfoStop')
-                done()
+                setTimeout(done, 1)
               }, 100)
             }, 50)
           },
@@ -340,7 +340,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -358,7 +358,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             // Cleanup should be complete
             expect(document.getElementById('viewport13')).toBeNull()
             iframe = null
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             // Start parent info monitoring
@@ -401,7 +401,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -426,7 +426,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 200)
           },
         })[0]
@@ -454,7 +454,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -475,7 +475,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should not crash
               expect(iframe.iframeResizer).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -499,7 +499,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should handle all calls
               expect(iframe.iframeResizer).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -526,7 +526,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -551,7 +551,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]

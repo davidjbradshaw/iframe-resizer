@@ -23,7 +23,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             readyCalled = true
             expect(iframeEl).toBe(iframe)
             expect(iframeEl.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -42,7 +42,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(iframeEl.iframeResizer.close).toBeDefined()
             expect(iframeEl.iframeResizer.moveToAnchor).toBeDefined()
             expect(iframeEl.iframeResizer.disconnect).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -60,7 +60,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframeEl) => {
             // Check that the iframe has been initialized
             expect(initComplete).toBe(true)
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -86,7 +86,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           },
           onAfterClose: () => {
             expect(beforeCloseCalled).toBe(true)
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             setTimeout(() => {
@@ -119,7 +119,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Iframe should still exist
               expect(document.getElementById('lifecycle6')).toBeTruthy()
               expect(afterCloseCalled).toBe(false)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -139,7 +139,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(id).toBe('lifecycle7')
             // Iframe should be removed from DOM
             expect(document.getElementById('lifecycle7')).toBeFalsy()
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             setTimeout(() => {
@@ -158,7 +158,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           id: 'lifecycle8',
           checkOrigin: false,
           onAfterClose: () => {
-            done()
+            setTimeout(done, 1)
           },
           onReady: () => {
             setTimeout(() => {
@@ -184,7 +184,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(event.type).toBe('mouseenter')
             expect(event.screenX).toBeDefined()
             expect(event.screenY).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
           onReady: () => {
             setTimeout(() => {
@@ -207,7 +207,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onMouseEnter: (event) => {
             expect(typeof event.screenX).toBe('number')
             expect(typeof event.screenY).toBe('number')
-            done()
+            setTimeout(done, 1)
           },
           onReady: () => {
             setTimeout(() => {
@@ -237,7 +237,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(event.type).toBe('mouseleave')
             expect(event.screenX).toBeDefined()
             expect(event.screenY).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
           onReady: () => {
             setTimeout(() => {
@@ -260,7 +260,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onMouseLeave: (event) => {
             expect(typeof event.screenX).toBe('number')
             expect(typeof event.screenY).toBe('number')
-            done()
+            setTimeout(done, 1)
           },
           onReady: () => {
             setTimeout(() => {
@@ -291,7 +291,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             
             setTimeout(() => {
               expect(callOrder).toEqual(['onReady'])
-              done()
+              setTimeout(done, 1)
             }, 10)
           },
         })[0]
@@ -320,7 +320,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onAfterClose: () => {
             callOrder.push('onAfterClose')
             expect(callOrder).toEqual(['onReady', 'onBeforeClose', 'onAfterClose'])
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -342,7 +342,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onMouseLeave: () => {
             events.push('leave')
             expect(events).toEqual(['enter', 'leave'])
-            done()
+            setTimeout(done, 1)
           },
           onReady: () => {
             setTimeout(() => {

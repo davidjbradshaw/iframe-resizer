@@ -15,7 +15,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             called = true
             expect(iframe.iframeResizer).toBeDefined()
             tearDown(iframe)
-            done()
+            setTimeout(done, 1)
           },
         },
         iframe,

@@ -38,7 +38,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             // Should be called after iframe is added to DOM
             expect(disconnectedIframe.isConnected).toBe(true)
             expect(disconnectedIframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         }, disconnectedIframe)
 
@@ -73,7 +73,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             readyCalled = true
             expect(disconnectedIframe.isConnected).toBe(true)
-            done()
+            setTimeout(done, 1)
           },
         }, disconnectedIframe)
 
@@ -108,7 +108,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               expect(iframes.length).toBe(2)
               expect(iframes[0].iframeResizer).toBeDefined()
               expect(iframes[1].iframeResizer).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }
           },
         })
@@ -131,7 +131,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           if (frame1Ready.ready && frame2Ready.ready) {
             expect(iframe1.iframeResizer).toBeDefined()
             expect(iframe2.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           }
         }
 
@@ -184,7 +184,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Both iframes should have received their own resize events
               expect(resizeCount1).toBeGreaterThan(0)
               expect(resizeCount2).toBeGreaterThan(0)
-              done()
+              setTimeout(done, 1)
             }
           },
         })
@@ -227,7 +227,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Verify iframe is no longer in DOM with longer delay
               setTimeout(() => {
                 expect(document.getElementById('edge4')).toBeNull()
-                done()
+                setTimeout(done, 1)
               }, 100)
             }, 50)
           },
@@ -245,7 +245,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onAfterClose: () => {
             // Verify iframe is removed
             expect(document.getElementById('edge5')).toBeNull()
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             setTimeout(() => {
@@ -276,7 +276,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have warned about already setup
               expect(console.warn).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -294,7 +294,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -309,7 +309,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: true,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -325,7 +325,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: ['http://localhost:9876', window.location.origin],
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -341,7 +341,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           sameDomain: true,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -358,7 +358,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -372,7 +372,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -387,7 +387,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -415,7 +415,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             if (++readyCount >= iframes.length) {
               expect(iframes.length).toBeGreaterThan(0)
-              done()
+              setTimeout(done, 1)
             }
           },
         })
@@ -443,7 +443,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             expect(iframes.length).toBe(1)
             expect(iframes[0].id).toBe('edge14')
-            done()
+            setTimeout(done, 1)
           },
         }, '#edge14')
 
@@ -509,7 +509,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have handled resizes (may be throttled)
               expect(resizeCount).toBeGreaterThan(0)
-              done()
+              setTimeout(done, 1)
             }, 200)
           },
         })[0]
@@ -526,7 +526,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             // Should only be called after init
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -553,7 +553,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             // Should have auto-generated ID
             expect(iframeWithId.id).toBeTruthy()
             expect(iframeWithId.id).toContain('iframeResizer')
-            done()
+            setTimeout(done, 1)
           },
         }, iframeEl)
 
@@ -571,7 +571,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: (iframeWithId) => {
             expect(iframeWithId.id).toContain(customId)
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 

@@ -32,7 +32,7 @@ define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
           if (finished) return
           finished = true
           expect(iframe.iframeResizer).toBeDefined()
-          done()
+          setTimeout(done, 1)
         },
       })
 

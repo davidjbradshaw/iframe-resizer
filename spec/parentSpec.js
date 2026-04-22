@@ -20,7 +20,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             if (finished) return
             finished = true
             ready = true
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -96,7 +96,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
         spyOn(iframe.contentWindow, 'postMessage').and.callFake(() => {
           // Call done after first postMessage
-          done()
+          setTimeout(done, 1)
         })
 
         // Send ready message from child
@@ -162,7 +162,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           expect(iframe.offsetHeight).toBe(
             HEIGHT + extraHeights.reduce((a, b) => a + b, 0),
           )
-          done()
+          setTimeout(done, 1)
         }, 160)
       })
 
@@ -179,7 +179,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           expect(iframe.offsetHeight).toBe(
             HEIGHT + extraHeights.reduce((a, b) => a + b * REM, 0),
           )
-          done()
+          setTimeout(done, 1)
         }, 160)
       })
 
@@ -191,7 +191,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           expect(iframe.offsetHeight).toBe(
             HEIGHT + extraHeights.reduce((a, b) => a + b, 0),
           )
-          done()
+          setTimeout(done, 1)
         }, 160)
       })
     })

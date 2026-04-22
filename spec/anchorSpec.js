@@ -22,7 +22,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           )
 
           tearDown(iframe1)
-          done()
+          setTimeout(done, 1)
         },
       })
       
@@ -47,7 +47,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           expect(position.x).toBe(8)
           expect(position.y).toBeGreaterThan(8)
           tearDown(iframe2)
-          done()
+          setTimeout(done, 1)
         },
       })[0]
       
@@ -61,7 +61,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         moveToAnchor: () => {
           called = true
           tearDown(iframe3)
-          done()
+          setTimeout(done, 1)
         },
       }
       
@@ -81,7 +81,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               if (!called) {
                 tearDown(iframe3)
-                done()
+                setTimeout(done, 1)
               }
             }, 50)
           }, 10)

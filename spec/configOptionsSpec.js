@@ -21,7 +21,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             // Tolerance of 0 means any size change should trigger resize
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -38,7 +38,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             // Tolerance value should be set
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -54,7 +54,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           tolerance: 100,
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -72,7 +72,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'vertical',
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -88,7 +88,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'horizontal',
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -104,7 +104,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'both',
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -120,7 +120,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'none',
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -166,7 +166,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 expect(resized).toBe(true)
                 // Height should be set
                 expect(iframe.style.height).toBe('150px')
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -199,7 +199,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 expect(resized).toBe(true)
                 // Width should be set, height should not
                 expect(iframe.style.width).toBe('300px')
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -233,7 +233,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 // Both dimensions should be set
                 expect(iframe.style.height).toBe('200px')
                 expect(iframe.style.width).toBe('400px')
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -255,7 +255,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           sizeWidth: true,
           onReady: () => {
             expect(console.warn).toHaveBeenCalled()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -273,7 +273,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           sizeHeight: true,
           onReady: () => {
             expect(console.warn).toHaveBeenCalled()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -292,7 +292,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           sizeHeight: false,
           onReady: () => {
             expect(console.warn).toHaveBeenCalled()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -310,7 +310,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           warningTimeout: 0,
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -326,7 +326,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           warningTimeout: 2000,
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -352,7 +352,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 ),
               )
               expect(noResponseWarning).toBe(false)
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -382,7 +382,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             ),
           )
           expect(noResponseWarning).toBe(true)
-          done()
+          setTimeout(done, 1)
         }, 200)
       })
     })
@@ -398,7 +398,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'both',
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -418,7 +418,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           inPageLinks: true,
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -440,7 +440,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
             // Note: Direction cannot be changed after initialization in current implementation
             // This test documents the current behavior
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -459,7 +459,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           tolerance: -5,
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -475,7 +475,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           warningTimeout: 999999,
           onReady: () => {
             expect(iframe).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -510,7 +510,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
                 // With direction 'none', dimensions should not be set
                 expect(hasHeight || hasWidth).toBe(false)
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },

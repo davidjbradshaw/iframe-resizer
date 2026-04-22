@@ -20,7 +20,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             // autoResize should be enabled by default
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -37,7 +37,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             // With direction 'none', autoResize should be disabled
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -69,7 +69,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Should have processed initial resize but behavior may vary
                 expect(iframe.iframeResizer).toBeDefined()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -105,7 +105,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Both resizes should have been processed
                 expect(resizeCount).toBeGreaterThan(0)
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -132,7 +132,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have sent page info
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -157,7 +157,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Monitoring should be stopped
                 expect(iframe.iframeResizer).toBeDefined()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -187,7 +187,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'pageInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -212,7 +212,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have sent parent info
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -237,7 +237,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Monitoring should be stopped
                 expect(iframe.iframeResizer).toBeDefined()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -267,7 +267,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'parentInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 150)
           },
         })[0]
@@ -300,7 +300,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have handled resizes (may be throttled)
               expect(resizeCount).toBeGreaterThan(0)
-              done()
+              setTimeout(done, 1)
             }, 200)
           },
         })[0]
@@ -341,7 +341,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 setTimeout(() => {
                   // Should have handled resizes from all sources
                   expect(resizeCount).toBeGreaterThan(0)
-                  done()
+                  setTimeout(done, 1)
                 }, 50)
               }, 50)
             }, 50)
@@ -382,7 +382,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // May or may not trigger another resize depending on implementation
                 expect(resizeCount).toBeGreaterThanOrEqual(firstCount)
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -425,7 +425,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 // Should not have triggered additional resize due to tolerance
                 // Note: tolerance is applied on child side, so parent may still receive
                 expect(resizeCount).toBeGreaterThanOrEqual(firstCount)
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -463,7 +463,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Should have triggered resize
                 expect(resizeCount).toBeGreaterThan(0)
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -490,7 +490,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Visibility change is handled automatically
               expect(iframe.style.height).toBe('100px')
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -528,7 +528,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 value: false,
               })
 
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -547,7 +547,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframeEl) => {
             // First run should be complete
             expect(iframeEl.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -571,7 +571,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Should handle subsequent resizes normally
                 expect(iframe.iframeResizer).toBeDefined()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -591,7 +591,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onAfterClose: () => {
             // Cleanup should be complete
             expect(document.getElementById('perf20')).toBeNull()
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             // Start monitoring
@@ -623,7 +623,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               setTimeout(() => {
                 // All should be cleaned up
-                done()
+                setTimeout(done, 1)
               }, 100)
             }
           },
@@ -665,7 +665,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               expect(resizeCount).toBeGreaterThan(0)
               // Should complete reasonably quickly
               expect(elapsed).toBeLessThan(1000)
-              done()
+              setTimeout(done, 1)
             }, 300)
           },
         })[0]
@@ -710,7 +710,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               
               // Stop monitoring
               mockMsgFromIFrame(iframe, 'pageInfoStop')
-              done()
+              setTimeout(done, 1)
             }, 300)
           },
         })[0]
