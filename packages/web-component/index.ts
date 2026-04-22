@@ -22,6 +22,9 @@ const RESIZER_ATTR_MAP: Record<string, string> = {
   warningtimeout: 'warningTimeout',
 }
 
+// Attributes that should be parsed as numbers
+const NUMERIC_ATTRS = new Set(['offsetsize', 'tolerance', 'warningtimeout'])
+
 const EVENT_NAMES = [
   'onReady',
   'onMessage',
@@ -40,9 +43,18 @@ const EVENT_MAP: Record<string, string> = {
   onMouseLeave: 'iframe-resizer:mouseleave',
 }
 
-function parseBooleanAttr(value: string): boolean | string {
+function parseAttrValue(
+  name: string,
+  value: string,
+): boolean | number | string {
+  if (NUMERIC_ATTRS.has(name)) {
+    const num = Number(value)
+    if (!Number.isNaN(num)) return num
+  }
+
   if (value === '' || value === 'true') return true
   if (value === 'false') return false
+
   return value
 }
 
@@ -53,6 +65,8 @@ export class IframeResizerElement extends HTMLElement {
   private consoleGroup = createAutoConsoleGroup()
 
   private resizerOptions: Partial<IFrameOptions> = {}
+
+  private iframe: HTMLIFrameElement | null = null
 
   get options(): Partial<IFrameOptions> {
     return this.resizerOptions
@@ -67,18 +81,22 @@ export class IframeResizerElement extends HTMLElement {
   }
 
   connectedCallback(): void {
+    // Guard against duplicate iframes if element is moved in the DOM
+    if (this.iframe) return
+
     const iframe = document.createElement('iframe')
     const attrOptions: Record<string, unknown> = {}
 
     for (const attr of this.attributes) {
       const optionName = RESIZER_ATTR_MAP[attr.name]
       if (optionName) {
-        attrOptions[optionName] = parseBooleanAttr(attr.value)
+        attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
       } else {
         iframe.setAttribute(attr.name, attr.value)
       }
     }
 
+    this.iframe = iframe
     this.append(iframe)
 
     const eventHandlers: Record<string, (data: unknown) => void> = {}
@@ -110,16 +128,14 @@ export class IframeResizerElement extends HTMLElement {
           return false
         },
       })(iframe) ?? null
-
-    if (attrOptions.log) {
-      this.consoleGroup.log('Created Web Component')
-    }
   }
 
   disconnectedCallback(): void {
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
     this.resizer = null
+    this.iframe?.remove()
+    this.iframe = null
   }
 }
 
