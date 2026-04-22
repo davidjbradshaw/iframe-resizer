@@ -130,13 +130,25 @@ describe('web-component/IframeResizerElement', () => {
     expect(options.onBeforeClose!()).toBe(false)
   })
 
-  it('accepts programmatic options', () => {
+  it('accepts programmatic options and exposes them via the getter', () => {
     createElement({ license: 'GPLv3' })
     ;(el as any).options = { tolerance: 10 }
+
+    expect((el as any).options).toEqual({ tolerance: 10 })
+
     document.body.append(el)
 
     expect(connectResizer).toHaveBeenCalledWith(
       expect.objectContaining({ tolerance: 10 }),
+    )
+  })
+
+  it('parses "false" boolean attribute', () => {
+    createElement({ license: 'GPLv3', checkorigin: 'false' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ checkOrigin: false }),
     )
   })
 
