@@ -61,7 +61,10 @@ export default function IframeResizer(Alpine: Alpine): void {
         },
       })(el)
 
-      cleanup(() => resizer?.disconnect())
+      cleanup(() => {
+        resizer?.disconnect()
+        consoleGroup.endAutoGroup()
+      })
     },
   )
 }

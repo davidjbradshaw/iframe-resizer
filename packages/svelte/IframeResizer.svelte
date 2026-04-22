@@ -27,10 +27,9 @@
 
   let iframe: HTMLIFrameElement
   let resizer: IFrameObject | null = null
+  const consoleGroup = createAutoConsoleGroup()
 
   onMount(() => {
-    const consoleGroup = createAutoConsoleGroup()
-
     const props: Record<string, any> = {
       license,
       bodyBackground,
@@ -75,6 +74,7 @@
 
   onDestroy(() => {
     resizer?.disconnect()
+    consoleGroup.endAutoGroup()
   })
 
   export function moveToAnchor(anchor: string) {

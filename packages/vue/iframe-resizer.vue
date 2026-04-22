@@ -69,9 +69,9 @@
 
   const iframeRef = ref<HTMLIFrameElement | null>(null)
   const resizer = ref<IFrameObject | null>(null)
+  const consoleGroup = createAutoConsoleGroup()
 
   onMounted(() => {
-    const consoleGroup = createAutoConsoleGroup()
     // Template refs are guaranteed populated before onMounted fires
     const iframe = iframeRef.value!
     const options: any = {
@@ -101,6 +101,7 @@
 
   onBeforeUnmount(() => {
     resizer.value?.disconnect()
+    consoleGroup.endAutoGroup()
   })
 
   defineExpose({

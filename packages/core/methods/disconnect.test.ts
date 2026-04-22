@@ -22,4 +22,39 @@ describe('core/methods/disconnect', () => {
     expect(settings.disc).toBeUndefined()
     expect(iframe.iframeResizer).toBeUndefined()
   })
+
+  it('clears msgTimeout, removes load listener, and stops info monitors', () => {
+    vi.spyOn(coreConsole, 'log').mockImplementation(() => {})
+    const clearSpy = vi.spyOn(globalThis, 'clearTimeout')
+    const iframe = document.createElement('iframe')
+    iframe.id = 'cleanup'
+    const removeSpy = vi.spyOn(iframe, 'removeEventListener')
+    const onLoadListener = () => {}
+    const stopPageInfo = vi.fn()
+    const stopParentInfo = vi.fn()
+    settings.cleanup = {
+      msgTimeout: 42,
+      onLoadListener,
+      stopPageInfo,
+      stopParentInfo,
+    }
+
+    disconnect(iframe)
+
+    expect(clearSpy).toHaveBeenCalledWith(42)
+    expect(removeSpy).toHaveBeenCalledWith('load', onLoadListener, false)
+    expect(stopPageInfo).toHaveBeenCalled()
+    expect(stopParentInfo).toHaveBeenCalled()
+    expect(settings.cleanup).toBeUndefined()
+  })
+
+  it('is safe to call when settings entry is already missing', () => {
+    vi.spyOn(coreConsole, 'log').mockImplementation(() => {})
+    const iframe = document.createElement('iframe')
+    iframe.id = 'missing'
+    iframe.iframeResizer = {}
+
+    expect(() => disconnect(iframe)).not.toThrow()
+    expect(iframe.iframeResizer).toBeUndefined()
+  })
 })

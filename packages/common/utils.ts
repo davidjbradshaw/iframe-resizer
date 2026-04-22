@@ -20,7 +20,7 @@ export function getElementName(el: any): string {
       return `${el.nodeName}#${el.id}`
 
     case isDef(el.name):
-      return `${el.nodeName} (${el.name}`
+      return `${el.nodeName} (${el.name})`
 
     case isDef(el.className):
       return `${el.nodeName}.${el.className}`
