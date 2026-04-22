@@ -123,6 +123,86 @@ describe('child/observers/mutation deeper', () => {
     obs.disconnect()
   })
 
+  test('falls back to documentElement when document.body is null', () => {
+    const bodyDescriptor = Object.getOwnPropertyDescriptor(
+      Document.prototype,
+      'body',
+    )!
+    Object.defineProperty(document, 'body', {
+      configurable: true,
+      get: () => null,
+    })
+
+    try {
+      const observe = vi.fn()
+      globalThis.MutationObserver = function (cb) {
+        callbacks.cb = cb
+        this.observe = observe
+        this.disconnect = vi.fn()
+      }
+
+      const obs = createMutationObserver(vi.fn())
+      expect(observe).toHaveBeenCalledWith(
+        document.documentElement,
+        expect.any(Object),
+      )
+      obs.disconnect()
+    } finally {
+      Object.defineProperty(document, 'body', bodyDescriptor)
+    }
+  })
+
+  test('skips non-element removed nodes (shouldSkip branch)', () => {
+    const callback = vi.fn()
+    const obs = createMutationObserver(callback)
+
+    const textNode = document.createTextNode('ignored')
+    const scriptEl = document.createElement('script')
+
+    callbacks.cb([{ addedNodes: [], removedNodes: [textNode, scriptEl] }])
+    vi.runAllTimers()
+
+    // Neither node should be tracked as a regular element removal
+    expect(callback).toHaveBeenCalledWith(
+      expect.objectContaining({ removedNodes: expect.any(Set) }),
+    )
+    const { removedNodes } = callback.mock.calls[0][0]
+    expect(removedNodes.has(textNode)).toBe(false)
+    expect(removedNodes.has(scriptEl)).toBe(false)
+
+    obs.disconnect()
+  })
+
+  test('queues additional mutations while one is pending (early return)', () => {
+    // Defer RAF so we can pile up mutation callbacks without flushing
+    let rafCb: (() => void) | null = null
+    globalThis.requestAnimationFrame = (cb) => {
+      rafCb ??= cb
+      return 1
+    }
+
+    const seen: Array<Set<Node>> = []
+    const callback = vi.fn((m: { addedNodes: Set<Node> }) => {
+      seen.push(new Set(m.addedNodes))
+    })
+    const obs = createMutationObserver(callback)
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('span')
+
+    // First batch schedules rAF
+    callbacks.cb([{ addedNodes: [el1], removedNodes: [] }])
+    // Second batch hits the `if (pending) return` path
+    callbacks.cb([{ addedNodes: [el2], removedNodes: [] }])
+
+    rafCb!()
+
+    expect(callback).toHaveBeenCalledTimes(1)
+    expect(seen[0].has(el1)).toBe(true)
+    expect(seen[0].has(el2)).toBe(true)
+
+    obs.disconnect()
+  })
+
   test('throttles mutations when event loop is busy (delay > delayLimit)', () => {
     // Defer RAF so we can advance time between mutation and processing
     let rafCb: () => void

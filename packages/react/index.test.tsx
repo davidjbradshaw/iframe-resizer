@@ -23,11 +23,17 @@ vi.mock('auto-console-group', () => ({
 const disconnect = vi.fn()
 const moveToAnchor = vi.fn()
 const sendMessage = vi.fn()
+const getVersion = vi.fn(() => ({ parent: '6.0.0', child: '6.0.0' }))
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn(() => (iframe: any) => {
     // Expose a minimal API similar to production
-    iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+    iframe.iframeResizer = {
+      disconnect,
+      moveToAnchor,
+      sendMessage,
+      getVersion,
+    }
     return iframe.iframeResizer
   }),
 }))
@@ -82,6 +88,31 @@ describe('React IframeResizer component', () => {
       root.unmount()
     })
     expect(disconnect).toHaveBeenCalledTimes(1)
+  })
+
+  test('getVersion forwards to iframeResizer.getVersion', async () => {
+    const fRef = createRef<any>()
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-iframe-version"
+          src="https://example.com"
+          ref={fRef}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(fRef.current.getVersion()).toEqual({
+      parent: '6.0.0',
+      child: '6.0.0',
+    })
+    expect(getVersion).toHaveBeenCalled()
+
+    await act(async () => {
+      root.unmount()
+    })
   })
 
   test('getRef returns iframeRef and getElement returns the element', async () => {
