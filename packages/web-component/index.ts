@@ -101,6 +101,7 @@ export class IframeResizerElement extends HTMLElement {
 
     const iframe = document.createElement('iframe')
     const attrOptions: Record<string, unknown> = {}
+    const attrsToRemove: string[] = []
 
     for (const attr of this.attributes) {
       const optionName = RESIZER_ATTR_MAP[attr.name]
@@ -108,8 +109,11 @@ export class IframeResizerElement extends HTMLElement {
         attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
       } else {
         iframe.setAttribute(attr.name, attr.value)
+        attrsToRemove.push(attr.name)
       }
     }
+
+    for (const name of attrsToRemove) this.removeAttribute(name)
 
     this.iframe = iframe
     this.append(iframe)
@@ -154,7 +158,11 @@ export class IframeResizerElement extends HTMLElement {
   }
 }
 
-if (!customElements.get('iframe-resizer')) {
+// Don't run for server side render
+if (
+  typeof customElements !== 'undefined' &&
+  !customElements.get('iframe-resizer')
+) {
   customElements.define('iframe-resizer', IframeResizerElement)
 }
 
