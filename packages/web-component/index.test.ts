@@ -152,6 +152,75 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
+  it('parses numeric attributes as numbers', () => {
+    createElement({ license: 'GPLv3', tolerance: '5', warningTimeout: '0' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tolerance: 5,
+        warningTimeout: 0,
+      }),
+    )
+  })
+
+  it('does not create duplicate iframes when connectedCallback fires twice', () => {
+    createElement({ license: 'GPLv3', src: 'about:blank' })
+    document.body.append(el)
+
+    expect(el.querySelectorAll('iframe').length).toBe(1)
+    const callCount = vi.mocked(connectResizer).mock.calls.length
+
+    // Manually call connectedCallback again (simulates edge case)
+    ;(el as any).connectedCallback()
+
+    expect(el.querySelectorAll('iframe').length).toBe(1)
+    expect(connectResizer).toHaveBeenCalledTimes(callCount)
+  })
+
+  it('recreates iframe after disconnect and reconnect', () => {
+    createElement({ license: 'GPLv3', src: 'about:blank' })
+    document.body.append(el)
+    el.remove()
+
+    document.body.append(el)
+    expect(el.querySelector('iframe')).not.toBeNull()
+  })
+
+  it('removes iframe on disconnect', () => {
+    createElement({ license: 'GPLv3', src: 'about:blank' })
+    document.body.append(el)
+
+    expect(el.querySelector('iframe')).not.toBeNull()
+    el.remove()
+    expect(el.querySelector('iframe')).toBeNull()
+  })
+
+  it('options getter returns programmatic options', () => {
+    createElement({ license: 'GPLv3' })
+    ;(el as any).options = { tolerance: 10 }
+
+    expect((el as any).options).toEqual({ tolerance: 10 })
+  })
+
+  it('treats empty numeric attributes as strings not zero', () => {
+    createElement({ license: 'GPLv3', warningTimeout: '' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ warningTimeout: '' }),
+    )
+  })
+
+  it('treats non-numeric attribute values as strings', () => {
+    createElement({ license: 'GPLv3', tolerance: 'abc' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ tolerance: 'abc' }),
+    )
+  })
+
   it('exposes iframeResizer property', () => {
     createElement({ license: 'GPLv3' })
     document.body.append(el)

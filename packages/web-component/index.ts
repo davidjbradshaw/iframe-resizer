@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-classes-per-file */
 import { esModuleInterop } from '@iframe-resizer/common'
 import type { IFrameObject, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
@@ -22,16 +24,24 @@ const RESIZER_ATTR_MAP: Record<string, string> = {
   warningtimeout: 'warningTimeout',
 }
 
-const EVENT_NAMES = [
-  'onReady',
-  'onMessage',
-  'onResized',
-  'onScroll',
-  'onMouseEnter',
-  'onMouseLeave',
-] as const
+// Attributes that should be parsed as numbers
+const NUMERIC_ATTRS = new Set([
+  'bodymargin',
+  'bodypadding',
+  'offsetsize',
+  'tolerance',
+  'warningtimeout',
+])
 
-const EVENT_MAP: Record<string, string> = {
+// Attributes where empty value means boolean true
+const BOOLEAN_ATTRS = new Set([
+  'checkorigin',
+  'inpagelinks',
+  'log',
+  'scrolling',
+])
+
+const EVENTS: Record<string, string> = {
   onReady: 'iframe-resizer:ready',
   onMessage: 'iframe-resizer:message',
   onResized: 'iframe-resizer:resized',
@@ -40,19 +50,38 @@ const EVENT_MAP: Record<string, string> = {
   onMouseLeave: 'iframe-resizer:mouseleave',
 }
 
-function parseBooleanAttr(value: string): boolean | string {
-  if (value === '' || value === 'true') return true
+function parseAttrValue(
+  name: string,
+  value: string,
+): boolean | number | string {
+  if (NUMERIC_ATTRS.has(name) && value !== '') {
+    const num = Number(value)
+    if (!Number.isNaN(num)) return num
+  }
+
+  if (value === 'true') return true
   if (value === 'false') return false
+  if (value === '' && BOOLEAN_ATTRS.has(name)) return true
+
   return value
 }
 
-export class IframeResizerElement extends HTMLElement {
+// Fallback for SSR environments where HTMLElement is not defined
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+const HTMLBase =
+  typeof HTMLElement === 'undefined'
+    ? (class {} as unknown as typeof HTMLElement)
+    : HTMLElement
+
+export class IframeResizerElement extends HTMLBase {
   private resizer: IFrameObject | null = null
 
   // eslint-disable-next-line new-cap
   private consoleGroup = createAutoConsoleGroup()
 
   private resizerOptions: Partial<IFrameOptions> = {}
+
+  private iframe: HTMLIFrameElement | null = null
 
   get options(): Partial<IFrameOptions> {
     return this.resizerOptions
@@ -67,35 +96,36 @@ export class IframeResizerElement extends HTMLElement {
   }
 
   connectedCallback(): void {
+    // Guard against duplicate iframes if element is moved in the DOM
+    if (this.iframe?.isConnected) return
+
     const iframe = document.createElement('iframe')
     const attrOptions: Record<string, unknown> = {}
 
     for (const attr of this.attributes) {
       const optionName = RESIZER_ATTR_MAP[attr.name]
       if (optionName) {
-        attrOptions[optionName] = parseBooleanAttr(attr.value)
+        attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
       } else {
         iframe.setAttribute(attr.name, attr.value)
       }
     }
 
+    this.iframe = iframe
     this.append(iframe)
 
     const eventHandlers: Record<string, (data: unknown) => void> = {}
 
-    for (const event of EVENT_NAMES) {
-      eventHandlers[event] = (data: unknown) => {
+    for (const [callback, eventName] of Object.entries(EVENTS)) {
+      eventHandlers[callback] = (data: unknown) => {
         this.dispatchEvent(
-          new CustomEvent(EVENT_MAP[event], {
+          new CustomEvent(eventName, {
             detail: data,
             bubbles: true,
           }),
         )
       }
     }
-
-    this.consoleGroup.label(`web-component(${iframe.id})`)
-    this.consoleGroup.event('setup')
 
     this.resizer =
       connectResizer({
@@ -111,19 +141,24 @@ export class IframeResizerElement extends HTMLElement {
         },
       })(iframe) ?? null
 
-    if (attrOptions.log) {
-      this.consoleGroup.log('Created Web Component')
-    }
+    this.consoleGroup.label(`web-component(${iframe.id})`)
+    this.consoleGroup.event('setup')
   }
 
   disconnectedCallback(): void {
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
     this.resizer = null
+    this.iframe?.remove()
+    this.iframe = null
   }
 }
 
-if (!customElements.get('iframe-resizer')) {
+// Don't run for server side render
+if (
+  typeof customElements !== 'undefined' &&
+  !customElements.get('iframe-resizer')
+) {
   customElements.define('iframe-resizer', IframeResizerElement)
 }
 
