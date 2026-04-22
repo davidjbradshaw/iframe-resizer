@@ -68,7 +68,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
             '[iFrameSizer]parentIframeTests:0:0:autoResize:true',
             '*',
           )
-          done()
+          setTimeout(done, 1)
         }, 10)
       })
 
@@ -123,7 +123,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           expect(pageInfo.clientHeight).toBe(645)
 
           expect(pageInfo.clientWidth).toBe(1295)
-          done()
+          setTimeout(done, 1)
         })
 
         expect(msgObject.source.postMessage).toHaveBeenCalledWith(
@@ -202,7 +202,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           )
 
           win.parentIframe.setTargetOrigin('*')
-          done()
+          setTimeout(done, 1)
         })
       })
     })
@@ -218,7 +218,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(msgCalled).toBe(msg)
-          done()
+          setTimeout(done, 1)
         })
       })
 
@@ -228,7 +228,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
 
         setTimeout(() => {
           expect(msgCalled.foo).toBe('bar')
-          done()
+          setTimeout(done, 1)
         })
       })
 
@@ -243,7 +243,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           expect(
             msgObject.source.postMessage.calls.mostRecent().args[0],
           ).toContain(':reset')
-          done()
+          setTimeout(done, 1)
         }, 200)
       })
 
@@ -263,7 +263,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           expect(console.warn).toHaveBeenCalledWith(
             'Unexpected message ([iFrameSizer]foo), this is likely due to a newer version of iframe-resizer running on the parent page.',
           )
-          done()
+          setTimeout(done, 1)
         })
       })
     })
@@ -277,7 +277,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
             .filter((args) => args[0].includes(':manualResize'))
 
           expect(resizeCalls.length).toBeGreaterThan(0)
-          done()
+          setTimeout(done, 1)
         }, 17)
       })
     })

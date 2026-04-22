@@ -32,7 +32,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             '*',
           )
 
-          done()
+          setTimeout(done, 1)
         },
       })[0]
 
@@ -49,7 +49,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         checkOrigin: false,
         onMessage: (messageData) => {
           expect(messageData.message).toBe('test:test')
-          done()
+          setTimeout(done, 1)
         },
       })[0]
 
@@ -75,7 +75,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         },
         onMessage: (messageData) => {
           expect(messageData.message).toBe('message: test string')
-          done()
+          setTimeout(done, 1)
         },
       })[0]
 

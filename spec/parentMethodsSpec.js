@@ -29,7 +29,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 '[iFrameSizer]moveToAnchor:testAnchor',
                 '*',
               )
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -71,7 +71,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 '[iFrameSizer]moveToAnchor:test-anchor_123',
                 '*',
               )
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -97,7 +97,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 '[iFrameSizer]moveToAnchor:',
                 '*',
               )
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -127,7 +127,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 call.args[0].includes('"Hello"'),
               )
               expect(hasMessage).toBe(true)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -155,7 +155,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 call.args[0].includes('test') && call.args[0].includes('123'),
               )
               expect(hasMessage).toBe(true)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -178,7 +178,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have sent message
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -201,7 +201,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have sent message
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -229,7 +229,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have sent all messages
               expect(callCount).toBeGreaterThanOrEqual(3)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -250,7 +250,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(document.getElementById('method13')).toBeNull()
             // Set iframe to null so tearDown doesn't try to close it
             iframe = null
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             setTimeout(() => {
@@ -278,7 +278,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(beforeCloseCalled).toBe(true)
             // Set iframe to null so tearDown doesn't try to close it
             iframe = null
-            done()
+            setTimeout(done, 1)
           },
           onReady: (iframeEl) => {
             setTimeout(() => {
@@ -305,7 +305,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Iframe should still exist
               expect(document.getElementById('method15')).not.toBeNull()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -331,7 +331,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Should not crash
                 expect(document.getElementById('method16')).toBeNull()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -351,7 +351,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframeEl) => {
             // Verify disconnect method exists
             expect(typeof iframeEl.iframeResizer.disconnect).toBe('function')
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -376,7 +376,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // All methods should have been called
               expect(iframeEl.contentWindow.postMessage.calls.count()).toBeGreaterThan(0)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -402,7 +402,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
               setTimeout(() => {
                 expect(iframeEl.contentWindow.postMessage).toHaveBeenCalled()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -425,7 +425,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(iframe.iframeResizer.sendMessage).toBeDefined()
             expect(iframe.iframeResizer.close).toBeDefined()
             expect(iframe.iframeResizer.disconnect).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -444,7 +444,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(typeof iframe.iframeResizer.sendMessage).toBe('function')
             expect(typeof iframe.iframeResizer.close).toBe('function')
             expect(typeof iframe.iframeResizer.disconnect).toBe('function')
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 

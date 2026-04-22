@@ -32,7 +32,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             ),
           )
           expect(hasTimeoutWarning).toBe(true)
-          done()
+          setTimeout(done, 1)
         }, 200)
       })
 
@@ -55,7 +55,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 ),
               )
               expect(hasTimeoutWarning).toBe(false)
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -85,7 +85,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             ),
           )
           expect(hasTimeoutWarning).toBe(false)
-          done()
+          setTimeout(done, 1)
         }, 150)
       })
 
@@ -101,7 +101,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // First timeout cycle passed, iframe is now ready
               expect(iframe.iframeResizer).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -127,7 +127,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should not have processed the message
               expect(iframe.style.height).not.toBe('100px')
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -148,7 +148,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should not crash
               expect(iframe).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -169,7 +169,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should not crash, dimensions should be NaN or 0
               expect(iframe).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -195,7 +195,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             setTimeout(() => {
               // Should have ignored the message
               expect(iframe).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -229,7 +229,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 ),
               )
               expect(hasUnsupportedWarning).toBe(true)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -248,7 +248,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             // Should work with current origin in allowed list
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -264,7 +264,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: () => {
             // Should be called regardless of origin
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -279,7 +279,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: [window.location.origin, 'https://example.com'],
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 
@@ -306,7 +306,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Message was sent but iframe is gone
                 expect(document.getElementById('error13')).toBeNull()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -329,7 +329,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               setTimeout(() => {
                 // Should not crash
                 expect(document.getElementById('error14')).toBeNull()
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 10)
           },
@@ -370,7 +370,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 ),
               )
               expect(hasIgnoreLog).toBe(true)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -402,7 +402,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 ),
               )
               expect(hasIgnoreLog).toBe(true)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -437,7 +437,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 ),
               )
               expect(hasWarning).toBe(true)
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -485,7 +485,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 value: false,
               })
 
-              done()
+              setTimeout(done, 1)
             }, 50)
           },
         })[0]
@@ -520,7 +520,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               expect(errorThrown).toBe(true)
               // Iframe should still be functional
               expect(iframe.iframeResizer).toBeDefined()
-              done()
+              setTimeout(done, 1)
             }, 100)
           },
         })[0]
@@ -562,7 +562,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                 // Both resizes should have been processed
                 expect(firstResizeCalled).toBe(true)
                 expect(secondResizeCalled).toBe(true)
-                done()
+                setTimeout(done, 1)
               }, 50)
             }, 50)
           },
@@ -583,7 +583,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             expect(iframe.iframeResizer).toBeDefined()
-            done()
+            setTimeout(done, 1)
           },
         })[0]
 

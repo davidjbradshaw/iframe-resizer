@@ -28,7 +28,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         }
         if (0 !== msg.indexOf('pageInfoStop')) {
           tearDown(iframe1)
-          done()
+          setTimeout(done, 1)
         }
       })
       
@@ -56,7 +56,7 @@ define(['iframeResizerParent'], (iframeResize) => {
             expect(iframes.length).toBe(2)
             tearDown(iframes[0])
             tearDown(iframes[1])
-            done()
+            setTimeout(done, 1)
           }
         },
       })
