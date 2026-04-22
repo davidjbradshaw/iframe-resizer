@@ -31,7 +31,7 @@ describe('utils', () => {
 
       delete mockElement.id
 
-      expect(getElementName(mockElement)).toBe('DIV (test-name')
+      expect(getElementName(mockElement)).toBe('DIV (test-name)')
 
       delete mockElement.name
 

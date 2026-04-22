@@ -24,6 +24,7 @@ vi.mock('auto-console-group', () => ({
     expand: vi.fn(),
     log: vi.fn(),
     warn: vi.fn(),
+    endAutoGroup: vi.fn(),
   }),
 }))
 
