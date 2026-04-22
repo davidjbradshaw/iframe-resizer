@@ -75,6 +75,7 @@
 
   onDestroy(() => {
     resizer?.disconnect()
+    consoleGroup.endAutoGroup()
   })
 
   export function moveToAnchor(anchor: string) {

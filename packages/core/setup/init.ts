@@ -32,6 +32,7 @@ function checkReset(id: string): void {
 }
 
 function addLoadListener(
+  id: string,
   iframe: HTMLIFrameElement,
   initChild: () => void,
 ): void {
@@ -39,6 +40,7 @@ function addLoadListener(
   const onload = (): ReturnType<typeof setTimeout> =>
     setTimeout(initChild, AFTER_EVENT_STACK)
   addEventListener(iframe, LOAD, onload)
+  settings[id].onLoadListener = onload
 }
 
 const noContent = (iframe: HTMLIFrameElement): boolean => {
@@ -81,6 +83,6 @@ export default function init(id: string, message: string): void {
   const { iframe } = settings[id]
 
   settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
-  addLoadListener(iframe, createInitChild(ONLOAD))
+  addLoadListener(id, iframe, createInitChild(ONLOAD))
   sendInit(id, createInitChild(INIT))
 }
