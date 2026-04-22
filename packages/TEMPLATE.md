@@ -17,7 +17,13 @@ Using npm:
 npm install @@PKG_NAME@@
 ```
 
-or using yarn:
+Using pnpm:
+
+```bash
+pnpm add @@PKG_NAME@@
+```
+
+Using yarn:
 
 ```bash
 yarn add @@PKG_NAME@@
