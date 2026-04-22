@@ -106,7 +106,8 @@ export class IframeResizerElement extends HTMLBase {
 
   connectedCallback(): void {
     // Guard against duplicate iframes if element is moved in the DOM
-    if (this.iframe) return
+    if (this.iframe?.isConnected) return
+    this.iframe = null
 
     const iframe = document.createElement('iframe')
     const attrOptions: Record<string, unknown> = {}
