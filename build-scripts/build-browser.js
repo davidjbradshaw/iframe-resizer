@@ -8,6 +8,7 @@ import {
   pluginsBase,
   typescriptChild,
   typescriptParent,
+  typescriptWebComponent,
 } from '../vite.config/shared/plugins.js'
 
 const { BETA, DEBUG } = process.env
@@ -60,6 +61,26 @@ const configs = [
           ],
     },
     plugins: [typescriptChild(), resolve(), ...pluginsBase(stripLog)()],
+  },
+  {
+    input: 'packages/web-component/index.ts',
+    output: {
+      banner: createBanner('web-component', 'iife'),
+      file: 'js/iframe-resizer.web-component.js',
+      format: 'iife',
+      sourcemap,
+      plugins: DEBUG
+        ? []
+        : [
+            terser({
+              output: {
+                comments: false,
+                preamble: createBanner('web-component', 'iife'),
+              },
+            }),
+          ],
+    },
+    plugins: [typescriptWebComponent(), resolve(), ...pluginsBase(stripLog)()],
   },
   {
     input: 'packages/jquery/plugin.js',
