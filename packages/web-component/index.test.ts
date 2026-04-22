@@ -140,6 +140,57 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
+  it('parses numeric attributes as numbers', () => {
+    createElement({ license: 'GPLv3', tolerance: '5', warningTimeout: '0' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tolerance: 5,
+        warningTimeout: 0,
+      }),
+    )
+  })
+
+  it('does not create duplicate iframes on reconnect', () => {
+    createElement({ license: 'GPLv3', src: 'about:blank' })
+    document.body.append(el)
+
+    expect(el.querySelectorAll('iframe').length).toBe(1)
+
+    // Simulate moving element (disconnect + reconnect)
+    const parent = el.parentElement!
+    el.remove()
+    parent.append(el)
+
+    expect(el.querySelectorAll('iframe').length).toBe(1)
+  })
+
+  it('removes iframe on disconnect', () => {
+    createElement({ license: 'GPLv3', src: 'about:blank' })
+    document.body.append(el)
+
+    expect(el.querySelector('iframe')).not.toBeNull()
+    el.remove()
+    expect(el.querySelector('iframe')).toBeNull()
+  })
+
+  it('options getter returns programmatic options', () => {
+    createElement({ license: 'GPLv3' })
+    ;(el as any).options = { tolerance: 10 }
+
+    expect((el as any).options).toEqual({ tolerance: 10 })
+  })
+
+  it('treats non-numeric attribute values as strings', () => {
+    createElement({ license: 'GPLv3', tolerance: 'abc' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ tolerance: 'abc' }),
+    )
+  })
+
   it('exposes iframeResizer property', () => {
     createElement({ license: 'GPLv3' })
     document.body.append(el)
