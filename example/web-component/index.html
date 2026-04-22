@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="https://iframe-resizer.com/favicon.ico" />
     <title>Web Component Example</title>
+    <script src="../../js/iframe-resizer.web-component.js"></script>
     <style>
       body {
         font-family: system-ui, sans-serif;
@@ -43,9 +44,7 @@
       <pre id="event-data"></pre>
     </div>
 
-    <script type="module">
-      import '@iframe-resizer/web-component'
-
+    <script>
       const el = document.querySelector('iframe-resizer')
       const display = document.getElementById('event-display')
       const pre = document.getElementById('event-data')
