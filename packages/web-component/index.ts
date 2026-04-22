@@ -23,7 +23,21 @@ const RESIZER_ATTR_MAP: Record<string, string> = {
 }
 
 // Attributes that should be parsed as numbers
-const NUMERIC_ATTRS = new Set(['offsetsize', 'tolerance', 'warningtimeout'])
+const NUMERIC_ATTRS = new Set([
+  'bodymargin',
+  'bodypadding',
+  'offsetsize',
+  'tolerance',
+  'warningtimeout',
+])
+
+// Attributes where empty value means boolean true
+const BOOLEAN_ATTRS = new Set([
+  'checkorigin',
+  'inpagelinks',
+  'log',
+  'scrolling',
+])
 
 const EVENT_NAMES = [
   'onReady',
@@ -52,8 +66,9 @@ function parseAttrValue(
     if (!Number.isNaN(num)) return num
   }
 
-  if (value === '' || value === 'true') return true
+  if (value === 'true') return true
   if (value === 'false') return false
+  if (value === '' && BOOLEAN_ATTRS.has(name)) return true
 
   return value
 }
@@ -112,9 +127,6 @@ export class IframeResizerElement extends HTMLElement {
       }
     }
 
-    this.consoleGroup.label(`web-component(${iframe.id})`)
-    this.consoleGroup.event('setup')
-
     this.resizer =
       connectResizer({
         ...(attrOptions as unknown as IFrameOptions),
@@ -128,6 +140,9 @@ export class IframeResizerElement extends HTMLElement {
           return false
         },
       })(iframe) ?? null
+
+    this.consoleGroup.label(`web-component(${iframe.id})`)
+    this.consoleGroup.event('setup')
   }
 
   disconnectedCallback(): void {
