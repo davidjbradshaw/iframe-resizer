@@ -48,16 +48,7 @@ for (const [key, value] of Object.entries(Astro.props)) {
 <script>
   import connectResizer, { type IFrameComponent, type IFrameOptions } from '@iframe-resizer/core'
 
-  const EVENTS = [
-    'onReady',
-    'onMessage',
-    'onResized',
-    'onScroll',
-    'onMouseEnter',
-    'onMouseLeave',
-  ]
-
-  const EVENT_MAP: Record<string, string> = {
+  const EVENTS: Record<string, string> = {
     onReady: 'iframe-resizer:ready',
     onMessage: 'iframe-resizer:message',
     onResized: 'iframe-resizer:resized',
@@ -69,10 +60,10 @@ for (const [key, value] of Object.entries(Astro.props)) {
   function createEventDispatcher(iframe: HTMLIFrameElement) {
     const handlers: Record<string, (data: unknown) => void> = {}
 
-    for (const event of EVENTS) {
-      handlers[event] = (data: unknown) => {
+    for (const [callback, eventName] of Object.entries(EVENTS)) {
+      handlers[callback] = (data: unknown) => {
         iframe.dispatchEvent(
-          new CustomEvent(EVENT_MAP[event], {
+          new CustomEvent(eventName, {
             detail: data,
             bubbles: true,
           }),
