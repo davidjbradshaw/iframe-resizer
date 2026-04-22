@@ -63,7 +63,7 @@ function parseAttrValue(
   name: string,
   value: string,
 ): boolean | number | string {
-  if (NUMERIC_ATTRS.has(name)) {
+  if (NUMERIC_ATTRS.has(name) && value !== '') {
     const num = Number(value)
     if (!Number.isNaN(num)) return num
   }
@@ -107,11 +107,9 @@ export class IframeResizerElement extends HTMLBase {
   connectedCallback(): void {
     // Guard against duplicate iframes if element is moved in the DOM
     if (this.iframe?.isConnected) return
-    this.iframe = null
 
     const iframe = document.createElement('iframe')
     const attrOptions: Record<string, unknown> = {}
-    const attrsToRemove: string[] = []
 
     for (const attr of this.attributes) {
       const optionName = RESIZER_ATTR_MAP[attr.name]
@@ -119,11 +117,8 @@ export class IframeResizerElement extends HTMLBase {
         attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
       } else {
         iframe.setAttribute(attr.name, attr.value)
-        attrsToRemove.push(attr.name)
       }
     }
-
-    for (const name of attrsToRemove) this.removeAttribute(name)
 
     this.iframe = iframe
     this.append(iframe)

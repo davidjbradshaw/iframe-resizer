@@ -152,18 +152,27 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
-  it('does not create duplicate iframes on reconnect', () => {
+  it('does not create duplicate iframes when connectedCallback fires twice', () => {
     createElement({ license: 'GPLv3', src: 'about:blank' })
     document.body.append(el)
 
     expect(el.querySelectorAll('iframe').length).toBe(1)
+    const callCount = vi.mocked(connectResizer).mock.calls.length
 
-    // Simulate moving element (disconnect + reconnect)
-    const parent = el.parentElement!
-    el.remove()
-    parent.append(el)
+    // Manually call connectedCallback again (simulates edge case)
+    ;(el as any).connectedCallback()
 
     expect(el.querySelectorAll('iframe').length).toBe(1)
+    expect(connectResizer).toHaveBeenCalledTimes(callCount)
+  })
+
+  it('recreates iframe after disconnect and reconnect', () => {
+    createElement({ license: 'GPLv3', src: 'about:blank' })
+    document.body.append(el)
+    el.remove()
+
+    document.body.append(el)
+    expect(el.querySelector('iframe')).not.toBeNull()
   })
 
   it('removes iframe on disconnect', () => {
@@ -180,6 +189,15 @@ describe('web-component/IframeResizerElement', () => {
     ;(el as any).options = { tolerance: 10 }
 
     expect((el as any).options).toEqual({ tolerance: 10 })
+  })
+
+  it('treats empty numeric attributes as strings not zero', () => {
+    createElement({ license: 'GPLv3', warningTimeout: '' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ warningTimeout: '' }),
+    )
   })
 
   it('treats non-numeric attribute values as strings', () => {
