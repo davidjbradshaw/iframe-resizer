@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-classes-per-file */
 import { esModuleInterop } from '@iframe-resizer/common'
 import type { IFrameObject, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
@@ -73,7 +75,14 @@ function parseAttrValue(
   return value
 }
 
-export class IframeResizerElement extends HTMLElement {
+// Fallback for SSR environments where HTMLElement is not defined
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+const HTMLBase =
+  typeof HTMLElement === 'undefined'
+    ? (class {} as unknown as typeof HTMLElement)
+    : HTMLElement
+
+export class IframeResizerElement extends HTMLBase {
   private resizer: IFrameObject | null = null
 
   // eslint-disable-next-line new-cap
