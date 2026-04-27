@@ -39,7 +39,7 @@ const BOOLEAN_ATTRS = new Set([
   'scrolling',
 ])
 
-// Attributes that accept arrays (space-separated)
+// Attributes that should be parsed as whitespace-separated arrays
 const ARRAY_ATTRS = new Set(['checkorigin'])
 
 const EVENTS: Record<string, string> = {
@@ -63,7 +63,8 @@ function parseAttrValue(
   if (value === 'true') return true
   if (value === 'false') return false
   if (value === '' && BOOLEAN_ATTRS.has(name)) return true
-  if (ARRAY_ATTRS.has(name) && value.includes(' ')) return value.split(' ')
+  if (ARRAY_ATTRS.has(name) && /\s/.test(value))
+    return value.trim().split(/\s+/)
 
   return value
 }
