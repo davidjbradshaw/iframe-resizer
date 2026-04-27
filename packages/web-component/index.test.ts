@@ -258,6 +258,31 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
+  it('passes single checkOrigin value as string', () => {
+    createElement({ license: 'GPLv3', checkOrigin: 'https://a.com' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        checkOrigin: 'https://a.com',
+      }),
+    )
+  })
+
+  it('splits multiple checkOrigin values into an array', () => {
+    createElement({
+      license: 'GPLv3',
+      checkOrigin: 'https://a.com https://b.com',
+    })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        checkOrigin: ['https://a.com', 'https://b.com'],
+      }),
+    )
+  })
+
   it('exposes iframeResizer property', () => {
     createElement({ license: 'GPLv3' })
     document.body.append(el)
