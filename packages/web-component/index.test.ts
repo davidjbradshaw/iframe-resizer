@@ -212,6 +212,43 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
+  it('splits space-separated values into arrays', () => {
+    createElement({
+      license: 'GPLv3',
+      checkOrigin: 'https://a.com https://b.com',
+    })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        checkOrigin: ['https://a.com', 'https://b.com'],
+      }),
+    )
+  })
+
+  it('handles extra whitespace when splitting array attributes', () => {
+    createElement({
+      license: 'GPLv3',
+      checkOrigin: '  https://a.com   https://b.com\thttps://c.com  ',
+    })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        checkOrigin: ['https://a.com', 'https://b.com', 'https://c.com'],
+      }),
+    )
+  })
+
+  it('does not split non-array attributes that contain spaces', () => {
+    createElement({ license: 'GPLv3', bodyBackground: 'rgb(0 0 0)' })
+    document.body.append(el)
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ bodyBackground: 'rgb(0 0 0)' }),
+    )
+  })
+
   it('treats non-numeric attribute values as strings', () => {
     createElement({ license: 'GPLv3', tolerance: 'abc' })
     document.body.append(el)
