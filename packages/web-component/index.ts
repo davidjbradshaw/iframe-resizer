@@ -39,6 +39,9 @@ const BOOLEAN_ATTRS = new Set([
   'scrolling',
 ])
 
+// Attributes that accept arrays (space-separated)
+const ARRAY_ATTRS = new Set(['checkorigin'])
+
 const EVENTS: Record<string, string> = {
   onReady: 'iframe-resizer:ready',
   onMessage: 'iframe-resizer:message',
@@ -51,7 +54,7 @@ const EVENTS: Record<string, string> = {
 function parseAttrValue(
   name: string,
   value: string,
-): boolean | number | string {
+): boolean | number | string | string[] {
   if (NUMERIC_ATTRS.has(name) && value !== '') {
     const num = Number(value)
     if (!Number.isNaN(num)) return num
@@ -60,6 +63,7 @@ function parseAttrValue(
   if (value === 'true') return true
   if (value === 'false') return false
   if (value === '' && BOOLEAN_ATTRS.has(name)) return true
+  if (ARRAY_ATTRS.has(name) && value.includes(' ')) return value.split(' ')
 
   return value
 }
