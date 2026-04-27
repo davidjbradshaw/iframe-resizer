@@ -2,10 +2,10 @@
  * Type definitions for @iframe-resizer/child
  */
 
-import type { IFrameVersion } from '@iframe-resizer/common'
+export type { IFrameVersion } from '@iframe-resizer/common'
 
 /** Configuration options set via window.iframeResizer before loading the child script. */
-export interface PageOptions {
+export interface IFramePageOptions {
   /** Restrict which elements are checked for resizing. */
   ignoreSelector?: string
   /** Offset added to the calculated size. */
@@ -23,7 +23,7 @@ export interface PageOptions {
 }
 
 /** Parent page properties returned by getParentProps(). */
-export interface ParentProps {
+export interface IFrameParentProps {
   /** Values from iframe.getBoundingClientRect() */
   iframe: {
     x: number
@@ -53,7 +53,7 @@ export interface ParentProps {
 }
 
 /** Child public API available at window.parentIframe. */
-export interface ParentIframe {
+export interface IFrameParentAPI {
   /** Turn autoResizing of the iframe on and off. Returns current state. */
   autoResize(resize?: boolean): boolean
   /** Remove the iframe from the parent page. */
@@ -68,7 +68,7 @@ export interface ParentIframe {
    * Request parent page properties. Your callback is recalled on
    * parent scroll/resize. Returns an unsubscribe function.
    */
-  getParentProps(callback: (data: ParentProps) => void): () => void
+  getParentProps(callback: (data: IFrameParentProps) => void): () => void
   /** Move to anchor in parent page. */
   moveToAnchor(hash: string): void
   /**
@@ -90,9 +90,16 @@ export interface ParentIframe {
   setTargetOrigin(targetOrigin: string): void
 }
 
+/** @deprecated Use IFramePageOptions instead */
+export type PageOptions = IFramePageOptions
+/** @deprecated Use IFrameParentProps instead */
+export type ParentProps = IFrameParentProps
+/** @deprecated Use IFrameParentAPI instead */
+export type ParentIframe = IFrameParentAPI
+
 declare global {
   interface Window {
-    iframeResizer: PageOptions
-    parentIframe: ParentIframe
+    iframeResizer: IFramePageOptions
+    parentIframe: IFrameParentAPI
   }
 }
