@@ -20,8 +20,9 @@ import {
 import { HIGHLIGHT } from 'auto-console-group'
 
 import checkSameDomain from './checks/origin'
+import checkValidMessage from './checks/valid-message'
 import checkVersion from './checks/version'
-import { info, log, warn } from './console'
+import { info, log } from './console'
 import { onMessage } from './events/message'
 import onMouse from './events/mouse'
 import resizeIframe from './events/resize'
@@ -39,7 +40,7 @@ import firstRun from './setup/first-run'
 import settings from './values/settings'
 
 export default function routeMessage(messageData: MessageData): void {
-  const { height, id, iframe, mode, message, type, width } = messageData
+  const { id, iframe, mode, message, type } = messageData
   const { lastMessage } = settings[id]
 
   if (settings[id]?.firstRun) firstRun(id, mode)
@@ -120,27 +121,6 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     default:
-      if (width === 0 && height === 0) {
-        warn(
-          id,
-          `Unsupported message received (${type}), this is likely due to the iframe containing a later ` +
-            `version of iframe-resizer than the parent page`,
-        )
-        return
-      }
-
-      if (width === 0 || height === 0) {
-        log(id, 'Ignoring message with 0 height or width')
-        return
-      }
-
-      // Recheck document.hidden here, as only Firefox
-      // correctly supports this in the iframe
-      if (document.hidden) {
-        log(id, 'Page hidden - ignored resize request')
-        return
-      }
-
-      resizeIframe(messageData)
+      if (checkValidMessage(messageData)) resizeIframe(messageData)
   }
 }

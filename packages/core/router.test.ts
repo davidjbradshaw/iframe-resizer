@@ -11,6 +11,7 @@ import {
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('./checks/origin', () => ({ default: vi.fn() }))
+vi.mock('./checks/valid-message', () => ({ default: vi.fn(() => true) }))
 vi.mock('./checks/version', () => ({ default: vi.fn() }))
 vi.mock('./console', () => ({ info: vi.fn(), log: vi.fn(), warn: vi.fn() }))
 vi.mock('./events/message', () => ({ onMessage: vi.fn() }))
@@ -48,8 +49,8 @@ const resetIframe = (await import('./methods/reset')).default
 const { stopPageInfoMonitor } = await import('./monitor/page-info')
 const { stopParentInfoMonitor } = await import('./monitor/props')
 const { setTitle } = await import('./page/title')
-// Not used in these tests; ensure router handles unknown messages without scroll actions
-const { warn, info, log } = await import('./console')
+const checkValidMessage = (await import('./checks/valid-message')).default
+const { info } = await import('./console')
 const firstRun = (await import('./setup/first-run')).default
 
 describe('core/router', () => {
@@ -125,29 +126,19 @@ describe('core/router', () => {
     expect(setTitle).toHaveBeenCalledWith(id, 'm')
   })
 
-  test('unsupported message with 0x0 warns and returns', () => {
-    routeMessage({ ...base, type: 'UNKNOWN', width: 0, height: 0 })
-
-    expect(warn).toHaveBeenCalled()
-    expect(resizeIframe).not.toHaveBeenCalled()
-  })
-
-  test('ignores 0 width or height', () => {
-    routeMessage({ ...base, type: 'UNKNOWN', width: 0, height: 10 })
-
-    expect(log).toHaveBeenCalled()
-    routeMessage({ ...base, type: 'UNKNOWN', width: 10, height: 0 })
-
-    expect(log).toHaveBeenCalled()
-  })
-
-  test('when visible, calls resize for unknown type', () => {
-    Object.defineProperty(document, 'hidden', {
-      configurable: true,
-      value: false,
-    })
+  test('delegates to checkValidMessage for unknown types', () => {
     routeMessage({ ...base, type: 'SOMETHING' })
 
+    expect(checkValidMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'SOMETHING' }),
+    )
     expect(resizeIframe).toHaveBeenCalled()
+  })
+
+  test('does not resize when checkValidMessage returns false', () => {
+    vi.mocked(checkValidMessage).mockReturnValueOnce(false)
+    routeMessage({ ...base, type: 'SOMETHING' })
+
+    expect(resizeIframe).not.toHaveBeenCalled()
   })
 })
