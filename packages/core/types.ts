@@ -28,7 +28,7 @@ export type IFrameScrollOption = boolean | typeof AUTO | typeof OMIT
 // --- Resizer object attached to iframe.iframeResizer ---
 
 export interface IFrameObject {
-  /** Remove the iframe from the page. */
+  /** @deprecated Use disconnect() and remove the iframe via your framework instead. */
   close(): void
   /** Disconnect iframe-resizer from the iframe. */
   disconnect(): void
@@ -83,19 +83,11 @@ export interface IFrameScrollData {
 // --- Options ---
 
 export interface IFrameOptions {
-  /** Override the body background style in the iframe. */
+  /** @deprecated Use CSS in the child page instead. */
   bodyBackground?: string | null
-  /**
-   * Override the default body margin style in the iframe.
-   * A string can be any valid value for the CSS margin attribute, for example '8px 3em'.
-   * A number value is converted into px.
-   */
+  /** @deprecated Use CSS in the child page instead. */
   bodyMargin?: number | string | null
-  /**
-   * Override the default body padding style in the iframe.
-   * A string can be any valid value for the CSS padding attribute, for example '8px 3em'.
-   * A number value is converted into px.
-   */
+  /** @deprecated Use CSS in the child page instead. */
   bodyPadding?: number | string | null
   /**
    * When set to true, only allow incoming messages from the domain listed in the
