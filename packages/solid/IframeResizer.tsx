@@ -17,14 +17,14 @@ import { onCleanup, onMount, splitProps } from 'solid-js'
 
 const createAutoConsoleGroup = esModuleInterop(acg)
 
-export type IframeResizerMethods = Pick<
+export type IFrameResizerMethods = Pick<
   IFrameObject,
   'moveToAnchor' | 'sendMessage'
 > & {
   getElement: () => IFrameComponent
 }
 
-export type IframeResizerProps = {
+export type IFrameResizerProps = {
   license: string
   bodyBackground?: string | null
   bodyMargin?: string | number | null
@@ -43,7 +43,7 @@ export type IframeResizerProps = {
   onScroll?: (data: IFrameScrollData) => boolean
   onMouseEnter?: (data: IFrameMouseData) => void
   onMouseLeave?: (data: IFrameMouseData) => void
-  ref?: (methods: IframeResizerMethods) => void
+  ref?: (methods: IFrameResizerMethods) => void
 } & Omit<
   ComponentProps<'iframe'>,
   'scrolling' | 'ref' | 'onScroll' | 'onMouseEnter' | 'onMouseLeave'
@@ -71,7 +71,7 @@ const RESIZER_KEYS = [
   'ref',
 ] as const
 
-export default function IframeResizer(props: IframeResizerProps): JSX.Element {
+export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   let iframeEl!: IFrameComponent
   const [local, iframeProps] = splitProps(props, RESIZER_KEYS)
   const consoleGroup = createAutoConsoleGroup()

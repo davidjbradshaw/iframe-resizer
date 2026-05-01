@@ -30,14 +30,14 @@ type IframeProps = React.DetailedHTMLProps<
   HTMLIFrameElement
 >
 
-export type IframeResizerProps = Omit<IframeProps, 'scrolling'> &
+export type IFrameResizerProps = Omit<IframeProps, 'scrolling'> &
   Omit<IFrameOptions, 'id' | 'onBeforeClose'>
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
 
 function IframeResizer(
-  props: IframeResizerProps,
+  props: IFrameResizerProps,
   ref: React.ForwardedRef<IFrameForwardRef>,
 ): ReactElement {
   const { log, logExpand } = props
@@ -99,6 +99,6 @@ function IframeResizer(
   return <iframe {...filteredProps} ref={iframeRef} />
 }
 
-export default forwardRef<IFrameForwardRef, IframeResizerProps>(IframeResizer)
+export default forwardRef<IFrameForwardRef, IFrameResizerProps>(IframeResizer)
 
 export type * from '@iframe-resizer/core'
