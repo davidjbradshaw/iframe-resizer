@@ -1,37 +1,21 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable react/require-default-props */
 import { esModuleInterop } from '@iframe-resizer/common'
-import type {
-  IFrameComponent,
-  IFrameObject,
-  IFrameOptions,
-} from '@iframe-resizer/core'
+import type { IFrameComponent } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 import React, {
   forwardRef,
   type ReactElement,
-  type RefObject,
   useEffect,
   useImperativeHandle,
   useRef,
 } from 'react'
 
 import filterIframeAttribs from './filter-iframe-attribs'
+import type { IFrameForwardRef, IFrameResizerProps } from './types'
 
-export type IFrameForwardRef = Omit<IFrameObject, 'close' | 'disconnect'> & {
-  /** @deprecated Use getRef() instead */
-  getElement: () => IFrameComponent
-  getRef: () => RefObject<IFrameComponent | null>
-}
-
-type IframeProps = React.DetailedHTMLProps<
-  React.IframeHTMLAttributes<HTMLIFrameElement>,
-  HTMLIFrameElement
->
-
-export type IFrameResizerProps = Omit<IframeProps, 'scrolling'> &
-  Omit<IFrameOptions, 'id' | 'onBeforeClose'>
+export type { IFrameForwardRef, IFrameResizerProps } from './types'
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
