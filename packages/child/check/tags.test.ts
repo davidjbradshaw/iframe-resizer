@@ -14,13 +14,13 @@ describe('child/check/tags', () => {
     document.body.innerHTML = ''
   })
 
-  it('collects elements with data-iframe-size and logs state', () => {
+  it('collects elements with data-iframe-resize and logs state', () => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
 
     const el1 = document.createElement('div')
-    el1.dataset.iframeSize = ''
+    el1.dataset.iframeResize = ''
     const el2 = document.createElement('div')
-    el2.dataset.iframeSize = ''
+    el2.dataset.iframeResize = ''
     document.body.append(el1, el2)
 
     checkAndSetupTags()

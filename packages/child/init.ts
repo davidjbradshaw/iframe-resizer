@@ -5,6 +5,7 @@ import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
 import checkCrossDomain from './check/cross-domain'
 import checkIgnoredElements from './check/ignored-elements'
+import migrateLegacySizeAttr from './check/migrate-size-attr'
 import checkMode from './check/mode'
 import checkQuirksMode from './check/quirks-mode'
 import checkReadyYet from './check/ready'
@@ -72,6 +73,7 @@ function startIframeResizerChild({
     checkIgnoredElements,
     checkCrossDomain,
     checkQuirksMode,
+    migrateLegacySizeAttr,
     checkAndSetupTags,
     checkSettings,
     bothDirections ? id : checkBlockingCSS,
