@@ -61,7 +61,7 @@ export default function getAutoSize(getDimension: GetDimension): number {
       return Math.max(scrollSize, MIN_SIZE)
 
     case hasTags:
-      info(`Found element with data-iframe-size attribute`)
+      info(`Found element with data-iframe-resize attribute`)
       calculatedSize = getDimension.taggedElement()
       break
 

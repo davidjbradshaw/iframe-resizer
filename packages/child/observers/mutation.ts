@@ -2,6 +2,7 @@ import { round } from '@iframe-resizer/common'
 import {
   IGNORE_ATTR,
   IGNORE_TAGS,
+  LEGACY_SIZE_ATTR,
   SIZE_ATTR,
 } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
@@ -21,7 +22,7 @@ export const newMutations: MutationRecord[][] = []
 
 const config = {
   attributes: true,
-  attributeFilter: [IGNORE_ATTR, SIZE_ATTR],
+  attributeFilter: [IGNORE_ATTR, LEGACY_SIZE_ATTR, SIZE_ATTR],
   attributeOldValue: false,
   characterData: false,
   characterDataOldValue: false,
