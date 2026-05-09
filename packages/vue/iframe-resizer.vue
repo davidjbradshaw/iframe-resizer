@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
+  import { onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type {
@@ -71,10 +71,8 @@
   const resizer = ref<IFrameObject | null>(null)
   const consoleGroup = createAutoConsoleGroup()
 
-  onMounted(() => {
-    // Template refs are guaranteed populated before onMounted fires
-    const iframe = iframeRef.value!
-    const options: any = {
+  function buildOptions(): any {
+    return {
       ...Object.fromEntries(
         Object.entries(toRaw(props)).filter(([, value]) => value !== undefined),
       ),
@@ -87,6 +85,12 @@
       onMessage: (data: IFrameMessageData) => emit('onMessage', data),
       onResized: (data: IFrameResizedData) => emit('onResized', data),
     }
+  }
+
+  onMounted(() => {
+    // Template refs are guaranteed populated before onMounted fires
+    const iframe = iframeRef.value!
+    const options = buildOptions()
 
     consoleGroup.label(`vue(${iframe.id})`)
     consoleGroup.event('setup')
@@ -98,6 +102,18 @@
       consoleGroup.log('Created Vue component')
     }
   })
+
+  // Re-bind on prop changes; subsequent calls take the update path in core
+  // and dispatch an UPDATE message to the child.
+  watch(
+    () => ({ ...toRaw(props) }),
+    () => {
+      const iframe = iframeRef.value
+      if (!iframe) return
+      connectResizer(buildOptions())(iframe)
+    },
+    { deep: true },
+  )
 
   onBeforeUnmount(() => {
     resizer.value?.disconnect()

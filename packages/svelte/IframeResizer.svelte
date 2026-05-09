@@ -29,8 +29,8 @@
   let resizer: IFrameObject | null = null
   const consoleGroup = createAutoConsoleGroup()
 
-  onMount(() => {
-    const props: Record<string, any> = {
+  function buildOptions(): Record<string, any> {
+    const wireProps: Record<string, any> = {
       license,
       bodyBackground,
       bodyMargin,
@@ -44,10 +44,9 @@
       tolerance,
       warningTimeout,
     }
-
-    const options: Record<string, any> = {
+    return {
       ...Object.fromEntries(
-        Object.entries(props).filter(([, value]) => value !== undefined),
+        Object.entries(wireProps).filter(([, value]) => value !== undefined),
       ),
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
@@ -60,7 +59,10 @@
       onMessage: (...args: any[]) => dispatch('message', ...args),
       onResized: (...args: any[]) => dispatch('resized', ...args),
     }
+  }
 
+  onMount(() => {
+    const options = buildOptions()
     consoleGroup.label(`svelte(${iframe.id})`)
     consoleGroup.event('setup')
 
@@ -71,6 +73,31 @@
       consoleGroup.log('Created Svelte component')
     }
   })
+
+  // Re-bind on prop change (after the initial bind in onMount).
+  // The first reactive run also fires, so guard with a sentinel.
+  let initialReactiveRun = true
+  $: {
+    void [
+      license,
+      bodyBackground,
+      bodyMargin,
+      bodyPadding,
+      checkOrigin,
+      direction,
+      log,
+      inPageLinks,
+      offsetSize,
+      scrolling,
+      tolerance,
+      warningTimeout,
+    ]
+    if (initialReactiveRun) {
+      initialReactiveRun = false
+    } else if (iframe) {
+      connectResizer(buildOptions())(iframe)
+    }
+  }
 
   onDestroy(() => {
     resizer?.disconnect()

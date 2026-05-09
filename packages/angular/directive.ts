@@ -8,6 +8,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  type SimpleChanges,
 } from '@angular/core'
 import { esModuleInterop } from '@iframe-resizer/common'
 import type {
@@ -63,16 +64,8 @@ export class IframeResizerDirective {
 
   constructor(private elementRef: ElementRef) {}
 
-  ngAfterViewInit(): void {
-    const id = this.elementRef.nativeElement?.id
-
-    this.consoleGroup.label(`angular(${id})`)
-    this.consoleGroup.event('setup')
-    this.consoleGroup.expand(this.options.logExpand)
-
-    if (this.debug) this.consoleGroup.log('ngAfterViewInit')
-
-    this.resizer = connectResizer({
+  private buildOptions(): IFrameOptions {
+    return {
       ...this.options,
 
       onBeforeClose: () => {
@@ -98,7 +91,30 @@ export class IframeResizerDirective {
         top: number
         left: number
       }) => this.onScroll.next(event),
-    })(this.elementRef.nativeElement)
+    } as IFrameOptions
+  }
+
+  ngAfterViewInit(): void {
+    const id = this.elementRef.nativeElement?.id
+
+    this.consoleGroup.label(`angular(${id})`)
+    this.consoleGroup.event('setup')
+    this.consoleGroup.expand(this.options.logExpand)
+
+    if (this.debug) this.consoleGroup.log('ngAfterViewInit')
+
+    this.resizer = connectResizer(this.buildOptions())(
+      this.elementRef.nativeElement,
+    )
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Re-bind when @Input options change. Skip the first call: the binding
+    // hasn't been established yet at that point — ngAfterViewInit handles it.
+    if (!this.resizer) return
+    if (!changes.options) return
+    if (this.debug) this.consoleGroup.log('ngOnChanges: options updated')
+    connectResizer(this.buildOptions())(this.elementRef.nativeElement)
   }
 
   ngOnDestroy(): void {

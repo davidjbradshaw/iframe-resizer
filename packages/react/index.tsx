@@ -13,6 +13,7 @@ import React, {
 } from 'react'
 
 import filterIframeAttribs from './filter-iframe-attribs'
+import buildOptionsKey from './options-key'
 import type { IFrameForwardRef, IFrameResizerProps } from './types'
 
 export type { IFrameForwardRef, IFrameResizerProps } from './types'
@@ -45,8 +46,7 @@ function IframeResizer(
     return false
   }
 
-  // This hook is only run once, as once iframe-resizer is bound, it will
-  // deal with changes to the element and does not need recalling
+  // First mount: establish the iframe-resizer binding and clean up on unmount.
   useEffect(() => {
     const iframe = iframeRef.current
 
@@ -63,6 +63,21 @@ function IframeResizer(
       resizer?.disconnect()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Re-bind when iframe-resizer-relevant props change. The first mount above
+  // already created the binding, so subsequent calls take the update path in
+  // core, which sends an UPDATE message to the child.
+  const optionsKey = buildOptionsKey(props)
+  const isFirstUpdateRef = useRef(true)
+  useEffect(() => {
+    if (isFirstUpdateRef.current) {
+      isFirstUpdateRef.current = false
+      return
+    }
+    const iframe = iframeRef.current
+    if (!iframe) return
+    connectResizer({ ...props, onBeforeClose })(iframe)
+  }, [optionsKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useImperativeHandle(
     ref,

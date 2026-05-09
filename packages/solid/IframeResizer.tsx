@@ -3,9 +3,10 @@ import type { IFrameComponent } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 import type { JSX } from 'solid-js'
-import { onCleanup, onMount, splitProps } from 'solid-js'
+import { createEffect, onCleanup, onMount, splitProps } from 'solid-js'
 
 import type { IFrameResizerProps } from './types'
+import pickWireOptions from './wire-options'
 
 export type { IFrameResizerMethods, IFrameResizerProps } from './types'
 
@@ -40,18 +41,6 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
 
   onMount(() => {
     const {
-      license,
-      bodyBackground,
-      bodyMargin,
-      bodyPadding,
-      checkOrigin,
-      direction,
-      inPageLinks,
-      log,
-      offsetSize,
-      scrolling,
-      tolerance,
-      warningTimeout,
       onReady,
       onMessage,
       onResized,
@@ -66,22 +55,7 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
     consoleGroup.event('setup')
 
     const options: Record<string, any> = {
-      ...Object.fromEntries(
-        Object.entries({
-          license,
-          bodyBackground,
-          bodyMargin,
-          bodyPadding,
-          checkOrigin,
-          direction,
-          inPageLinks,
-          log,
-          offsetSize,
-          scrolling,
-          tolerance,
-          warningTimeout,
-        }).filter(([, v]) => v !== undefined),
-      ),
+      ...pickWireOptions(local),
       onBeforeClose: () => {
         consoleGroup.warn(
           'Close method is disabled, use Solid to remove the iframe.',
@@ -102,8 +76,8 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
 
     const resizer = connectResizer(options)(iframeEl)
 
-    consoleGroup.expand(log === 'expanded')
-    if (log) consoleGroup.log('Created Solid component')
+    consoleGroup.expand(local.log === 'expanded')
+    if (local.log) consoleGroup.log('Created Solid component')
 
     if (typeof setRef === 'function') {
       setRef({
@@ -118,6 +92,22 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
       consoleGroup.endAutoGroup()
       resizer?.disconnect()
     })
+  })
+
+  // Re-bind when iframe-resizer-relevant props change. The first call inside
+  // onMount establishes the binding; this effect tracks subsequent changes
+  // and routes through the update path in core.
+  let isFirstUpdate = true
+  createEffect(() => {
+    const updateOptions = pickWireOptions(local)
+
+    if (isFirstUpdate) {
+      isFirstUpdate = false
+      return
+    }
+    if (!iframeEl) return
+
+    connectResizer(updateOptions)(iframeEl)
   })
 
   // eslint-disable-next-line jsx-a11y/iframe-has-title

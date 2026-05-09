@@ -18,6 +18,7 @@ describe('child/page/links branches', () => {
     document.body.innerHTML = ''
     state.inPageLinks = undefined
     settings.mode = 0
+    settings.inPageLinks = true
     sendMessage.mockClear()
   })
 

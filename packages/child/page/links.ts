@@ -43,6 +43,8 @@ function jumpToTarget(hash: string, target: Element): void {
 }
 
 export function findTarget(location: string): void {
+  if (settings.inPageLinks !== true) return
+
   const hash = location.split('#')[1] || location // Remove # if present
   const hashData = decodeURIComponent(hash)
   const target =
@@ -98,16 +100,20 @@ function enableInPageLinks(): void {
   }
 }
 
-export default function setupInPageLinks(enabled: boolean): void {
+export default function setupInPageLinks(requested: boolean): void {
   const { mode } = settings
 
-  if (enabled) {
-    if (checkMode(mode)) {
-      advise(getModeData(5))
-    } else {
-      enableInPageLinks()
-    }
-  } else {
+  if (!requested) {
     log('In page linking not enabled')
+    return
   }
+
+  if (state.inPageLinks?.findTarget) return // Already wired up
+
+  if (checkMode(mode)) {
+    advise(getModeData(5))
+    return
+  }
+
+  enableInPageLinks()
 }

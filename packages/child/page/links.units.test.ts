@@ -15,7 +15,7 @@ vi.mock('../console', () => ({ advise: vi.fn(), log: vi.fn() }))
 vi.mock('../send/message', () => ({ __esModule: true, default: vi.fn() }))
 vi.mock('../events/listeners', () => ({ addEventListener: vi.fn() }))
 vi.mock('../values/settings', () => ({
-  default: { mode: 0 },
+  default: { mode: 0, inPageLinks: true },
 }))
 vi.mock('../values/state', () => ({
   default: { inPageLinks: null },

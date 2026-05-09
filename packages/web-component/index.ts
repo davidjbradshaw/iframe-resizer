@@ -85,16 +85,58 @@ export class IframeResizerElement extends HTMLBase {
 
   private iframe: HTMLIFrameElement | null = null
 
+  static get observedAttributes(): string[] {
+    return Object.keys(RESIZER_ATTR_MAP)
+  }
+
   get options(): Partial<IFrameOptions> {
     return this.resizerOptions
   }
 
   set options(val: Partial<IFrameOptions>) {
     this.resizerOptions = val
+    this.rebind()
   }
 
   get iframeResizer(): IFrameObject | null {
     return this.resizer
+  }
+
+  private buildOptions(): IFrameOptions {
+    const attrOptions: Record<string, unknown> = {}
+    for (const attr of this.attributes) {
+      const optionName = RESIZER_ATTR_MAP[attr.name]
+      if (optionName) {
+        attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
+      }
+    }
+
+    const eventHandlers: Record<string, (data: unknown) => void> = {}
+    for (const [callback, eventName] of Object.entries(EVENTS)) {
+      eventHandlers[callback] = (data: unknown) => {
+        this.dispatchEvent(
+          new CustomEvent(eventName, { detail: data, bubbles: true }),
+        )
+      }
+    }
+
+    return {
+      ...(attrOptions as unknown as IFrameOptions),
+      ...this.resizerOptions,
+      ...eventHandlers,
+      onBeforeClose: () => {
+        this.consoleGroup.event('close')
+        this.consoleGroup.warn(
+          'Close event ignored, remove the <iframe-resizer> element to close.',
+        )
+        return false
+      },
+    } as IFrameOptions
+  }
+
+  private rebind(): void {
+    if (!this.iframe || !this.resizer) return
+    connectResizer(this.buildOptions())(this.iframe)
   }
 
   connectedCallback(): void {
@@ -102,13 +144,9 @@ export class IframeResizerElement extends HTMLBase {
     if (this.iframe?.isConnected) return
 
     const iframe = document.createElement('iframe')
-    const attrOptions: Record<string, unknown> = {}
 
     for (const attr of this.attributes) {
-      const optionName = RESIZER_ATTR_MAP[attr.name]
-      if (optionName) {
-        attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
-      } else {
+      if (!RESIZER_ATTR_MAP[attr.name]) {
         iframe.setAttribute(attr.name, attr.value)
       }
     }
@@ -116,35 +154,20 @@ export class IframeResizerElement extends HTMLBase {
     this.iframe = iframe
     this.append(iframe)
 
-    const eventHandlers: Record<string, (data: unknown) => void> = {}
-
-    for (const [callback, eventName] of Object.entries(EVENTS)) {
-      eventHandlers[callback] = (data: unknown) => {
-        this.dispatchEvent(
-          new CustomEvent(eventName, {
-            detail: data,
-            bubbles: true,
-          }),
-        )
-      }
-    }
-
-    this.resizer =
-      connectResizer({
-        ...(attrOptions as unknown as IFrameOptions),
-        ...this.resizerOptions,
-        ...eventHandlers,
-        onBeforeClose: () => {
-          this.consoleGroup.event('close')
-          this.consoleGroup.warn(
-            'Close event ignored, remove the <iframe-resizer> element to close.',
-          )
-          return false
-        },
-      })(iframe) ?? null
+    this.resizer = connectResizer(this.buildOptions())(iframe) ?? null
 
     this.consoleGroup.label(`web-component(${iframe.id})`)
     this.consoleGroup.event('setup')
+  }
+
+  attributeChangedCallback(
+    name: string,
+    oldValue: string | null,
+    newValue: string | null,
+  ): void {
+    if (oldValue === newValue) return
+    if (!RESIZER_ATTR_MAP[name]) return
+    this.rebind()
   }
 
   disconnectedCallback(): void {

@@ -140,6 +140,49 @@ describe('React IframeResizer component', () => {
     })
   })
 
+  test('re-binds connectResizer when iframe-resizer options change', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    connectResizer.mockClear()
+
+    function Wrapper({ logFlag }: { logFlag: boolean }) {
+      return (
+        <IframeResizer
+          id="react-update"
+          src="https://example.com"
+          log={logFlag}
+        />
+      )
+    }
+
+    await act(async () => {
+      root.render(<Wrapper logFlag={false} />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // Re-render with a different option value; the second useEffect fires
+    // and re-calls connectResizer — which routes through the update path.
+    await act(async () => {
+      root.render(<Wrapper logFlag />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    // Re-rendering with the same options does NOT fire another bind.
+    await act(async () => {
+      root.render(<Wrapper logFlag />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
   test('onBeforeClose returns false and logs warning', async () => {
     const connectResizer = (await import('@iframe-resizer/core')).default
 
