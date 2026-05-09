@@ -67,17 +67,25 @@ export function checkLocationHash(): void {
   }
 }
 
-export function bindAnchors(): void {
-  for (const link of document.querySelectorAll('a[href^="#"]')) {
-    const href = link.getAttribute('href')
+export function handleAnchorClick(e: Event): void {
+  if (settings.inPageLinks !== true) return
 
-    if (href && href !== '#') {
-      addEventListener(link, 'click', (e) => {
-        e.preventDefault()
-        findTarget(href)
-      })
-    }
-  }
+  const target = e.target as Element | null
+  const link = target?.closest?.('a[href^="#"]')
+  if (!link) return
+
+  const href = link.getAttribute('href')
+  if (!href || href === '#') return
+
+  e.preventDefault()
+  findTarget(href)
+}
+
+export function bindAnchors(): void {
+  // Delegated listener: catches anchors added after init, and lets disable
+  // (settings.inPageLinks = false) restore native anchor behaviour because
+  // preventDefault() is gated inside the handler.
+  addEventListener(document, 'click', handleAnchorClick)
 }
 
 function bindLocationHash(): void {
@@ -95,9 +103,7 @@ function enableInPageLinks(): void {
   bindLocationHash()
   initCheck()
 
-  state.inPageLinks = {
-    findTarget,
-  }
+  state.findInPageLinkTarget = findTarget
 }
 
 export default function setupInPageLinks(requested: boolean): void {
@@ -108,7 +114,7 @@ export default function setupInPageLinks(requested: boolean): void {
     return
   }
 
-  if (state.inPageLinks?.findTarget) return // Already wired up
+  if (state.findInPageLinkTarget) return // Already wired up
 
   if (checkMode(mode)) {
     advise(getModeData(5))

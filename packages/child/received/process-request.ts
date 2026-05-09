@@ -9,7 +9,7 @@ import update from './update'
 import { getData } from './utils'
 
 const moveToAnchor = (event: MessageEvent): void =>
-  state.inPageLinks.findTarget(getData(event))
+  state.findInPageLinkTarget?.(getData(event))
 
 export default {
   init,

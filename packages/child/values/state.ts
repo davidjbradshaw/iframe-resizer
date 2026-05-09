@@ -6,7 +6,7 @@ export default {
   height: 0,
   isHidden: false,
   initLock: true,
-  inPageLinks: {} as { findTarget: (location: string) => void },
+  findInPageLinkTarget: null as ((location: string) => void) | null,
   origin: undefined,
   hasOverflowUpdated: true,
   overflowedNodeSet: new Set(),

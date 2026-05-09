@@ -14,7 +14,7 @@ describe('child/page/links', () => {
     document.body.innerHTML = ''
     settings.mode = 0
     settings.inPageLinks = true
-    state.inPageLinks = undefined
+    state.findInPageLinkTarget = null
   })
 
   test('setup and findTarget sends message for existing id', () => {
@@ -28,7 +28,7 @@ describe('child/page/links', () => {
 
     setupInPageLinks(true)
     // use the registered finder directly
-    state.inPageLinks.findTarget('#t1')
+    state.findInPageLinkTarget('#t1')
 
     expect(sendMessage).toHaveBeenCalled()
   })
