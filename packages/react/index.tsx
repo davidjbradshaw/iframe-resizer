@@ -67,7 +67,16 @@ function IframeResizer(
   // Re-bind when iframe-resizer-relevant props change. The first mount above
   // already created the binding, so subsequent calls take the update path in
   // core, which sends an UPDATE message to the child.
+  //
+  // optionsKey is the only meaningful dep — it's a stable serialization of the
+  // props the resizer cares about. We read latest `props` and `onBeforeClose`
+  // through refs so the effect doesn't re-fire on unrelated re-renders.
   const optionsKey = buildOptionsKey(props)
+  const propsRef = useRef(props)
+  const onBeforeCloseRef = useRef(onBeforeClose)
+  propsRef.current = props
+  onBeforeCloseRef.current = onBeforeClose
+
   const isFirstUpdateRef = useRef(true)
   useEffect(() => {
     if (isFirstUpdateRef.current) {
@@ -76,8 +85,11 @@ function IframeResizer(
     }
     const iframe = iframeRef.current
     if (!iframe) return
-    connectResizer({ ...props, onBeforeClose })(iframe)
-  }, [optionsKey]) // eslint-disable-line react-hooks/exhaustive-deps
+    connectResizer({
+      ...propsRef.current,
+      onBeforeClose: onBeforeCloseRef.current,
+    })(iframe)
+  }, [optionsKey])
 
   useImperativeHandle(
     ref,

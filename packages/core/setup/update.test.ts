@@ -23,7 +23,6 @@ const trigger = (await import('../send/trigger')).default
 const createOutgoingMessage = (await import('../send/outgoing')).default
 const meetsMinChildVersion = (await import('../checks/min-child-version'))
   .default
-const console = await import('../console')
 const settings = (await import('../values/settings')).default
 const updateIframe = (await import('./update')).default
 
@@ -33,13 +32,13 @@ describe('core/setup/update', () => {
     for (const key of Object.keys(settings)) delete settings[key]
   })
 
-  it('errors and skips dispatch when child version < 6', () => {
+  it('throws RangeError and skips dispatch when child version < 6', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(false)
     settings.edge1 = { mode: 0, direction: 'vertical' }
 
-    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true })
-
-    expect(console.error).toHaveBeenCalled()
+    expect(() =>
+      updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true }),
+    ).toThrow(RangeError)
     expect(trigger).not.toHaveBeenCalled()
   })
 
@@ -76,5 +75,46 @@ describe('core/setup/update', () => {
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true })
 
     expect(settings.edge1.mouseEvents).toBe(false)
+  })
+
+  it('does not flip mouseEvents when mouse handler keys are present but undefined', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical', mouseEvents: false }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, {
+      onMouseEnter: undefined,
+      onMouseLeave: undefined,
+    })
+
+    expect(settings.edge1.mouseEvents).toBe(false)
+  })
+
+  it('normalizes string log values into a boolean and derives logExpand', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical' }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: 'expanded' })
+
+    expect(settings.edge1.log).toBe(true)
+    expect(settings.edge1.logExpand).toBe(true)
+  })
+
+  it('normalizes numeric LOG_DISABLED (0) to false', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical' }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: 0 })
+
+    expect(settings.edge1.log).toBe(false)
+  })
+
+  it('normalizes numeric LOG_EXPANDED (2) to log:true and logExpand:true', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical' }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: 2 })
+
+    expect(settings.edge1.log).toBe(true)
+    expect(settings.edge1.logExpand).toBe(true)
   })
 })

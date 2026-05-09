@@ -1,6 +1,5 @@
-import { hasOwn } from '@iframe-resizer/common'
-
 const hasMouseEvents = (options: Record<string, any>): boolean =>
-  hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
+  typeof options.onMouseEnter === 'function' ||
+  typeof options.onMouseLeave === 'function'
 
 export default hasMouseEvents
