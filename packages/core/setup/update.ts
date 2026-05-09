@@ -8,10 +8,8 @@ import setOffsetSize from '../send/offset'
 import createOutgoingMessage from '../send/outgoing'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
+import hasMouseEvents from './has-mouse-events'
 import { setTargetOrigin } from './target-origin'
-
-const hasMouseEvents = (options: Record<string, any>): boolean =>
-  hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
 
 function mergeOptions(id: string, options: Record<string, any>): void {
   settings[id] = {
