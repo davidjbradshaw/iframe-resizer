@@ -11,6 +11,7 @@ import {
   type SimpleChanges,
 } from '@angular/core'
 import { esModuleInterop } from '@iframe-resizer/common'
+import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 import type {
   IFrameComponent,
   IFrameMessageData,
@@ -56,7 +57,7 @@ export class IframeResizerDirective {
     return this.resizer
   }
 
-  @Input() options: IFrameOptions & { logExpand?: boolean } = {
+  @Input() options: IFrameOptions = {
     license: '',
   }
 
@@ -99,7 +100,9 @@ export class IframeResizerDirective {
 
     this.consoleGroup.label(`angular(${id})`)
     this.consoleGroup.event('setup')
-    this.consoleGroup.expand(this.options.logExpand)
+    this.consoleGroup.expand(
+      this.options.log === EXPAND || this.options.log === LOG_EXPANDED,
+    )
 
     if (this.debug) this.consoleGroup.log('ngAfterViewInit')
 

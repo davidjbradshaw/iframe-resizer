@@ -1,4 +1,5 @@
 import { esModuleInterop } from '@iframe-resizer/common'
+import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 import type { IFrameComponent } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -76,7 +77,7 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
 
     const resizer = connectResizer(options)(iframeEl)
 
-    consoleGroup.expand(local.log === 'expanded')
+    consoleGroup.expand(local.log === EXPAND || local.log === LOG_EXPANDED)
     if (local.log) consoleGroup.log('Created Solid component')
 
     if (typeof setRef === 'function') {
