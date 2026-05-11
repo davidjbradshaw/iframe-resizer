@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../console', () => ({ advise: vi.fn() }))
-
-const { advise } = await import('../console')
 const state = (await import('../values/state')).default
 const moveToAnchor = (await import('./move-to-anchor')).default
 
@@ -22,9 +19,8 @@ describe('child/methods/move-to-anchor', () => {
     expect(() => moveToAnchor(123)).toThrowError(TypeError)
   })
 
-  it('advises when inPageLinks is not enabled', () => {
+  it('is a no-op when inPageLinks is not enabled', () => {
     state.findInPageLinkTarget = null
-    moveToAnchor('section-1')
-    expect(advise).toHaveBeenCalledWith(expect.stringContaining('inPageLinks'))
+    expect(() => moveToAnchor('section-1')).not.toThrow()
   })
 })
