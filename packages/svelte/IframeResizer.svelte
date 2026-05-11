@@ -4,7 +4,7 @@
   import connectResizer from '@iframe-resizer/core'
   import type { IFrameLogOption, IFrameObject } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
-  import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
+  import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
 
   // Deal with UMD not converting default exports to named exports
@@ -68,7 +68,7 @@
 
     resizer = connectResizer(options)(iframe)
 
-    consoleGroup.expand(options.logExpand)
+    consoleGroup.expand(log === EXPAND || log === LOG_EXPANDED)
     if ([COLLAPSE, EXPAND, true].includes(options.log as any)) {
       consoleGroup.log('Created Svelte component')
     }

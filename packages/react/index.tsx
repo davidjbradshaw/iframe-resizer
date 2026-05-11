@@ -1,6 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable react/require-default-props */
 import { esModuleInterop } from '@iframe-resizer/common'
+import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 import type { IFrameComponent } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -25,7 +26,7 @@ function IframeResizer(
   props: IFrameResizerProps,
   ref: React.ForwardedRef<IFrameForwardRef>,
 ): ReactElement {
-  const { log, logExpand } = props
+  const { log } = props
   const filteredProps = filterIframeAttribs(props)
   const iframeRef = useRef<IFrameComponent>(null)
   const consoleGroupRef =
@@ -55,7 +56,7 @@ function IframeResizer(
 
     const resizer = connectResizer({ ...props, onBeforeClose })(iframe)
 
-    consoleGroup.expand(logExpand)
+    consoleGroup.expand(log === EXPAND || log === LOG_EXPANDED)
     if (log) consoleGroup.log('Created React component')
 
     return () => {

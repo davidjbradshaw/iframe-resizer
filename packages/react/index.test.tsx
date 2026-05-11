@@ -7,16 +7,21 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import IframeResizer from './index'
 
-// Mock auto-console-group to avoid noisy logs and to provide required API
-vi.mock('auto-console-group', () => ({
-  default: () => ({
+// Shared console-group spy so tests can assert on its calls
+const { consoleGroup } = vi.hoisted(() => ({
+  consoleGroup: {
     label: vi.fn(),
     event: vi.fn(),
     warn: vi.fn(),
     expand: vi.fn(),
     log: vi.fn(),
     endAutoGroup: vi.fn(),
-  }),
+  },
+}))
+
+// Mock auto-console-group to avoid noisy logs and to provide required API
+vi.mock('auto-console-group', () => ({
+  default: () => consoleGroup,
 }))
 
 // Mock connectResizer to attach a minimal iframeResizer API and return a resizer
@@ -49,6 +54,7 @@ describe('React IframeResizer component', () => {
     disconnect.mockClear()
     moveToAnchor.mockClear()
     sendMessage.mockClear()
+    consoleGroup.expand.mockClear()
   })
 
   test('renders an iframe and wires ref methods', async () => {
@@ -177,6 +183,40 @@ describe('React IframeResizer component', () => {
     })
 
     expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('expands the console group when log="expanded"', async () => {
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-expanded"
+          src="https://example.com"
+          log="expanded"
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(consoleGroup.expand).toHaveBeenCalledWith(true)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('does not expand the console group for a plain log flag', async () => {
+    await act(async () => {
+      root.render(
+        <IframeResizer id="react-collapsed" src="https://example.com" log />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(consoleGroup.expand).toHaveBeenCalledWith(false)
 
     await act(async () => {
       root.unmount()

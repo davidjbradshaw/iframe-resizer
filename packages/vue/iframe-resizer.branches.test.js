@@ -13,10 +13,6 @@ let capturedOptions = {}
 // Mock core connect to expose options passed to connectResizer
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options) => {
-    // simulate internal mutation performed by connectResizer
-    // so consoleOptions.expand picks it up
-    // eslint-disable-next-line no-param-reassign
-    options.logExpand = true
     capturedOptions = options
     return () => mockResizer
   }),
