@@ -49,6 +49,9 @@ export function setupConsole({
     }
 }
 
+export const updateConsoleExpand = (iframeId: string): void =>
+  settings[iframeId]?.console?.expand?.(settings[iframeId]?.logExpand)
+
 const output =
   (type: string) =>
   (iframeId: string, ...args: any[]): any =>

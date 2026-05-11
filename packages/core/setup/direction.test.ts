@@ -19,11 +19,26 @@ describe('core/setup/direction', () => {
     }
   })
 
-  test('vertical leaves sizes as-is', () => {
+  test('vertical resets to default sizes', () => {
     settings.i7.direction = VERTICAL
     setDirection('i7')
 
     expect(settings.i7.sizeHeight).toBe(true)
+    expect(settings.i7.sizeWidth).toBe(false)
+    expect(settings.i7.autoResize).toBe(true)
+  })
+
+  test('switching back to vertical clears stale flags', () => {
+    settings.i7.direction = HORIZONTAL
+    setDirection('i7')
+    expect(settings.i7.sizeWidth).toBe(true)
+    expect(settings.i7.sizeHeight).toBe(false)
+
+    settings.i7.direction = VERTICAL
+    setDirection('i7')
+    expect(settings.i7.sizeWidth).toBe(false)
+    expect(settings.i7.sizeHeight).toBe(true)
+    expect(settings.i7.autoResize).toBe(true)
   })
 
   test('horizontal sets sizeWidth true and sizeHeight false via fallthrough', () => {
