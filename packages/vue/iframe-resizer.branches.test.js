@@ -51,6 +51,30 @@ describe('Vue iframe-resizer branches', () => {
     app = null
   })
 
+  it('calls consoleGroup.expand(true) when log="expanded"', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: 'expanded' })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('calls consoleGroup.expand(true) when log=LOG_EXPANDED (2)', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: 2 })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('calls consoleGroup.expand(false) when log=true', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: true })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(false)
+  })
+
   it('does not log when props.log is -1 (no logging)', async () => {
     app = createApp(IframeResizer, { license: 'GPLv3', log: -1 })
     app.mount(container)
