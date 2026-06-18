@@ -35,10 +35,10 @@ export default function useResizer(props: IFrameResizerProps) {
   useEffect(() => {
     const iframe = iframeRef.current
 
+    const resizer = connectResizer({ ...props, onBeforeClose })(iframe)
+
     consoleGroup.label(`react(${iframe.id})`)
     consoleGroup.event('setup')
-
-    const resizer = connectResizer({ ...props, onBeforeClose })(iframe)
 
     consoleGroup.expand(logExpand)
     if (log) consoleGroup.log('Created React component')
