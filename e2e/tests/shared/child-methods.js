@@ -277,12 +277,12 @@ export function childTests(baseUrl) {
 
   // --- Attributes ---
 
-  test('data-iframe-size element is detected', async ({ page }) => {
+  test('data-iframe-resize element is detected', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    const el = page.frameLocator('iframe').locator('[data-iframe-size]')
+    const el = page.frameLocator('iframe').locator('[data-iframe-resize]')
     await expect(el).toBeVisible()
   })
 

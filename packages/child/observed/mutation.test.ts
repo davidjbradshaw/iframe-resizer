@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest'
 vi.mock('@iframe-resizer/common/consts', () => ({
   MUTATION_OBSERVER: 'mutation',
 }))
+vi.mock('../check/migrate-size-attr', () => ({ default: vi.fn() }))
 vi.mock('../check/overflow', () => ({
   default: vi.fn(() => ({
     hasOverflowUpdated: true,

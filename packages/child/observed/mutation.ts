@@ -1,5 +1,6 @@
 import { MUTATION_OBSERVER } from '@iframe-resizer/common/consts'
 
+import migrateLegacySizeAttr from '../check/migrate-size-attr'
 import checkOverflow from '../check/overflow'
 import checkAndSetupTags from '../check/tags'
 import { endAutoGroup, event as consoleEvent, info } from '../console'
@@ -57,6 +58,7 @@ function contentMutated({
 }): void {
   consoleEvent('contentMutated')
   state.applySelectors()
+  migrateLegacySizeAttr()
   checkAndSetupTags()
   checkOverflow()
   endAutoGroup()

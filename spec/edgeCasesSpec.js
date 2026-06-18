@@ -350,6 +350,29 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     describe('License validation', () => {
+      // Warm up the module-level vAdvised flag in checkMode with a valid
+      // GPLv3 init. Without this, tests using invalid/missing licenses can
+      // throw during init when run first under randomised test order, which
+      // prevents onReady from firing and times the test out.
+      beforeAll((done) => {
+        const warmupIframe = document.createElement('iframe')
+        warmupIframe.id = 'license-warmup'
+        warmupIframe.src = 'spec/resources/frame.content.html'
+        document.body.append(warmupIframe)
+
+        iframeResize({
+          license: 'GPLv3',
+          checkOrigin: false,
+          onReady: () => {
+            warmupIframe.remove()
+            tearDown(warmupIframe)
+            setTimeout(done, 1)
+          },
+        }, warmupIframe)
+
+        mockMsgFromIFrame(warmupIframe, 'init')
+      })
+
       it('should accept GPLv3 license', (done) => {
         iframe = iframeResize({
           license: 'GPLv3',

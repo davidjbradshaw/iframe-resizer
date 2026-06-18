@@ -10,9 +10,9 @@ describe('child/page/apply-selectors', () => {
     el.className = 'match'
     document.body.append(el)
 
-    applySelector('sizeSelector', 'data-iframe-size', '.match')
+    applySelector('sizeSelector', 'data-iframe-resize', '.match')
 
-    expect(Object.hasOwn(el.dataset, 'iframeSize')).toBe(true)
+    expect(Object.hasOwn(el.dataset, 'iframeResize')).toBe(true)
     expect(childConsole.log).toHaveBeenCalled()
   })
 
@@ -30,7 +30,7 @@ describe('child/page/apply-selectors', () => {
     })
     run()
 
-    expect(Object.hasOwn(el1.dataset, 'iframeSize')).toBe(true)
+    expect(Object.hasOwn(el1.dataset, 'iframeResize')).toBe(true)
     expect(Object.hasOwn(el2.dataset, 'iframeIgnore')).toBe(true)
   })
 

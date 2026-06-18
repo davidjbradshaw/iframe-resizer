@@ -67,7 +67,7 @@ export function startTimingCheck(): void {
 
 Calculating the page size is taking an excessive amount of time (${round(average)}ms).
 
-To improve performance add the <b>data-iframe-size</> attribute to the ${detail.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
+To improve performance add the <b>data-iframe-resize</> attribute to the ${detail.Side.toLowerCase()} most element on the page. For more details see: <u>https://iframe-resizer.com/perf</>.`,
     )
   }, PERF_CHECK_INTERVAL)
 }

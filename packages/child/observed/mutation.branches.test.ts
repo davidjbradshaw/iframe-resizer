@@ -9,6 +9,7 @@ vi.mock('../console', () => ({
   info: vi.fn(),
 }))
 
+vi.mock('../check/migrate-size-attr', () => ({ default: vi.fn() }))
 vi.mock('../check/overflow', () => ({ default: vi.fn() }))
 vi.mock('../check/tags', () => ({ default: vi.fn() }))
 
