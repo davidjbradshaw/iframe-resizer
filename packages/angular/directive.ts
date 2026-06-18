@@ -66,8 +66,10 @@ export class IframeResizerDirective {
   constructor(private elementRef: ElementRef) {}
 
   private buildOptions(): IFrameOptions {
+    const { logExpand: _logExpand, ...options } = this.options as IFrameOptions &
+      Record<string, unknown>
     return {
-      ...this.options,
+      ...options,
 
       onBeforeClose: () => {
         this.consoleGroup.event('close')
