@@ -54,7 +54,8 @@ function IframeResizer(
     consoleGroup.label(`react(${iframe.id})`)
     consoleGroup.event('setup')
 
-    const resizer = connectResizer({ ...props, onBeforeClose })(iframe)
+    const { logExpand: _logExpand, ...coreProps } = props
+    const resizer = connectResizer({ ...coreProps, onBeforeClose })(iframe)
 
     consoleGroup.expand(log === EXPAND || log === LOG_EXPANDED)
     if (log) consoleGroup.log('Created React component')
@@ -86,8 +87,9 @@ function IframeResizer(
     }
     const iframe = iframeRef.current
     if (!iframe) return
+    const { logExpand: _logExpand, ...coreProps } = propsRef.current
     connectResizer({
-      ...propsRef.current,
+      ...coreProps,
       onBeforeClose: onBeforeCloseRef.current,
     })(iframe)
   }, [optionsKey])
