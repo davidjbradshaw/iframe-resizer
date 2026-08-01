@@ -53,10 +53,15 @@ const customConfig = (file) => {
         types,
         exports: {
           '.': {
+            types: `./${types}`,
             import: `./${module}`,
             require: './index.umd.js',
           },
-          './sfc': './iframe-resizer.vue',
+          './sfc': {
+            types: './iframe-resizer.vue.d.ts',
+            default: './iframe-resizer.vue',
+          },
+          './package.json': './package.json',
         },
         peerDependencies: {
           vue: '^3.3.0',
