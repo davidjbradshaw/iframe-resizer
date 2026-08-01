@@ -44,14 +44,19 @@ and API documentation. This includes versions for:
 * **[React](https://iframe-resizer.com/frameworks/react)**
 * **[Vue](https://iframe-resizer.com/frameworks/vue3)**
 * **[Angular](https://iframe-resizer.com/frameworks/angular)**
+* **[Svelte](https://iframe-resizer.com/frameworks/svelte)**
+* **[Solid](https://iframe-resizer.com/frameworks/solid)**
+* **[Astro](https://iframe-resizer.com/frameworks/astro)**
+* **[Alpine](https://iframe-resizer.com/frameworks/alpine)**
+* **[Web Components](https://iframe-resizer.com/frameworks/web-component)**
 * **[jQuery](https://iframe-resizer.com/frameworks/jquery)**
 
 Along with setup guides for:
-  
+
 * **[Wordpress](https://iframe-resizer.com/guides/wordpress/)**
 * **[Google Apps Script](https://iframe-resizer.com/guides/google_apps_script)**
 
-Their is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation
+There is also an [API](https://iframe-resizer.com/frameworks/api/) to support the creation
 of additional custom components.
 
 ### Extended API
@@ -68,12 +73,16 @@ Additionally _iframe-resizer_ provides a range of missing browser API features, 
 
 When combined with [viewer.js](https://viewerjs.org/) it can even resize iframes containing PDF and ODF documents.
 
-## Version 5
+## Version 6
 
-This version of iframe-resizer has been extensively rewritten to use modern browser APIs, this has enabled significantly better performance and greater accuracy in the detection of content resizing events.
+Version 6 fully ports the codebase to **TypeScript**, and replaces the old _@definitelyTyped_ based types with consistent type definitions that now cover all packages in full.
 
-With this release, the opportunity has been taken to refresh and simplify the API, if you are coming from a previous version then their is an [Upgrade Guide](https://iframe-resizer.com/upgrade) to explain the changes.
+The framework ecosystem expands with official packages for **Svelte**, **Solid**, **Astro**, **Alpine**, and **Web Components**, joining the existing **React**, **Vue**, **Angular**, and **jQuery** integrations.
+
+This release also includes further improvements to performance, security, and accessibility.
+
+If you are upgrading from a previous version, please see the [Upgrade Guide](https://iframe-resizer.com/upgrade).
 
 ---
 [<img align="right" src="https://badge.fury.io/js/@iframe-resizer%2Fcore.svg" alt="NPM" />](https://badge.fury.io/js/@iframe-resizer%2Fparent)
-Copyright &copy; 2013-25 [David J. Bradshaw](https://github.com/davidjbradshaw)
+Copyright &copy; 2013-26 [David J. Bradshaw](https://github.com/davidjbradshaw)

@@ -3,6 +3,22 @@
 VERSION=`node bin/getVersion.js  2>/dev/null`
 YEAR=`date +%y`
 
+PACKAGES=(
+  common
+  core
+  alpine
+  angular
+  astro
+  child
+  jquery
+  parent
+  react
+  solid
+  svelte
+  vue
+  web-component
+)
+
 if [ -z "$1" ]; then
     echo "Build type not specified"
     echo
@@ -27,39 +43,38 @@ echo
 echo "Publishing version $VERSION as $1"
 echo
 
-npm login
+npm whoami &>/dev/null || npm login
 
-git stash
+STASHED=false
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=true
+fi
 git pull
-git stash pop
+if $STASHED; then
+  git stash pop
+fi
 
 npm install
 npm test
 npm run build:$1
 
-cd dist/parent
-npm publish --tag $1
-cd ../child
-npm publish --tag $1
-cd ../core
-npm publish --tag $1
-cd ../jquery
-npm publish --tag $1
-cd ../react
-npm publish --tag $1
-cd ../vue
-npm publish --tag $1
-cd ../legacy
-npm publish --tag $1
+for pkg in "${PACKAGES[@]}"; do
+  echo "Publishing @iframe-resizer/$pkg"
+  cd "dist/$pkg"
+  npm publish --tag $1 --access public
+  cd ../..
+done
 
 if [ $1 != "latest" ]
 then
   exit 0
 fi
 
-echo "Updating GitHub build"
+echo "Updating example dependencies"
+bin/update-examples.sh --minor
 
-cd ../..
+echo "Updating GitHub build"
 rm -v iframe-resizer.zip
 zip iframe-resizer.zip js/**
 

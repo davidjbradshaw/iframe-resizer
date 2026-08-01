@@ -3,7 +3,11 @@
 
 const LOG = true
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000
+// Delay to ensure all queued callbacks complete before teardown
+const TEARDOWN_DELAY_MS = 100
+
+// Increase timeout for async tests in CI environments
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000
 jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures'
 
 function tearDown(iframe) {
@@ -11,8 +15,10 @@ function tearDown(iframe) {
     iframe?.iframeResizer?.close()
   }
 
-  if (iframe?.iframeResizer) setTimeout(removeResizer)
-  window.parentIFrame = undefined
+  // Wait for queued callbacks (like onReady via isolateUserCode setTimeout)
+  // to complete before closing the iframe and removing settings
+  if (iframe?.iframeResizer) setTimeout(removeResizer, TEARDOWN_DELAY_MS)
+  window.parentIframe = undefined
 }
 
 function loadIFrame(filename) {
@@ -60,7 +66,7 @@ function spyOnIFramePostMessage(iframe) {
 }
 
 function closeChild(window, done) {
-  window.parentIFrame.close()
+  window.parentIframe.close()
   done()
 }
 

@@ -8,4 +8,18 @@ updates:
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      eslint:
+        patterns: ["eslint", "eslint-*", "@typescript-eslint/*"]
+      babel:
+        patterns: ["@babel/*"]
+      rollup:
+        patterns: ["rollup", "rollup-*", "@rollup/*"]
+      vite:
+        patterns: ["vite", "vite-*", "@vitejs/*", "vitest", "@vitest/*"]
+      karma:
+        patterns: ["karma", "karma-*"]
+      playwright:
+        patterns: ["playwright", "@playwright/*"]

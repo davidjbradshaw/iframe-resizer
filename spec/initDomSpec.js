@@ -1,20 +1,28 @@
 define(['iframeResizerParent'], (iframeResize) => {
   describe('iFrame init(DOM Object)', () => {
-    xit('should create iframeResizer object', (done) => {
+    it('should create iframeResizer object', (done) => {
       loadIFrame('iframe600.html')
+      const iframe = document.getElementsByTagName('iframe')[0]
+      let called = false
 
       iframeResize(
         {
           license: 'GPLv3',
           warningTimeout: 1000,
+          checkOrigin: false,
           onReady: (iframe) => {
+            if (called) return
+            called = true
             expect(iframe.iframeResizer).toBeDefined()
             tearDown(iframe)
-            done()
+            setTimeout(done, 1)
           },
         },
-        document.getElementsByTagName('iframe')[0],
+        iframe,
       )
+
+      // Mock the init message from child
+      mockMsgFromIFrame(iframe, 'init')
     })
   })
 })

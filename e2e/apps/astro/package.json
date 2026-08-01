@@ -1,0 +1,14 @@
+{
+  "name": "e2e-astro",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "astro build"
+  },
+  "dependencies": {
+    "@iframe-resizer/astro": "file:../../../dist/astro",
+    "@iframe-resizer/common": "file:../../../dist/common",
+    "@iframe-resizer/core": "file:../../../dist/core",
+    "astro": "^5.18.1"
+  }
+}

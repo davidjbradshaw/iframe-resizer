@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://iframe-resizer.com/favicon.ico" />
+    <title>Web Component Example</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="../../js-dist/iframe-resizer.web-component.js"></script>
+    <style>
+      iframe-resizer iframe {
+        width: 100%;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>@iframe-resizer/web-component example</h2>
+
+    <iframe-resizer
+      license="GPLv3"
+      log
+      inPageLinks
+      id="myIframe"
+      src="child/frame.content.html"
+    ></iframe-resizer>
+
+    <div class="message-data" id="event-display" style="display: none">
+      <h3>Event Data:</h3>
+      <pre id="event-data"></pre>
+    </div>
+
+    <script>
+      const el = document.querySelector('iframe-resizer')
+      const display = document.getElementById('event-display')
+      const pre = document.getElementById('event-data')
+
+      function showData(data) {
+        display.style.display = ''
+        pre.textContent = JSON.stringify(data, (k, v) => k === 'iframe' ? undefined : v, 2)
+      }
+
+      el.addEventListener('iframe-resizer:resized', (e) => showData(e.detail))
+
+      el.addEventListener('iframe-resizer:message', (e) => {
+        showData(e.detail)
+        alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)
+        e.detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+      })
+    </script>
+  </body>
+</html>

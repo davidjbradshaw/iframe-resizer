@@ -1,12 +1,9 @@
 {
   "reject": [
-    "@jest/globals",
-    "jest",
-    "jest-environment-jsdom",
+    "@angular/core",
     "grunt-contrib-quint",
     "eslint",
     "eslint-plugin-compat",
-    "eslint-plugin-jest",
     "eslint-plugin-json",
     "eslint-plugin-lodash",
     "eslint-plugin-markdown",

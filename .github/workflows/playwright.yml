@@ -1,7 +1,7 @@
 # This workflow runs Playwright e2e tests
 # For more information see: https://playwright.dev/docs/ci
 
-name: Playwright E2E Tests
+name: Playwright
 
 permissions:
   contents: read
@@ -13,50 +13,93 @@ on:
     branches: [ "master", "dev" ]
 
 jobs:
-  test:
-    timeout-minutes: 60
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [20.x]
-    
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - uses: actions/checkout@v6
+
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v6
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22.x
         cache: 'npm'
-    
+
     - name: Install dependencies
       run: npm ci
-    
+
+    - name: Build project
+      run: TEST=1 node build-scripts/build-all.js
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: build-output
+        path: |
+          dist/
+          js/
+          test-js/
+        retention-days: 1
+
+  e2e:
+    name: ${{ matrix.framework }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        framework:
+          - alpine
+          - angular
+          - astro
+          - jquery
+          - parent
+          - react
+          - solid
+          - svelte
+          - vue
+          - web-component
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v6
+      with:
+        node-version: 22.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium
-    
-    - name: Build project
-      run: npm run rollup:debug
-    
-    - name: Copy built files to js-dist for e2e tests
-      run: cp -r js/* js-dist/
-    
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v7
+      with:
+        name: build-output
+
+    - name: Build e2e app
+      run: bash build-scripts/build-e2e-app.sh ${{ matrix.framework }}
+
     - name: Run Playwright tests
-      run: npm run test:e2e
-    
+      run: npx playwright test e2e/tests/${{ matrix.framework }}.spec.js
+
     - name: Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: always()
       with:
-        name: playwright-report
+        name: playwright-report-${{ matrix.framework }}
         path: playwright-report/
         retention-days: 30
-    
+
     - name: Upload test screenshots
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: failure()
       with:
-        name: playwright-screenshots
+        name: playwright-screenshots-${{ matrix.framework }}
         path: test-results/
         retention-days: 30
