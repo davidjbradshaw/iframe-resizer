@@ -13,10 +13,6 @@ let capturedOptions = {}
 // Mock core connect to expose options passed to connectResizer
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options) => {
-    // simulate internal mutation performed by connectResizer
-    // so consoleOptions.expand picks it up
-    // eslint-disable-next-line no-param-reassign
-    options.logExpand = true
     capturedOptions = options
     return () => mockResizer
   }),
@@ -53,6 +49,30 @@ describe('Vue iframe-resizer branches', () => {
     app?.unmount()
     container.remove()
     app = null
+  })
+
+  it('calls consoleGroup.expand(true) when log="expanded"', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: 'expanded' })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('calls consoleGroup.expand(true) when log=LOG_EXPANDED (2)', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: 2 })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('calls consoleGroup.expand(false) when log=true', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: true })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(false)
   })
 
   it('does not log when props.log is -1 (no logging)', async () => {

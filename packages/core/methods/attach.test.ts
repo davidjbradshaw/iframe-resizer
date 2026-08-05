@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('@iframe-resizer/common', () => ({ typeAssert: vi.fn() }))
 vi.mock('../send/trigger', () => ({ default: vi.fn() }))
 vi.mock('./close', () => ({ default: vi.fn() }))
 vi.mock('./disconnect', () => ({ default: vi.fn() }))
+vi.mock('./move-to-anchor', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({ default: {} }))
 
 const { default: attachMethods } = await import('./attach')
 const { default: trigger } = await import('../send/trigger')
-const { typeAssert } = await import('@iframe-resizer/common')
 const closeIframe = (await import('./close')).default
 const disconnect = (await import('./disconnect')).default
+const moveToAnchor = (await import('./move-to-anchor')).default
 const settings = (await import('../values/settings')).default
 
 describe('core/methods/attach', () => {
@@ -36,12 +36,7 @@ describe('core/methods/attach', () => {
     expect(disconnect).toHaveBeenCalledWith(iframe)
 
     api.moveToAnchor('hash')
-    expect(typeAssert).toHaveBeenCalled()
-    expect(trigger).toHaveBeenCalledWith(
-      'Move to anchor',
-      'moveToAnchor:hash',
-      'if1',
-    )
+    expect(moveToAnchor).toHaveBeenCalledWith('if1', 'hash')
 
     api.sendMessage({ a: 1 })
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')

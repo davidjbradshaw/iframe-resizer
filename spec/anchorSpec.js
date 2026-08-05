@@ -11,6 +11,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         id: 'anchor1',
         warningTimeout: 1000,
         checkOrigin: false,
+        inPageLinks: true,
         onReady: (iframe1) => {
           spyOn(iframe1.contentWindow, 'postMessage')
 

@@ -1,11 +1,11 @@
 import type { IFrameVersion } from '@iframe-resizer/common'
-import { typeAssert } from '@iframe-resizer/common'
-import { MESSAGE, STRING, VERSION } from '@iframe-resizer/common/consts'
+import { MESSAGE, VERSION } from '@iframe-resizer/common/consts'
 
 import trigger from '../send/trigger'
 import settings from '../values/settings'
 import closeIframe from './close'
 import disconnect from './disconnect'
+import moveToAnchor from './move-to-anchor'
 
 export default function attachMethods(id: string): void {
   if (settings[id]) {
@@ -24,10 +24,7 @@ export default function attachMethods(id: string): void {
         }
       },
 
-      moveToAnchor(anchor: string) {
-        typeAssert(anchor, STRING, 'moveToAnchor(anchor) anchor')
-        trigger('Move to anchor', `moveToAnchor:${anchor}`, id)
-      },
+      moveToAnchor: moveToAnchor.bind(null, id),
 
       sendMessage(message: any) {
         message = JSON.stringify(message)

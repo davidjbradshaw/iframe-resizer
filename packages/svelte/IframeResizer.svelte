@@ -4,7 +4,7 @@
   import connectResizer from '@iframe-resizer/core'
   import type { IFrameLogOption, IFrameObject } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
-  import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
+  import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
 
   // Deal with UMD not converting default exports to named exports
@@ -29,8 +29,8 @@
   let resizer: IFrameObject | null = null
   const consoleGroup = createAutoConsoleGroup()
 
-  onMount(() => {
-    const props: Record<string, any> = {
+  function buildOptions(): Record<string, any> {
+    const wireProps: Record<string, any> = {
       license,
       bodyBackground,
       bodyMargin,
@@ -44,10 +44,9 @@
       tolerance,
       warningTimeout,
     }
-
-    const options: Record<string, any> = {
+    return {
       ...Object.fromEntries(
-        Object.entries(props).filter(([, value]) => value !== undefined),
+        Object.entries(wireProps).filter(([, value]) => value !== undefined),
       ),
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
@@ -60,17 +59,45 @@
       onMessage: (...args: any[]) => dispatch('message', ...args),
       onResized: (...args: any[]) => dispatch('resized', ...args),
     }
+  }
 
+  onMount(() => {
+    const options = buildOptions()
     consoleGroup.label(`svelte(${iframe.id})`)
     consoleGroup.event('setup')
 
     resizer = connectResizer(options)(iframe)
 
-    consoleGroup.expand(options.logExpand)
+    consoleGroup.expand(log === EXPAND || log === LOG_EXPANDED)
     if ([COLLAPSE, EXPAND, true].includes(options.log as any)) {
       consoleGroup.log('Created Svelte component')
     }
   })
+
+  // Re-bind on prop change (after the initial bind in onMount).
+  // The first reactive run also fires, so guard with a sentinel.
+  let initialReactiveRun = true
+  $: {
+    void [
+      license,
+      bodyBackground,
+      bodyMargin,
+      bodyPadding,
+      checkOrigin,
+      direction,
+      log,
+      inPageLinks,
+      offsetSize,
+      scrolling,
+      tolerance,
+      warningTimeout,
+    ]
+    if (initialReactiveRun) {
+      initialReactiveRun = false
+    } else if (iframe) {
+      connectResizer(buildOptions())(iframe)
+    }
+  }
 
   onDestroy(() => {
     resizer?.disconnect()

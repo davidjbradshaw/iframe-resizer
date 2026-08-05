@@ -9,6 +9,7 @@ const mockResizer = {
 }
 
 let capturedOptions = {}
+let mockConsoleGroup
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options) => {
@@ -18,19 +19,23 @@ vi.mock('@iframe-resizer/core', () => ({
 }))
 
 vi.mock('auto-console-group', () => ({
-  default: () => ({
-    event: vi.fn(),
-    label: vi.fn(),
-    expand: vi.fn(),
-    log: vi.fn(),
-    warn: vi.fn(),
-    endAutoGroup: vi.fn(),
-  }),
+  default: () => {
+    mockConsoleGroup = {
+      event: vi.fn(),
+      label: vi.fn(),
+      expand: vi.fn(),
+      log: vi.fn(),
+      warn: vi.fn(),
+      endAutoGroup: vi.fn(),
+    }
+    return mockConsoleGroup
+  },
 }))
 
 import { flushSync, mount, unmount } from 'svelte'
 import IframeResizer from './IframeResizer.svelte'
 import connectResizer from '@iframe-resizer/core'
+import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 
 describe('Svelte IframeResizer lifecycle', () => {
   let target
@@ -134,6 +139,36 @@ describe('Svelte IframeResizer lifecycle', () => {
       props: { license: 'GPLv3', log: true },
     })
     flushSync()
+    unmount(component)
+  })
+
+  it('expands console group when log is "expanded"', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: EXPAND },
+    })
+    flushSync()
+    expect(mockConsoleGroup.expand).toHaveBeenCalledWith(true)
+    unmount(component)
+  })
+
+  it('expands console group when log is LOG_EXPANDED', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: LOG_EXPANDED },
+    })
+    flushSync()
+    expect(mockConsoleGroup.expand).toHaveBeenCalledWith(true)
+    unmount(component)
+  })
+
+  it('does not expand console group when log is true', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: true },
+    })
+    flushSync()
+    expect(mockConsoleGroup.expand).toHaveBeenCalledWith(false)
     unmount(component)
   })
 

@@ -17,6 +17,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'method4',
           checkOrigin: false,
+          inPageLinks: true,
           onReady: () => {
             spyOn(iframe.contentWindow, 'postMessage')
 
@@ -59,6 +60,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'method6',
           checkOrigin: false,
+          inPageLinks: true,
           onReady: () => {
             spyOn(iframe.contentWindow, 'postMessage')
 
@@ -85,6 +87,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'method7',
           checkOrigin: false,
+          inPageLinks: true,
           onReady: () => {
             spyOn(iframe.contentWindow, 'postMessage')
 
@@ -366,6 +369,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'method21',
           checkOrigin: false,
+          inPageLinks: true,
           onReady: (iframeEl) => {
             spyOn(iframeEl.contentWindow, 'postMessage')
 

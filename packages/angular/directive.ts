@@ -8,8 +8,10 @@ import {
   EventEmitter,
   Input,
   Output,
+  type SimpleChanges,
 } from '@angular/core'
 import { esModuleInterop } from '@iframe-resizer/common'
+import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 import type {
   IFrameComponent,
   IFrameMessageData,
@@ -55,7 +57,7 @@ export class IframeResizerDirective {
     return this.resizer
   }
 
-  @Input() options: IFrameOptions & { logExpand?: boolean } = {
+  @Input() options: IFrameOptions = {
     license: '',
   }
 
@@ -63,17 +65,11 @@ export class IframeResizerDirective {
 
   constructor(private elementRef: ElementRef) {}
 
-  ngAfterViewInit(): void {
-    const id = this.elementRef.nativeElement?.id
-
-    this.consoleGroup.label(`angular(${id})`)
-    this.consoleGroup.event('setup')
-    this.consoleGroup.expand(this.options.logExpand)
-
-    if (this.debug) this.consoleGroup.log('ngAfterViewInit')
-
-    this.resizer = connectResizer({
-      ...this.options,
+  private buildOptions(): IFrameOptions {
+    const { logExpand: _logExpand, ...options } = this
+      .options as IFrameOptions & Record<string, unknown>
+    return {
+      ...options,
 
       onBeforeClose: () => {
         this.consoleGroup.event('close')
@@ -98,7 +94,32 @@ export class IframeResizerDirective {
         top: number
         left: number
       }) => this.onScroll.next(event),
-    })(this.elementRef.nativeElement)
+    } as IFrameOptions
+  }
+
+  ngAfterViewInit(): void {
+    const id = this.elementRef.nativeElement?.id
+
+    this.consoleGroup.label(`angular(${id})`)
+    this.consoleGroup.event('setup')
+    this.consoleGroup.expand(
+      this.options.log === EXPAND || this.options.log === LOG_EXPANDED,
+    )
+
+    if (this.debug) this.consoleGroup.log('ngAfterViewInit')
+
+    this.resizer = connectResizer(this.buildOptions())(
+      this.elementRef.nativeElement,
+    )
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Re-bind when @Input options change. Skip the first call: the binding
+    // hasn't been established yet at that point — ngAfterViewInit handles it.
+    if (!this.resizer) return
+    if (!changes.options) return
+    if (this.debug) this.consoleGroup.log('ngOnChanges: options updated')
+    connectResizer(this.buildOptions())(this.elementRef.nativeElement)
   }
 
   ngOnDestroy(): void {

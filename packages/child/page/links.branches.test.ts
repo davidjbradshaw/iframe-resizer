@@ -16,15 +16,16 @@ describe('child/page/links branches', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
     document.body.innerHTML = ''
-    state.inPageLinks = undefined
+    state.findInPageLinkTarget = null
     settings.mode = 0
+    settings.inPageLinks = true
     sendMessage.mockClear()
   })
 
   it('enabled=false logs and does not set up handlers', () => {
     setupInPageLinks(false)
 
-    expect(state.inPageLinks).toBeUndefined()
+    expect(state.findInPageLinkTarget).toBeNull()
     expect(sendMessage).not.toHaveBeenCalled()
   })
 
@@ -34,7 +35,7 @@ describe('child/page/links branches', () => {
     setupInPageLinks(true)
 
     expect(consoleMod.advise).toHaveBeenCalled()
-    expect(state.inPageLinks).toBeUndefined()
+    expect(state.findInPageLinkTarget).toBeNull()
     expect(sendMessage).not.toHaveBeenCalled()
   })
 
@@ -69,7 +70,7 @@ describe('child/page/links branches', () => {
   })
 
   it('findTarget jumps when element exists', () => {
-    // Enable and use state.inPageLinks.findTarget
+    // Enable and use state.findInPageLinkTarget
     const target = document.createElement('div')
     target.id = 'found'
     target.getBoundingClientRect = () => ({ left: 7, top: 11 })
@@ -77,7 +78,7 @@ describe('child/page/links branches', () => {
 
     setupInPageLinks(true)
 
-    state.inPageLinks.findTarget('#found')
+    state.findInPageLinkTarget('#found')
 
     expect(sendMessage).toHaveBeenCalledWith(11, 7, SCROLL_TO_OFFSET)
   })
@@ -91,7 +92,7 @@ describe('child/page/links branches', () => {
     setupInPageLinks(true)
 
     // Pass location without # prefix
-    state.inPageLinks.findTarget('nohash')
+    state.findInPageLinkTarget('nohash')
 
     expect(sendMessage).toHaveBeenCalledWith(15, 5, SCROLL_TO_OFFSET)
   })
@@ -104,7 +105,7 @@ describe('child/page/links branches', () => {
 
     setupInPageLinks(true)
 
-    state.inPageLinks.findTarget('#byname')
+    state.findInPageLinkTarget('#byname')
 
     expect(sendMessage).toHaveBeenCalledWith(9, 3, SCROLL_TO_OFFSET)
   })
