@@ -9,6 +9,6 @@
     "@iframe-resizer/astro": "file:../../../dist/astro",
     "@iframe-resizer/common": "file:../../../dist/common",
     "@iframe-resizer/core": "file:../../../dist/core",
-    "astro": "^5.18.1"
+    "astro": "^7.3.2"
   }
 }
