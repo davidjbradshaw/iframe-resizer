@@ -9,19 +9,30 @@ const TEARDOWN_DELAY_MS = 100
 // Increase timeout for async tests in CI environments
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000
 
-const FIXTURES_PATH = 'base/spec/javascripts/fixtures'
+const FIXTURES_PATH = '/base/spec/javascripts/fixtures/'
 const FIXTURES_ID = 'jasmine-fixtures'
 const fixturesCache = {}
 
+// Preload every fixture Karma serves, so loadIFrame() can stay synchronous
+beforeAll(async () => {
+  const files = Object.keys(window.__karma__.files).filter((file) =>
+    file.startsWith(FIXTURES_PATH),
+  )
+
+  await Promise.all(
+    files.map(async (file) => {
+      const response = await fetch(file)
+      if (!response.ok) {
+        throw new Error('Fixture could not be loaded: ' + file)
+      }
+      fixturesCache[file.slice(FIXTURES_PATH.length)] = await response.text()
+    }),
+  )
+})
+
 function readFixture(filename) {
   if (!(filename in fixturesCache)) {
-    const xhr = new XMLHttpRequest()
-    xhr.open('GET', FIXTURES_PATH + '/' + filename, false)
-    xhr.send()
-    if (xhr.status !== 200) {
-      throw new Error('Fixture could not be loaded: ' + filename)
-    }
-    fixturesCache[filename] = xhr.responseText
+    throw new Error('Unknown fixture: ' + filename)
   }
 
   return fixturesCache[filename]
