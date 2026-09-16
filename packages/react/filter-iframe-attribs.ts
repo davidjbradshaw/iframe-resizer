@@ -11,7 +11,6 @@ export default ({
   offsetSize,
   scrolling,
   tolerance,
-  waitForLoad,
   warningTimeout,
   onAfterClose,
   onMessage,
