@@ -94,8 +94,11 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
         })[0]
 
+        let finished = false
         spyOn(iframe.contentWindow, 'postMessage').and.callFake(() => {
           // Call done after first postMessage
+          if (finished) return
+          finished = true
           setTimeout(done, 1)
         })
 

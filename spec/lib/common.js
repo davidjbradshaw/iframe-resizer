@@ -4,7 +4,7 @@
 const LOG = true
 
 // Delay to ensure all queued callbacks complete before teardown
-const TEARDOWN_DELAY_MS = 100
+const TEARDOWN_DELAY_MS = 10
 
 // Increase timeout for async tests in CI environments
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000
@@ -42,16 +42,31 @@ function removeFixtures() {
   document.getElementById(FIXTURES_ID)?.remove()
 }
 
-afterEach(removeFixtures)
+// Resolves once the previous test's delayed close() has run, so the next test
+// can't start while a stale disconnect() is still pending for the same iframe id
+let pendingClose = Promise.resolve()
+
+afterEach(async () => {
+  await pendingClose
+  pendingClose = Promise.resolve()
+  removeFixtures()
+})
 
 function tearDown(iframe) {
-  function removeResizer() {
-    iframe?.iframeResizer?.close()
-  }
-
   // Wait for queued callbacks (like onReady via isolateUserCode setTimeout)
   // to complete before closing the iframe and removing settings
-  if (iframe?.iframeResizer) setTimeout(removeResizer, TEARDOWN_DELAY_MS)
+  if (iframe?.iframeResizer) {
+    const close = new Promise((resolve) => {
+      setTimeout(() => {
+        iframe.iframeResizer?.close()
+        resolve()
+      }, TEARDOWN_DELAY_MS)
+    })
+
+    // Accumulate, so tests that tear down several iframes wait for all of them
+    pendingClose = Promise.all([pendingClose, close])
+  }
+
   window.parentIframe = undefined
 }
 
