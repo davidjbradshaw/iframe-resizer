@@ -22,5 +22,6 @@ jobs:
       with:
         node-version: 26.x
         cache: 'npm'
+    - run: npm install -g npm@12
     - run: npm ci
     - run: npm run test:unit
