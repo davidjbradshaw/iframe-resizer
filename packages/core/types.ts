@@ -115,8 +115,6 @@ export interface IFrameOptions {
    * before triggering a resize of the iframe.
    */
   tolerance?: number
-  /** @deprecated No longer required in modern browsers. */
-  waitForLoad?: boolean
   /** Timeout in ms before warning if iframe has not responded. */
   warningTimeout?: number
   /**
