@@ -26,6 +26,7 @@ export default defineConfig({
   },
   plugins: [
     svelte({
+      configFile: false,
       compilerOptions: {
         customElement: false,
       },
