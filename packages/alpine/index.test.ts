@@ -259,7 +259,10 @@ describe('Alpine IframeResizer plugin', () => {
     expect(ctx.evaluate).toHaveBeenCalledWith('iframeOptions()')
   })
 
-  test('directive sets waitForLoad option', () => {
+  // Alpine attaches the directive after Alpine.start(), which can be after a
+  // same-origin iframe has already loaded. waitForLoad would then suppress the
+  // init sent on attach and the child would never initialise.
+  test('directive does not set waitForLoad', () => {
     const mockAlpine = createMockAlpine()
     IframeResizer(mockAlpine as any)
 
@@ -269,6 +272,6 @@ describe('Alpine IframeResizer plugin', () => {
     callback(mockIframe, { expression: 'opts' }, ctx)
 
     const capturedOptions = vi.mocked(connectResizer).mock.calls[0][0] as any
-    expect(capturedOptions.waitForLoad).toBe(true)
+    expect(capturedOptions.waitForLoad).toBeUndefined()
   })
 })
