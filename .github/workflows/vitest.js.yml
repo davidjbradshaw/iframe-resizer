@@ -20,7 +20,7 @@ jobs:
     - name: Use Node.js 22.x
       uses: actions/setup-node@v6
       with:
-        node-version: 22.x
+        node-version: 26.x
         cache: 'npm'
     - run: npm ci
     - run: npm run test:unit
