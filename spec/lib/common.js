@@ -8,7 +8,30 @@ const TEARDOWN_DELAY_MS = 100
 
 // Increase timeout for async tests in CI environments
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000
-jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures'
+
+const FIXTURES_PATH = 'base/spec/javascripts/fixtures'
+const FIXTURES_ID = 'jasmine-fixtures'
+const fixturesCache = {}
+
+function readFixture(filename) {
+  if (!(filename in fixturesCache)) {
+    const xhr = new XMLHttpRequest()
+    xhr.open('GET', FIXTURES_PATH + '/' + filename, false)
+    xhr.send()
+    if (xhr.status !== 200) {
+      throw new Error('Fixture could not be loaded: ' + filename)
+    }
+    fixturesCache[filename] = xhr.responseText
+  }
+
+  return fixturesCache[filename]
+}
+
+function removeFixtures() {
+  document.getElementById(FIXTURES_ID)?.remove()
+}
+
+afterEach(removeFixtures)
 
 function tearDown(iframe) {
   function removeResizer() {
@@ -22,7 +45,11 @@ function tearDown(iframe) {
 }
 
 function loadIFrame(filename) {
-  loadFixtures(filename)
+  removeFixtures()
+  const container = document.createElement('div')
+  container.id = FIXTURES_ID
+  container.innerHTML = readFixture(filename)
+  document.body.append(container)
 }
 
 function getTarget(iframe) {

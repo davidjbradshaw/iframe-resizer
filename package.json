@@ -130,7 +130,6 @@
     "http-server": "^14.1.1",
     "jasmine": "^7.0.0",
     "jasmine-core": "^7.0.2",
-    "jasmine-jquery": "^2.1.1",
     "jquery": "^4.0.0",
     "jsdom": "^30.0.1",
     "karma": "^6.4.4",
@@ -138,7 +137,6 @@
     "karma-coverage": "^2.2.1",
     "karma-firefox-launcher": "^2.1.3",
     "karma-jasmine": "^5.1.0",
-    "karma-jasmine-jquery": "^0.1.1",
     "karma-logcapture-reporter": "0.0.1",
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
@@ -178,14 +176,8 @@
     "RWD",
     "responsive"
   ],
-  "overrides": {
-    "karma-jasmine-jquery": {
-      "bower-installer": "1.3.6"
-    }
-  },
   "allowScripts": {
     "fsevents@2.3.3": true,
-    "es5-ext@0.10.64": true,
-    "karma-jasmine-jquery@0.1.1": true
+    "es5-ext@0.10.64": true
   }
 }
