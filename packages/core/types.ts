@@ -115,6 +115,12 @@ export interface IFrameOptions {
    * before triggering a resize of the iframe.
    */
   tolerance?: number
+  /**
+   * @deprecated No longer required in modern browsers and will be removed in
+   * a future version. Leave unset: if the iframe loads before iframe-resizer
+   * attaches, this option prevents it from initialising.
+   */
+  waitForLoad?: boolean
   /** Timeout in ms before warning if iframe has not responded. */
   warningTimeout?: number
   /**

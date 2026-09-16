@@ -17,6 +17,7 @@ describe('filterIframeAttribs', () => {
       offsetSize: 10,
       scrolling: AUTO,
       tolerance: 5,
+      waitForLoad: true,
       warningTimeout: 3000,
       onAfterClose: vi.fn(),
       onMessage: vi.fn(),
