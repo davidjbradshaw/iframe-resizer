@@ -171,6 +171,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
         let resizeCount1 = 0
         let resizeCount2 = 0
+        let finished = false
 
         const iframes = iframeResize({
           license: 'GPLv3',
@@ -180,7 +181,8 @@ define(['iframeResizerParent'], (iframeResize) => {
             if (data.iframe.id === iframes[0].id) resizeCount1++
             if (data.iframe.id === iframes[1].id) resizeCount2++
 
-            if (resizeCount1 > 0 && resizeCount2 > 0) {
+            if (resizeCount1 > 0 && resizeCount2 > 0 && !finished) {
+              finished = true
               // Both iframes should have received their own resize events
               expect(resizeCount1).toBeGreaterThan(0)
               expect(resizeCount2).toBeGreaterThan(0)
