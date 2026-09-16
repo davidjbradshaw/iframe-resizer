@@ -21,6 +21,7 @@ vi.mock('./console', () => {
 
 beforeEach(() => {
   vi.resetModules()
+  vi.clearAllMocks()
 })
 
 it('throws TypeError when options is not an object', async () => {

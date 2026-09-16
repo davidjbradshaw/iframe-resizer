@@ -4,6 +4,7 @@ vi.mock('../send/message', () => ({ default: vi.fn() }))
 
 beforeEach(() => {
   vi.resetModules()
+  vi.clearAllMocks()
 })
 
 it('parseFrozen returns an immutable object', async () => {
