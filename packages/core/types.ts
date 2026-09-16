@@ -16,10 +16,7 @@ import {
 } from '@iframe-resizer/common/consts'
 
 export type IFrameDirection =
-  | typeof VERTICAL
-  | typeof HORIZONTAL
-  | typeof NONE
-  | typeof BOTH
+  typeof VERTICAL | typeof HORIZONTAL | typeof NONE | typeof BOTH
 
 export type IFrameLogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
 
