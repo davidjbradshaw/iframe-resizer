@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [26.x]
         # Single Node.js version is sufficient (browser-targeted)
 
     steps:
