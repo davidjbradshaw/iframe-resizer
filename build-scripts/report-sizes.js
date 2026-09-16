@@ -31,7 +31,7 @@ function listBundles(root, dir) {
 }
 
 // Print one table of every JS bundle in the given dirs (relative to root)
-export default function reportSizes(root, dirs) {
+export default function reportSizes(root, dirs, note = '') {
   const rows = dirs
     .flatMap((dir) => listBundles(root, dir))
     .map((path) => ({ path, ...measure(join(root, path)) }))
@@ -40,7 +40,7 @@ export default function reportSizes(root, dirs) {
 
   const width = Math.max(...rows.map(({ path }) => path.length))
 
-  console.log('\n📦 Bundle sizes\n')
+  console.log(`\n📦 Bundle sizes${note ? ` (${note})` : ''}\n`)
 
   for (const { path, raw, gzip, brotli } of rows) {
     console.log(
