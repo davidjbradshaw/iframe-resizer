@@ -14,11 +14,17 @@ function measure(path) {
   }
 }
 
+const isEsm = (file) => file.endsWith('.esm.js')
+
+// Where a package ships several formats, only report the ESM build
 function listBundles(root, dir) {
   try {
-    return readdirSync(join(root, dir))
-      .filter((file) => file.endsWith('.js') || file.endsWith('.astro'))
-      .map((file) => `${dir}/${file}`)
+    const files = readdirSync(join(root, dir)).filter(
+      (file) => file.endsWith('.js') || file.endsWith('.astro'),
+    )
+    const bundles = files.some(isEsm) ? files.filter(isEsm) : files
+
+    return bundles.map((file) => `${dir}/${file}`)
   } catch {
     return []
   }
