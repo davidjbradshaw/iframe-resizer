@@ -32,6 +32,7 @@ vi.mock('./read/from-page', () => ({
 }))
 vi.mock('./check/mode', () => ({ default: vi.fn() }))
 vi.mock('./send/size', () => ({ default: vi.fn() }))
+vi.mock('./values/state', () => ({ default: { firstRun: false } }))
 vi.mock('./utils/isolate', () => ({
   default: (arr) =>
     arr.forEach((fn) => {
@@ -81,7 +82,6 @@ it('uses id (no-op) when bothDirections is true', async () => {
 })
 
 it('returns early when not first run', async () => {
-  vi.mock('./values/state', () => ({ default: { firstRun: false } }))
   const { default: init } = await import('./init')
   const sendSize = (await import('./send/size')).default
   const { default: state } = await import('./values/state')

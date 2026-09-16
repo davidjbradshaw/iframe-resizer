@@ -1,5 +1,7 @@
 import { beforeEach, expect, it, vi } from 'vitest'
 
+vi.mock('../send/message', () => ({ default: vi.fn() }))
+
 beforeEach(() => {
   vi.resetModules()
 })
@@ -12,7 +14,6 @@ it('parseFrozen returns an immutable object', async () => {
 })
 
 it('notExpected calls sendMessage with typeStop', async () => {
-  vi.mock('../send/message', () => ({ default: vi.fn() }))
   const { notExpected } = await import('./utils')
   const msg = await import('../send/message')
   notExpected('foo')
