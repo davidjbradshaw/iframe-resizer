@@ -4,9 +4,7 @@
     "js/*",
     "dist/*",
     "*.d.ts",
-    "coverage/**",
-    "vite-build.js",
-    "vite.config.js"
+    "coverage/**"
   ],
   "env": {
     "amd": true,

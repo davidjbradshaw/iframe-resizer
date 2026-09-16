@@ -1,5 +1,4 @@
 import { babel } from '@rollup/plugin-babel'
-import commonjs from '@rollup/plugin-commonjs'
 import strip from '@rollup/plugin-strip'
 import typescript from '@rollup/plugin-typescript'
 import clear from 'rollup-plugin-clear'
@@ -36,9 +35,7 @@ export const pluginsBase =
       exclude: 'node_modules/**',
     })
 
-    const base = skipVI
-      ? [babelPlugin, commonjs()]
-      : [babelPlugin, versionInjector(vi), commonjs()]
+    const base = skipVI ? [babelPlugin] : [babelPlugin, versionInjector(vi)]
 
     return stripLog ? delog.concat(base) : log.concat(base)
   }
