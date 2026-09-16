@@ -78,7 +78,8 @@ async function buildAll() {
 
   const { default: reportSizes } = await import('./report-sizes.js')
   const distDirs = DEBUG ? [] : packages.map((pkg) => `dist/${pkg.name}`)
-  reportSizes(root, [...distDirs, 'js'])
+  const note = DEBUG || TEST ? 'logging not stripped' : ''
+  reportSizes(root, [...distDirs, 'js'], note)
 
   console.log('\n✅ Build completed successfully!\n')
 }
