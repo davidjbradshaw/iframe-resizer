@@ -51,6 +51,9 @@ const noContent = (iframe: HTMLIFrameElement): boolean => {
 function sendInit(id: string, initChild: () => void): void {
   const { iframe, waitForLoad } = settings[id]
 
+  // Internal/test-only (not in IFrameOptions): skip the immediate init so it
+  // is only sent from the load event, giving tests one deterministic point.
+  // Unsafe for real pages, as an iframe that loaded before attach never inits.
   if (waitForLoad === true) return
   if (noContent(iframe)) {
     setTimeout(() => {
