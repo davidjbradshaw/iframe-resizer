@@ -42,6 +42,7 @@ vi.mock('./utils/isolate', () => ({
 
 beforeEach(() => {
   vi.resetModules()
+  vi.clearAllMocks()
   fromPageData = { bodyBackground: '', bodyPadding: '' }
 })
 
