@@ -55,4 +55,35 @@ describe('React IframeResizer branches', () => {
       root.unmount()
     })
   })
+
+  test('imperative methods throw before the resizer is initialised', async () => {
+    const fRef = createRef<any>()
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-noinit"
+          src="https://example.org"
+          ref={fRef}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    // Simulate the iframe being mounted but core not yet having attached
+    const iframe = fRef.current.getElement()
+    delete iframe.iframeResizer
+
+    const notReady = /not available yet/
+    expect(() => fRef.current.getVersion()).toThrow(notReady)
+    expect(() => fRef.current.moveToAnchor('top')).toThrow(notReady)
+    expect(() => fRef.current.sendMessage('hi')).toThrow(notReady)
+
+    // Element accessors do not depend on the resizer
+    expect(fRef.current.getElement()).toBe(iframe)
+    expect(fRef.current.getRef().current).toBe(iframe)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
 })
