@@ -54,6 +54,15 @@ jobs:
             echo '{"version":"2.1.0","runs":[]}' > eslint-results.sarif
           fi
 
+      # The SARIF formatter includes messages silenced by eslint-disable
+      # comments, and code scanning raises alerts for them anyway. Only
+      # upload what ESLint actually reports.
+      - name: Drop inline-suppressed results from SARIF
+        run: |
+          jq '.runs[].results |= map(select(((.suppressions // []) | length) == 0))' \
+            eslint-results.sarif > eslint-results.filtered.sarif
+          mv eslint-results.filtered.sarif eslint-results.sarif
+
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v4
         with:
