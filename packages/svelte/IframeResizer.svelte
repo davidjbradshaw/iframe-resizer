@@ -2,7 +2,12 @@
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 
   import connectResizer from '@iframe-resizer/core'
-  import type { IFrameLogOption, IFrameObject } from '@iframe-resizer/core'
+  import type {
+    IFrameDirection,
+    IFrameLogOption,
+    IFrameObject,
+    IFrameOptions,
+  } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
@@ -15,7 +20,7 @@
   export let bodyMargin: string | undefined = undefined
   export let bodyPadding: string | undefined = undefined
   export let checkOrigin: boolean | undefined = undefined
-  export let direction: string | undefined = undefined
+  export let direction: IFrameDirection | undefined = undefined
   export let log: IFrameLogOption | undefined = undefined
   export let inPageLinks: boolean | undefined = undefined
   export let offsetSize: number | undefined = undefined
@@ -29,8 +34,8 @@
   let resizer: IFrameObject | null = null
   const consoleGroup = createAutoConsoleGroup()
 
-  function buildOptions(): Record<string, any> {
-    const wireProps: Record<string, any> = {
+  function buildOptions(): IFrameOptions {
+    const options: IFrameOptions = {
       license,
       bodyBackground,
       bodyMargin,
@@ -43,11 +48,6 @@
       scrolling,
       tolerance,
       warningTimeout,
-    }
-    return {
-      ...Object.fromEntries(
-        Object.entries(wireProps).filter(([, value]) => value !== undefined),
-      ),
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
         consoleGroup.warn(
@@ -59,6 +59,13 @@
       onMessage: (...args: any[]) => dispatch('message', ...args),
       onResized: (...args: any[]) => dispatch('resized', ...args),
     }
+
+    // Drop unset props so they don't override core's defaults on update
+    for (const key of Object.keys(options) as (keyof IFrameOptions)[]) {
+      if (options[key] === undefined) delete options[key]
+    }
+
+    return options
   }
 
   onMount(() => {
@@ -74,11 +81,13 @@
     }
   })
 
-  // Re-bind on prop change (after the initial bind in onMount).
-  // The first reactive run also fires, so guard with a sentinel.
-  let initialReactiveRun = true
+  // Re-bind when the resizer props change (after the initial bind in onMount).
+  // Svelte runs this block during init, before bind:this has set `iframe`,
+  // and again once it is set, so compare a key of the props rather than
+  // counting runs.
+  let lastOptionsKey: string | undefined
   $: {
-    void [
+    const optionsKey = JSON.stringify([
       license,
       bodyBackground,
       bodyMargin,
@@ -91,12 +100,15 @@
       scrolling,
       tolerance,
       warningTimeout,
-    ]
-    if (initialReactiveRun) {
-      initialReactiveRun = false
-    } else if (iframe) {
+    ])
+    if (
+      iframe &&
+      lastOptionsKey !== undefined &&
+      optionsKey !== lastOptionsKey
+    ) {
       connectResizer(buildOptions())(iframe)
     }
+    lastOptionsKey = optionsKey
   }
 
   onDestroy(() => {

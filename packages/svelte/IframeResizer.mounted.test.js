@@ -33,6 +33,7 @@ vi.mock('auto-console-group', () => ({
 }))
 
 import { flushSync, mount, unmount } from 'svelte'
+import { createClassComponent } from 'svelte/legacy'
 import IframeResizer from './IframeResizer.svelte'
 import connectResizer from '@iframe-resizer/core'
 import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
@@ -51,14 +52,37 @@ describe('Svelte IframeResizer lifecycle', () => {
     target.remove()
   })
 
-  it('mounts and calls connectResizer', () => {
+  it('mounts and calls connectResizer exactly once', () => {
     const component = mount(IframeResizer, {
       target,
       props: { license: 'GPLv3' },
     })
     flushSync()
-    expect(connectResizer).toHaveBeenCalled()
+    // The reactive block runs again once bind:this sets the iframe; that
+    // must not re-bind through core's update path
+    expect(connectResizer).toHaveBeenCalledTimes(1)
     unmount(component)
+  })
+
+  it('re-binds when a resizer prop changes, not when it is unchanged', () => {
+    const component = createClassComponent({
+      component: IframeResizer,
+      target,
+      props: { license: 'GPLv3' },
+    })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    component.$set({ tolerance: 5 })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(capturedOptions.tolerance).toBe(5)
+
+    component.$set({ tolerance: 5 })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    component.$destroy()
   })
 
   it('calls disconnect on unmount', () => {
