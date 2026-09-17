@@ -5,6 +5,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     it('requested from iFrame', (done) => {
+      let finished = false
       const iframe1 = iframeResize({
         license: 'GPLv3',
         log: true,
@@ -27,6 +28,8 @@ define(['iframeResizerParent'], (iframeResize) => {
           ).not.toEqual(0)
         }
         if (0 !== msg.indexOf('pageInfoStop')) {
+          if (finished) return
+          finished = true
           tearDown(iframe1)
           setTimeout(done, 1)
         }

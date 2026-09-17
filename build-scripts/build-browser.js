@@ -63,7 +63,7 @@ const configs = [
     plugins: [typescriptChild(), resolve(), ...pluginsBase(stripLog)()],
   },
   {
-    input: 'packages/web-component/index.ts',
+    input: 'packages/web-component/iife.ts',
     output: {
       banner: createBanner('web-component', 'iife'),
       file: 'js/iframe-resizer.web-component.js',

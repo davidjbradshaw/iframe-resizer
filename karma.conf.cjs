@@ -5,7 +5,7 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine-jquery', 'jasmine', 'requirejs'],
+    frameworks: ['jasmine', 'requirejs'],
 
     // Karma will require() these plugins
     /*
@@ -19,6 +19,8 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
+      // jQuery must be global before the jQuery plugin loads
+      'node_modules/jquery/dist/jquery.js',
       'test-main.js',
       'spec/lib/*.js',
       { pattern: 'js/*.js', included: false },

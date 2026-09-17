@@ -1,7 +1,27 @@
 import { beforeEach, expect, it, vi } from 'vitest'
 
+vi.mock('./checks/id', () => ({ default: vi.fn(() => 'abc') }))
+vi.mock('./listeners', () => ({ default: vi.fn() }))
+vi.mock('./setup/logging', () => ({ default: vi.fn() }))
+vi.mock('./setup', () => ({
+  default: vi.fn((iframe) => {
+    iframe.iframeResizer = { ready: 1 }
+  }),
+}))
+vi.mock('./console', () => {
+  const errorBoundary = vi.fn(
+    (_, fn) =>
+      (...args) =>
+        fn(...args),
+  )
+  const event = vi.fn()
+  const warn = vi.fn()
+  return { errorBoundary, event, warn }
+})
+
 beforeEach(() => {
   vi.resetModules()
+  vi.clearAllMocks()
 })
 
 it('throws TypeError when options is not an object', async () => {
@@ -38,25 +58,6 @@ it('runs update flow and returns existing api when already setup', async () => {
 })
 
 it('sets up logging and wraps setupIframe via errorBoundary', async () => {
-  vi.mock('./checks/id', () => ({ default: vi.fn(() => 'abc') }))
-  vi.mock('./listeners', () => ({ default: vi.fn() }))
-  vi.mock('./setup/logging', () => ({ default: vi.fn() }))
-  vi.mock('./setup', () => ({
-    default: vi.fn((iframe) => {
-      iframe.iframeResizer = { ready: 1 }
-    }),
-  }))
-  vi.mock('./console', () => {
-    const errorBoundary = vi.fn(
-      (_, fn) =>
-        (...args) =>
-          fn(...args),
-    )
-    const event = vi.fn()
-    const warn = vi.fn()
-    return { errorBoundary, event, warn }
-  })
-
   const { default: connectResizer } = await import('./index')
   const loggingMod = await import('./setup/logging')
   const setupMod = await import('./setup')

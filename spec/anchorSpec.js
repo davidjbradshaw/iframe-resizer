@@ -59,8 +59,10 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('mock incoming message to parent', (done) => {
       let called = false
       window.parentIframe = {
-        moveToAnchor: () => {
+        moveToAnchor: (hash) => {
+          if (called) return
           called = true
+          expect(hash).toBe('anchorNotOnParent')
           tearDown(iframe3)
           setTimeout(done, 1)
         },
@@ -73,18 +75,10 @@ define(['iframeResizerParent'], (iframeResize) => {
         warningTimeout: 100,
         checkOrigin: false,
         onReady: (iframe3) => {
-          // Send anchor link to parent page
+          // Anchor not on this page, so core forwards it to window.parentIframe
           setTimeout(() => {
-            mockMsgFromIFrame(iframe3, 'inPageLink:#anchorParentTest')
+            mockMsgFromIFrame(iframe3, 'inPageLink:#anchorNotOnParent')
             
-            // Fallback timeout in case moveToAnchor is not called
-            // This ensures test completes even if behavior differs
-            setTimeout(() => {
-              if (!called) {
-                tearDown(iframe3)
-                setTimeout(done, 1)
-              }
-            }, 50)
           }, 10)
         },
       })[0]

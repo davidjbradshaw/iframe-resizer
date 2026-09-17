@@ -26,7 +26,10 @@ export default defineConfig({
     dts({
       tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/web-component/**/*.ts'],
-      exclude: ['packages/web-component/**/*.test.*'],
+      exclude: [
+        'packages/web-component/**/*.test.*',
+        'packages/web-component/iife.ts',
+      ],
       outDir: 'dist/web-component',
       entryRoot: 'packages/web-component',
     }),
