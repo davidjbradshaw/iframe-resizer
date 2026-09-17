@@ -7,6 +7,7 @@
   </head>
   <body>
     <h2>@iframe-resizer/web-component example</h2>
+    <button id="update-option">Update option</button>
 
     <iframe-resizer
       license="GPLv3"
@@ -20,6 +21,10 @@
     <script type="module" src="/src/main.js"></script>
     <script type="module">
       const el = document.querySelector('iframe-resizer')
+
+      document.getElementById('update-option').addEventListener('click', () => {
+        el.setAttribute('bodybackground', 'rgb(0, 128, 0)')
+      })
 
       el.addEventListener('iframe-resizer:message', (e) => {
         alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)

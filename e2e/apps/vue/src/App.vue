@@ -3,6 +3,7 @@
   import IframeResizer from '@iframe-resizer/vue/sfc'
 
   const eventData = ref(null)
+  const bodyBackground = ref()
 
   const onResized = (data) => {
     eventData.value = data
@@ -17,12 +18,16 @@
 
 <template>
   <h2>@iframe-resizer/vue example</h2>
+  <button id="update-option" @click="bodyBackground = 'rgb(0, 128, 0)'">
+    Update option
+  </button>
   <IframeResizer
     id="myframe"
     src="child/frame.test.html"
     license="GPLv3"
     log="collapsed"
     inPageLinks
+    :body-background="bodyBackground"
     @on-message="onMessage"
     @on-resized="onResized"
   />

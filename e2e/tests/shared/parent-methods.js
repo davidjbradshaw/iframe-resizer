@@ -1,11 +1,22 @@
 import { expect, test } from '@playwright/test'
 
-import { assertChildText, waitForResizer } from './utils'
+import { assertChildText, waitForChildText, waitForResizer } from './utils'
+
+// Applied to the child's body by the option-update test; distinctive so it
+// cannot be confused with a default
+const UPDATED_BACKGROUND = 'rgb(0, 128, 0)'
 
 /**
  * Shared parent-side method tests.
+ *
+ * updateControl: the app renders a #update-option control that changes
+ * bodyBackground through its own framework state. Without it, the test
+ * re-calls the global iframeResize factory on the bound iframe instead.
  */
-export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
+export function parentMethodTests(
+  baseUrl,
+  { hasDisconnect = true, updateControl = false } = {},
+) {
   test('sendMessage delivers data to child', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
@@ -50,27 +61,46 @@ export function parentMethodTests(baseUrl, { hasDisconnect = true } = {}) {
     )
   })
 
-  test('connectResizer re-binding sends update without breaking the iframe', async ({
-    page,
-  }) => {
+  test('changing an option after init updates the child', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    // Skip frameworks that don't expose the imperative factory globally.
-    const hasFactory = await page.evaluate(
-      () => typeof window.iframeResize === 'function',
-    )
-    test.skip(!hasFactory, 'iframeResize factory not exposed globally')
+    // Wait for the child to finish init, so the change takes the update path
+    await waitForChildText(page, '#ready-status', 'ready')
 
-    // Re-bind with new options on an already-connected iframe.
-    // The update flow should fire (no throw) and iframeResizer stays attached.
-    const result = await page.evaluate(() => {
-      const iframe = document.querySelector('iframe')
-      window.iframeResize({ license: 'GPLv3', log: true }, iframe)
-      return iframe.iframeResizer ? 'attached' : 'detached'
-    })
-    expect(result).toBe('attached')
+    if (updateControl) {
+      await page.click('#update-option')
+    } else {
+      const hasFactory = await page.evaluate(
+        () => typeof window.iframeResize === 'function',
+      )
+      test.skip(!hasFactory, 'iframeResize factory not exposed globally')
+
+      await page.evaluate((background) => {
+        const iframe = document.querySelector('iframe')
+        window.iframeResize(
+          { license: 'GPLv3', bodyBackground: background },
+          iframe,
+        )
+      }, UPDATED_BACKGROUND)
+    }
+
+    // The new option travels parent -> core update -> child, which applies
+    // it to the body: the only way this passes is if the whole chain worked
+    await page.waitForFunction(
+      (background) => {
+        const body = document.querySelector('iframe')?.contentDocument?.body
+        return !!body && getComputedStyle(body).backgroundColor === background
+      },
+      UPDATED_BACKGROUND,
+      { timeout: 5000 },
+    )
+
+    const stillAttached = await page.evaluate(
+      () => typeof document.querySelector('iframe').iframeResizer,
+    )
+    expect(stillAttached).toBe('object')
   })
 
   if (hasDisconnect) {

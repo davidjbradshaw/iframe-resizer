@@ -6,6 +6,6 @@ const BASE = '/e2e/fixtures/react/index.html'
 
 test.describe('React', () => {
   parentEventTests(BASE)
-  parentMethodTests(BASE, { hasDisconnect: false })
+  parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
 })

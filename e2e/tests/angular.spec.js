@@ -6,6 +6,6 @@ const BASE = '/e2e/fixtures/angular/index.html'
 
 test.describe('Angular', () => {
   parentEventTests(BASE)
-  parentMethodTests(BASE, { hasDisconnect: false })
+  parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
 })
