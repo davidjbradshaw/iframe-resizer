@@ -70,7 +70,10 @@ export function checkLocationHash(): void {
 export function handleAnchorClick(e: Event): void {
   if (settings.inPageLinks !== true) return
 
-  const target = e.target as Element | null
+  // Inside an open shadow root e.target is retargeted to the host, which
+  // hides the anchor from closest(); composedPath() still starts at the
+  // element that was actually clicked
+  const target = (e.composedPath?.()[0] ?? e.target) as Element | null
   const link = target?.closest?.('a[href^="#"]')
   if (!link) return
 

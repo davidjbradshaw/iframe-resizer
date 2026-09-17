@@ -125,6 +125,29 @@ describe('child/page/links branches', () => {
     expect(sendMessage).not.toHaveBeenCalled()
   })
 
+  it('intercepts anchor clicks inside an open shadow root', () => {
+    const host = document.createElement('div')
+    const shadow = host.attachShadow({ mode: 'open' })
+    const anchor = document.createElement('a')
+    anchor.setAttribute('href', '#shadowed')
+    shadow.append(anchor)
+    document.body.append(host)
+
+    setupInPageLinks(true)
+
+    // A composed click bubbles out of the shadow root with e.target
+    // retargeted to the host; composedPath() still exposes the anchor
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    })
+    anchor.dispatchEvent(clickEvent)
+
+    expect(clickEvent.defaultPrevented).toBe(true)
+    expect(sendMessage).toHaveBeenCalledWith(0, 0, IN_PAGE_LINK, '#shadowed')
+  })
+
   it('checkLocationHash does nothing when hash is empty', () => {
     window.location.hash = ''
 
