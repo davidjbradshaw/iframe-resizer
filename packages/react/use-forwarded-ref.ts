@@ -7,21 +7,20 @@ export default function useForwardedRef(
   ref: ForwardedRef<IFrameForwardRef>,
   iframeRef: RefObject<IFrameComponent>,
 ) {
-  const getIframeResizer = () => {
-    const iframeResizer = iframeRef.current?.iframeResizer
+  useImperativeHandle(ref, () => {
+    const getIframeResizer = () => {
+      const iframeResizer = iframeRef.current?.iframeResizer
 
-    if (!iframeResizer) {
-      throw new Error(
-        'iframe-resizer instance is not available yet. Make sure the iframe is mounted and initialized before calling imperative methods.',
-      )
+      if (!iframeResizer) {
+        throw new Error(
+          'iframe-resizer instance is not available yet. Make sure the iframe is mounted and initialized before calling imperative methods.',
+        )
+      }
+
+      return iframeResizer
     }
 
-    return iframeResizer
-  }
-
-  useImperativeHandle(
-    ref,
-    () => ({
+    return {
       getRef: () => iframeRef,
       getElement: () => iframeRef.current,
       getVersion: () => getIframeResizer().getVersion(),
@@ -29,7 +28,6 @@ export default function useForwardedRef(
       sendMessage: (message: any, targetOrigin?: string) => {
         getIframeResizer().sendMessage(message, targetOrigin)
       },
-    }),
-    [iframeRef],
-  )
+    }
+  }, [iframeRef])
 }
