@@ -22,6 +22,10 @@ vi.mock('../checks/options', () => ({
 vi.mock('../values/settings', () => ({
   default: {} as Record<string, any>,
 }))
+vi.mock('@iframe-resizer/common', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  setMode: vi.fn(() => 42),
+}))
 
 const trigger = (await import('../send/trigger')).default
 const createOutgoingMessage = (await import('../send/outgoing')).default
@@ -31,6 +35,7 @@ const setScrolling = (await import('./scrolling')).default
 const setOffsetSize = (await import('../send/offset')).default
 const { updateConsoleExpand } = await import('../console')
 const settings = (await import('../values/settings')).default
+const { setMode } = await import('@iframe-resizer/common')
 const updateIframe = (await import('./update')).default
 
 describe('core/setup/update', () => {
@@ -161,5 +166,27 @@ describe('core/setup/update', () => {
 
     expect(settings.edge1.log).toBe(true)
     expect(settings.edge1.logExpand).toBe(true)
+  })
+
+  it('re-derives mode when a license is passed', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical' }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { license: 'GPLv3' })
+
+    expect(setMode).toHaveBeenCalledWith(
+      expect.objectContaining({ license: 'GPLv3' }),
+    )
+    expect(settings.edge1.mode).toBe(42)
+  })
+
+  it('leaves mode alone when no license is passed', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical' }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { tolerance: 5 })
+
+    expect(setMode).not.toHaveBeenCalled()
+    expect(settings.edge1.mode).toBe(0)
   })
 })

@@ -30,7 +30,8 @@ function mergeOptions(
   }
 
   if (hasMouseEvents(options)) settings[id].mouseEvents = true
-  if (hasOwn(options, 'mode')) settings[id].mode = setMode(options)
+  // mode is derived from the license, which is what callers pass
+  if (hasOwn(options, 'license')) settings[id].mode = setMode(options)
 
   updateOptionNames(id)
   setDirection(id)
