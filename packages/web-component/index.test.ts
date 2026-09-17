@@ -289,4 +289,16 @@ describe('web-component/IframeResizerElement', () => {
 
     expect((el as any).iframeResizer).toBe(mockResizer)
   })
+
+  it('resets an option to its default when its attribute is removed', () => {
+    createElement({ license: 'GPLv3', inpagelinks: '' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+
+    el.removeAttribute('inpagelinks')
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ inPageLinks: false }),
+    )
+  })
 })
