@@ -1,6 +1,6 @@
 import { esModuleInterop } from '@iframe-resizer/common'
 import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
-import type { IFrameComponent } from '@iframe-resizer/core'
+import type { IFrameComponent, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 import type { JSX } from 'solid-js'
@@ -55,7 +55,7 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
     consoleGroup.label(`solid(${iframeEl.id})`)
     consoleGroup.event('setup')
 
-    const options: Record<string, any> = {
+    const options: IFrameOptions = {
       ...pickWireOptions(local),
       onBeforeClose: () => {
         consoleGroup.warn(
