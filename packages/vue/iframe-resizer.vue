@@ -104,16 +104,13 @@
   })
 
   // Re-bind on prop changes; subsequent calls take the update path in core
-  // and dispatch an UPDATE message to the child.
-  watch(
-    () => ({ ...toRaw(props) }),
-    () => {
-      const iframe = iframeRef.value
-      if (!iframe) return
-      connectResizer(buildOptions())(iframe)
-    },
-    { deep: true },
-  )
+  // and dispatch an UPDATE message to the child. Watch the reactive props
+  // object itself: reading a toRaw() copy inside a getter tracks nothing.
+  watch(props, () => {
+    const iframe = iframeRef.value
+    if (!iframe) return
+    connectResizer(buildOptions())(iframe)
+  })
 
   onBeforeUnmount(() => {
     resizer.value?.disconnect()

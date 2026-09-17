@@ -31,8 +31,9 @@ vi.mock('auto-console-group', () => ({
   default: () => acg,
 }))
 
-import { createApp, nextTick } from 'vue'
+import { createApp, h, nextTick, ref } from 'vue'
 import IframeResizer from './iframe-resizer.vue'
+import connectResizer from '@iframe-resizer/core'
 
 describe('Vue iframe-resizer branches', () => {
   let container
@@ -57,6 +58,27 @@ describe('Vue iframe-resizer branches', () => {
     await nextTick()
 
     expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('re-binds with the new options when a prop changes', async () => {
+    const bodyBackground = ref()
+    app = createApp({
+      setup: () => () =>
+        h(IframeResizer, {
+          license: 'GPLv3',
+          bodyBackground: bodyBackground.value,
+        }),
+    })
+    app.mount(container)
+    await nextTick()
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    bodyBackground.value = 'rgb(0, 128, 0)'
+    await nextTick()
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(capturedOptions.bodyBackground).toBe('rgb(0, 128, 0)')
   })
 
   it('calls consoleGroup.expand(true) when log=LOG_EXPANDED (2)', async () => {
