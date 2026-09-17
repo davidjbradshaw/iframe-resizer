@@ -1,7 +1,16 @@
 <script>
   import IframeResizer from '@iframe-resizer/svelte'
 
-  let bodyBackground
+  let extra = {}
+
+  function updateOption() {
+    extra = {
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: '12px',
+      scrolling: true,
+    }
+  }
 
   function onResized(event) {
     console.log('resized', event.detail)
@@ -15,16 +24,14 @@
 
 <h2>@iframe-resizer/svelte example</h2>
 
-<button id="update-option" on:click={() => (bodyBackground = 'rgb(0, 128, 0)')}>
-  Update option
-</button>
+<button id="update-option" on:click={updateOption}>Update option</button>
 
 <IframeResizer
   license="GPLv3"
   id="myIframe"
   log="collapsed"
   inPageLinks
-  {bodyBackground}
+  {...extra}
   on:ready={onResized}
   on:message={onMessage}
   on:resized={onResized}

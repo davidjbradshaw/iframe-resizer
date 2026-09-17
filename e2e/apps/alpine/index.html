@@ -9,12 +9,22 @@
     <div
       x-data="{
         messageData: null,
+        extra: {},
+        updateOption() {
+          this.extra = {
+            bodyBackground: 'rgb(0, 128, 0)',
+            bodyPadding: '6px',
+            bodyMargin: 12,
+            scrolling: true,
+          }
+        },
         get iframeOptions() {
           const self = this
           return {
             license: 'GPLv3',
             log: true,
             inPageLinks: true,
+            ...this.extra,
             onResized(data) { self.messageData = data },
             onMessage(data) {
               self.messageData = data
@@ -26,6 +36,7 @@
       }"
     >
       <h2>@iframe-resizer/alpine example</h2>
+      <button id="update-option" @click="updateOption()">Update option</button>
 
       <iframe
         x-iframe-resizer="iframeOptions"

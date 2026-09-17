@@ -4,7 +4,15 @@ import IframeResizer from '@iframe-resizer/solid'
 import type { IframeMessageData, IframeResizedData } from '@iframe-resizer/solid'
 
 function App() {
-  const [bodyBackground, setBodyBackground] = createSignal<string>()
+  const [extra, setExtra] = createSignal<Record<string, unknown>>({})
+
+  const updateOption = () =>
+    setExtra({
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: 12,
+      scrolling: true,
+    })
 
   const onResized = (data: IframeResizedData) => {
     console.log('resized', data.height, data.width)
@@ -17,7 +25,7 @@ function App() {
   return (
     <>
       <h2>@iframe-resizer/solid example</h2>
-      <button id="update-option" onClick={() => setBodyBackground('rgb(0, 128, 0)')}>
+      <button id="update-option" onClick={updateOption}>
         Update option
       </button>
       <IframeResizer
@@ -25,7 +33,7 @@ function App() {
         id="myIframe"
         log
         inPageLinks
-        bodyBackground={bodyBackground()}
+        {...extra()}
         onMessage={onMessage}
         onResized={onResized}
         src="child/frame.test.html"

@@ -9,7 +9,12 @@ function App() {
   const iframeRef = useRef<IframeForwardRef>(null)
   const [messageData, setMessageData] = useState<IframeResizedData | IframeMessageData>()
   const [show, setShow] = useState(true)
-  const [bodyBackground, setBodyBackground] = useState<string>()
+  const [extra, setExtra] = useState<{
+    bodyBackground?: string
+    bodyPadding?: string
+    bodyMargin?: number
+    scrolling?: boolean
+  }>({})
 
   const onResized = (data: IframeResizedData) => setMessageData(data)
 
@@ -23,7 +28,15 @@ function App() {
     <>
       <h2>@iframe-resizer/react example</h2>
       <button onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
-      <button id="update-option" onClick={() => setBodyBackground('rgb(0, 128, 0)')}>
+      <button
+        id="update-option"
+        onClick={() => setExtra({
+          bodyBackground: 'rgb(0, 128, 0)',
+          bodyPadding: '6px',
+          bodyMargin: 12,
+          scrolling: true,
+        })}
+      >
         Update option
       </button>
       {show &&
@@ -33,7 +46,7 @@ function App() {
             log
             ref={iframeRef}
             inPageLinks
-            bodyBackground={bodyBackground}
+            {...extra}
             onMessage={onMessage}
             onResized={onResized}
             src="child/frame.test.html"

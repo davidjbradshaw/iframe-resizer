@@ -24,6 +24,9 @@
 
       document.getElementById('update-option').addEventListener('click', () => {
         el.setAttribute('bodybackground', 'rgb(0, 128, 0)')
+        el.setAttribute('bodypadding', '6px')
+        el.setAttribute('bodymargin', '12')
+        el.setAttribute('scrolling', '')
       })
 
       el.addEventListener('iframe-resizer:message', (e) => {

@@ -2,9 +2,26 @@ import { expect, test } from '@playwright/test'
 
 import { assertChildText, waitForChildText, waitForResizer } from './utils'
 
-// Applied to the child's body by the option-update test; distinctive so it
-// cannot be confused with a default
-const UPDATED_BACKGROUND = 'rgb(0, 128, 0)'
+// Options changed by the option-update test, chosen because each has an
+// observable effect: the body styles land in the child, scrolling changes the
+// parent's iframe element. Values are distinctive so they cannot be confused
+// with defaults; bodyMargin is numeric to exercise the number -> px conversion.
+export const UPDATED_OPTIONS = {
+  bodyBackground: 'rgb(0, 128, 0)',
+  bodyPadding: '6px',
+  bodyMargin: 12,
+  scrolling: true,
+}
+
+// What the test expects to observe after the update
+const EXPECTED = {
+  child: {
+    backgroundColor: 'rgb(0, 128, 0)',
+    padding: '6px',
+    margin: '12px',
+  },
+  iframe: { scrolling: 'yes', overflow: 'auto' },
+}
 
 /**
  * Shared parent-side method tests.
@@ -77,23 +94,30 @@ export function parentMethodTests(
       )
       test.skip(!hasFactory, 'iframeResize factory not exposed globally')
 
-      await page.evaluate((background) => {
+      await page.evaluate((options) => {
         const iframe = document.querySelector('iframe')
-        window.iframeResize(
-          { license: 'GPLv3', bodyBackground: background },
-          iframe,
-        )
-      }, UPDATED_BACKGROUND)
+        window.iframeResize({ license: 'GPLv3', ...options }, iframe)
+      }, UPDATED_OPTIONS)
     }
 
-    // The new option travels parent -> core update -> child, which applies
-    // it to the body: the only way this passes is if the whole chain worked
+    // The new options travel parent -> core update -> child, which applies
+    // the body styles; scrolling is applied to the iframe by the parent. The
+    // only way this passes is if the whole chain worked for every option.
     await page.waitForFunction(
-      (background) => {
-        const body = document.querySelector('iframe')?.contentDocument?.body
-        return !!body && getComputedStyle(body).backgroundColor === background
+      (expected) => {
+        const iframe = document.querySelector('iframe')
+        const body = iframe?.contentDocument?.body
+        if (!body) return false
+        const style = getComputedStyle(body)
+        return (
+          style.backgroundColor === expected.child.backgroundColor &&
+          style.padding === expected.child.padding &&
+          style.margin === expected.child.margin &&
+          iframe.scrolling === expected.iframe.scrolling &&
+          iframe.style.overflow === expected.iframe.overflow
+        )
       },
-      UPDATED_BACKGROUND,
+      EXPECTED,
       { timeout: 5000 },
     )
 

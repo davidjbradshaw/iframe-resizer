@@ -29,7 +29,13 @@ export class AppComponent {
 
   // Reassign rather than mutate so ngOnChanges sees a new options input
   updateOption() {
-    this.options = { ...this.options, bodyBackground: 'rgb(0, 128, 0)' }
+    this.options = {
+      ...this.options,
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: 12,
+      scrolling: true,
+    }
   }
 
   onResized(data: any) {
