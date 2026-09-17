@@ -1,6 +1,6 @@
-import { SEPARATOR, UPDATE } from '@iframe-resizer/common/consts'
+import { SEPARATOR } from '@iframe-resizer/common/consts'
 
-import { event as consoleEvent, log, setConsoleOptions } from '../console'
+import { log, setConsoleOptions } from '../console'
 import setupMouseEvents from '../events/mouse'
 import { setBodyStyle, setMargin } from '../page/css'
 import setupInPageLinks from '../page/links'
@@ -10,8 +10,6 @@ import settings from '../values/settings'
 import { getData } from './utils'
 
 export default function updateFromParent(event: MessageEvent): void {
-  consoleEvent(UPDATE)
-
   const previous = {
     bodyBackground: settings.bodyBackground,
     bodyMarginStr: settings.bodyMarginStr,
