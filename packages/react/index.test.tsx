@@ -252,4 +252,78 @@ describe('React IframeResizer component', () => {
       root.unmount()
     })
   })
+
+  test('invokes the latest callback prop without re-binding', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    connectResizer.mockClear()
+    const first = vi.fn()
+    const second = vi.fn()
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-cb"
+          src="https://example.com"
+          onMessage={first}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    const { onMessage } = vi.mocked(connectResizer).mock.calls[0][0] as any
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-cb"
+          src="https://example.com"
+          onMessage={second}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    // A new callback identity alone does not re-bind...
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // ...but core still reaches the latest one
+    onMessage({ message: 'hi' })
+    expect(second).toHaveBeenCalledWith({ message: 'hi' })
+    expect(first).not.toHaveBeenCalled()
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('re-binds when a callback is added', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    connectResizer.mockClear()
+
+    await act(async () => {
+      root.render(<IframeResizer id="react-cb2" src="https://example.com" />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-cb2"
+          src="https://example.com"
+          onReady={vi.fn()}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    const options = vi.mocked(connectResizer).mock.calls[1][0] as any
+    expect(typeof options.onReady).toBe('function')
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
 })

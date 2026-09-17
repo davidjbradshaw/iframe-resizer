@@ -17,5 +17,7 @@ type IframeProps = React.DetailedHTMLProps<
   HTMLIFrameElement
 >
 
+// onBeforeClose is overridden and onAfterClose never fires: close is
+// ignored in React, remove the component instead
 export type IFrameResizerProps = Omit<IframeProps, 'scrolling'> &
-  Omit<IFrameOptions, 'id' | 'onBeforeClose'>
+  Omit<IFrameOptions, 'id' | 'onBeforeClose' | 'onAfterClose'>
