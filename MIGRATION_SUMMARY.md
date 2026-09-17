@@ -556,7 +556,7 @@ Alpine.start()
 
 - **`x-iframe-resizer` directive**: Applied directly to the `<iframe>` element. Accepts an Alpine expression that evaluates to an `IFrameOptions` object.
 - **`x-if` for lifecycle**: Use `x-if` (not `x-show`) to add/remove the iframe. When `x-if` removes the element, Alpine's `cleanup()` fires and calls `resizer.disconnect()`.
-- **`waitForLoad: true`** set by default so the directive works with lazily loaded iframes.
+- **No `waitForLoad`**: The directive attaches after `Alpine.start()`, which can be after a same-origin iframe has already loaded; `waitForLoad` would suppress the init sent on attach and the child would never initialise. Core already handles lazily loaded iframes without it.
 - **`onBeforeClose` override**: Returns `false` with a console warning, directing users to use `x-if` instead of programmatic iframe removal.
 - **Reactive callbacks**: Use `const self = this` inside the options method to capture the Alpine data proxy, allowing callbacks to update reactive state from outside Alpine's context.
 

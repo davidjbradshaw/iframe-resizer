@@ -28,7 +28,7 @@ const customConfig = (file) => {
         types: 'directive.d.ts',
         peerDependencies: {
           '@angular/core':
-            '^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0',
+            '^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0',
         },
       }
 
@@ -53,10 +53,15 @@ const customConfig = (file) => {
         types,
         exports: {
           '.': {
+            types: `./${types}`,
             import: `./${module}`,
             require: './index.umd.js',
           },
-          './sfc': './iframe-resizer.vue',
+          './sfc': {
+            types: './iframe-resizer.vue.d.ts',
+            default: './iframe-resizer.vue',
+          },
+          './package.json': './package.json',
         },
         peerDependencies: {
           vue: '^3.3.0',
