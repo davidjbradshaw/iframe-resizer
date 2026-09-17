@@ -9,6 +9,7 @@ import setOffsetSize from '../send/offset'
 import createOutgoingMessage from '../send/outgoing'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
+import setupBodyMargin from './body-margin'
 import setDirection from './direction'
 import hasMouseEvents from './has-mouse-events'
 import normalizeLog from './normalize-log'
@@ -34,6 +35,7 @@ function mergeOptions(
   if (hasOwn(options, 'license')) settings[id].mode = setMode(options)
 
   updateOptionNames(id)
+  setupBodyMargin(id)
   setDirection(id)
   setScrolling(iframe)
   setOffsetSize(id, options)

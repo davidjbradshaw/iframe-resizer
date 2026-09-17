@@ -189,4 +189,13 @@ describe('core/setup/update', () => {
     expect(setMode).not.toHaveBeenCalled()
     expect(settings.edge1.mode).toBe(0)
   })
+
+  it('converts a numeric bodyMargin to px, as setup does', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = { mode: 0, direction: 'vertical' }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { bodyMargin: 12 })
+
+    expect(settings.edge1.bodyMargin).toBe('12px')
+  })
 })
