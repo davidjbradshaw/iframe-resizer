@@ -1,0 +1,20 @@
+{
+  "name": "solid",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@iframe-resizer/child": "^6.0.0-beta.9",
+    "@iframe-resizer/solid": "^6.0.0-beta.9",
+    "solid-js": "^1.9.12"
+  },
+  "devDependencies": {
+    "vite": "^8.0.8",
+    "vite-plugin-solid": "^2.11.12"
+  }
+}

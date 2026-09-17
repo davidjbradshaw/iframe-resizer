@@ -1,0 +1,20 @@
+{
+  "name": "e2e-web-component",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@iframe-resizer/web-component": "file:../../../dist/web-component",
+    "@iframe-resizer/common": "file:../../../dist/common",
+    "@iframe-resizer/core": "file:../../../dist/core"
+  },
+  "devDependencies": {
+    "vite": "^7.3.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
+  }
+}

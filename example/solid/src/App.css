@@ -1,0 +1,8 @@
+#root {
+  padding: 2rem;
+}
+
+iframe {
+  width: 100%;
+  height: 100vh;
+}

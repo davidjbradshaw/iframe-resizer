@@ -17,7 +17,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         scrollTo: (x, y) => {
           expect(x).toBe(0)
           expect(y).toBe(0)
-          done()
+          setTimeout(done, 1)
           return false
         },
       }
@@ -32,7 +32,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         scrollToOffset: (x, y) => {
           expect(x).toBe(8)
           expect(y).toBe(8)
-          done()
+          setTimeout(done, 1)
           return false
         },
       }

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@iframe-resizer/react": ["../../packages/react/index.tsx"],
+      "@iframe-resizer/core": ["../../packages/core/index.ts"]
+    }
+  },
+  "include": ["src", "../../packages/global.d.ts"]
+}

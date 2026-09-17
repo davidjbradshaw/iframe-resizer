@@ -1,0 +1,24 @@
+---
+import IframeResizer from '@iframe-resizer/astro'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Astro E2E Test</title>
+    <style>
+      iframe { width: 100%; height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <h2>@iframe-resizer/astro example</h2>
+    <IframeResizer
+      license="GPLv3"
+      id="myIframe"
+      log
+      inPageLinks
+      src="child/frame.test.html"
+    />
+  </body>
+</html>

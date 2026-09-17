@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Component E2E Test</title>
+  </head>
+  <body>
+    <h2>@iframe-resizer/web-component example</h2>
+
+    <iframe-resizer
+      license="GPLv3"
+      log
+      inPageLinks
+      id="myIframe"
+      src="child/frame.test.html"
+      style="width: 100%; height: 100vh"
+    ></iframe-resizer>
+
+    <script type="module" src="/src/main.js"></script>
+    <script type="module">
+      const el = document.querySelector('iframe-resizer')
+
+      el.addEventListener('iframe-resizer:message', (e) => {
+        alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)
+        e.detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+      })
+    </script>
+  </body>
+</html>
