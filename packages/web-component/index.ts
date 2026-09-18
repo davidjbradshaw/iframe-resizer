@@ -70,6 +70,8 @@ const EVENTS: Record<string, string> = {
   onMouseLeave: 'iframe-resizer:mouseleave',
 }
 
+type Callback = (data: unknown) => unknown
+
 function parseAttrValue(
   name: string,
   value: string,
@@ -130,12 +132,29 @@ export class IframeResizerElement extends HTMLBase {
       }
     }
 
-    const eventHandlers: Record<string, (data: unknown) => void> = {}
+    // Each callback dispatches its event and then calls the same-named
+    // callback set through the options property, if any. That callback is
+    // read when core invokes the handler, so a later change is picked up
+    // without re-binding. The events are cancelable and the callback's return
+    // value is passed back, so either can stop a scroll as onScroll can.
+    const eventHandlers: Record<string, Callback> = {}
     for (const [callback, eventName] of Object.entries(EVENTS)) {
       eventHandlers[callback] = (data: unknown) => {
-        this.dispatchEvent(
-          new CustomEvent(eventName, { detail: data, bubbles: true }),
+        const proceed = this.dispatchEvent(
+          new CustomEvent(eventName, {
+            detail: data,
+            bubbles: true,
+            cancelable: true,
+          }),
         )
+        if (!proceed) return false
+
+        const userCallback = (this.resizerOptions as Record<string, unknown>)[
+          callback
+        ]
+        return typeof userCallback === 'function'
+          ? (userCallback as Callback)(data)
+          : undefined
       }
     }
 
