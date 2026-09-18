@@ -3,13 +3,17 @@
 
   let extra = {}
 
+  // First click: styles and origin; second click: offsetSize alone
   function updateOption() {
-    extra = {
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: '12px',
-      scrolling: true,
-    }
+    extra = extra.bodyBackground
+      ? { ...extra, offsetSize: 100 }
+      : {
+          bodyBackground: 'rgb(0, 128, 0)',
+          bodyPadding: '6px',
+          bodyMargin: '12px',
+          scrolling: true,
+          checkOrigin: [location.origin],
+        }
   }
 
   function onResized(event) {

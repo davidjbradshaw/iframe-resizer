@@ -11,6 +11,7 @@ export const UPDATED_OPTIONS = {
   bodyPadding: '6px',
   bodyMargin: 12,
   scrolling: true,
+  offsetSize: 100,
 }
 
 // What the test expects to observe after the update
@@ -21,6 +22,20 @@ const EXPECTED = {
     margin: '12px',
   },
   iframe: { scrolling: 'yes', overflow: 'auto' },
+}
+
+// The iframe height once the child has stopped sending resizes
+async function settledIframeHeight(page) {
+  let last = -1
+  for (let i = 0; i < 20; i += 1) {
+    const height = await page
+      .locator('iframe')
+      .evaluate((el) => el.offsetHeight)
+    if (height === last) return height
+    last = height
+    await page.waitForTimeout(250)
+  }
+  throw new Error('iframe height did not settle')
 }
 
 /**
@@ -78,27 +93,56 @@ export function parentMethodTests(
     )
   })
 
-  test('changing an option after init updates the child', async ({ page }) => {
+  // Load the page, wait for the child to finish init (so a change takes the
+  // update path, not init) and return once the resizer is ready
+  async function loadAndInit(page) {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
-
-    // Wait for the child to finish init, so the change takes the update path
     await waitForChildText(page, '#ready-status', 'ready')
+  }
 
+  // Change the options: through the app's own state, or by re-calling the
+  // global factory on the bound iframe for the static pages. The first call
+  // applies every option except offsetSize; the second applies offsetSize
+  // alone, so its effect on the iframe height can be measured in isolation.
+  async function updateOptions(page, { offset = false } = {}) {
     if (updateControl) {
       await page.click('#update-option')
-    } else {
-      const hasFactory = await page.evaluate(
-        () => typeof window.iframeResize === 'function',
-      )
-      test.skip(!hasFactory, 'iframeResize factory not exposed globally')
-
-      await page.evaluate((options) => {
-        const iframe = document.querySelector('iframe')
-        window.iframeResize({ license: 'GPLv3', ...options }, iframe)
-      }, UPDATED_OPTIONS)
+      return
     }
+
+    const hasFactory = await page.evaluate(
+      () => typeof window.iframeResize === 'function',
+    )
+    test.skip(!hasFactory, 'iframeResize factory not exposed globally')
+
+    const { offsetSize, ...rest } = UPDATED_OPTIONS
+    const options = offset ? { offsetSize } : rest
+
+    await page.evaluate(
+      ({ opts, restrictOrigin }) => {
+        const iframe = document.querySelector('iframe')
+        window.iframeResize(
+          {
+            license: 'GPLv3',
+            ...opts,
+            // location is only available here, in the page
+            ...(restrictOrigin ? { checkOrigin: [location.origin] } : {}),
+          },
+          iframe,
+        )
+      },
+      { opts: options, restrictOrigin: !offset },
+    )
+  }
+
+  test('changing options after init updates the child and the iframe', async ({
+    page,
+  }) => {
+    await loadAndInit(page)
+
+    await updateOptions(page)
 
     // The new options travel parent -> core update -> child, which applies
     // the body styles; scrolling is applied to the iframe by the parent. The
@@ -121,10 +165,63 @@ export function parentMethodTests(
       { timeout: 5000 },
     )
 
+    // offsetSize is added by the child to the size it reports, and a changed
+    // offset makes it re-send that size at once (as parentIframe.setOffsetSize
+    // does), so the iframe must grow by exactly the offset, with no other
+    // trigger. Measured from a settled height so the body style changes
+    // above are not mixed into the comparison.
+    const heightBefore = await settledIframeHeight(page)
+
+    await updateOptions(page, { offset: true })
+
+    await page.waitForFunction(
+      (expected) =>
+        document.querySelector('iframe').offsetHeight === expected,
+      heightBefore + UPDATED_OPTIONS.offsetSize,
+      { timeout: 5000 },
+    )
+
     const stillAttached = await page.evaluate(
       () => typeof document.querySelector('iframe').iframeResizer,
     )
     expect(stillAttached).toBe('object')
+  })
+
+  test('changing checkOrigin keeps messaging working in both directions', async ({
+    page,
+  }) => {
+    await loadAndInit(page)
+
+    // The child pins its own target origin; checkOrigin is a parent-side
+    // setting and is not sent to the child, so changing it must not disturb
+    // this. Both directions are exercised after the update.
+    await page
+      .frameLocator('iframe')
+      .locator('body')
+      .evaluate(() => window.parentIframe.setTargetOrigin(location.origin))
+
+    await updateOptions(page)
+
+    // parent -> child
+    await page.evaluate(() => {
+      document.querySelector('iframe').iframeResizer.sendMessage('after-update')
+    })
+    await assertChildText(page, '#last-message', 'after-update')
+
+    // child -> parent: every page surfaces onMessage as an alert. Handle
+    // dialogs as they arrive (some pages send a reply straight after the
+    // alert) and poll for the one carrying the child's message.
+    const alerts = []
+    page.on('dialog', (dialog) => {
+      alerts.push(dialog.message())
+      dialog.accept().catch(() => {})
+    })
+
+    await page.frameLocator('iframe').locator('#btn-send-message').click()
+
+    await expect
+      .poll(() => alerts.some((message) => message.includes('hello from child')))
+      .toBe(true)
   })
 
   if (hasDisconnect) {

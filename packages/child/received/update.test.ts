@@ -1,7 +1,10 @@
+import { SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import settings from '../values/settings'
+import state from '../values/state'
 
+vi.mock('../send/size', () => ({ default: vi.fn() }))
 vi.mock('../console', () => ({
   errorBoundary: (fn: any) => fn,
   event: vi.fn(),
@@ -21,6 +24,7 @@ const consoleMod = await import('../console')
 const setupMouseEvents = (await import('../events/mouse')).default
 const cssMod = await import('../page/css')
 const setupInPageLinks = (await import('../page/links')).default
+const sendSize = (await import('../send/size')).default
 
 const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
   // Wire format mirrors createOutgoingMessage on the parent side, prefixed
@@ -42,8 +46,8 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     'child',
     'auto',
     fields.mouseEvents ?? 'false',
-    '0',
-    '0',
+    fields.offsetHeight ?? '0',
+    fields.offsetWidth ?? '0',
     fields.sizeHeight ?? 'true',
     '',
     '',
@@ -63,6 +67,34 @@ describe('child/received/update', () => {
     settings.bodyBackground = ''
     settings.bodyMarginStr = ''
     settings.bodyPadding = ''
+    settings.offsetHeight = 0
+    settings.offsetWidth = 0
+    state.pageSettings = []
+  })
+
+  it('re-sends the size when the offset changes, as setOffsetSize does', () => {
+    updateFromParent(buildEvent('edge1', { offsetHeight: '100' }))
+
+    expect(settings.offsetHeight).toBe(100)
+    expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
+  })
+
+  it('does not re-send the size when the offset is unchanged', () => {
+    settings.offsetHeight = 100
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '100' }))
+
+    expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  it('ignores parent values for options the page set itself', () => {
+    state.pageSettings = ['offsetHeight', 'offsetWidth']
+    settings.offsetHeight = 50
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '100' }))
+
+    expect(settings.offsetHeight).toBe(50)
+    expect(sendSize).not.toHaveBeenCalled()
   })
 
   it('updates console settings on every update', () => {

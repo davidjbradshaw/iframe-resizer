@@ -14,6 +14,8 @@ function App() {
     bodyPadding?: string
     bodyMargin?: number
     scrolling?: boolean
+    offsetSize?: number
+    checkOrigin?: string[]
   }>({})
 
   const onResized = (data: IframeResizedData) => setMessageData(data)
@@ -30,12 +32,18 @@ function App() {
       <button onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
       <button
         id="update-option"
-        onClick={() => setExtra({
-          bodyBackground: 'rgb(0, 128, 0)',
-          bodyPadding: '6px',
-          bodyMargin: 12,
-          scrolling: true,
-        })}
+        onClick={() => setExtra((prev) =>
+          // First click: styles and origin; second click: offsetSize alone
+          prev.bodyBackground
+            ? { ...prev, offsetSize: 100 }
+            : {
+              bodyBackground: 'rgb(0, 128, 0)',
+              bodyPadding: '6px',
+              bodyMargin: 12,
+              scrolling: true,
+              checkOrigin: [location.origin],
+            },
+        )}
       >
         Update option
       </button>

@@ -11,12 +11,16 @@
         messageData: null,
         extra: {},
         updateOption() {
-          this.extra = {
-            bodyBackground: 'rgb(0, 128, 0)',
-            bodyPadding: '6px',
-            bodyMargin: 12,
-            scrolling: true,
-          }
+          // First click: styles and origin; second click: offsetSize alone
+          this.extra = this.extra.bodyBackground
+            ? { ...this.extra, offsetSize: 100 }
+            : {
+                bodyBackground: 'rgb(0, 128, 0)',
+                bodyPadding: '6px',
+                bodyMargin: 12,
+                scrolling: true,
+                checkOrigin: [location.origin],
+              }
         },
         get iframeOptions() {
           const self = this

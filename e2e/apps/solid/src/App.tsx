@@ -6,13 +6,19 @@ import type { IframeMessageData, IframeResizedData } from '@iframe-resizer/solid
 function App() {
   const [extra, setExtra] = createSignal<Record<string, unknown>>({})
 
+  // First click: styles and origin; second click: offsetSize alone
   const updateOption = () =>
-    setExtra({
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: 12,
-      scrolling: true,
-    })
+    setExtra((prev) =>
+      prev.bodyBackground
+        ? { ...prev, offsetSize: 100 }
+        : {
+            bodyBackground: 'rgb(0, 128, 0)',
+            bodyPadding: '6px',
+            bodyMargin: 12,
+            scrolling: true,
+            checkOrigin: [location.origin],
+          },
+    )
 
   const onResized = (data: IframeResizedData) => {
     console.log('resized', data.height, data.width)

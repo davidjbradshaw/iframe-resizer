@@ -5,13 +5,17 @@
   const eventData = ref(null)
   const extra = ref({})
 
+  // First click: styles and origin; second click: offsetSize alone
   const updateOption = () => {
-    extra.value = {
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: '12px',
-      scrolling: true,
-    }
+    extra.value = extra.value.bodyBackground
+      ? { ...extra.value, offsetSize: 100 }
+      : {
+          bodyBackground: 'rgb(0, 128, 0)',
+          bodyPadding: '6px',
+          bodyMargin: '12px',
+          scrolling: true,
+          checkOrigin: [location.origin],
+        }
   }
 
   const onResized = (data) => {

@@ -27,15 +27,19 @@ export class AppComponent {
     inPageLinks: true,
   }
 
-  // Reassign rather than mutate so ngOnChanges sees a new options input
+  // Reassign rather than mutate so ngOnChanges sees a new options input.
+  // First click: styles and origin; second click: offsetSize alone
   updateOption() {
-    this.options = {
-      ...this.options,
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: 12,
-      scrolling: true,
-    }
+    this.options = this.options.bodyBackground
+      ? { ...this.options, offsetSize: 100 }
+      : {
+          ...this.options,
+          bodyBackground: 'rgb(0, 128, 0)',
+          bodyPadding: '6px',
+          bodyMargin: 12,
+          scrolling: true,
+          checkOrigin: [location.origin],
+        }
   }
 
   onResized(data: any) {
