@@ -5,8 +5,10 @@
   import type {
     IFrameDirection,
     IFrameLogOption,
+    IFrameMouseData,
     IFrameObject,
     IFrameOptions,
+    IFrameScrollData,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
@@ -58,6 +60,14 @@
       onReady: (...args: any[]) => dispatch('ready', ...args),
       onMessage: (...args: any[]) => dispatch('message', ...args),
       onResized: (...args: any[]) => dispatch('resized', ...args),
+      // Cancelable: preventDefault() in the handler stops the scroll, as
+      // returning false from onScroll does
+      onScroll: (data: IFrameScrollData) =>
+        dispatch('scroll', data, { cancelable: true }),
+      // Passing the mouse handlers enables mouse events in the child; whether
+      // the page listens to them cannot be told here
+      onMouseEnter: (data: IFrameMouseData) => dispatch('mouseenter', data),
+      onMouseLeave: (data: IFrameMouseData) => dispatch('mouseleave', data),
     }
 
     // Drop unset props so they don't override core's defaults on update

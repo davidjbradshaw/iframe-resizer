@@ -145,6 +145,45 @@ describe('Svelte IframeResizer lifecycle', () => {
     unmount(component)
   })
 
+  it('dispatches a cancelable scroll event', () => {
+    let cancel = false
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: {
+        scroll: (e) => {
+          if (cancel) e.preventDefault()
+        },
+      },
+    })
+    flushSync()
+
+    expect(capturedOptions.onScroll({ top: 1, left: 2 })).toBe(true)
+    cancel = true
+    expect(capturedOptions.onScroll({ top: 1, left: 2 })).toBe(false)
+    unmount(component)
+  })
+
+  it('dispatches mouseenter and mouseleave events', () => {
+    const events = []
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: {
+        mouseenter: (e) => events.push(['enter', e.detail]),
+        mouseleave: (e) => events.push(['leave', e.detail]),
+      },
+    })
+    flushSync()
+    capturedOptions.onMouseEnter({ type: 'mouseenter' })
+    capturedOptions.onMouseLeave({ type: 'mouseleave' })
+    expect(events).toEqual([
+      ['enter', { type: 'mouseenter' }],
+      ['leave', { type: 'mouseleave' }],
+    ])
+    unmount(component)
+  })
+
   it('onBeforeClose returns false and warns', () => {
     const component = mount(IframeResizer, {
       target,

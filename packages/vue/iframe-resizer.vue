@@ -10,8 +10,10 @@
     IFrameComponent,
     IFrameLogOption,
     IFrameMessageData,
+    IFrameMouseData,
     IFrameObject,
     IFrameResizedData,
+    IFrameScrollData,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
@@ -65,6 +67,9 @@
     onReady: [iframe: IFrameComponent]
     onMessage: [data: IFrameMessageData]
     onResized: [data: IFrameResizedData]
+    onScroll: [data: IFrameScrollData]
+    onMouseEnter: [data: IFrameMouseData]
+    onMouseLeave: [data: IFrameMouseData]
   }>()
 
   const iframeRef = ref<HTMLIFrameElement | null>(null)
@@ -84,6 +89,16 @@
       onReady: (iframe: IFrameComponent) => emit('onReady', iframe),
       onMessage: (data: IFrameMessageData) => emit('onMessage', data),
       onResized: (data: IFrameResizedData) => emit('onResized', data),
+      // An emit has no return value, so a scroll requested by the child
+      // cannot be cancelled from the handler as it can with onScroll
+      onScroll: (data: IFrameScrollData) => {
+        emit('onScroll', data)
+        return true
+      },
+      // Passing the mouse handlers enables mouse events in the child; whether
+      // the page listens to them cannot be told here
+      onMouseEnter: (data: IFrameMouseData) => emit('onMouseEnter', data),
+      onMouseLeave: (data: IFrameMouseData) => emit('onMouseLeave', data),
     }
   }
 

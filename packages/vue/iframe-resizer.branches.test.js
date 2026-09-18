@@ -127,8 +127,15 @@ describe('Vue iframe-resizer branches', () => {
     expect(result).toBe(false)
   })
 
-  it('forwards onReady/onMessage/onResized via emit', async () => {
-    const received = { onReady: [], onMessage: [], onResized: [] }
+  it('forwards the core callbacks via emit', async () => {
+    const received = {
+      onReady: [],
+      onMessage: [],
+      onResized: [],
+      onScroll: [],
+      onMouseEnter: [],
+      onMouseLeave: [],
+    }
 
     // Vue converts emit('onReady') to handler prop 'onOnReady'
     app = createApp(IframeResizer, {
@@ -136,6 +143,9 @@ describe('Vue iframe-resizer branches', () => {
       onOnReady: (...args) => received.onReady.push(args),
       onOnMessage: (...args) => received.onMessage.push(args),
       onOnResized: (...args) => received.onResized.push(args),
+      onOnScroll: (...args) => received.onScroll.push(args),
+      onOnMouseEnter: (...args) => received.onMouseEnter.push(args),
+      onOnMouseLeave: (...args) => received.onMouseLeave.push(args),
     })
     app.mount(container)
     await nextTick()
@@ -143,9 +153,17 @@ describe('Vue iframe-resizer branches', () => {
     capturedOptions.onReady('r')
     capturedOptions.onMessage('m')
     capturedOptions.onResized('s')
+    const scrollResult = capturedOptions.onScroll('sc')
+    capturedOptions.onMouseEnter('in')
+    capturedOptions.onMouseLeave('out')
 
     expect(received.onReady).toEqual([['r']])
     expect(received.onMessage).toEqual([['m']])
     expect(received.onResized).toEqual([['s']])
+    expect(received.onScroll).toEqual([['sc']])
+    expect(received.onMouseEnter).toEqual([['in']])
+    expect(received.onMouseLeave).toEqual([['out']])
+    // Emits cannot cancel the scroll
+    expect(scrollResult).toBe(true)
   })
 })
