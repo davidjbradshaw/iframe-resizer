@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import sendMessage from '../send/message'
+import settings from '../values/settings'
 import setupMouseEvents from './mouse'
 
 vi.mock('../send/message', () => ({ default: vi.fn() }))
@@ -8,6 +9,7 @@ vi.mock('../send/message', () => ({ default: vi.fn() }))
 describe('child/events/mouse', () => {
   let addSpy
   beforeEach(() => {
+    settings.mouseEvents = true
     addSpy = vi.spyOn(document, 'addEventListener')
   })
 
@@ -36,5 +38,15 @@ describe('child/events/mouse', () => {
 
     expect(sendMessage).toHaveBeenCalledWith(0, 0, 'mouseenter', '10:20')
     expect(sendMessage).toHaveBeenCalledWith(0, 0, 'mouseleave', '30:40')
+  })
+
+  test('does not forward events when settings.mouseEvents is false', () => {
+    setupMouseEvents({ mouseEvents: true })
+
+    settings.mouseEvents = false
+    const [, fn1] = addSpy.mock.calls[0].slice(0, 2)
+    fn1({ type: 'mouseenter', screenY: 10, screenX: 20 })
+
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })

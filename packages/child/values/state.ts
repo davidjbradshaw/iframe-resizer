@@ -6,9 +6,12 @@ export default {
   height: 0,
   isHidden: false,
   initLock: true,
-  inPageLinks: {} as { findTarget: (location: string) => void },
+  findInPageLinkTarget: null as ((location: string) => void) | null,
   origin: undefined,
   hasOverflowUpdated: true,
+  // Setting names the page provided in window.iframeResizer; these win over
+  // values sent by the parent, on init and on update
+  pageSettings: [] as string[],
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [] as unknown as NodeListOf<Element>,

@@ -7,16 +7,21 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import IframeResizer from './index'
 
-// Mock auto-console-group to avoid noisy logs and to provide required API
-vi.mock('auto-console-group', () => ({
-  default: () => ({
+// Shared console-group spy so tests can assert on its calls
+const { consoleGroup } = vi.hoisted(() => ({
+  consoleGroup: {
     label: vi.fn(),
     event: vi.fn(),
     warn: vi.fn(),
     expand: vi.fn(),
     log: vi.fn(),
     endAutoGroup: vi.fn(),
-  }),
+  },
+}))
+
+// Mock auto-console-group to avoid noisy logs and to provide required API
+vi.mock('auto-console-group', () => ({
+  default: () => consoleGroup,
 }))
 
 // Mock connectResizer to attach a minimal iframeResizer API and return a resizer
@@ -49,6 +54,7 @@ describe('React IframeResizer component', () => {
     disconnect.mockClear()
     moveToAnchor.mockClear()
     sendMessage.mockClear()
+    consoleGroup.expand.mockClear()
   })
 
   test('renders an iframe and wires ref methods', async () => {
@@ -140,6 +146,83 @@ describe('React IframeResizer component', () => {
     })
   })
 
+  test('re-binds connectResizer when iframe-resizer options change', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    connectResizer.mockClear()
+
+    function Wrapper({ logFlag }: { logFlag: boolean }) {
+      return (
+        <IframeResizer
+          id="react-update"
+          src="https://example.com"
+          log={logFlag}
+        />
+      )
+    }
+
+    await act(async () => {
+      root.render(<Wrapper logFlag={false} />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // Re-render with a different option value; the second useEffect fires
+    // and re-calls connectResizer — which routes through the update path.
+    await act(async () => {
+      root.render(<Wrapper logFlag />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    // Re-rendering with the same options does NOT fire another bind.
+    await act(async () => {
+      root.render(<Wrapper logFlag />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('expands the console group when log="expanded"', async () => {
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-expanded"
+          src="https://example.com"
+          log="expanded"
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(consoleGroup.expand).toHaveBeenCalledWith(true)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('does not expand the console group for a plain log flag', async () => {
+    await act(async () => {
+      root.render(
+        <IframeResizer id="react-collapsed" src="https://example.com" log />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(consoleGroup.expand).toHaveBeenCalledWith(false)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
   test('onBeforeClose returns false and logs warning', async () => {
     const connectResizer = (await import('@iframe-resizer/core')).default
 
@@ -164,6 +247,80 @@ describe('React IframeResizer component', () => {
     const result = capturedOptions.onBeforeClose()
 
     expect(result).toBe(false)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('invokes the latest callback prop without re-binding', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    connectResizer.mockClear()
+    const first = vi.fn()
+    const second = vi.fn()
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-cb"
+          src="https://example.com"
+          onMessage={first}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    const { onMessage } = vi.mocked(connectResizer).mock.calls[0][0] as any
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-cb"
+          src="https://example.com"
+          onMessage={second}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    // A new callback identity alone does not re-bind...
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // ...but core still reaches the latest one
+    onMessage({ message: 'hi' })
+    expect(second).toHaveBeenCalledWith({ message: 'hi' })
+    expect(first).not.toHaveBeenCalled()
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('re-binds when a callback is added', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    connectResizer.mockClear()
+
+    await act(async () => {
+      root.render(<IframeResizer id="react-cb2" src="https://example.com" />)
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      root.render(
+        <IframeResizer
+          id="react-cb2"
+          src="https://example.com"
+          onReady={vi.fn()}
+        />,
+      )
+      await Promise.resolve()
+    })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    const options = vi.mocked(connectResizer).mock.calls[1][0] as any
+    expect(typeof options.onReady).toBe('function')
 
     await act(async () => {
       root.unmount()

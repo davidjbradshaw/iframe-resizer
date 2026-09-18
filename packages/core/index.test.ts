@@ -8,6 +8,7 @@ vi.mock('./setup', () => ({
     iframe.iframeResizer = { ready: 1 }
   }),
 }))
+vi.mock('./setup/update', () => ({ default: vi.fn() }))
 vi.mock('./console', () => {
   const errorBoundary = vi.fn(
     (_, fn) =>
@@ -29,14 +30,15 @@ it('throws TypeError when options is not an object', async () => {
   expect(() => connectResizer(null)).toThrow(TypeError)
 })
 
-it('warns and returns existing api when already setup', async () => {
+it('runs update flow and returns existing api when already setup', async () => {
   const { default: connectResizer } = await import('./index')
-  const consoleMod = await import('./console')
+  const updateMod = await import('./setup/update')
   const iframe = { iframeResizer: { api: true } }
-  const fn = connectResizer({})
+  const options = { y: 2 }
+  const fn = connectResizer(options)
   const api = fn(iframe)
 
-  expect(consoleMod.warn).toHaveBeenCalled()
+  expect(updateMod.default).toHaveBeenCalledWith(iframe, options)
   expect(api).toBe(iframe.iframeResizer)
 })
 

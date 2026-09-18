@@ -6,6 +6,6 @@ const BASE = '/e2e/fixtures/vue/index.html'
 
 test.describe('Vue', () => {
   parentEventTests(BASE)
-  parentMethodTests(BASE, { hasDisconnect: false })
+  parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
 })

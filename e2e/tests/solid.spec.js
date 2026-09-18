@@ -6,6 +6,6 @@ const BASE = '/e2e/fixtures/solid/index.html'
 
 test.describe('Solid', () => {
   parentEventTests(BASE)
-  parentMethodTests(BASE, { hasDisconnect: false })
+  parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
 })

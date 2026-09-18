@@ -7,6 +7,6 @@ describe('child/values/state', () => {
     expect(state.firstRun).toBe(true)
     expect(state.overflowedNodeSet instanceof Set).toBe(true)
     expect(state.win).toBe(window)
-    expect(typeof state.inPageLinks).toBe('object')
+    expect(state.findInPageLinkTarget).toBeNull()
   })
 })

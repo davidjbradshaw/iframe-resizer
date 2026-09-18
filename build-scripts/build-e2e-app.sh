@@ -23,6 +23,12 @@ fi
 echo "Building e2e/$FRAMEWORK..."
 cd "$APP_DIR"
 
+# Angular cannot consume the babel-built dist/angular decorators, so the app
+# compiles the directive from source; keep that copy in sync with the package
+if [ "$FRAMEWORK" = "angular" ]; then
+  cp "$ROOT/packages/angular/directive.ts" src/iframe-resizer.directive.ts
+fi
+
 npm install
 npm run build
 

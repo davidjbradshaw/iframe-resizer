@@ -36,7 +36,10 @@ type DirectiveCallback = (
   el: HTMLIFrameElement,
   attributes: { expression: string },
   context: {
-    evaluate: (expression: string) => unknown
+    evaluateLater: (
+      expression: string,
+    ) => (callback: (value: unknown) => void) => void
+    effect: (fn: () => void) => void
     cleanup: (fn: () => void) => void
   },
 ) => void
@@ -55,17 +58,34 @@ function createMockAlpine(): {
   }
 }
 
+// Mimics Alpine's directive utilities: evaluateLater yields the current
+// result, effect runs its callback at once (and again on rerunEffects, as
+// Alpine would when reactive data read during evaluation changes).
 function createMockContext(evaluateResult: unknown = {}): {
-  evaluate: ReturnType<typeof vi.fn>
+  evaluateLater: ReturnType<typeof vi.fn>
+  effect: ReturnType<typeof vi.fn>
   cleanup: ReturnType<typeof vi.fn>
   runCleanup: () => void
+  rerunEffects: (nextResult: unknown) => void
 } {
   const cleanupFns: (() => void)[] = []
+  const effectFns: (() => void)[] = []
+  let result = evaluateResult
 
   return {
-    evaluate: vi.fn(() => evaluateResult),
+    evaluateLater: vi.fn(
+      () => (callback: (value: unknown) => void) => callback(result),
+    ),
+    effect: vi.fn((fn: () => void) => {
+      effectFns.push(fn)
+      fn()
+    }),
     cleanup: vi.fn((fn: () => void) => cleanupFns.push(fn)),
     runCleanup: () => cleanupFns.forEach((fn) => fn()),
+    rerunEffects: (nextResult: unknown) => {
+      result = nextResult
+      effectFns.forEach((fn) => fn())
+    },
   }
 }
 
@@ -247,7 +267,7 @@ describe('Alpine IframeResizer plugin', () => {
     )
   })
 
-  test('directive evaluates expression via Alpine evaluate', () => {
+  test('directive evaluates expression via Alpine evaluateLater inside an effect', () => {
     const mockAlpine = createMockAlpine()
     IframeResizer(mockAlpine as any)
 
@@ -256,7 +276,8 @@ describe('Alpine IframeResizer plugin', () => {
 
     callback(mockIframe, { expression: 'iframeOptions()' }, ctx)
 
-    expect(ctx.evaluate).toHaveBeenCalledWith('iframeOptions()')
+    expect(ctx.evaluateLater).toHaveBeenCalledWith('iframeOptions()')
+    expect(ctx.effect).toHaveBeenCalledTimes(1)
   })
 
   // Alpine attaches the directive after Alpine.start(), which can be after a
@@ -273,5 +294,28 @@ describe('Alpine IframeResizer plugin', () => {
 
     const capturedOptions = vi.mocked(connectResizer).mock.calls[0][0] as any
     expect(capturedOptions.waitForLoad).toBeUndefined()
+  })
+
+  test('re-binds with the new options when reactive data changes', () => {
+    const mockAlpine = createMockAlpine()
+    IframeResizer(mockAlpine as any)
+
+    const callback = mockAlpine.getCallback()!
+    const ctx = createMockContext({ license: 'GPLv3' })
+
+    callback(mockIframe, { expression: 'iframeOptions' }, ctx)
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // Alpine re-runs the effect when data read during evaluation changes
+    ctx.rerunEffects({ license: 'GPLv3', bodyBackground: 'rgb(0, 128, 0)' })
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    const updated = vi.mocked(connectResizer).mock.calls[1][0] as any
+    expect(updated.bodyBackground).toBe('rgb(0, 128, 0)')
+    expect(typeof updated.onBeforeClose).toBe('function')
+
+    // Cleanup still disconnects the original binding once
+    ctx.runCleanup()
+    expect(disconnect).toHaveBeenCalledTimes(1)
   })
 })

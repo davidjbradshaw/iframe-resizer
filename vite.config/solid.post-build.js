@@ -8,15 +8,17 @@ export default async function solidPostBuild() {
   const root = join(__dirname, '..')
 
   try {
-    // Copy source component for bundlers that use the `solid` exports condition
-    const tsxSource = join(root, 'packages/solid/IframeResizer.tsx')
-    const tsxDest = join(root, 'dist/solid/IframeResizer.tsx')
-
-    if (!existsSync(tsxSource)) {
-      throw new Error(`Source file not found: ${tsxSource}`)
+    // Copy source files for bundlers that use the `solid` exports condition.
+    // IframeResizer.tsx is the entry; wire-options.ts is a relative dependency.
+    const sourceFiles = ['IframeResizer.tsx', 'wire-options.ts']
+    for (const file of sourceFiles) {
+      const src = join(root, 'packages/solid', file)
+      const dest = join(root, 'dist/solid', file)
+      if (!existsSync(src)) {
+        throw new Error(`Source file not found: ${src}`)
+      }
+      copyFileSync(src, dest)
     }
-
-    copyFileSync(tsxSource, tsxDest)
 
     // Write index.d.ts that re-exports types from the component
     writeFileSync(

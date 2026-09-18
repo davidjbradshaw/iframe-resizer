@@ -9,12 +9,31 @@
     <div
       x-data="{
         messageData: null,
+        extra: {},
+        // Option changes applied after init by the e2e tests, one button per step
+        updates: {
+          styles: {
+            bodyBackground: 'rgb(0, 128, 0)',
+            bodyPadding: '6px',
+            bodyMargin: 12,
+            scrolling: true,
+            checkOrigin: [location.origin],
+          },
+          offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
+          tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
+          links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
+          direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
+        },
+        update(step) {
+          this.extra = { ...this.extra, ...this.updates[step] }
+        },
         get iframeOptions() {
           const self = this
           return {
             license: 'GPLv3',
             log: true,
             inPageLinks: true,
+            ...this.extra,
             onResized(data) { self.messageData = data },
             onMessage(data) {
               self.messageData = data
@@ -26,6 +45,9 @@
       }"
     >
       <h2>@iframe-resizer/alpine example</h2>
+      <template x-for="step in Object.keys(updates)">
+        <button :id="`update-${step}`" @click="update(step)" x-text="`Update ${step}`"></button>
+      </template>
 
       <iframe
         x-iframe-resizer="iframeOptions"

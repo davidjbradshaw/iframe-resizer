@@ -28,6 +28,7 @@ export const SCROLL_BY = 'scrollBy'
 export const SCROLL_TO = 'scrollTo'
 export const SCROLL_TO_OFFSET = 'scrollToOffset'
 export const TITLE = 'title'
+export const UPDATE = 'update'
 
 export const BASE = 10
 export const SINGLE = 1

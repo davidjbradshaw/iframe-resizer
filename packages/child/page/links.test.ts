@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import sendMessage from '../send/message'
 import settings from '../values/settings'
 import state from '../values/state'
-import setupInPageLinks from './links'
+import setupInPageLinks, { findTarget } from './links'
 
 vi.mock('../console', () => ({ log: vi.fn(), advise: vi.fn() }))
 vi.mock('../send/message', () => ({ __esModule: true, default: vi.fn() }))
@@ -13,6 +13,8 @@ describe('child/page/links', () => {
     vi.clearAllMocks()
     document.body.innerHTML = ''
     settings.mode = 0
+    settings.inPageLinks = true
+    state.findInPageLinkTarget = null
   })
 
   test('setup and findTarget sends message for existing id', () => {
@@ -26,8 +28,15 @@ describe('child/page/links', () => {
 
     setupInPageLinks(true)
     // use the registered finder directly
-    state.inPageLinks.findTarget('#t1')
+    state.findInPageLinkTarget('#t1')
 
     expect(sendMessage).toHaveBeenCalled()
+  })
+
+  test('findTarget no-op when inPageLinks setting becomes false', () => {
+    settings.inPageLinks = false
+    findTarget('#nope')
+
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })
