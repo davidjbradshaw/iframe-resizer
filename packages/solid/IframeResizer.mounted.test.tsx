@@ -27,6 +27,7 @@ vi.mock('auto-console-group', () => ({
   }),
 }))
 
+import { createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
 import IframeResizer from './IframeResizer'
 import connectResizer from '@iframe-resizer/core'
@@ -58,6 +59,47 @@ describe('Solid IframeResizer lifecycle', () => {
     dispose()
 
     expect(mockResizer.disconnect).toHaveBeenCalled()
+  })
+
+  it('uses the latest callback prop without re-binding', () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    const [onMessage, setOnMessage] =
+      createSignal<(data: unknown) => void>(first)
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onMessage={onMessage()} />,
+      container,
+    )
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+    const bound = capturedOptions.onMessage
+
+    setOnMessage(() => second)
+
+    // A new callback identity alone does not re-bind...
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // ...but core still reaches the latest one
+    bound({ message: 'hi' })
+    expect(second).toHaveBeenCalledWith({ message: 'hi' })
+    expect(first).not.toHaveBeenCalled()
+  })
+
+  it('re-binds when a callback is added', () => {
+    const [onMouseEnter, setOnMouseEnter] = createSignal<
+      ((data: unknown) => void) | undefined
+    >()
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onMouseEnter={onMouseEnter()} />,
+      container,
+    )
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    setOnMouseEnter(() => vi.fn())
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(typeof capturedOptions.onMouseEnter).toBe('function')
   })
 
   it('renders an iframe element', () => {
