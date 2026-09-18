@@ -5,10 +5,16 @@ import { assertChildText, waitForChildText, waitForResizer } from './utils'
 // Options changed after init, in steps, each chosen because it has an
 // observable effect: the body styles land in the child, scrolling changes the
 // parent's iframe element, offsetSize grows the iframe, tolerance suppresses
-// a small resize and inPageLinks off restores native anchor behaviour.
+// a small resize, inPageLinks off restores native anchor behaviour and
+// direction switches which dimension of a resize is applied.
 // Values are distinctive so they cannot be confused with defaults; bodyMargin
 // is numeric to exercise the number -> px conversion. The framework apps
 // hardcode the same values behind their #update-<step> buttons.
+//
+// Every step also sets a distinct bodyBackground, which doubles as a marker
+// that the step has reached the child: the frameworks apply a change
+// asynchronously and the settings travel in one message, so once the colour
+// shows the rest of the step has landed too.
 export const UPDATES = {
   styles: {
     bodyBackground: 'rgb(0, 128, 0)',
@@ -16,9 +22,10 @@ export const UPDATES = {
     bodyMargin: 12,
     scrolling: true,
   },
-  offset: { offsetSize: 100 },
-  tolerance: { tolerance: 1000 },
-  links: { inPageLinks: false },
+  offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
+  tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
+  links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
+  direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
 }
 
 // What the test expects to observe after the styles update
@@ -130,27 +137,36 @@ export function parentMethodTests(
 
   // Apply one UPDATES step: through the app's own state, or by re-calling the
   // global factory on the bound iframe for the static pages. Each step is
-  // applied alone so its effect can be observed in isolation.
+  // applied alone so its effect can be observed in isolation. Returns once
+  // the step's bodyBackground marker shows in the child.
   async function updateOptions(page, step) {
     if (updateControl) {
       await page.click(`#update-${step}`)
-      return
+    } else {
+      await page.evaluate(
+        ({ opts, restrictOrigin }) => {
+          const iframe = document.querySelector('iframe')
+          window.iframeResize(
+            {
+              license: 'GPLv3',
+              ...opts,
+              // location is only available here, in the page
+              ...(restrictOrigin ? { checkOrigin: [location.origin] } : {}),
+            },
+            iframe,
+          )
+        },
+        { opts: UPDATES[step], restrictOrigin: step === 'styles' },
+      )
     }
 
-    await page.evaluate(
-      ({ opts, restrictOrigin }) => {
-        const iframe = document.querySelector('iframe')
-        window.iframeResize(
-          {
-            license: 'GPLv3',
-            ...opts,
-            // location is only available here, in the page
-            ...(restrictOrigin ? { checkOrigin: [location.origin] } : {}),
-          },
-          iframe,
-        )
+    await page.waitForFunction(
+      (color) => {
+        const body = document.querySelector('iframe')?.contentDocument?.body
+        return !!body && getComputedStyle(body).backgroundColor === color
       },
-      { opts: UPDATES[step], restrictOrigin: step === 'styles' },
+      UPDATES[step].bodyBackground,
+      { timeout: 5000 },
     )
   }
 
@@ -264,6 +280,46 @@ export function parentMethodTests(
     // inside the iframe and its location gains the hash
     await link.click()
     await expect.poll(childHash).toBe('#test-anchor')
+  })
+
+  test('changing direction after init switches the dimension that is resized', async ({
+    page,
+  }) => {
+    await loadAndInit(page)
+    const child = page.frameLocator('iframe').locator('body')
+    const inlineSize = () =>
+      page
+        .locator('iframe')
+        .evaluate((el) => [el.style.height, el.style.width])
+    const [, widthBefore] = await inlineSize()
+
+    // Control: vertical (the default) applies the height of a manual resize
+    // from the child and ignores its width
+    await child.evaluate(() => window.parentIframe.resize(200, 400))
+    await page.waitForFunction(
+      () => document.querySelector('iframe').style.height === '200px',
+      { timeout: 5000 },
+    )
+    expect((await inlineSize())[1]).toBe(widthBefore)
+
+    await updateOptions(page, 'direction')
+
+    // Horizontal: a resize with no arguments makes the child calculate its
+    // size; the width (the right edge of the data-iframe-resize element) is
+    // applied and the height left alone. A manual width is not used here as
+    // the body reflows when the iframe width changes, which triggers a
+    // calculated resize straight after it.
+    const contentWidth = await page
+      .frameLocator('iframe')
+      .locator('[data-iframe-resize]')
+      .evaluate((el) => el.getBoundingClientRect().right)
+    await child.evaluate(() => window.parentIframe.resize())
+    await page.waitForFunction(
+      (expected) => document.querySelector('iframe').style.width === expected,
+      `${contentWidth}px`,
+      { timeout: 5000 },
+    )
+    expect((await inlineSize())[0]).toBe('200px')
   })
 
   test('changing checkOrigin keeps messaging working in both directions', async ({

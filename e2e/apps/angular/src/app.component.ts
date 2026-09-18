@@ -38,9 +38,10 @@ export class AppComponent {
       scrolling: true,
       checkOrigin: [location.origin],
     },
-    offset: { offsetSize: 100 },
-    tolerance: { tolerance: 1000 },
-    links: { inPageLinks: false },
+    offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
+    tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
+    links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
+    direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
   }
 
   steps = Object.keys(this.updates)

@@ -11,6 +11,7 @@
     <button id="update-offset">Update offset</button>
     <button id="update-tolerance">Update tolerance</button>
     <button id="update-links">Update links</button>
+    <button id="update-direction">Update direction</button>
 
     <iframe-resizer
       license="GPLv3"
@@ -36,9 +37,10 @@
           // Two origins so the attribute parses as an array (a single value stays a string)
           checkorigin: location.origin + ' https://example.com',
         },
-        offset: { offsetsize: '100' },
-        tolerance: { tolerance: '1000' },
-        links: { inpagelinks: 'false' },
+        offset: { bodybackground: 'rgb(0, 0, 128)', offsetsize: '100' },
+        tolerance: { bodybackground: 'rgb(128, 0, 0)', tolerance: '1000' },
+        links: { bodybackground: 'rgb(128, 128, 0)', inpagelinks: 'false' },
+        direction: { bodybackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
       }
 
       for (const [step, attrs] of Object.entries(UPDATES)) {

@@ -73,8 +73,11 @@
     <a name="test-anchor" id="test-anchor"></a>
     <p>Anchor target</p>
 
-    <!-- Attribute testing -->
-    <div data-iframe-resize style="padding: 10px; background: #eef">
+    <!-- Attribute testing. The element has a set width so the page is also
+         valid for horizontal sizing: a fluid block's right edge always tracks
+         the iframe width less the body margin, which would shrink the iframe
+         on every resize -->
+    <div data-iframe-resize style="padding: 10px; background: #eef; width: 250px">
       This div has data-iframe-resize attribute
     </div>
 
