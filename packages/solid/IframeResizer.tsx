@@ -7,6 +7,7 @@ import type { JSX } from 'solid-js'
 import {
   createEffect,
   createMemo,
+  createRenderEffect,
   onCleanup,
   onMount,
   splitProps,
@@ -49,9 +50,46 @@ const RESIZER_KEYS = [
 
 type Callback = (...args: unknown[]) => unknown
 
+type StyleProp = JSX.CSSProperties | string | undefined
+
+// Solid re-sets every property of a style object whenever an element's props
+// are re-assigned, which would overwrite the size iframe-resizer has set on
+// the iframe with the size the page started it at. So the style prop is
+// applied here instead, touching only the properties whose value changed.
+// Returns the applied value, to be passed back as prev on the next call.
+function applyStyle(
+  el: HTMLElement,
+  value: StyleProp,
+  prev: StyleProp,
+): StyleProp {
+  if (typeof value !== 'object') {
+    el.style.cssText = value ?? ''
+    return value
+  }
+
+  const previous = (typeof prev === 'object' ? prev : {}) as Record<
+    string,
+    unknown
+  >
+  if (typeof prev === 'string') el.style.cssText = ''
+
+  for (const name of Object.keys(previous)) {
+    if (!(name in value)) el.style.removeProperty(name)
+  }
+
+  for (const [name, v] of Object.entries(value)) {
+    if (v !== previous[name])
+      el.style.setProperty(name, v == null ? '' : `${v}`)
+  }
+
+  return value
+}
+
 export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   let iframeEl!: IFrameComponent
-  const [local, iframeProps] = splitProps(props, RESIZER_KEYS)
+  const [local, styleProp, iframeProps] = splitProps(props, RESIZER_KEYS, [
+    'style',
+  ])
   const consoleGroup = createAutoConsoleGroup()
 
   const onBeforeClose = (): boolean => {
@@ -64,14 +102,15 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   // Each callback is passed to core as a wrapper that reads the current prop
   // when invoked, so a changed callback is used without re-binding. Only
   // callbacks that are present are passed: core enables mouse events on the
-  // presence of the mouse handlers.
+  // presence of the mouse handlers. Core keeps a wrapper once bound, so it
+  // must tolerate the prop being removed later.
   const callbackOptions = (): Partial<IFrameOptions> =>
     Object.fromEntries(
       CALLBACKS.filter((name) => typeof local[name] === 'function').map(
         (name) => [
           name,
           (...args: unknown[]) =>
-            untrack(() => local[name] as Callback)(...args),
+            untrack(() => local[name] as Callback | undefined)?.(...args),
         ],
       ),
     )
@@ -135,5 +174,12 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   })
 
   // eslint-disable-next-line jsx-a11y/iframe-has-title
-  return <iframe {...iframeProps} ref={iframeEl} />
+  const iframe = <iframe {...iframeProps} ref={iframeEl} />
+
+  let prevStyle: StyleProp
+  createRenderEffect(() => {
+    prevStyle = applyStyle(iframeEl, styleProp.style, prevStyle)
+  })
+
+  return iframe
 }

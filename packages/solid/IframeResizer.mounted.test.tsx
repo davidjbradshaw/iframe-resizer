@@ -102,6 +102,52 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(typeof capturedOptions.onMouseEnter).toBe('function')
   })
 
+  it('keeps the size set by iframe-resizer when the props are re-applied', () => {
+    const [extra, setExtra] = createSignal<Record<string, unknown>>({})
+
+    dispose = render(
+      () => (
+        <IframeResizer
+          license="GPLv3"
+          {...extra()}
+          style={{ height: '100vh', width: '50%' }}
+        />
+      ),
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    expect(iframe.style.height).toBe('100vh')
+
+    // core sets the size straight onto the element
+    iframe.style.height = '800px'
+
+    setExtra({ bodyBackground: 'red' })
+
+    expect(iframe.style.height).toBe('800px')
+    expect(iframe.style.width).toBe('50%')
+  })
+
+  it('applies only the style values that changed', () => {
+    const [width, setWidth] = createSignal('50%')
+
+    dispose = render(
+      () => (
+        <IframeResizer
+          license="GPLv3"
+          style={{ height: '100vh', width: width() }}
+        />
+      ),
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setWidth('60%')
+
+    expect(iframe.style.width).toBe('60%')
+    expect(iframe.style.height).toBe('800px')
+  })
+
   it('renders an iframe element', () => {
     dispose = render(
       () => <IframeResizer id="test-frame" license="GPLv3" />,
