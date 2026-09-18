@@ -10,17 +10,21 @@
       x-data="{
         messageData: null,
         extra: {},
-        updateOption() {
-          // First click: styles and origin; second click: offsetSize alone
-          this.extra = this.extra.bodyBackground
-            ? { ...this.extra, offsetSize: 100 }
-            : {
-                bodyBackground: 'rgb(0, 128, 0)',
-                bodyPadding: '6px',
-                bodyMargin: 12,
-                scrolling: true,
-                checkOrigin: [location.origin],
-              }
+        // Option changes applied after init by the e2e tests, one button per step
+        updates: {
+          styles: {
+            bodyBackground: 'rgb(0, 128, 0)',
+            bodyPadding: '6px',
+            bodyMargin: 12,
+            scrolling: true,
+            checkOrigin: [location.origin],
+          },
+          offset: { offsetSize: 100 },
+          tolerance: { tolerance: 1000 },
+          links: { inPageLinks: false },
+        },
+        update(step) {
+          this.extra = { ...this.extra, ...this.updates[step] }
         },
         get iframeOptions() {
           const self = this
@@ -40,7 +44,9 @@
       }"
     >
       <h2>@iframe-resizer/alpine example</h2>
-      <button id="update-option" @click="updateOption()">Update option</button>
+      <template x-for="step in Object.keys(updates)">
+        <button :id="`update-${step}`" @click="update(step)" x-text="`Update ${step}`"></button>
+      </template>
 
       <iframe
         x-iframe-resizer="iframeOptions"

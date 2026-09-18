@@ -3,17 +3,22 @@
 
   let extra = {}
 
-  // First click: styles and origin; second click: offsetSize alone
-  function updateOption() {
-    extra = extra.bodyBackground
-      ? { ...extra, offsetSize: 100 }
-      : {
-          bodyBackground: 'rgb(0, 128, 0)',
-          bodyPadding: '6px',
-          bodyMargin: '12px',
-          scrolling: true,
-          checkOrigin: [location.origin],
-        }
+  // Option changes applied after init by the e2e tests, one button per step
+  const UPDATES = {
+    styles: {
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: '12px',
+      scrolling: true,
+      checkOrigin: [location.origin],
+    },
+    offset: { offsetSize: 100 },
+    tolerance: { tolerance: 1000 },
+    links: { inPageLinks: false },
+  }
+
+  function update(step) {
+    extra = { ...extra, ...UPDATES[step] }
   }
 
   function onResized(event) {
@@ -28,7 +33,9 @@
 
 <h2>@iframe-resizer/svelte example</h2>
 
-<button id="update-option" on:click={updateOption}>Update option</button>
+{#each Object.keys(UPDATES) as step}
+  <button id="update-{step}" on:click={() => update(step)}>Update {step}</button>
+{/each}
 
 <IframeResizer
   license="GPLv3"

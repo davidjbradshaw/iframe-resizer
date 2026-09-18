@@ -5,17 +5,22 @@
   const eventData = ref(null)
   const extra = ref({})
 
-  // First click: styles and origin; second click: offsetSize alone
-  const updateOption = () => {
-    extra.value = extra.value.bodyBackground
-      ? { ...extra.value, offsetSize: 100 }
-      : {
-          bodyBackground: 'rgb(0, 128, 0)',
-          bodyPadding: '6px',
-          bodyMargin: '12px',
-          scrolling: true,
-          checkOrigin: [location.origin],
-        }
+  // Option changes applied after init by the e2e tests, one button per step
+  const UPDATES = {
+    styles: {
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: '12px',
+      scrolling: true,
+      checkOrigin: [location.origin],
+    },
+    offset: { offsetSize: 100 },
+    tolerance: { tolerance: 1000 },
+    links: { inPageLinks: false },
+  }
+
+  const update = (step) => {
+    extra.value = { ...extra.value, ...UPDATES[step] }
   }
 
   const onResized = (data) => {
@@ -31,7 +36,14 @@
 
 <template>
   <h2>@iframe-resizer/vue example</h2>
-  <button id="update-option" @click="updateOption">Update option</button>
+  <button
+    v-for="(options, step) in UPDATES"
+    :key="step"
+    :id="`update-${step}`"
+    @click="update(step)"
+  >
+    Update {{ step }}
+  </button>
   <IframeResizer
     id="myframe"
     src="child/frame.test.html"

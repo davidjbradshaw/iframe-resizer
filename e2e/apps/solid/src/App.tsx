@@ -1,24 +1,27 @@
-import { createSignal } from 'solid-js'
+import { createSignal, For } from 'solid-js'
 import { render } from 'solid-js/web'
 import IframeResizer from '@iframe-resizer/solid'
 import type { IframeMessageData, IframeResizedData } from '@iframe-resizer/solid'
 
+// Option changes applied after init by the e2e tests, one button per step
+const UPDATES: Record<string, Record<string, unknown>> = {
+  styles: {
+    bodyBackground: 'rgb(0, 128, 0)',
+    bodyPadding: '6px',
+    bodyMargin: 12,
+    scrolling: true,
+    checkOrigin: [location.origin],
+  },
+  offset: { offsetSize: 100 },
+  tolerance: { tolerance: 1000 },
+  links: { inPageLinks: false },
+}
+
 function App() {
   const [extra, setExtra] = createSignal<Record<string, unknown>>({})
 
-  // First click: styles and origin; second click: offsetSize alone
-  const updateOption = () =>
-    setExtra((prev) =>
-      prev.bodyBackground
-        ? { ...prev, offsetSize: 100 }
-        : {
-            bodyBackground: 'rgb(0, 128, 0)',
-            bodyPadding: '6px',
-            bodyMargin: 12,
-            scrolling: true,
-            checkOrigin: [location.origin],
-          },
-    )
+  const update = (step: string) =>
+    setExtra((prev) => ({ ...prev, ...UPDATES[step] }))
 
   const onResized = (data: IframeResizedData) => {
     console.log('resized', data.height, data.width)
@@ -31,9 +34,13 @@ function App() {
   return (
     <>
       <h2>@iframe-resizer/solid example</h2>
-      <button id="update-option" onClick={updateOption}>
-        Update option
-      </button>
+      <For each={Object.keys(UPDATES)}>
+        {(step) => (
+          <button id={`update-${step}`} onClick={() => update(step)}>
+            Update {step}
+          </button>
+        )}
+      </For>
       <IframeResizer
         license="GPLv3"
         id="myIframe"

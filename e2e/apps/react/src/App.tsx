@@ -5,18 +5,27 @@ import IframeResizer, {
   type IframeResizedData,
 } from '@iframe-resizer/react'
 
+// Option changes applied after init by the e2e tests, one button per step
+const UPDATES = {
+  styles: {
+    bodyBackground: 'rgb(0, 128, 0)',
+    bodyPadding: '6px',
+    bodyMargin: 12,
+    scrolling: true,
+    checkOrigin: [location.origin],
+  },
+  offset: { offsetSize: 100 },
+  tolerance: { tolerance: 1000 },
+  links: { inPageLinks: false },
+}
+
+type Extra = Partial<(typeof UPDATES)[keyof typeof UPDATES]>
+
 function App() {
   const iframeRef = useRef<IframeForwardRef>(null)
   const [messageData, setMessageData] = useState<IframeResizedData | IframeMessageData>()
   const [show, setShow] = useState(true)
-  const [extra, setExtra] = useState<{
-    bodyBackground?: string
-    bodyPadding?: string
-    bodyMargin?: number
-    scrolling?: boolean
-    offsetSize?: number
-    checkOrigin?: string[]
-  }>({})
+  const [extra, setExtra] = useState<Extra>({})
 
   const onResized = (data: IframeResizedData) => setMessageData(data)
 
@@ -30,23 +39,15 @@ function App() {
     <>
       <h2>@iframe-resizer/react example</h2>
       <button onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
-      <button
-        id="update-option"
-        onClick={() => setExtra((prev) =>
-          // First click: styles and origin; second click: offsetSize alone
-          prev.bodyBackground
-            ? { ...prev, offsetSize: 100 }
-            : {
-              bodyBackground: 'rgb(0, 128, 0)',
-              bodyPadding: '6px',
-              bodyMargin: 12,
-              scrolling: true,
-              checkOrigin: [location.origin],
-            },
-        )}
-      >
-        Update option
-      </button>
+      {Object.entries(UPDATES).map(([step, options]) => (
+        <button
+          key={step}
+          id={`update-${step}`}
+          onClick={() => setExtra((prev) => ({ ...prev, ...options }))}
+        >
+          Update {step}
+        </button>
+      ))}
       {show &&
         <>
           <IframeResizer

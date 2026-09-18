@@ -8,7 +8,9 @@ import { IframeResizerDirective } from './iframe-resizer.directive'
   imports: [IframeResizerDirective],
   template: `
     <h2>iframe-resizer/angular example</h2>
-    <button id="update-option" (click)="updateOption()">Update option</button>
+    @for (step of steps; track step) {
+      <button id="update-{{ step }}" (click)="update(step)">Update {{ step }}</button>
+    }
     <iframe
       iframe-resizer
       [options]="options"
@@ -27,19 +29,25 @@ export class AppComponent {
     inPageLinks: true,
   }
 
-  // Reassign rather than mutate so ngOnChanges sees a new options input.
-  // First click: styles and origin; second click: offsetSize alone
-  updateOption() {
-    this.options = this.options.bodyBackground
-      ? { ...this.options, offsetSize: 100 }
-      : {
-          ...this.options,
-          bodyBackground: 'rgb(0, 128, 0)',
-          bodyPadding: '6px',
-          bodyMargin: 12,
-          scrolling: true,
-          checkOrigin: [location.origin],
-        }
+  // Option changes applied after init by the e2e tests, one button per step
+  updates: Record<string, Partial<IFrameOptions>> = {
+    styles: {
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: 12,
+      scrolling: true,
+      checkOrigin: [location.origin],
+    },
+    offset: { offsetSize: 100 },
+    tolerance: { tolerance: 1000 },
+    links: { inPageLinks: false },
+  }
+
+  steps = Object.keys(this.updates)
+
+  // Reassign rather than mutate so ngOnChanges sees a new options input
+  update(step: string) {
+    this.options = { ...this.options, ...this.updates[step] }
   }
 
   onResized(data: any) {

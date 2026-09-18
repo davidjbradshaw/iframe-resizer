@@ -13,7 +13,11 @@
           document.getElementById('last-message').textContent = message
         },
         onBeforeResize(newSize) {
-          document.getElementById('before-resize').textContent = newSize
+          // Runs on every size calculation, and a DOM write here is itself a
+          // mutation the child observes, so only write when the value changes
+          const el = document.getElementById('before-resize')
+          const text = String(newSize)
+          if (el.textContent !== text) el.textContent = text
           return newSize
         },
       }
@@ -54,6 +58,8 @@
       <a href="#" id="btn-close" onclick="parentIframe.close(); return false">close</a>
       <a href="#" id="btn-toggle" onclick="document.getElementById('toggle-content').style.display = document.getElementById('toggle-content').style.display === 'none' ? '' : 'none'; return false">toggleContent</a>
       <a href="#" id="btn-change-title" onclick="document.title = 'Updated Title'; return false">changeTitle</a>
+      <!-- A real in-page link: handled by iframe-resizer when inPageLinks is on, natively when off -->
+      <a href="#test-anchor" id="link-anchor">in-page link</a>
     </div>
 
     <!-- Content for resize testing -->

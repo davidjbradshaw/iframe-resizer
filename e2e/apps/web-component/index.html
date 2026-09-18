@@ -7,7 +7,10 @@
   </head>
   <body>
     <h2>@iframe-resizer/web-component example</h2>
-    <button id="update-option">Update option</button>
+    <button id="update-styles">Update styles</button>
+    <button id="update-offset">Update offset</button>
+    <button id="update-tolerance">Update tolerance</button>
+    <button id="update-links">Update links</button>
 
     <iframe-resizer
       license="GPLv3"
@@ -22,19 +25,27 @@
     <script type="module">
       const el = document.querySelector('iframe-resizer')
 
-      // First click: styles and origin; second click: offsetSize alone
-      document.getElementById('update-option').addEventListener('click', () => {
-        if (el.hasAttribute('bodybackground')) {
-          el.setAttribute('offsetsize', '100')
-          return
-        }
-        el.setAttribute('bodybackground', 'rgb(0, 128, 0)')
-        el.setAttribute('bodypadding', '6px')
-        el.setAttribute('bodymargin', '12')
-        el.setAttribute('scrolling', '')
-        // Two origins so the attribute parses as an array (a single value stays a string)
-        el.setAttribute('checkorigin', location.origin + ' https://example.com')
-      })
+      // Option changes applied after init by the e2e tests, one button per
+      // step; each sets the matching attributes
+      const UPDATES = {
+        styles: {
+          bodybackground: 'rgb(0, 128, 0)',
+          bodypadding: '6px',
+          bodymargin: '12',
+          scrolling: '',
+          // Two origins so the attribute parses as an array (a single value stays a string)
+          checkorigin: location.origin + ' https://example.com',
+        },
+        offset: { offsetsize: '100' },
+        tolerance: { tolerance: '1000' },
+        links: { inpagelinks: 'false' },
+      }
+
+      for (const [step, attrs] of Object.entries(UPDATES)) {
+        document.getElementById(`update-${step}`).addEventListener('click', () => {
+          for (const [name, value] of Object.entries(attrs)) el.setAttribute(name, value)
+        })
+      }
 
       el.addEventListener('iframe-resizer:message', (e) => {
         alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)
