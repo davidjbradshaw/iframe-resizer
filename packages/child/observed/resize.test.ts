@@ -13,8 +13,23 @@ vi.mock('./observers', () => ({ default: {} }))
 const createResizeObservers = (await import('./resize')).default
 const observers = (await import('./observers')).default
 const sendSize = (await import('../send/size')).default
+const state = (await import('../values/state')).default
 
 describe('child/observed/resize', () => {
+  test('flags a body or html resize as the viewport resizing, only while sending', () => {
+    createResizeObservers([])
+    const seen = []
+    sendSize.mockImplementation(() => seen.push(state.viewportResized))
+
+    observers.resize._cb([{ target: document.body }])
+    observers.resize._cb([{ target: document.documentElement }])
+    observers.resize._cb([{ target: document.createElement('div') }])
+
+    expect(seen).toEqual([true, true, false])
+    expect(state.viewportResized).toBe(false)
+    sendSize.mockReset()
+  })
+
   test('creates resize observer, attaches and sends on entry', () => {
     const nodeList = [document.createElement('div')]
     const api = createResizeObservers(nodeList)

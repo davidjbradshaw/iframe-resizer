@@ -19,6 +19,9 @@ export default {
   timerActive: false,
   totalTime: 0,
   triggerLocked: false,
+  // Set while a size calculation was triggered by <html> or <body> resizing,
+  // which inside an iframe means the viewport changed, not the content
+  viewportResized: false,
   width: 0,
   win: window,
   onPageInfo: null,

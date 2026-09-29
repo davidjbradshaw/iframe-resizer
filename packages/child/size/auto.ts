@@ -153,5 +153,19 @@ export default function getAutoSize(getDimension: GetDimension): number {
 
   calculatedSize += getOffset(getDimension)
 
+  // Fluid content is as wide as the body, so when the iframe is narrowed to
+  // the width just measured, the body narrows and the content measures
+  // narrower again. A calculation the viewport itself triggered carries no
+  // new information about the content width, so it may grow the iframe
+  // (content now overflows) but never shrink it.
+  if (!isHeight && state.viewportResized && calculatedSize < state.width) {
+    info(
+      `Width not reduced to %c${calculatedSize}px%c by the viewport resizing`,
+      HIGHLIGHT,
+      FOREGROUND,
+    )
+    calculatedSize = state.width
+  }
+
   return Math.max(calculatedSize, MIN_SIZE)
 }
