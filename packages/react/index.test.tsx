@@ -1,6 +1,7 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable react/react-in-jsx-scope */
-import { createRef } from 'react'
+import connectResizer from '@iframe-resizer/core'
+import { createRef, StrictMode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
@@ -94,6 +95,29 @@ describe('React IframeResizer component', () => {
       root.unmount()
     })
     expect(disconnect).toHaveBeenCalledTimes(1)
+  })
+
+  test('a StrictMode remount binds afresh without taking the update path', async () => {
+    vi.mocked(connectResizer).mockClear()
+
+    // In development StrictMode runs the effects as mount, unmount, mount
+    await act(async () => {
+      root.render(
+        <StrictMode>
+          <IframeResizer id="strict-iframe" src="https://example.com" />
+        </StrictMode>,
+      )
+      await Promise.resolve()
+    })
+
+    // Two binds (one per mount) and nothing more: the update effect must
+    // not re-call connectResizer on the freshly bound iframe
+    expect(disconnect).toHaveBeenCalledTimes(1)
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    await act(async () => {
+      root.unmount()
+    })
   })
 
   test('getVersion forwards to iframeResizer.getVersion', async () => {

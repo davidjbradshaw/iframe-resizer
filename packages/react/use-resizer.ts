@@ -56,6 +56,7 @@ export default function useResizer(props: IFrameResizerProps) {
   onBeforeCloseRef.current = onBeforeClose
 
   const wrappersRef = useRef<Partial<Record<Callback, Wrapper>>>({})
+  const isFirstUpdateRef = useRef(true)
 
   const buildOptions = useCallback((): IFrameOptions => {
     const { logExpand: _logExpand, ...coreProps } = propsRef.current
@@ -93,6 +94,9 @@ export default function useResizer(props: IFrameResizerProps) {
     return () => {
       consoleGroup.endAutoGroup()
       resizer?.disconnect()
+      // A remount (StrictMode in development runs mount, unmount, mount)
+      // binds afresh, so the update effect must skip its next run too
+      isFirstUpdateRef.current = true
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -104,7 +108,6 @@ export default function useResizer(props: IFrameResizerProps) {
   // about, including which callbacks are present (but not their identity,
   // which the wrappers absorb), so this doesn't re-fire on every render.
   const optionsKey = buildOptionsKey(props)
-  const isFirstUpdateRef = useRef(true)
 
   useEffect(() => {
     if (isFirstUpdateRef.current) {
