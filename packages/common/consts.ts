@@ -76,12 +76,15 @@ export const ENABLE = 'autoResizeEnabled'
 export const SIZE_CHANGE_DETECTED = Symbol('sizeChanged')
 export const MANUAL_RESIZE_REQUEST = 'manualResize'
 export const PARENT_RESIZE_REQUEST = 'parentResize'
+export const SET_OFFSET_SIZE = 'setOffsetSize'
+
+// Explicit size requests: sent even when a resize is already pending in
+// the current frame, the page is hidden or autoResize is off
 export const IGNORE_DISABLE_RESIZE = {
   [MANUAL_RESIZE_REQUEST]: 1,
   [PARENT_RESIZE_REQUEST]: 1,
+  [SET_OFFSET_SIZE]: 1,
 }
-
-export const SET_OFFSET_SIZE = 'setOffsetSize'
 
 export const RESIZE_OBSERVER = 'resizeObserver'
 export const OVERFLOW_OBSERVER = 'overflowObserver'

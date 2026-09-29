@@ -31,7 +31,7 @@ const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 const dispatch = (await import('./dispatch')).default
 const sendSize = (await import('./size')).default
-const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST } =
+const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST, SET_OFFSET_SIZE } =
   await import('@iframe-resizer/common/consts')
 
 describe('child/send/size', () => {
@@ -105,6 +105,20 @@ describe('child/send/size', () => {
     expect(consoleMod.log).toHaveBeenCalledWith(
       'Resize already pending - Ignored resize request',
     )
+  })
+
+  test('sends an offset change even when a resize is already pending', () => {
+    const orig = globalThis.requestAnimationFrame
+    globalThis.requestAnimationFrame = () => 1 // do not flush pending
+    sendSize('evt', 'd')
+    vi.clearAllMocks()
+    sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
+    globalThis.requestAnimationFrame = orig
+
+    expect(consoleMod.log).not.toHaveBeenCalledWith(
+      'Resize already pending - Ignored resize request',
+    )
+    expect(dispatch).toHaveBeenCalledTimes(1)
   })
 
   test('respects autoResize=false except for allowed events', () => {
