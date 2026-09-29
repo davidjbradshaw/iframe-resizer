@@ -20,7 +20,9 @@ export const test = base.extend({
 
     await use(page)
 
-    expect(errors, 'errors reported in the browser').toEqual([])
+    if (errors.length > 0) {
+      throw new Error(`Errors reported in the browser:\n${errors.join('\n')}`)
+    }
   },
 })
 

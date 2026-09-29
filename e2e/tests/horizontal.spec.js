@@ -1,5 +1,4 @@
 import { expect, test } from './shared/test'
-
 import { waitForChildText, waitForResizer } from './shared/utils'
 
 const BASE = '/e2e/fixtures/horizontal.html'

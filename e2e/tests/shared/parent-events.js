@@ -1,5 +1,4 @@
 import { expect, test } from './test'
-
 import { waitForResizer } from './utils'
 
 /**

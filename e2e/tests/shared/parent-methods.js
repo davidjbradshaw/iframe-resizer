@@ -1,5 +1,4 @@
 import { expect, test } from './test'
-
 import { assertChildText, waitForChildText, waitForResizer } from './utils'
 
 // Options changed after init, in steps, each chosen because it has an
@@ -41,18 +40,28 @@ const EXPECTED = {
 // Time allowed for a resize that must NOT happen to show up if it did
 const NO_RESIZE_WAIT_MS = 1000
 
-// The iframe height once the child has stopped sending resizes
+// The iframe height once the child has stopped sending resizes: unchanged
+// for at least a quarter of a second. Judged by time, not by consecutive
+// evaluations, as Playwright evaluates the function twice on start.
+const SETTLE_MS = 250
+
 async function settledIframeHeight(page) {
-  let last = -1
-  for (let i = 0; i < 20; i += 1) {
-    const height = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
-    if (height === last) return height
-    last = height
-    await page.waitForTimeout(250)
-  }
-  throw new Error('iframe height did not settle')
+  return page
+    .waitForFunction(
+      (settleMs) => {
+        const iframe = document.querySelector('iframe')
+        const height = iframe.offsetHeight
+        const now = performance.now()
+        if (iframe.settleHeight !== height) {
+          iframe.settleHeight = height
+          iframe.settleSince = now
+        }
+        return now - iframe.settleSince >= settleMs && height
+      },
+      SETTLE_MS,
+      { polling: 50, timeout: 5000 },
+    )
+    .then((handle) => handle.jsonValue())
 }
 
 // Wait for the iframe height to move away from a known value
@@ -140,25 +149,28 @@ export function parentMethodTests(
   // applied alone so its effect can be observed in isolation. Returns once
   // the step's bodyBackground marker shows in the child.
   async function updateOptions(page, step) {
-    if (updateControl) {
-      await page.click(`#update-${step}`)
-    } else {
-      await page.evaluate(
+    const applyThroughFactory = () =>
+      page.evaluate(
         ({ opts, restrictOrigin }) => {
           const iframe = document.querySelector('iframe')
           window.iframeResize(
             {
               license: 'GPLv3',
               ...opts,
-              // location is only available here, in the page
-              ...(restrictOrigin ? { checkOrigin: [location.origin] } : {}),
+              // The page's origin is only known here, in the page
+              ...(restrictOrigin
+                ? { checkOrigin: [window.location.origin] }
+                : {}),
             },
             iframe,
           )
         },
         { opts: UPDATES[step], restrictOrigin: step === 'styles' },
       )
-    }
+
+    await (updateControl
+      ? page.click(`#update-${step}`)
+      : applyThroughFactory())
 
     await page.waitForFunction(
       (color) => {
@@ -208,8 +220,7 @@ export function parentMethodTests(
     await updateOptions(page, 'offset')
 
     await page.waitForFunction(
-      (expected) =>
-        document.querySelector('iframe').offsetHeight === expected,
+      (expected) => document.querySelector('iframe').offsetHeight === expected,
       heightBefore + UPDATES.offset.offsetSize,
       { timeout: 5000 },
     )
@@ -233,8 +244,7 @@ export function parentMethodTests(
     await waitForHeightChange(page, initial)
     await toggle.click()
     await page.waitForFunction(
-      (expected) =>
-        document.querySelector('iframe').offsetHeight === expected,
+      (expected) => document.querySelector('iframe').offsetHeight === expected,
       initial,
       { timeout: 5000 },
     )
@@ -288,9 +298,7 @@ export function parentMethodTests(
     await loadAndInit(page)
     const child = page.frameLocator('iframe').locator('body')
     const inlineSize = () =>
-      page
-        .locator('iframe')
-        .evaluate((el) => [el.style.height, el.style.width])
+      page.locator('iframe').evaluate((el) => [el.style.height, el.style.width])
     const [, widthBefore] = await inlineSize()
 
     // Control: vertical (the default) applies the height of a manual resize
@@ -300,7 +308,8 @@ export function parentMethodTests(
       () => document.querySelector('iframe').style.height === '200px',
       { timeout: 5000 },
     )
-    expect((await inlineSize())[1]).toBe(widthBefore)
+    const [, widthAfterVertical] = await inlineSize()
+    expect(widthAfterVertical).toBe(widthBefore)
 
     await updateOptions(page, 'direction')
 
@@ -319,7 +328,8 @@ export function parentMethodTests(
       `${contentWidth}px`,
       { timeout: 5000 },
     )
-    expect((await inlineSize())[0]).toBe('200px')
+    const [heightAfterHorizontal] = await inlineSize()
+    expect(heightAfterHorizontal).toBe('200px')
   })
 
   test('changing checkOrigin keeps messaging working in both directions', async ({
@@ -333,7 +343,9 @@ export function parentMethodTests(
     await page
       .frameLocator('iframe')
       .locator('body')
-      .evaluate(() => window.parentIframe.setTargetOrigin(location.origin))
+      .evaluate(() =>
+        window.parentIframe.setTargetOrigin(window.location.origin),
+      )
 
     await updateOptions(page, 'styles')
 
@@ -355,7 +367,9 @@ export function parentMethodTests(
     await page.frameLocator('iframe').locator('#btn-send-message').click()
 
     await expect
-      .poll(() => alerts.some((message) => message.includes('hello from child')))
+      .poll(() =>
+        alerts.some((message) => message.includes('hello from child')),
+      )
       .toBe(true)
   })
 
