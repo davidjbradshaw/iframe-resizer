@@ -1,4 +1,4 @@
-import { VERTICAL } from '@iframe-resizer/common/consts'
+import { HORIZONTAL, VERTICAL } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'
@@ -8,14 +8,19 @@ export default function setOffsetSize(
   id: string,
   { offset, offsetSize }: { offset?: number; offsetSize?: number },
 ): void {
-  const newOffset = offsetSize || offset
+  const newOffset = offsetSize ?? offset
 
-  if (!newOffset) return // No offset set or offset is zero
+  // Not passed: leave the current offset alone. Zero is a value, it clears it.
+  if (newOffset === undefined || newOffset === null) return
 
-  if (settings[id].direction === VERTICAL) {
+  const { direction } = settings[id]
+
+  if (direction !== HORIZONTAL) {
     settings[id].offsetHeight = newOffset
     log(id, `Offset height: %c${newOffset}`, HIGHLIGHT)
-  } else {
+  }
+
+  if (direction !== VERTICAL) {
     settings[id].offsetWidth = newOffset
     log(id, `Offset width: %c${newOffset}`, HIGHLIGHT)
   }

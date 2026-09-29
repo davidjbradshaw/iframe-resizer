@@ -5,6 +5,7 @@ vi.mock('../values/settings', () => ({
   default: {
     id1: { direction: 'vertical', offsetHeight: 0, offsetWidth: 0 },
     id2: { direction: 'horizontal', offsetHeight: 0, offsetWidth: 0 },
+    id3: { direction: 'both', offsetHeight: 0, offsetWidth: 0 },
   },
 }))
 
@@ -14,9 +15,23 @@ const settings = (await import('../values/settings')).default
 
 describe('core/send/offset', () => {
   test('no-op when no offset provided', () => {
-    setOffsetSize('id1', { offset: 0 })
+    setOffsetSize('id1', {})
 
     expect(log).not.toHaveBeenCalled()
+  })
+
+  test('zero clears the offset', () => {
+    settings.id1.offsetHeight = 40
+    setOffsetSize('id1', { offsetSize: 0 })
+
+    expect(settings.id1.offsetHeight).toBe(0)
+  })
+
+  test('sets both offsets for direction both', () => {
+    setOffsetSize('id3', { offsetSize: 25 })
+
+    expect(settings.id3.offsetHeight).toBe(25)
+    expect(settings.id3.offsetWidth).toBe(25)
   })
 
   test('sets offsetHeight for vertical', () => {
