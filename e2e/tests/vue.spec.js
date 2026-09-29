@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test } from './shared/test'
 
 import { childTests, parentEventTests, parentMethodTests } from './shared'
 

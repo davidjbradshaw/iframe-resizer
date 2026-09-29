@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './shared/test'
 
 import { waitForChildText, waitForResizer } from './shared/utils'
 
