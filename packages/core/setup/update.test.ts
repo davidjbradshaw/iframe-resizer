@@ -46,7 +46,7 @@ describe('core/setup/update', () => {
 
   it('throws RangeError and skips dispatch when child version < 6', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(false)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     expect(() =>
       updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true }),
@@ -54,9 +54,22 @@ describe('core/setup/update', () => {
     expect(trigger).not.toHaveBeenCalled()
   })
 
+  it('throws a helpful error, before the version check, when the child has not initialised', () => {
+    settings.edge1 = { mode: 0, direction: 'vertical', initialised: false }
+
+    expect(() =>
+      updateIframe({ id: 'edge1' } as HTMLIFrameElement, { tolerance: 5 }),
+    ).toThrow('Wait for onReady')
+
+    expect(settings.edge1.tolerance).toBeUndefined()
+    expect(trigger).not.toHaveBeenCalled()
+    expect(meetsMinChildVersion).not.toHaveBeenCalled()
+  })
+
   it('merges options into settings and dispatches UPDATE message', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
     settings.edge1 = {
+      initialised: true,
       mode: 0,
       direction: 'vertical',
       log: false,
@@ -82,7 +95,7 @@ describe('core/setup/update', () => {
 
   it('re-applies side-effect setup steps', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     const iframe = { id: 'edge1' } as HTMLIFrameElement
     updateIframe(iframe, { scrolling: false })
@@ -97,7 +110,7 @@ describe('core/setup/update', () => {
 
   it('re-derives size flags when direction changes', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, {
       direction: 'horizontal',
@@ -109,7 +122,7 @@ describe('core/setup/update', () => {
 
   it('translates deprecated option names', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     const onClose = () => {}
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { onClose })
@@ -120,7 +133,12 @@ describe('core/setup/update', () => {
 
   it('does not flip mouseEvents to true when no mouse handlers passed', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical', mouseEvents: false }
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'vertical',
+      mouseEvents: false,
+    }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true })
 
@@ -129,7 +147,12 @@ describe('core/setup/update', () => {
 
   it('does not flip mouseEvents when mouse handler keys are present but undefined', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical', mouseEvents: false }
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'vertical',
+      mouseEvents: false,
+    }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, {
       onMouseEnter: undefined,
@@ -141,7 +164,7 @@ describe('core/setup/update', () => {
 
   it('normalizes string log values into a boolean and derives logExpand', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: 'expanded' })
 
@@ -151,7 +174,7 @@ describe('core/setup/update', () => {
 
   it('normalizes numeric LOG_DISABLED (0) to false', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: 0 })
 
@@ -160,7 +183,7 @@ describe('core/setup/update', () => {
 
   it('normalizes numeric LOG_EXPANDED (2) to log:true and logExpand:true', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: 2 })
 
@@ -170,7 +193,7 @@ describe('core/setup/update', () => {
 
   it('re-derives mode when a license is passed', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { license: 'GPLv3' })
 
@@ -182,7 +205,7 @@ describe('core/setup/update', () => {
 
   it('leaves mode alone when no license is passed', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { tolerance: 5 })
 
@@ -192,7 +215,7 @@ describe('core/setup/update', () => {
 
   it('converts a numeric bodyMargin to px, as setup does', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    settings.edge1 = { mode: 0, direction: 'vertical' }
+    settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { bodyMargin: 12 })
 

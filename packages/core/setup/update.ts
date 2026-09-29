@@ -51,6 +51,12 @@ export default function updateIframe(
   const { id } = iframe
   consoleEvent(id, UPDATE)
 
+  if (!settings[id].initialised) {
+    throw new Error(
+      'Options cannot be updated until the child page has initialised. Wait for onReady before changing the options of a bound iframe.',
+    )
+  }
+
   if (!meetsMinChildVersion(id)) {
     throw new RangeError(
       'Updating options on a bound iframe requires @iframe-resizer/child v6 or later in the iframe.',
