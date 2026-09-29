@@ -46,15 +46,16 @@ export default function getContentSize(
   log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
 
   switch (updateEvent) {
+    // Explicit requests adopt the new size even when the change is within
+    // tolerance, so an offset change smaller than the tolerance still applies
     case INIT:
     case ENABLE:
     case SIZE_CHANGE_DETECTED:
     case MANUAL_RESIZE_REQUEST:
     case PARENT_RESIZE_REQUEST:
+    case SET_OFFSET_SIZE:
       state.height = newHeight
       state.width = newWidth
-    // eslint-disable-next-line no-fallthrough
-    case SET_OFFSET_SIZE:
       return state
 
     // the following case needs {} to prevent a compile error on Next.js

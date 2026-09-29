@@ -22,6 +22,16 @@ let sendPending = false
 let hiddenMessageShown = false
 let rafId: number | null = null
 
+// A trigger that arrived while a send was pending; measured once at the end
+// of the frame, so a change made after the frame's first measurement is
+// not lost. Whether it came from the viewport resizing is kept with it, as
+// the width calculation needs to know.
+let deferred: {
+  trigger: string
+  desc: string
+  viewportResized: boolean
+} | null = null
+
 function sendSize(
   triggerEvent: string,
   triggerEventDesc: string,
@@ -32,11 +42,15 @@ function sendSize(
   const { autoResize } = settings
   const { isHidden } = state
 
+  // Manual and parent resize requests are explicit, so they are sent even
+  // when the page is hidden, a send is pending or autoResize is off
+  const isExplicitRequest = triggerEvent in IGNORE_DISABLE_RESIZE
+
   consoleEvent(triggerEvent)
 
   switch (true) {
-    // Allow manual and parent resize requests to bypass the hidden check
-    case isHidden === true && !(triggerEvent in IGNORE_DISABLE_RESIZE): {
+    case isHidden === true && !isExplicitRequest: {
+      deferred = null
       if (hiddenMessageShown === true) break
       log('Iframe hidden - Ignored resize request')
       hiddenMessageShown = true
@@ -46,18 +60,25 @@ function sendSize(
       break
     }
 
-    // Ignore overflowObserver here, as more efficient than using
-    // mutationObserver to detect OVERFLOW_ATTR changes
-    // Also allow manual and parent resize requests to bypass the pending check
+    // One measurement per frame: the first trigger is measured and sent at
+    // once, a later one is measured again at the end of the frame, when
+    // layout has settled for everything the frame changed. overflowObserver
+    // is measured at once, as that is cheaper than a mutationObserver on
+    // OVERFLOW_ATTR changes.
     case sendPending === true &&
       triggerEvent !== OVERFLOW_OBSERVER &&
-      !(triggerEvent in IGNORE_DISABLE_RESIZE): {
+      !isExplicitRequest: {
       purge()
-      log('Resize already pending - Ignored resize request')
-      break // only update once per frame
+      log('Resize already pending - Deferred to end of frame')
+      deferred = {
+        trigger: triggerEvent,
+        desc: triggerEventDesc,
+        viewportResized: state.viewportResized,
+      }
+      break
     }
 
-    case !autoResize && !(triggerEvent in IGNORE_DISABLE_RESIZE): {
+    case !autoResize && !isExplicitRequest: {
       info('Resizing disabled')
       break
     }
@@ -82,7 +103,22 @@ function sendSize(
           sendPending = false
           rafId = null
           consoleEvent('requestAnimationFrame')
-          debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
+
+          if (deferred === null) {
+            debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
+            return
+          }
+
+          const { trigger, desc, viewportResized } = deferred
+          deferred = null
+          debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
+
+          state.viewportResized = viewportResized
+          try {
+            errorBoundary(sendSize)(trigger, desc)
+          } finally {
+            state.viewportResized = false
+          }
         })
 
       state.timerActive = false // Reset time for next resize
