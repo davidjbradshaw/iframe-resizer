@@ -160,7 +160,8 @@ describe('core/listeners', () => {
     expect(routeMessage).not.toHaveBeenCalled()
   })
 
-  test('iframeParentListener calls iframeListener with sameOrigin flag', async () => {
+  test('iframeParentListener handles the message in a microtask, not a timer', async () => {
+    // Timers are faked and never run: only a microtask can deliver it
     vi.useFakeTimers()
 
     const decode = (await import('./received/decode')).default
@@ -176,13 +177,47 @@ describe('core/listeners', () => {
     const { default: setup } = await import('./listeners')
     setup()
 
-    // Call iframeParentListener
     window.iframeParentListener('[iFrameSizer]test')
 
-    // Fast-forward timers
-    vi.runAllTimers()
+    // Not inside the child's call...
+    expect(routeMessage).not.toHaveBeenCalled()
+
+    // ...but as soon as it has finished, without waiting for a task
+    await Promise.resolve()
 
     expect(routeMessage).toHaveBeenCalledWith({ id: 'abc', type: 'INIT' })
+
+    vi.useRealTimers()
+  })
+
+  test('iframeParentListener waits for a timer when the iframe width is set', async () => {
+    vi.useFakeTimers()
+
+    const decode = (await import('./received/decode')).default
+    decode.mockReturnValue({ id: 'wide', type: 'resizeObserver' })
+    preflight.isMessageForUs.mockReturnValue(true)
+    preflight.checkIframeExists.mockReturnValue(true)
+    preflight.isMessageFromMetaParent.mockReturnValue(false)
+    preflight.isMessageFromIframe.mockReturnValue(true)
+
+    const settingsMod = await import('./values/settings')
+    settingsMod.default.wide = { sizeWidth: true }
+
+    const { default: setup } = await import('./listeners')
+    setup()
+
+    window.iframeParentListener('[iFrameSizer]wide:100:200:resizeObserver')
+
+    // A microtask is not enough: the width must not change while the child
+    // is still delivering its ResizeObserver callbacks
+    await Promise.resolve()
+    expect(routeMessage).not.toHaveBeenCalled()
+
+    vi.runAllTimers()
+    expect(routeMessage).toHaveBeenCalledWith({
+      id: 'wide',
+      type: 'resizeObserver',
+    })
 
     vi.useRealTimers()
   })
