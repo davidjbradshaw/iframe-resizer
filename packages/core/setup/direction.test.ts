@@ -1,4 +1,11 @@
-import { BOTH, HORIZONTAL, NONE, VERTICAL } from '@iframe-resizer/common/consts'
+import {
+  BOTH,
+  BOTH_LEGACY,
+  HORIZONTAL,
+  HORIZONTAL_LEGACY,
+  NONE,
+  VERTICAL,
+} from '@iframe-resizer/common/consts'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import settings from '../values/settings'
@@ -63,6 +70,36 @@ describe('core/setup/direction', () => {
 
     expect(settings.i7.autoResize).toBe(false)
     expect(settings.i7.sizeWidth).toBe(false)
+  })
+
+  test('horizontal-legacy sizes the width only and sets widthLegacy', () => {
+    settings.i7.direction = HORIZONTAL_LEGACY
+    setDirection('i7')
+
+    expect(settings.i7.sizeWidth).toBe(true)
+    expect(settings.i7.sizeHeight).toBe(false)
+    expect(settings.i7.widthLegacy).toBe(true)
+  })
+
+  test('both-legacy sizes both and sets widthLegacy', () => {
+    settings.i7.direction = BOTH_LEGACY
+    setDirection('i7')
+
+    expect(settings.i7.sizeWidth).toBe(true)
+    expect(settings.i7.sizeHeight).toBe(true)
+    expect(settings.i7.widthLegacy).toBe(true)
+  })
+
+  test('horizontal and both do not set widthLegacy, and it is cleared on change', () => {
+    settings.i7.direction = BOTH_LEGACY
+    setDirection('i7')
+
+    for (const direction of [HORIZONTAL, BOTH, VERTICAL]) {
+      settings.i7.direction = direction
+      setDirection('i7')
+
+      expect(settings.i7.widthLegacy).toBe(false)
+    }
   })
 
   test('invalid direction throws', () => {

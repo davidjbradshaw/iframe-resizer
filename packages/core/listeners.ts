@@ -8,8 +8,8 @@ import {
 
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'
-import changesIframeWidth from './received/changes-iframe-width'
 import decodeMessage from './received/decode'
+import isWidthLegacy from './received/is-width-legacy'
 import {
   checkIframeExists,
   isMessageForUs,
@@ -58,12 +58,12 @@ function iframeListener(
 }
 
 // Called directly by a same-origin child. A microtask resizes the iframe
-// before the next paint; width changes wait for a timer, to avoid
+// before the next paint; legacy width directions wait for a timer, to avoid
 // ResizeObserver loop errors in the child.
 function iframeParentListener(data: string): void {
   const handle = (): void => iframeListener({ data, sameOrigin: true })
 
-  if (changesIframeWidth(data)) setTimeout(handle)
+  if (isWidthLegacy(data)) setTimeout(handle)
   else queueMicrotask(handle)
 }
 

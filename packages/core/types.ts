@@ -7,16 +7,23 @@ import type { IFrameVersion } from '@iframe-resizer/common'
 import {
   AUTO,
   BOTH,
+  BOTH_LEGACY,
   COLLAPSE,
   EXPAND,
   HORIZONTAL,
+  HORIZONTAL_LEGACY,
   NONE,
   OMIT,
   VERTICAL,
 } from '@iframe-resizer/common/consts'
 
 export type IFrameDirection =
-  typeof VERTICAL | typeof HORIZONTAL | typeof NONE | typeof BOTH
+  | typeof VERTICAL
+  | typeof HORIZONTAL
+  | typeof NONE
+  | typeof BOTH
+  | typeof HORIZONTAL_LEGACY
+  | typeof BOTH_LEGACY
 
 export type IFrameLogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
 

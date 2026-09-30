@@ -190,7 +190,38 @@ describe('core/listeners', () => {
     vi.useRealTimers()
   })
 
-  test('iframeParentListener waits for a timer when the iframe width is set', async () => {
+  test('iframeParentListener waits for a timer with a legacy width direction', async () => {
+    vi.useFakeTimers()
+
+    const decode = (await import('./received/decode')).default
+    decode.mockReturnValue({ id: 'old', type: 'resizeObserver' })
+    preflight.isMessageForUs.mockReturnValue(true)
+    preflight.checkIframeExists.mockReturnValue(true)
+    preflight.isMessageFromMetaParent.mockReturnValue(false)
+    preflight.isMessageFromIframe.mockReturnValue(true)
+
+    const settingsMod = await import('./values/settings')
+    settingsMod.default.old = { sizeWidth: true, widthLegacy: true }
+
+    const { default: setup } = await import('./listeners')
+    setup()
+
+    window.iframeParentListener('[iFrameSizer]old:100:200:resizeObserver')
+
+    // A microtask is not enough: the child's body follows the iframe width
+    await Promise.resolve()
+    expect(routeMessage).not.toHaveBeenCalled()
+
+    vi.runAllTimers()
+    expect(routeMessage).toHaveBeenCalledWith({
+      id: 'old',
+      type: 'resizeObserver',
+    })
+
+    vi.useRealTimers()
+  })
+
+  test('iframeParentListener uses a microtask when the width is sized to content', async () => {
     vi.useFakeTimers()
 
     const decode = (await import('./received/decode')).default
@@ -201,19 +232,14 @@ describe('core/listeners', () => {
     preflight.isMessageFromIframe.mockReturnValue(true)
 
     const settingsMod = await import('./values/settings')
-    settingsMod.default.wide = { sizeWidth: true }
+    settingsMod.default.wide = { sizeWidth: true, widthLegacy: false }
 
     const { default: setup } = await import('./listeners')
     setup()
 
     window.iframeParentListener('[iFrameSizer]wide:100:200:resizeObserver')
-
-    // A microtask is not enough: the width must not change while the child
-    // is still delivering its ResizeObserver callbacks
     await Promise.resolve()
-    expect(routeMessage).not.toHaveBeenCalled()
 
-    vi.runAllTimers()
     expect(routeMessage).toHaveBeenCalledWith({
       id: 'wide',
       type: 'resizeObserver',

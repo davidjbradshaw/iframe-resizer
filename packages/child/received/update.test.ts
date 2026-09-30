@@ -18,12 +18,14 @@ vi.mock('../page/css', () => ({
   setMargin: vi.fn(),
 }))
 vi.mock('../page/links', () => ({ default: vi.fn() }))
+vi.mock('../page/content-width', () => ({ default: vi.fn() }))
 
 const updateFromParent = (await import('./update')).default
 const consoleMod = await import('../console')
 const setupMouseEvents = (await import('../events/mouse')).default
 const cssMod = await import('../page/css')
 const setupInPageLinks = (await import('../page/links')).default
+const setContentWidth = (await import('../page/content-width')).default
 const sendSize = (await import('../send/size')).default
 
 const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
@@ -54,6 +56,7 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     '0',
     '',
     fields.logExpand ?? 'false',
+    fields.widthLegacy ?? 'false',
   ].join(':')
   return { data: `[iFrameSizer]update:${data}` } as MessageEvent
 }
@@ -77,6 +80,21 @@ describe('child/received/update', () => {
 
     expect(settings.offsetHeight).toBe(100)
     expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
+  })
+
+  it('re-applies the content width and receives the legacy flag', () => {
+    settings.widthLegacy = false
+
+    updateFromParent(
+      buildEvent('frame', { sizeWidth: 'true', widthLegacy: 'true' }),
+    )
+
+    expect(settings.calculateWidth).toBe(true)
+    expect(settings.widthLegacy).toBe(true)
+    expect(setContentWidth).toHaveBeenCalledTimes(1)
+
+    settings.calculateWidth = false
+    settings.widthLegacy = false
   })
 
   it('does not re-send the size when the offset is unchanged', () => {

@@ -1,4 +1,11 @@
-import { BOTH, HORIZONTAL, NONE, VERTICAL } from '@iframe-resizer/common/consts'
+import {
+  BOTH,
+  BOTH_LEGACY,
+  HORIZONTAL,
+  HORIZONTAL_LEGACY,
+  NONE,
+  VERTICAL,
+} from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'
@@ -13,15 +20,19 @@ export default function setDirection(id: string): void {
   settings[id].sizeWidth = defaults.sizeWidth
   settings[id].sizeHeight = defaults.sizeHeight
   settings[id].autoResize = defaults.autoResize
+  settings[id].widthLegacy =
+    direction === HORIZONTAL_LEGACY || direction === BOTH_LEGACY
 
   switch (direction) {
     case VERTICAL:
       break
 
     case HORIZONTAL:
+    case HORIZONTAL_LEGACY:
       settings[id].sizeHeight = false
     // eslint-disable-next-line no-fallthrough
     case BOTH:
+    case BOTH_LEGACY:
       settings[id].sizeWidth = true
       break
 

@@ -103,6 +103,8 @@ export const NONE = 'none'
 export const BOTH = 'both'
 export const VERTICAL = 'vertical'
 export const HORIZONTAL = 'horizontal'
+export const HORIZONTAL_LEGACY = 'horizontal-legacy'
+export const BOTH_LEGACY = 'both-legacy'
 export const OMIT = 'omit'
 
 export const NO_CHANGE = 'No change in content size detected'
