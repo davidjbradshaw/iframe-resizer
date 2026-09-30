@@ -37,14 +37,16 @@
     <div id="box">Animated by CSS keyframes</div>
 
     <script>
+      // ?mode=height (default), width or width-legacy
       const mode = new URLSearchParams(location.search).get('mode') || 'height'
+      const sizesWidth = mode !== 'height'
       const box = document.getElementById('box')
-      box.classList.add(mode)
+      box.classList.add(sizesWidth ? 'width' : 'height')
 
       // Out of the flow the box has to be named as the content to measure.
       // In the flow it must not be: a tagged element is measured to its own
       // edge, which leaves out the body margin below it.
-      if (mode === 'width') box.dataset.iframeResize = ''
+      if (sizesWidth) box.dataset.iframeResize = ''
 
       // The browser reports a resize it could not deliver in the same pass as
       // an error event, not an exception; pass it up so the test can see it

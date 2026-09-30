@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>E2E Width Modes Child</title>
+    <script type="text/javascript" src="/dist/child/index.umd.js"></script>
+    <style>
+      body { margin: 8px; font-family: sans-serif; font-size: 15px; }
+      h4 { margin: 0 0 6px; }
+      p { margin: 0 0 8px; }
+      .cards { white-space: nowrap; }
+      .card {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 150px;
+        height: 80px;
+        margin-right: 8px;
+        padding: 8px;
+        background: #cfe0f5;
+        vertical-align: top;
+        white-space: normal;
+      }
+      button { margin: 0 6px 8px 0; }
+      td { padding: 4px 36px; border: 1px solid #999; white-space: nowrap; }
+      table { border-collapse: collapse; }
+    </style>
+  </head>
+  <body>
+    <script>
+      const query = new URLSearchParams(location.search)
+
+      const LOREM =
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+
+      const CONTENT = {
+        short: '<h4>Short label</h4><p>Just a few words.</p>',
+
+        article: `<h4>An article</h4><p>${LOREM}</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>`,
+
+        cards: `<h4>Cards, each 150px wide</h4>
+          <button id="add">Add a card</button><button id="remove">Remove a card</button>
+          <div class="cards" id="cards"><div class="card">Card 1</div><div class="card">Card 2</div></div>`,
+
+        table: `<h4>Text and a wide table</h4><p>${LOREM}</p>
+          <table><tr><td>a table</td><td>that is</td><td>wider than</td><td>the starting</td><td>width of</td><td>the iframe</td></tr></table>`,
+      }
+
+      document.body.insertAdjacentHTML(
+        'beforeend',
+        CONTENT[query.get('content')] || CONTENT.short,
+      )
+
+      const cards = document.getElementById('cards')
+      if (cards) {
+        document.getElementById('add').addEventListener('click', () => {
+          const card = document.createElement('div')
+          card.className = 'card'
+          card.textContent = `Card ${cards.children.length + 1}`
+          cards.append(card)
+        })
+        document.getElementById('remove').addEventListener('click', () => {
+          cards.lastElementChild?.remove()
+        })
+      }
+    </script>
+  </body>
+</html>

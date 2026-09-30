@@ -17,9 +17,14 @@
     <iframe scrolling="no"></iframe>
 
     <script type="text/javascript">
-      // ?mode=height (default) sizes the iframe vertically, ?mode=width
-      // horizontally
+      // ?mode=height (default), width or width-legacy
+      const DIRECTIONS = {
+        height: 'vertical',
+        width: 'horizontal',
+        'width-legacy': 'horizontal-legacy',
+      }
       const mode = new URLSearchParams(location.search).get('mode') || 'height'
+      const sizesWidth = mode !== 'height'
       const iframe = document.querySelector('iframe')
 
       // How long to let the page settle before sampling
@@ -46,7 +51,7 @@
       iframeResize(
         {
           license: 'GPLv3',
-          direction: mode === 'width' ? 'horizontal' : 'vertical',
+          direction: DIRECTIONS[mode],
           onResized() {
             stats.resized += 1
           },
@@ -59,7 +64,7 @@
       // The size the content asks for: the height of <html>, or the right
       // edge of the animated box
       function contentSize(doc) {
-        return mode === 'width'
+        return sizesWidth
           ? doc.getElementById('box').getBoundingClientRect().right
           : doc.documentElement.getBoundingClientRect().height
       }
@@ -70,7 +75,7 @@
         const ready = iframe.iframeResizer && doc && doc.getElementById('box')
         if (!ready || performance.now() - started < WARM_UP_MS) return
 
-        const shown = mode === 'width' ? iframe.clientWidth : iframe.clientHeight
+        const shown = sizesWidth ? iframe.clientWidth : iframe.clientHeight
         const difference = Math.abs(shown - contentSize(doc))
 
         stats.paints += 1
