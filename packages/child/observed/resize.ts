@@ -11,14 +11,13 @@ function resizeObserved(entries: ResizeObserverEntry[]): void {
   const el = entries[0].target
 
   // <html> and <body> resize when the iframe does, so a calculation they
-  // trigger must not treat the viewport's new size as the content's
+  // trigger must not treat the viewport's new size as the content's. The
+  // flag is only set for the duration of the send; sendSize is wrapped in
+  // errorBoundary, so it returns even when the calculation throws.
   state.viewportResized =
     el === document.documentElement || el === document.body
-  try {
-    sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
-  } finally {
-    state.viewportResized = false
-  }
+  sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
+  state.viewportResized = false
 }
 
 export default function createResizeObservers(
