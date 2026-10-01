@@ -9,6 +9,7 @@ const mockResizer = {
 }
 
 let capturedOptions = {}
+let mockConsoleGroup
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options) => {
@@ -18,19 +19,24 @@ vi.mock('@iframe-resizer/core', () => ({
 }))
 
 vi.mock('auto-console-group', () => ({
-  default: () => ({
-    event: vi.fn(),
-    label: vi.fn(),
-    expand: vi.fn(),
-    log: vi.fn(),
-    warn: vi.fn(),
-    endAutoGroup: vi.fn(),
-  }),
+  default: () => {
+    mockConsoleGroup = {
+      event: vi.fn(),
+      label: vi.fn(),
+      expand: vi.fn(),
+      log: vi.fn(),
+      warn: vi.fn(),
+      endAutoGroup: vi.fn(),
+    }
+    return mockConsoleGroup
+  },
 }))
 
 import { flushSync, mount, unmount } from 'svelte'
+import { createClassComponent } from 'svelte/legacy'
 import IframeResizer from './IframeResizer.svelte'
 import connectResizer from '@iframe-resizer/core'
+import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 
 describe('Svelte IframeResizer lifecycle', () => {
   let target
@@ -46,14 +52,37 @@ describe('Svelte IframeResizer lifecycle', () => {
     target.remove()
   })
 
-  it('mounts and calls connectResizer', () => {
+  it('mounts and calls connectResizer exactly once', () => {
     const component = mount(IframeResizer, {
       target,
       props: { license: 'GPLv3' },
     })
     flushSync()
-    expect(connectResizer).toHaveBeenCalled()
+    // The reactive block runs again once bind:this sets the iframe; that
+    // must not re-bind through core's update path
+    expect(connectResizer).toHaveBeenCalledTimes(1)
     unmount(component)
+  })
+
+  it('re-binds when a resizer prop changes, not when it is unchanged', () => {
+    const component = createClassComponent({
+      component: IframeResizer,
+      target,
+      props: { license: 'GPLv3' },
+    })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    component.$set({ tolerance: 5 })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(capturedOptions.tolerance).toBe(5)
+
+    component.$set({ tolerance: 5 })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    component.$destroy()
   })
 
   it('calls disconnect on unmount', () => {
@@ -116,6 +145,45 @@ describe('Svelte IframeResizer lifecycle', () => {
     unmount(component)
   })
 
+  it('dispatches a cancelable scroll event', () => {
+    let cancel = false
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: {
+        scroll: (e) => {
+          if (cancel) e.preventDefault()
+        },
+      },
+    })
+    flushSync()
+
+    expect(capturedOptions.onScroll({ top: 1, left: 2 })).toBe(true)
+    cancel = true
+    expect(capturedOptions.onScroll({ top: 1, left: 2 })).toBe(false)
+    unmount(component)
+  })
+
+  it('dispatches mouseenter and mouseleave events', () => {
+    const events = []
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3' },
+      events: {
+        mouseenter: (e) => events.push(['enter', e.detail]),
+        mouseleave: (e) => events.push(['leave', e.detail]),
+      },
+    })
+    flushSync()
+    capturedOptions.onMouseEnter({ type: 'mouseenter' })
+    capturedOptions.onMouseLeave({ type: 'mouseleave' })
+    expect(events).toEqual([
+      ['enter', { type: 'mouseenter' }],
+      ['leave', { type: 'mouseleave' }],
+    ])
+    unmount(component)
+  })
+
   it('onBeforeClose returns false and warns', () => {
     const component = mount(IframeResizer, {
       target,
@@ -134,6 +202,36 @@ describe('Svelte IframeResizer lifecycle', () => {
       props: { license: 'GPLv3', log: true },
     })
     flushSync()
+    unmount(component)
+  })
+
+  it('expands console group when log is "expanded"', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: EXPAND },
+    })
+    flushSync()
+    expect(mockConsoleGroup.expand).toHaveBeenCalledWith(true)
+    unmount(component)
+  })
+
+  it('expands console group when log is LOG_EXPANDED', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: LOG_EXPANDED },
+    })
+    flushSync()
+    expect(mockConsoleGroup.expand).toHaveBeenCalledWith(true)
+    unmount(component)
+  })
+
+  it('does not expand console group when log is true', () => {
+    const component = mount(IframeResizer, {
+      target,
+      props: { license: 'GPLv3', log: true },
+    })
+    flushSync()
+    expect(mockConsoleGroup.expand).toHaveBeenCalledWith(false)
     unmount(component)
   })
 

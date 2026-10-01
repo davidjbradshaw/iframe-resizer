@@ -1,4 +1,5 @@
 import { esModuleInterop } from '@iframe-resizer/common'
+import { VERTICAL } from '@iframe-resizer/common/consts'
 import type { IFrameObject, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -42,6 +43,24 @@ const BOOLEAN_ATTRS = new Set([
 // Attributes that should be parsed as whitespace-separated arrays
 const ARRAY_ATTRS = new Set(['checkorigin'])
 
+// Core defaults restored when a mapped attribute is removed. A removed
+// attribute is simply absent from buildOptions(), and core's update path
+// merges over the existing settings, so the reset has to be explicit.
+// license is omitted (removing it is not a meaningful runtime change) and
+// so is offsetSize (core ignores a zero offset on update).
+const RESIZER_ATTR_DEFAULTS: Record<string, unknown> = {
+  bodyBackground: null,
+  bodyMargin: null,
+  bodyPadding: null,
+  checkOrigin: true,
+  direction: VERTICAL,
+  inPageLinks: false,
+  log: false,
+  scrolling: false,
+  tolerance: 0,
+  warningTimeout: 5000,
+}
+
 const EVENTS: Record<string, string> = {
   onReady: 'iframe-resizer:ready',
   onMessage: 'iframe-resizer:message',
@@ -50,6 +69,8 @@ const EVENTS: Record<string, string> = {
   onMouseEnter: 'iframe-resizer:mouseenter',
   onMouseLeave: 'iframe-resizer:mouseleave',
 }
+
+type Callback = (data: unknown) => unknown
 
 function parseAttrValue(
   name: string,
@@ -85,16 +106,75 @@ export class IframeResizerElement extends HTMLBase {
 
   private iframe: HTMLIFrameElement | null = null
 
+  static get observedAttributes(): string[] {
+    return Object.keys(RESIZER_ATTR_MAP)
+  }
+
   get options(): Partial<IFrameOptions> {
     return this.resizerOptions
   }
 
   set options(val: Partial<IFrameOptions>) {
     this.resizerOptions = val
+    this.rebind()
   }
 
   get iframeResizer(): IFrameObject | null {
     return this.resizer
+  }
+
+  private buildOptions(): IFrameOptions {
+    const attrOptions: Record<string, unknown> = {}
+    for (const attr of this.attributes) {
+      const optionName = RESIZER_ATTR_MAP[attr.name]
+      if (optionName) {
+        attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
+      }
+    }
+
+    // Each callback dispatches its event and then calls the same-named
+    // callback set through the options property, if any. That callback is
+    // read when core invokes the handler, so a later change is picked up
+    // without re-binding. The events are cancelable and the callback's return
+    // value is passed back, so either can stop a scroll as onScroll can.
+    const eventHandlers: Record<string, Callback> = {}
+    for (const [callback, eventName] of Object.entries(EVENTS)) {
+      eventHandlers[callback] = (data: unknown) => {
+        const proceed = this.dispatchEvent(
+          new CustomEvent(eventName, {
+            detail: data,
+            bubbles: true,
+            cancelable: true,
+          }),
+        )
+        if (!proceed) return false
+
+        const userCallback = (this.resizerOptions as Record<string, unknown>)[
+          callback
+        ]
+        return typeof userCallback === 'function'
+          ? (userCallback as Callback)(data)
+          : undefined
+      }
+    }
+
+    return {
+      ...(attrOptions as unknown as IFrameOptions),
+      ...this.resizerOptions,
+      ...eventHandlers,
+      onBeforeClose: () => {
+        this.consoleGroup.event('close')
+        this.consoleGroup.warn(
+          'Close event ignored, remove the <iframe-resizer> element to close.',
+        )
+        return false
+      },
+    } as IFrameOptions
+  }
+
+  private rebind(overrides: Record<string, unknown> = {}): void {
+    if (!this.iframe || !this.resizer) return
+    connectResizer({ ...this.buildOptions(), ...overrides })(this.iframe)
   }
 
   connectedCallback(): void {
@@ -102,13 +182,9 @@ export class IframeResizerElement extends HTMLBase {
     if (this.iframe?.isConnected) return
 
     const iframe = document.createElement('iframe')
-    const attrOptions: Record<string, unknown> = {}
 
     for (const attr of this.attributes) {
-      const optionName = RESIZER_ATTR_MAP[attr.name]
-      if (optionName) {
-        attrOptions[optionName] = parseAttrValue(attr.name, attr.value)
-      } else {
+      if (!RESIZER_ATTR_MAP[attr.name]) {
         iframe.setAttribute(attr.name, attr.value)
       }
     }
@@ -116,35 +192,28 @@ export class IframeResizerElement extends HTMLBase {
     this.iframe = iframe
     this.append(iframe)
 
-    const eventHandlers: Record<string, (data: unknown) => void> = {}
-
-    for (const [callback, eventName] of Object.entries(EVENTS)) {
-      eventHandlers[callback] = (data: unknown) => {
-        this.dispatchEvent(
-          new CustomEvent(eventName, {
-            detail: data,
-            bubbles: true,
-          }),
-        )
-      }
-    }
-
-    this.resizer =
-      connectResizer({
-        ...(attrOptions as unknown as IFrameOptions),
-        ...this.resizerOptions,
-        ...eventHandlers,
-        onBeforeClose: () => {
-          this.consoleGroup.event('close')
-          this.consoleGroup.warn(
-            'Close event ignored, remove the <iframe-resizer> element to close.',
-          )
-          return false
-        },
-      })(iframe) ?? null
+    this.resizer = connectResizer(this.buildOptions())(iframe) ?? null
 
     this.consoleGroup.label(`web-component(${iframe.id})`)
     this.consoleGroup.event('setup')
+  }
+
+  attributeChangedCallback(
+    name: string,
+    oldValue: string | null,
+    newValue: string | null,
+  ): void {
+    if (oldValue === newValue) return
+
+    const optionName = RESIZER_ATTR_MAP[name]
+    if (!optionName) return
+
+    const reset =
+      newValue === null && optionName in RESIZER_ATTR_DEFAULTS
+        ? { [optionName]: RESIZER_ATTR_DEFAULTS[optionName] }
+        : {}
+
+    this.rebind(reset)
   }
 
   disconnectedCallback(): void {

@@ -1,4 +1,4 @@
-import { hasOwn, setMode } from '@iframe-resizer/common'
+import { setMode } from '@iframe-resizer/common'
 
 import checkOptions from '../checks/options'
 import checkWarningTimeout from '../checks/warning-timeout'
@@ -7,11 +7,9 @@ import setOffsetSize from '../send/offset'
 import defaults from '../values/defaults'
 import settings from '../values/settings'
 import setDirection from './direction'
+import hasMouseEvents from './has-mouse-events'
 import { getPostMessageTarget, setTargetOrigin } from './target-origin'
 import updateOptionNames from './update-option-names'
-
-const hasMouseEvents = (options: Record<string, any>): boolean =>
-  hasOwn(options, 'onMouseEnter') || hasOwn(options, 'onMouseLeave')
 
 export default function processOptions(
   iframe: HTMLIFrameElement,

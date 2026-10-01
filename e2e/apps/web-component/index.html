@@ -7,6 +7,11 @@
   </head>
   <body>
     <h2>@iframe-resizer/web-component example</h2>
+    <button id="update-styles">Update styles</button>
+    <button id="update-offset">Update offset</button>
+    <button id="update-tolerance">Update tolerance</button>
+    <button id="update-links">Update links</button>
+    <button id="update-direction">Update direction</button>
 
     <iframe-resizer
       license="GPLv3"
@@ -20,6 +25,29 @@
     <script type="module" src="/src/main.js"></script>
     <script type="module">
       const el = document.querySelector('iframe-resizer')
+
+      // Option changes applied after init by the e2e tests, one button per
+      // step; each sets the matching attributes
+      const UPDATES = {
+        styles: {
+          bodybackground: 'rgb(0, 128, 0)',
+          bodypadding: '6px',
+          bodymargin: '12',
+          scrolling: '',
+          // Two origins so the attribute parses as an array (a single value stays a string)
+          checkorigin: location.origin + ' https://example.com',
+        },
+        offset: { bodybackground: 'rgb(0, 0, 128)', offsetsize: '100' },
+        tolerance: { bodybackground: 'rgb(128, 0, 0)', tolerance: '1000' },
+        links: { bodybackground: 'rgb(128, 128, 0)', inpagelinks: 'false' },
+        direction: { bodybackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
+      }
+
+      for (const [step, attrs] of Object.entries(UPDATES)) {
+        document.getElementById(`update-${step}`).addEventListener('click', () => {
+          for (const [name, value] of Object.entries(attrs)) el.setAttribute(name, value)
+        })
+      }
 
       el.addEventListener('iframe-resizer:message', (e) => {
         alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)

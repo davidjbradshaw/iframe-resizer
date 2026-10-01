@@ -13,10 +13,6 @@ let capturedOptions = {}
 // Mock core connect to expose options passed to connectResizer
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options) => {
-    // simulate internal mutation performed by connectResizer
-    // so consoleOptions.expand picks it up
-    // eslint-disable-next-line no-param-reassign
-    options.logExpand = true
     capturedOptions = options
     return () => mockResizer
   }),
@@ -35,8 +31,9 @@ vi.mock('auto-console-group', () => ({
   default: () => acg,
 }))
 
-import { createApp, nextTick } from 'vue'
+import { createApp, h, nextTick, ref } from 'vue'
 import IframeResizer from './iframe-resizer.vue'
+import connectResizer from '@iframe-resizer/core'
 
 describe('Vue iframe-resizer branches', () => {
   let container
@@ -53,6 +50,51 @@ describe('Vue iframe-resizer branches', () => {
     app?.unmount()
     container.remove()
     app = null
+  })
+
+  it('calls consoleGroup.expand(true) when log="expanded"', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: 'expanded' })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('re-binds with the new options when a prop changes', async () => {
+    const bodyBackground = ref()
+    app = createApp({
+      setup: () => () =>
+        h(IframeResizer, {
+          license: 'GPLv3',
+          bodyBackground: bodyBackground.value,
+        }),
+    })
+    app.mount(container)
+    await nextTick()
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    bodyBackground.value = 'rgb(0, 128, 0)'
+    await nextTick()
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(capturedOptions.bodyBackground).toBe('rgb(0, 128, 0)')
+  })
+
+  it('calls consoleGroup.expand(true) when log=LOG_EXPANDED (2)', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: 2 })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(true)
+  })
+
+  it('calls consoleGroup.expand(false) when log=true', async () => {
+    app = createApp(IframeResizer, { license: 'GPLv3', log: true })
+    app.mount(container)
+    await nextTick()
+
+    expect(acg.expand).toHaveBeenCalledWith(false)
   })
 
   it('does not log when props.log is -1 (no logging)', async () => {
@@ -85,8 +127,15 @@ describe('Vue iframe-resizer branches', () => {
     expect(result).toBe(false)
   })
 
-  it('forwards onReady/onMessage/onResized via emit', async () => {
-    const received = { onReady: [], onMessage: [], onResized: [] }
+  it('forwards the core callbacks via emit', async () => {
+    const received = {
+      onReady: [],
+      onMessage: [],
+      onResized: [],
+      onScroll: [],
+      onMouseEnter: [],
+      onMouseLeave: [],
+    }
 
     // Vue converts emit('onReady') to handler prop 'onOnReady'
     app = createApp(IframeResizer, {
@@ -94,6 +143,9 @@ describe('Vue iframe-resizer branches', () => {
       onOnReady: (...args) => received.onReady.push(args),
       onOnMessage: (...args) => received.onMessage.push(args),
       onOnResized: (...args) => received.onResized.push(args),
+      onOnScroll: (...args) => received.onScroll.push(args),
+      onOnMouseEnter: (...args) => received.onMouseEnter.push(args),
+      onOnMouseLeave: (...args) => received.onMouseLeave.push(args),
     })
     app.mount(container)
     await nextTick()
@@ -101,9 +153,17 @@ describe('Vue iframe-resizer branches', () => {
     capturedOptions.onReady('r')
     capturedOptions.onMessage('m')
     capturedOptions.onResized('s')
+    const scrollResult = capturedOptions.onScroll('sc')
+    capturedOptions.onMouseEnter('in')
+    capturedOptions.onMouseLeave('out')
 
     expect(received.onReady).toEqual([['r']])
     expect(received.onMessage).toEqual([['m']])
     expect(received.onResized).toEqual([['s']])
+    expect(received.onScroll).toEqual([['sc']])
+    expect(received.onMouseEnter).toEqual([['in']])
+    expect(received.onMouseLeave).toEqual([['out']])
+    // Emits cannot cancel the scroll
+    expect(scrollResult).toBe(true)
   })
 })

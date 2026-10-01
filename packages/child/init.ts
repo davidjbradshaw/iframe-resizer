@@ -117,7 +117,14 @@ export default function (data: string[]): void {
 
   map2settings(readDataFromParent(data))
   startLogging(settings)
-  map2settings(readDataFromPage())
+
+  // Page settings are applied last so they win over the parent; remember
+  // which ones the page set so updates from the parent leave them alone
+  const pageSettings = readDataFromPage()
+  map2settings(pageSettings)
+  state.pageSettings = Object.keys(pageSettings).filter(
+    (key) => pageSettings[key] !== undefined,
+  )
 
   state.applySelectors = createApplySelectors(settings)
 

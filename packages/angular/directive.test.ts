@@ -338,11 +338,11 @@ describe('Angular IframeResizerDirective', () => {
     directive.ngAfterViewInit()
 
     expect(mockGroupExpand).toHaveBeenCalledTimes(1)
-    expect(mockGroupExpand).toHaveBeenCalledWith(undefined)
+    expect(mockGroupExpand).toHaveBeenCalledWith(false)
   })
 
-  test('expand passes logExpand option when set', () => {
-    directive.options = { license: 'TEST', logExpand: true }
+  test('expand is true when log option is "expanded"', () => {
+    directive.options = { license: 'TEST', log: 'expanded' }
     directive.ngAfterViewInit()
 
     expect(mockGroupExpand).toHaveBeenCalledWith(true)

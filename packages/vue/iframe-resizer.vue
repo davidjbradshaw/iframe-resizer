@@ -3,18 +3,20 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
+  import { onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type {
     IFrameComponent,
     IFrameLogOption,
     IFrameMessageData,
+    IFrameMouseData,
     IFrameObject,
     IFrameResizedData,
+    IFrameScrollData,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
-  import { COLLAPSE, EXPAND } from '@iframe-resizer/common/consts'
+  import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
 
   // Deal with UMD not converting default exports to named exports
@@ -65,16 +67,17 @@
     onReady: [iframe: IFrameComponent]
     onMessage: [data: IFrameMessageData]
     onResized: [data: IFrameResizedData]
+    onScroll: [data: IFrameScrollData]
+    onMouseEnter: [data: IFrameMouseData]
+    onMouseLeave: [data: IFrameMouseData]
   }>()
 
   const iframeRef = ref<HTMLIFrameElement | null>(null)
   const resizer = ref<IFrameObject | null>(null)
   const consoleGroup = createAutoConsoleGroup()
 
-  onMounted(() => {
-    // Template refs are guaranteed populated before onMounted fires
-    const iframe = iframeRef.value!
-    const options: any = {
+  function buildOptions(): any {
+    return {
       ...Object.fromEntries(
         Object.entries(toRaw(props)).filter(([, value]) => value !== undefined),
       ),
@@ -86,17 +89,42 @@
       onReady: (iframe: IFrameComponent) => emit('onReady', iframe),
       onMessage: (data: IFrameMessageData) => emit('onMessage', data),
       onResized: (data: IFrameResizedData) => emit('onResized', data),
+      // An emit has no return value, so a scroll requested by the child
+      // cannot be cancelled from the handler as it can with onScroll
+      onScroll: (data: IFrameScrollData) => {
+        emit('onScroll', data)
+        return true
+      },
+      // Passing the mouse handlers enables mouse events in the child; whether
+      // the page listens to them cannot be told here
+      onMouseEnter: (data: IFrameMouseData) => emit('onMouseEnter', data),
+      onMouseLeave: (data: IFrameMouseData) => emit('onMouseLeave', data),
     }
+  }
+
+  onMounted(() => {
+    // Template refs are guaranteed populated before onMounted fires
+    const iframe = iframeRef.value!
+    const options = buildOptions()
 
     consoleGroup.label(`vue(${iframe.id})`)
     consoleGroup.event('setup')
 
     resizer.value = connectResizer(options)(iframe)
 
-    consoleGroup.expand(options.logExpand)
+    consoleGroup.expand(props.log === EXPAND || props.log === LOG_EXPANDED)
     if ([COLLAPSE, EXPAND, true].includes(options.log as any)) {
       consoleGroup.log('Created Vue component')
     }
+  })
+
+  // Re-bind on prop changes; subsequent calls take the update path in core
+  // and dispatch an UPDATE message to the child. Watch the reactive props
+  // object itself: reading a toRaw() copy inside a getter tracks nothing.
+  watch(props, () => {
+    const iframe = iframeRef.value
+    if (!iframe) return
+    connectResizer(buildOptions())(iframe)
   })
 
   onBeforeUnmount(() => {

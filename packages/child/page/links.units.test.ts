@@ -15,10 +15,10 @@ vi.mock('../console', () => ({ advise: vi.fn(), log: vi.fn() }))
 vi.mock('../send/message', () => ({ __esModule: true, default: vi.fn() }))
 vi.mock('../events/listeners', () => ({ addEventListener: vi.fn() }))
 vi.mock('../values/settings', () => ({
-  default: { mode: 0 },
+  default: { mode: 0, inPageLinks: true },
 }))
 vi.mock('../values/state', () => ({
-  default: { inPageLinks: null },
+  default: { findInPageLinkTarget: null },
 }))
 vi.mock('../../common/mode', () => ({
   checkMode: vi.fn(() => false),
@@ -29,7 +29,7 @@ describe('child/page/links unit tests', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     document.body.innerHTML = ''
-    state.inPageLinks = null
+    state.findInPageLinkTarget = null
   })
 
   describe('getPagePosition', () => {
@@ -256,46 +256,26 @@ describe('child/page/links unit tests', () => {
   })
 
   describe('bindAnchors', () => {
-    test('adds click listeners to anchor elements with hash hrefs', () => {
-      const a1 = document.createElement('a')
-      a1.setAttribute('href', '#section1')
-      const a2 = document.createElement('a')
-      a2.setAttribute('href', '#section2')
-      document.body.append(a1, a2)
-
-      bindAnchors()
-
-      expect(addEventListener).toHaveBeenCalledTimes(2)
-      expect(vi.mocked(addEventListener).mock.calls[0][0]).toBe(a1)
-      expect(vi.mocked(addEventListener).mock.calls[0][1]).toBe('click')
-      expect(vi.mocked(addEventListener).mock.calls[1][0]).toBe(a2)
-      expect(vi.mocked(addEventListener).mock.calls[1][1]).toBe('click')
-    })
-
-    test('skips anchors with href="#"', () => {
-      const a1 = document.createElement('a')
-      a1.setAttribute('href', '#')
-      const a2 = document.createElement('a')
-      a2.setAttribute('href', '#valid')
-      document.body.append(a1, a2)
-
+    test('attaches a single delegated click listener on document', () => {
       bindAnchors()
 
       expect(addEventListener).toHaveBeenCalledTimes(1)
-      expect(vi.mocked(addEventListener).mock.calls[0][0]).toBe(a2)
+      expect(vi.mocked(addEventListener).mock.calls[0][0]).toBe(document)
+      expect(vi.mocked(addEventListener).mock.calls[0][1]).toBe('click')
     })
 
-    test('does nothing when no matching anchors exist', () => {
-      const a = document.createElement('a')
-      a.setAttribute('href', 'http://example.com')
-      document.body.append(a)
-
+    function captureDelegatedHandler(): (e: Event) => void {
+      let captured: (e: Event) => void
+      vi.mocked(addEventListener).mockImplementation(
+        (_el, _evt, handler: any) => {
+          captured = handler
+        },
+      )
       bindAnchors()
+      return captured!
+    }
 
-      expect(addEventListener).not.toHaveBeenCalled()
-    })
-
-    test('click handler calls findTarget and prevents default', () => {
+    test('handler calls findTarget and prevents default for hash anchor', () => {
       const target = document.createElement('div')
       target.id = 'clickTarget'
       document.body.append(target)
@@ -304,21 +284,74 @@ describe('child/page/links unit tests', () => {
       a.setAttribute('href', '#clickTarget')
       document.body.append(a)
 
-      // Use real addEventListener to capture the handler
-      let capturedHandler: (e: Event) => void
-      vi.mocked(addEventListener).mockImplementation(
-        (_el, _evt, handler: any) => {
-          capturedHandler = handler
-        },
-      )
-
-      bindAnchors()
-
-      const mockEvent = { preventDefault: vi.fn() }
-      capturedHandler!(mockEvent as unknown as Event)
+      const handler = captureDelegatedHandler()
+      const mockEvent = { target: a, preventDefault: vi.fn() }
+      handler(mockEvent as unknown as Event)
 
       expect(mockEvent.preventDefault).toHaveBeenCalled()
       expect(sendMessage).toHaveBeenCalled()
+    })
+
+    test('handler ignores anchor with href="#"', () => {
+      const a = document.createElement('a')
+      a.setAttribute('href', '#')
+      document.body.append(a)
+
+      const handler = captureDelegatedHandler()
+      const mockEvent = { target: a, preventDefault: vi.fn() }
+      handler(mockEvent as unknown as Event)
+
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
+    test('handler ignores clicks outside hash anchors', () => {
+      const div = document.createElement('div')
+      document.body.append(div)
+
+      const handler = captureDelegatedHandler()
+      const mockEvent = { target: div, preventDefault: vi.fn() }
+      handler(mockEvent as unknown as Event)
+
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
+    test('handler walks up to find ancestor hash anchor', () => {
+      const target = document.createElement('div')
+      target.id = 'nested'
+      document.body.append(target)
+
+      const a = document.createElement('a')
+      a.setAttribute('href', '#nested')
+      const inner = document.createElement('span')
+      a.append(inner)
+      document.body.append(a)
+
+      const handler = captureDelegatedHandler()
+      const mockEvent = { target: inner, preventDefault: vi.fn() }
+      handler(mockEvent as unknown as Event)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled()
+      expect(sendMessage).toHaveBeenCalled()
+    })
+
+    test('handler is a no-op when settings.inPageLinks is false', async () => {
+      const settingsMod = (await import('../values/settings')).default
+      settingsMod.inPageLinks = false
+
+      const a = document.createElement('a')
+      a.setAttribute('href', '#x')
+      document.body.append(a)
+
+      const handler = captureDelegatedHandler()
+      const mockEvent = { target: a, preventDefault: vi.fn() }
+      handler(mockEvent as unknown as Event)
+
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+      expect(sendMessage).not.toHaveBeenCalled()
+
+      settingsMod.inPageLinks = true
     })
   })
 })

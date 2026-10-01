@@ -96,6 +96,22 @@ describe('child/size/max-element', () => {
     expect(val).toBe(450)
   })
 
+  test('does not floor a width at the document height', () => {
+    const wide = document.createElement('div')
+    const narrow = document.createElement('div')
+    wide.getBoundingClientRect = () => ({ bottom: 0, right: 300 })
+    narrow.getBoundingClientRect = () => ({ bottom: 0, right: 120 })
+    document.body.append(wide, narrow)
+
+    // A page taller than it is wide
+    document.documentElement.getBoundingClientRect = () => ({
+      bottom: 900,
+      right: 1024,
+    })
+
+    expect(getMaxElement('right')).toBe(300)
+  })
+
   test('converts overflowedNodeSet to array', () => {
     state.hasOverflow = true
 

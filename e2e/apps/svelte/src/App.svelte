@@ -1,6 +1,27 @@
 <script>
   import IframeResizer from '@iframe-resizer/svelte'
 
+  let extra = {}
+
+  // Option changes applied after init by the e2e tests, one button per step
+  const UPDATES = {
+    styles: {
+      bodyBackground: 'rgb(0, 128, 0)',
+      bodyPadding: '6px',
+      bodyMargin: '12px',
+      scrolling: true,
+      checkOrigin: [location.origin],
+    },
+    offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
+    tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
+    links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
+    direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
+  }
+
+  function update(step) {
+    extra = { ...extra, ...UPDATES[step] }
+  }
+
   function onResized(event) {
     console.log('resized', event.detail)
   }
@@ -13,11 +34,16 @@
 
 <h2>@iframe-resizer/svelte example</h2>
 
+{#each Object.keys(UPDATES) as step}
+  <button id="update-{step}" on:click={() => update(step)}>Update {step}</button>
+{/each}
+
 <IframeResizer
   license="GPLv3"
   id="myIframe"
   log="collapsed"
   inPageLinks
+  {...extra}
   on:ready={onResized}
   on:message={onMessage}
   on:resized={onResized}

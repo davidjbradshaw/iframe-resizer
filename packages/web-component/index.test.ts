@@ -122,6 +122,45 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
+  it('calls a callback set through the options property and dispatches the event', () => {
+    createElement({ license: 'GPLv3' })
+    const first = vi.fn()
+    ;(el as any).options = { onMessage: first }
+    document.body.append(el)
+
+    const handler = vi.fn()
+    el.addEventListener('iframe-resizer:message', handler)
+
+    const options = vi.mocked(connectResizer).mock.calls[0][0]
+    options.onMessage({ message: 'hi' })
+
+    expect(handler).toHaveBeenCalledWith(
+      expect.objectContaining({ detail: { message: 'hi' } }),
+    )
+    expect(first).toHaveBeenCalledWith({ message: 'hi' })
+
+    // A callback changed later is used by the handler already bound
+    const second = vi.fn()
+    ;(el as any).options = { onMessage: second }
+    options.onMessage({ message: 'again' })
+
+    expect(second).toHaveBeenCalledWith({ message: 'again' })
+    expect(first).toHaveBeenCalledTimes(1)
+  })
+
+  it('lets an event listener or callback cancel a scroll', () => {
+    createElement({ license: 'GPLv3' })
+    document.body.append(el)
+
+    const options = vi.mocked(connectResizer).mock.calls[0][0]
+    expect(options.onScroll({ top: 0, left: 0 })).toBeUndefined()
+    ;(el as any).options = { onScroll: () => false }
+    expect(options.onScroll({ top: 0, left: 0 })).toBe(false)
+    ;(el as any).options = {}
+    el.addEventListener('iframe-resizer:scroll', (e) => e.preventDefault())
+    expect(options.onScroll({ top: 0, left: 0 })).toBe(false)
+  })
+
   it('onBeforeClose returns false', () => {
     createElement({ license: 'GPLv3' })
     document.body.append(el)
@@ -288,5 +327,17 @@ describe('web-component/IframeResizerElement', () => {
     document.body.append(el)
 
     expect((el as any).iframeResizer).toBe(mockResizer)
+  })
+
+  it('resets an option to its default when its attribute is removed', () => {
+    createElement({ license: 'GPLv3', inpagelinks: '' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+
+    el.removeAttribute('inpagelinks')
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ inPageLinks: false }),
+    )
   })
 })

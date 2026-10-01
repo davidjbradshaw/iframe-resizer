@@ -3,10 +3,13 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'
 import sendMessage from '../send/message'
+import settings from '../values/settings'
 import { addEventListener } from './listeners'
 
-const sendMouse = (evt: MouseEvent): void =>
+const sendMouse = (evt: MouseEvent): void => {
+  if (settings.mouseEvents !== true) return
   sendMessage(0, 0, evt.type, `${evt.screenY}:${evt.screenX}`)
+}
 
 function addMouseListener(evt: string, name: string): void {
   log(`Add event listener: %c${name}`, HIGHLIGHT)

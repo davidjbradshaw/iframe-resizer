@@ -1,5 +1,5 @@
 import { capitalizeFirstLetter } from '@iframe-resizer/common'
-import { MIN_SIZE } from '@iframe-resizer/common/consts'
+import { HEIGHT_EDGE, MIN_SIZE } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'
@@ -26,9 +26,14 @@ export function findMaxElement(
 
   let elVal
   let maxEl: Element = document.documentElement
-  let maxVal = state.hasTags
-    ? MIN_SIZE
-    : document.documentElement.getBoundingClientRect().bottom
+
+  // Untagged height starts from the <html> bottom, so the page is never
+  // shorter than its document. There is no equivalent for width: <html> is
+  // always as wide as the viewport, so its right edge would pin the width.
+  let maxVal =
+    !state.hasTags && side === HEIGHT_EDGE
+      ? document.documentElement.getBoundingClientRect().bottom
+      : MIN_SIZE
 
   for (const element of targetElements) {
     elVal =

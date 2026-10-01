@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mocks
-const mockFindTarget = vi.fn(() => 'target-found')
-vi.mock('../values/state', () => ({
-  default: { inPageLinks: { findTarget: mockFindTarget } },
-}))
+const mockFindTarget = vi.fn()
+const mockState: { findInPageLinkTarget: ((loc: string) => void) | null } = {
+  findInPageLinkTarget: mockFindTarget,
+}
+vi.mock('../values/state', () => ({ default: mockState }))
 vi.mock('./utils', () => ({ getData: (e) => e.data }))
 vi.mock('./init', () => ({ default: vi.fn() }))
 vi.mock('./message', () => ({ default: vi.fn() }))
@@ -16,7 +17,8 @@ vi.mock('./resize', () => ({ default: vi.fn() }))
 describe('child/received/process-request', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    mockFindTarget.mockReset().mockReturnValue('target-found')
+    mockFindTarget.mockReset()
+    mockState.findInPageLinkTarget = mockFindTarget
   })
 
   it('exposes request handlers and alias', async () => {
@@ -34,10 +36,16 @@ describe('child/received/process-request', () => {
     expect(mod.default.inPageLink).toBe(mod.default.moveToAnchor)
   })
 
-  it('moveToAnchor delegates to state.inPageLinks.findTarget', async () => {
+  it('moveToAnchor delegates to state.findInPageLinkTarget', async () => {
     const mod = await import('./process-request')
-    const result = mod.default.moveToAnchor({ data: 'anchor-123' })
+    mod.default.moveToAnchor({ data: 'anchor-123' })
     expect(mockFindTarget).toHaveBeenCalledWith('anchor-123')
-    expect(result).toBe('target-found')
+  })
+
+  it('moveToAnchor is a no-op when findInPageLinkTarget is null', async () => {
+    mockState.findInPageLinkTarget = null
+    const mod = await import('./process-request')
+    expect(() => mod.default.moveToAnchor({ data: 'anchor-123' })).not.toThrow()
+    expect(mockFindTarget).not.toHaveBeenCalled()
   })
 })

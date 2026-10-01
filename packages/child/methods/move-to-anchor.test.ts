@@ -9,12 +9,12 @@ const moveToAnchor = (await import('./move-to-anchor')).default
 describe('child/methods/move-to-anchor', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    state.inPageLinks = { findTarget: vi.fn() }
+    state.findInPageLinkTarget = vi.fn()
   })
 
   it('calls findTarget with the provided anchor', () => {
     moveToAnchor('section-1')
-    expect(state.inPageLinks.findTarget).toHaveBeenCalledWith('section-1')
+    expect(state.findInPageLinkTarget).toHaveBeenCalledWith('section-1')
   })
 
   it('throws TypeError when anchor is not a string', () => {
@@ -22,9 +22,17 @@ describe('child/methods/move-to-anchor', () => {
     expect(() => moveToAnchor(123)).toThrowError(TypeError)
   })
 
-  it('advises when inPageLinks is not enabled', () => {
-    state.inPageLinks = undefined
+  it('warns, without throwing, when inPageLinks is not enabled', () => {
+    state.findInPageLinkTarget = null
+
+    expect(() => moveToAnchor('section-1')).not.toThrow()
+    expect(advise).toHaveBeenCalledWith(
+      expect.stringContaining('requires <b>inPageLinks</> to be enabled'),
+    )
+  })
+
+  it('does not warn when inPageLinks is enabled', () => {
     moveToAnchor('section-1')
-    expect(advise).toHaveBeenCalledWith(expect.stringContaining('inPageLinks'))
+    expect(advise).not.toHaveBeenCalled()
   })
 })

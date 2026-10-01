@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-
+import { expect, test } from './test'
 import { assertChildText, waitForResizer } from './utils'
 
 /**
@@ -59,8 +58,10 @@ export function childTests(baseUrl) {
     await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
-    const origin = await page.evaluate(
-      () => document.querySelector('iframe')?.contentWindow?.parentIframe?.getParentOrigin(),
+    const origin = await page.evaluate(() =>
+      document
+        .querySelector('iframe')
+        ?.contentWindow?.parentIframe?.getParentOrigin(),
     )
 
     // Same-origin iframes use direct bridge (no postMessage origin)
@@ -316,12 +317,10 @@ export function childTests(baseUrl) {
       return document.querySelector('iframe') === null
     })
 
-    if (iframeRemoved) {
-      // Vanilla parent — iframe was removed
-      await expect(page.locator('iframe')).toHaveCount(0)
-    } else {
-      // Framework wrapper — iframe should still be present
-      await expect(page.locator('iframe')).toBeVisible()
-    }
+    // Vanilla parent removes the iframe; a framework wrapper keeps it
+    const iframe = page.locator('iframe')
+    await (iframeRemoved
+      ? expect(iframe).toHaveCount(0)
+      : expect(iframe).toBeVisible())
   })
 }
