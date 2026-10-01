@@ -5,7 +5,7 @@ vi.mock('../values/settings', () => ({
   default: { calculateWidth: false, widthLegacy: false },
 }))
 
-const { advise } = await import('../console')
+const { advise, log } = await import('../console')
 const settings = (await import('../values/settings')).default
 const setContentWidth = (await import('./content-width')).default
 
@@ -15,68 +15,85 @@ const widths = () =>
     el.style.getPropertyPriority('width'),
   ])
 
+const UNTOUCHED = [
+  ['', ''],
+  ['', ''],
+]
+const MAX_CONTENT = [
+  ['max-content', 'important'],
+  ['max-content', 'important'],
+]
+
+const direction = (calculateWidth, widthLegacy = false) => {
+  settings.calculateWidth = calculateWidth
+  settings.widthLegacy = widthLegacy
+  setContentWidth()
+}
+
 describe('child/page/content-width', () => {
   beforeEach(() => {
-    // Return to the unset state between tests
-    settings.calculateWidth = false
-    settings.widthLegacy = false
-    setContentWidth()
+    direction(false)
+    document.body.style.removeProperty('width')
     vi.clearAllMocks()
   })
 
   test('leaves the page alone when the width is not sized', () => {
-    setContentWidth()
+    direction(false)
 
-    expect(widths()).toEqual([
-      ['', ''],
-      ['', ''],
-    ])
-  })
-
-  test('makes html and body as wide as their content when the width is sized', () => {
-    settings.calculateWidth = true
-    setContentWidth()
-
-    expect(widths()).toEqual([
-      ['max-content', 'important'],
-      ['max-content', 'important'],
-    ])
+    expect(widths()).toEqual(UNTOUCHED)
     expect(advise).not.toHaveBeenCalled()
   })
 
-  test('removes it again when the width stops being sized', () => {
-    settings.calculateWidth = true
-    setContentWidth()
-    settings.calculateWidth = false
-    setContentWidth()
+  test('makes html and body as wide as their content when the width is sized', () => {
+    direction(true)
 
+    expect(widths()).toEqual(MAX_CONTENT)
+    expect(log).toHaveBeenCalledTimes(1)
+    expect(advise).not.toHaveBeenCalled()
+  })
+
+  test('applies it once, however often it is called', () => {
+    direction(true)
+    direction(true)
+
+    expect(log).toHaveBeenCalledTimes(1)
+  })
+
+  test('puts back the widths the page had when the width stops being sized', () => {
+    document.body.style.setProperty('width', '600px')
+
+    direction(true)
+    expect(widths()).toEqual([
+      ['max-content', 'important'],
+      ['max-content', 'important'],
+    ])
+
+    direction(false)
     expect(widths()).toEqual([
       ['', ''],
-      ['', ''],
+      ['600px', ''],
     ])
   })
 
-  test('does not remove a width the page set itself', () => {
-    document.body.style.width = '600px'
-    setContentWidth()
+  test('with the legacy direction leaves the page alone and advises, once', () => {
+    direction(true, true)
+    direction(true, true)
 
-    expect(document.body.style.width).toBe('600px')
-    document.body.style.removeProperty('width')
-  })
-
-  test('with a legacy direction leaves the page alone and advises, once', () => {
-    settings.calculateWidth = true
-    settings.widthLegacy = true
-    setContentWidth()
-    setContentWidth()
-
-    expect(widths()).toEqual([
-      ['', ''],
-      ['', ''],
-    ])
+    expect(widths()).toEqual(UNTOUCHED)
     expect(advise).toHaveBeenCalledTimes(1)
     expect(advise).toHaveBeenCalledWith(
       expect.stringContaining('horizontal-legacy'),
     )
+  })
+
+  test('switches between legacy and content sizing', () => {
+    direction(true, true)
+    expect(widths()).toEqual(UNTOUCHED)
+
+    direction(true)
+    expect(widths()).toEqual(MAX_CONTENT)
+
+    direction(true, true)
+    expect(widths()).toEqual(UNTOUCHED)
   })
 })

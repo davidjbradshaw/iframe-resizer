@@ -1,6 +1,5 @@
 import {
   BOTH,
-  BOTH_LEGACY,
   HORIZONTAL,
   HORIZONTAL_LEGACY,
   NONE,
@@ -81,17 +80,8 @@ describe('core/setup/direction', () => {
     expect(settings.i7.widthLegacy).toBe(true)
   })
 
-  test('both-legacy sizes both and sets widthLegacy', () => {
-    settings.i7.direction = BOTH_LEGACY
-    setDirection('i7')
-
-    expect(settings.i7.sizeWidth).toBe(true)
-    expect(settings.i7.sizeHeight).toBe(true)
-    expect(settings.i7.widthLegacy).toBe(true)
-  })
-
   test('horizontal and both do not set widthLegacy, and it is cleared on change', () => {
-    settings.i7.direction = BOTH_LEGACY
+    settings.i7.direction = HORIZONTAL_LEGACY
     setDirection('i7')
 
     for (const direction of [HORIZONTAL, BOTH, VERTICAL]) {

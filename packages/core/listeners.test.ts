@@ -12,6 +12,7 @@ vi.mock('./console', () => ({
 }))
 vi.mock('./received/decode', () => ({
   default: vi.fn(() => ({ id: 'abc', type: 'INIT' })),
+  getIframeId: (msg) => msg.slice(13).split(':')[0],
 }))
 vi.mock('./received/preflight', () => ({
   checkIframeExists: vi.fn(() => true),

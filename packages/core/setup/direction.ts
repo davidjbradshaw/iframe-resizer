@@ -1,6 +1,5 @@
 import {
   BOTH,
-  BOTH_LEGACY,
   HORIZONTAL,
   HORIZONTAL_LEGACY,
   NONE,
@@ -20,8 +19,7 @@ export default function setDirection(id: string): void {
   settings[id].sizeWidth = defaults.sizeWidth
   settings[id].sizeHeight = defaults.sizeHeight
   settings[id].autoResize = defaults.autoResize
-  settings[id].widthLegacy =
-    direction === HORIZONTAL_LEGACY || direction === BOTH_LEGACY
+  settings[id].widthLegacy = direction === HORIZONTAL_LEGACY
 
   switch (direction) {
     case VERTICAL:
@@ -32,7 +30,6 @@ export default function setDirection(id: string): void {
       settings[id].sizeHeight = false
     // eslint-disable-next-line no-fallthrough
     case BOTH:
-    case BOTH_LEGACY:
       settings[id].sizeWidth = true
       break
 

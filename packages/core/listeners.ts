@@ -8,8 +8,7 @@ import {
 
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'
-import decodeMessage from './received/decode'
-import isWidthLegacy from './received/is-width-legacy'
+import decodeMessage, { getIframeId } from './received/decode'
 import {
   checkIframeExists,
   isMessageForUs,
@@ -63,7 +62,7 @@ function iframeListener(
 function iframeParentListener(data: string): void {
   const handle = (): void => iframeListener({ data, sameOrigin: true })
 
-  if (isWidthLegacy(data)) setTimeout(handle)
+  if (settings[getIframeId(data)]?.widthLegacy) setTimeout(handle)
   else queueMicrotask(handle)
 }
 
