@@ -27,7 +27,7 @@ describe('child/read/from-parent', () => {
     data[20] = '5.0.0'
     data[21] = '0' // mode -> Number
     data[23] = 'true' // logExpand -> Boolean
-    data[24] = 'true' // widthLegacy -> Boolean
+    data[24] = 'true' // maxContentWidth -> Boolean
 
     const out = readFromParent(data)
 
@@ -47,7 +47,7 @@ describe('child/read/from-parent', () => {
     expect(out.version).toBe('5.0.0')
     expect(out.mode).toBe(0)
     expect(out.logExpand).toBe(true)
-    expect(out.widthLegacy).toBe(true)
+    expect(out.maxContentWidth).toBe(true)
   })
 
   test('handles undefined values gracefully', () => {
@@ -64,6 +64,6 @@ describe('child/read/from-parent', () => {
     expect(out.tolerance).toBeUndefined()
     expect(out.mode).toBeUndefined()
     // An older parent does not send it
-    expect(out.widthLegacy).toBeUndefined()
+    expect(out.maxContentWidth).toBeUndefined()
   })
 })

@@ -56,7 +56,7 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     '0',
     '',
     fields.logExpand ?? 'false',
-    fields.widthLegacy ?? 'false',
+    fields.maxContentWidth ?? 'false',
   ].join(':')
   return { data: `[iFrameSizer]update:${data}` } as MessageEvent
 }
@@ -82,19 +82,19 @@ describe('child/received/update', () => {
     expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
   })
 
-  it('re-applies the content width and receives the legacy flag', () => {
-    settings.widthLegacy = false
+  it('receives the maxContentWidth flag and re-applies the content width', () => {
+    settings.maxContentWidth = false
 
     updateFromParent(
-      buildEvent('frame', { sizeWidth: 'true', widthLegacy: 'true' }),
+      buildEvent('frame', { sizeWidth: 'true', maxContentWidth: 'true' }),
     )
 
     expect(settings.calculateWidth).toBe(true)
-    expect(settings.widthLegacy).toBe(true)
+    expect(settings.maxContentWidth).toBe(true)
     expect(setContentWidth).toHaveBeenCalledTimes(1)
 
     settings.calculateWidth = false
-    settings.widthLegacy = false
+    settings.maxContentWidth = false
   })
 
   it('does not re-send the size when the offset is unchanged', () => {

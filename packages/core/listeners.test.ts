@@ -191,40 +191,7 @@ describe('core/listeners', () => {
     vi.useRealTimers()
   })
 
-  test('iframeParentListener waits for a timer with a legacy width direction', async () => {
-    vi.useFakeTimers()
-
-    const decode = (await import('./received/decode')).default
-    decode.mockReturnValue({ id: 'old', type: 'resizeObserver' })
-    preflight.isMessageForUs.mockReturnValue(true)
-    preflight.checkIframeExists.mockReturnValue(true)
-    preflight.isMessageFromMetaParent.mockReturnValue(false)
-    preflight.isMessageFromIframe.mockReturnValue(true)
-
-    const settingsMod = await import('./values/settings')
-    settingsMod.default.old = { sizeWidth: true, widthLegacy: true }
-
-    const { default: setup } = await import('./listeners')
-    setup()
-
-    window.iframeParentListener('[iFrameSizer]old:100:200:resizeObserver')
-
-    // A microtask is not enough: the child's body follows the iframe width
-    await Promise.resolve()
-    expect(routeMessage).not.toHaveBeenCalled()
-
-    vi.runAllTimers()
-    expect(routeMessage).toHaveBeenCalledWith({
-      id: 'old',
-      type: 'resizeObserver',
-    })
-
-    vi.useRealTimers()
-  })
-
-  test('iframeParentListener uses a microtask when the width is sized to content', async () => {
-    vi.useFakeTimers()
-
+  async function listenForWidth(iframeSettings) {
     const decode = (await import('./received/decode')).default
     decode.mockReturnValue({ id: 'wide', type: 'resizeObserver' })
     preflight.isMessageForUs.mockReturnValue(true)
@@ -233,18 +200,50 @@ describe('core/listeners', () => {
     preflight.isMessageFromIframe.mockReturnValue(true)
 
     const settingsMod = await import('./values/settings')
-    settingsMod.default.wide = { sizeWidth: true, widthLegacy: false }
+    settingsMod.default.wide = { sizeWidth: true, ...iframeSettings }
 
     const { default: setup } = await import('./listeners')
     setup()
 
     window.iframeParentListener('[iFrameSizer]wide:100:200:resizeObserver')
-    await Promise.resolve()
+  }
 
+  test('iframeParentListener uses a microtask when a v6 child sizes its page to its content', async () => {
+    vi.useFakeTimers()
+    await listenForWidth({ maxContentWidth: true, childVersion: '6.0.0' })
+
+    await Promise.resolve()
     expect(routeMessage).toHaveBeenCalledWith({
       id: 'wide',
       type: 'resizeObserver',
     })
+
+    vi.useRealTimers()
+  })
+
+  test('iframeParentListener waits for a timer with a legacy width direction', async () => {
+    vi.useFakeTimers()
+    await listenForWidth({ maxContentWidth: false, childVersion: '6.0.0' })
+
+    // A microtask is not enough: the child's body follows the iframe width
+    await Promise.resolve()
+    expect(routeMessage).not.toHaveBeenCalled()
+
+    vi.runAllTimers()
+    expect(routeMessage).toHaveBeenCalled()
+
+    vi.useRealTimers()
+  })
+
+  test('iframeParentListener waits for a timer until the child is known to be v6', async () => {
+    vi.useFakeTimers()
+    await listenForWidth({ maxContentWidth: true })
+
+    await Promise.resolve()
+    expect(routeMessage).not.toHaveBeenCalled()
+
+    vi.runAllTimers()
+    expect(routeMessage).toHaveBeenCalled()
 
     vi.useRealTimers()
   })

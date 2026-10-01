@@ -27,8 +27,8 @@ export interface ChildSettings {
   sizeSelector: string
   targetOrigin: string | string[]
   tolerance: number
+  maxContentWidth: boolean
   widthCalcMode: string
-  widthLegacy: boolean
   onBeforeResize:
     | ((
         newSize: number,
@@ -66,8 +66,8 @@ const settings: ChildSettings = {
   sizeSelector: '',
   targetOrigin: '*',
   tolerance: 0,
+  maxContentWidth: false,
   widthCalcMode: AUTO,
-  widthLegacy: false,
 
   onBeforeResize: undefined,
   onMessage: () => {

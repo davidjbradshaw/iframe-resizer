@@ -8,7 +8,7 @@ vi.mock('../observers/resize', () => ({
   })),
 }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
-vi.mock('../values/settings', () => ({ default: { widthLegacy: false } }))
+vi.mock('../values/settings', () => ({ default: { maxContentWidth: false } }))
 vi.mock('./observers', () => ({ default: {} }))
 
 const createResizeObservers = (await import('./resize')).default
@@ -18,8 +18,7 @@ const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 
 describe('child/observed/resize', () => {
-  test('with a legacy width direction, flags a body or html resize as the viewport resizing, only while sending', () => {
-    settings.widthLegacy = true
+  test('flags a body or html resize as the viewport resizing, only while sending', () => {
     createResizeObservers([])
     const seen = []
     sendSize.mockImplementation(() => seen.push(state.viewportResized))
@@ -31,10 +30,10 @@ describe('child/observed/resize', () => {
     expect(seen).toEqual([true, true, false])
     expect(state.viewportResized).toBe(false)
     sendSize.mockReset()
-    settings.widthLegacy = false
   })
 
   test('does not flag a body or html resize when they are sized to content', () => {
+    settings.maxContentWidth = true
     createResizeObservers([])
     const seen = []
     sendSize.mockImplementation(() => seen.push(state.viewportResized))
@@ -44,6 +43,7 @@ describe('child/observed/resize', () => {
 
     expect(seen).toEqual([false, false])
     sendSize.mockReset()
+    settings.maxContentWidth = false
   })
 
   test('creates resize observer, attaches and sends on entry', () => {

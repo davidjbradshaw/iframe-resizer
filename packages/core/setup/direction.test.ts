@@ -7,8 +7,11 @@ import {
 } from '@iframe-resizer/common/consts'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
+import { advise } from '../console'
 import settings from '../values/settings'
 import setDirection from './direction'
+
+vi.mock('../console', () => ({ advise: vi.fn(), log: vi.fn() }))
 
 describe('core/setup/direction', () => {
   afterEach(() => {
@@ -71,13 +74,35 @@ describe('core/setup/direction', () => {
     expect(settings.i7.sizeWidth).toBe(false)
   })
 
-  test('horizontal-legacy sizes the width only and sets widthLegacy', () => {
+  test('horizontal-legacy sizes the width only, is legacy, and advises once', () => {
     settings.i7.direction = HORIZONTAL_LEGACY
+    setDirection('i7')
     setDirection('i7')
 
     expect(settings.i7.sizeWidth).toBe(true)
     expect(settings.i7.sizeHeight).toBe(false)
     expect(settings.i7.widthLegacy).toBe(true)
+    expect(settings.i7.maxContentWidth).toBe(false)
+    expect(advise).toHaveBeenCalledTimes(1)
+    expect(advise).toHaveBeenCalledWith(
+      'i7',
+      expect.stringContaining('horizontal-legacy'),
+    )
+  })
+
+  test('horizontal and both ask the child to size its page to its content', () => {
+    for (const direction of [HORIZONTAL, BOTH]) {
+      settings.i7.direction = direction
+      setDirection('i7')
+
+      expect(settings.i7.maxContentWidth).toBe(true)
+    }
+
+    settings.i7.direction = VERTICAL
+    setDirection('i7')
+
+    expect(settings.i7.maxContentWidth).toBe(false)
+    expect(advise).not.toHaveBeenCalled()
   })
 
   test('horizontal and both do not set widthLegacy, and it is cleared on change', () => {

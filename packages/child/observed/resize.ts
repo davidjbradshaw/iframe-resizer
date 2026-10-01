@@ -11,10 +11,10 @@ function resizeObserved(entries: ResizeObserverEntry[]): void {
   if (!Array.isArray(entries) || entries.length === 0) return
   const el = entries[0].target
 
-  // With a legacy width direction <html> and <body> are as wide as the
+  // Unless sized to their content, <html> and <body> are as wide as the
   // iframe, so their resizing is the viewport changing, not the content
   state.viewportResized =
-    settings.widthLegacy &&
+    !settings.maxContentWidth &&
     (el === document.documentElement || el === document.body)
   sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
   state.viewportResized = false
