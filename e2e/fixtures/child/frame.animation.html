@@ -3,7 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <title>E2E Animation Child</title>
-    <script type="text/javascript" src="/dist/child/index.umd.js"></script>
+    <script>
+      // ?child=v5 loads the last v5 child instead of the current one
+      const script = document.createElement('script')
+      script.src =
+        new URLSearchParams(location.search).get('child') === 'v5'
+          ? 'v5/iframeResizer.contentWindow.js'
+          : '/js/iframe-resizer.child.js'
+      script.async = false
+      document.head.append(script)
+    </script>
     <style>
       html { margin: 0; padding: 0; }
       body { margin: 8px; font-family: sans-serif; }

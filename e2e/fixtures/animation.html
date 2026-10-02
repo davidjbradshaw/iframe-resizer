@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>iframe-resizer animation e2e</title>
-    <script type="text/javascript" src="../../dist/parent/index.umd.js"></script>
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
     <style>
       body { font-family: sans-serif; margin: 12px; }
       #stats { font: 13px/1.5 monospace; white-space: pre; background: #f0f0f0; padding: 8px; }
@@ -23,7 +23,9 @@
         width: 'horizontal',
         'width-legacy': 'horizontal-legacy',
       }
-      const mode = new URLSearchParams(location.search).get('mode') || 'height'
+      const query = new URLSearchParams(location.search)
+      const mode = query.get('mode') || 'height'
+      const child = query.get('child') || ''
       const sizesWidth = mode !== 'height'
       const iframe = document.querySelector('iframe')
 
@@ -46,7 +48,7 @@
         }
       })
 
-      iframe.src = `child/frame.animation.html?mode=${mode}`
+      iframe.src = `child/frame.animation.html?mode=${mode}&child=${child}`
 
       iframeResize(
         {
