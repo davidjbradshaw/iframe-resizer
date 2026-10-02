@@ -3,9 +3,19 @@ import { describe, expect, test, vi } from 'vitest'
 vi.mock('../console', () => ({ log: vi.fn() }))
 vi.mock('../values/settings', () => ({
   default: {
-    id1: { direction: 'vertical', offsetHeight: 0, offsetWidth: 0 },
-    id2: { direction: 'horizontal', offsetHeight: 0, offsetWidth: 0 },
-    id3: { direction: 'both', offsetHeight: 0, offsetWidth: 0 },
+    id1: {
+      sizeHeight: true,
+      sizeWidth: false,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    },
+    id2: {
+      sizeHeight: false,
+      sizeWidth: true,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    },
+    id3: { sizeHeight: true, sizeWidth: true, offsetHeight: 0, offsetWidth: 0 },
   },
 }))
 

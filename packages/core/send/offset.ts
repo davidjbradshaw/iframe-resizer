@@ -1,4 +1,3 @@
-import { HORIZONTAL, VERTICAL } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { log } from '../console'
@@ -13,14 +12,15 @@ export default function setOffsetSize(
   // Not passed: leave the current offset alone. Zero is a value, it clears it.
   if (newOffset === undefined || newOffset === null) return
 
-  const { direction } = settings[id]
+  // Keyed on the flags setDirection() derives, not the direction value itself
+  const { sizeHeight, sizeWidth } = settings[id]
 
-  if (direction !== HORIZONTAL) {
+  if (sizeHeight) {
     settings[id].offsetHeight = newOffset
     log(id, `Offset height: %c${newOffset}`, HIGHLIGHT)
   }
 
-  if (direction !== VERTICAL) {
+  if (sizeWidth) {
     settings[id].offsetWidth = newOffset
     log(id, `Offset width: %c${newOffset}`, HIGHLIGHT)
   }
