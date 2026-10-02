@@ -40,7 +40,7 @@ import firstRun from './setup/first-run'
 import settings from './values/settings'
 
 export default function routeMessage(messageData: MessageData): void {
-  const { id, iframe, mode, message, type } = messageData
+  const { id, iframe, height, width, mode, message, type } = messageData
   const { lastMessage } = settings[id]
 
   if (settings[id]?.firstRun) firstRun(id, mode)
@@ -65,7 +65,8 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     case INIT:
-      resizeIframe(messageData)
+      // The version and mode are for the parent, not the onResized callback
+      resizeIframe({ id, iframe, height, width, type })
       checkSameDomain(id)
       checkVersion(id, message)
       settings[id].initialised = true
