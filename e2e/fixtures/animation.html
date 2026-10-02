@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer animation e2e</title>
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
+    <style>
+      body { font-family: sans-serif; margin: 12px; }
+      #stats { font: 13px/1.5 monospace; white-space: pre; background: #f0f0f0; padding: 8px; }
+      iframe { width: 400px; height: 200px; border: 0; }
+    </style>
+  </head>
+
+  <body>
+    <h2>Animated content</h2>
+    <div id="stats">starting…</div>
+    <iframe scrolling="no"></iframe>
+
+    <script type="text/javascript">
+      // ?mode=height (default), width or width-legacy
+      const DIRECTIONS = {
+        height: 'vertical',
+        width: 'horizontal',
+        'width-legacy': 'horizontal-legacy',
+      }
+      const query = new URLSearchParams(location.search)
+      const mode = query.get('mode') || 'height'
+      const child = query.get('child') || ''
+      const sizesWidth = mode !== 'height'
+      const iframe = document.querySelector('iframe')
+
+      // How long to let the page settle before sampling
+      const WARM_UP_MS = 1000
+
+      const stats = {
+        mode,
+        paints: 0, // paints sampled
+        paintsBehind: 0, // ...where the iframe was out by more than 1px
+        worst: 0, // largest difference seen, px
+        resized: 0, // onResized callbacks
+        resizeObserverErrors: 0, // "ResizeObserver loop" errors, either page
+      }
+      window.stats = stats
+
+      window.addEventListener('error', (e) => {
+        if (/ResizeObserver loop/.test(e.message)) {
+          stats.resizeObserverErrors += 1
+        }
+      })
+
+      iframe.src = `child/frame.animation.html?mode=${mode}&child=${child}`
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          direction: DIRECTIONS[mode],
+          onResized() {
+            stats.resized += 1
+          },
+        },
+        iframe,
+      )
+
+      const started = performance.now()
+
+      // The size the content asks for: the height of <html>, or the right
+      // edge of the animated box
+      function contentSize(doc) {
+        return sizesWidth
+          ? doc.getElementById('box').getBoundingClientRect().right
+          : doc.documentElement.getBoundingClientRect().height
+      }
+
+      // Runs as a task straight after a paint, so it reads what was shown
+      function sample() {
+        const doc = iframe.contentDocument
+        const ready = iframe.iframeResizer && doc && doc.getElementById('box')
+        if (!ready || performance.now() - started < WARM_UP_MS) return
+
+        const shown = sizesWidth ? iframe.clientWidth : iframe.clientHeight
+        const difference = Math.abs(shown - contentSize(doc))
+
+        stats.paints += 1
+        if (difference > 1) stats.paintsBehind += 1
+        stats.worst = Math.max(stats.worst, difference)
+      }
+
+      const channel = new MessageChannel()
+      channel.port1.onmessage = sample
+
+      function sampleAfterPaint() {
+        channel.port2.postMessage(0)
+        requestAnimationFrame(sampleAfterPaint)
+      }
+      requestAnimationFrame(sampleAfterPaint)
+
+      setInterval(() => {
+        document.getElementById('stats').textContent =
+          `mode                    ${stats.mode}\n` +
+          `paints sampled          ${stats.paints}\n` +
+          `paints out by > 1px     ${stats.paintsBehind}\n` +
+          `worst difference        ${stats.worst.toFixed(1)}px\n` +
+          `resize messages         ${stats.resized}\n` +
+          `ResizeObserver errors   ${stats.resizeObserverErrors}`
+      }, 250)
+    </script>
+  </body>
+</html>

@@ -8,11 +8,13 @@ vi.mock('../observers/resize', () => ({
   })),
 }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
+vi.mock('../values/settings', () => ({ default: { maxContentWidth: false } }))
 vi.mock('./observers', () => ({ default: {} }))
 
 const createResizeObservers = (await import('./resize')).default
 const observers = (await import('./observers')).default
 const sendSize = (await import('../send/size')).default
+const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 
 describe('child/observed/resize', () => {
@@ -28,6 +30,20 @@ describe('child/observed/resize', () => {
     expect(seen).toEqual([true, true, false])
     expect(state.viewportResized).toBe(false)
     sendSize.mockReset()
+  })
+
+  test('does not flag a body or html resize when they are sized to content', () => {
+    settings.maxContentWidth = true
+    createResizeObservers([])
+    const seen = []
+    sendSize.mockImplementation(() => seen.push(state.viewportResized))
+
+    observers.resize._cb([{ target: document.body }])
+    observers.resize._cb([{ target: document.documentElement }])
+
+    expect(seen).toEqual([false, false])
+    sendSize.mockReset()
+    settings.maxContentWidth = false
   })
 
   test('creates resize observer, attaches and sends on entry', () => {

@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer width directions</title>
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
+    <style>
+      body { font-family: sans-serif; margin: 16px; color: #222; }
+      h1 { font-size: 20px; margin: 0 0 4px; }
+      h2 { font-size: 16px; margin: 28px 0 2px; }
+      .intro, .note { color: #555; font-size: 14px; margin: 0 0 10px; max-width: 760px; }
+      .label { font: 13px/1.6 monospace; margin-top: 10px; }
+      .label b { display: inline-block; min-width: 290px; }
+      .width { background: #222; color: #fff; padding: 1px 6px; border-radius: 3px; }
+      .scroll { overflow-x: auto; padding-bottom: 6px; }
+      iframe { width: 400px; height: 190px; border: 2px solid #c33; background: #fff; display: block; }
+      .horizontal iframe { border-color: #2a7; }
+      .ruler {
+        height: 8px;
+        width: 400px;
+        background: repeating-linear-gradient(90deg, #999 0 1px, transparent 1px 100px);
+        border-left: 1px solid #999;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1><code>direction: 'horizontal'</code> and <code>'horizontal-legacy'</code></h1>
+    <p class="intro">
+      Every iframe starts 400px wide; the ruler above each one is 400px,
+      ticked every 100px. With <code>horizontal</code> (green) the child makes
+      the page as wide as its content. With <code>horizontal-legacy</code>
+      (red) the page stays as wide as the iframe, as it was before v6.
+    </p>
+
+    <div id="cases"></div>
+
+    <script type="text/javascript">
+      const CASES = [
+        ['short', 'Short content', 'Narrower than the iframe.'],
+        ['article', 'An article', 'Wrapping text.'],
+        ['cards', 'Content with its own width', 'Fixed-width cards that can be added and removed.'],
+        ['table', 'Text and a wide table', 'The table cannot wrap.'],
+      ]
+      const DIRECTIONS = ['horizontal-legacy', 'horizontal']
+
+      const variant = (content, direction) => `
+        <div class="label"><b>direction: '${direction}'</b>
+          iframe width <span class="width" id="w-${content}-${direction}">…</span></div>
+        <div class="scroll ${direction}">
+          <div class="ruler"></div>
+          <iframe id="f-${content}-${direction}" data-direction="${direction}"
+            scrolling="no" src="child/frame.width-modes.html?content=${content}"></iframe>
+        </div>`
+
+      document.getElementById('cases').innerHTML = CASES.map(
+        ([content, title, note]) =>
+          `<h2>${title}</h2><p class="note">${note}</p>${DIRECTIONS.map((direction) => variant(content, direction)).join('')}`,
+      ).join('')
+
+      const show = (iframe) => {
+        const readout = document.getElementById(iframe.id.replace('f-', 'w-'))
+        readout.textContent = `${iframe.clientWidth}px`
+      }
+
+      for (const iframe of document.querySelectorAll('iframe')) {
+        iframeResize(
+          {
+            license: 'GPLv3',
+            direction: iframe.dataset.direction,
+            onReady: show,
+            onResized: () => show(iframe),
+          },
+          iframe,
+        )
+      }
+    </script>
+  </body>
+</html>
