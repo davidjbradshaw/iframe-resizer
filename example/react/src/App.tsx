@@ -5,7 +5,6 @@ import IframeResizer, {
   type IFrameResizedData,
 } from '@iframe-resizer/react'
 
-import MessageData from './message-data'
 
 import './App.css'
 
@@ -38,7 +37,14 @@ function App() {
             src="child/frame.content.html"
             style={{ width: '100%', height: '100vh' }}
           />
-          <MessageData data={messageData} />
+          {messageData && (
+            <div className="message-data">
+              <h3>Event Data:</h3>
+              <pre>
+                {JSON.stringify(messageData, (key, value) => (key === 'iframe' ? undefined : value), 2)}
+              </pre>
+            </div>
+          )}
         </>
       }
     </>

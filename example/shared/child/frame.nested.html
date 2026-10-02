@@ -43,12 +43,25 @@
         scrolling="no"
       ></iframe>
     </div>
-    <p id="callback"></p>
+    <div class="message-data" id="event-display" style="display: none">
+      <h3>Event Data:</h3>
+      <pre id="event-data"></pre>
+    </div>
 
     <script type="text/javascript">
       const level = document.location.search.replace(/\?/, '') || 0
       const id = `nestedIFrame${level}`
-      const callbackDisplay = document.querySelector('p#callback')
+      const display = document.getElementById('event-display')
+      const eventData = document.getElementById('event-data')
+
+      function showData(data) {
+        display.style.display = ''
+        eventData.textContent = JSON.stringify(
+          data,
+          (key, value) => (key === 'iframe' ? undefined : value),
+          2,
+        )
+      }
       const iframe = document.getElementById('nestedIFrame')
 
       iframe.setAttribute('id', id)
@@ -69,7 +82,7 @@
 
         // Callback fn when iFrame resized, update the data being displayed
         onResized(messageData) {
-          callbackDisplay.innerHTML = ` <b> Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
+          showData(messageData)
         },
 
         // Callback fn when message is received, forward to parent page
@@ -79,7 +92,7 @@
 
         // Callback fn when iFrame is closed
         onAfterClose(id) {
-          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+          showData({ id, type: 'close' })
         },
       })
 
