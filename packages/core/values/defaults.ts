@@ -1,0 +1,42 @@
+import { AUTO, VERTICAL } from '@iframe-resizer/common/consts'
+
+export default Object.freeze({
+  autoResize: true,
+  bodyBackground: null,
+  bodyMargin: null,
+  bodyPadding: null,
+  checkOrigin: true,
+  direction: VERTICAL,
+  firstRun: true,
+  inPageLinks: false,
+  heightCalculationMethod: AUTO,
+  id: 'iframeResizer',
+  log: false,
+  logExpand: false,
+  license: undefined,
+  mouseEvents: true,
+  offsetHeight: null,
+  offsetWidth: null,
+  postMessageTarget: null,
+  sameOrigin: true,
+  scrolling: false,
+  sizeHeight: true,
+  // sizeSelector: '',
+  sizeWidth: false,
+  tolerance: 0,
+  waitForLoad: false,
+  warningTimeout: 5000,
+  widthCalculationMethod: AUTO,
+
+  onBeforeClose: () => true,
+  onAfterClose() {},
+  onMessage() {
+    // eslint-disable-next-line no-console
+    console.warn('', 'onMessage function not defined')
+  },
+  onMouseEnter() {},
+  onMouseLeave() {},
+  onReady() {},
+  onResized() {},
+  onScroll: () => true,
+})

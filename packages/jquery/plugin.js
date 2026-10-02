@@ -1,6 +1,7 @@
 import connectResizer from '@iframe-resizer/core'
 
-import { deprecateMethod, warn } from '../core/console'
+// eslint-disable-next-line import/extensions
+import { warn } from '../core/console'
 
 switch (true) {
   case window.jQuery === undefined:
@@ -21,11 +22,5 @@ switch (true) {
       const init = (i, el) => connectWithOptions(el)
 
       return this.filter('iframe').each(init).end()
-    }
-
-    window.jQuery.fn.iFrameResize = function (options) {
-      deprecateMethod('iFrameResize()', 'iframeResize()', '', 'jQuery')
-
-      return this.iframeResize(options)
     }
 }

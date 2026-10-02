@@ -1,6 +1,11 @@
 {
   "cSpell.words": [
+    "alpinejs",
     "Automagically",
+    "bodybackground",
+    "bodymargin",
+    "bodypadding",
+    "checkorigin",
     "chorizontal",
     "ciframe",
     "cnone",
@@ -15,11 +20,22 @@
     "initialisation",
     "Initialised",
     "Initialising",
+    "inpagelinks",
     "javascripts",
     "logcapture",
     "Loggable",
+    "networkidle",
+    "offsetsize",
     "sarif",
     "scanjs",
-    "sonarjs"
-  ]
+    "sonarjs",
+    "warningtimeout"
+  ],
+  "chat.tools.terminal.autoApprove": {
+    "npm run -s test:unit:cov": true,
+    "npm run -s test:unit": true,
+    "npm run -s test:int": true
+  },
+  "claudeCodeChat.permissions.yoloMode": false,
+  "angular.enable-strict-mode-prompt": false
 }

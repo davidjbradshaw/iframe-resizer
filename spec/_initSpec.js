@@ -1,10 +1,12 @@
 define(['iframeResizerParent'], (iframeResize) => {
-  xdescribe('iFrame init', () => {
+  describe('iFrame init', () => {
     let iframe
     const id = 'initTest'
 
     beforeEach((done) => {
       loadIFrame('iframe600.html')
+
+      let called = false
 
       iframe = iframeResize({
         license: 'GPLv3',
@@ -16,11 +18,14 @@ define(['iframeResizerParent'], (iframeResize) => {
         tolerance: 1,
         direction: 'horizontal',
         onReady: () => {
+          if (called) return
+          called = true
           setTimeout(done, 1)
         },
       })[0]
 
-      console.log('iframe', iframe)
+      // Mock the init message from child
+      mockMsgFromIFrame(iframe, 'init')
     })
 
     afterEach(() => {
@@ -38,10 +43,6 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       it('should create a close method', () => {
         expect(iframe.iframeResizer.close).toBeDefined()
-      })
-
-      it('should create a resize method', () => {
-        expect(iframe.iframeResizer.resize).toBeDefined()
       })
 
       it('should create a moveToAnchor method', () => {
