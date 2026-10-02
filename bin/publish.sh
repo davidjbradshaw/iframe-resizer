@@ -71,6 +71,9 @@ then
   exit 0
 fi
 
+echo "Updating examples to v$VERSION"
+node build-scripts/update-example-versions.js
+
 echo "Updating example dependencies"
 bin/update-examples.sh --minor
 
