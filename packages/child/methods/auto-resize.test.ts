@@ -46,6 +46,16 @@ describe('child/methods/auto-resize', () => {
     expect(sendMessage).toHaveBeenCalledWith(0, 0, AUTO_RESIZE, 'true')
   })
 
+  test('sends a size check when enabling while already enabled', async () => {
+    settings.autoResize = true
+    const out = autoResize(true)
+
+    expect(out).toBe(true)
+    await Promise.resolve()
+
+    expect(sendSize).toHaveBeenCalledWith(ENABLE, 'Auto Resize enabled')
+  })
+
   test('disables autoResize from true', () => {
     settings.autoResize = true
     const out = autoResize(false)

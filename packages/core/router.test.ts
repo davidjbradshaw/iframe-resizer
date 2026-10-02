@@ -78,7 +78,14 @@ describe('core/router', () => {
   test('handles INIT and marks initialised', () => {
     routeMessage({ ...base, type: INIT })
 
-    expect(resizeIframe).toHaveBeenCalled()
+    // The version and mode in the init message are not passed on
+    expect(resizeIframe).toHaveBeenCalledWith({
+      id,
+      iframe,
+      height: 100,
+      width: 100,
+      type: INIT,
+    })
     expect(checkSameDomain).toHaveBeenCalledWith(id)
     expect(checkVersion).toHaveBeenCalledWith(id, 'm')
     expect(settings[id].initialised).toBe(true)
