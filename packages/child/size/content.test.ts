@@ -94,6 +94,22 @@ describe('child/size/content', () => {
     expect(state.width).toBe(200)
   })
 
+  test('adopts the size on an offset change within tolerance', async () => {
+    const isSizeChangeDetected = (await import('./change-detected')).default
+    isSizeChangeDetected.mockReturnValue(false)
+    state.height = 100
+    state.width = 200
+
+    const result = getContentSize(
+      SET_OFFSET_SIZE,
+      'parentIframe.setOffsetSize(5)',
+    )
+
+    expect(result).toBe(state)
+    expect(state.height).toBe(300)
+    expect(state.width).toBe(400)
+  })
+
   test('returns null for observer events when no change', async () => {
     const isSizeChangeDetected = (await import('./change-detected')).default
     isSizeChangeDetected.mockReturnValue(false)

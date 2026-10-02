@@ -21,6 +21,7 @@ vi.mock('../values/state', () => ({
     timerActive: false,
     totalTime: 0,
     sameOrigin: false,
+    viewportResized: false,
   },
 }))
 vi.mock('./dispatch', () => ({ default: vi.fn() }))
@@ -95,30 +96,89 @@ describe('child/send/size', () => {
     expect(dispatch).not.toHaveBeenCalled()
   })
 
-  test('ignores when sendPending true for non-overflow triggers', () => {
-    const orig = globalThis.requestAnimationFrame
-    globalThis.requestAnimationFrame = () => 1 // do not flush pending
-    sendSize('evt', 'd')
-    sendSize('evt', 'd')
-    globalThis.requestAnimationFrame = orig
+  describe('one measurement per frame', () => {
+    // Capture the frame callback instead of running it, so a send stays
+    // pending until the test ends the frame
+    let endFrame
 
-    expect(consoleMod.log).toHaveBeenCalledWith(
-      'Resize already pending - Ignored resize request',
-    )
-  })
+    beforeEach(() => {
+      globalThis.requestAnimationFrame = (cb) => {
+        endFrame = cb
+        return 1
+      }
+    })
 
-  test('sends an offset change even when a resize is already pending', () => {
-    const orig = globalThis.requestAnimationFrame
-    globalThis.requestAnimationFrame = () => 1 // do not flush pending
-    sendSize('evt', 'd')
-    vi.clearAllMocks()
-    sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
-    globalThis.requestAnimationFrame = orig
+    test('a trigger while a send is pending is measured once at the next animation frame', () => {
+      sendSize('evt', 'first')
+      expect(dispatch).toHaveBeenCalledTimes(1)
 
-    expect(consoleMod.log).not.toHaveBeenCalledWith(
-      'Resize already pending - Ignored resize request',
-    )
-    expect(dispatch).toHaveBeenCalledTimes(1)
+      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
+      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(200)')
+
+      expect(consoleMod.log).toHaveBeenCalledWith(
+        'Resize already pending - Deferred to next animation frame',
+      )
+      expect(dispatch).toHaveBeenCalledTimes(1)
+
+      endFrame()
+
+      // The last deferred trigger is measured; the trailing custom sizes
+      // are undefined, so compare the leading arguments
+      expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
+        SET_OFFSET_SIZE,
+        'parentIframe.setOffsetSize(200)',
+      ])
+      expect(dispatch).toHaveBeenCalledTimes(2)
+      expect(dispatch.mock.lastCall.slice(0, 3)).toEqual([
+        10,
+        20,
+        SET_OFFSET_SIZE,
+      ])
+
+      // The deferred send starts a frame of its own, with nothing deferred
+      endFrame()
+      expect(dispatch).toHaveBeenCalledTimes(2)
+    })
+
+    test('a deferred viewport resize is measured as one', () => {
+      const seen = []
+      getContentSize.mockImplementation(() => {
+        seen.push(state.viewportResized)
+        return { height: 10, width: 20 }
+      })
+
+      sendSize('evt', 'first')
+      state.viewportResized = true
+      sendSize('resizeObserver', 'Element resized <BODY>')
+      state.viewportResized = false
+
+      endFrame()
+
+      expect(seen).toEqual([false, true])
+      expect(state.viewportResized).toBe(false)
+      getContentSize.mockImplementation(() => ({ height: 10, width: 20 }))
+    })
+
+    test('nothing is measured at the end of a frame with a single trigger', () => {
+      sendSize('evt', 'only')
+      endFrame()
+
+      expect(dispatch).toHaveBeenCalledTimes(1)
+    })
+
+    test('an explicit request is sent at once while a send is pending', () => {
+      sendSize('evt', 'first')
+      sendSize(MANUAL_RESIZE_REQUEST, 'parentIframe.resize()')
+
+      expect(dispatch).toHaveBeenCalledTimes(2)
+    })
+
+    test('an offset change while hidden is ignored', () => {
+      state.isHidden = true
+      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
+
+      expect(dispatch).not.toHaveBeenCalled()
+    })
   })
 
   test('respects autoResize=false except for allowed events', () => {
@@ -131,7 +191,7 @@ describe('child/send/size', () => {
 
     expect(dispatch).not.toHaveBeenCalled()
 
-    // OVERFLOW_OBSERVER does NOT bypass autoResize=false (only manual/parent resize allowed)
+    // OVERFLOW_OBSERVER does NOT bypass autoResize=false (only explicit requests do)
     settings.autoResize = false
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
 
