@@ -67,6 +67,7 @@
 
         onResized(messageData) {
           // Callback fn when resize is received
+          window.lastResized = messageData
           callbackDisplay.innerHTML = 
           `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Height:</b> ${messageData.height} <br><b>Width:</b> ${messageData.width} <br><b>Event type:</b> ${messageData.type}`
         },
