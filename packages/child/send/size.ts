@@ -22,15 +22,34 @@ let sendPending = false
 let hiddenMessageShown = false
 let rafId: number | null = null
 
-// A trigger that arrived while a send was pending; measured once at the end
-// of the frame, so a change made after the frame's first measurement is
-// not lost. Whether it came from the viewport resizing is kept with it, as
-// the width calculation needs to know.
+// A trigger that arrived while a send was pending; measured at the next
+// animation frame, so a change made after this frame's measurement is not
+// lost. Whether the viewport resized is kept with it, as the width
+// calculation needs to know.
 let deferred: {
   trigger: string
   desc: string
   viewportResized: boolean
 } | null = null
+
+function onAnimationFrame(): void {
+  sendPending = false
+  rafId = null
+  consoleEvent('requestAnimationFrame')
+
+  if (deferred === null) {
+    debug('Reset sendPending')
+    return
+  }
+
+  const { trigger, desc, viewportResized } = deferred
+  deferred = null
+  debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
+
+  state.viewportResized = viewportResized
+  errorBoundary(sendSize)(trigger, desc)
+  state.viewportResized = false
+}
 
 function sendSize(
   triggerEvent: string,
@@ -61,15 +80,14 @@ function sendSize(
     }
 
     // One measurement per frame: the first trigger is measured and sent at
-    // once, a later one is measured again at the end of the frame, when
-    // layout has settled for everything the frame changed. overflowObserver
-    // is measured at once, as that is cheaper than a mutationObserver on
-    // OVERFLOW_ATTR changes.
+    // once, a later one is measured at the next animation frame. The
+    // overflowObserver is measured at once, as that is cheaper than a
+    // mutationObserver on OVERFLOW_ATTR changes.
     case sendPending === true &&
       triggerEvent !== OVERFLOW_OBSERVER &&
       !isExplicitRequest: {
       purge()
-      log('Resize already pending - Deferred to end of frame')
+      log('Resize already pending - Deferred to next animation frame')
       deferred = {
         trigger: triggerEvent,
         desc: triggerEventDesc,
@@ -98,28 +116,7 @@ function sendSize(
 
       if (newSize) dispatch(newSize.height, newSize.width, triggerEvent, msg)
 
-      if (!rafId)
-        rafId = requestAnimationFrame(() => {
-          sendPending = false
-          rafId = null
-          consoleEvent('requestAnimationFrame')
-
-          if (deferred === null) {
-            debug(`Reset sendPending: %c${triggerEvent}`, HIGHLIGHT)
-            return
-          }
-
-          const { trigger, desc, viewportResized } = deferred
-          deferred = null
-          debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
-
-          state.viewportResized = viewportResized
-          try {
-            errorBoundary(sendSize)(trigger, desc)
-          } finally {
-            state.viewportResized = false
-          }
-        })
+      if (!rafId) rafId = requestAnimationFrame(onAnimationFrame)
 
       state.timerActive = false // Reset time for next resize
     }

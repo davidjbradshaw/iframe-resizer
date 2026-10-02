@@ -108,7 +108,7 @@ describe('child/send/size', () => {
       }
     })
 
-    test('a trigger while a send is pending is measured once at the end of the frame', () => {
+    test('a trigger while a send is pending is measured once at the next animation frame', () => {
       sendSize('evt', 'first')
       expect(dispatch).toHaveBeenCalledTimes(1)
 
@@ -116,7 +116,7 @@ describe('child/send/size', () => {
       sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(200)')
 
       expect(consoleMod.log).toHaveBeenCalledWith(
-        'Resize already pending - Deferred to end of frame',
+        'Resize already pending - Deferred to next animation frame',
       )
       expect(dispatch).toHaveBeenCalledTimes(1)
 
