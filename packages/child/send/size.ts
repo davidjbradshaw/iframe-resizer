@@ -44,9 +44,13 @@ function onAnimationFrame(): void {
   deferred = null
   debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
 
+  // errorBoundary re-throws anything that is not an Error
   state.viewportResized = viewportResized
-  errorBoundary(sendSize)(trigger, desc)
-  state.viewportResized = false
+  try {
+    safeSendSize(trigger, desc)
+  } finally {
+    state.viewportResized = false
+  }
 }
 
 function sendSize(
@@ -125,4 +129,6 @@ function sendSize(
   endAutoGroup()
 }
 
-export default errorBoundary(sendSize)
+const safeSendSize = errorBoundary(sendSize)
+
+export default safeSendSize

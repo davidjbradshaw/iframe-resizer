@@ -194,6 +194,20 @@ describe('child/send/size', () => {
       expect(dispatch).toHaveBeenCalledTimes(1)
     })
 
+    test('the viewport flag is reset when a deferred send throws a non-Error', () => {
+      sendSize('evt', 'first')
+      state.viewportResized = true
+      sendSize('resizeObserver', 'Element resized <BODY>')
+      state.viewportResized = false
+
+      const notAnError = 'bad'
+      getContentSize.mockImplementationOnce(() => {
+        throw notAnError
+      })
+      expect(() => endFrame()).toThrow('bad')
+      expect(state.viewportResized).toBe(false)
+    })
+
     test('an offset change while hidden is ignored', () => {
       state.isHidden = true
       sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
