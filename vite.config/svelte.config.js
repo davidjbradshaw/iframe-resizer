@@ -22,7 +22,7 @@ export default defineConfig({
       ],
     },
     ...terserWithBanner('svelte'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     svelte({

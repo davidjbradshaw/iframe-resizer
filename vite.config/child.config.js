@@ -17,7 +17,7 @@ export default defineConfig({
       external: [/^@iframe-resizer\/common/, 'auto-console-group'],
     },
     ...terserWithBanner('child'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     ...createPluginsProd('child'),

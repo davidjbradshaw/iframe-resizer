@@ -16,7 +16,7 @@ export default defineConfig({
       external: ['@iframe-resizer/core', 'auto-console-group'],
     },
     ...terserWithBanner('astro'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     dts({

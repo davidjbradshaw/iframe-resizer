@@ -20,7 +20,7 @@ export default defineConfig({
       ],
     },
     ...terserWithBanner('web-component'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     dts({
