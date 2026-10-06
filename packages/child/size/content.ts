@@ -46,8 +46,8 @@ export default function getContentSize(
   log(`Resize event: %c${triggerEventDesc}`, HIGHLIGHT)
 
   switch (updateEvent) {
-    // Explicit requests adopt the new size even when the change is within
-    // tolerance, so an offset change smaller than the tolerance still applies
+    // These adopt the measured size even within tolerance, so an offset
+    // change smaller than the tolerance still applies
     case INIT:
     case ENABLE:
     case SIZE_CHANGE_DETECTED:
