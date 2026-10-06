@@ -156,6 +156,34 @@ export function childTests(baseUrl) {
     expect(height).toBeLessThan(220)
   })
 
+  test('autoResize(true) restores the content size after a manual resize', async ({
+    page,
+  }) => {
+    await page.goto(baseUrl)
+    await page.waitForLoadState('networkidle')
+    await waitForResizer(page)
+    const height = () =>
+      page.locator('iframe').evaluate((el) => el.offsetHeight)
+    const content = await height()
+
+    // A manual resize while autoResize is still on holds until the next
+    // content change...
+    await page.frameLocator('iframe').locator('#btn-resize-both').click()
+    await page.waitForFunction(
+      () => Math.abs(document.querySelector('iframe').offsetHeight - 200) < 20,
+      { timeout: 5000 },
+    )
+
+    // ...and autoResize(true), though already on, is that change
+    await page.frameLocator('iframe').locator('#btn-auto-resize').click()
+    await page.waitForFunction(
+      (expected) =>
+        Math.abs(document.querySelector('iframe').offsetHeight - expected) < 20,
+      content,
+      { timeout: 5000 },
+    )
+  })
+
   test('scrollTo triggers parent scroll', async ({ page }) => {
     await page.goto(baseUrl)
     await page.waitForLoadState('networkidle')

@@ -21,7 +21,7 @@ export default defineConfig({
       ],
     },
     ...terserWithBanner('angular'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     dts({

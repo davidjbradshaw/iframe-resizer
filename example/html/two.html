@@ -34,7 +34,10 @@
       ></iframe>
     </div>
 
-    <p id="callback"></p>
+    <div class="message-data" id="event-display" style="display: none">
+      <h3>Event Data:</h3>
+      <pre id="event-data"></pre>
+    </div>
     <div style="margin: 8px 0; font-size: 13px">
       For details on how this works, see
       <a href="https://iframe-resizer.com">https://frame-resizer.com</a>.
@@ -53,7 +56,17 @@
        *
        */
 
-      const callbackDisplay = document.querySelector('p#callback')
+      const display = document.getElementById('event-display')
+      const eventData = document.getElementById('event-data')
+
+      function showData(data) {
+        display.style.display = ''
+        eventData.textContent = JSON.stringify(
+          data,
+          (key, value) => (key === 'iframe' ? undefined : value),
+          2,
+        )
+      }
 
       const iframes = iframeResize({
         inPageLinks: true, // Enable in page links
@@ -61,16 +74,16 @@
 
         onResized(messageData) {
           // Callback fn when resize is received
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Height:</b> ${messageData.height} <b>Width:</b> ${messageData.width} <b>Event type:</b> ${messageData.type}`
+          showData(messageData)
         },
         onMessage(messageData) {
           // Callback fn when message is received
-          callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <b>Message:</b> ${messageData.message}`
+          showData(messageData)
           alert(`${messageData.message} (${messageData.iframe.id})`)
         },
         onAfterClose(id) {
           // Callback fn when iFrame is closed
-          callbackDisplay.innerHTML = `<b>IFrame (</b>${id}<b>) removed from page.</b>`
+          showData({ id, type: 'close' })
         },
       })
     </script>

@@ -22,7 +22,7 @@ export default defineConfig({
       ],
     },
     ...terserWithBanner('solid'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [solid(), ...createPluginsProd('solid')],
 })

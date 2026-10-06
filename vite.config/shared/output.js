@@ -26,7 +26,7 @@ export const output = (file) => (format) => {
         preamble: createBanner(file, format),
       },
     })
-    settings.sourcemap = BETA || false
+    settings.sourcemap = BETA === '1'
   }
 
   return settings

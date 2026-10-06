@@ -39,7 +39,7 @@ export default async function vuePostBuild() {
         },
       },
       ...terserWithBanner('vue'),
-      sourcemap: process.env.BETA || false,
+      sourcemap: process.env.BETA === '1',
     },
   })
 

@@ -23,7 +23,7 @@ export default defineConfig({
       ],
     },
     ...terserWithBanner('vue'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     vue({

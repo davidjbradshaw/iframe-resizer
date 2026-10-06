@@ -27,7 +27,7 @@ export default async function () {
         },
       },
       ...terserWithBanner('core'),
-      sourcemap: process.env.BETA || false,
+      sourcemap: process.env.BETA === '1',
     },
   })
 }
