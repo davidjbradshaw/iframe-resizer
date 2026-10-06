@@ -16,7 +16,7 @@ export default defineConfig({
       external: ['auto-console-group'],
     },
     ...terserWithBanner('common'),
-    sourcemap: process.env.BETA || false,
+    sourcemap: process.env.BETA === '1',
   },
   plugins: [
     dts({

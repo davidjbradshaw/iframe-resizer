@@ -23,7 +23,7 @@ export default async function () {
       outDir: 'dist/parent',
       emptyOutDir: false,
       ...terserWithBanner('parent'),
-      sourcemap: process.env.BETA || false,
+      sourcemap: process.env.BETA === '1',
     },
   })
 }

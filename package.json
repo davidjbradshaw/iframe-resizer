@@ -34,6 +34,7 @@
     "test": "time npm run test:all",
     "test:ci": "time npm run test:all:ci",
     "serve:e2e": "http-server . -p 8080 --cors -c-1 --silent",
+    "pretest:e2e": "playwright install chromium",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",

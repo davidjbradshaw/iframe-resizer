@@ -15,7 +15,7 @@ export default async function () {
       outDir: 'dist/common',
       emptyOutDir: false,
       ...terserWithBanner('common'),
-      sourcemap: process.env.BETA || false,
+      sourcemap: process.env.BETA === '1',
     },
   })
 }
