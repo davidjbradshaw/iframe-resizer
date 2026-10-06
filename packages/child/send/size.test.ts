@@ -25,12 +25,14 @@ vi.mock('../values/state', () => ({
   },
 }))
 vi.mock('./dispatch', () => ({ default: vi.fn() }))
+vi.mock('../check/overflow', () => ({ default: vi.fn() }))
 
 const consoleMod = await import('../console')
 const getContentSize = (await import('../size/content')).default
 const settings = (await import('../values/settings')).default
 const state = (await import('../values/state')).default
 const dispatch = (await import('./dispatch')).default
+const checkOverflow = (await import('../check/overflow')).default
 const sendSize = (await import('./size')).default
 const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST, SET_OFFSET_SIZE } =
   await import('@iframe-resizer/common/consts')
@@ -206,6 +208,34 @@ describe('child/send/size', () => {
       })
       expect(() => endFrame()).toThrow('bad')
       expect(state.viewportResized).toBe(false)
+    })
+
+    test('an overflow change while a send is pending is deferred', () => {
+      sendSize('evt', 'first')
+      sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
+      expect(dispatch).toHaveBeenCalledTimes(1)
+
+      endFrame()
+      expect(getContentSize.mock.lastCall[0]).toBe(OVERFLOW_OBSERVER)
+      expect(dispatch).toHaveBeenCalledTimes(2)
+    })
+
+    test('the overflow state is refreshed before a deferred trigger is measured', () => {
+      const order = []
+      checkOverflow.mockImplementation(() => order.push('checkOverflow'))
+      getContentSize.mockImplementation(() => {
+        order.push('measure')
+        return { height: 10, width: 20 }
+      })
+
+      sendSize('evt', 'first')
+      order.length = 0
+      sendSize('resizeObserver', 'deferred')
+      endFrame()
+
+      expect(order).toEqual(['checkOverflow', 'measure'])
+      checkOverflow.mockReset()
+      getContentSize.mockImplementation(() => ({ height: 10, width: 20 }))
     })
 
     test('an offset change while hidden is ignored', () => {

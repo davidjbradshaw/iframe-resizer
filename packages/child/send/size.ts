@@ -1,9 +1,7 @@
-import {
-  IGNORE_DISABLE_RESIZE,
-  OVERFLOW_OBSERVER,
-} from '@iframe-resizer/common/consts'
+import { IGNORE_DISABLE_RESIZE } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
+import checkOverflow from '../check/overflow'
 import {
   debug,
   endAutoGroup,
@@ -44,6 +42,10 @@ function onAnimationFrame(): void {
   deferred = null
   debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
 
+  // The overflow attributes are already current; reading them now means
+  // overflowObserved() finds no change, so this frame is measured once
+  checkOverflow()
+
   // errorBoundary re-throws anything that is not an Error
   state.viewportResized = viewportResized
   try {
@@ -81,13 +83,9 @@ function sendSize(
       break
     }
 
-    // One measurement per frame: the first trigger is measured and sent at
-    // once, a later one is measured at the next animation frame. The
-    // overflowObserver is measured at once, as that is cheaper than a
-    // mutationObserver on OVERFLOW_ATTR changes.
-    case sendPending === true &&
-      triggerEvent !== OVERFLOW_OBSERVER &&
-      !isExplicitRequest: {
+    // One measurement per frame: a later trigger is measured at the next
+    // animation frame
+    case sendPending === true && !isExplicitRequest: {
       purge()
       log('Resize already pending - Deferred to next animation frame')
       deferred = {
