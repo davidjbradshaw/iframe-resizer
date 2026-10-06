@@ -183,6 +183,17 @@ describe('child/send/size', () => {
       expect(dispatch).toHaveBeenCalledTimes(2)
     })
 
+    test('a throw while measuring does not leave a send pending', () => {
+      getContentSize.mockImplementationOnce(() => {
+        throw new TypeError('onBeforeResize')
+      })
+      expect(() => sendSize('evt', 'throws')).toThrow(TypeError)
+
+      endFrame()
+      sendSize('mutationObserver', 'next')
+      expect(dispatch).toHaveBeenCalledTimes(1)
+    })
+
     test('an offset change while hidden is ignored', () => {
       state.isHidden = true
       sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')

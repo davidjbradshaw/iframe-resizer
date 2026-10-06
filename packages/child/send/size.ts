@@ -106,6 +106,9 @@ function sendSize(
       state.totalTime = performance.now()
       state.timerActive = true
 
+      // Before measuring, so a throw cannot leave a send pending for good
+      if (!rafId) rafId = requestAnimationFrame(onAnimationFrame)
+
       const newSize = getContentSize(
         triggerEvent,
         triggerEventDesc,
@@ -114,8 +117,6 @@ function sendSize(
       )
 
       if (newSize) dispatch(newSize.height, newSize.width, triggerEvent, msg)
-
-      if (!rafId) rafId = requestAnimationFrame(onAnimationFrame)
 
       state.timerActive = false // Reset time for next resize
     }
