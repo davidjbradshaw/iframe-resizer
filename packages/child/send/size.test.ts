@@ -173,6 +173,16 @@ describe('child/send/size', () => {
       expect(dispatch).toHaveBeenCalledTimes(2)
     })
 
+    test('an explicit request drops a trigger deferred before it', () => {
+      sendSize('evt', 'first')
+      sendSize('mutationObserver', 'deferred')
+      sendSize(MANUAL_RESIZE_REQUEST, 'parentIframe.resize(500)', 500)
+      expect(dispatch).toHaveBeenCalledTimes(2)
+
+      endFrame()
+      expect(dispatch).toHaveBeenCalledTimes(2)
+    })
+
     test('an offset change while hidden is ignored', () => {
       state.isHidden = true
       sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')

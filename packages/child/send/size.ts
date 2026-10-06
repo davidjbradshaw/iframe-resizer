@@ -22,10 +22,8 @@ let sendPending = false
 let hiddenMessageShown = false
 let rafId: number | null = null
 
-// A trigger that arrived while a send was pending; measured at the next
-// animation frame, so a change made after this frame's measurement is not
-// lost. Whether the viewport resized is kept with it, as the width
-// calculation needs to know.
+// A trigger that arrived while a send was pending, measured at the next
+// animation frame so a change made after this frame's measurement is not lost
 let deferred: {
   trigger: string
   desc: string
@@ -104,6 +102,7 @@ function sendSize(
     default: {
       hiddenMessageShown = false
       sendPending = true
+      deferred = null // Covered by this measurement
       state.totalTime = performance.now()
       state.timerActive = true
 
