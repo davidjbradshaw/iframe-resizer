@@ -38,6 +38,9 @@ describe('core/methods/attach', () => {
     api.moveToAnchor('hash')
     expect(moveToAnchor).toHaveBeenCalledWith('if1', 'hash')
 
+    api.resize()
+    expect(trigger).toHaveBeenCalledWith('Window resize', 'resize', 'if1')
+
     api.sendMessage({ a: 1 })
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
   })
