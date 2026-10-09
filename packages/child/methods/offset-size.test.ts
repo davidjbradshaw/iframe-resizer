@@ -8,6 +8,8 @@ describe('child/methods/offset-size', () => {
   beforeEach(() => {
     settings.offsetHeight = 0
     settings.offsetWidth = 0
+    settings.calculateHeight = true
+    settings.calculateWidth = true
     vi.spyOn(childSize, 'default').mockImplementation(() => {})
   })
 
@@ -15,12 +17,20 @@ describe('child/methods/offset-size', () => {
     vi.restoreAllMocks()
   })
 
-  it('sets both offsets and calls sendSize', () => {
+  it('sets both offsets when both axes are calculated and calls sendSize', () => {
     setOffsetSize(42)
 
     expect(settings.offsetHeight).toBe(42)
     expect(settings.offsetWidth).toBe(42)
     expect(childSize.default).toHaveBeenCalled()
+  })
+
+  it('sets only the offset of the calculated axis', () => {
+    settings.calculateWidth = false
+    setOffsetSize(42)
+
+    expect(settings.offsetHeight).toBe(42)
+    expect(settings.offsetWidth).toBe(0)
   })
 
   it('throws TypeError for non-number argument', () => {

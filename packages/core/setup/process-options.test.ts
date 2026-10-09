@@ -46,7 +46,7 @@ describe('core/setup/process-options', () => {
 
     expect(updateOptionNames).toHaveBeenCalledWith('if1')
     expect(setDirection).toHaveBeenCalledWith('if1')
-    expect(setOffsetSize).toHaveBeenCalledWith('if1', options)
+    expect(setOffsetSize).toHaveBeenCalledWith('if1')
     expect(checkWarningTimeout).toHaveBeenCalledWith('if1')
     expect(getPostMessageTarget).toHaveBeenCalledWith(iframe)
     expect(setTargetOrigin).toHaveBeenCalledWith('if1')

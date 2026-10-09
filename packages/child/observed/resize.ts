@@ -16,8 +16,11 @@ function resizeObserved(entries: ResizeObserverEntry[]): void {
   state.viewportResized =
     !settings.maxContentWidth &&
     (el === document.documentElement || el === document.body)
-  sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
-  state.viewportResized = false
+  try {
+    sendSize(RESIZE_OBSERVER, `Element resized <${getElementName(el)}>`)
+  } finally {
+    state.viewportResized = false
+  }
 }
 
 export default function createResizeObservers(

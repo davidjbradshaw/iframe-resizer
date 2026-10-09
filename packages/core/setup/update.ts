@@ -38,7 +38,7 @@ function mergeOptions(
   setupBodyMargin(id)
   setDirection(id)
   setScrolling(iframe)
-  setOffsetSize(id, options)
+  setOffsetSize(id)
   setTargetOrigin(id)
   updateConsoleExpand(id)
   settings[id].syncTitle = checkTitle(id)
