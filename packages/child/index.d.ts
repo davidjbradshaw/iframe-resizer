@@ -11,6 +11,8 @@ export interface IFramePageOptions {
   /** Offset added to the calculated size. */
   offsetSize?: number
   /** CSS selector for elements to use for size calculation. */
+  resizeSelector?: string
+  /** @deprecated Use `resizeSelector` instead. */
   sizeSelector?: string
   /** Restrict which parent origins can communicate with the iframe. */
   targetOrigin?: string | string[]
