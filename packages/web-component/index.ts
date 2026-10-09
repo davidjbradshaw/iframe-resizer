@@ -46,8 +46,7 @@ const ARRAY_ATTRS = new Set(['checkorigin'])
 // Core defaults restored when a mapped attribute is removed. A removed
 // attribute is simply absent from buildOptions(), and core's update path
 // merges over the existing settings, so the reset has to be explicit.
-// license is omitted (removing it is not a meaningful runtime change) and
-// so is offsetSize (core ignores a zero offset on update).
+// license is omitted, as removing it is not a meaningful runtime change.
 const RESIZER_ATTR_DEFAULTS: Record<string, unknown> = {
   bodyBackground: null,
   bodyMargin: null,
@@ -56,6 +55,7 @@ const RESIZER_ATTR_DEFAULTS: Record<string, unknown> = {
   direction: VERTICAL,
   inPageLinks: false,
   log: false,
+  offsetSize: 0,
   scrolling: false,
   tolerance: 0,
   warningTimeout: 5000,

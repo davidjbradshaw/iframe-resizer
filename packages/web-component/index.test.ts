@@ -329,6 +329,18 @@ describe('web-component/IframeResizerElement', () => {
     expect((el as any).iframeResizer).toBe(mockResizer)
   })
 
+  it('clears the offset when the offsetsize attribute is removed', () => {
+    createElement({ license: 'GPLv3', offsetsize: '20' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+
+    el.removeAttribute('offsetsize')
+
+    expect(connectResizer).toHaveBeenCalledWith(
+      expect.objectContaining({ offsetSize: 0 }),
+    )
+  })
+
   it('resets an option to its default when its attribute is removed', () => {
     createElement({ license: 'GPLv3', inpagelinks: '' })
     document.body.append(el)

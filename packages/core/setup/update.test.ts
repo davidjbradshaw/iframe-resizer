@@ -101,7 +101,7 @@ describe('core/setup/update', () => {
     updateIframe(iframe, { scrolling: false })
 
     expect(setScrolling).toHaveBeenCalledWith(iframe)
-    expect(setOffsetSize).toHaveBeenCalledWith('edge1', { scrolling: false })
+    expect(setOffsetSize).toHaveBeenCalledWith('edge1')
     expect(updateConsoleExpand).toHaveBeenCalledWith('edge1')
     // setDirection ran and re-derived flags from the (vertical) direction
     expect(settings.edge1.sizeWidth).toBe(false)

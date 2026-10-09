@@ -29,7 +29,7 @@ export default function processOptions(
 
   updateOptionNames(id)
   setDirection(id)
-  setOffsetSize(id, options)
+  setOffsetSize(id)
   checkWarningTimeout(id)
   getPostMessageTarget(iframe)
   setTargetOrigin(id)

@@ -94,6 +94,22 @@ describe('child/size/content', () => {
     expect(state.width).toBe(200)
   })
 
+  test('adopts the size on an offset change within tolerance', async () => {
+    const isSizeChangeDetected = (await import('./change-detected')).default
+    isSizeChangeDetected.mockReturnValue(false)
+    state.height = 100
+    state.width = 200
+
+    const result = getContentSize(
+      SET_OFFSET_SIZE,
+      'parentIframe.setOffsetSize(5)',
+    )
+
+    expect(result).toBe(state)
+    expect(state.height).toBe(300)
+    expect(state.width).toBe(400)
+  })
+
   test('returns null for observer events when no change', async () => {
     const isSizeChangeDetected = (await import('./change-detected')).default
     isSizeChangeDetected.mockReturnValue(false)
@@ -210,7 +226,7 @@ describe('child/size/content', () => {
     expect(state.width).toBe(250)
   })
 
-  test('returns state for SET_OFFSET_SIZE event and updates size due to change detection', async () => {
+  test('returns state for SET_OFFSET_SIZE event and updates size on a change', async () => {
     const isSizeChangeDetected = (await import('./change-detected')).default
     isSizeChangeDetected.mockReturnValue(true)
 
@@ -219,23 +235,8 @@ describe('child/size/content', () => {
     const ret = getContentSize(SET_OFFSET_SIZE, 'set offset', 150, 250)
 
     expect(ret).toBe(state)
-    // Size should be updated because change was detected
     expect(state.height).toBe(150)
     expect(state.width).toBe(250)
-  })
-
-  test('returns state for SET_OFFSET_SIZE event without updating when no change', async () => {
-    const isSizeChangeDetected = (await import('./change-detected')).default
-    isSizeChangeDetected.mockReturnValue(false)
-
-    state.height = 100
-    state.width = 200
-    const ret = getContentSize(SET_OFFSET_SIZE, 'set offset', 100, 200)
-
-    expect(ret).toBe(state)
-    // Size remains the same when no change detected
-    expect(state.height).toBe(100)
-    expect(state.width).toBe(200)
   })
 
   test('returns null for MUTATION_OBSERVER when no change', async () => {
