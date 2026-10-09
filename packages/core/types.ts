@@ -38,6 +38,8 @@ export interface IFrameObject {
   getVersion(): IFrameVersion
   /** Move the page in the iframe to the specified anchor. */
   moveToAnchor(anchor: string): void
+  /** Trigger a resize event for the iframe. */
+  resize(): void
   /** Send a message to the iframe. */
   sendMessage(message: any, targetOrigin?: string): void
 }

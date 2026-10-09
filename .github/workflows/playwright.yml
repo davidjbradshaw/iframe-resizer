@@ -58,6 +58,7 @@ jobs:
           - angular
           - animation
           - astro
+          - check-origin
           - horizontal
           - jquery
           - parent

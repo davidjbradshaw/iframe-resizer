@@ -46,10 +46,14 @@ describe('core/listeners', () => {
     const winAddCall = addEventListener.mock.calls.find((c) => c[0] === window)
     const listener = winAddCall[2]
 
-    const src = { name: 'parentWindow' }
-    listener({ data: CHILD_READY_MESSAGE, source: src })
+    const event = {
+      data: CHILD_READY_MESSAGE,
+      source: { name: 'parentWindow' },
+      origin: 'https://a.com',
+    }
+    listener(event)
 
-    expect(iframeReady).toHaveBeenCalledWith(src)
+    expect(iframeReady).toHaveBeenCalledWith(event)
   })
 
   test('ignored non-iframe strings call console event and debug', async () => {
