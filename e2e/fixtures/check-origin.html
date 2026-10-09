@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer checkOrigin test</title>
+    <style>
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="myIframe" src="child/frame.content.html"></iframe>
+
+    <script src="../../dist/parent/index.umd.js"></script>
+    <script>
+      // ?checkOrigin=false turns the check off; it is on by default
+      const params = new URLSearchParams(window.location.search)
+
+      window.readyCount = 0
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          checkOrigin: params.get('checkOrigin') !== 'false',
+          onReady: () => {
+            window.readyCount += 1
+          },
+        },
+        '#myIframe',
+      )
+    </script>
+  </body>
+</html>

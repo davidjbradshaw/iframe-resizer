@@ -57,6 +57,7 @@ jobs:
           - alpine
           - angular
           - astro
+          - check-origin
           - jquery
           - parent
           - react

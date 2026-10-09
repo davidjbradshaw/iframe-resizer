@@ -6,12 +6,19 @@ import { expect, test as base } from '@playwright/test'
  * A library error that is only reported to the console must not pass.
  */
 export const test = base.extend({
-  page: async ({ page }, use) => {
+  // Patterns for console errors a test expects; any other error still fails it
+  allowedErrors: [[], { option: true }],
+
+  page: async ({ page, allowedErrors }, use) => {
     const errors = []
 
     page.on('console', (message) => {
-      if (message.type() === 'error') {
-        errors.push(`console.error: ${message.text()}`)
+      const text = message.text()
+      if (
+        message.type() === 'error' &&
+        !allowedErrors.some((pattern) => pattern.test(text))
+      ) {
+        errors.push(`console.error: ${text}`)
       }
     })
     page.on('pageerror', (error) => {

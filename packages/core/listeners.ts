@@ -25,7 +25,7 @@ function iframeListener(
   const msg = event.data
 
   if (msg === CHILD_READY_MESSAGE) {
-    iframeReady((event as MessageEvent).source)
+    iframeReady(event as MessageEvent)
     return
   }
 
