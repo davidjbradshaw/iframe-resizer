@@ -7,7 +7,7 @@ import {
   STRING,
 } from '@iframe-resizer/common/consts'
 
-import { log } from '../console'
+import { deprecateOption, log } from '../console'
 import settings from '../values/settings'
 
 const read =
@@ -55,6 +55,14 @@ function readOffsetSize(data: Record<string, any>): {
   return { offsetHeight, offsetWidth }
 }
 
+// Renamed to match the data-iframe-resize attribute it applies
+function readResizeSelector(data: Record<string, any>): string | undefined {
+  if (!('sizeSelector' in data)) return readString(data, 'resizeSelector')
+
+  deprecateOption('sizeSelector', 'resizeSelector')
+  return readString(data, 'resizeSelector') ?? readString(data, 'sizeSelector')
+}
+
 function readData(data: Record<string, any>): Record<string, any> {
   log(`Reading data from page:`, Object.keys(data))
 
@@ -65,7 +73,7 @@ function readData(data: Record<string, any>): Record<string, any> {
     offsetWidth,
     ignoreSelector: readString(data, 'ignoreSelector'),
     [getKey(3)]: readString(data, getKey(0)),
-    sizeSelector: readString(data, 'sizeSelector'),
+    resizeSelector: readResizeSelector(data),
     targetOrigin: readOrigins(data, 'targetOrigin'),
 
     onBeforeResize: readFunction(data, 'onBeforeResize'),

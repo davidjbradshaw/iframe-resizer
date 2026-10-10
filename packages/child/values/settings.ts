@@ -24,7 +24,7 @@ export interface ChildSettings {
   mouseEvents: boolean
   offsetHeight: number
   offsetWidth: number
-  sizeSelector: string
+  resizeSelector: string
   targetOrigin: string | string[]
   tolerance: number
   widthCalcMode: string
@@ -62,7 +62,7 @@ const settings: ChildSettings = {
   offsetHeight: 0,
   offsetWidth: 0,
   parentId: undefined,
-  sizeSelector: '',
+  resizeSelector: '',
   targetOrigin: '*',
   tolerance: 0,
   widthCalcMode: AUTO,
