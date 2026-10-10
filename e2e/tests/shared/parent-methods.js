@@ -108,6 +108,9 @@ export function parentMethodTests(
     expect(version.child).toBeTruthy()
     expect(version.parent).not.toBe('legacy')
     expect(version.child).not.toBe('legacy')
+
+    // Built together, so dev and test builds share a build number
+    expect(version.child).toBe(version.parent)
   })
 
   test('moveToAnchor scrolls to named anchor', async ({ page }) => {

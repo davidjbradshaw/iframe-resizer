@@ -9,6 +9,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
 const { DEBUG, TEST } = process.env
 
+// One build number for the whole run, e.g. 20261010.142530; the plugins
+// add it to the version of dev and test builds
+if ((DEBUG || TEST) && !process.env.BUILD_NUMBER) {
+  const now = new Date().toISOString()
+  process.env.BUILD_NUMBER = `${now.slice(0, 10).replaceAll('-', '')}.${now.slice(11, 19).replaceAll(':', '')}`
+}
+
 const packages = [
   { name: 'common', type: 'vite', postBuild: true },
   { name: 'core', type: 'vite', postBuild: true },
@@ -53,18 +60,18 @@ async function buildPackage(pkg) {
 }
 
 async function buildAll() {
-  if (!DEBUG) {
-    console.log('Building iframe-resizer packages...\n')
+  // Dev builds include the packages too, so dist and js/ always come from the
+  // same build and share its build number
+  console.log('Building iframe-resizer packages...\n')
 
-    for (const pkg of packages) {
-      console.log(`Building ${pkg.name}...`)
-      await buildPackage(pkg)
-    }
-
-    console.log('\nGenerating SFC type declarations...')
-    const { default: generateSfcDts } = await import('./generate-sfc-dts.js')
-    generateSfcDts()
+  for (const pkg of packages) {
+    console.log(`Building ${pkg.name}...`)
+    await buildPackage(pkg)
   }
+
+  console.log('\nGenerating SFC type declarations...')
+  const { default: generateSfcDts } = await import('./generate-sfc-dts.js')
+  generateSfcDts()
 
   console.log('\nBuilding browser bundles...')
   const buildBrowser = await import('./build-browser.js')
@@ -77,7 +84,7 @@ async function buildAll() {
   }
 
   const { default: reportSizes } = await import('./report-sizes.js')
-  const distDirs = DEBUG ? [] : packages.map((pkg) => `dist/${pkg.name}`)
+  const distDirs = packages.map((pkg) => `dist/${pkg.name}`)
   const note = DEBUG || TEST ? 'logging not stripped' : ''
   reportSizes(root, [...distDirs, 'js'], note)
 

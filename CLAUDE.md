@@ -30,7 +30,7 @@ This is a manual monorepo (no npm workspaces). Packages under `packages/` do not
 Despite the filename, `vite.config.js` is a **Rollup** configuration driven programmatically by `vite-build.js`.
 
 ```bash
-npm run build:dev      # DEBUG=1, builds IIFE bundles to js/ only (fast)
+npm run build:dev      # DEBUG=1, all packages to dist/ and js/, logging kept, with a build number
 npm run build:prod     # Full production build: eslint + all formats to dist/ and js/
 npm run build:beta     # Beta build with sourcemaps
 ```

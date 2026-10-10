@@ -5,7 +5,6 @@ import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
 import stripCode from 'rollup-plugin-strip-code'
-import versionInjector from 'rollup-plugin-version-injector'
 
 import pkg from '../../package.json' with { type: 'json' }
 import createBanner from './banner.js'
@@ -14,12 +13,22 @@ import createPkgJson from './pkgJson.js'
 const { BETA, DEBUG, TEST } = process.env
 const stripLog = !(DEBUG === '1' || BETA === '1' || TEST === '1')
 
-const vi = {
-  injectInComments: false,
-  logLevel: 'warn',
-}
+// Dev and test builds add the build number (set by build-all.js) to the
+// version, so a parent and child from different builds report a mismatch
+const VERSION_TAG = '[VI]{version}[/VI]'
+const version = process.env.BUILD_NUMBER
+  ? `${pkg.version}+build.${process.env.BUILD_NUMBER}`
+  : pkg.version
 
-export const injectVersion = () => [versionInjector(vi)]
+const versionTag = () => ({
+  name: 'iframe-resizer:version',
+  transform: (code) =>
+    code.includes(VERSION_TAG)
+      ? { code: code.replaceAll(VERSION_TAG, version), map: null }
+      : null,
+})
+
+export const injectVersion = () => [versionTag()]
 
 const BANNER_FORMATS = { es: 'esm', cjs: 'cjs', umd: 'umd', iife: 'iife' }
 
@@ -60,7 +69,7 @@ export const pluginsBase =
       exclude: 'node_modules/**',
     })
 
-    const base = skipVI ? [babelPlugin] : [babelPlugin, versionInjector(vi)]
+    const base = skipVI ? [babelPlugin] : [babelPlugin, versionTag()]
 
     return stripLog ? delog.concat(base) : log.concat(base)
   }
