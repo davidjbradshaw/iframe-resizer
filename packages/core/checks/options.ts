@@ -28,5 +28,9 @@ The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been rep
     )
   }
 
-  return options
+  // An option passed as undefined is treated as not passed, so it does not
+  // replace the default, or the current value on update
+  return Object.fromEntries(
+    Object.entries(options).filter(([, value]) => value !== undefined),
+  )
 }
