@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "lib": ["ES2022", "DOM"],
+    "declaration": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "outDir": "../../node_modules/.cache/angular-ngc",
+    "rootDir": "../../packages/angular",
+    "baseUrl": ".",
+    "paths": {
+      "@angular/core": ["node_modules/@angular/core"],
+      "@iframe-resizer/core": ["../../dist/core/index.d.ts"],
+      "@iframe-resizer/common": ["../../dist/common/index.d.ts"],
+      "@iframe-resizer/common/consts": ["../../dist/common/consts.d.ts"]
+    },
+    "typeRoots": []
+  },
+  "files": ["../../packages/angular/directive.ts"],
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
+}

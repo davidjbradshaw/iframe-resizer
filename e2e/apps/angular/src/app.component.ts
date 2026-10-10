@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import type { IFrameOptions } from '@iframe-resizer/core'
-import { IframeResizerDirective } from './iframe-resizer.directive'
+import { IframeResizerDirective } from '@iframe-resizer/angular'
 
 @Component({
   selector: 'app-root',

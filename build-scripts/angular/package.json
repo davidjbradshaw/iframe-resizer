@@ -1,0 +1,14 @@
+{
+  "name": "iframe-resizer-angular-build",
+  "private": true,
+  "description": "Angular 16 compiler for @iframe-resizer/angular, so apps on Angular 16 and later can link the published directive",
+  "dependencies": {
+    "@angular/compiler": "~16.2.12",
+    "@angular/compiler-cli": "~16.2.12",
+    "@angular/core": "~16.2.12",
+    "rxjs": "~7.8.1",
+    "tslib": "^2.6.2",
+    "typescript": "~5.1.6",
+    "zone.js": "~0.13.3"
+  }
+}
