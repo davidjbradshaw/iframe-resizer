@@ -24,7 +24,7 @@
     "publish:beta": "time bin/publish.sh beta",
     "vite:beta": "BETA=1 node build-scripts/build-all.js",
     "vite:debug": "DEBUG=1 node build-scripts/build-all.js",
-    "vite:watch": "WATCH=1 ROLLUP_WATCH=1 DEBUG=1 node build-scripts/build-all.js",
+    "vite:watch": "DEBUG=1 node build-scripts/watch.js",
     "typecheck": "tsc --noEmit -p tsconfig.build.json && tsc --noEmit -p packages/solid/tsconfig.json && svelte-check --tsconfig ./tsconfig.svelte.json --threshold error && vue-tsc --noEmit -p tsconfig.vue.json",
     "vite:test": "npm run eslint:fix && npm run typecheck && TEST=1 node build-scripts/build-all.js",
     "vite:test:ci": "npm run typecheck && TEST=1 node build-scripts/build-all.js",
