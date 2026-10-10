@@ -28,8 +28,14 @@ export function getBorderEnds(compStyle: CSSStyleDeclaration): number {
   return top + bot
 }
 
+const getMessageFields = (msg: string): string[] =>
+  msg.slice(MESSAGE_ID_LENGTH).split(':')
+
+// The id is the first field, so it needs no further decoding
+export const getIframeId = (msg: string): string => getMessageFields(msg)[0]
+
 export default function decodeMessage(msg: string): MessageData {
-  const data = msg.slice(MESSAGE_ID_LENGTH).split(':')
+  const data = getMessageFields(msg)
   const height = data[1] ? Number(data[1]) : 0
   const iframe = settings[data[0]]?.iframe
   const compStyle = iframe ? getComputedStyle(iframe) : null

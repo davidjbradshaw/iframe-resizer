@@ -32,7 +32,8 @@ describe('child index', () => {
   })
 
   describe('iframeChildListener', () => {
-    it('calls received asynchronously with data and sameOrigin flag', async () => {
+    it('calls received in a microtask, not a timer, with data and sameOrigin flag', async () => {
+      // Timers are faked and never run: only a microtask can deliver it
       vi.useFakeTimers()
 
       await import('./index')
@@ -41,11 +42,11 @@ describe('child index', () => {
       const testData = { type: 'test', value: 'message' }
       window.iframeChildListener(testData)
 
-      // received should not be called immediately
+      // Not inside the parent's call...
       expect(receivedMod.default).not.toHaveBeenCalled()
 
-      // Fast-forward time to trigger setTimeout
-      await vi.runAllTimersAsync()
+      // ...but as soon as it has finished, without waiting for a task
+      await Promise.resolve()
 
       // received should now be called with the correct arguments
       expect(receivedMod.default).toHaveBeenCalledTimes(1)

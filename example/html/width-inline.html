@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>iFrame message passing test</title>
+    <title>iframe-resizer horizontal-inline</title>
     <meta name="description" content="iFrame message passing test" />
     <meta name="viewport" content="width=device-width" />
     <style>
@@ -36,10 +36,12 @@
 
   <body>
     <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
-    <h2>Automagically resizing iFrame</h2>
+    <h2>Width: <code>horizontal-inline</code></h2>
+    <p>The page in the iframe is made as wide as its content, so the iframe follows the content's natural width.</p>
     <p>
       Back to
-      <a name="anchorParentTest" href="index.html">vertical iframes</a>.
+      <a name="anchorParentTest" href="index.html">vertical iframes</a>, or
+      try <a href="width-block.html">horizontal-block</a>.
     </p>
     
     <div id="iframeContainer" style="margin: 20px">
@@ -87,7 +89,7 @@
       iframeResize({
         log: true, // Enable console logging
         inPageLinks: true, // Enable in page links
-        direction: 'horizontal', // Enable horizontal resizing
+        direction: 'horizontal-inline', // Resize the width
         license: 'GPLv3',
         overflow: -30,
 

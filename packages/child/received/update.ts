@@ -2,6 +2,7 @@ import { SEPARATOR, SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
 
 import { log, setConsoleOptions } from '../console'
 import setupMouseEvents from '../events/mouse'
+import setContentWidth from '../page/content-width'
 import { setBodyStyle, setMargin } from '../page/css'
 import setupInPageLinks from '../page/links'
 import readDataFromParent from '../read/from-parent'
@@ -47,6 +48,9 @@ export default function updateFromParent(event: MessageEvent): void {
 
   if (settings.mouseEvents && !previous.mouseEvents) setupMouseEvents(settings)
   if (settings.inPageLinks && !previous.inPageLinks) setupInPageLinks(true)
+
+  // The direction may have changed
+  setContentWidth()
 
   // A changed offset must trigger a size calculation, exactly as
   // parentIframe.setOffsetSize() does, so the iframe grows or shrinks at once

@@ -6,9 +6,10 @@ import {
   STRING,
 } from '@iframe-resizer/common/consts'
 
+import meetsMinChildVersion from './checks/min-child-version'
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'
-import decodeMessage from './received/decode'
+import decodeMessage, { getIframeId } from './received/decode'
 import {
   checkIframeExists,
   isMessageForUs,
@@ -56,9 +57,29 @@ function iframeListener(
   }
 }
 
+// A width change must not reach a page that is as wide as its iframe
+// before the next paint, as that causes ResizeObserver loop errors; only a
+// v6 child told to size its page to its content is safe
+function waitsForTimer(id: string): boolean {
+  const iframeSettings = settings[id]
+
+  return (
+    !!iframeSettings?.sizeWidth &&
+    (!iframeSettings.maxContentWidth || !meetsMinChildVersion(id))
+  )
+}
+
+// Called directly by a same-origin child. A microtask resizes the iframe
+// before the next paint.
+function iframeParentListener(data: string): void {
+  const handle = (): void => iframeListener({ data, sameOrigin: true })
+
+  if (waitsForTimer(getIframeId(data))) setTimeout(handle)
+  else queueMicrotask(handle)
+}
+
 export default once(() => {
   addEventListener(window, MESSAGE, iframeListener as EventListener)
   addEventListener(document, 'visibilitychange', tabVisible)
-  ;(window as any).iframeParentListener = (data: string) =>
-    setTimeout(() => iframeListener({ data, sameOrigin: true }))
+  ;(window as any).iframeParentListener = iframeParentListener
 })

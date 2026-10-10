@@ -16,8 +16,9 @@ function iframeResizerChild(): void {
     return
   }
 
+  // Called directly by a same-origin parent
   window.iframeChildListener = (data: any) => {
-    setTimeout(() => received({ data, sameOrigin: true }))
+    queueMicrotask(() => received({ data, sameOrigin: true }))
   }
   consoleEvent('listen')
   addEventListener(window, MESSAGE, received)
