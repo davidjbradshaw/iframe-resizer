@@ -24,7 +24,7 @@ const customConfig = (file) => {
     case 'angular':
       return {
         main,
-        module,
+        module: 'fesm2022/iframe-resizer-angular.mjs',
         types: 'directive.d.ts',
         peerDependencies: {
           '@angular/core':
