@@ -38,10 +38,10 @@ test.describe('Animation', () => {
     expect(stats.resizeObserverErrors).toBe(0)
   })
 
-  test('a legacy width direction follows its content without ResizeObserver errors', async ({
+  test('horizontal-block follows its content without ResizeObserver errors', async ({
     page,
   }) => {
-    const stats = await run(page, 'width-legacy')
+    const stats = await run(page, 'width-block')
 
     expect(stats.paints).toBeGreaterThan(MIN_PAINTS)
     expect(stats.resized).toBeGreaterThan(stats.paints / 2)

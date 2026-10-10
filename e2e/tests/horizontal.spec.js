@@ -14,7 +14,7 @@ const contentWidth = (page) =>
     .locator('[data-iframe-resize]')
     .evaluate((el) => el.getBoundingClientRect().right)
 
-async function loadChild(page, child, direction = 'horizontal') {
+async function loadChild(page, child, direction = 'horizontal-inline') {
   await page.goto(`${BASE}?child=${child}&direction=${direction}`)
   await page.waitForLoadState('networkidle')
   await waitForResizer(page)
@@ -66,10 +66,10 @@ test.describe('Horizontal', () => {
     await expectIframeToFitContent(page)
   })
 
-  test('with a legacy direction, fluid content does not shrink the iframe on every resize', async ({
+  test('with horizontal-block, fluid content does not shrink the iframe on every resize', async ({
     page,
   }) => {
-    await loadChild(page, 'frame.fluid.html', 'horizontal-legacy')
+    await loadChild(page, 'frame.fluid.html', 'horizontal-block')
 
     // The content is as wide as the iframe less the body margin, so without
     // a guard every resize would narrow the iframe by that margin

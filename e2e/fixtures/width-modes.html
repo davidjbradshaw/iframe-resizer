@@ -14,7 +14,7 @@
       .width { background: #222; color: #fff; padding: 1px 6px; border-radius: 3px; }
       .scroll { overflow-x: auto; padding-bottom: 6px; }
       iframe { width: 400px; height: 190px; border: 2px solid #c33; background: #fff; display: block; }
-      .horizontal iframe { border-color: #2a7; }
+      .horizontal-inline iframe { border-color: #2a7; }
       .ruler {
         height: 8px;
         width: 400px;
@@ -25,11 +25,11 @@
   </head>
 
   <body>
-    <h1><code>direction: 'horizontal'</code> and <code>'horizontal-legacy'</code></h1>
+    <h1><code>direction: 'horizontal-inline'</code> and <code>'horizontal-block'</code></h1>
     <p class="intro">
       Every iframe starts 400px wide; the ruler above each one is 400px,
-      ticked every 100px. With <code>horizontal</code> (green) the child makes
-      the page as wide as its content. With <code>horizontal-legacy</code>
+      ticked every 100px. With <code>horizontal-inline</code> (green) the child
+      makes the page as wide as its content. With <code>horizontal-block</code>
       (red) the page stays as wide as the iframe, as it was before v6.
     </p>
 
@@ -42,7 +42,8 @@
         ['cards', 'Content with its own width', 'Fixed-width cards that can be added and removed.'],
         ['table', 'Text and a wide table', 'The table cannot wrap.'],
       ]
-      const DIRECTIONS = ['horizontal-legacy', 'horizontal']
+      // horizontal is the deprecated name for horizontal-block
+      const DIRECTIONS = ['horizontal-block', 'horizontal-inline', 'horizontal']
 
       const variant = (content, direction) => `
         <div class="label"><b>direction: '${direction}'</b>

@@ -17,11 +17,11 @@
     <iframe scrolling="no"></iframe>
 
     <script type="text/javascript">
-      // ?mode=height (default), width or width-legacy
+      // ?mode=height (default), width or width-block
       const DIRECTIONS = {
         height: 'vertical',
-        width: 'horizontal',
-        'width-legacy': 'horizontal-legacy',
+        width: 'horizontal-inline',
+        'width-block': 'horizontal-block',
       }
       const query = new URLSearchParams(location.search)
       const mode = query.get('mode') || 'height'

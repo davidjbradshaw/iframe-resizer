@@ -3,8 +3,9 @@ import { expect, test } from './shared/test'
 const BASE = '/e2e/fixtures/width-modes.html'
 
 const START_WIDTH = 400
-const LEGACY = 'horizontal-legacy'
-const HORIZONTAL = 'horizontal'
+const BLOCK = 'horizontal-block'
+const INLINE = 'horizontal-inline'
+const HORIZONTAL = 'horizontal' // Deprecated name for horizontal-block
 
 // Two 150px cards, each with an 8px margin
 const TWO_CARDS = 316
@@ -24,47 +25,55 @@ test.describe('Width directions', () => {
     await page.waitForTimeout(1000)
   })
 
-  test('short content: horizontal shrinks the iframe to fit it, legacy does not', async ({
+  test('short content: inline shrinks the iframe to fit it, block does not', async ({
     page,
   }) => {
-    expect(await width(page, 'short', HORIZONTAL)).toBeLessThan(300)
-    expect(await width(page, 'short', LEGACY)).toBeGreaterThan(380)
+    expect(await width(page, 'short', INLINE)).toBeLessThan(300)
+    expect(await width(page, 'short', BLOCK)).toBeGreaterThan(380)
   })
 
-  test('wrapping text: horizontal unwraps it, legacy keeps the width of the iframe', async ({
+  test('wrapping text: inline unwraps it, block keeps the width of the iframe', async ({
     page,
   }) => {
-    expect(await width(page, 'article', HORIZONTAL)).toBeGreaterThan(1000)
-    expect(await width(page, 'article', LEGACY)).toBeLessThanOrEqual(
+    expect(await width(page, 'article', INLINE)).toBeGreaterThan(1000)
+    expect(await width(page, 'article', BLOCK)).toBeLessThanOrEqual(
       START_WIDTH,
     )
   })
 
-  test('a wide table: horizontal unwraps the text, legacy wraps it to the table', async ({
+  test('a wide table: inline unwraps the text, block wraps it to the table', async ({
     page,
   }) => {
-    const legacy = await width(page, 'table', LEGACY)
+    const block = await width(page, 'table', BLOCK)
 
-    expect(legacy).toBeGreaterThan(START_WIDTH)
-    expect(await width(page, 'table', HORIZONTAL)).toBeGreaterThan(legacy)
+    expect(block).toBeGreaterThan(START_WIDTH)
+    expect(await width(page, 'table', INLINE)).toBeGreaterThan(block)
   })
 
-  test('horizontal follows content with its own width as it grows and shrinks', async ({
+  test('inline follows content with its own width as it grows and shrinks', async ({
     page,
   }) => {
-    const cards = page.frameLocator(frameId('cards', HORIZONTAL))
-    const initial = await width(page, 'cards', HORIZONTAL)
+    const cards = page.frameLocator(frameId('cards', INLINE))
+    const initial = await width(page, 'cards', INLINE)
 
     expect(initial).toBeLessThan(START_WIDTH)
 
     await cards.locator('#add').click()
     await cards.locator('#add').click()
     await expect
-      .poll(() => width(page, 'cards', HORIZONTAL))
+      .poll(() => width(page, 'cards', INLINE))
       .toBe(initial + TWO_CARDS)
 
     await cards.locator('#remove').click()
     await cards.locator('#remove').click()
-    await expect.poll(() => width(page, 'cards', HORIZONTAL)).toBe(initial)
+    await expect.poll(() => width(page, 'cards', INLINE)).toBe(initial)
+  })
+
+  test('horizontal is sized as horizontal-block', async ({ page }) => {
+    const contents = ['short', 'article', 'table']
+    const widths = (direction) =>
+      Promise.all(contents.map((content) => width(page, content, direction)))
+
+    expect(await widths(HORIZONTAL)).toEqual(await widths(BLOCK))
   })
 })

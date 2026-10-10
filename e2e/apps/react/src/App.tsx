@@ -19,7 +19,7 @@ const UPDATES = {
   links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
   direction: {
     bodyBackground: 'rgb(0, 128, 128)',
-    direction: 'horizontal' as const,
+    direction: 'horizontal-inline' as const,
   },
 }
 
