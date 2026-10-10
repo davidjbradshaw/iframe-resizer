@@ -60,18 +60,18 @@ async function buildPackage(pkg) {
 }
 
 async function buildAll() {
-  if (!DEBUG) {
-    console.log('Building iframe-resizer packages...\n')
+  // Dev builds include the packages too, so dist and js/ always come from the
+  // same build and share its build number
+  console.log('Building iframe-resizer packages...\n')
 
-    for (const pkg of packages) {
-      console.log(`Building ${pkg.name}...`)
-      await buildPackage(pkg)
-    }
-
-    console.log('\nGenerating SFC type declarations...')
-    const { default: generateSfcDts } = await import('./generate-sfc-dts.js')
-    generateSfcDts()
+  for (const pkg of packages) {
+    console.log(`Building ${pkg.name}...`)
+    await buildPackage(pkg)
   }
+
+  console.log('\nGenerating SFC type declarations...')
+  const { default: generateSfcDts } = await import('./generate-sfc-dts.js')
+  generateSfcDts()
 
   console.log('\nBuilding browser bundles...')
   const buildBrowser = await import('./build-browser.js')
@@ -84,7 +84,7 @@ async function buildAll() {
   }
 
   const { default: reportSizes } = await import('./report-sizes.js')
-  const distDirs = DEBUG ? [] : packages.map((pkg) => `dist/${pkg.name}`)
+  const distDirs = packages.map((pkg) => `dist/${pkg.name}`)
   const note = DEBUG || TEST ? 'logging not stripped' : ''
   reportSizes(root, [...distDirs, 'js'], note)
 
