@@ -16,4 +16,15 @@ describe('core/checks/options', () => {
     expect(out).toEqual({ sizeWidth: true, sizeHeight: true, autoResize: true })
     expect(advise).toHaveBeenCalled()
   })
+
+  test('drops options passed as undefined, so defaults apply', () => {
+    const out = checkOptions('id', {
+      direction: undefined,
+      tolerance: 5,
+      bodyBackground: null,
+    })
+
+    expect(out).toEqual({ tolerance: 5, bodyBackground: null })
+    expect('direction' in out).toBe(false)
+  })
 })

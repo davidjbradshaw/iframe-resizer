@@ -56,15 +56,19 @@ jobs:
         framework:
           - alpine
           - angular
+          - animation
           - astro
           - check-origin
+          - horizontal
           - jquery
           - parent
           - react
           - solid
           - svelte
+          - v5-child
           - vue
           - web-component
+          - width-modes
 
     steps:
     - uses: actions/checkout@v6

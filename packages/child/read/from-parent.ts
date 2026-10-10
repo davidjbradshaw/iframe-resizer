@@ -32,4 +32,5 @@ export default (data: string[]): Record<string, any> => ({
   mode: getNumber(data[21]),
   // sizeSelector: data[22] // Now only available via page settings
   logExpand: getBoolean(data[23]),
+  maxContentWidth: getBoolean(data[24]),
 })

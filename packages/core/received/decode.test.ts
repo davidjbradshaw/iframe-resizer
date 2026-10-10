@@ -2,7 +2,11 @@ import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import settings from '../values/settings'
-import decodeMessage, { getBorderEnds, getPaddingEnds } from './decode'
+import decodeMessage, {
+  getBorderEnds,
+  getIframeId,
+  getPaddingEnds,
+} from './decode'
 
 describe('core/received/decode', () => {
   const origGetComputed = global.getComputedStyle
@@ -17,6 +21,12 @@ describe('core/received/decode', () => {
       borderTopWidth: '2px',
       borderBottomWidth: '1px',
     })
+  })
+
+  test('getIframeId returns the first field of a message', () => {
+    expect(getIframeId('[iFrameSizer]i1:100:200:init')).toBe('i1')
+    // A later field that looks like an id is not the id
+    expect(getIframeId('[iFrameSizer]i1:100:200:message:i2')).toBe('i1')
   })
 
   test('calculates padding and border ends', () => {

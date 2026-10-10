@@ -25,6 +25,7 @@ import setupPublicMethods from './methods'
 import attachObservers from './observed'
 import createApplySelectors from './page/apply-selectors'
 import injectClearFixIntoBodyElement from './page/clear-fix'
+import setContentWidth from './page/content-width'
 import { setBodyStyle, setMargin } from './page/css'
 import setupInPageLinks from './page/links'
 import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
@@ -83,6 +84,7 @@ function startIframeResizerChild({
     () => setBodyStyle('padding', bodyPadding),
 
     bothDirections ? id : stopInfiniteResizingOfIframe,
+    setContentWidth,
     injectClearFixIntoBodyElement,
 
     state.applySelectors,
