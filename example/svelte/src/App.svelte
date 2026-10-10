@@ -9,7 +9,15 @@
     'width-block': 'horizontal-block',
   }
   const direction = DIRECTIONS[example]
-  const src = direction ? 'child/frame.animate-width.html' : 'child/frame.content.html'
+  const src = direction
+    ? `child/frame.width.html?direction=${direction}`
+    : 'child/frame.content.html'
+  const TITLES = {
+    index: 'one iframe',
+    two: 'two iframes',
+    'width-inline': 'width (inline)',
+    'width-block': 'width (block)',
+  }
   const ids = example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
 
   let eventData = null
@@ -25,7 +33,7 @@
   }
 </script>
 
-<h2>@iframe-resizer/svelte example</h2>
+<h2>@iframe-resizer/svelte example: {TITLES[example]}</h2>
 <nav>
   <a href="index.html">One iframe</a>
   <a href="two.html">Two iframes</a>
