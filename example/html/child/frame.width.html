@@ -38,14 +38,9 @@
   </head>
 
   <body>
-    <h3>Content width</h3>
-    <p>
-      With <code>horizontal-inline</code> the page is as wide as its content, so
-      this paragraph sits on one line, up to its 40em limit. With
-      <code>horizontal-block</code> the page is as wide as the iframe, so the
-      text wraps to the iframe instead.
-    </p>
-    <p>Both follow the row of 150px cards below as it grows and shrinks.</p>
+    <h3 id="heading"></h3>
+    <p id="intro"></p>
+    <p>The iframe follows the row of 150px cards below as it grows and shrinks.</p>
 
     <button id="add">Add a card</button>
     <button id="remove">Remove a card</button>
@@ -57,6 +52,20 @@
     <p><a href="frame.animate-width.html">Animated width</a></p>
 
     <script>
+      // The parent page passes its direction, e.g. frame.width.html?direction=horizontal-block
+      const direction =
+        new URLSearchParams(location.search).get('direction') ?? 'horizontal-inline'
+
+      const INTRO = {
+        'horizontal-inline':
+          'The page is as wide as its content, so this paragraph sits on one line, up to its 40em limit.',
+        'horizontal-block':
+          "The page is as wide as the iframe, so this paragraph wraps to the iframe's width.",
+      }
+
+      document.getElementById('heading').textContent = `direction: '${direction}'`
+      document.getElementById('intro').textContent = INTRO[direction] ?? ''
+
       const cards = document.getElementById('cards')
 
       document.getElementById('add').addEventListener('click', () => {

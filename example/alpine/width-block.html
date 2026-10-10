@@ -68,11 +68,16 @@
         get direction() {
           return { 'width-inline': 'horizontal-inline', 'width-block': 'horizontal-block' }[this.example]
         },
+        get title() {
+          return { index: 'one iframe', two: 'two iframes', 'width-inline': 'width (inline)', 'width-block': 'width (block)' }[this.example]
+        },
         get ids() {
           return this.example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
         },
         get src() {
-          return this.direction ? 'child/frame.width.html' : 'child/frame.content.html'
+          return this.direction
+            ? 'child/frame.width.html?direction=' + this.direction
+            : 'child/frame.content.html'
         },
         get iframeOptions() {
           const self = this
@@ -91,7 +96,7 @@
         }
       }"
     >
-      <h2>@iframe-resizer/alpine example</h2>
+      <h2 x-text="'@iframe-resizer/alpine example: ' + title">@iframe-resizer/alpine example</h2>
       <nav>
         <a href="index.html">One iframe</a>
         <a href="two.html">Two iframes</a>
