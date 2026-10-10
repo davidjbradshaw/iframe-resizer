@@ -22,6 +22,23 @@ export function getSelectedElements(): Element[] | NodeListOf<Element> {
       : getAllElements(document.documentElement) // Width resizing may need to check all elements
 }
 
+const px = (el: Element, property: string): number =>
+  parseFloat(getComputedStyle(el).getPropertyValue(property)) || 0
+
+// Where <html>'s right edge is when it wraps its content-sized <body>; the
+// page's own CSS may pin or cap <html> itself, so it is not read directly
+const contentRight = (): number => {
+  const html = document.documentElement
+  const { body } = document
+
+  return (
+    body.getBoundingClientRect().right +
+    px(body, 'margin-right') +
+    px(html, 'padding-right') +
+    px(html, 'border-right-width')
+  )
+}
+
 export function findMaxElement(
   targetElements: Element[] | NodeListOf<Element>,
   side: string,
@@ -31,15 +48,16 @@ export function findMaxElement(
   let elVal
   let maxEl: Element = document.documentElement
 
-  // Untagged sizes start from the <html> edge, so the page is never smaller
-  // than its document. For width only with horizontal-inline: otherwise
-  // <html> is as wide as the viewport, and its right edge would pin the width.
-  const fromDocument =
-    !state.hasTags &&
-    (side === HEIGHT_EDGE || (side === WIDTH_EDGE && settings.maxContentWidth))
-  let maxVal = fromDocument
-    ? document.documentElement.getBoundingClientRect()[side]
-    : MIN_SIZE
+  // Untagged sizes start from the page's own edge, so it is never smaller
+  // than its document. Width only when the page is sized to its content
+  // (maxContentWidth): otherwise <html> is as wide as the viewport
+  let maxVal = MIN_SIZE
+  if (!state.hasTags) {
+    if (side === HEIGHT_EDGE)
+      maxVal = document.documentElement.getBoundingClientRect().bottom
+    else if (side === WIDTH_EDGE && settings.maxContentWidth)
+      maxVal = contentRight()
+  }
 
   for (const element of targetElements) {
     elVal =

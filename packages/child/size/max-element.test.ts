@@ -6,6 +6,7 @@ import getMaxElement from './max-element'
 
 describe('child/size/max-element', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     state.hasTags = false
     state.hasOverflow = false
     state.overflowedNodeSet = new Set()
@@ -114,27 +115,80 @@ describe('child/size/max-element', () => {
     expect(getMaxElement('right')).toBe(300)
   })
 
-  test('floors a horizontal-inline width at the <html> right edge', () => {
-    // An absolutely positioned element overflows; in-flow content is wider
+  // The floor for a content-sized page: <body>'s right edge plus its right
+  // margin and <html>'s right padding and border
+  function mockContentRight({ body, html }) {
+    vi.spyOn(document.body, 'getBoundingClientRect').mockReturnValue({
+      bottom: 0,
+      right: body,
+    })
+    vi.spyOn(document.documentElement, 'getBoundingClientRect').mockReturnValue(
+      { bottom: 0, right: html },
+    )
+    global.getComputedStyle = vi.fn((el) => ({
+      getPropertyValue: (property) => {
+        if (el === document.body && property === 'margin-right') return '8px'
+        if (el === document.documentElement && property === 'padding-right')
+          return '10px'
+        return '0'
+      },
+    }))
+  }
+
+  test('floors a content-sized width at the body edge, not the overflowed element', () => {
     settings.maxContentWidth = true
     state.hasOverflow = true
     const overflowed = document.createElement('div')
     overflowed.getBoundingClientRect = () => ({ bottom: 0, right: 330 })
     state.overflowedNodeSet = new Set([overflowed])
-    document.documentElement.getBoundingClientRect = () => ({ right: 418 })
+    mockContentRight({ body: 420, html: 438 })
 
-    expect(getMaxElement('right')).toBe(418)
+    expect(getMaxElement('right')).toBe(438)
   })
 
-  test('an overflowed element wider than <html> still sets the width', () => {
+  test('the floor follows the body when the page pins <html> wider', () => {
+    settings.maxContentWidth = true
+    state.hasOverflow = true
+    const overflowed = document.createElement('div')
+    overflowed.getBoundingClientRect = () => ({ bottom: 0, right: 330 })
+    state.overflowedNodeSet = new Set([overflowed])
+    // e.g. html { min-width: 100% } keeps <html> at the iframe's 900px
+    mockContentRight({ body: 420, html: 900 })
+
+    expect(getMaxElement('right')).toBe(438)
+  })
+
+  test('an overflowed element wider than the page still sets the width', () => {
     settings.maxContentWidth = true
     state.hasOverflow = true
     const overflowed = document.createElement('div')
     overflowed.getBoundingClientRect = () => ({ bottom: 0, right: 800 })
     state.overflowedNodeSet = new Set([overflowed])
-    document.documentElement.getBoundingClientRect = () => ({ right: 418 })
+    mockContentRight({ body: 420, html: 438 })
 
     expect(getMaxElement('right')).toBe(800)
+  })
+
+  test('a tagged element sets the width with no floor', () => {
+    settings.maxContentWidth = true
+    state.hasTags = true
+    const tagged = document.createElement('div')
+    tagged.getBoundingClientRect = () => ({ bottom: 0, right: 300 })
+    state.taggedElements = [tagged]
+    mockContentRight({ body: 420, html: 438 })
+
+    expect(getMaxElement('right')).toBe(300)
+  })
+
+  test('a block width has no floor', () => {
+    settings.maxContentWidth = false
+    state.hasOverflow = true
+    const overflowed = document.createElement('div')
+    overflowed.getBoundingClientRect = () => ({ bottom: 0, right: 330 })
+    state.overflowedNodeSet = new Set([overflowed])
+    mockContentRight({ body: 900, html: 900 })
+
+    expect(getMaxElement('right')).toBe(330)
   })
 
   test('converts overflowedNodeSet to array', () => {
