@@ -11,7 +11,8 @@ export default function serveChild() {
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.url === '/js-dist/iframe-resizer.child.js') {
+        // Vite prefixes the page's /js-dist/ path with the config's base
+        if (req.url?.endsWith('/js-dist/iframe-resizer.child.js')) {
           res.setHeader('Content-Type', 'application/javascript')
           res.end(readFileSync(childPath))
           return

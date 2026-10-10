@@ -1,16 +1,38 @@
-import { createSignal, Show } from 'solid-js'
+import { createSignal, For, Show } from 'solid-js'
 import IframeResizer from '@iframe-resizer/solid'
 import type {
+  IFrameDirection,
   IFrameMessageData,
   IFrameResizedData,
+  IFrameResizerMethods,
 } from '@iframe-resizer/solid'
-import type { IframeResizerMethods } from '@iframe-resizer/solid'
-
 
 import './App.css'
 
+// Each page sets <body data-example>, see index.html, two.html and width-*.html
+const example = document.body.dataset.example ?? 'index'
+
+const DIRECTIONS: Record<string, string> = {
+  'width-inline': 'horizontal-inline',
+  'width-block': 'horizontal-block',
+}
+const direction = DIRECTIONS[example] as IFrameDirection | undefined
+const src = direction ? 'child/frame.animate-width.html' : 'child/frame.content.html'
+const ids = example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
+
+function Nav() {
+  return (
+    <nav>
+      <a href="index.html">One iframe</a>
+      <a href="two.html">Two iframes</a>
+      <a href="width-inline.html">Width (inline)</a>
+      <a href="width-block.html">Width (block)</a>
+    </nav>
+  )
+}
+
 function App() {
-  let iframeApi: IframeResizerMethods | undefined
+  const iframeApis: Record<string, IFrameResizerMethods> = {}
   const [messageData, setMessageData] = createSignal<IFrameResizedData | IFrameMessageData>()
   const [show, setShow] = createSignal(true)
 
@@ -19,25 +41,32 @@ function App() {
   const onMessage = (data: IFrameMessageData) => {
     setMessageData(data)
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
-    iframeApi?.sendMessage('Hello back from the parent page')
+    iframeApis[data.iframe.id]?.sendMessage('Hello back from the parent page')
   }
 
   return (
     <>
       <h2>@iframe-resizer/solid example</h2>
+      <Nav />
       <button onClick={() => setShow(!show())}>{show() ? 'Hide' : 'Show'}</button>
       <Show when={show()}>
-        <IframeResizer
-          license="GPLv3"
-          id="myIframe"
-          log
-          ref={(r) => (iframeApi = r)}
-          inPageLinks
-          onMessage={onMessage}
-          onResized={onResized}
-          src="child/frame.content.html"
-          style={{ width: '100%', height: '100vh' }}
-        />
+        <div class={direction ? 'frames width' : 'frames'}>
+          <For each={ids}>
+            {(id) => (
+              <IframeResizer
+                license="GPLv3"
+                id={id}
+                log
+                ref={(api) => (iframeApis[id] = api)}
+                {...(direction && { direction })}
+                inPageLinks
+                onMessage={onMessage}
+                onResized={onResized}
+                src={src}
+              />
+            )}
+          </For>
+        </div>
         <Show when={messageData()}>
           <div class="message-data">
             <h3>Event Data:</h3>

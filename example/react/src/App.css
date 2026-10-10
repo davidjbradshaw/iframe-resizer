@@ -5,9 +5,31 @@
   /* text-align: center; */
 }
 
-iframe {
-  width: 95vh;
+nav {
+  margin-bottom: 16px;
+}
+
+nav a {
+  margin-right: 16px;
+}
+
+.frames {
+  display: flex;
+  gap: 2%;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.frames iframe {
+  flex: 1;
+  min-width: 0;
   height: 100vh;
+}
+
+/* The width examples size the iframe to its content */
+.frames.width iframe {
+  flex: none;
+  height: 300px;
 }
 
 .message-data {

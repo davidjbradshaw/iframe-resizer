@@ -1,0 +1,128 @@
+---
+import IframeResizer from '@iframe-resizer/astro'
+
+// The example to show, set by each page in src/pages
+interface Props {
+  example: 'index' | 'two' | 'width-inline' | 'width-block'
+}
+
+const { example } = Astro.props
+
+const DIRECTIONS: Record<string, string> = {
+  'width-inline': 'horizontal-inline',
+  'width-block': 'horizontal-block',
+}
+const direction = DIRECTIONS[example]
+const src = direction ? '/child/frame.animate-width.html' : '/child/frame.content.html'
+const ids = example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="https://iframe-resizer.com/favicon.ico" />
+    <title>@iframe-resizer/astro example</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      nav {
+        margin-bottom: 16px;
+      }
+
+      nav a {
+        margin-right: 16px;
+      }
+
+      .frames {
+        display: flex;
+        gap: 2%;
+        align-items: flex-start;
+        margin-top: 16px;
+      }
+
+      .frames iframe {
+        flex: 1;
+        min-width: 0;
+        height: 100vh;
+      }
+
+      /* The width examples size the iframe to its content */
+      .frames.width iframe {
+        flex: none;
+        height: 300px;
+      }
+      .message-data {
+        margin-top: 20px;
+        padding: 16px;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+
+      .message-data h3 {
+        margin: 0 0 8px;
+      }
+
+      .message-data pre {
+        margin: 0;
+        overflow: auto;
+      }
+      pre {
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>@iframe-resizer/astro example</h2>
+    <nav>
+      <a href="index.html">One iframe</a>
+      <a href="two.html">Two iframes</a>
+      <a href="width-inline.html">Width (inline)</a>
+      <a href="width-block.html">Width (block)</a>
+    </nav>
+
+    <div class:list={['frames', { width: direction }]}>
+      {ids.map((id) => (
+        <IframeResizer
+          id={id}
+          src={src}
+          direction={direction}
+          license="GPLv3"
+          log
+          inPageLinks
+        />
+      ))}
+    </div>
+
+    <div id="event-data" class="message-data" style="display: none;">
+      <h3>Event Data:</h3>
+      <pre id="event-output"></pre>
+    </div>
+
+    <script>
+      const eventData = document.getElementById('event-data')
+      const eventOutput = document.getElementById('event-output')
+
+      const show = (detail: unknown) => {
+        eventData!.style.display = 'block'
+        eventOutput!.textContent = JSON.stringify(detail, (key, value) => key === 'iframe' ? undefined : value, 2)
+      }
+
+      // The events bubble, so one listener covers every iframe
+      document.addEventListener('iframe-resizer:resized', (e: Event) => {
+        show((e as CustomEvent).detail)
+      })
+
+      document.addEventListener('iframe-resizer:message', (e: Event) => {
+        const detail = (e as CustomEvent).detail
+        show(detail)
+        alert(`Message from frame ${detail.iframe.id}: ${detail.message}`)
+        detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+      })
+    </script>
+  </body>
+</html>
