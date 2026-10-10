@@ -10,7 +10,8 @@ import {
   COLLAPSE,
   EXPAND,
   HORIZONTAL,
-  HORIZONTAL_LEGACY,
+  HORIZONTAL_BLOCK,
+  HORIZONTAL_INLINE,
   NONE,
   OMIT,
   VERTICAL,
@@ -18,10 +19,12 @@ import {
 
 export type IFrameDirection =
   | typeof VERTICAL
-  | typeof HORIZONTAL
-  | typeof NONE
+  | typeof HORIZONTAL_BLOCK
+  | typeof HORIZONTAL_INLINE
   | typeof BOTH
-  | typeof HORIZONTAL_LEGACY
+  | typeof NONE
+  /** @deprecated Use `'horizontal-block'`, which works the same way. */
+  | typeof HORIZONTAL
 
 export type IFrameLogOption = boolean | typeof EXPAND | typeof COLLAPSE | number
 
@@ -100,7 +103,11 @@ export interface IFrameOptions {
    * or disable this option.
    */
   checkOrigin?: boolean | string[]
-  /** Set the resizing direction of the iframe. */
+  /**
+   * Set the resizing direction of the iframe. `'horizontal-inline'` makes the
+   * page as wide as its content; `'horizontal-block'` keeps it as wide as the
+   * iframe. `'horizontal'` is deprecated, use `'horizontal-block'`.
+   */
   direction?: IFrameDirection
   /** Custom iframe id. */
   id?: string

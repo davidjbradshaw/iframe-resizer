@@ -1,7 +1,8 @@
 import {
   BOTH,
   HORIZONTAL,
-  HORIZONTAL_LEGACY,
+  HORIZONTAL_BLOCK,
+  HORIZONTAL_INLINE,
   NONE,
   VERTICAL,
 } from '@iframe-resizer/common/consts'
@@ -74,47 +75,47 @@ describe('core/setup/direction', () => {
     expect(settings.i7.sizeWidth).toBe(false)
   })
 
-  test('horizontal-legacy sizes the width only, is legacy, and advises once', () => {
-    settings.i7.direction = HORIZONTAL_LEGACY
-    setDirection('i7')
-    setDirection('i7')
+  test('horizontal-block and horizontal-inline size the width only', () => {
+    for (const direction of [HORIZONTAL_BLOCK, HORIZONTAL_INLINE]) {
+      settings.i7.direction = direction
+      setDirection('i7')
 
-    expect(settings.i7.sizeWidth).toBe(true)
-    expect(settings.i7.sizeHeight).toBe(false)
-    expect(settings.i7.widthLegacy).toBe(true)
-    expect(settings.i7.maxContentWidth).toBe(false)
-    expect(advise).toHaveBeenCalledTimes(1)
-    expect(advise).toHaveBeenCalledWith(
-      'i7',
-      expect.stringContaining('horizontal-legacy'),
-    )
+      expect(settings.i7.sizeWidth).toBe(true)
+      expect(settings.i7.sizeHeight).toBe(false)
+    }
   })
 
-  test('horizontal and both ask the child to size its page to its content', () => {
-    for (const direction of [HORIZONTAL, BOTH]) {
+  test('horizontal-inline and both ask the child to size its page to its content', () => {
+    for (const direction of [HORIZONTAL_INLINE, BOTH]) {
       settings.i7.direction = direction
       setDirection('i7')
 
       expect(settings.i7.maxContentWidth).toBe(true)
     }
 
-    settings.i7.direction = VERTICAL
-    setDirection('i7')
-
-    expect(settings.i7.maxContentWidth).toBe(false)
-    expect(advise).not.toHaveBeenCalled()
-  })
-
-  test('horizontal and both do not set widthLegacy, and it is cleared on change', () => {
-    settings.i7.direction = HORIZONTAL_LEGACY
-    setDirection('i7')
-
-    for (const direction of [HORIZONTAL, BOTH, VERTICAL]) {
+    for (const direction of [HORIZONTAL_BLOCK, VERTICAL]) {
       settings.i7.direction = direction
       setDirection('i7')
 
-      expect(settings.i7.widthLegacy).toBe(false)
+      expect(settings.i7.maxContentWidth).toBe(false)
     }
+
+    expect(advise).not.toHaveBeenCalled()
+  })
+
+  test('horizontal works as horizontal-block and advises once', () => {
+    settings.i7.direction = HORIZONTAL
+    setDirection('i7')
+    setDirection('i7')
+
+    expect(settings.i7.sizeWidth).toBe(true)
+    expect(settings.i7.sizeHeight).toBe(false)
+    expect(settings.i7.maxContentWidth).toBe(false)
+    expect(advise).toHaveBeenCalledTimes(1)
+    expect(advise).toHaveBeenCalledWith(
+      'i7',
+      expect.stringContaining('horizontal-block'),
+    )
   })
 
   test('invalid direction throws', () => {

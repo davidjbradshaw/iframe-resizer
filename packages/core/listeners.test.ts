@@ -225,7 +225,7 @@ describe('core/listeners', () => {
     vi.useRealTimers()
   })
 
-  test('iframeParentListener waits for a timer with a legacy width direction', async () => {
+  test('iframeParentListener waits for a timer with a block width direction', async () => {
     vi.useFakeTimers()
     await listenForWidth({ maxContentWidth: false, childVersion: '6.0.0' })
 

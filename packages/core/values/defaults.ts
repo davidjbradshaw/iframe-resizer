@@ -28,7 +28,7 @@ export default Object.freeze({
   warningTimeout: 5000,
   widthCalculationMethod: AUTO,
   maxContentWidth: false,
-  widthLegacy: false,
+  horizontalAdvised: false,
 
   onBeforeClose: () => true,
   onAfterClose() {},
