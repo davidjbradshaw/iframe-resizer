@@ -15,6 +15,8 @@ for dir in "$ROOT"/e2e/apps/*/; do
   fi
 done
 
+# Builds every app first, so all the failures are listed, then fails
 if [ $FAILED -gt 0 ]; then
   echo "$FAILED framework(s) failed to build"
+  exit 1
 fi
