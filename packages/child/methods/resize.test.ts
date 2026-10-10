@@ -54,7 +54,7 @@ describe('child/methods/resize', () => {
     expect(typeAssert).toHaveBeenCalledTimes(1)
     expect(sendSize).toHaveBeenCalledWith(
       MANUAL_RESIZE_REQUEST,
-      'parentIframe.resize(,200)',
+      'parentIframe.resize(undefined,200)',
       undefined,
       200,
     )

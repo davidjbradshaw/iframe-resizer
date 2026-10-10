@@ -21,7 +21,8 @@ export default function resize(
       'parentIframe.resize(customHeight, customWidth) customWidth',
     )
 
-  const height = customHeight === undefined ? '' : customHeight
+  // A width alone still shows the missing height: resize(undefined,200)
+  const height = customHeight ?? (customWidth === undefined ? '' : 'undefined')
   const width = customWidth === undefined ? '' : `,${customWidth}`
   const valString = `${height}${width}`
 

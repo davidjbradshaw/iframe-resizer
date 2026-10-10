@@ -4,7 +4,8 @@ import { HIGHLIGHT } from 'auto-console-group'
 import { info, warn } from '../console'
 
 export function checkCSS(attr: string, value: string): string {
-  if (/(?:^|[\s,])-/.test(value)) {
+  // A minus that starts a number, so calc(100% - 10px) and var(--x) pass
+  if (/(?:^|[\s,])-[\d.]/.test(value)) {
     warn(`Negative CSS value ignored for ${attr}`)
     value = ''
   }
@@ -23,7 +24,7 @@ export function setMargin({
   bodyMarginStr,
   bodyMargin,
 }: {
-  bodyMarginStr: string | undefined
+  bodyMarginStr?: string
   bodyMargin: number
 }): void {
   // If called via V1 script, convert bodyMargin from int to str
