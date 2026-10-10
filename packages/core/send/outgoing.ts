@@ -28,6 +28,7 @@ export default function createOutgoingMessage(id: string): string {
     // sizeSelector,
     sizeWidth,
     tolerance,
+    maxContentWidth,
     widthCalculationMethod,
   } = settings[id]
 
@@ -56,5 +57,6 @@ export default function createOutgoingMessage(id: string): string {
     mode,
     '', // sizeSelector,
     logExpand,
+    maxContentWidth,
   ].join(SEPARATOR)
 }

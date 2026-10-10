@@ -101,7 +101,9 @@ export const WHITE = 'color: #E3E3E3;'
 export const NONE = 'none'
 export const BOTH = 'both'
 export const VERTICAL = 'vertical'
-export const HORIZONTAL = 'horizontal'
+export const HORIZONTAL = 'horizontal' // Deprecated, same as HORIZONTAL_BLOCK
+export const HORIZONTAL_BLOCK = 'horizontal-block'
+export const HORIZONTAL_INLINE = 'horizontal-inline'
 export const OMIT = 'omit'
 
 export const NO_CHANGE = 'No change in content size detected'

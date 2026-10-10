@@ -1,7 +1,8 @@
 import {
   AUTO_RESIZE,
   BOTH,
-  HORIZONTAL,
+  HORIZONTAL_BLOCK,
+  HORIZONTAL_INLINE,
   NONE,
   VERTICAL,
 } from '@iframe-resizer/common/consts'
@@ -23,7 +24,7 @@ export default function checkOptions(
       id,
       `<rb>Deprecated Option</>
 
-The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <bb>${VERTICAL}</>, <bb>${HORIZONTAL}</>, <bb>${BOTH}</> or <bb>${NONE}</>.
+The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <bb>${VERTICAL}</>, <bb>${HORIZONTAL_INLINE}</>, <bb>${HORIZONTAL_BLOCK}</>, <bb>${BOTH}</> or <bb>${NONE}</>.
 `,
     )
   }

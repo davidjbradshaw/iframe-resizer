@@ -15,7 +15,7 @@ const UPDATES: Record<string, Record<string, unknown>> = {
   offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
   tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
   links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-  direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal' },
+  direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
 }
 
 function App() {

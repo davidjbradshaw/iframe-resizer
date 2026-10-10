@@ -7,8 +7,15 @@ const START_WIDTH = '400px'
 const iframeWidth = (page) =>
   page.locator('iframe').evaluate((el) => el.style.width)
 
-async function loadChild(page, child) {
-  await page.goto(`${BASE}?child=${child}`)
+// The right edge of the element the child is told to measure
+const contentWidth = (page) =>
+  page
+    .frameLocator('iframe')
+    .locator('[data-iframe-resize]')
+    .evaluate((el) => el.getBoundingClientRect().right)
+
+async function loadChild(page, child, direction = 'horizontal-inline') {
+  await page.goto(`${BASE}?child=${child}&direction=${direction}`)
   await page.waitForLoadState('networkidle')
   await waitForResizer(page)
   await waitForChildText(page, '#ready-status', 'ready')
@@ -19,35 +26,53 @@ async function loadChild(page, child) {
   )
 }
 
+// style.width reads back rounded to three decimals
+async function expectIframeToFitContent(page) {
+  expect(parseFloat(await iframeWidth(page))).toBeCloseTo(
+    await contentWidth(page),
+    2,
+  )
+}
+
 test.describe('Horizontal', () => {
   test('content with a width of its own sizes the iframe to it', async ({
     page,
   }) => {
     await loadChild(page, 'frame.max-content.html')
 
-    // The body shrink-wraps its text, so the tagged block's right edge is
-    // the longest line unwrapped; the iframe must grow to exactly that
-    const contentWidth = await page
-      .frameLocator('iframe')
-      .locator('[data-iframe-resize]')
-      .evaluate((el) => el.getBoundingClientRect().right)
-    expect(contentWidth).toBeGreaterThan(parseFloat(START_WIDTH))
-    // style.width reads back rounded to three decimals
-    expect(parseFloat(await iframeWidth(page))).toBeCloseTo(contentWidth, 2)
+    expect(await contentWidth(page)).toBeGreaterThan(parseFloat(START_WIDTH))
+    await expectIframeToFitContent(page)
 
     await page.waitForTimeout(1000)
-    expect(parseFloat(await iframeWidth(page))).toBeCloseTo(contentWidth, 2)
+    await expectIframeToFitContent(page)
   })
 
-  test('fluid content does not shrink the iframe on every resize', async ({
-    page,
-  }) => {
+  test('fluid content is sized to its unwrapped width', async ({ page }) => {
     await loadChild(page, 'frame.fluid.html')
 
-    // The child measures its content as wide as the body, so the first
-    // width is the iframe's own width less the body margin. That narrows
-    // the iframe, which narrows the body, which measures narrower again:
-    // without a guard the iframe shrinks by the margin on every resize.
+    // The child makes <html> and <body> as wide as their content
+    const bodyWidth = await page
+      .frameLocator('iframe')
+      .locator('body')
+      .evaluate((el) => [
+        el.style.getPropertyValue('width'),
+        el.style.getPropertyPriority('width'),
+      ])
+    expect(bodyWidth).toEqual(['max-content', 'important'])
+
+    await expectIframeToFitContent(page)
+
+    await page.waitForTimeout(1000)
+    await expectIframeToFitContent(page)
+  })
+
+  test('with horizontal-block, fluid content does not shrink the iframe on every resize', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.fluid.html', 'horizontal-block')
+
+    // The content is as wide as the iframe less the body margin, so without
+    // a guard every resize would narrow the iframe by that margin
     const first = await iframeWidth(page)
     expect(parseFloat(first)).toBeGreaterThan(300)
 

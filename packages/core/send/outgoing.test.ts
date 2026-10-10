@@ -21,6 +21,7 @@ vi.mock('../values/settings', () => ({
       sizeWidth: false,
       tolerance: 0,
       widthCalculationMethod: 'scroll',
+      maxContentWidth: true,
     },
   },
 }))
@@ -44,5 +45,8 @@ describe('core/send/outgoing', () => {
     expect(parts[11]).toBe('0') // tolerance
     expect(parts[12]).toBe('true') // inPageLinks
     expect(parts[14]).toBe('scroll') // widthCalculationMethod
+    expect(parts[23]).toBe('false') // logExpand
+    expect(parts[24]).toBe('true') // maxContentWidth, the last field
+    expect(parts).toHaveLength(25)
   })
 })
