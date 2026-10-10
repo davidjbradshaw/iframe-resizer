@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
+import * as childConsole from '../console'
 import settings from '../values/settings'
 
 describe('child/read/from-page', () => {
@@ -9,6 +10,42 @@ describe('child/read/from-page', () => {
     settings.mode = 0
     settings.calculateHeight = true
     settings.calculateWidth = false
+  })
+
+  test('reads the deprecated sizeSelector as resizeSelector and advises', async () => {
+    const deprecateOption = vi
+      .spyOn(childConsole, 'deprecateOption')
+      .mockImplementation(() => {})
+    window.iframeResizer = { sizeSelector: '#old' }
+
+    const { default: readFromPage } = await import('./from-page')
+
+    expect(readFromPage().resizeSelector).toBe('#old')
+    expect(deprecateOption).toHaveBeenCalledWith(
+      'sizeSelector',
+      'resizeSelector',
+    )
+  })
+
+  test('resizeSelector wins when both names are set', async () => {
+    vi.spyOn(childConsole, 'deprecateOption').mockImplementation(() => {})
+    window.iframeResizer = { sizeSelector: '#old', resizeSelector: '#new' }
+
+    const { default: readFromPage } = await import('./from-page')
+
+    expect(readFromPage().resizeSelector).toBe('#new')
+  })
+
+  test('does not advise when only resizeSelector is set', async () => {
+    const deprecateOption = vi
+      .spyOn(childConsole, 'deprecateOption')
+      .mockImplementation(() => {})
+    window.iframeResizer = { resizeSelector: '#new' }
+
+    const { default: readFromPage } = await import('./from-page')
+    readFromPage()
+
+    expect(deprecateOption).not.toHaveBeenCalled()
   })
 
   test('returns empty object when mode === 1', async () => {
@@ -21,7 +58,7 @@ describe('child/read/from-page', () => {
   test('reads values from window.iframeResizer and applies offsetSize', async () => {
     window.iframeResizer = {
       ignoreSelector: '.x',
-      sizeSelector: '#y',
+      resizeSelector: '#y',
       targetOrigin: 'https://example.com',
       offsetSize: 5,
       onMessage: () => {},
@@ -33,7 +70,7 @@ describe('child/read/from-page', () => {
     const out = readFromPage()
 
     expect(out.ignoreSelector).toBe('.x')
-    expect(out.sizeSelector).toBe('#y')
+    expect(out.resizeSelector).toBe('#y')
     expect(out.targetOrigin).toBe('https://example.com')
     expect(out.offsetHeight).toBe(5)
     // calculateWidth is false by default so width offset omitted

@@ -19,14 +19,14 @@ export const applySelector = (
 }
 
 export default function ({
-  sizeSelector,
+  resizeSelector,
   ignoreSelector,
 }: {
-  sizeSelector: string
+  resizeSelector: string
   ignoreSelector: string
 }): () => void {
   return () => {
-    applySelector('sizeSelector', SIZE_ATTR, sizeSelector)
+    applySelector('resizeSelector', SIZE_ATTR, resizeSelector)
     applySelector('ignoreSelector', IGNORE_ATTR, ignoreSelector)
   }
 }
