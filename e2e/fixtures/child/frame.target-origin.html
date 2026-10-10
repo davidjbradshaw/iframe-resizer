@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer targetOrigin test</title>
+    <script>
+      // ?targetOrigin=a,b sets the parent origins this page may message
+      window.iframeResizer = {
+        targetOrigin: new URLSearchParams(window.location.search)
+          .get('targetOrigin')
+          .split(','),
+      }
+    </script>
+    <script src="/dist/child/index.umd.js"></script>
+  </head>
+  <body>
+    <p>Child page that may only message a list of parent origins.</p>
+  </body>
+</html>

@@ -24,6 +24,18 @@ export const readFunction = read(FUNCTION)
 export const readNumber = read(NUMBER)
 export const readString = read(STRING)
 
+// A single origin or a list of them
+function readOrigins(
+  data: Record<string, any>,
+  key: string,
+): string | string[] | undefined {
+  const value = data[key]
+  if (Array.isArray(value) && value.every((v) => typeof v === STRING))
+    return value
+
+  return readString(data, key)
+}
+
 const isObject = (obj: any): obj is Record<string, any> =>
   obj !== null && typeof obj === OBJECT && !Array.isArray(obj)
 
@@ -62,7 +74,7 @@ function readData(data: Record<string, any>): Record<string, any> {
     ignoreSelector: readString(data, 'ignoreSelector'),
     [getKey(3)]: readString(data, getKey(0)),
     resizeSelector: readResizeSelector(data),
-    targetOrigin: readString(data, 'targetOrigin'),
+    targetOrigin: readOrigins(data, 'targetOrigin'),
 
     onBeforeResize: readFunction(data, 'onBeforeResize'),
     onMessage: readFunction(data, 'onMessage'),

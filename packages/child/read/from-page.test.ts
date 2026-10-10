@@ -12,6 +12,25 @@ describe('child/read/from-page', () => {
     settings.calculateWidth = false
   })
 
+  test('reads a list of target origins', async () => {
+    window.iframeResizer = { targetOrigin: ['https://a.com', 'https://b.com'] }
+
+    const { default: readFromPage } = await import('./from-page')
+
+    expect(readFromPage().targetOrigin).toEqual([
+      'https://a.com',
+      'https://b.com',
+    ])
+  })
+
+  test('rejects a target origin list that is not all strings', async () => {
+    window.iframeResizer = { targetOrigin: ['https://a.com', 1] }
+
+    const { default: readFromPage } = await import('./from-page')
+
+    expect(() => readFromPage()).toThrow('targetOrigin is not a string.')
+  })
+
   test('reads the deprecated sizeSelector as resizeSelector and advises', async () => {
     const deprecateOption = vi
       .spyOn(childConsole, 'deprecateOption')
