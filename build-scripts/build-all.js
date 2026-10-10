@@ -9,6 +9,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
 const { DEBUG, TEST } = process.env
 
+// One build number for the whole run, e.g. 20261010.142530; the plugins
+// add it to the version of dev and test builds
+if ((DEBUG || TEST) && !process.env.BUILD_NUMBER) {
+  const now = new Date().toISOString()
+  process.env.BUILD_NUMBER = `${now.slice(0, 10).replaceAll('-', '')}.${now.slice(11, 19).replaceAll(':', '')}`
+}
+
 const packages = [
   { name: 'common', type: 'vite', postBuild: true },
   { name: 'core', type: 'vite', postBuild: true },
