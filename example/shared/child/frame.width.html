@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer width example</title>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      body {
+        margin: 8px;
+        font-family: system-ui, sans-serif;
+        font-size: 15px;
+      }
+      h3 {
+        margin: 0 0 8px;
+      }
+      p {
+        max-width: 40em;
+        margin: 0 0 12px;
+      }
+      button {
+        margin: 0 6px 8px 0;
+      }
+      .cards {
+        white-space: nowrap;
+      }
+      .card {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 150px;
+        height: 60px;
+        margin-right: 8px;
+        padding: 8px;
+        background: #cfe0f5;
+        vertical-align: top;
+        white-space: normal;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Content width</h3>
+    <p>
+      With <code>horizontal-inline</code> the page is as wide as its content, so
+      this paragraph sits on one line, up to its 40em limit. With
+      <code>horizontal-block</code> the page is as wide as the iframe, so the
+      text wraps to the iframe instead.
+    </p>
+    <p>Both follow the row of 150px cards below as it grows and shrinks.</p>
+
+    <button id="add">Add a card</button>
+    <button id="remove">Remove a card</button>
+    <div class="cards" id="cards">
+      <div class="card">Card 1</div>
+      <div class="card">Card 2</div>
+    </div>
+
+    <p><a href="frame.animate-width.html">Animated width</a></p>
+
+    <script>
+      const cards = document.getElementById('cards')
+
+      document.getElementById('add').addEventListener('click', () => {
+        const card = document.createElement('div')
+        card.className = 'card'
+        card.textContent = `Card ${cards.children.length + 1}`
+        cards.append(card)
+      })
+
+      document.getElementById('remove').addEventListener('click', () => {
+        cards.lastElementChild?.remove()
+      })
+    </script>
+
+    <script
+      type="text/javascript"
+      src="/js-dist/iframe-resizer.child.js"
+    ></script>
+  </body>
+</html>

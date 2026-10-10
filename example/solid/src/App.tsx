@@ -17,7 +17,7 @@ const DIRECTIONS: Record<string, string> = {
   'width-block': 'horizontal-block',
 }
 const direction = DIRECTIONS[example] as IFrameDirection | undefined
-const src = direction ? 'child/frame.animate-width.html' : 'child/frame.content.html'
+const src = direction ? 'child/frame.width.html' : 'child/frame.content.html'
 const ids = example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
 
 function Nav() {
