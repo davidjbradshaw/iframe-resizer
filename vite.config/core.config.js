@@ -1,5 +1,3 @@
-import { existsSync, renameSync } from 'node:fs'
-
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
@@ -34,12 +32,6 @@ export default defineConfig({
       ],
       outDir: 'dist/core',
       entryRoot: 'packages/core',
-      rollupTypes: true,
-      afterBuild: () => {
-        const src = 'dist/core/index.esm.d.ts'
-        const dest = 'dist/core/index.d.ts'
-        if (existsSync(src)) renameSync(src, dest)
-      },
     }),
     ...createPluginsProd('core'),
   ],

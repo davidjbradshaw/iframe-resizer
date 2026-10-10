@@ -134,8 +134,13 @@ const customConfig = (file) => {
         module,
         types,
         exports: {
-          '.': { import: `./${module}`, require: `./${main}` },
+          '.': {
+            types: `./${types}`,
+            import: `./${module}`,
+            require: `./${main}`,
+          },
           './consts': {
+            types: './consts.d.ts',
             import: './consts.esm.js',
             require: './consts.cjs.js',
           },
