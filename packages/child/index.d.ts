@@ -2,7 +2,9 @@
  * Type definitions for @iframe-resizer/child
  */
 
-export type { IFrameVersion } from '@iframe-resizer/common'
+import type { IFrameVersion } from '@iframe-resizer/common'
+
+export type { IFrameVersion }
 
 /** Configuration options set via window.iframeResizer before loading the child script. */
 export interface IFramePageOptions {
@@ -11,6 +13,8 @@ export interface IFramePageOptions {
   /** Offset added to the calculated size. */
   offsetSize?: number
   /** CSS selector for elements to use for size calculation. */
+  resizeSelector?: string
+  /** @deprecated Use `resizeSelector` instead. */
   sizeSelector?: string
   /** Restrict which parent origins can communicate with the iframe. */
   targetOrigin?: string | string[]

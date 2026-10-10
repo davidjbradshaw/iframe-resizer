@@ -18,11 +18,12 @@ export default async function sveltePostBuild() {
 
     copyFileSync(svelteSource, svelteDest)
 
-    // Write index.d.ts that re-exports from the component
+    // Write index.d.ts that re-exports the component and the core types,
+    // matching packages/svelte/index.ts
     const indexDts = join(root, 'dist/svelte/index.d.ts')
     writeFileSync(
       indexDts,
-      `export { default } from './IframeResizer.svelte'\nexport type { IframeResizerProps, IframeResizerMethods } from './IframeResizer.svelte'\n`,
+      `export { default } from './IframeResizer.svelte'\nexport type * from '@iframe-resizer/core'\n`,
     )
 
     // Fix import paths in generated JS files

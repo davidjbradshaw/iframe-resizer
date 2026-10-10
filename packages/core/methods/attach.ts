@@ -1,5 +1,5 @@
 import type { IFrameVersion } from '@iframe-resizer/common'
-import { MESSAGE, RESIZE, VERSION } from '@iframe-resizer/common/consts'
+import { MESSAGE, VERSION } from '@iframe-resizer/common/consts'
 
 import trigger from '../send/trigger'
 import settings from '../values/settings'
@@ -25,10 +25,6 @@ export default function attachMethods(id: string): void {
       },
 
       moveToAnchor: moveToAnchor.bind(null, id),
-
-      resize() {
-        trigger('Window resize', RESIZE, id)
-      },
 
       sendMessage(message: any) {
         message = JSON.stringify(message)

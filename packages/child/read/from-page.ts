@@ -7,7 +7,7 @@ import {
   STRING,
 } from '@iframe-resizer/common/consts'
 
-import { log } from '../console'
+import { deprecateOption, log } from '../console'
 import settings from '../values/settings'
 
 const read =
@@ -23,6 +23,18 @@ const read =
 export const readFunction = read(FUNCTION)
 export const readNumber = read(NUMBER)
 export const readString = read(STRING)
+
+// A single origin or a list of them
+function readOrigins(
+  data: Record<string, any>,
+  key: string,
+): string | string[] | undefined {
+  const value = data[key]
+  if (Array.isArray(value) && value.every((v) => typeof v === STRING))
+    return value
+
+  return readString(data, key)
+}
 
 const isObject = (obj: any): obj is Record<string, any> =>
   obj !== null && typeof obj === OBJECT && !Array.isArray(obj)
@@ -43,6 +55,14 @@ function readOffsetSize(data: Record<string, any>): {
   return { offsetHeight, offsetWidth }
 }
 
+// Renamed to match the data-iframe-resize attribute it applies
+function readResizeSelector(data: Record<string, any>): string | undefined {
+  if (!('sizeSelector' in data)) return readString(data, 'resizeSelector')
+
+  deprecateOption('sizeSelector', 'resizeSelector')
+  return readString(data, 'resizeSelector') ?? readString(data, 'sizeSelector')
+}
+
 function readData(data: Record<string, any>): Record<string, any> {
   log(`Reading data from page:`, Object.keys(data))
 
@@ -53,8 +73,8 @@ function readData(data: Record<string, any>): Record<string, any> {
     offsetWidth,
     ignoreSelector: readString(data, 'ignoreSelector'),
     [getKey(3)]: readString(data, getKey(0)),
-    sizeSelector: readString(data, 'sizeSelector'),
-    targetOrigin: readString(data, 'targetOrigin'),
+    resizeSelector: readResizeSelector(data),
+    targetOrigin: readOrigins(data, 'targetOrigin'),
 
     onBeforeResize: readFunction(data, 'onBeforeResize'),
     onMessage: readFunction(data, 'onMessage'),

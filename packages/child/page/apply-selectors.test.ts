@@ -10,7 +10,7 @@ describe('child/page/apply-selectors', () => {
     el.className = 'match'
     document.body.append(el)
 
-    applySelector('sizeSelector', 'data-iframe-resize', '.match')
+    applySelector('resizeSelector', 'data-iframe-resize', '.match')
 
     expect(Object.hasOwn(el.dataset, 'iframeResize')).toBe(true)
     expect(childConsole.log).toHaveBeenCalled()
@@ -25,7 +25,7 @@ describe('child/page/apply-selectors', () => {
     document.body.append(el1, el2)
 
     const run = applySelectors({
-      sizeSelector: '.size',
+      resizeSelector: '.size',
       ignoreSelector: '.ignore',
     })
     run()

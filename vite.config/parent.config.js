@@ -41,7 +41,9 @@ export default defineConfig({
       include: ['packages/parent/esm.ts', 'packages/parent/factory.ts'],
       outDir: 'dist/parent',
       entryRoot: 'packages/parent',
-      rollupTypes: true,
+      // The entry is esm.ts, so write a types entry that re-exports it,
+      // named after the bundle (index.esm.d.ts) and renamed to index.d.ts
+      insertTypesEntry: true,
       afterBuild: () => {
         const src = 'dist/parent/index.esm.d.ts'
         const dest = 'dist/parent/index.d.ts'

@@ -25,13 +25,6 @@ export default defineConfig({
       exclude: ['packages/common/**/*.test.*'],
       outDir: 'dist/common',
       entryRoot: 'packages/common',
-      rollupTypes: true,
-      afterBuild: async () => {
-        const { existsSync, renameSync } = await import('node:fs')
-        const src = 'dist/common/index.esm.d.ts'
-        const dest = 'dist/common/index.d.ts'
-        if (existsSync(src)) renameSync(src, dest)
-      },
     }),
     ...createPluginsProd('common'),
   ],
