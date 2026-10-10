@@ -9,8 +9,9 @@ export default async function solidPostBuild() {
 
   try {
     // Copy source files for bundlers that use the `solid` exports condition.
-    // IframeResizer.tsx is the entry; wire-options.ts is a relative dependency.
-    const sourceFiles = ['IframeResizer.tsx', 'wire-options.ts']
+    // IframeResizer.tsx is the entry; wire-options.ts and types.ts are relative
+    // dependencies, and types.ts also provides the published types.
+    const sourceFiles = ['IframeResizer.tsx', 'types.ts', 'wire-options.ts']
     for (const file of sourceFiles) {
       const src = join(root, 'packages/solid', file)
       const dest = join(root, 'dist/solid', file)
@@ -20,10 +21,21 @@ export default async function solidPostBuild() {
       copyFileSync(src, dest)
     }
 
-    // Write index.d.ts that re-exports types from the component
+    // Write index.d.ts declaring the component and re-exporting its types,
+    // matching packages/solid/index.ts
     writeFileSync(
       join(root, 'dist/solid/index.d.ts'),
-      `export { default } from './IframeResizer'\nexport type { IframeResizerProps, IframeResizerMethods } from './IframeResizer'\n`,
+      [
+        `import type { JSX } from 'solid-js'`,
+        `import type { IFrameResizerProps } from './types'`,
+        ``,
+        `export type { IFrameResizerMethods, IFrameResizerProps } from './types'`,
+        `export type * from '@iframe-resizer/core'`,
+        ``,
+        `declare function IframeResizer(props: IFrameResizerProps): JSX.Element`,
+        `export default IframeResizer`,
+        ``,
+      ].join('\n'),
     )
 
     // Fix import paths in generated JS files (packages/solid → .)

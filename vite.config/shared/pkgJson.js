@@ -76,6 +76,7 @@ const customConfig = (file) => {
         svelte: 'IframeResizer.svelte',
         exports: {
           '.': {
+            types: `./${types}`,
             svelte: './IframeResizer.svelte',
             import: './index.esm.js',
             require: './index.cjs.js',
@@ -94,6 +95,7 @@ const customConfig = (file) => {
         solid: 'IframeResizer.tsx',
         exports: {
           '.': {
+            types: `./${types}`,
             solid: './IframeResizer.tsx',
             import: './index.esm.js',
             require: './index.cjs.js',
