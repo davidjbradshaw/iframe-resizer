@@ -19,7 +19,7 @@
     <script>
       window.iframeResizer = {
         onMessage(message) {
-          alert(message, parentIframe.getId())
+          alert(`${message} ${parentIframe.getId()}`)
         },
       }
     </script>
@@ -37,7 +37,7 @@
         style.top = `${document.body.scrollHeight - 10}px`
 
         div.textContent = 'Overflowing content'
-        document.body.lastChild.append(div)
+        document.body.append(div)
         return false
       }
     </script>

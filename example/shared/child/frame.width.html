@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer width example</title>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      body {
+        margin: 8px;
+        font-family: system-ui, sans-serif;
+        font-size: 15px;
+      }
+      /* Shaded to show each block's width: as wide as the widest content
+         with horizontal-inline, as wide as the iframe with horizontal-block */
+      h3 {
+        margin: 0 0 8px;
+        background: #fde9c4;
+      }
+      p {
+        margin: 0 0 12px;
+        background: #dcefdc;
+      }
+      button {
+        margin: 0 6px 8px 0;
+      }
+      .cards {
+        white-space: nowrap;
+        background: #eadcf2;
+      }
+      .card {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 150px;
+        height: 60px;
+        margin-right: 8px;
+        padding: 8px;
+        background: #cfe0f5;
+        vertical-align: top;
+        white-space: normal;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3 id="heading"></h3>
+    <p id="intro"></p>
+    <p>Add and remove 150px cards to see how the iframe follows them.</p>
+
+    <button id="add">Add a card</button>
+    <button id="remove">Remove a card</button>
+    <div class="cards" id="cards">
+      <div class="card">Card 1</div>
+      <div class="card">Card 2</div>
+    </div>
+
+    <p><a href="frame.animate-width.html">Animated width</a></p>
+
+    <script>
+      // The parent page passes its direction, e.g. frame.width.html?direction=horizontal-block
+      const direction =
+        new URLSearchParams(location.search).get('direction') ?? 'horizontal-inline'
+
+      const INTRO = {
+        'horizontal-inline':
+          'The page is as wide as its content, so this paragraph sits on one line.',
+        'horizontal-block':
+          "The page is as wide as the iframe, so the shaded blocks stretch to fill it. The iframe grows to fit the cards, but not back down, as the blocks keep it wide.",
+      }
+
+      document.getElementById('heading').textContent = `direction: '${direction}'`
+      document.getElementById('intro').textContent = INTRO[direction] ?? ''
+
+      const cards = document.getElementById('cards')
+
+      document.getElementById('add').addEventListener('click', () => {
+        const card = document.createElement('div')
+        card.className = 'card'
+        card.textContent = `Card ${cards.children.length + 1}`
+        cards.append(card)
+      })
+
+      document.getElementById('remove').addEventListener('click', () => {
+        cards.lastElementChild?.remove()
+      })
+    </script>
+
+    <script
+      type="text/javascript"
+      src="/js-dist/iframe-resizer.child.js"
+    ></script>
+  </body>
+</html>

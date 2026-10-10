@@ -16,7 +16,15 @@ const DIRECTIONS: Record<string, string> = {
   'width-block': 'horizontal-block',
 }
 const direction = DIRECTIONS[example] as IFrameDirection | undefined
-const src = direction ? 'child/frame.animate-width.html' : 'child/frame.content.html'
+const src = direction
+  ? `child/frame.width.html?direction=${direction}`
+  : 'child/frame.content.html'
+const TITLES: Record<string, string> = {
+  index: 'one iframe',
+  two: 'two iframes',
+  'width-inline': 'width (inline)',
+  'width-block': 'width (block)',
+}
 const ids = example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
 
 function Nav() {
@@ -45,7 +53,7 @@ function App() {
 
   return (
     <>
-      <h2>@iframe-resizer/react example</h2>
+      <h2>@iframe-resizer/react example: {TITLES[example]}</h2>
       <Nav />
       <button onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
       {show &&
