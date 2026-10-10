@@ -3,7 +3,7 @@ import { INIT, VERSION } from '@iframe-resizer/common/consts'
 
 import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
-import checkCrossDomain from './check/cross-domain'
+import checkCrossOrigin from './check/cross-origin'
 import checkIgnoredElements from './check/ignored-elements'
 import migrateLegacySizeAttr from './check/migrate-size-attr'
 import checkMode from './check/mode'
@@ -72,7 +72,7 @@ function startIframeResizerChild({
 
   const setup = [
     checkIgnoredElements,
-    checkCrossDomain,
+    checkCrossOrigin,
     checkQuirksMode,
     migrateLegacySizeAttr,
     checkAndSetupTags,

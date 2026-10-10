@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as childConsole from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
-import checkCrossDomain from './cross-domain'
+import checkCrossOrigin from './cross-origin'
 
-describe('child/check/cross-domain', () => {
+describe('child/check/cross-origin', () => {
   beforeEach(() => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
     settings.mode = 0
@@ -21,7 +21,7 @@ describe('child/check/cross-domain', () => {
     const parentMock = { iframeParentListener: () => {} }
     vi.stubGlobal('parent', parentMock)
 
-    checkCrossDomain()
+    checkCrossOrigin()
 
     expect(state.sameOrigin).toBe(true)
 
@@ -29,22 +29,22 @@ describe('child/check/cross-domain', () => {
     vi.stubGlobal('parent', originalParent)
   })
 
-  it('logs when cross-domain access throws', () => {
+  it('logs when cross-origin access throws', () => {
     const originalParent = window.parent
     const throwingParent = new Proxy(
       {},
       {
         has() {
-          throw new Error('cross-domain')
+          throw new Error('cross-origin')
         },
       },
     )
     vi.stubGlobal('parent', throwingParent)
 
-    checkCrossDomain()
+    checkCrossOrigin()
 
     expect(childConsole.log).toHaveBeenCalledWith(
-      'Cross domain iframe detected',
+      'Cross-origin iframe detected',
     )
 
     // restore

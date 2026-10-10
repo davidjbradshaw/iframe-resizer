@@ -20,9 +20,9 @@ page content size. Therefore _iframe-resizer_ automatically inspects your page a
 best value for your page size from a range DOM values and _iframe-resizer's_ own custom content
 size calculation algorithm.
 
-### Cross Domain
+### Cross-Origin
 
-Supports both internal (same-domain) and external (cross-domain) iframes via a simple
+Supports both same-origin and cross-origin iframes via a simple
 JS file that is designed to be a zero impact guest on the sites hosting it.
 
 ### Lightening Performance
