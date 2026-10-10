@@ -1,11 +1,15 @@
 import { build } from 'vite'
 
-import { injectVersion, terserWithBanner } from './shared/plugins.js'
+import {
+  injectVersion,
+  stripTestCode,
+  terserWithBanner,
+} from './shared/plugins.js'
 
 export default async function () {
   await build({
     configFile: false,
-    plugins: [...injectVersion()],
+    plugins: [stripTestCode(), ...injectVersion()],
     resolve: {
       alias: {
         '@iframe-resizer/common/consts': './packages/common/consts.ts',

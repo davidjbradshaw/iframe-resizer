@@ -20,6 +20,16 @@ const vi = {
 
 export const injectVersion = () => [versionInjector(vi)]
 
+// Removes the child's test hooks. Runs first, while the TEST CODE comments
+// are still in the source; the TypeScript transform does not keep them.
+export const stripTestCode = () => ({
+  ...stripCode({
+    start_comment: 'TEST CODE START',
+    end_comment: 'TEST CODE END',
+  }),
+  enforce: 'pre',
+})
+
 const stripInclude = ['**/*.js', '**/*.ts']
 
 export const pluginsBase =
@@ -95,10 +105,7 @@ export const createPluginsProd = (
       targets,
       verbose: true,
     }),
-    stripCode({
-      start_comment: 'TEST CODE START',
-      end_comment: 'TEST CODE END',
-    }),
+    stripTestCode(),
     ...pluginsBase(stripLog, skipVersionInjector)(),
   ]
 }
