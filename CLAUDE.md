@@ -54,6 +54,7 @@ npm test              # Full suite: eslint + build + e2e + integration + unit
 npm run test:unit     # Vitest only (fast, use during development)
 npm run test:int      # Karma/Jasmine integration tests (needs test-js/ built)
 npm run test:e2e      # Playwright e2e (needs js-dist/ and http-server)
+npm run test:types    # Compile the published types in dist as a strict consumer would
 ```
 
 **Unit tests (Vitest):** Co-located as `*.test.js` next to source in `packages/`. Environment: jsdom. Coverage: V8.
