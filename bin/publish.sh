@@ -1,6 +1,9 @@
 #! /bin/bash
 
-VERSION=`node bin/getVersion.js  2>/dev/null`
+# Stop at the first failed step, so a failed test, build or publish
+# never goes on to publish, tag or push
+set -euo pipefail
+
 YEAR=`date +%y`
 
 PACKAGES=(
@@ -19,11 +22,29 @@ PACKAGES=(
   web-component
 )
 
-if [ -z "$1" ]; then
+if [ -z "${1:-}" ]; then
     echo "Build type not specified"
     echo
     exit 1
 fi
+
+STASHED=false
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash
+  STASHED=true
+fi
+if ! git pull; then
+  if $STASHED; then
+    git stash pop
+  fi
+  exit 1
+fi
+if $STASHED; then
+  git stash pop
+fi
+
+# Read after the pull, so the checks and the tag use the pulled version
+VERSION=`node bin/getVersion.js  2>/dev/null`
 
 if [[ $VERSION = *"-"* ]];then
   if [ $1 = "latest" ]; then
@@ -45,25 +66,19 @@ echo
 
 npm whoami &>/dev/null || npm login
 
-STASHED=false
-if ! git diff --quiet || ! git diff --cached --quiet; then
-  git stash
-  STASHED=true
-fi
-git pull
-if $STASHED; then
-  git stash pop
+# The latest tag gets the production build
+BUILD=$1
+if [ $1 = "latest" ]; then
+  BUILD=prod
 fi
 
 npm install
 npm test
-npm run build:$1
+npm run build:$BUILD
 
 for pkg in "${PACKAGES[@]}"; do
   echo "Publishing @iframe-resizer/$pkg"
-  cd "dist/$pkg"
-  npm publish --tag $1 --access public
-  cd ../..
+  (cd "dist/$pkg" && npm publish --tag $1 --access public)
 done
 
 if [ $1 != "latest" ]
@@ -71,14 +86,16 @@ then
   exit 0
 fi
 
-echo "Updating examples to v$VERSION"
-node build-scripts/update-example-versions.js
-
+# Bump the example dependencies first, so the lock files that
+# update-example-versions.js regenerates include them
 echo "Updating example dependencies"
 bin/update-examples.sh --minor
 
+echo "Updating examples to v$VERSION"
+node build-scripts/update-example-versions.js
+
 echo "Updating GitHub build"
-rm -v iframe-resizer.zip
+rm -fv iframe-resizer.zip
 zip iframe-resizer.zip js/**
 
 cp -v js/** js-dist
