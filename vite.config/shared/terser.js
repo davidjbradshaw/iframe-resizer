@@ -1,11 +1,8 @@
-import createBanner from './banner.js'
-
-export default (file) => ({
+export default () => ({
   minify: 'terser',
   terserOptions: {
     format: {
       comments: false,
-      preamble: createBanner(file, 'esm'),
     },
   },
 })

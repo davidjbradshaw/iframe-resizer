@@ -59,7 +59,9 @@ export default function useResizer(props: IFrameResizerProps) {
   const isFirstUpdateRef = useRef(true)
 
   const buildOptions = useCallback((): IFrameOptions => {
-    const { logExpand: _logExpand, ...coreProps } = propsRef.current
+    // Core derives logExpand from log, so drop one a JS caller passes
+    const { logExpand: _logExpand, ...coreProps } =
+      propsRef.current as IFrameResizerProps & { logExpand?: unknown }
     const options: IFrameOptions = {
       ...coreProps,
       onBeforeClose: onBeforeCloseRef.current,

@@ -4,7 +4,7 @@ import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
-import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
+import { createPluginsProd, terserMinify } from './shared/plugins.js'
 
 const filterDeps = (contents) => {
   const pkg = JSON.parse(contents)
@@ -32,7 +32,7 @@ export default defineConfig({
         'auto-console-group',
       ],
     },
-    ...terserWithBanner('parent'),
+    ...terserMinify(),
     sourcemap: process.env.BETA === '1',
   },
   plugins: [

@@ -1,7 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { defineConfig } from 'vite'
 
-import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
+import { createPluginsProd, terserMinify } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -21,7 +21,7 @@ export default defineConfig({
         'auto-console-group',
       ],
     },
-    ...terserWithBanner('svelte'),
+    ...terserMinify(),
     sourcemap: process.env.BETA === '1',
   },
   plugins: [

@@ -1,11 +1,16 @@
 import { build } from 'vite'
 
-import { injectVersion, terserWithBanner } from './shared/plugins.js'
+import {
+  formatBanner,
+  injectVersion,
+  stripTestCode,
+  terserMinify,
+} from './shared/plugins.js'
 
 export default async function () {
   await build({
     configFile: false,
-    plugins: [...injectVersion()],
+    plugins: [stripTestCode(), formatBanner('child'), ...injectVersion()],
     resolve: {
       alias: {
         '@iframe-resizer/common/consts': './packages/common/consts.ts',
@@ -21,7 +26,7 @@ export default async function () {
       },
       outDir: 'dist/child',
       emptyOutDir: false,
-      ...terserWithBanner('child'),
+      ...terserMinify(),
       sourcemap: process.env.BETA === '1',
     },
   })
