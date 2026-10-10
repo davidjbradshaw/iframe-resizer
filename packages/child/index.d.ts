@@ -2,7 +2,9 @@
  * Type definitions for @iframe-resizer/child
  */
 
-export type { IFrameVersion } from '@iframe-resizer/common'
+import type { IFrameVersion } from '@iframe-resizer/common'
+
+export type { IFrameVersion }
 
 /** Configuration options set via window.iframeResizer before loading the child script. */
 export interface IFramePageOptions {
