@@ -66,6 +66,19 @@ test.describe('Horizontal', () => {
     await expectIframeToFitContent(page)
   })
 
+  test('an overflowing element narrower than the page does not shrink it below the page', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.overflow-width.html')
+    await page.waitForTimeout(500)
+
+    const barRight = await page
+      .frameLocator('iframe')
+      .locator('#bar')
+      .evaluate((el) => el.getBoundingClientRect().right)
+    expect(parseFloat(await iframeWidth(page))).toBeGreaterThanOrEqual(barRight)
+  })
+
   test('with horizontal-block, fluid content does not shrink the iframe on every resize', async ({
     page,
   }) => {

@@ -1,5 +1,9 @@
 import { capitalizeFirstLetter } from '@iframe-resizer/common'
-import { HEIGHT_EDGE, MIN_SIZE } from '@iframe-resizer/common/consts'
+import {
+  HEIGHT_EDGE,
+  MIN_SIZE,
+  WIDTH_EDGE,
+} from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { info } from '../console'
@@ -27,13 +31,15 @@ export function findMaxElement(
   let elVal
   let maxEl: Element = document.documentElement
 
-  // Untagged height starts from the <html> bottom, so the page is never
-  // shorter than its document. There is no equivalent for width: <html> is
-  // always as wide as the viewport, so its right edge would pin the width.
-  let maxVal =
-    !state.hasTags && side === HEIGHT_EDGE
-      ? document.documentElement.getBoundingClientRect().bottom
-      : MIN_SIZE
+  // Untagged sizes start from the <html> edge, so the page is never smaller
+  // than its document. For width only with horizontal-inline: otherwise
+  // <html> is as wide as the viewport, and its right edge would pin the width.
+  const fromDocument =
+    !state.hasTags &&
+    (side === HEIGHT_EDGE || (side === WIDTH_EDGE && settings.maxContentWidth))
+  let maxVal = fromDocument
+    ? document.documentElement.getBoundingClientRect()[side]
+    : MIN_SIZE
 
   for (const element of targetElements) {
     elVal =

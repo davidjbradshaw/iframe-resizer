@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
+import settings from '../values/settings'
 import state from '../values/state'
 import getMaxElement from './max-element'
 
@@ -9,6 +10,7 @@ describe('child/size/max-element', () => {
     state.hasOverflow = false
     state.overflowedNodeSet = new Set()
     state.taggedElements = []
+    settings.maxContentWidth = false
 
     // Reset DOM
     document.body.innerHTML = ''
@@ -110,6 +112,29 @@ describe('child/size/max-element', () => {
     })
 
     expect(getMaxElement('right')).toBe(300)
+  })
+
+  test('floors a horizontal-inline width at the <html> right edge', () => {
+    // An absolutely positioned element overflows; in-flow content is wider
+    settings.maxContentWidth = true
+    state.hasOverflow = true
+    const overflowed = document.createElement('div')
+    overflowed.getBoundingClientRect = () => ({ bottom: 0, right: 330 })
+    state.overflowedNodeSet = new Set([overflowed])
+    document.documentElement.getBoundingClientRect = () => ({ right: 418 })
+
+    expect(getMaxElement('right')).toBe(418)
+  })
+
+  test('an overflowed element wider than <html> still sets the width', () => {
+    settings.maxContentWidth = true
+    state.hasOverflow = true
+    const overflowed = document.createElement('div')
+    overflowed.getBoundingClientRect = () => ({ bottom: 0, right: 800 })
+    state.overflowedNodeSet = new Set([overflowed])
+    document.documentElement.getBoundingClientRect = () => ({ right: 418 })
+
+    expect(getMaxElement('right')).toBe(800)
   })
 
   test('converts overflowedNodeSet to array', () => {
