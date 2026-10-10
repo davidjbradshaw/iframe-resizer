@@ -8,6 +8,7 @@ import stripCode from 'rollup-plugin-strip-code'
 import versionInjector from 'rollup-plugin-version-injector'
 
 import pkg from '../../package.json' with { type: 'json' }
+import createBanner from './banner.js'
 import createPkgJson from './pkgJson.js'
 
 const { BETA, DEBUG, TEST } = process.env
@@ -19,6 +20,20 @@ const vi = {
 }
 
 export const injectVersion = () => [versionInjector(vi)]
+
+const BANNER_FORMATS = { es: 'esm', cjs: 'cjs', umd: 'umd', iife: 'iife' }
+
+// Adds the banner after minification, labelled with each output's format
+export const formatBanner = (file) => ({
+  name: 'iframe-resizer:banner',
+  outputOptions: (options) => ({
+    ...options,
+    postBanner: createBanner(
+      file,
+      BANNER_FORMATS[options.format] ?? options.format,
+    ),
+  }),
+})
 
 // Removes the child's test hooks. Runs first, while the TEST CODE comments
 // are still in the source; the TypeScript transform does not keep them.
@@ -106,6 +121,7 @@ export const createPluginsProd = (
       verbose: true,
     }),
     stripTestCode(),
+    formatBanner(file),
     ...pluginsBase(stripLog, skipVersionInjector)(),
   ]
 }
@@ -150,4 +166,4 @@ export const typescriptChild = () =>
 export { default as createBanner } from './banner.js'
 
 // Terser config for Vite lib builds — minifies and adds banner
-export { default as terserWithBanner } from './terser.js'
+export { default as terserMinify } from './terser.js'

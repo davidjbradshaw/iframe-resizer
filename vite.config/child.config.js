@@ -1,7 +1,7 @@
 import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 
-import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
+import { createPluginsProd, terserMinify } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -16,7 +16,7 @@ export default defineConfig({
     rollupOptions: {
       external: [/^@iframe-resizer\/common/, 'auto-console-group'],
     },
-    ...terserWithBanner('child'),
+    ...terserMinify(),
     sourcemap: process.env.BETA === '1',
   },
   plugins: [

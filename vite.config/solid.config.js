@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import solid from 'vite-plugin-solid'
 
-import { createPluginsProd, terserWithBanner } from './shared/plugins.js'
+import { createPluginsProd, terserMinify } from './shared/plugins.js'
 
 export default defineConfig({
   build: {
@@ -21,7 +21,7 @@ export default defineConfig({
         'auto-console-group',
       ],
     },
-    ...terserWithBanner('solid'),
+    ...terserMinify(),
     sourcemap: process.env.BETA === '1',
   },
   plugins: [solid(), ...createPluginsProd('solid')],

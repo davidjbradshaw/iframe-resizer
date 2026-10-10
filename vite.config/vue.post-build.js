@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { build } from 'vite'
 
-import { terserWithBanner } from './shared/plugins.js'
+import { formatBanner, terserMinify } from './shared/plugins.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -15,7 +15,7 @@ export default async function vuePostBuild() {
   // Build UMD separately (only vue is external, everything else bundled in)
   await build({
     configFile: false,
-    plugins: [vue()],
+    plugins: [vue(), formatBanner('vue')],
     resolve: {
       alias: {
         '@iframe-resizer/common/consts': './packages/common/consts.ts',
@@ -38,7 +38,7 @@ export default async function vuePostBuild() {
           globals: { vue: 'Vue' },
         },
       },
-      ...terserWithBanner('vue'),
+      ...terserMinify(),
       sourcemap: process.env.BETA === '1',
     },
   })

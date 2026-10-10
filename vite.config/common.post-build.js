@@ -1,11 +1,11 @@
 import { build } from 'vite'
 
-import { injectVersion, terserWithBanner } from './shared/plugins.js'
+import { formatBanner, injectVersion, terserMinify } from './shared/plugins.js'
 
 export default async function () {
   await build({
     configFile: false,
-    plugins: [...injectVersion()],
+    plugins: [formatBanner('common'), ...injectVersion()],
     build: {
       lib: {
         entry: './packages/common/consts.ts',
@@ -14,7 +14,7 @@ export default async function () {
       },
       outDir: 'dist/common',
       emptyOutDir: false,
-      ...terserWithBanner('common'),
+      ...terserMinify(),
       sourcemap: process.env.BETA === '1',
     },
   })
