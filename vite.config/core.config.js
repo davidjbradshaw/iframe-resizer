@@ -30,7 +30,6 @@ export default defineConfig({
         'packages/core/index.ts',
         'packages/core/types.ts',
       ],
-      outDir: 'dist/core',
       entryRoot: 'packages/core',
     }),
     ...createPluginsProd('core'),

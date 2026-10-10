@@ -23,7 +23,6 @@ export default defineConfig({
       tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/astro/**/*.ts'],
       exclude: ['packages/astro/**/*.test.*'],
-      outDir: 'dist/astro',
       entryRoot: 'packages/astro',
     }),
     ...createPluginsProd('astro', { skipVersionInjector: true }),

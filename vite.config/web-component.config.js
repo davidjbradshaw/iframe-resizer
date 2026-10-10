@@ -30,7 +30,6 @@ export default defineConfig({
         'packages/web-component/**/*.test.*',
         'packages/web-component/iife.ts',
       ],
-      outDir: 'dist/web-component',
       entryRoot: 'packages/web-component',
     }),
     ...createPluginsProd('web-component'),

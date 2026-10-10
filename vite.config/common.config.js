@@ -23,7 +23,6 @@ export default defineConfig({
       tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/common/**/*.ts'],
       exclude: ['packages/common/**/*.test.*'],
-      outDir: 'dist/common',
       entryRoot: 'packages/common',
     }),
     ...createPluginsProd('common'),
