@@ -1,14 +1,31 @@
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
+import { compile, preprocess } from 'svelte/compiler'
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
+
+// Svelte 4 cannot compile TypeScript without a preprocessor, so the
+// component ships as JavaScript; its types are in the .d.ts files
+async function toJavaScript(filename) {
+  const { code } = await preprocess(
+    readFileSync(filename, 'utf8'),
+    vitePreprocess({ script: true, style: false }),
+    { filename },
+  )
+  const js = code.replace(/<script lang="ts">\s*/, '<script>\n')
+
+  compile(js, { filename }) // Throws if any TypeScript is left
+  return js
+}
 
 export default async function sveltePostBuild() {
   const root = join(__dirname, '..')
 
   try {
-    // Copy Svelte component file
+    // Publish the Svelte component file, as JavaScript
     const svelteSource = join(root, 'packages/svelte/IframeResizer.svelte')
     const svelteDest = join(root, 'dist/svelte/IframeResizer.svelte')
 
@@ -16,7 +33,7 @@ export default async function sveltePostBuild() {
       throw new Error(`Source file not found: ${svelteSource}`)
     }
 
-    copyFileSync(svelteSource, svelteDest)
+    writeFileSync(svelteDest, await toJavaScript(svelteSource))
 
     // Write index.d.ts that re-exports the component and the core types,
     // matching packages/svelte/index.ts
