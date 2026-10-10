@@ -66,6 +66,35 @@ test.describe('Horizontal', () => {
     await expectIframeToFitContent(page)
   })
 
+  test('an overflowing element narrower than the page does not shrink it below the page', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.overflow-width.html')
+    const child = page.frameLocator('iframe')
+
+    // The absolutely positioned box is the only overflowed element, so it is
+    // what the width is measured from
+    await expect(child.locator('#abs')).toHaveAttribute(
+      'data-iframe-overflowed',
+    )
+
+    // The page's own right edge: <body> wraps its content, plus the margin
+    // and padding around it
+    const pageRight = await child.locator('body').evaluate((body) => {
+      const html = document.documentElement
+      const px = (el, property) =>
+        parseFloat(getComputedStyle(el).getPropertyValue(property))
+      return (
+        body.getBoundingClientRect().right +
+        px(body, 'margin-right') +
+        px(html, 'padding-right')
+      )
+    })
+    await expect
+      .poll(async () => parseFloat(await iframeWidth(page)))
+      .toBeCloseTo(pageRight, 1)
+  })
+
   test('with horizontal-block, fluid content does not shrink the iframe on every resize', async ({
     page,
   }) => {
