@@ -28,7 +28,6 @@ export default defineConfig({
       tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/angular/**/*.ts'],
       exclude: ['packages/angular/**/*.test.*'],
-      outDir: 'dist/angular',
       entryRoot: 'packages/angular',
     }),
     ...createPluginsProd('angular'),

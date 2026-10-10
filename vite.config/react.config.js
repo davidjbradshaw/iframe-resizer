@@ -33,7 +33,6 @@ export default defineConfig({
         'packages/react/**/*.tsx',
       ],
       exclude: ['packages/react/**/*.test.*'],
-      outDir: 'dist/react',
       entryRoot: 'packages/react',
     }),
     ...createPluginsProd('react'),

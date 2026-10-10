@@ -39,7 +39,6 @@ export default defineConfig({
     dts({
       tsconfigPath: './tsconfig.build.json',
       include: ['packages/parent/esm.ts', 'packages/parent/factory.ts'],
-      outDir: 'dist/parent',
       entryRoot: 'packages/parent',
       // The entry is esm.ts, so write a types entry that re-exports it,
       // named after the bundle (index.esm.d.ts) and renamed to index.d.ts

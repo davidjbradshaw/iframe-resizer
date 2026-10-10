@@ -28,7 +28,6 @@ export default defineConfig({
       tsconfigPath: './tsconfig.build.json',
       include: ['packages/global.d.ts', 'packages/alpine/**/*.ts'],
       exclude: ['packages/alpine/**/*.test.*'],
-      outDir: 'dist/alpine',
       entryRoot: 'packages/alpine',
     }),
     ...createPluginsProd('alpine'),
