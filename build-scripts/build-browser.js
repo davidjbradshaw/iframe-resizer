@@ -6,6 +6,7 @@ import clear from 'rollup-plugin-clear'
 import {
   createBanner,
   pluginsBase,
+  stripTestCode,
   typescriptChild,
   typescriptParent,
   typescriptWebComponent,
@@ -60,7 +61,12 @@ const configs = [
             }),
           ],
     },
-    plugins: [typescriptChild(), resolve(), ...pluginsBase(stripLog)()],
+    plugins: [
+      stripTestCode(),
+      typescriptChild(),
+      resolve(),
+      ...pluginsBase(stripLog)(),
+    ],
   },
   {
     input: 'packages/web-component/iife.ts',
