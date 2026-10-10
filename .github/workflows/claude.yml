@@ -19,7 +19,7 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: write       # Allow Claude to make commits if needed
+      contents: read        # Read the repo; Claude comments, it does not push
       pull-requests: write  # Allow Claude to comment on PRs
       issues: write         # Allow Claude to comment on issues
       id-token: write
