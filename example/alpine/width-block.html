@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://iframe-resizer.com/favicon.ico" />
+    <title>Alpine.js Example</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      nav {
+        margin-bottom: 16px;
+      }
+
+      nav a {
+        margin-right: 16px;
+      }
+
+      .frames {
+        display: flex;
+        gap: 2%;
+        align-items: flex-start;
+        margin-top: 16px;
+      }
+
+      .frames iframe {
+        flex: 1;
+        min-width: 0;
+        height: 100vh;
+      }
+
+      /* The width examples size the iframe to its content */
+      .frames.width iframe {
+        flex: none;
+        height: 300px;
+      }
+      .message-data {
+        margin-top: 20px;
+        padding: 16px;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+
+      .message-data h3 {
+        margin: 0 0 8px;
+      }
+
+      .message-data pre {
+        margin: 0;
+        overflow: auto;
+      }
+      pre {
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body data-example="width-block">
+    <div
+      x-data="{
+        show: true,
+        messageData: null,
+        // Each page sets <body data-example>, see index.html, two.html and width-*.html
+        example: document.body.dataset.example ?? 'index',
+        get direction() {
+          return { 'width-inline': 'horizontal-inline', 'width-block': 'horizontal-block' }[this.example]
+        },
+        get title() {
+          return { index: 'one iframe', two: 'two iframes', 'width-inline': 'width (inline)', 'width-block': 'width (block)' }[this.example]
+        },
+        get ids() {
+          return this.example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
+        },
+        get src() {
+          return this.direction
+            ? 'child/frame.width.html?direction=' + this.direction
+            : 'child/frame.content.html'
+        },
+        get iframeOptions() {
+          const self = this
+          return {
+            license: 'GPLv3',
+            log: true,
+            inPageLinks: true,
+            ...(self.direction && { direction: self.direction }),
+            onResized(data) { self.messageData = data },
+            onMessage(data) {
+              self.messageData = data
+              alert('Message from frame ' + data.iframe.id + ': ' + data.message)
+              data.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+            }
+          }
+        }
+      }"
+    >
+      <h2 x-text="'@iframe-resizer/alpine example: ' + title">@iframe-resizer/alpine example</h2>
+      <nav>
+        <a href="index.html">One iframe</a>
+        <a href="two.html">Two iframes</a>
+        <a href="width-inline.html">Width (inline)</a>
+        <a href="width-block.html">Width (block)</a>
+      </nav>
+      <button @click="show = !show" x-text="show ? 'Hide' : 'Show'"></button>
+
+      <template x-if="show">
+        <div class="frames" :class="{ width: direction }">
+          <template x-for="id in ids" :key="id">
+            <iframe x-iframe-resizer="iframeOptions" :id="id" :src="src"></iframe>
+          </template>
+        </div>
+      </template>
+
+      <div class="message-data" x-show="messageData">
+        <h3>Event Data:</h3>
+        <pre x-text="JSON.stringify(messageData, (k, v) => k === 'iframe' ? undefined : v, 2)"></pre>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

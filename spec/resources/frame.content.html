@@ -197,9 +197,9 @@
           }
 
           function callMethod(methodName, val1, val2) {
-            if ('parentIFrame' in window)
-              window.parentIFrame[methodName](val1, val2)
-            else warn('window.parentIFrame methods not enabled.')
+            if ('parentIframe' in window)
+              window.parentIframe[methodName](val1, val2)
+            else warn('window.parentIframe methods not enabled.')
           }
 
           console.info(test)
@@ -225,7 +225,7 @@
 
             case 'size':
               changeContent()
-              callMethod('size')
+              callMethod('resize')
               break
 
             case 'autoResize':
@@ -236,11 +236,11 @@
               break
 
             case 'size100':
-              callMethod('size', 100)
+              callMethod('resize', 100)
               break
 
             case 'size200300':
-              callMethod('size', 200, 300)
+              callMethod('resize', 200, 300)
               break
 
             case 'jsTrigger':
@@ -265,15 +265,8 @@
               break
 
             case 'chkGetId':
-              if ('parentIFrame' in window)
-                callMethod('sendMessage', window.parentIFrame.getId())
-              break
-
-            case 'setHeightCalculationMethod':
-              if ('parentIFrame' in window) {
-                parentIFrame.setHeightCalculationMethod('max')
-                callMethod('size')
-              }
+              if ('parentIframe' in window)
+                callMethod('sendMessage', window.parentIframe.getId())
               break
 
             case 'width':
@@ -284,8 +277,8 @@
               $('p').html('<img src="djb.jpg">')
               break
 
-            case 'getPageInfo':
-              callMethod('getPageInfo', (pageInfo) => {})
+            case 'getParentProps':
+              callMethod('getParentProps', (pageInfo) => {})
               break
 
             default:

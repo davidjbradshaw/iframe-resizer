@@ -1,0 +1,33 @@
+import { build } from 'vite'
+
+import {
+  formatBanner,
+  injectVersion,
+  stripTestCode,
+  terserMinify,
+} from './shared/plugins.js'
+
+export default async function () {
+  await build({
+    configFile: false,
+    plugins: [stripTestCode(), formatBanner('child'), ...injectVersion()],
+    resolve: {
+      alias: {
+        '@iframe-resizer/common/consts': './packages/common/consts.ts',
+        '@iframe-resizer/common': './packages/common/index.ts',
+      },
+    },
+    build: {
+      lib: {
+        entry: './packages/child/index.ts',
+        name: 'iframeResizerChild',
+        formats: ['umd'],
+        fileName: () => 'index.umd.js',
+      },
+      outDir: 'dist/child',
+      emptyOutDir: false,
+      ...terserMinify(),
+      sourcemap: process.env.BETA === '1',
+    },
+  })
+}

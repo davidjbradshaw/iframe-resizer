@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer horizontal e2e</title>
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
+  </head>
+
+  <body>
+    <h2>Horizontal resizing</h2>
+    <p>Child page: <code id="child-name"></code></p>
+
+    <div id="iframeContainer" style="margin: 20px">
+      <iframe scrolling="no" style="width: 400px; height: 200px"></iframe>
+    </div>
+
+    <script type="text/javascript">
+      // ?child=<file> chooses the child page, ?direction=<value> the direction
+      const query = new URLSearchParams(location.search)
+      const child = query.get('child') || 'frame.fluid.html'
+      document.getElementById('child-name').textContent = child
+      document.querySelector('iframe').src = `child/${child}`
+
+      iframeResize({
+        license: 'GPLv3',
+        log: true,
+        direction: query.get('direction') || 'horizontal-inline',
+      })
+    </script>
+  </body>
+</html>

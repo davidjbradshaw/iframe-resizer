@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://iframe-resizer.com/favicon.ico" />
+    <title>Web Component Example</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="../../js-dist/iframe-resizer.web-component.js"></script>
+  </head>
+  <body>
+    <h2>@iframe-resizer/web-component example: one iframe</h2>
+    <nav>
+      <a href="index.html">One iframe</a>
+      <a href="two.html">Two iframes</a>
+      <a href="width-inline.html">Width (inline)</a>
+      <a href="width-block.html">Width (block)</a>
+    </nav>
+
+    <div class="frames">
+      <iframe-resizer
+        license="GPLv3"
+        log
+        inPageLinks
+        id="myIframe"
+        src="child/frame.content.html"
+      ></iframe-resizer>
+    </div>
+
+    <div class="message-data" id="event-display" style="display: none">
+      <h3>Event Data:</h3>
+      <pre id="event-data"></pre>
+    </div>
+
+    <script>
+      const display = document.getElementById('event-display')
+      const pre = document.getElementById('event-data')
+
+      function showData(data) {
+        display.style.display = ''
+        pre.textContent = JSON.stringify(data, (k, v) => k === 'iframe' ? undefined : v, 2)
+      }
+
+      // The events bubble, so one listener covers every iframe
+      document.addEventListener('iframe-resizer:resized', (e) => showData(e.detail))
+
+      document.addEventListener('iframe-resizer:message', (e) => {
+        showData(e.detail)
+        alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)
+        e.detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
+      })
+    </script>
+  </body>
+</html>

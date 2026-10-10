@@ -1,0 +1,50 @@
+#root {
+  padding: 2rem;
+}
+
+nav {
+  margin-bottom: 16px;
+}
+
+nav a {
+  margin-right: 16px;
+}
+
+.frames {
+  display: flex;
+  gap: 2%;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.frames iframe {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+}
+
+/* The width examples size the iframe to its content */
+.frames.width iframe {
+  flex: none;
+  height: 300px;
+}
+
+.message-data {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.message-data h3 {
+  margin: 0 0 8px;
+}
+
+.message-data pre {
+  margin: 0;
+  overflow: auto;
+}
+
+pre {
+  overflow: auto;
+}

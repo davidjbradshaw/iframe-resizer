@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer checkOrigin test</title>
+    <style>
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="myIframe"></iframe>
+
+    <script src="../../js/iframe-resizer.parent.js"></script>
+    <script>
+      // ?checkOrigin=false turns the check off and a comma-separated list sets
+      // the allowed origins; it is on by default. ?src= sets the child page.
+      const params = new URLSearchParams(window.location.search)
+      const checkOrigin = params.get('checkOrigin')
+
+      document.getElementById('myIframe').src =
+        params.get('src') ?? 'child/frame.content.html'
+
+      window.readyCount = 0
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          checkOrigin:
+            checkOrigin === null
+              ? true
+              : checkOrigin === 'false'
+                ? false
+                : checkOrigin.split(','),
+          onReady: () => {
+            window.readyCount += 1
+          },
+        },
+        '#myIframe',
+      )
+    </script>
+  </body>
+</html>
