@@ -19,15 +19,18 @@ This is a manual monorepo (no npm workspaces). Packages under `packages/` do not
 | `react` | React component wrapping core |
 | `vue` | Vue 3 SFC + plugin wrapping core |
 | `angular` | Angular standalone directive wrapping core |
+| `svelte` | Svelte component wrapping core |
+| `solid` | SolidJS component wrapping core |
+| `alpine` | Alpine.js directive wrapping core |
+| `astro` | Astro component wrapping core |
+| `web-component` | `<iframe-resizer>` custom element wrapping core |
 | `jquery` | jQuery plugin wrapping core |
-| `legacy` | v4 backward-compat bundle (parent + child + jquery) |
-| `smoke` | Import smoke tests for all modules |
 
-**Dependency flow:** `common` ← `core` ← `parent`/`react`/`vue`/`angular`/`jquery`; `common` ← `child` (independent of core). Parent and child communicate only via `postMessage`.
+**Dependency flow:** `common` ← `core` ← `parent` and every framework package; `common` ← `child` (independent of core). Parent and child communicate only via `postMessage`.
 
 ## Build System
 
-Despite the filename, `vite.config.js` is a **Rollup** configuration driven programmatically by `vite-build.js`.
+`build-scripts/build-all.js` builds every package from its `vite.config/<package>.config.js` (Vite with Rolldown; jQuery uses Rollup), runs any `vite.config/<package>.post-build.js` (UMD builds and type files), then builds the browser bundles (`build-scripts/build-browser.js`) and, for test builds, the Karma bundles (`build-scripts/build-tests.js`). Shared plugins live in `vite.config/shared/`.
 
 ```bash
 npm run build:dev      # DEBUG=1, all packages to dist/ and js/, logging kept, with a build number
@@ -39,9 +42,9 @@ npm run build:beta     # Beta build with sourcemaps
 - `dist/` — npm-publishable packages (ESM/CJS/UMD per package)
 - `js/` — Browser IIFE bundles
 - `test-js/` — UMD builds for Karma integration tests
-- `js-dist/` — Static copy of js/ for e2e tests
+- `js-dist/` — Copy of js/ from the last full release, used by the public examples; only updated by `npm run publish`
 
-**Build environment flags:** `DEBUG=1`, `BETA=1`, `TEST=1`, `WATCH=1`
+**Build environment flags:** `DEBUG=1`, `BETA=1`, `TEST=1`. Dev and test builds add a build number to the version (`6.0.0+build.<number>`), so a parent and child from different builds report a version mismatch.
 
 Production builds strip debug logging (`@rollup/plugin-strip`) and test code (markers: `/* TEST CODE START */` / `/* TEST CODE END */`).
 
@@ -53,19 +56,19 @@ Three test tiers:
 npm test              # Full suite: eslint + build + e2e + integration + unit
 npm run test:unit     # Vitest only (fast, use during development)
 npm run test:int      # Karma/Jasmine integration tests (needs test-js/ built)
-npm run test:e2e      # Playwright e2e (needs js-dist/ and http-server)
+npm run test:e2e      # Playwright e2e (needs js/ and dist/ built)
 npm run test:types    # Compile the published types in dist as a strict consumer would
 ```
 
-**Unit tests (Vitest):** Co-located as `*.test.js` next to source in `packages/`. Environment: jsdom. Coverage: V8.
+**Unit tests (Vitest):** Co-located as `*.test.ts` / `*.test.js` next to source in `packages/`. Environment: jsdom. Coverage: V8.
 ```bash
-npx vitest run packages/core/router.test.js     # Run single test file
+npx vitest run packages/core/router.test.ts     # Run single test file
 npm run test:watch                               # Watch mode
 ```
 
 **Integration tests (Karma + Jasmine):** In `spec/`. Uses RequireJS + ChromeHeadless. Tests real postMessage between parent/child.
 
-**E2E tests (Playwright):** In `e2e/`. Serves `example/html/` pages on localhost:8080.
+**E2E tests (Playwright):** Specs in `e2e/tests/*.spec.js`, pages in `e2e/fixtures/` (framework apps built from `e2e/apps/`). The repo is served on localhost:8080 (`npm run serve:e2e`). Tests fail on any `console.error` in the page.
 
 ### Test conventions
 - Use extensionless imports in tests

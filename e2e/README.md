@@ -54,7 +54,7 @@ npm run test:e2e:debug
 ### Run a specific test file
 
 ```bash
-npx playwright test e2e/iframe-resize.spec.js
+npx playwright test e2e/tests/parent.spec.js
 ```
 
 ### Run tests in a specific browser
@@ -67,31 +67,33 @@ npx playwright test --project=webkit
 
 ## Test Structure
 
-Tests are organized by functionality:
+Specs live in `e2e/tests/` and load pages from `e2e/fixtures/`, served from the repo root on localhost:8080.
 
-- `iframe-resize.spec.js` - Basic iframe resizing functionality
-  - Loading parent page with iframe
-  - Iframe resizing on content changes
-  - Messaging between parent and iframe
-  - Multiple iframe handling
-  - jQuery integration
-  - Cross-origin handling
-  - React and Vue examples
+- **One spec per package**: `parent`, `jquery`, `web-component`, `react`, `vue`, `angular`, `svelte`, `solid`, `alpine` and `astro`. Each runs the shared suites in `e2e/tests/shared/` (`parent-events.js`, `parent-methods.js` and `child-methods.js`) against its own page. The framework pages are built from `e2e/apps/<framework>` by `build-scripts/build-e2e-examples.sh`.
+- **Behaviour specs**:
+  - `animation.spec.js` checks the iframe matches its content on every paint.
+  - `horizontal.spec.js` and `width-modes.spec.js` cover the width directions.
+  - `check-origin.spec.js` covers `checkOrigin` and lists of target origins.
+  - `v5-child.spec.js` runs the last v5 child against the current parent.
+
+The pages load the local builds, `js/` for browser bundles and `dist/` for the framework apps, so build first (`npm run build:dev`).
 
 ## Writing New Tests
 
-To add a new test, create a new `.spec.js` file in the `e2e` directory:
+Add a `.spec.js` file to `e2e/tests/`, and its page to `e2e/fixtures/`. Import `test` and `expect` from `./shared/test`, not from `@playwright/test`. The shared `test` fails if anything is logged with `console.error`, or an uncaught error reaches the page. To expect a specific error, list it with `test.use({ allowedErrors: [/pattern/] })`.
 
 ```javascript
-import { test, expect } from '@playwright/test'
+import { expect, test } from './shared/test'
 
-test.describe('My Feature', () => {
-  test('should do something', async ({ page }) => {
-    await page.goto('/example/html/index.html')
+test.describe('My feature', () => {
+  test('does something', async ({ page }) => {
+    await page.goto('/e2e/fixtures/index.html')
     // Your test code here
   })
 })
 ```
+
+Add the spec's name to the matrix in `.github/workflows/playwright.yml` so it runs in CI.
 
 ## Configuration
 
