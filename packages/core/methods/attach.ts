@@ -29,13 +29,13 @@ export default function attachMethods(id: string): void {
       sendMessage(message: any) {
         // undefined, a function or a symbol encode to nothing, which the
         // child cannot parse, so the caller is told here instead
-        const json = JSON.stringify(message)
-        if (json === undefined)
+        const serialized = JSON.stringify(message)
+        if (serialized === undefined)
           throw new TypeError(
             `iframe.iframeResizer.sendMessage(message) message must be a value JSON can encode, not ${typeof message}`,
           )
 
-        trigger(MESSAGE, `${MESSAGE}:${json}`, id)
+        trigger(MESSAGE, `${MESSAGE}:${serialized}`, id)
       },
     }
   }

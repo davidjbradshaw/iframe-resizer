@@ -13,11 +13,11 @@ export default function (msg: any, targetOrigin?: string): void {
 
   // undefined, a function or a symbol encode to nothing, which the parent
   // cannot parse, so the caller is told here instead
-  const json = JSON.stringify(msg)
-  if (json === undefined)
+  const serialized = JSON.stringify(msg)
+  if (serialized === undefined)
     throw new TypeError(
       `parentIframe.sendMessage(msg) msg must be a value JSON can encode, not ${typeof msg}`,
     )
 
-  sendMessage(0, 0, MESSAGE, json, targetOrigin)
+  sendMessage(0, 0, MESSAGE, serialized, targetOrigin)
 }
