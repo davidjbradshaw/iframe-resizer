@@ -66,6 +66,40 @@ describe('core/setup/update', () => {
     expect(meetsMinChildVersion).not.toHaveBeenCalled()
   })
 
+  it('throws on an invalid direction and leaves the settings as they were', () => {
+    vi.mocked(meetsMinChildVersion)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'horizontal-inline',
+      sizeWidth: true,
+      sizeHeight: false,
+      tolerance: 0,
+    }
+
+    expect(() =>
+      updateIframe({ id: 'edge1' } as HTMLIFrameElement, {
+        direction: 'horizonal',
+        tolerance: 5,
+      }),
+    ).toThrow('Direction value of "horizonal" is not valid')
+
+    expect(settings.edge1).toMatchObject({
+      direction: 'horizontal-inline',
+      sizeWidth: true,
+      sizeHeight: false,
+      tolerance: 0,
+    })
+    expect(trigger).not.toHaveBeenCalled()
+
+    // The bad value was not kept, so the next update goes through
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { tolerance: 2 })
+    expect(settings.edge1.tolerance).toBe(2)
+    expect(trigger).toHaveBeenCalledTimes(1)
+  })
+
   it('merges options into settings and dispatches UPDATE message', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
     settings.edge1 = {

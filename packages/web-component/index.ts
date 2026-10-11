@@ -84,8 +84,8 @@ function parseAttrValue(
   if (value === 'true') return true
   if (value === 'false') return false
   if (value === '' && BOOLEAN_ATTRS.has(name)) return true
-  if (ARRAY_ATTRS.has(name) && /\s/.test(value))
-    return value.trim().split(/\s+/)
+  // Core only reads a list, so even a single value is passed as one
+  if (ARRAY_ATTRS.has(name)) return value.trim().split(/\s+/)
 
   return value
 }

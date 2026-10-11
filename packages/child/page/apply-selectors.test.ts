@@ -34,6 +34,29 @@ describe('child/page/apply-selectors', () => {
     expect(Object.hasOwn(el2.dataset, 'iframeIgnore')).toBe(true)
   })
 
+  it('drops an invalid selector with advice, so applying it does not throw', () => {
+    vi.spyOn(childConsole, 'log').mockImplementation(() => {})
+    const advise = vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
+    const el = document.createElement('div')
+    el.className = 'still-applied'
+    document.body.append(el)
+
+    const run = applySelectors({
+      resizeSelector: '#main >',
+      ignoreSelector: '.still-applied',
+    })
+
+    expect(advise).toHaveBeenCalledTimes(1)
+    expect(advise.mock.calls[0][0]).toContain('resizeSelector')
+    expect(advise.mock.calls[0][0]).toContain('#main >')
+
+    // Applied on every mutation, so it must not throw, or advise again
+    expect(() => run()).not.toThrow()
+    expect(() => run()).not.toThrow()
+    expect(advise).toHaveBeenCalledTimes(1)
+    expect(Object.hasOwn(el.dataset, 'iframeIgnore')).toBe(true)
+  })
+
   it('applySelector returns early when selector is empty', () => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
     const logCallsBefore = childConsole.log.mock.calls.length
