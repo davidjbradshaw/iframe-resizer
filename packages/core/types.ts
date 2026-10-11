@@ -42,7 +42,7 @@ export interface IFrameObject {
   /** Move the page in the iframe to the specified anchor. */
   moveToAnchor(anchor: string): void
   /** Send a message to the iframe. */
-  sendMessage(message: any, targetOrigin?: string): void
+  sendMessage(message: any): void
 }
 
 // --- Extended HTMLIFrameElement ---

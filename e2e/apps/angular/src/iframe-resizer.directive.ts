@@ -133,8 +133,8 @@ export class IframeResizerDirective {
     this.resizer?.moveToAnchor(anchor)
   }
 
-  public sendMessage(message: any, targetOrigin?: string): void {
-    this.resizer?.sendMessage(message, targetOrigin)
+  public sendMessage(message: any): void {
+    this.resizer?.sendMessage(message)
   }
 }
 

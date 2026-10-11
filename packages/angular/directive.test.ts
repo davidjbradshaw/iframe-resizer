@@ -114,9 +114,9 @@ describe('Angular IframeResizerDirective', () => {
 
   test('sendMessage method calls iframe resizer sendMessage', () => {
     directive.ngAfterViewInit()
-    directive.sendMessage({ hello: 'world' }, '*')
+    directive.sendMessage({ hello: 'world' })
 
-    expect(sendMessage).toHaveBeenCalledWith({ hello: 'world' }, '*')
+    expect(sendMessage).toHaveBeenCalledWith({ hello: 'world' })
   })
 
   test('onReady callback emits EventEmitter', async () => {

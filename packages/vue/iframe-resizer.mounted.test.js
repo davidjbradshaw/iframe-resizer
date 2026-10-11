@@ -53,7 +53,7 @@ describe('Vue iframe-resizer mounted lifecycle', () => {
     vm.sendMessage('m')
 
     expect(mockResizer.moveToAnchor).toHaveBeenCalledWith('a')
-    expect(mockResizer.sendMessage).toHaveBeenCalledWith('m', undefined)
+    expect(mockResizer.sendMessage).toHaveBeenCalledWith('m')
   })
 
   it('renders an iframe element', async () => {

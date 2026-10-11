@@ -112,8 +112,8 @@ describe('Svelte IframeResizer lifecycle', () => {
       props: { license: 'GPLv3' },
     })
     flushSync()
-    component.sendMessage('hello', '*')
-    expect(mockResizer.sendMessage).toHaveBeenCalledWith('hello', '*')
+    component.sendMessage('hello')
+    expect(mockResizer.sendMessage).toHaveBeenCalledWith('hello')
     unmount(component)
   })
 

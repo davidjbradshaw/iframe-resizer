@@ -143,8 +143,7 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
       setRef({
         getElement: () => iframeEl,
         moveToAnchor: (anchor) => resizer?.moveToAnchor(anchor),
-        sendMessage: (message, targetOrigin) =>
-          resizer?.sendMessage(message, targetOrigin),
+        sendMessage: (message) => resizer?.sendMessage(message),
       })
     }
 
