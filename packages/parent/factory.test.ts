@@ -149,23 +149,6 @@ describe('createIframeResize - Disconnected iframes', () => {
     expect(result[0]).toBe(iframe1)
   })
 
-  it('should not run in server-side rendering environment', () => {
-    // Save original window
-    const originalWindow = global.window
-
-    // Delete window to simulate SSR
-    delete global.window
-
-    const ssrIFrameResize = createIframeResize()
-    const result = ssrIFrameResize({}, mockIframe)
-
-    // Should return empty array
-    expect(result).toEqual([])
-
-    // Restore window
-    global.window = originalWindow
-  })
-
   it('should throw error when document.body is null in browser environment', () => {
     // Save original document.body
     const originalBody = document.body

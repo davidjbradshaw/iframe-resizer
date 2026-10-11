@@ -12,16 +12,15 @@ const { getElementPosition, scrollToLink } = await import('./scroll')
 const { log } = await import('../console')
 
 describe('core/page/in-page-link', () => {
+  // window.top can't be redefined, so move self away from it instead
   const simulateIframe = (): void => {
-    Object.defineProperty(window, 'top', { value: {}, configurable: true })
-    Object.defineProperty(window, 'self', { value: window, configurable: true })
+    Object.defineProperty(window, 'self', { value: {}, configurable: true })
   }
 
   beforeEach(() => {
     vi.clearAllMocks()
     document.body.innerHTML = ''
     delete window.parentIframe
-    Object.defineProperty(window, 'top', { value: window, configurable: true })
     Object.defineProperty(window, 'self', { value: window, configurable: true })
   })
 
