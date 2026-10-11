@@ -25,6 +25,9 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    // Loads jsdom once per worker, not once per file. Tests then run on
+    // jsdom's own window, where top, location and window can't be redefined
+    pool: 'vmThreads',
     setupFiles: ['./vitest.setup.js'],
     globals: true,
     include: ['packages/**/*.test.{js,ts,jsx,tsx}'],

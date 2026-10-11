@@ -107,14 +107,9 @@ describe('core/console', () => {
 
   test('getMyId returns nested parent label when window.top !== window.self', () => {
     const iframeId = 'nested-f1'
-    const originalTop = window.top
     const originalSelf = window.self
 
-    // Mock nested iframe scenario
-    Object.defineProperty(window, 'top', {
-      configurable: true,
-      value: { name: 'top window' },
-    })
+    // Mock nested iframe scenario; window.top can't be redefined
     Object.defineProperty(window, 'self', {
       configurable: true,
       value: { name: 'self window' },
@@ -127,11 +122,7 @@ describe('core/console', () => {
     // The console group label should include "nested parent"
     expect(settings[iframeId].console.log).toHaveBeenCalledWith('test message')
 
-    // Restore original values
-    Object.defineProperty(window, 'top', {
-      configurable: true,
-      value: originalTop,
-    })
+    // Restore original value
     Object.defineProperty(window, 'self', {
       configurable: true,
       value: originalSelf,
