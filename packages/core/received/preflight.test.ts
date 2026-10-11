@@ -166,9 +166,12 @@ describe('core/received/preflight', () => {
     }
 
     expect(preflight.isMessageFromIframe(messageData, forgedEvent)).toBe(false)
-    expect(warn).toHaveBeenCalledWith(
+    // Only logged, as nested pages see these from the page above them
+    expect(warn).not.toHaveBeenCalled()
+    expect(log).toHaveBeenCalledWith(
       'i11',
       expect.stringContaining('not from the iframe'),
+      expect.anything(),
     )
   })
 

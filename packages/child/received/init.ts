@@ -13,7 +13,8 @@ type InitEvent =
   | { data: string; sameOrigin: true; source?: undefined; origin?: undefined }
 
 // Only a window above this page can set it up. On Google Apps Script that
-// is the host two levels up, not the direct parent.
+// is the host two levels up, not the direct parent. Reading parent and
+// comparing windows are both allowed across origins.
 function isAncestor(source: MessageEventSource | null | undefined): boolean {
   let win: Window = window
 
