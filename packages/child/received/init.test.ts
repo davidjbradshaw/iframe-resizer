@@ -3,13 +3,25 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // Mock dependencies with factory style to satisfy Vitest v4
 vi.mock('../console', () => ({
   log: vi.fn(),
+  warn: vi.fn(),
 }))
 
 const mockInit = vi.fn()
 vi.mock('../init', () => ({ default: mockInit }))
 
-const mockState = { target: null, origin: null, firstRun: true, initLock: true }
+const mockState = {
+  target: null,
+  origin: null,
+  firstRun: true,
+  initLock: true,
+  testHarness: false,
+}
 vi.mock('../values/state', () => ({ default: mockState }))
+
+// The page sits two iframes down: window -> parentWindow -> topWindow
+const topWindow: any = {}
+topWindow.parent = topWindow
+const parentWindow = { parent: topWindow }
 
 describe('child/received/init', () => {
   beforeEach(() => {
@@ -19,22 +31,28 @@ describe('child/received/init', () => {
     mockState.origin = null
     mockState.firstRun = true
     mockState.initLock = true
+    Object.defineProperty(window, 'parent', {
+      configurable: true,
+      value: parentWindow,
+    })
+    Object.defineProperty(document, 'readyState', {
+      value: 'complete',
+      configurable: true,
+    })
   })
 
   it('ignores init when document is loading', async () => {
     const { log } = await import('../console')
     const mod = await import('./init')
 
-    const original = Object.getOwnPropertyDescriptor(document, 'readyState')
     Object.defineProperty(document, 'readyState', {
       value: 'loading',
       configurable: true,
     })
 
-    mod.default({ data: 'prefix:any', source: 'src', origin: 'ori' })
+    mod.default({ data: 'prefix:any', source: parentWindow, origin: 'ori' })
     expect(log).toHaveBeenCalledWith('Page not ready, ignoring init message')
-
-    if (original) Object.defineProperty(document, 'readyState', original)
+    expect(mockInit).not.toHaveBeenCalled()
   })
 
   it('processes init data when ready and updates state', async () => {
@@ -42,16 +60,10 @@ describe('child/received/init', () => {
       await import('@iframe-resizer/common/consts')
     const mod = await import('./init')
 
-    const original = Object.getOwnPropertyDescriptor(document, 'readyState')
-    Object.defineProperty(document, 'readyState', {
-      value: 'complete',
-      configurable: true,
-    })
-
     const payload = `${'X'.repeat(MESSAGE_ID_LENGTH)}a${SEPARATOR}b${SEPARATOR}c`
     const event = {
       data: payload,
-      source: { id: 1 },
+      source: parentWindow,
       origin: 'https://example.test',
     }
 
@@ -67,7 +79,47 @@ describe('child/received/init', () => {
     // Execute timeout callback immediately for assertion
     timerSpy.mock.calls.at(-1)[0]()
     expect(mockState.initLock).toBe(false)
+  })
 
-    if (original) Object.defineProperty(document, 'readyState', original)
+  it('accepts init from a window above the parent, as on Google Apps Script', async () => {
+    const mod = await import('./init')
+    const event = { data: 'prefix:a:b', source: topWindow, origin: 'ori' }
+
+    mod.default(event)
+
+    expect(mockState.target).toBe(topWindow)
+    expect(mockInit).toHaveBeenCalled()
+  })
+
+  it('ignores init from a window that is not above the page', async () => {
+    const { warn } = await import('../console')
+    const mod = await import('./init')
+    const event = { data: 'prefix:a:b', source: {}, origin: 'ori' }
+
+    mod.default(event)
+
+    expect(mockState.target).toBeNull()
+    expect(mockState.origin).toBeNull()
+    expect(mockInit).not.toHaveBeenCalled()
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('init'))
+  })
+
+  it('accepts init passed directly by a same-origin parent', async () => {
+    const mod = await import('./init')
+
+    mod.default({ data: 'prefix:a:b', sameOrigin: true })
+
+    expect(mockInit).toHaveBeenCalled()
+  })
+
+  it('ignores a second init, so the target cannot be changed', async () => {
+    const mod = await import('./init')
+    mockState.firstRun = false
+    mockState.target = parentWindow
+
+    mod.default({ data: 'prefix:a:b', source: topWindow, origin: 'ori' })
+
+    expect(mockState.target).toBe(parentWindow)
+    expect(mockInit).not.toHaveBeenCalled()
   })
 })

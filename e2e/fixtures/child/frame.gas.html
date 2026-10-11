@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>E2E GAS Child</title>
+    <!-- As on Google Apps Script: tell the host page where this page is, as
+         it is two levels down, then load the child -->
+    <script>
+      top.postMessage('gasFrame', '*')
+    </script>
+    <script type="text/javascript" src="/js/iframe-resizer.child.js"></script>
+    <style>
+      body { margin: 8px; font-family: sans-serif; }
+      #block { height: 300px; background: #dcefdc; }
+    </style>
+  </head>
+  <body>
+    <div id="block">Content two iframes down</div>
+  </body>
+</html>
