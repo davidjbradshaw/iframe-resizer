@@ -2,6 +2,9 @@ const main = 'index.cjs.js'
 const module = 'index.esm.js'
 const types = 'index.d.ts'
 
+// The Angular Package Format path, shared with the Angular build config
+export const ANGULAR_ESM = 'fesm2022/iframe-resizer-angular.mjs'
+
 const customConfig = (file) => {
   const entryPoints = {
     main,
@@ -24,7 +27,7 @@ const customConfig = (file) => {
     case 'angular':
       return {
         main,
-        module: 'fesm2022/iframe-resizer-angular.mjs',
+        module: ANGULAR_ESM,
         types: 'directive.d.ts',
         peerDependencies: {
           '@angular/core':

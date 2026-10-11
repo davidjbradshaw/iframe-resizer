@@ -3,6 +3,7 @@ import { copyFileSync, existsSync } from 'node:fs'
 
 import { defineConfig } from 'vite'
 
+import { ANGULAR_ESM } from './shared/pkgJson.js'
 import { createPluginsProd } from './shared/plugins.js'
 
 const TOOLCHAIN = 'build-scripts/angular'
@@ -37,11 +38,8 @@ export default defineConfig({
     lib: {
       entry: `./${NGC_OUT}/directive.js`,
       formats: ['es', 'cjs'],
-      // The Angular Package Format path: Analog only links files under fesm20*
-      fileName: (format) =>
-        format === 'es'
-          ? 'fesm2022/iframe-resizer-angular.mjs'
-          : 'index.cjs.js',
+      // Analog's build only links files under fesm20*
+      fileName: (format) => (format === 'es' ? ANGULAR_ESM : 'index.cjs.js'),
     },
     outDir: 'dist/angular',
     emptyOutDir: false,
