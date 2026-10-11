@@ -1,5 +1,6 @@
 import type { IFrameVersion } from '@iframe-resizer/common'
-import { MESSAGE, VERSION } from '@iframe-resizer/common/consts'
+import { typeAssert } from '@iframe-resizer/common'
+import { MESSAGE, STRING, VERSION } from '@iframe-resizer/common/consts'
 
 import trigger from '../send/trigger'
 import settings from '../values/settings'
@@ -26,7 +27,14 @@ export default function attachMethods(id: string): void {
 
       moveToAnchor: moveToAnchor.bind(null, id),
 
-      sendMessage(message: any) {
+      sendMessage(message: any, targetOrigin?: string) {
+        if (targetOrigin !== undefined)
+          typeAssert(
+            targetOrigin,
+            STRING,
+            'iframe.iframeResizer.sendMessage(message, targetOrigin) targetOrigin',
+          )
+
         // undefined, a function or a symbol encode to nothing, which the
         // child cannot parse, so the caller is told here instead
         const serialized = JSON.stringify(message)
@@ -35,7 +43,7 @@ export default function attachMethods(id: string): void {
             `iframe.iframeResizer.sendMessage(message) message must be a value JSON can encode, not ${typeof message}`,
           )
 
-        trigger(MESSAGE, `${MESSAGE}:${serialized}`, id)
+        trigger(MESSAGE, `${MESSAGE}:${serialized}`, id, targetOrigin)
       },
     }
   }

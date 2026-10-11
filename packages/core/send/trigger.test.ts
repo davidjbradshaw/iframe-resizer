@@ -67,6 +67,44 @@ describe('core/send/trigger', () => {
     )
   })
 
+  test('posts only to the targetOrigin given for this message', () => {
+    settings.d = {
+      iframe: { contentWindow: {}, id: 'd' },
+      postMessageTarget: { postMessage: vi.fn() },
+      sameOrigin: false,
+      targetOrigin: ['https://x.com', 'https://y.com'],
+    }
+
+    trigger('message', 'message:"hi"', 'd', 'https://y.com')
+
+    expect(settings.d.postMessageTarget.postMessage).toHaveBeenCalledTimes(1)
+    expect(settings.d.postMessageTarget.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://y.com',
+    )
+  })
+
+  test('drops a message for another origin on the same-origin route, as postMessage would', () => {
+    const iframeChildListener = vi.fn()
+    settings.e = {
+      iframe: { contentWindow: { iframeChildListener }, id: 'e' },
+      postMessageTarget: { postMessage: vi.fn() },
+      sameOrigin: true,
+      targetOrigin: ['*'],
+    }
+
+    trigger('message', 'message:"hi"', 'e', 'https://other.example')
+
+    expect(iframeChildListener).not.toHaveBeenCalled()
+    expect(settings.e.postMessageTarget.postMessage).not.toHaveBeenCalled()
+
+    trigger('message', 'message:"hi"', 'e', window.location.origin)
+    trigger('message', 'message:"hi"', 'e', '*')
+    trigger('message', 'message:"hi"', 'e', '/')
+
+    expect(iframeChildListener).toHaveBeenCalledTimes(3)
+  })
+
   test('warns when id not found', async () => {
     const s = (await import('../values/settings')).default
     delete s.a.postMessageTarget
