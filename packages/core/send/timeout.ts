@@ -1,14 +1,7 @@
+import { getOrigin } from '@iframe-resizer/common'
 import { OBJECT } from '@iframe-resizer/common/consts'
 
 import { advise, event } from '../console'
-
-export const getOrigin = (url: string): string | null => {
-  try {
-    return new URL(url).origin
-  } catch (error) {
-    return null
-  }
-}
 
 export const allowsScriptsAndOrigin = (sandbox: DOMTokenList): boolean =>
   typeof sandbox === OBJECT &&

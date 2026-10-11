@@ -1,3 +1,4 @@
+import { getOrigin } from '@iframe-resizer/common'
 import {
   INIT_EVENTS,
   MESSAGE_ID,
@@ -7,7 +8,6 @@ import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, info, log, warn } from '../console'
 import settings from '../values/settings'
-import { getOrigin } from './timeout'
 
 export const filterMsg = (msg: string): string =>
   msg
