@@ -8,6 +8,6 @@ for p in angular common core; do
   cp -R ../../../dist/$p node_modules/@iframe-resizer/$p
   node -e '
 const fs=require("fs"),f="node_modules/@iframe-resizer/'$p'/package.json";const j=JSON.parse(fs.readFileSync(f));
-j.type="module"; j.main="index.esm.js"; if(!j.exports) j.exports={".":{types:"./index.d.ts",default:"./index.esm.js"}};
+j.type="module"; j.main=j.module; if(!j.exports) j.exports={".":{types:"./"+j.types,default:"./"+j.module}};
 fs.writeFileSync(f,JSON.stringify(j,null,2))'
 done
