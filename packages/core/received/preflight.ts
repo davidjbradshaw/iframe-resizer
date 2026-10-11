@@ -51,8 +51,8 @@ export function isMessageFromIframe(
 
   if (sameOrigin) return true
 
-  // Logged, not warned: a nested page gets messages from the page above it
-  // that can carry the same id as one of its own iframes
+  // Logged, not warned: an iframe replaced under the same id can still have
+  // messages in flight from its old page, and those are harmless
   if (!isFromTarget(id, event.source ?? null)) {
     log(
       id,
