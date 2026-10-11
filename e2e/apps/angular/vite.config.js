@@ -7,6 +7,12 @@ export default defineConfig({
   build: {
     outDir: '../../fixtures/angular',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        'confirm-47': 'confirm-47.html',
+      },
+    },
   },
   resolve: {
     preserveSymlinks: true,
