@@ -33,3 +33,4 @@ e2e/fixtures/web-component/
 # Build output of the review confirmation tests
 e2e/confirm/angular-ssr/out/
 e2e/fixtures/confirm/16.2-solid-early-update/
+e2e/confirm/angular-ssr/src/directive.ts

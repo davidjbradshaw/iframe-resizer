@@ -1,6 +1,7 @@
+import { getOrigin } from '@iframe-resizer/common'
+
 import { error, event } from '../console'
 import settings from '../values/settings'
-import { getOrigin } from './timeout'
 
 // The browser drops messages to a page whose origin is not a target origin
 const isAllowedOrigin = (targetOrigin: string[], origin: string): boolean =>

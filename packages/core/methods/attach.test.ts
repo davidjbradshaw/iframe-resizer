@@ -39,7 +39,37 @@ describe('core/methods/attach', () => {
     expect(moveToAnchor).toHaveBeenCalledWith('if1', 'hash')
 
     api.sendMessage({ a: 1 })
-    expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
+    expect(trigger).toHaveBeenCalledWith(
+      'message',
+      'message:{"a":1}',
+      'if1',
+      undefined,
+    )
+  })
+
+  test('sendMessage passes a targetOrigin on with the message', () => {
+    const iframe = { id: 'if1' }
+    settings.if1 = { iframe }
+
+    attachMethods('if1')
+    iframe.iframeResizer.sendMessage('hi', 'https://a.example')
+
+    expect(trigger).toHaveBeenCalledWith(
+      'message',
+      'message:"hi"',
+      'if1',
+      'https://a.example',
+    )
+  })
+
+  test('sendMessage throws, and sends nothing, for a targetOrigin that is not a string', () => {
+    const iframe = { id: 'if1' }
+    settings.if1 = { iframe }
+
+    attachMethods('if1')
+
+    expect(() => iframe.iframeResizer.sendMessage('hi', 5)).toThrow(TypeError)
+    expect(trigger).not.toHaveBeenCalled()
   })
 
   test.each([
