@@ -166,7 +166,7 @@ describe('core/received/preflight', () => {
     }
 
     expect(preflight.isMessageFromIframe(messageData, forgedEvent)).toBe(false)
-    // Only logged, as nested pages see these from the page above them
+    // Only logged, as a replaced iframe's old page can still be sending
     expect(warn).not.toHaveBeenCalled()
     expect(log).toHaveBeenCalledWith(
       'i11',
