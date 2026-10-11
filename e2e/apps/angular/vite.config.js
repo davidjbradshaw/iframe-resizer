@@ -10,7 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'index.html',
-        'confirm-47': 'confirm-47.html',
+        zone: 'zone.html',
       },
     },
   },
