@@ -16,6 +16,13 @@ describe('child/methods/origin', () => {
     expect(getParentOrigin()).toBe('x')
   })
 
+  it('getParentOrigin returns this page origin when the parent set it up directly', () => {
+    // The same-origin route passes no origin with the init message
+    state.origin = undefined
+
+    expect(getParentOrigin()).toBe(window.location.origin)
+  })
+
   it('setTargetOrigin validates and sets settings.targetOrigin with log', () => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
     setTargetOrigin('https://a.b')

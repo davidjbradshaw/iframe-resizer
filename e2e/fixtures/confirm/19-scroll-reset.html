@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Confirm 19: mutation resets a scrolled iframe</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+  </head>
+
+  <body>
+    <h2>Confirm 19</h2>
+    <p>
+      A fixed-height, scrollable iframe in horizontal-inline mode. The parent
+      sets the width only, so the child is expected to scroll vertically.
+    </p>
+
+    <div style="margin: 20px">
+      <iframe
+        src="/e2e/fixtures/confirm/19-scroll-reset-child.html"
+        style="width: 400px; height: 200px"
+      ></iframe>
+    </div>
+
+    <script type="text/javascript">
+      iframeResize({
+        license: 'GPLv3',
+        log: true,
+        direction: 'horizontal-inline',
+        scrolling: true,
+      })
+    </script>
+  </body>
+</html>

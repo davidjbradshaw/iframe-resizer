@@ -22,26 +22,33 @@ function mergeOptions(
   options: Record<string, any>,
 ): void {
   const { id } = iframe
+  const previous = settings[id]
 
   normalizeLog(options)
 
   settings[id] = {
-    ...settings[id],
+    ...previous,
     ...checkOptions(id, options),
   }
 
-  if (hasMouseEvents(options)) settings[id].mouseEvents = true
-  // mode is derived from the license, which is what callers pass
-  if (hasOwn(options, 'license')) settings[id].mode = setMode(options)
+  try {
+    if (hasMouseEvents(options)) settings[id].mouseEvents = true
+    // mode is derived from the license, which is what callers pass
+    if (hasOwn(options, 'license')) settings[id].mode = setMode(options)
 
-  updateOptionNames(id)
-  setupBodyMargin(id)
-  setDirection(id)
-  setScrolling(iframe)
-  setOffsetSize(id)
-  setTargetOrigin(id)
-  updateConsoleExpand(id)
-  settings[id].syncTitle = checkTitle(id)
+    updateOptionNames(id)
+    setupBodyMargin(id)
+    setDirection(id)
+    setScrolling(iframe)
+    setOffsetSize(id)
+    setTargetOrigin(id)
+    updateConsoleExpand(id)
+    settings[id].syncTitle = checkTitle(id)
+  } catch (error) {
+    // An invalid option, such as direction, leaves the iframe as it was
+    settings[id] = previous
+    throw error
+  }
 }
 
 export default function updateIframe(

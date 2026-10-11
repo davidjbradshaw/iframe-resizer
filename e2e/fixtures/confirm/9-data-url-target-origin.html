@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Confirm 9: data: URL iframe target origin</title>
+    <style>
+      iframe {
+        width: 100%;
+        height: 100px;
+        border: 0;
+      }
+    </style>
+    <script src="/js/iframe-resizer.parent.js"></script>
+  </head>
+  <body>
+    <p>Parent ready: <span id="parent-ready">pending</span></p>
+    <script>
+      // The child page lives entirely in a data: URL, so it has an opaque
+      // origin. It loads the child script from the static server by absolute URL.
+      const childHtml = `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="http://localhost:8080/js/iframe-resizer.child.js"><\/script>
+  </head>
+  <body>
+    <p>Hello from a data: URL child.</p>
+  </body>
+</html>`
+
+      const checkOrigin = !location.search.includes('checkOrigin=false')
+
+      window.events = []
+      window.childReady = false
+
+      const iframe = document.createElement('iframe')
+      iframe.id = 'child'
+      iframe.src = `data:text/html,${encodeURIComponent(childHtml)}`
+      document.body.append(iframe)
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          checkOrigin,
+          warningTimeout: 3000,
+          onReady() {
+            window.childReady = true
+            document.getElementById('parent-ready').textContent = 'ready'
+          },
+          onResized(data) {
+            window.events.push({ type: data.type, height: data.height })
+          },
+        },
+        iframe,
+      )
+    </script>
+  </body>
+</html>

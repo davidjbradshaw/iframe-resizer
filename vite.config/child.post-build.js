@@ -3,6 +3,7 @@ import { build } from 'vite'
 import {
   formatBanner,
   injectVersion,
+  stripLogging,
   stripTestCode,
   terserMinify,
 } from './shared/plugins.js'
@@ -10,7 +11,12 @@ import {
 export default async function () {
   await build({
     configFile: false,
-    plugins: [stripTestCode(), formatBanner('child'), ...injectVersion()],
+    plugins: [
+      stripTestCode(),
+      formatBanner('child'),
+      ...injectVersion(),
+      ...stripLogging(),
+    ],
     resolve: {
       alias: {
         '@iframe-resizer/common/consts': './packages/common/consts.ts',

@@ -1,6 +1,13 @@
 import { describe, expect, test } from 'vitest'
 
-import { esModuleInterop, getElementName, hasOwn, lower, round } from './utils'
+import {
+  esModuleInterop,
+  getElementName,
+  getOrigin,
+  hasOwn,
+  lower,
+  round,
+} from './utils'
 
 describe('utils', () => {
   describe('round', () => {
@@ -108,6 +115,23 @@ describe('utils', () => {
     test('should return module when __esModule is empty string', () => {
       const mockModule = { __esModule: '', default: 'default-export' }
       expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+  })
+
+  describe('getOrigin', () => {
+    test('returns the origin of an absolute URL, dropping any path', () => {
+      expect(getOrigin('https://a.example')).toBe('https://a.example')
+      expect(getOrigin('https://a.example/')).toBe('https://a.example')
+      expect(getOrigin('https://a.example:8080/page.html?x=1')).toBe(
+        'https://a.example:8080',
+      )
+    })
+
+    test('returns null when the value is not an absolute URL', () => {
+      expect(getOrigin('')).toBeNull()
+      expect(getOrigin('*')).toBeNull()
+      expect(getOrigin('/')).toBeNull()
+      expect(getOrigin('not a url')).toBeNull()
     })
   })
 })

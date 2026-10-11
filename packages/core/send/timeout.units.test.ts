@@ -5,27 +5,7 @@ vi.mock('../console', () => ({
   event: vi.fn(),
 }))
 
-const { getOrigin, allowsScriptsAndOrigin } = await import('./timeout')
-
-describe('getOrigin', () => {
-  test('parses origin from a valid URL', () => {
-    expect(getOrigin('https://example.com/path')).toBe('https://example.com')
-  })
-
-  test('parses origin with port', () => {
-    expect(getOrigin('https://example.com:8443/a/b')).toBe(
-      'https://example.com:8443',
-    )
-  })
-
-  test('returns null for an invalid URL', () => {
-    expect(getOrigin('not-a-url')).toBeNull()
-  })
-
-  test('returns null for an empty string', () => {
-    expect(getOrigin('')).toBeNull()
-  })
-})
+const { allowsScriptsAndOrigin } = await import('./timeout')
 
 describe('allowsScriptsAndOrigin', () => {
   test('returns true when sandbox has allow-scripts but not allow-same-origin', () => {

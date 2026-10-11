@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Finding 22: ignored element and width scan</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+  </head>
+
+  <body>
+    <h2>Finding 22</h2>
+
+    <div id="iframeContainer" style="margin: 20px">
+      <iframe
+        scrolling="no"
+        src="/e2e/fixtures/confirm/22-ignored-width-child.html"
+        style="width: 400px; height: 200px"
+      ></iframe>
+    </div>
+
+    <script type="text/javascript">
+      iframeResize({
+        license: 'GPLv3',
+        log: true,
+        direction: 'horizontal-inline',
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Confirm 24: both-direction width with bottom overflow</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+  </head>
+
+  <body>
+    <h2>Finding 24</h2>
+
+    <div id="iframeContainer" style="margin: 20px">
+      <iframe
+        scrolling="no"
+        style="width: 400px; height: 200px"
+        src="24-both-width-overflow-child.html"
+      ></iframe>
+    </div>
+
+    <script type="text/javascript">
+      iframeResize({
+        license: 'GPLv3',
+        log: true,
+        direction: 'both',
+      })
+    </script>
+  </body>
+</html>
