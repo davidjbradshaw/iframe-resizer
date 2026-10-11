@@ -18,7 +18,7 @@
     "build:prod": "time npm run vite:prod",
     "build:test": "time npm run test",
     "eslint": "eslint packages/ build-scripts/ vite.config/ *.js *.cjs *.mjs --ext .js,.jsx,.mjs,.cjs,.ts,.tsx --color",
-    "eslint:fix": "npm run eslint -- --fix",
+    "eslint:fix": "npm run eslint -- --fix && prettier --write --log-level warn \"packages/**/*.vue\"",
     "eslint:sarif": "eslint packages/ build-scripts/ vite.config/ *.js *.cjs *.mjs --ext .js,.jsx,.mjs,.cjs,.ts,.tsx --color --no-error-on-unmatched-pattern --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "publish": "time bin/publish.sh latest",
     "publish:beta": "time bin/publish.sh beta",
