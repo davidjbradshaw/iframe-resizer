@@ -12,6 +12,22 @@ import { advise, log } from '../console'
 import defaults from '../values/defaults'
 import settings from '../values/settings'
 
+const DIRECTIONS = new Set<unknown>([
+  VERTICAL,
+  HORIZONTAL,
+  HORIZONTAL_BLOCK,
+  HORIZONTAL_INLINE,
+  BOTH,
+  NONE,
+])
+
+const invalidDirection = (direction: unknown): TypeError =>
+  new TypeError(`Direction value of "${direction}" is not valid`)
+
+export function checkDirection(direction: unknown): void {
+  if (!DIRECTIONS.has(direction)) throw invalidDirection(direction)
+}
+
 const adviseHorizontal = (id: string): void =>
   advise(
     id,
@@ -55,7 +71,7 @@ export default function setDirection(id: string): void {
       break
 
     default:
-      throw new TypeError(`Direction value of "${direction}" is not valid`)
+      throw invalidDirection(direction)
   }
 
   // The child makes its page as wide as its content, unless block

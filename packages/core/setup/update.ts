@@ -10,7 +10,7 @@ import createOutgoingMessage from '../send/outgoing'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
 import setupBodyMargin from './body-margin'
-import setDirection from './direction'
+import setDirection, { checkDirection } from './direction'
 import hasMouseEvents from './has-mouse-events'
 import normalizeLog from './normalize-log'
 import setScrolling from './scrolling'
@@ -25,9 +25,13 @@ function mergeOptions(
 
   normalizeLog(options)
 
+  // Checked before anything is merged, so a bad value changes nothing
+  const checked = checkOptions(id, options)
+  if (hasOwn(checked, 'direction')) checkDirection(checked.direction)
+
   settings[id] = {
     ...settings[id],
-    ...checkOptions(id, options),
+    ...checked,
   }
 
   if (hasMouseEvents(options)) settings[id].mouseEvents = true
