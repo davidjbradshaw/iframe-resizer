@@ -27,4 +27,18 @@ describe('child/methods/send-message', () => {
 
     expect(sendMessage).toHaveBeenCalledWith(0, 0, MESSAGE, '"x"', undefined)
   })
+
+  test.each([
+    ['undefined', undefined],
+    ['a function', () => {}],
+    ['a symbol', Symbol('x')],
+  ])(
+    'throws, and sends nothing, for %s, which JSON cannot encode',
+    (_, msg) => {
+      vi.mocked(sendMessage).mockClear()
+
+      expect(() => send(msg)).toThrow(TypeError)
+      expect(sendMessage).not.toHaveBeenCalled()
+    },
+  )
 })

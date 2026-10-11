@@ -42,6 +42,23 @@ describe('core/methods/attach', () => {
     expect(trigger).toHaveBeenCalledWith('message', 'message:{"a":1}', 'if1')
   })
 
+  test.each([
+    ['undefined', undefined],
+    ['a function', () => {}],
+    ['a symbol', Symbol('x')],
+  ])(
+    'sendMessage throws, and sends nothing, for %s, which JSON cannot encode',
+    (_, message) => {
+      const iframe = { id: 'if1' }
+      settings.if1 = { iframe }
+
+      attachMethods('if1')
+
+      expect(() => iframe.iframeResizer.sendMessage(message)).toThrow(TypeError)
+      expect(trigger).not.toHaveBeenCalled()
+    },
+  )
+
   test('getVersion returns parent and child versions', () => {
     const iframe = { id: 'if1' }
     settings.if1 = { iframe, childVersion: '1.2.3' }
