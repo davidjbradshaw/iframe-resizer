@@ -14,13 +14,14 @@ function measure(path) {
   }
 }
 
-const isEsm = (file) => file.endsWith('.esm.js')
+const isEsm = (file) => file.endsWith('.esm.js') || file.endsWith('.mjs')
 
-// Where a package ships several formats, only report the ESM build
+// Where a package ships several formats, only report the ESM build. This
+// looks in subfolders, as Angular's ESM build is in fesm2022/
 function listBundles(root, dir) {
   try {
-    const files = readdirSync(join(root, dir)).filter(
-      (file) => file.endsWith('.js') || file.endsWith('.astro'),
+    const files = readdirSync(join(root, dir), { recursive: true }).filter(
+      (file) => /\.(m?js|astro)$/.test(file),
     )
     const bundles = files.some(isEsm) ? files.filter(isEsm) : files
 
