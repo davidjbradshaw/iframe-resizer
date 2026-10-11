@@ -10,7 +10,7 @@ import createOutgoingMessage from '../send/outgoing'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
 import setupBodyMargin from './body-margin'
-import setDirection, { checkDirection } from './direction'
+import setDirection from './direction'
 import hasMouseEvents from './has-mouse-events'
 import normalizeLog from './normalize-log'
 import setScrolling from './scrolling'
@@ -22,30 +22,33 @@ function mergeOptions(
   options: Record<string, any>,
 ): void {
   const { id } = iframe
+  const previous = settings[id]
 
   normalizeLog(options)
 
-  // Checked before anything is merged, so a bad value changes nothing
-  const checked = checkOptions(id, options)
-  if (hasOwn(checked, 'direction')) checkDirection(checked.direction)
-
   settings[id] = {
-    ...settings[id],
-    ...checked,
+    ...previous,
+    ...checkOptions(id, options),
   }
 
-  if (hasMouseEvents(options)) settings[id].mouseEvents = true
-  // mode is derived from the license, which is what callers pass
-  if (hasOwn(options, 'license')) settings[id].mode = setMode(options)
+  try {
+    if (hasMouseEvents(options)) settings[id].mouseEvents = true
+    // mode is derived from the license, which is what callers pass
+    if (hasOwn(options, 'license')) settings[id].mode = setMode(options)
 
-  updateOptionNames(id)
-  setupBodyMargin(id)
-  setDirection(id)
-  setScrolling(iframe)
-  setOffsetSize(id)
-  setTargetOrigin(id)
-  updateConsoleExpand(id)
-  settings[id].syncTitle = checkTitle(id)
+    updateOptionNames(id)
+    setupBodyMargin(id)
+    setDirection(id)
+    setScrolling(iframe)
+    setOffsetSize(id)
+    setTargetOrigin(id)
+    updateConsoleExpand(id)
+    settings[id].syncTitle = checkTitle(id)
+  } catch (error) {
+    // An invalid option, such as direction, leaves the iframe as it was
+    settings[id] = previous
+    throw error
+  }
 }
 
 export default function updateIframe(

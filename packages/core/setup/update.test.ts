@@ -66,7 +66,7 @@ describe('core/setup/update', () => {
     expect(meetsMinChildVersion).not.toHaveBeenCalled()
   })
 
-  it('throws on an invalid direction before changing any settings', () => {
+  it('throws on an invalid direction and leaves the settings as they were', () => {
     vi.mocked(meetsMinChildVersion)
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(true)
