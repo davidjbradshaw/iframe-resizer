@@ -7,7 +7,7 @@ import {
 } from '@angular/platform-browser'
 import { filter, firstValueFrom } from 'rxjs'
 import type { IFrameOptions } from '@iframe-resizer/core'
-import { IframeResizerDirective } from './iframe-resizer.directive'
+import { IframeResizerDirective } from '@iframe-resizer/angular'
 
 // Finding 47: counts application change-detection passes while the child
 // sends resize messages. No directive Output is bound, so a message should
