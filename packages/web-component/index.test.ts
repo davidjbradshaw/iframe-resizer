@@ -297,13 +297,13 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
-  it('passes single checkOrigin value as string', () => {
+  it('passes a single checkOrigin value as a list, as core only reads a list', () => {
     createElement({ license: 'GPLv3', checkOrigin: 'https://a.com' })
     document.body.append(el)
 
     expect(connectResizer).toHaveBeenCalledWith(
       expect.objectContaining({
-        checkOrigin: 'https://a.com',
+        checkOrigin: ['https://a.com'],
       }),
     )
   })
