@@ -21,11 +21,14 @@ import type {
   IFrameOptions,
   IFrameResizedData,
 } from '@iframe-resizer/core'
-import connectResizer from '@iframe-resizer/core'
+import core from '@iframe-resizer/core'
 import acg from 'auto-console-group'
 
 // Deal with UMD not converting default exports to named exports
 const createAutoConsoleGroup = esModuleInterop(acg)
+// A test runner such as Vitest leaves this file to Node, which loads core's
+// CommonJS build and so nests its default export
+const connectResizer = esModuleInterop<typeof core>(core)
 
 // RxJS 7 has Subject.observed; Angular 16 also allows RxJS 6, which has only
 // the observers array
@@ -107,11 +110,15 @@ export class IframeResizerDirective {
 
       onResized: (event: IFrameResizedData) => this.emit(this.onResized, event),
 
+      // Emits once core has scrolled, as change detection before that could
+      // move the page under the position core has already worked out
       onScroll: (event: {
         iframe: IFrameComponent
         top: number
         left: number
-      }) => this.emit(this.onScroll, event),
+      }) => {
+        queueMicrotask(() => this.emit(this.onScroll, event))
+      },
     } as IFrameOptions
   }
 

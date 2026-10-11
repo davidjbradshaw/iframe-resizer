@@ -289,7 +289,7 @@ describe('Angular IframeResizerDirective', () => {
     expect(handler).toHaveBeenCalledWith(eventData)
   })
 
-  test('onScroll callback emits EventEmitter', async () => {
+  test('onScroll callback emits EventEmitter once core has scrolled', async () => {
     const connectResizer = (await import('@iframe-resizer/core')).default
 
     let capturedOptions: any
@@ -307,7 +307,13 @@ describe('Angular IframeResizerDirective', () => {
     directive.ngAfterViewInit()
 
     const scrollData = { iframe: { id: 'test' }, top: 100, left: 0 }
-    capturedOptions.onScroll(scrollData)
+    const result = fromCore(() => capturedOptions.onScroll(scrollData))
+
+    // Core scrolls as soon as the callback returns, so the Output waits
+    expect(result).toBeUndefined()
+    expect(handler).not.toHaveBeenCalled()
+
+    await Promise.resolve()
 
     expect(handler).toHaveBeenCalledWith(scrollData)
   })
