@@ -9,15 +9,15 @@ import { filter, firstValueFrom } from 'rxjs'
 import type { IFrameOptions } from '@iframe-resizer/core'
 import { IframeResizerDirective } from '@iframe-resizer/angular'
 
-// Finding 47: counts application change-detection passes while the child
-// sends resize messages. No directive Output is bound, so a message should
-// not need to run change detection at all.
+// Counts application change-detection passes while the child sends resize
+// messages. No directive Output is bound, so the library's own traffic
+// should not run change detection at all.
 @Component({
-  selector: 'app-confirm-47',
+  selector: 'app-zone',
   standalone: true,
   imports: [IframeResizerDirective],
   template: `
-    <h2>Angular zone confirm 47</h2>
+    <h2>iframe-resizer/angular zone test</h2>
     <iframe
       iframe-resizer
       [options]="options"
@@ -27,7 +27,7 @@ import { IframeResizerDirective } from '@iframe-resizer/angular'
     ></iframe>
   `,
 })
-export class Confirm47Component implements DoCheck {
+export class ZoneComponent implements DoCheck {
   options: IFrameOptions = { license: 'GPLv3' }
 
   childSrc: SafeResourceUrl
@@ -40,7 +40,7 @@ export class Confirm47Component implements DoCheck {
     const origin =
       new URLSearchParams(location.search).get('child') ?? location.origin
     this.childSrc = sanitizer.bypassSecurityTrustResourceUrl(
-      `${origin}/e2e/fixtures/confirm/47-angular-zone-child.html`,
+      `${origin}/e2e/fixtures/child/frame.grow.html`,
     )
     ;(window as any).cdCount = 0
   }
@@ -50,4 +50,4 @@ export class Confirm47Component implements DoCheck {
   }
 }
 
-bootstrapApplication(Confirm47Component)
+bootstrapApplication(ZoneComponent)
