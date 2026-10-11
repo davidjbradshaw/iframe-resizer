@@ -134,6 +134,7 @@
 
   defineExpose({
     moveToAnchor: (anchor: string) => resizer.value?.moveToAnchor(anchor),
-    sendMessage: (msg: any) => resizer.value?.sendMessage(msg),
+    sendMessage: (msg: any, target?: string) =>
+      resizer.value?.sendMessage(msg, target),
   })
 </script>

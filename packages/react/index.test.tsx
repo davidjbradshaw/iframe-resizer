@@ -85,10 +85,10 @@ describe('React IframeResizer component', () => {
 
     // Calls through to underlying iframeResizer methods
     fRef.current.moveToAnchor('section-1')
-    fRef.current.sendMessage({ hello: 'world' })
+    fRef.current.sendMessage({ hello: 'world' }, '*')
 
     expect(moveToAnchor).toHaveBeenCalledWith('section-1')
-    expect(sendMessage).toHaveBeenCalledWith({ hello: 'world' })
+    expect(sendMessage).toHaveBeenCalledWith({ hello: 'world' }, '*')
 
     // Unmount triggers cleanup
     await act(async () => {

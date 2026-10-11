@@ -191,8 +191,8 @@ describe('Solid IframeResizer lifecycle', () => {
       container,
     )
 
-    api.sendMessage('hello')
-    expect(mockResizer.sendMessage).toHaveBeenCalledWith('hello')
+    api.sendMessage('hello', '*')
+    expect(mockResizer.sendMessage).toHaveBeenCalledWith('hello', '*')
   })
 
   it('calls onResized callback', () => {

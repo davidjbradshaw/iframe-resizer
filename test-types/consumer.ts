@@ -69,9 +69,3 @@ export const direction: IFrameDirection = 'sideways'
 export const log: IFrameLogOption = 'loud'
 // @ts-expect-error not a scrolling option
 export const scrolling: IFrameScrollOption = 'sometimes'
-
-// The parent posts to the iframe it was given, so its sendMessage takes no
-// targetOrigin; passing one must be an error
-declare const iframeObject: IFrameObject
-// @ts-expect-error no targetOrigin parameter
-iframeObject.sendMessage('message', 'https://a.example')

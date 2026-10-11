@@ -130,8 +130,8 @@
     resizer?.moveToAnchor(anchor)
   }
 
-  export function sendMessage(msg: any) {
-    resizer?.sendMessage(msg)
+  export function sendMessage(msg: any, target?: string) {
+    resizer?.sendMessage(msg, target)
   }
 </script>
 

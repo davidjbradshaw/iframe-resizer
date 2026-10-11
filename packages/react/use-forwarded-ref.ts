@@ -25,8 +25,8 @@ export default function useForwardedRef(
       getElement: () => iframeRef.current,
       getVersion: () => getIframeResizer().getVersion(),
       moveToAnchor: (anchor: string) => getIframeResizer().moveToAnchor(anchor),
-      sendMessage: (message: any) => {
-        getIframeResizer().sendMessage(message)
+      sendMessage: (message: any, targetOrigin?: string) => {
+        getIframeResizer().sendMessage(message, targetOrigin)
       },
     }
   }, [iframeRef])
