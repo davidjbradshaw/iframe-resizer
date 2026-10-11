@@ -12,13 +12,18 @@ export default [
     plugins: [typescriptParent(), ...createPluginsProd('jquery')],
   },
 
-  // UMD (bundled core)
+  // UMD (bundled core). It imports nothing, so it leaves the package.json
+  // to the ESM/CJS build, which lists the dependencies those files import
   {
     input: 'packages/jquery/plugin.js',
     output: {
       name: 'iframeResize',
       ...output('jquery')('umd'),
     },
-    plugins: [typescriptParent(), ...createPluginsProd('jquery'), resolve()],
+    plugins: [
+      typescriptParent(),
+      ...createPluginsProd('jquery', { skipPackageJson: true }),
+      resolve(),
+    ],
   },
 ]
