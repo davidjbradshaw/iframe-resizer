@@ -14,16 +14,18 @@
     <iframe id="myIframe"></iframe>
     <script src="../../js/iframe-resizer.parent.js"></script>
     <script>
-      // ?src= sets the child page, to load it from another origin
+      // ?src= sets the child page, to load it from another origin, and
+      // ?checkOrigin= the one origin stored for messages to go to
       const params = new URLSearchParams(window.location.search)
       const iframe = document.getElementById('myIframe')
       iframe.src = params.get('src') ?? 'child/frame.messages.html'
+      const checkOrigin = params.get('checkOrigin')
 
       window.ready = false
       iframeResize(
         {
           license: 'GPLv3',
-          checkOrigin: false,
+          checkOrigin: checkOrigin ? [checkOrigin] : false,
           onReady: () => {
             window.ready = true
           },
