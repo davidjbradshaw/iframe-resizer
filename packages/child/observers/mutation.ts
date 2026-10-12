@@ -172,17 +172,18 @@ export default function createMutationObserver(
     const { body } = document
     if (!body || body === target) return
 
-    const pending = observer.takeRecords()
-    const { childNodes: removed } = target
+    // Copies, as a record's node lists don't change once it is made
+    const queued = observer.takeRecords()
+    const removed = [...target.childNodes]
     target = body
     observer.disconnect()
     observer.observe(target, config)
     info('Moved%c MutationObserver%c to new body', HIGHLIGHT, FOREGROUND)
 
     mutationObserved([
-      ...pending,
+      ...queued,
       {
-        addedNodes: body.childNodes,
+        addedNodes: [...body.childNodes],
         removedNodes: removed,
       } as unknown as MutationRecord,
     ])
