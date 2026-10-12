@@ -41,8 +41,9 @@ export function getOffset(getDimension: GetDimension): number {
   return offset
 }
 
+// Once the iframe is sized, the page scroll size includes a positive offset
 export const getAdjustedScroll = (getDimension: GetDimension): number =>
-  getDimension.documentElementScroll() + Math.max(0, getDimension.getOffset())
+  getDimension.documentElementScroll() - Math.max(0, getDimension.getOffset())
 
 export default function getAutoSize(getDimension: GetDimension): number {
   const { hasOverflow, hasTags, triggerLocked } = state

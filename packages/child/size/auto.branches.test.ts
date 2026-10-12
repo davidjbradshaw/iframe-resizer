@@ -184,4 +184,37 @@ describe('child/size/auto branches', () => {
     })
     expect(res).toBe(115) // 100 + 15 offset
   })
+
+  // Content 400px with a 50px offset: once sized, the page scrolls to 450px
+  const sizedWithOffset = {
+    ...base,
+    boundingClientRect: () => 400,
+    documentElementScroll: () => 450,
+    getOffset: () => 50,
+  }
+
+  it('counts a positive offset once when the size is unchanged', async () => {
+    state.firstRun = false
+    expect(auto(sizedWithOffset)).toBe(450)
+
+    state.triggerLocked = true
+    expect(auto(sizedWithOffset)).toBe(450)
+  })
+
+  it('counts a positive offset once when the page is hidden', async () => {
+    state.firstRun = false
+    const res = auto({ ...sizedWithOffset, boundingClientRect: () => 0 })
+    expect(res).toBe(450)
+  })
+
+  it('ignores a negative offset in the scroll size', async () => {
+    state.firstRun = false
+    const res = auto({
+      ...base,
+      boundingClientRect: () => 0,
+      documentElementScroll: () => 400,
+      getOffset: () => -50,
+    })
+    expect(res).toBe(350)
+  })
 })
