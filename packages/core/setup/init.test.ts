@@ -3,14 +3,14 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 vi.useFakeTimers()
 
 vi.mock('../../common/listeners', () => ({ addEventListener: vi.fn() }))
-vi.mock('../console', () => ({ event: vi.fn(), info: vi.fn() }))
+vi.mock('../console', () => ({ event: vi.fn(), info: vi.fn(), warn: vi.fn() }))
 vi.mock('../methods/reset', () => ({ default: vi.fn() }))
 vi.mock('../send/timeout', () => ({ default: vi.fn() }))
 vi.mock('../send/trigger', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({ default: {} }))
 
 const { addEventListener } = await import('../../common/listeners')
-const { event: consoleEvent, info } = await import('../console')
+const { event: consoleEvent, info, warn } = await import('../console')
 const resetIframe = (await import('../methods/reset')).default
 const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
@@ -104,6 +104,62 @@ describe('core/setup/init', () => {
     // Since we're running timers, INIT path runs, and the condition checks eventType === INIT
     // So warnOnNoResponse should NOT be called
     expect(warnOnNoResponse.mock.calls.length).toBe(warnCallsBefore)
+  })
+
+  test('takes the remote host from a src set after bind when the iframe loads', () => {
+    const iframe = { loading: 'eager', src: '', srcdoc: '' }
+    settings.if7 = { iframe, checkOrigin: true, firstRun: true }
+    init('if7', 'msg')
+    vi.runAllTimers()
+
+    expect(settings.if7.remoteHost).toBeUndefined()
+
+    const onloadHandler = addEventListener.mock.calls.find(
+      (call) => call[0] === iframe && call[1] === 'load',
+    )[2]
+    iframe.src = 'https://later.example/page.html'
+    onloadHandler()
+    vi.runAllTimers()
+
+    expect(settings.if7.remoteHost).toBe('https://later.example')
+    expect(settings.if7.targetOrigin).toEqual(['https://later.example'])
+    expect(trigger).toHaveBeenCalledWith(ONLOAD, 'msg', 'if7')
+  })
+
+  test('takes the remote host from the current src when the child says it is ready', () => {
+    const iframe = { loading: 'eager', src: 'https://first.example/a.html' }
+    settings.if8 = {
+      iframe,
+      checkOrigin: true,
+      firstRun: true,
+      remoteHost: 'https://first.example',
+      targetOrigin: ['https://first.example'],
+    }
+    init('if8', 'msg')
+    vi.runAllTimers()
+
+    iframe.src = 'https://second.example/b.html'
+    settings.if8.initChild()
+
+    expect(settings.if8.remoteHost).toBe('https://second.example')
+    expect(settings.if8.targetOrigin).toEqual(['https://second.example'])
+    expect(trigger).toHaveBeenLastCalledWith(INIT_FROM_IFRAME, 'msg', 'if8')
+  })
+
+  test('does not repeat the empty checkOrigin warning when the src is unchanged', () => {
+    settings.if9 = {
+      iframe: { loading: 'eager', src: 'https://same.example/a.html' },
+      checkOrigin: [],
+      firstRun: true,
+      remoteHost: 'https://same.example',
+      targetOrigin: [],
+    }
+    init('if9', 'msg')
+    vi.runAllTimers()
+    settings.if9.initChild()
+
+    expect(warn).not.toHaveBeenCalled()
+    expect(settings.if9.targetOrigin).toEqual([])
   })
 
   test('handles iframe removed before load event gracefully', () => {

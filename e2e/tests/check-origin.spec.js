@@ -22,6 +22,11 @@ const navigateIframe = (page) =>
     document.getElementById('myIframe').contentWindow.location.href = url
   }, OTHER_PAGE)
 
+const setIframeSrc = (page) =>
+  page.evaluate((url) => {
+    document.getElementById('myIframe').src = url
+  }, OTHER_PAGE)
+
 const waitForOriginError = (page) =>
   page.waitForEvent(
     'console',
@@ -44,6 +49,21 @@ test.describe('checkOrigin', () => {
 
       expect((await originError).text()).toContain(OTHER_ORIGIN)
       expect(await page.evaluate(() => window.readyCount)).toBe(1)
+    })
+  })
+
+  // The allowed origin comes from the src the iframe has when it loads,
+  // not the one it had when it was bound
+  test.describe('iframe bound before it has a src', () => {
+    test('connects to a page from another origin set as the src later', async ({
+      page,
+    }) => {
+      await page.goto(parentPage({ src: '' }))
+
+      await setIframeSrc(page)
+
+      // The shared fixture fails the test if any error was logged
+      await page.waitForFunction(() => window.readyCount === 1)
     })
   })
 

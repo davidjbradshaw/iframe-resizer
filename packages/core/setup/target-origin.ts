@@ -7,6 +7,13 @@ export const getTargetOrigin = (remoteHost: string): string =>
     ? '*'
     : remoteHost
 
+// The origin the iframe's src points at, which is the only one allowed
+// to message the parent when checkOrigin is true
+export function setRemoteHost(id: string): void {
+  const { iframe } = settings[id]
+  settings[id].remoteHost = iframe.src.split('/').slice(0, 3).join('/')
+}
+
 export function setTargetOrigin(id: string): void {
   const { checkOrigin, remoteHost } = settings[id]
 

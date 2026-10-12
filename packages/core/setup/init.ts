@@ -14,6 +14,7 @@ import resetIframe from '../methods/reset'
 import warnOnNoResponse from '../send/timeout'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
+import { setRemoteHost, setTargetOrigin } from './target-origin'
 
 const AFTER_EVENT_STACK = 1
 const isLazy = (iframe: HTMLIFrameElement): boolean => iframe.loading === LAZY
@@ -41,6 +42,13 @@ function addLoadListener(
     setTimeout(initChild, AFTER_EVENT_STACK)
   addEventListener(iframe, LOAD, onload)
   settings[id].onLoadListener = onload
+}
+
+// The src can be set, or changed, after the iframe was bound
+function refreshRemoteHost(id: string): void {
+  const { remoteHost } = settings[id]
+  setRemoteHost(id)
+  if (settings[id].remoteHost !== remoteHost) setTargetOrigin(id)
 }
 
 const noContent = (iframe: HTMLIFrameElement): boolean => {
@@ -74,6 +82,7 @@ export default function init(id: string, message: string): void {
 
     if (firstRun) settings[id].sameOrigin = true
 
+    refreshRemoteHost(id)
     trigger(eventType, message, id)
     if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 

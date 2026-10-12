@@ -13,6 +13,7 @@ vi.mock('../values/settings', () => ({ default: {} }))
 vi.mock('./direction', () => ({ default: vi.fn() }))
 vi.mock('./target-origin', () => ({
   getPostMessageTarget: vi.fn(),
+  setRemoteHost: vi.fn(),
   setTargetOrigin: vi.fn(),
 }))
 vi.mock('./update-option-names', () => ({ default: vi.fn() }))
@@ -21,7 +22,7 @@ const checkWarningTimeout = (await import('../checks/warning-timeout')).default
 const setOffsetSize = (await import('../send/offset')).default
 const settings = (await import('../values/settings')).default
 const setDirection = (await import('./direction')).default
-const { getPostMessageTarget, setTargetOrigin } =
+const { getPostMessageTarget, setRemoteHost, setTargetOrigin } =
   await import('./target-origin')
 const updateOptionNames = (await import('./update-option-names')).default
 const processOptions = (await import('./process-options')).default
@@ -37,7 +38,6 @@ describe('core/setup/process-options', () => {
     processOptions(iframe, options)
 
     expect(settings.if1.iframe).toBe(iframe)
-    expect(settings.if1.remoteHost).toBe('https://a')
     expect(settings.if1.def).toBe(1)
     expect(settings.if1.parentId).toBe('pid')
     expect(settings.if1.mouseEvents).toBe(true)
@@ -49,6 +49,7 @@ describe('core/setup/process-options', () => {
     expect(setOffsetSize).toHaveBeenCalledWith('if1')
     expect(checkWarningTimeout).toHaveBeenCalledWith('if1')
     expect(getPostMessageTarget).toHaveBeenCalledWith(iframe)
+    expect(setRemoteHost).toHaveBeenCalledWith('if1')
     expect(setTargetOrigin).toHaveBeenCalledWith('if1')
   })
 
