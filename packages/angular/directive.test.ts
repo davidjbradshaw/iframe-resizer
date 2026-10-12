@@ -87,7 +87,11 @@ describe('Angular IframeResizerDirective', () => {
 
     // Create directive instance
     zone = createZone()
-    directive = new FreshDirective(mockElementRef, zone as unknown as NgZone)
+    directive = new FreshDirective(
+      mockElementRef,
+      zone as unknown as NgZone,
+      'browser',
+    )
   })
 
   // Mocks connectResizer to record the options it gets, and whether it and
@@ -462,6 +466,7 @@ describe('Angular IframeResizerDirective', () => {
     const directiveNoId = new FreshDirective(
       elementRefNoId,
       zone as unknown as NgZone,
+      'browser',
     )
 
     directiveNoId.ngAfterViewInit()
@@ -485,6 +490,24 @@ describe('Angular IframeResizerDirective', () => {
       [false, false],
       [false, false],
     ])
+  })
+
+  test('does not start when rendering on the server', async () => {
+    const calls = await mockConnect()
+    const { IframeResizerDirective: FreshDirective } =
+      await import('./directive')
+    const onServer = new FreshDirective(
+      mockElementRef,
+      zone as unknown as NgZone,
+      'server',
+    )
+
+    onServer.ngAfterViewInit()
+    onServer.ngOnChanges({ options: {} } as any)
+    onServer.ngOnDestroy()
+
+    expect(calls).toHaveLength(0)
+    expect(onServer.iframeResizer).toBeUndefined()
   })
 
   test('parent methods run outside the Angular zone', () => {
