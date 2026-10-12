@@ -9,6 +9,7 @@ import setupIframe from './setup'
 import setupLogging from './setup/logging'
 import updateIframe from './setup/update'
 import type { IFrameComponent, IFrameObject, IFrameOptions } from './types'
+import getBoundId from './values/bound-id'
 
 export type * from './types'
 export {
@@ -26,7 +27,8 @@ export default function connectResizer(
   checkManualLogging(options)
 
   return (iframe: HTMLIFrameElement) => {
-    const id = ensureHasId(iframe, options)
+    const id =
+      LABEL in iframe ? getBoundId(iframe) : ensureHasId(iframe, options)
 
     if (LABEL in iframe) {
       errorBoundary(id, updateIframe)(iframe, options)
