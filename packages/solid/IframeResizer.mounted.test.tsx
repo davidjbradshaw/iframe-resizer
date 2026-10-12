@@ -148,6 +148,47 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(iframe.style.height).toBe('800px')
   })
 
+  it('keeps the size set by iframe-resizer when a string style changes', () => {
+    const [border, setBorder] = createSignal(1)
+    const css = (): string => `border: ${border()}px solid red; width: 50%`
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={css()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setBorder(2)
+
+    expect(iframe.style.borderTopWidth).toBe('2px')
+    expect(iframe.style.width).toBe('50%')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('keeps the size set by iframe-resizer when the style switches type', () => {
+    const [style, setStyle] = createSignal<any>('width: 50%; color: red')
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={style()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setStyle({ width: '60%' })
+
+    expect(iframe.style.width).toBe('60%')
+    expect(iframe.style.color).toBe('')
+    expect(iframe.style.height).toBe('800px')
+
+    setStyle('width: 70% !important')
+
+    expect(iframe.style.width).toBe('70%')
+    expect(iframe.style.getPropertyPriority('width')).toBe('important')
+    expect(iframe.style.height).toBe('800px')
+  })
+
   it('renders an iframe element', () => {
     dispose = render(
       () => <IframeResizer id="test-frame" license="GPLv3" />,
