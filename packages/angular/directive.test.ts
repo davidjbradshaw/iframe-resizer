@@ -504,6 +504,19 @@ describe('Angular IframeResizerDirective', () => {
     ])
   })
 
+  test('sets up and ends its console group outside the Angular zone', () => {
+    const inAngular: boolean[] = []
+    mockGroupEvent.mockImplementationOnce(() => inAngular.push(zone.inAngular))
+    mockGroupEndAutoGroup.mockImplementationOnce(() =>
+      inAngular.push(zone.inAngular),
+    )
+
+    directive.ngAfterViewInit()
+    directive.ngOnDestroy()
+
+    expect(inAngular).toEqual([false, false])
+  })
+
   test('parent methods run outside the Angular zone', () => {
     const inAngular: boolean[] = []
     moveToAnchor.mockImplementationOnce(() => inAngular.push(zone.inAngular))

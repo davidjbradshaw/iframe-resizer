@@ -7,6 +7,9 @@ export default defineConfig({
   build: {
     outDir: '../../fixtures/angular',
     emptyOutDir: true,
+    // With three pages, Vite puts its preload polyfill in their shared chunk,
+    // which then loads before zone.js; zone.js has to load first
+    modulePreload: { polyfill: false },
     rollupOptions: {
       input: {
         main: 'index.html',
