@@ -50,6 +50,19 @@ describe('child/read/from-parent', () => {
     expect(out.maxContentWidth).toBe(true)
   })
 
+  test('restores the colons escaped by the parent in the body styles', () => {
+    const data = []
+    data[7] = '0 10px'
+    data[9] = 'url(https%3A//cdn.example/bg.png)'
+    data[10] = 'calc(10px%3A5px)'
+
+    const out = readFromParent(data)
+
+    expect(out.bodyMarginStr).toBe('0 10px')
+    expect(out.bodyBackground).toBe('url(https://cdn.example/bg.png)')
+    expect(out.bodyPadding).toBe('calc(10px:5px)')
+  })
+
   test('handles undefined values gracefully', () => {
     const data = []
     data[0] = 'test-id'
@@ -63,6 +76,7 @@ describe('child/read/from-parent', () => {
     expect(out.logging).toBeUndefined()
     expect(out.tolerance).toBeUndefined()
     expect(out.mode).toBeUndefined()
+    expect(out.bodyBackground).toBeUndefined()
     // An older parent does not send it
     expect(out.maxContentWidth).toBeUndefined()
   })

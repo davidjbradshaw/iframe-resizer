@@ -5,7 +5,7 @@ vi.mock('../values/settings', () => ({
   default: {
     abc: {
       autoResize: true,
-      bodyBackground: '#fff',
+      bodyBackground: 'url(https://cdn.example/bg.png)',
       bodyMargin: 8,
       bodyPadding: '0',
       heightCalculationMethod: 'auto',
@@ -42,6 +42,9 @@ describe('core/send/outgoing', () => {
     expect(parts[6]).toBe('true') // autoResize
     expect(parts[7]).toBe('8') // bodyMargin
     expect(parts[8]).toBe('auto') // heightCalculationMethod
+    // A colon in a body style is escaped, so it does not shift the fields
+    expect(parts[9]).toBe('url(https%3A//cdn.example/bg.png)') // bodyBackground
+    expect(parts[10]).toBe('0') // bodyPadding
     expect(parts[11]).toBe('0') // tolerance
     expect(parts[12]).toBe('true') // inPageLinks
     expect(parts[14]).toBe('scroll') // widthCalculationMethod

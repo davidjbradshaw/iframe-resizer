@@ -1,3 +1,5 @@
+import { unescapeField } from '@iframe-resizer/common'
+
 const strBool = (str: string): boolean => str === 'true'
 
 const castDefined =
@@ -7,6 +9,7 @@ const castDefined =
 
 const getBoolean = castDefined(strBool)
 const getNumber = castDefined(Number)
+const getText = castDefined(unescapeField)
 
 export default (data: string[]): Record<string, any> => ({
   parentId: data[0],
@@ -15,10 +18,10 @@ export default (data: string[]): Record<string, any> => ({
   logging: getBoolean(data[3]),
   // data[4] no longer used (was intervalTimer)
   autoResize: getBoolean(data[6]),
-  bodyMarginStr: data[7],
+  bodyMarginStr: getText(data[7]),
   // data[8] no longer used (was heightCalcMode)
-  bodyBackground: data[9],
-  bodyPadding: data[10],
+  bodyBackground: getText(data[9]),
+  bodyPadding: getText(data[10]),
   tolerance: getNumber(data[11]),
   inPageLinks: getBoolean(data[12]),
   // data[13] no longer used (was resizeFrom)
