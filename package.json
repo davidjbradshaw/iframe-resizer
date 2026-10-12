@@ -180,5 +180,8 @@
   "allowScripts": {
     "fsevents@2.3.3": true,
     "es5-ext@0.10.64": true
+  },
+  "overrides": {
+    "@babel/plugin-transform-runtime": "^7.29.0"
   }
 }
