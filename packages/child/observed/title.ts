@@ -19,7 +19,7 @@ export default function titleChanged(): void {
 
   log(`Title: %c${currentTitle}`, HIGHLIGHT)
 
-  // A parent before v5 reads an unknown message as a size of 0
+  // v1 to v3 parents read an unknown message as a size of 0
   if (currentTitle && !isLegacyParent(settings.version))
     sendMessage(0, 0, TITLE, currentTitle)
 }
