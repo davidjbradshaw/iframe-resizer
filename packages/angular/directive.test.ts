@@ -509,9 +509,10 @@ describe('Angular IframeResizerDirective', () => {
     let attempts = 0
     connectResizer.mockImplementation(() => (iframe: any) => {
       attempts += 1
-      // core's error boundary returns undefined, as for an invalid option
-      if (attempts === 1) return
-      iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+      // The first fails, as core's error boundary does on an invalid option
+      if (attempts > 1) {
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+      }
       return iframe.iframeResizer
     })
 
