@@ -13,14 +13,20 @@ import settings from '../values/settings'
 import state from '../values/state'
 import { getAllElements } from './all'
 
-export function getSelectedElements(): Element[] | NodeListOf<Element> {
+export function getSelectedElements(
+  side: string,
+): Element[] | NodeListOf<Element> {
   const { hasOverflow, hasTags, overflowedNodeSet, taggedElements } = state
+
+  // The overflow observer (observed/overflow.ts) watches one edge, so its
+  // set only narrows the search on that side
+  const overflowEdge = settings.calculateHeight ? HEIGHT_EDGE : WIDTH_EDGE
 
   // Width resizing may need to check all elements; the overflow set has
   // already had the ignored ones removed
   return hasTags
     ? taggedElements
-    : hasOverflow
+    : hasOverflow && side === overflowEdge
       ? Array.from(overflowedNodeSet as Iterable<Element>)
       : Array.from(
           filterIgnoredElements(getAllElements(document.documentElement)),
@@ -84,7 +90,7 @@ export default function getMaxElement(side: string): number {
   const { logging } = settings
   const { hasTags } = state
 
-  const targetElements = getSelectedElements()
+  const targetElements = getSelectedElements(side)
   const { maxEl, maxVal } = findMaxElement(targetElements, side)
 
   info(`${Side} position calculated from:`, maxEl)
