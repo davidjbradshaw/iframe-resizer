@@ -12,7 +12,9 @@ import type { IFrameVersion as CommonVersion } from '@iframe-resizer/common'
 import type {
   IFrameDirection,
   IFrameLogOption,
+  IFrameMouseData,
   IFrameOptions,
+  IFrameScrollData,
   IFrameScrollOption,
 } from '@iframe-resizer/core'
 import type iframeResize from '@iframe-resizer/parent'
@@ -70,6 +72,15 @@ export const direction: IFrameDirection = 'sideways'
 export const log: IFrameLogOption = 'loud'
 // @ts-expect-error not a scrolling option
 export const scrolling: IFrameScrollOption = 'sometimes'
+
+// The React component's onScroll and mouse callbacks get iframe-resizer
+// data, not React's DOM events, so typed handlers must be accepted
+export const reactCallbacks: ReactProps = {
+  license: 'GPLv3',
+  onScroll: (data: IFrameScrollData) => data.top > 0,
+  onMouseEnter: (data: IFrameMouseData) => console.log(data.iframe.id),
+  onMouseLeave: (data) => console.log(data.iframe.id),
+}
 
 // The Vue and Svelte types only offer the options the components take, so
 // these stop being errors if they advertise every core option again
