@@ -42,6 +42,8 @@ const hasSubscribers = <T>(output: EventEmitter<T>): boolean =>
 export class IframeResizerDirective {
   private resizer?: IFrameObject
 
+  private viewReady = false
+
   private consoleGroup = createAutoConsoleGroup()
 
   @Output() onReady = new EventEmitter<IFrameComponent>()
@@ -159,16 +161,17 @@ export class IframeResizerDirective {
 
     if (this.debug) this.consoleGroup.log('ngAfterViewInit')
 
+    this.viewReady = true
     this.resizer = this.connect()
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Re-bind when @Input options change. Skip the first call: the binding
-    // hasn't been established yet at that point — ngAfterViewInit handles it.
-    if (!this.resizer) return
-    if (!changes.options) return
+    // Re-bind when @Input options change. Skip the first call: the view isn't
+    // ready, and ngAfterViewInit connects. Not tested on this.resizer, as a
+    // first connect that fails, such as on an invalid option, leaves it unset
+    if (!this.viewReady || !changes.options) return
     if (this.debug) this.consoleGroup.log('ngOnChanges: options updated')
-    this.connect()
+    this.resizer = this.connect() ?? this.resizer
   }
 
   ngOnDestroy(): void {
