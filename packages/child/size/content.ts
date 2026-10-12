@@ -6,6 +6,8 @@ import {
   NO_CHANGE,
   OVERFLOW_OBSERVER,
   PARENT_RESIZE_REQUEST,
+  RESET,
+  RESET_PAGE,
   RESIZE_OBSERVER,
   SET_OFFSET_SIZE,
   SIZE_CHANGE_DETECTED,
@@ -47,12 +49,14 @@ export default function getContentSize(
 
   switch (updateEvent) {
     // These adopt the measured size even within tolerance, so an offset
-    // change smaller than the tolerance still applies
+    // change smaller than the tolerance still applies, and a reset always sends
     case INIT:
     case ENABLE:
     case SIZE_CHANGE_DETECTED:
     case MANUAL_RESIZE_REQUEST:
     case PARENT_RESIZE_REQUEST:
+    case RESET:
+    case RESET_PAGE:
     case SET_OFFSET_SIZE:
       state.height = newHeight
       state.width = newWidth

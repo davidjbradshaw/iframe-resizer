@@ -79,3 +79,22 @@ test.describe('Parent: changing the id of a bound iframe', () => {
       .toContain(`ReferenceError: The id of a bound iframe cannot be changed, from "${boundId}" to "renamed"`)
   })
 })
+
+test.describe('Parent reset', () => {
+  test('parentIframe.reset() keeps the size onBeforeResize allows', async ({
+    page,
+  }) => {
+    await page.goto('/e2e/fixtures/reset.html')
+    await page.waitForFunction(() => window.ready)
+
+    const iframeHeight = () =>
+      page.evaluate(() => document.getElementById('resetIframe').offsetHeight)
+    await expect.poll(iframeHeight).toBe(500)
+
+    const child = page.frame({ url: /frame\.reset\.html$/ })
+    await child.evaluate(() => window.parentIframe.reset())
+    await page.waitForTimeout(300)
+
+    expect(await iframeHeight()).toBe(500)
+  })
+})

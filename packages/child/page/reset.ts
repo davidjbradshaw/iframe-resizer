@@ -3,7 +3,7 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import { debug, log } from '../console'
 import sendMessage from '../send/message'
-import { getHeight, getWidth } from '../size'
+import getContentSize from '../size/content'
 import settings from '../values/settings'
 import state from '../values/state'
 
@@ -23,12 +23,9 @@ function lockTrigger(): void {
 }
 
 export function triggerReset(triggerEvent: string): void {
-  const { heightCalcMode, widthCalcMode } = settings
-  const height = getHeight[heightCalcMode]()
-  const width = getWidth[widthCalcMode]()
-
-  log(`Reset trigger event: %c${triggerEvent}`, HIGHLIGHT)
-  sendMessage(height, width, triggerEvent)
+  // Measured like any other size, which a reset always stores
+  getContentSize(triggerEvent, `Reset trigger event: ${triggerEvent}`)
+  sendMessage(state.height, state.width, triggerEvent)
 }
 
 export function resetIframe(triggerEventDesc: string): void {
