@@ -116,8 +116,9 @@ export class IframeResizerElement extends HTMLBase {
     return this.resizerOptions
   }
 
-  set options(val: Partial<IFrameOptions>) {
-    this.resizerOptions = val
+  // A framework sets undefined for an unset binding, so treat that as none
+  set options(val: Partial<IFrameOptions> | null | undefined) {
+    this.resizerOptions = val ?? {}
     this.rebind()
   }
 
