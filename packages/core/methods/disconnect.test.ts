@@ -23,6 +23,19 @@ describe('core/methods/disconnect', () => {
     expect(iframe.iframeResizer).toBeUndefined()
   })
 
+  it('cleans up the id the iframe was bound under after its id changes', () => {
+    vi.spyOn(coreConsole, 'log').mockImplementation(() => {})
+    const iframe = document.createElement('iframe')
+    const stopPageInfo = vi.fn()
+    settings.bound = { iframe, stopPageInfo }
+    iframe.id = 'renamed'
+
+    disconnect(iframe)
+
+    expect(settings.bound).toBeUndefined()
+    expect(stopPageInfo).toHaveBeenCalled()
+  })
+
   it('clears msgTimeout, removes load listener, and stops info monitors', () => {
     vi.spyOn(coreConsole, 'log').mockImplementation(() => {})
     const clearSpy = vi.spyOn(globalThis, 'clearTimeout')

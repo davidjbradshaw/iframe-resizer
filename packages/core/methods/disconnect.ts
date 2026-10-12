@@ -3,10 +3,11 @@ import { LOAD } from '@iframe-resizer/common/consts'
 
 import { log } from '../console'
 import type { IFrameComponent } from '../types'
+import getBoundId from '../values/bound-id'
 import settings from '../values/settings'
 
 export default function disconnect(iframe: IFrameComponent): void {
-  const { id } = iframe
+  const id = getBoundId(iframe)
   log(id, 'Disconnected from iframe')
 
   const entry = settings[id]
