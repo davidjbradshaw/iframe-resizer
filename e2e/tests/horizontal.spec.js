@@ -109,3 +109,17 @@ test.describe('Horizontal', () => {
     expect(await iframeWidth(page)).toBe(first)
   })
 })
+
+test.describe('direction none', () => {
+  test('connects without resizing the iframe', async ({ page }) => {
+    await page.goto(`${BASE}?child=frame.fluid.html&direction=none`)
+
+    // onReady waits for the child's init reply
+    await page.waitForFunction(() => window.readyCount === 1)
+
+    const { width, height } = await page
+      .locator('iframe')
+      .evaluate((el) => ({ width: el.style.width, height: el.style.height }))
+    expect({ width, height }).toEqual({ width: START_WIDTH, height: '200px' })
+  })
+})

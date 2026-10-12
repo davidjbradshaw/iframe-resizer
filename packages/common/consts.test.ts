@@ -30,6 +30,7 @@ describe('common/consts', () => {
   it('defines resize request and disable rules', () => {
     expect(consts.MANUAL_RESIZE_REQUEST).toBe('manualResize')
     expect(consts.PARENT_RESIZE_REQUEST).toBe('parentResize')
+    expect(consts.IGNORE_DISABLE_RESIZE).toHaveProperty(consts.INIT, 1)
     expect(consts.IGNORE_DISABLE_RESIZE).toHaveProperty(
       consts.MANUAL_RESIZE_REQUEST,
       1,
