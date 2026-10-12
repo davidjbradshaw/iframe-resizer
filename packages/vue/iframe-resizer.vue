@@ -14,6 +14,7 @@
     IFrameObject,
     IFrameResizedData,
     IFrameScrollData,
+    IFrameScrollOption,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
@@ -30,10 +31,11 @@
       required: true,
     },
     bodyBackground: String,
-    bodyMargin: String,
-    bodyPadding: String,
+    // The types core takes, with Boolean first so a bare attribute is true
+    bodyMargin: [String, Number],
+    bodyPadding: [String, Number],
     checkOrigin: {
-      type: Boolean,
+      type: [Boolean, Array] as PropType<boolean | string[]>,
       default: true,
     },
     direction: String,
@@ -58,7 +60,7 @@
     },
     inPageLinks: Boolean,
     offsetSize: Number,
-    scrolling: Boolean,
+    scrolling: [Boolean, String] as PropType<IFrameScrollOption>,
     tolerance: Number,
     warningTimeout: Number,
   })
