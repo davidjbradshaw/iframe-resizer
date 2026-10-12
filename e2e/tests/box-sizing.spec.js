@@ -4,6 +4,7 @@ import { expect, test } from './shared/test'
 // size and its content on each axis
 const BASE = '/e2e/fixtures/box-sizing.html'
 const CONTENT_HEIGHT = 300
+const CONTENT_WIDTH = 400
 
 const child = (page) =>
   page.frames().find((frame) => frame.url().includes('frame.box-sizing'))
@@ -38,5 +39,18 @@ test.describe('Border-box iframe', () => {
     await child(page).evaluate(() => window.parentIframe.scrollBy(0, 100))
 
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(100)
+  })
+})
+
+test.describe('Border-box iframe sized by width', () => {
+  test('is sized so its content fits inside the padding and border', async ({
+    page,
+  }) => {
+    await page.goto(`${BASE}?direction=horizontal-inline`)
+    await page.waitForFunction(() => window.ready)
+
+    await expect
+      .poll(() => child(page).evaluate(() => window.innerWidth))
+      .toBe(CONTENT_WIDTH)
   })
 })
