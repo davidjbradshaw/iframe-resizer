@@ -40,7 +40,8 @@
     },
     direction: String,
     log: {
-      type: [String, Boolean, Number] as PropType<IFrameLogOption>,
+      // Boolean first, so Vue reads a bare `log` attribute as true, not ''
+      type: [Boolean, String, Number] as PropType<IFrameLogOption>,
       validator: (value: IFrameLogOption) => {
         switch (value) {
           case COLLAPSE:
