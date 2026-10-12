@@ -67,6 +67,7 @@ jobs:
           - send-message
           - solid
           - svelte
+          - title-observer
           - v5-child
           - vue
           - web-component
