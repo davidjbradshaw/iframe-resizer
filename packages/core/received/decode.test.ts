@@ -2,11 +2,7 @@ import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import settings from '../values/settings'
-import decodeMessage, {
-  getBorderEnds,
-  getIframeId,
-  getPaddingEnds,
-} from './decode'
+import decodeMessage, { getIframeId } from './decode'
 
 describe('core/received/decode', () => {
   const origGetComputed = global.getComputedStyle
@@ -43,61 +39,28 @@ describe('core/received/decode', () => {
     delete settings[':r1:']
   })
 
-  test('calculates padding and border ends', () => {
-    const comp = global.getComputedStyle()
-
-    expect(getPaddingEnds(comp)).toBe(8)
-    expect(getBorderEnds(comp)).toBe(3)
-  })
-
   test('decodes a message string into messageData', () => {
     const body = 'i1:100:200:TYPE:MSG:MODE'
     const msg = 'X'.repeat(MESSAGE_ID_LENGTH) + body
 
     const data = decodeMessage(msg)
 
+    // Padding and border are added only when a size is applied
     expect(data.id).toBe('i1')
-    expect(data.height).toBe(100 + 8 + 3)
+    expect(data.height).toBe(100)
     expect(data.width).toBe(200)
     expect(data.type).toBe('TYPE')
     expect(data.message).toBe('MSG')
     expect(data.mode).toBe('MODE')
   })
 
-  test('returns 0 for padding/border when boxSizing is not border-box', () => {
-    global.getComputedStyle = () => ({
-      boxSizing: 'content-box',
-      paddingTop: '5px',
-      paddingBottom: '3px',
-      borderTopWidth: '2px',
-      borderBottomWidth: '1px',
-    })
+  test('keeps the zero size of a mouse message on a border-box iframe', () => {
+    const msg = `${'X'.repeat(MESSAGE_ID_LENGTH)}i1:0:0:mouseenter:120:340`
 
-    const comp = global.getComputedStyle()
-    expect(getPaddingEnds(comp)).toBe(0)
-    expect(getBorderEnds(comp)).toBe(0)
-  })
+    const data = decodeMessage(msg)
 
-  test('handles missing padding values', () => {
-    global.getComputedStyle = () => ({
-      boxSizing: 'border-box',
-      paddingTop: null,
-      paddingBottom: null,
-    })
-
-    const comp = global.getComputedStyle()
-    expect(getPaddingEnds(comp)).toBe(0)
-  })
-
-  test('handles missing border values', () => {
-    global.getComputedStyle = () => ({
-      boxSizing: 'border-box',
-      borderTopWidth: null,
-      borderBottomWidth: null,
-    })
-
-    const comp = global.getComputedStyle()
-    expect(getBorderEnds(comp)).toBe(0)
+    expect(data.height).toBe(0)
+    expect(data.width).toBe(0)
   })
 
   test('decodes message without mode field', () => {

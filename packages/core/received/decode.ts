@@ -4,31 +4,6 @@ import { MESSAGE_ID_LENGTH, SEPARATOR } from '@iframe-resizer/common/consts'
 import type { MessageData } from '../message-data'
 import settings from '../values/settings'
 
-export function getPaddingEnds(compStyle: CSSStyleDeclaration): number {
-  if (compStyle.boxSizing !== 'border-box') return 0
-
-  const top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
-  const bot = compStyle.paddingBottom
-    ? parseInt(compStyle.paddingBottom, 10)
-    : 0
-
-  return top + bot
-}
-
-export function getBorderEnds(compStyle: CSSStyleDeclaration): number {
-  if (compStyle.boxSizing !== 'border-box') return 0
-
-  const top = compStyle.borderTopWidth
-    ? parseInt(compStyle.borderTopWidth, 10)
-    : 0
-
-  const bot = compStyle.borderBottomWidth
-    ? parseInt(compStyle.borderBottomWidth, 10)
-    : 0
-
-  return top + bot
-}
-
 const getMessageFields = (msg: string): string[] =>
   msg.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
 
@@ -41,15 +16,13 @@ export default function decodeMessage(msg: string): MessageData {
   const id = unescapeField(data[0])
   const height = data[1] ? Number(data[1]) : 0
   const iframe = settings[id]?.iframe
-  const compStyle = iframe ? getComputedStyle(iframe) : null
-  const paddingAndBorder = compStyle
-    ? getPaddingEnds(compStyle) + getBorderEnds(compStyle)
-    : 0
 
+  // The fields as sent: height is also a coordinate in mouse and scroll
+  // messages, so the iframe's padding and border are added only to a size
   const messageData: MessageData = {
     iframe,
     id,
-    height: height + paddingAndBorder,
+    height,
     width: Number(data[2]),
     type: data[3],
     message: data[4],

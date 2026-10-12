@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer box-sizing</title>
+    <style>
+      /* The common reset, with the iframe's border and padding kept */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 50px;
+        height: 3000px;
+      }
+      iframe {
+        border: 2px solid #333;
+        padding: 10px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="boxed" src="child/frame.box-sizing.html"></iframe>
+    <script src="../../js/iframe-resizer.parent.js"></script>
+    <script>
+      window.ready = false
+      window.mouse = null
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          direction: new URLSearchParams(location.search).get('direction') ?? 'vertical',
+          onReady: () => {
+            window.ready = true
+          },
+          onMouseEnter: ({ screenX, screenY }) => {
+            window.mouse = { screenX, screenY }
+          },
+        },
+        '#boxed',
+      )
+    </script>
+  </body>
+</html>
