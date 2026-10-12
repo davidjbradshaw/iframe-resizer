@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         zone: 'zone.html',
+        zoneless: 'zoneless.html',
       },
     },
   },

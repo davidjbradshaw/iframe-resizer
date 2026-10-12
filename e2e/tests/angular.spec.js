@@ -5,6 +5,12 @@ import { waitForChildText, waitForResizer } from './shared/utils'
 const BASE = '/e2e/fixtures/angular/index.html'
 const ZONE = '/e2e/fixtures/angular/zone.html'
 
+// The same app, with and without zone.js
+const APPS = {
+  'zone.js': BASE,
+  zoneless: '/e2e/fixtures/angular/zoneless.html',
+}
+
 // localhost and 127.0.0.1 are different origins served by the same server
 const CHILD_ORIGINS = {
   'same-origin': 'http://localhost:8080',
@@ -23,30 +29,36 @@ test.describe('Angular', () => {
   parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
 
-  test('a bound Output updates the template', async ({ page }) => {
-    await page.goto(BASE)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+  for (const [name, url] of Object.entries(APPS)) {
+    test(`a bound Output updates the template (${name})`, async ({ page }) => {
+      await page.goto(url)
+      await page.waitForLoadState('networkidle')
+      await waitForResizer(page)
+      await waitForChildText(page, '#ready-status', 'ready')
 
-    const before = await iframeHeight(page)
-
-    // Hiding the toggle content shrinks the child, which sends a resize
-    await page.frameLocator('iframe').locator('#btn-toggle').click()
-    await expect.poll(() => iframeHeight(page)).not.toBe(before)
-
-    // Core runs outside NgZone, so the handler's change only reaches the
-    // template because the bound onResized Output re-enters the zone. The
-    // style is serialised to three decimals; the Output carries the raw value.
-    const height = parseFloat(await iframeHeight(page))
-    await expect
-      .poll(() =>
-        page
-          .locator('#resized-height')
-          .evaluate((el) => parseFloat(el.textContent)),
+      expect(await page.evaluate(() => typeof window.Zone)).toBe(
+        name === 'zoneless' ? 'undefined' : 'function',
       )
-      .toBeCloseTo(height, 2)
-  })
+
+      const before = await iframeHeight(page)
+
+      // Hiding the toggle content shrinks the child, which sends a resize
+      await page.frameLocator('iframe').locator('#btn-toggle').click()
+      await expect.poll(() => iframeHeight(page)).not.toBe(before)
+
+      // The handler's change reaches the template only through the Output,
+      // as core runs outside NgZone. The style is serialised to three
+      // decimals, while the Output carries the raw value.
+      const height = parseFloat(await iframeHeight(page))
+      await expect
+        .poll(() =>
+          page
+            .locator('#resized-height')
+            .evaluate((el) => parseFloat(el.textContent)),
+        )
+        .toBeCloseTo(height, 2)
+    })
+  }
 })
 
 // The directive runs core outside NgZone, so the library's own message
