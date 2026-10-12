@@ -7,6 +7,7 @@ import {
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, info, log, warn } from '../console'
+import { getPostMessageTarget } from '../setup/target-origin'
 import settings from '../values/settings'
 
 export const filterMsg = (msg: string): string =>
@@ -33,7 +34,7 @@ export function dispatch(
     info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
   }
 
-  const { iframe, postMessageTarget, sameOrigin } = settings[id]
+  const { iframe, sameOrigin } = settings[id]
 
   // A targetOrigin given with this message replaces the configured ones
   const origins = targetOrigin ? [targetOrigin] : settings[id].targetOrigin
@@ -68,8 +69,10 @@ export function dispatch(
     `Sending message to iframe: %c${id}%c targetOrigin: %c${origins.join(', ')}`,
   )
 
+  const target = getPostMessageTarget(id)
+
   for (const origin of origins) {
-    postMessageTarget.postMessage(MESSAGE_ID + msg, origin)
+    target.postMessage(MESSAGE_ID + msg, origin)
   }
 }
 
@@ -81,8 +84,13 @@ function trigger(
 ): void {
   consoleEvent(id, calleeMsg)
 
-  if (!settings[id]?.postMessageTarget) {
+  if (!settings[id]) {
     warn(id, `Iframe not found`)
+    return
+  }
+
+  if (!getPostMessageTarget(id)) {
+    warn(id, 'Message not sent, the iframe is not in the document')
     return
   }
 

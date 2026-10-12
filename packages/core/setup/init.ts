@@ -14,6 +14,7 @@ import resetIframe from '../methods/reset'
 import warnOnNoResponse from '../send/timeout'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
+import { refreshRemoteHost } from './target-origin'
 
 const AFTER_EVENT_STACK = 1
 const isLazy = (iframe: HTMLIFrameElement): boolean => iframe.loading === LAZY
@@ -48,19 +49,25 @@ const noContent = (iframe: HTMLIFrameElement): boolean => {
   return !srcdoc && (src == null || src === '' || src === 'about:blank')
 }
 
+// The load event initialises the child once the iframe has a page
+function delayInit(id: string, eventName: string, reason: string): void {
+  setTimeout(() => {
+    consoleEvent(id, eventName)
+    info(id, `${reason}, delaying initialisation`)
+  })
+}
+
 function sendInit(id: string, initChild: () => void): void {
   const { iframe, waitForLoad } = settings[id]
 
   if (waitForLoad === true) return
   if (noContent(iframe)) {
-    setTimeout(() => {
-      consoleEvent(id, 'noContent')
-      info(id, 'No content detected in the iframe, delaying initialisation')
-    })
-    return
+    delayInit(id, 'noContent', 'No content detected in the iframe')
+  } else if (iframe.isConnected) {
+    setTimeout(initChild)
+  } else {
+    delayInit(id, 'notInDocument', 'The iframe is not in the document')
   }
-
-  setTimeout(initChild)
 }
 
 // We have to call trigger twice, as we can not be sure if all
@@ -74,6 +81,7 @@ export default function init(id: string, message: string): void {
 
     if (firstRun) settings[id].sameOrigin = true
 
+    refreshRemoteHost(id)
     trigger(eventType, message, id)
     if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
