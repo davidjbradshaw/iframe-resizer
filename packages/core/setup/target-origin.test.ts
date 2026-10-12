@@ -133,32 +133,31 @@ describe('core/setup/target-origin', () => {
     )
   })
 
-  it('getPostMessageTarget sets contentWindow when null', () => {
-    const iframe = document.createElement('iframe')
-    iframe.id = 'z'
-    const cw = {}
-    Object.defineProperty(iframe, 'contentWindow', {
-      configurable: true,
-      get: () => cw,
-    })
-    settings.z = { postMessageTarget: null }
-    getPostMessageTarget(iframe)
+  it('getPostMessageTarget returns the window the iframe has now', () => {
+    const iframe = { contentWindow: null }
+    settings.live = { iframe, postMessageTarget: null }
 
-    expect(settings.z.postMessageTarget).toBe(cw)
+    expect(getPostMessageTarget('live')).toBeNull()
+
+    const first = {}
+    iframe.contentWindow = first
+
+    expect(getPostMessageTarget('live')).toBe(first)
+
+    // Moving the iframe in the page gives it a new window
+    const moved = {}
+    iframe.contentWindow = moved
+
+    expect(getPostMessageTarget('live')).toBe(moved)
   })
 
-  it('does not set postMessageTarget when not null', () => {
-    const iframe = document.createElement('iframe')
-    iframe.id = 'already-set'
-    const cw = {}
-    const existingTarget = { existing: true }
-    Object.defineProperty(iframe, 'contentWindow', {
-      configurable: true,
-      get: () => cw,
-    })
-    settings['already-set'] = { postMessageTarget: existingTarget }
-    getPostMessageTarget(iframe)
+  it('getPostMessageTarget prefers the postMessageTarget option', () => {
+    const nested = { postMessage: () => {} }
+    settings.nested = {
+      iframe: { contentWindow: {} },
+      postMessageTarget: nested,
+    }
 
-    expect(settings['already-set'].postMessageTarget).toBe(existingTarget)
+    expect(getPostMessageTarget('nested')).toBe(nested)
   })
 })

@@ -12,7 +12,6 @@ vi.mock('../values/defaults', () => ({ default: { def: 1 } }))
 vi.mock('../values/settings', () => ({ default: {} }))
 vi.mock('./direction', () => ({ default: vi.fn() }))
 vi.mock('./target-origin', () => ({
-  getPostMessageTarget: vi.fn(),
   setRemoteHost: vi.fn(),
   setTargetOrigin: vi.fn(),
 }))
@@ -22,8 +21,7 @@ const checkWarningTimeout = (await import('../checks/warning-timeout')).default
 const setOffsetSize = (await import('../send/offset')).default
 const settings = (await import('../values/settings')).default
 const setDirection = (await import('./direction')).default
-const { getPostMessageTarget, setRemoteHost, setTargetOrigin } =
-  await import('./target-origin')
+const { setRemoteHost, setTargetOrigin } = await import('./target-origin')
 const updateOptionNames = (await import('./update-option-names')).default
 const processOptions = (await import('./process-options')).default
 
@@ -48,7 +46,6 @@ describe('core/setup/process-options', () => {
     expect(setDirection).toHaveBeenCalledWith('if1')
     expect(setOffsetSize).toHaveBeenCalledWith('if1')
     expect(checkWarningTimeout).toHaveBeenCalledWith('if1')
-    expect(getPostMessageTarget).toHaveBeenCalledWith(iframe)
     expect(setRemoteHost).toHaveBeenCalledWith('if1')
     expect(setTargetOrigin).toHaveBeenCalledWith('if1')
   })

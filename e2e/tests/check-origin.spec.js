@@ -27,6 +27,14 @@ const setIframeSrc = (page) =>
     document.getElementById('myIframe').src = url
   }, OTHER_PAGE)
 
+// Moving the iframe gives it a new window, which loads the page again
+const moveIframe = (page) =>
+  page.evaluate(() => {
+    const container = document.createElement('div')
+    document.body.append(container)
+    container.append(document.getElementById('myIframe'))
+  })
+
 const waitForOriginError = (page) =>
   page.waitForEvent(
     'console',
@@ -73,6 +81,18 @@ test.describe('checkOrigin', () => {
       await page.waitForFunction(() => window.readyCount === 1)
 
       await setIframeSrc(page)
+
+      // The shared fixture fails the test if any error was logged
+      await page.waitForFunction(() => window.readyCount === 2)
+    })
+  })
+
+  test.describe('cross-origin iframe moved in the page', () => {
+    test('connects to the page loaded in its new window', async ({ page }) => {
+      await page.goto(parentPage({ src: OTHER_PAGE }))
+      await page.waitForFunction(() => window.readyCount === 1)
+
+      await moveIframe(page)
 
       // The shared fixture fails the test if any error was logged
       await page.waitForFunction(() => window.readyCount === 2)
