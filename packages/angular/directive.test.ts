@@ -487,6 +487,34 @@ describe('Angular IframeResizerDirective', () => {
     ])
   })
 
+  test('connects on a later [options] change when the first connect failed', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    let attempts = 0
+    connectResizer.mockImplementation(() => (iframe: any) => {
+      attempts += 1
+      // core's error boundary returns undefined, as for an invalid option
+      if (attempts === 1) return
+      iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+      return iframe.iframeResizer
+    })
+
+    directive.ngAfterViewInit()
+    expect(directive.iframeResizer).toBeUndefined()
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(attempts).toBe(2)
+    expect(directive.iframeResizer).toBe(mockIframe.iframeResizer)
+  })
+
+  test('ignores [options] changes before the view is ready', async () => {
+    const calls = await mockConnect()
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(calls).toHaveLength(0)
+  })
+
   test('parent methods run outside the Angular zone', () => {
     const inAngular: boolean[] = []
     moveToAnchor.mockImplementationOnce(() => inAngular.push(zone.inAngular))
