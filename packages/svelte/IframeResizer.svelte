@@ -9,6 +9,7 @@
     IFrameObject,
     IFrameOptions,
     IFrameScrollData,
+    IFrameScrollOption,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
@@ -19,14 +20,14 @@
 
   export let license: string
   export let bodyBackground: string | undefined = undefined
-  export let bodyMargin: string | undefined = undefined
-  export let bodyPadding: string | undefined = undefined
-  export let checkOrigin: boolean | undefined = undefined
+  export let bodyMargin: number | string | undefined = undefined
+  export let bodyPadding: number | string | undefined = undefined
+  export let checkOrigin: boolean | string[] | undefined = undefined
   export let direction: IFrameDirection | undefined = undefined
   export let log: IFrameLogOption | undefined = undefined
   export let inPageLinks: boolean | undefined = undefined
   export let offsetSize: number | undefined = undefined
-  export let scrolling: boolean | undefined = undefined
+  export let scrolling: IFrameScrollOption | undefined = undefined
   export let tolerance: number | undefined = undefined
   export let warningTimeout: number | undefined = undefined
 
