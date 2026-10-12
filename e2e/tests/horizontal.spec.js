@@ -26,6 +26,23 @@ async function loadChild(page, child, direction = 'horizontal-inline') {
   )
 }
 
+// The page's own right edge: <body> wraps its content, plus the margin and
+// padding around it
+const pageRight = (page) =>
+  page
+    .frameLocator('iframe')
+    .locator('body')
+    .evaluate((body) => {
+      const html = document.documentElement
+      const px = (el, property) =>
+        parseFloat(getComputedStyle(el).getPropertyValue(property))
+      return (
+        body.getBoundingClientRect().right +
+        px(body, 'margin-right') +
+        px(html, 'padding-right')
+      )
+    })
+
 // style.width reads back rounded to three decimals
 async function expectIframeToFitContent(page) {
   expect(parseFloat(await iframeWidth(page))).toBeCloseTo(
@@ -78,21 +95,33 @@ test.describe('Horizontal', () => {
       'data-iframe-overflowed',
     )
 
-    // The page's own right edge: <body> wraps its content, plus the margin
-    // and padding around it
-    const pageRight = await child.locator('body').evaluate((body) => {
-      const html = document.documentElement
-      const px = (el, property) =>
-        parseFloat(getComputedStyle(el).getPropertyValue(property))
-      return (
-        body.getBoundingClientRect().right +
-        px(body, 'margin-right') +
-        px(html, 'padding-right')
-      )
-    })
     await expect
       .poll(async () => parseFloat(await iframeWidth(page)))
-      .toBeCloseTo(pageRight, 1)
+      .toBeCloseTo(await pageRight(page), 1)
+  })
+
+  test('an element marked data-iframe-ignore is left out of the width scan', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.ignored-width.html')
+    const child = page.frameLocator('iframe')
+
+    // Sanity check on the fixture: the ignored nav sticks out past the page
+    const expected = await pageRight(page)
+    const navRight = await child
+      .locator('#menu')
+      .evaluate((el) => el.getBoundingClientRect().right)
+    expect(navRight).toBeGreaterThan(expected + 250)
+
+    // A mutation that does not change the page width, so the width is
+    // measured again by the element scan rather than from <html>
+    await child
+      .locator('#content')
+      .evaluate((el) => el.setAttribute('data-touched', 'yes'))
+    await page.waitForTimeout(1000)
+
+    // Once settled, the iframe is as wide as the page, not the ignored nav
+    expect(parseFloat(await iframeWidth(page))).toBeCloseTo(expected, 1)
   })
 
   test('with horizontal-block, fluid content does not shrink the iframe on every resize', async ({

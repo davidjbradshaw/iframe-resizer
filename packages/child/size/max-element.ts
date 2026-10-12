@@ -6,6 +6,7 @@ import {
 } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
+import { filterIgnoredElements } from '../check/overflow'
 import { info } from '../console'
 import { PREF_END, PREF_START } from '../observers/perf'
 import settings from '../values/settings'
@@ -15,11 +16,15 @@ import { getAllElements } from './all'
 export function getSelectedElements(): Element[] | NodeListOf<Element> {
   const { hasOverflow, hasTags, overflowedNodeSet, taggedElements } = state
 
+  // Width resizing may need to check all elements; the overflow set has
+  // already had the ignored ones removed
   return hasTags
     ? taggedElements
     : hasOverflow
       ? Array.from(overflowedNodeSet as Iterable<Element>)
-      : getAllElements(document.documentElement) // Width resizing may need to check all elements
+      : Array.from(
+          filterIgnoredElements(getAllElements(document.documentElement)),
+        )
 }
 
 const px = (el: Element, property: string): number =>
