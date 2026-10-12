@@ -7,8 +7,11 @@ const ZONE = '/e2e/fixtures/angular/zone.html'
 
 // The same app, with and without zone.js
 const APPS = {
-  'zone.js': BASE,
-  zoneless: '/e2e/fixtures/angular/zoneless.html',
+  'zone.js': { url: BASE, typeOfZone: 'function' },
+  zoneless: {
+    url: '/e2e/fixtures/angular/zoneless.html',
+    typeOfZone: 'undefined',
+  },
 }
 
 // localhost and 127.0.0.1 are different origins served by the same server
@@ -29,16 +32,14 @@ test.describe('Angular', () => {
   parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
 
-  for (const [name, url] of Object.entries(APPS)) {
+  for (const [name, { url, typeOfZone }] of Object.entries(APPS)) {
     test(`a bound Output updates the template (${name})`, async ({ page }) => {
       await page.goto(url)
       await page.waitForLoadState('networkidle')
       await waitForResizer(page)
       await waitForChildText(page, '#ready-status', 'ready')
 
-      expect(await page.evaluate(() => typeof window.Zone)).toBe(
-        name === 'zoneless' ? 'undefined' : 'function',
-      )
+      expect(await page.evaluate(() => typeof window.Zone)).toBe(typeOfZone)
 
       const before = await iframeHeight(page)
 
@@ -59,6 +60,15 @@ test.describe('Angular', () => {
         .toBeCloseTo(height, 2)
     })
   }
+})
+
+// Changing [options] goes through core's update path, so run those tests
+// without zone.js too
+test.describe('Angular zoneless', () => {
+  parentMethodTests(APPS.zoneless.url, {
+    hasDisconnect: false,
+    updateControl: true,
+  })
 })
 
 // The directive runs core outside NgZone, so the library's own message

@@ -143,13 +143,16 @@ export class IframeResizerDirective {
   ngAfterViewInit(): void {
     const id = this.elementRef.nativeElement?.id
 
-    this.consoleGroup.label(`angular(${id})`)
-    this.consoleGroup.event('setup')
-    this.consoleGroup.expand(
-      this.options.log === EXPAND || this.options.log === LOG_EXPANDED,
-    )
-
-    if (this.debug) this.consoleGroup.log('ngAfterViewInit')
+    // auto-console-group queues microtasks, which inside the zone would cost
+    // a change detection pass each time a directive is created
+    this.zone.runOutsideAngular(() => {
+      this.consoleGroup.label(`angular(${id})`)
+      this.consoleGroup.event('setup')
+      this.consoleGroup.expand(
+        this.options.log === EXPAND || this.options.log === LOG_EXPANDED,
+      )
+      if (this.debug) this.consoleGroup.log('ngAfterViewInit')
+    })
 
     this.resizer = this.connect()
   }
@@ -164,9 +167,11 @@ export class IframeResizerDirective {
   }
 
   ngOnDestroy(): void {
-    if (this.debug) this.consoleGroup.log('ngOnDestroy')
-    this.consoleGroup.endAutoGroup()
-    this.resizer?.disconnect()
+    this.zone.runOutsideAngular(() => {
+      if (this.debug) this.consoleGroup.log('ngOnDestroy')
+      this.consoleGroup.endAutoGroup()
+      this.resizer?.disconnect()
+    })
   }
 
   // parent methods, outside the zone as a same-origin child replies on a timer
