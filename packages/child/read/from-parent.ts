@@ -12,7 +12,7 @@ const getNumber = castDefined(Number)
 const getText = castDefined(unescapeField)
 
 export default (data: string[]): Record<string, any> => ({
-  parentId: data[0],
+  parentId: getText(data[0]),
   bodyMargin: getNumber(data[1]),
   calculateWidth: getBoolean(data[2]),
   logging: getBoolean(data[3]),

@@ -50,14 +50,16 @@ describe('child/read/from-parent', () => {
     expect(out.maxContentWidth).toBe(true)
   })
 
-  test('restores the colons escaped by the parent in the body styles', () => {
+  test('restores the colons escaped by the parent in the id and body styles', () => {
     const data = []
+    data[0] = '%3Ar1%3A'
     data[7] = '0 10px'
     data[9] = 'url(https%3A//cdn.example/bg.png)'
     data[10] = 'calc(10px%3A5px)'
 
     const out = readFromParent(data)
 
+    expect(out.parentId).toBe(':r1:')
     expect(out.bodyMarginStr).toBe('0 10px')
     expect(out.bodyBackground).toBe('url(https://cdn.example/bg.png)')
     expect(out.bodyPadding).toBe('calc(10px:5px)')
