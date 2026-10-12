@@ -95,6 +95,30 @@ describe('core/send/ready', () => {
     expect(error).not.toHaveBeenCalled()
   })
 
+  test('matches the window the iframe has now when no postMessageTarget is given', () => {
+    settings.a.postMessageTarget = null
+    settings.a.iframe.contentWindow = 'new-win'
+    ready({ source: 'win', origin: 'https://a.com' })
+
+    expect(settings.a.initChild).not.toHaveBeenCalled()
+
+    ready({ source: 'new-win', origin: 'https://a.com' })
+
+    expect(settings.a.initChild).toHaveBeenCalled()
+    settings.a.postMessageTarget = 'win'
+    delete settings.a.iframe.contentWindow
+  })
+
+  test('ignores a message with no source for an iframe with no window', () => {
+    settings.a.postMessageTarget = null
+    settings.a.iframe.contentWindow = null
+    ready({ source: null, origin: 'https://a.com' })
+
+    expect(settings.a.initChild).not.toHaveBeenCalled()
+    settings.a.postMessageTarget = 'win'
+    delete settings.a.iframe.contentWindow
+  })
+
   test('does not report another iframe', () => {
     ready({ source: 'elsewhere', origin: 'https://other.com' })
 

@@ -41,8 +41,8 @@ export function refreshRemoteHost(id: string): void {
   if (settings[id].remoteHost !== remoteHost) setTargetOrigin(id)
 }
 
-export function getPostMessageTarget(iframe: HTMLIFrameElement): void {
-  const { id } = iframe
-  if (settings[id].postMessageTarget === null)
-    settings[id].postMessageTarget = iframe.contentWindow
-}
+// The window given as the postMessageTarget option, or else the iframe's
+// current window, which changes when the iframe is moved and is null
+// while it is out of the document
+export const getPostMessageTarget = (id: string): MessageEventSource | null =>
+  settings[id].postMessageTarget ?? settings[id].iframe.contentWindow
