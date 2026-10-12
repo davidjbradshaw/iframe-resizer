@@ -65,6 +65,7 @@ jobs:
           - jquery
           - legacy
           - message-source
+          - middle-tier
           - mutation-backlog
           - parent
           - react
