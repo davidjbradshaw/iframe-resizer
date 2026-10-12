@@ -1,3 +1,4 @@
+import { SEPARATOR } from './consts'
 import { isDef } from './type-check'
 
 export const capitalizeFirstLetter = (string: string): string =>
@@ -49,3 +50,13 @@ export const getOrigin = (url: string): string | null => {
     return null
   }
 }
+
+// A free-text field of a colon-separated message, with its colons escaped
+// so it cannot shift the fields after it
+const ESCAPED_SEPARATOR = '%3A'
+
+export const escapeField = (value: unknown): string =>
+  `${value ?? ''}`.split(SEPARATOR).join(ESCAPED_SEPARATOR)
+
+export const unescapeField = (value: string): string =>
+  value.split(ESCAPED_SEPARATOR).join(SEPARATOR)

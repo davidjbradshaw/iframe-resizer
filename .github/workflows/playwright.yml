@@ -58,6 +58,7 @@ jobs:
           - angular
           - animation
           - astro
+          - body-background
           - check-origin
           - horizontal
           - jquery
