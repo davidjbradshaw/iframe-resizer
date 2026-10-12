@@ -178,7 +178,10 @@ export default function createMutationObserver(
 
     mutationObserved([
       ...pending,
-      { addedNodes: body.childNodes, removedNodes: removed } as MutationRecord,
+      {
+        addedNodes: body.childNodes,
+        removedNodes: removed,
+      } as unknown as MutationRecord,
     ])
   })
   bodyObserver.observe(document.documentElement, { childList: true })
