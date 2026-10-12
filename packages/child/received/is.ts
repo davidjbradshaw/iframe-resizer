@@ -10,6 +10,10 @@ const IFRAME_RESIZE = 'iframeResize'
 export const isMessageForUs = (event: MessageEvent): boolean =>
   MESSAGE_ID === `${event.data}`.slice(0, MESSAGE_ID_LENGTH)
 
+// From an iframe on this page, when this page is also a parent page
+export const isFromOwnIframe = (event: MessageEvent): boolean =>
+  (event.source as Window | null)?.parent === window
+
 export const isMiddleTier = (): boolean =>
   IFRAME_RESIZE in window || // @ts-ignore
   (window.jQuery !== undefined && IFRAME_RESIZE in window.jQuery.prototype)

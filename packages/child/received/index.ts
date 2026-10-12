@@ -1,6 +1,6 @@
 import { errorBoundary, event as consoleEvent, warn } from '../console'
 import state from '../values/state'
-import { isMessageForUs, isMiddleTier } from './is'
+import { isFromOwnIframe, isMessageForUs, isMiddleTier } from './is'
 import processRequest from './process-request'
 import isMessageFromParent from './source'
 import { getMessageType } from './utils'
@@ -32,5 +32,5 @@ function receiver(event: MessageEvent): void {
 }
 
 export default errorBoundary((event: MessageEvent) => {
-  if (isMessageForUs(event)) receiver(event)
+  if (isMessageForUs(event) && !isFromOwnIframe(event)) receiver(event)
 })

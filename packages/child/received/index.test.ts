@@ -6,6 +6,7 @@ vi.mock('../console', () => ({
   warn: vi.fn(),
 }))
 vi.mock('./is', () => ({
+  isFromOwnIframe: vi.fn(() => false),
   isMessageForUs: vi.fn(() => true),
   isMiddleTier: vi.fn(() => false),
 }))
@@ -15,7 +16,7 @@ vi.mock('./source', () => ({ default: vi.fn(() => true) }))
 
 const { default: receiver } = await import('./index')
 const { warn } = await import('../console')
-const { isMiddleTier } = await import('./is')
+const { isFromOwnIframe, isMiddleTier } = await import('./is')
 const { getMessageType } = await import('./utils')
 const processRequest = (await import('./process-request')).default
 const state = (await import('../values/state')).default
@@ -67,5 +68,14 @@ describe('child/received/index', () => {
     getMessageType.mockReturnValue('surprise')
     receiver({ data: 'x' })
     expect(warn).toHaveBeenCalled()
+  })
+
+  test('ignores messages from its own iframes, without warning', () => {
+    isFromOwnIframe.mockReturnValueOnce(true)
+    getMessageType.mockReturnValue('known')
+    receiver({ data: '[iFrameSizer]inner:100:200:mutationObserver' })
+
+    expect(processRequest.known).not.toHaveBeenCalled()
+    expect(warn).not.toHaveBeenCalled()
   })
 })

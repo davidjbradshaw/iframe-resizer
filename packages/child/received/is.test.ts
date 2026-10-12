@@ -17,6 +17,16 @@ describe('child/received/is', () => {
     expect(mod.isMessageForUs(EVENT('other:x:y'))).toBe(false)
   })
 
+  it('detects messages from an iframe on this page', async () => {
+    const mod = await import('./is')
+    const ownIframe = { parent: window }
+    const parentPage = { parent: {} }
+    expect(mod.isFromOwnIframe({ source: ownIframe } as any)).toBe(true)
+    expect(mod.isFromOwnIframe({ source: parentPage } as any)).toBe(false)
+    expect(mod.isFromOwnIframe({ source: null } as any)).toBe(false)
+    expect(mod.isFromOwnIframe({ data: 'x' } as any)).toBe(false)
+  })
+
   it('detects middle tier via window.iframeResize', async () => {
     const mod = await import('./is')
     window.iframeResize = () => {}
