@@ -342,6 +342,23 @@ describe('Angular IframeResizerDirective', () => {
     )
   })
 
+  test('a bound onBeforeClose gets the iframe once core has cancelled the close', async () => {
+    const calls = await mockConnect()
+    const handler = vi.fn()
+    directive.onBeforeClose.subscribe(handler)
+
+    directive.ngAfterViewInit()
+    const result = fromCore(() => calls[0].options.onBeforeClose('test-iframe'))
+
+    expect(result).toBe(false)
+    expect(handler).not.toHaveBeenCalled()
+
+    await Promise.resolve()
+
+    expect(handler).toHaveBeenCalledWith(mockIframe)
+    expect(mockGroupWarn).not.toHaveBeenCalled()
+  })
+
   test('options input is passed to connectResizer', async () => {
     const connectResizer = (await import('@iframe-resizer/core')).default
 

@@ -104,11 +104,19 @@ export class IframeResizerDirective {
     return {
       ...options,
 
+      // Angular owns the iframe, so the close is always cancelled. A bound
+      // Output can remove it, once core has finished with the close
       onBeforeClose: () => {
         this.consoleGroup.event('close')
-        this.consoleGroup.warn(
-          'Close event ignored, to remove the iframe update your Angular component.',
-        )
+        if (hasSubscribers(this.onBeforeClose)) {
+          queueMicrotask(() =>
+            this.emit(this.onBeforeClose, this.elementRef.nativeElement),
+          )
+        } else {
+          this.consoleGroup.warn(
+            'Close event ignored, to remove the iframe update your Angular component.',
+          )
+        }
         return false
       },
 
