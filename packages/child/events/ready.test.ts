@@ -60,6 +60,34 @@ describe('child/events/ready', () => {
     window.iframeResizer = {}
   })
 
+  test('posts only to the parent origin the browser reports', async () => {
+    vi.resetModules()
+    const state = (await import('../values/state')).default
+    state.firstRun = true
+
+    window.iframeResizer = { targetOrigin: ['https://a.com', 'https://b.com'] }
+    Object.defineProperty(window.location, 'ancestorOrigins', {
+      configurable: true,
+      value: ['https://b.com'],
+    })
+
+    const postMessage = vi
+      .spyOn(window, 'postMessage')
+      .mockImplementation(() => {})
+
+    const { default: ready } = await import('./ready')
+    ready()
+
+    expect(postMessage).toHaveBeenCalledTimes(1)
+    expect(postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://b.com',
+    )
+
+    delete window.location.ancestorOrigins
+    window.iframeResizer = {}
+  })
+
   test('posts CHILD_READY_MESSAGE to both parent and top when they differ', async () => {
     vi.resetModules()
     const state = (await import('../values/state')).default
