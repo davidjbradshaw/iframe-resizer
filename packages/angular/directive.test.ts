@@ -537,6 +537,20 @@ describe('Angular IframeResizerDirective', () => {
     expect(handler).toHaveBeenCalledWith(mockIframe)
   })
 
+  test('mouse events are only turned on once a mouse Output is bound', async () => {
+    const calls = await mockConnect()
+
+    directive.ngAfterViewInit()
+    directive.onMouseLeave.subscribe(vi.fn())
+    directive.ngOnChanges({ options: {} } as any)
+
+    // Unbound at the first connect, bound by the next [options] change
+    expect(calls[0].options.onMouseEnter).toBeUndefined()
+    expect(calls[0].options.onMouseLeave).toBeUndefined()
+    expect(calls[1].options.onMouseEnter).toEqual(expect.any(Function))
+    expect(calls[1].options.onMouseLeave).toEqual(expect.any(Function))
+  })
+
   test('a bound Output still emits without Subject.observed (RxJS 6)', async () => {
     const calls = await mockConnect()
     const handler = vi.fn()

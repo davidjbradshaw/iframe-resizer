@@ -87,6 +87,20 @@ export class IframeResizerDirective {
   private buildOptions(): IFrameOptions {
     const { logExpand: _logExpand, ...options } = this
       .options as IFrameOptions & Record<string, unknown>
+
+    // Mouse events add listeners in the child and a message per pointer
+    // crossing, so they are only on when a mouse Output is bound as this
+    // connects; a later subscription waits for the next [options] change
+    const mouseEvents =
+      hasSubscribers(this.onMouseEnter) || hasSubscribers(this.onMouseLeave)
+        ? {
+            onMouseEnter: (event: IFrameMouseData) =>
+              this.emit(this.onMouseEnter, event),
+            onMouseLeave: (event: IFrameMouseData) =>
+              this.emit(this.onMouseLeave, event),
+          }
+        : {}
+
     return {
       ...options,
 
@@ -100,14 +114,7 @@ export class IframeResizerDirective {
 
       onMessage: (event: IFrameMessageData) => this.emit(this.onMessage, event),
 
-      // Passing both turns on mouse events in the child, so an Output that is
-      // subscribed after init, as through @ViewChild, still fires. Unbound,
-      // their messages cost no change detection
-      onMouseEnter: (event: IFrameMouseData) =>
-        this.emit(this.onMouseEnter, event),
-
-      onMouseLeave: (event: IFrameMouseData) =>
-        this.emit(this.onMouseLeave, event),
+      ...mouseEvents,
 
       onReady: (iframe: IFrameComponent) => this.emit(this.onReady, iframe),
 
