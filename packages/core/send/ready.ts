@@ -3,8 +3,12 @@ import { getOrigin } from '@iframe-resizer/common'
 import { error, event } from '../console'
 import settings from '../values/settings'
 
-// The browser drops messages to a page whose origin is not a target origin
-const isAllowedOrigin = (targetOrigin: string[], origin: string): boolean =>
+// The browser drops messages to a page whose origin is not a target origin.
+// Also checks replies, so an entry written as a URL works both ways.
+export const isAllowedOrigin = (
+  targetOrigin: string[],
+  origin: string,
+): boolean =>
   targetOrigin.some((target) => target === '*' || getOrigin(target) === origin)
 
 export const sendIframeReady =

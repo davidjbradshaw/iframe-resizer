@@ -75,6 +75,22 @@ test.describe('checkOrigin', () => {
       await page.waitForFunction(() => window.readyCount === 2)
     })
 
+    test('accepts entries written as URLs, with a path or a trailing slash', async ({
+      page,
+    }) => {
+      await page.goto(
+        parentPage({
+          checkOrigin: `${PARENT_ORIGIN}/,${OTHER_ORIGIN}/e2e/fixtures/`,
+        }),
+      )
+      await page.waitForFunction(() => window.readyCount === 1)
+
+      await navigateIframe(page)
+
+      // The shared fixture fails the test if a reply is rejected
+      await page.waitForFunction(() => window.readyCount === 2)
+    })
+
     test.describe('without the new origin', () => {
       test.use({ allowedErrors: [ORIGIN_ERROR] })
 

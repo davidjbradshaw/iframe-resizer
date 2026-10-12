@@ -4,6 +4,7 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import { log, warn } from '../console'
 import type { MessageData } from '../message-data'
+import { isAllowedOrigin } from '../send/ready'
 import settings from '../values/settings'
 
 const ABOVE_TYPES: Record<string, number> = { true: 1, false: 1, undefined: 1 }
@@ -72,13 +73,7 @@ export function isMessageFromIframe(
         HIGHLIGHT,
       )
 
-      for (const element of checkOrigin) {
-        if (element === origin) {
-          return true
-        }
-      }
-
-      return false
+      return isAllowedOrigin(checkOrigin, origin)
     }
 
     function checkSingle(): boolean {
