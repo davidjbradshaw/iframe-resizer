@@ -20,6 +20,7 @@ const RESIZER_ATTR_MAP: Record<string, string> = {
   offsetsize: 'offsetSize',
   scrolling: 'scrolling',
   tolerance: 'tolerance',
+  waitforload: 'waitForLoad',
   warningtimeout: 'warningTimeout',
 }
 
@@ -38,6 +39,7 @@ const BOOLEAN_ATTRS = new Set([
   'inpagelinks',
   'log',
   'scrolling',
+  'waitforload',
 ])
 
 // Attributes that should be parsed as whitespace-separated arrays
@@ -58,6 +60,7 @@ const RESIZER_ATTR_DEFAULTS: Record<string, unknown> = {
   offsetSize: 0,
   scrolling: false,
   tolerance: 0,
+  waitForLoad: false,
   warningTimeout: 5000,
 }
 
