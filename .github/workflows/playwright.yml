@@ -60,6 +60,7 @@ jobs:
           - astro
           - body-background
           - check-origin
+          - colon-id
           - horizontal
           - jquery
           - legacy
