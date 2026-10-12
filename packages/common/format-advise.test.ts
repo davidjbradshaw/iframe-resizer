@@ -38,6 +38,19 @@ describe('createFormatAdvise', () => {
     expect(mockFormatLogMsg).toHaveBeenCalledWith(expectedOutput)
   })
 
+  test('keeps element names in angle brackets in non-Chrome environments', () => {
+    vi.stubGlobal('chrome')
+
+    const msg =
+      'Set to 100px on the <b><html></> element via an inline <style> block.'
+    const formatAdvise = createFormatAdvise(mockFormatLogMsg)
+    formatAdvise(msg)
+
+    expect(mockFormatLogMsg).toHaveBeenCalledWith(
+      'Set to 100px on the <html> element via an inline <style> block.',
+    )
+  })
+
   test('should handle empty messages gracefully', () => {
     const msg = ''
     const formatAdvise = createFormatAdvise(mockFormatLogMsg)
