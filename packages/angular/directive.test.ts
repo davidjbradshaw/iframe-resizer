@@ -424,6 +424,19 @@ describe('Angular IframeResizerDirective', () => {
     expect(mockGroupEndAutoGroup).toHaveBeenCalledTimes(1)
   })
 
+  test('sets up and ends its console group outside the Angular zone', () => {
+    const inAngular: boolean[] = []
+    mockGroupEvent.mockImplementationOnce(() => inAngular.push(zone.inAngular))
+    mockGroupEndAutoGroup.mockImplementationOnce(() =>
+      inAngular.push(zone.inAngular),
+    )
+
+    directive.ngAfterViewInit()
+    directive.ngOnDestroy()
+
+    expect(inAngular).toEqual([false, false])
+  })
+
   test('debug mode logs in ngAfterViewInit and ngOnDestroy', () => {
     directive.debug = true
     directive.ngAfterViewInit()
@@ -502,19 +515,6 @@ describe('Angular IframeResizerDirective', () => {
       [false, false],
       [false, false],
     ])
-  })
-
-  test('sets up and ends its console group outside the Angular zone', () => {
-    const inAngular: boolean[] = []
-    mockGroupEvent.mockImplementationOnce(() => inAngular.push(zone.inAngular))
-    mockGroupEndAutoGroup.mockImplementationOnce(() =>
-      inAngular.push(zone.inAngular),
-    )
-
-    directive.ngAfterViewInit()
-    directive.ngOnDestroy()
-
-    expect(inAngular).toEqual([false, false])
   })
 
   test('parent methods run outside the Angular zone', () => {
