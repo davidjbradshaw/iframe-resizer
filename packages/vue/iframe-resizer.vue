@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+  import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type {
@@ -121,10 +121,12 @@
     }
   })
 
-  // Re-bind on prop changes; subsequent calls take the update path in core
-  // and dispatch an UPDATE message to the child. Watch the reactive props
-  // object itself: reading a toRaw() copy inside a getter tracks nothing.
-  watch(props, () => {
+  // Re-bind when a prop's value changes; later calls take core's update
+  // path. Compare a key, as an array or object prop can be a new object
+  // with the same value each time the parent renders
+  const propsKey = computed(() => JSON.stringify(props))
+
+  watch(propsKey, () => {
     const iframe = iframeRef.value
     if (!iframe) return
     connectResizer(buildOptions())(iframe)
