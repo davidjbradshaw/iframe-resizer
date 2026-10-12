@@ -58,17 +58,19 @@ for (const [key, value] of Object.entries(Astro.props)) {
   }
 
   function createEventDispatcher(iframe: HTMLIFrameElement) {
-    const handlers: Record<string, (data: unknown) => void> = {}
+    const handlers: Record<string, (data: unknown) => boolean> = {}
 
+    // Cancelable, as with <iframe-resizer>: preventDefault() on the scroll
+    // event returns false, which stops core scrolling the page
     for (const [callback, eventName] of Object.entries(EVENTS)) {
-      handlers[callback] = (data: unknown) => {
+      handlers[callback] = (data: unknown) =>
         iframe.dispatchEvent(
           new CustomEvent(eventName, {
             detail: data,
             bubbles: true,
+            cancelable: true,
           }),
         )
-      }
     }
 
     return handlers

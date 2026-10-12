@@ -34,6 +34,7 @@ import type VueIframeResizer from '@iframe-resizer/vue'
 import type { IFrameOptions as VueOptions } from '@iframe-resizer/vue'
 import type VueSfc from '@iframe-resizer/vue/sfc'
 import type { IframeResizerElement } from '@iframe-resizer/web-component'
+import type { ComponentProps } from 'svelte'
 
 export type Published = [
   IframeResizerDirective,
@@ -69,3 +70,26 @@ export const direction: IFrameDirection = 'sideways'
 export const log: IFrameLogOption = 'loud'
 // @ts-expect-error not a scrolling option
 export const scrolling: IFrameScrollOption = 'sometimes'
+
+// The Vue and Svelte types only offer the options the components take, so
+// these stop being errors if they advertise every core option again
+type VueProps = InstanceType<typeof VueSfc>['$props']
+type SvelteProps = ComponentProps<SvelteIframeResizer>
+
+export const vueProps: VueProps = { license: 'GPLv3', scrolling: 'auto' }
+export const vueWaitForLoad: VueProps = {
+  license: 'GPLv3',
+  // @ts-expect-error waitForLoad is not a prop of the Vue component
+  waitForLoad: true,
+}
+
+export const svelteProps: SvelteProps = {
+  license: 'GPLv3',
+  scrolling: true,
+  src: '/child.html',
+}
+export const svelteOnResized: SvelteProps = {
+  license: 'GPLv3',
+  // @ts-expect-error onResized is an event of the Svelte component, not a prop
+  onResized: () => {},
+}
