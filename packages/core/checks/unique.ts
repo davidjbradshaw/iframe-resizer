@@ -1,14 +1,22 @@
 import { NEW_LINE } from '@iframe-resizer/common/consts'
 
-import { advise } from '../console'
+import { advise, warn } from '../console'
 
 const shownDuplicateIdWarning: Record<string, boolean> = {}
 
 export default function checkUniqueId(id: string): boolean {
-  if (shownDuplicateIdWarning[id] === true) return false
-
   const elements = document.querySelectorAll(`iframe#${CSS.escape(id)}`)
-  if (elements.length <= 1) return true
+
+  // Unique again, so a later duplicate is advised afresh
+  if (elements.length <= 1) {
+    delete shownDuplicateIdWarning[id]
+    return true
+  }
+
+  if (shownDuplicateIdWarning[id] === true) {
+    warn(id, `Iframe not bound, as its ID (${id}) is still not unique`)
+    return false
+  }
 
   shownDuplicateIdWarning[id] = true
 
