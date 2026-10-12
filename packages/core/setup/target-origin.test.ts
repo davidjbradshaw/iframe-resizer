@@ -39,6 +39,25 @@ describe('core/setup/target-origin', () => {
     expect(settings.blank.remoteHost).toBe('')
   })
 
+  it('setRemoteHost gives a data: URL the opaque origin, sent to *', () => {
+    settings.data = {
+      checkOrigin: true,
+      iframe: { src: 'data:text/html,%3Cp%3E/a/b/c%3C/p%3E' },
+    }
+    setRemoteHost('data')
+    setTargetOrigin('data')
+
+    expect(settings.data.remoteHost).toBe('null')
+    expect(settings.data.targetOrigin).toEqual(['*'])
+  })
+
+  it('setRemoteHost leaves user info out of the origin', () => {
+    settings.creds = { iframe: { src: 'https://user:pw@host.example/page' } }
+    setRemoteHost('creds')
+
+    expect(settings.creds.remoteHost).toBe('https://host.example')
+  })
+
   it('setRemoteHost reads the current src each time it is called', () => {
     const iframe = { src: '' }
     settings.later = { iframe }
