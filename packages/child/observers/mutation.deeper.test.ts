@@ -23,8 +23,10 @@ describe('child/observers/mutation deeper', () => {
       cb()
       return 1
     }
+    delete callbacks.cb
+    // The first observer is the main one; the second watches for a new body
     globalThis.MutationObserver = function (cb) {
-      callbacks.cb = cb
+      callbacks.cb ??= cb
       this.observe = vi.fn()
       this.disconnect = vi.fn()
     }
@@ -136,20 +138,57 @@ describe('child/observers/mutation deeper', () => {
     try {
       const observe = vi.fn()
       globalThis.MutationObserver = function (cb) {
-        callbacks.cb = cb
+        callbacks.cb ??= cb
         this.observe = observe
         this.disconnect = vi.fn()
       }
 
       const obs = createMutationObserver(vi.fn())
-      expect(observe).toHaveBeenCalledWith(
+      expect(observe).toHaveBeenNthCalledWith(
+        1,
         document.documentElement,
-        expect.any(Object),
+        expect.objectContaining({ subtree: true }),
       )
       obs.disconnect()
     } finally {
       Object.defineProperty(document, 'body', bodyDescriptor)
     }
+  })
+
+  test('moves to a replaced body and passes on the change of content', () => {
+    const instances: any[] = []
+    globalThis.MutationObserver = function (cb) {
+      instances.push(this)
+      this.cb = cb
+      this.observe = vi.fn()
+      this.disconnect = vi.fn()
+      this.takeRecords = vi.fn(() => [])
+    }
+    const oldChild = document.createElement('p')
+    document.body.append(oldChild)
+    let seen: { added: Node[]; removed: Node[] } | undefined
+    const obs = createMutationObserver(({ addedNodes, removedNodes }) => {
+      seen = { added: [...addedNodes], removed: [...removedNodes] }
+    })
+    const [main, bodyWatcher] = instances
+
+    expect(bodyWatcher.observe).toHaveBeenCalledWith(document.documentElement, {
+      childList: true,
+    })
+
+    // What Turbo Drive does on navigation
+    const newBody = document.createElement('body')
+    const newChild = document.createElement('div')
+    newBody.append(newChild)
+    document.body.replaceWith(newBody)
+    bodyWatcher.cb([])
+
+    expect(main.observe).toHaveBeenLastCalledWith(newBody, expect.any(Object))
+    expect(seen).toEqual({ added: [newChild], removed: [oldChild] })
+
+    obs.disconnect()
+
+    expect(bodyWatcher.disconnect).toHaveBeenCalled()
   })
 
   test('skips non-element removed nodes (shouldSkip branch)', () => {

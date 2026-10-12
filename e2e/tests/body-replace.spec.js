@@ -1,7 +1,7 @@
-import { expect, test } from '../tests/shared/test'
-import { waitForChildText, waitForResizer } from '../tests/shared/utils'
+import { expect, test } from './shared/test'
+import { waitForChildText, waitForResizer } from './shared/utils'
 
-const PAGE = '/e2e/fixtures/confirm/29-body-replace.html'
+const PAGE = '/e2e/fixtures/body-replace.html'
 const GROW = 500
 const WAIT = 3000
 
@@ -44,7 +44,7 @@ async function grow(page, label) {
   return result
 }
 
-test.describe('Finding 29: body element replaced in the child', () => {
+test.describe('Body element replaced in the child', () => {
   test('content added to the new body still resizes the iframe', async ({
     page,
   }) => {
