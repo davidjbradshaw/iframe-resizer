@@ -65,6 +65,7 @@ function contentMutated({
 
   removeObservers(removedNodes)
   addObservers(addedNodes)
+  observers.resize.observeBody()
 }
 
 export default function mutationObserved(mutations: {

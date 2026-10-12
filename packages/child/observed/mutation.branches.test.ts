@@ -22,7 +22,11 @@ vi.mock('./observers', () => {
   return {
     default: {
       overflow: { attachObservers, detachObservers },
-      resize: { attachObserverToNonStaticElements, detachObservers },
+      resize: {
+        attachObserverToNonStaticElements,
+        detachObservers,
+        observeBody: vi.fn(),
+      },
     },
     attachObservers,
     attachObserverToNonStaticElements,

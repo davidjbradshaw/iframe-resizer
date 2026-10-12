@@ -25,6 +25,7 @@ vi.mock('./observers', () => ({
     resize: {
       attachObserverToNonStaticElements: vi.fn(),
       detachObservers: vi.fn(),
+      observeBody: vi.fn(),
     },
   },
 }))
