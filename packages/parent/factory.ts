@@ -13,10 +13,14 @@ export default function createIframeResize() {
   ) => IFrameObject | undefined
   let iframes: HTMLIFrameElement[]
 
-  function setupDisconnectedIframe(element: HTMLIFrameElement): void {
+  // Takes the connector for this call, as a later call replaces the shared one
+  function setupDisconnectedIframe(
+    element: HTMLIFrameElement,
+    connect: typeof connectWithOptions,
+  ): void {
     const observer = new MutationObserver(() => {
       if (element.isConnected) {
-        connectWithOptions(element)
+        connect(element)
         observer.disconnect()
       }
     })
@@ -42,7 +46,7 @@ export default function createIframeResize() {
         if (iframe.isConnected) {
           connectWithOptions(iframe)
         } else {
-          setupDisconnectedIframe(iframe)
+          setupDisconnectedIframe(iframe, connectWithOptions)
         }
 
         iframes.push(iframe)
