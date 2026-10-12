@@ -52,8 +52,34 @@ describe('core/checks/unique', () => {
     expect(checkUniqueId('dup2')).toBe(false)
     const firstCallCount = coreConsole.advise.mock.calls.length
 
-    // Second call should return false without calling advise again
+    // Second call warns, without the advice again
+    vi.spyOn(coreConsole, 'warn').mockImplementation(() => {})
     expect(checkUniqueId('dup2')).toBe(false)
     expect(coreConsole.advise.mock.calls.length).toBe(firstCallCount)
+    expect(coreConsole.warn).toHaveBeenCalled()
+  })
+
+  it('binds an iframe once its duplicate has gone', () => {
+    vi.spyOn(coreConsole, 'advise').mockImplementation(() => {})
+    Object.defineProperty(window, 'CSS', {
+      configurable: true,
+      value: { escape: (s) => s },
+    })
+    const old = document.createElement('iframe')
+    old.id = 'route'
+    const next = document.createElement('iframe')
+    next.id = 'route'
+    document.body.append(old, next)
+
+    // An SPA route change: both exist for a moment
+    expect(checkUniqueId('route')).toBe(false)
+
+    old.remove()
+    expect(checkUniqueId('route')).toBe(true)
+
+    // A later duplicate is advised again
+    document.body.append(old)
+    expect(checkUniqueId('route')).toBe(false)
+    expect(coreConsole.advise).toHaveBeenCalledTimes(2)
   })
 })
