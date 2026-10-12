@@ -41,3 +41,8 @@ export function getParentProps(callback: Listener): () => void {
     sendMessage(0, 0, PARENT_INFO_STOP)
   }
 }
+
+// The parent stops monitoring when the iframe loads, then sends init again
+export function resumeParentProps(): void {
+  if (state.parentInfoListeners.size > 0) sendMessage(0, 0, PARENT_INFO)
+}
