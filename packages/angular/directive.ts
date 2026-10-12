@@ -20,6 +20,7 @@ import type {
   IFrameObject,
   IFrameOptions,
   IFrameResizedData,
+  IFrameScrollData,
 } from '@iframe-resizer/core'
 import core from '@iframe-resizer/core'
 import acg from 'auto-console-group'
@@ -89,17 +90,31 @@ export class IframeResizerDirective {
   private buildOptions(): IFrameOptions {
     const { logExpand: _logExpand, ...options } = this
       .options as IFrameOptions & Record<string, unknown>
+    const given = options as IFrameOptions
+
+    // A callback given in [options] runs too, in the same zone entry as the
+    // Output, so neither is lost and a template updates either way
+    const both =
+      <T>(output: EventEmitter<T>, callback?: (event: T) => unknown) =>
+      (event: T): void => {
+        if (!callback && !hasSubscribers(output)) return
+        this.zone.run(() => {
+          callback?.(event)
+          output.next(event)
+        })
+      }
 
     // Mouse events add listeners in the child and a message per pointer
-    // crossing, so they are only on when a mouse Output is bound as this
-    // connects; a later subscription waits for the next [options] change
+    // crossing, so they are only on when a mouse Output is bound, or given in
+    // [options], as this connects; a later subscription waits for a change
     const mouseEvents =
-      hasSubscribers(this.onMouseEnter) || hasSubscribers(this.onMouseLeave)
+      hasSubscribers(this.onMouseEnter) ||
+      hasSubscribers(this.onMouseLeave) ||
+      given.onMouseEnter ||
+      given.onMouseLeave
         ? {
-            onMouseEnter: (event: IFrameMouseData) =>
-              this.emit(this.onMouseEnter, event),
-            onMouseLeave: (event: IFrameMouseData) =>
-              this.emit(this.onMouseLeave, event),
+            onMouseEnter: both(this.onMouseEnter, given.onMouseEnter),
+            onMouseLeave: both(this.onMouseLeave, given.onMouseLeave),
           }
         : {}
 
@@ -122,22 +137,20 @@ export class IframeResizerDirective {
         return false
       },
 
-      onMessage: (event: IFrameMessageData) => this.emit(this.onMessage, event),
+      onMessage: both(this.onMessage, given.onMessage),
 
       ...mouseEvents,
 
-      onReady: (iframe: IFrameComponent) => this.emit(this.onReady, iframe),
+      onReady: both(this.onReady, given.onReady),
 
-      onResized: (event: IFrameResizedData) => this.emit(this.onResized, event),
+      onResized: both(this.onResized, given.onResized),
 
       // Emits once core has scrolled, as change detection before that could
-      // move the page under the position core has already worked out
-      onScroll: (event: {
-        iframe: IFrameComponent
-        top: number
-        left: number
-      }) => {
+      // move the page under the position core has already worked out. One
+      // given in [options] runs at once, as returning false cancels the scroll
+      onScroll: (event: IFrameScrollData) => {
         queueMicrotask(() => this.emit(this.onScroll, event))
+        return given.onScroll?.(event)
       },
     } as IFrameOptions
   }
