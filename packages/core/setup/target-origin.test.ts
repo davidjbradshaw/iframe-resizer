@@ -4,6 +4,7 @@ import settings from '../values/settings'
 import {
   getPostMessageTarget,
   getTargetOrigin,
+  setRemoteHost,
   setTargetOrigin,
 } from './target-origin'
 
@@ -21,6 +22,30 @@ describe('core/setup/target-origin', () => {
     expect(getTargetOrigin('javascript:alert(1)')).toBe('*')
     expect(getTargetOrigin('file:///tmp')).toBe('*')
     expect(getTargetOrigin('https://example.com')).toBe('https://example.com')
+  })
+
+  it('setRemoteHost takes the origin from the iframe src', () => {
+    settings.host = { iframe: { src: 'https://a.b:8080/path/page.html?q=1' } }
+    setRemoteHost('host')
+
+    expect(settings.host.remoteHost).toBe('https://a.b:8080')
+  })
+
+  it('setRemoteHost is empty for an iframe without a src', () => {
+    settings.blank = { iframe: { src: '' } }
+    setRemoteHost('blank')
+
+    expect(settings.blank.remoteHost).toBe('')
+  })
+
+  it('setRemoteHost reads the current src each time it is called', () => {
+    const iframe = { src: '' }
+    settings.later = { iframe }
+    setRemoteHost('later')
+    iframe.src = 'https://later.example/page.html'
+    setRemoteHost('later')
+
+    expect(settings.later.remoteHost).toBe('https://later.example')
   })
 
   it('setTargetOrigin sets based on checkOrigin and remoteHost', () => {
