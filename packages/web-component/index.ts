@@ -172,9 +172,11 @@ export class IframeResizerElement extends HTMLBase {
     } as IFrameOptions
   }
 
-  private rebind(overrides: Record<string, unknown> = {}): void {
+  // Defaults go first, so a value set through the options property still
+  // wins over the default for an attribute that was removed
+  private rebind(defaults: Record<string, unknown> = {}): void {
     if (!this.iframe || !this.resizer) return
-    connectResizer({ ...this.buildOptions(), ...overrides })(this.iframe)
+    connectResizer({ ...defaults, ...this.buildOptions() })(this.iframe)
   }
 
   connectedCallback(): void {
