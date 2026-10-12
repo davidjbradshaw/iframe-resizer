@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Confirm 36: getParentProps across the iframe load event</title>
+    <title>iframe-resizer getParentProps load test</title>
     <style>
       body { margin: 0; padding: 16px; font-family: sans-serif; }
       iframe { width: 100%; border: 1px solid #999; }
     </style>
   </head>
   <body>
-    <h1>Finding 36: getParentProps subscription survives the iframe load event</h1>
+    <h1>getParentProps across the iframe load event</h1>
     <p>Status: <span id="status">pending</span></p>
     <iframe
       id="frame"
-      src="/e2e/fixtures/confirm/36-parent-props-load-child.html"
+      src="child/frame.parent-props-load.html"
     ></iframe>
     <script src="/js/iframe-resizer.parent.js"></script>
     <script>
