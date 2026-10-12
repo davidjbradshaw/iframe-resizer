@@ -13,6 +13,7 @@ import {
   splitProps,
   untrack,
 } from 'solid-js'
+import { isServer } from 'solid-js/web'
 
 import type { IFrameResizerProps } from './types'
 import pickWireOptions from './wire-options'
@@ -173,13 +174,17 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
     connectResizer(untrack(buildOptions))(iframeEl)
   })
 
+  // The server has no element to style, so it writes the style into the markup
+  const serverStyle = isServer ? styleProp : {}
   // eslint-disable-next-line jsx-a11y/iframe-has-title
-  const iframe = <iframe {...iframeProps} ref={iframeEl} />
+  const iframe = <iframe {...iframeProps} {...serverStyle} ref={iframeEl} />
 
-  let prevStyle: StyleProp
-  createRenderEffect(() => {
-    prevStyle = applyStyle(iframeEl, styleProp.style, prevStyle)
-  })
+  if (!isServer) {
+    let prevStyle: StyleProp
+    createRenderEffect(() => {
+      prevStyle = applyStyle(iframeEl, styleProp.style, prevStyle)
+    })
+  }
 
   return iframe
 }
