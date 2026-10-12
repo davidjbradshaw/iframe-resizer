@@ -118,7 +118,8 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     case TITLE:
-      setTitle(id, message)
+      // The whole body, as the title itself can contain the separator
+      setTitle(id, getMessageBody(id, 4))
       break
 
     default:
