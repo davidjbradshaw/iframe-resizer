@@ -9,6 +9,7 @@ import { createPluginsProd } from './shared/plugins.js'
 
 const TOOLCHAIN = 'build-scripts/angular'
 const NGC = `${TOOLCHAIN}/node_modules/.bin/ngc`
+// ngc's output, passed to it as --outDir so this is the only place it is set
 const NGC_OUT = 'node_modules/.cache/angular-ngc'
 // Hash of the lockfile the toolchain was last installed from
 const INSTALLED = `${TOOLCHAIN}/node_modules/.lockfile-hash`
@@ -46,9 +47,11 @@ const angularCompiler = () => {
       if (compiled) return
       compiled = true
       installToolchain()
-      execFileSync(NGC, ['-p', `${TOOLCHAIN}/tsconfig.json`], {
-        stdio: 'inherit',
-      })
+      execFileSync(
+        NGC,
+        ['-p', `${TOOLCHAIN}/tsconfig.json`, '--outDir', NGC_OUT],
+        { stdio: 'inherit' },
+      )
     },
     closeBundle() {
       compiled = false
