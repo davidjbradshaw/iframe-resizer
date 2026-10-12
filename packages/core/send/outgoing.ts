@@ -33,10 +33,10 @@ export default function createOutgoingMessage(id: string): string {
     widthCalculationMethod,
   } = settings[id]
 
-  // The body styles are free text, so a colon in one, as in url(https://...),
-  // must not shift the fields after it
+  // The id and body styles are free text, so a colon in one, as in React's
+  // useId() or url(https://...), must not shift the fields after it
   return [
-    id,
+    escapeField(id),
     V1_PADDING,
     sizeWidth,
     log,
