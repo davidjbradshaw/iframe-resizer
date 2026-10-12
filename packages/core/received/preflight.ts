@@ -2,9 +2,9 @@ import { isIframe } from '@iframe-resizer/common'
 import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
+import isAllowedOrigin from '../checks/allowed-origin'
 import { log, warn } from '../console'
 import type { MessageData } from '../message-data'
-import { isAllowedOrigin } from '../send/ready'
 import settings from '../values/settings'
 
 const ABOVE_TYPES: Record<string, number> = { true: 1, false: 1, undefined: 1 }
