@@ -70,6 +70,8 @@ To improve performance add the <b>data-iframe-resize</> attribute to the ${detai
 }
 
 export function perfObserver(list: PerformanceObserverEntryList): void {
+  let measured = false
+
   list.getEntries().forEach((entry) => {
     if (entry.name !== PREF_END) return
     try {
@@ -81,10 +83,15 @@ export function perfObserver(list: PerformanceObserverEntryList): void {
       detail = (entry as PerformanceMark).detail
       timings.push(duration)
       if (timings.length > MAX_SAMPLES) timings.shift()
+      measured = true
     } catch {
       // Missing marks; ignore
     }
   })
+
+  // Clear the marks once measured, as the timing check skips clearing them
+  // on pages with few tagged elements, and stops after its warning
+  if (measured) clearPerfMarks()
 }
 
 export default function createPerformanceObserver(): {
