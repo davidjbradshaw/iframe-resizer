@@ -29,6 +29,13 @@ export function setTargetOrigin(id: string): void {
     : [checkOrigin === false ? '*' : getTargetOrigin(remoteHost)]
 }
 
+// The src can be set, or changed, after the iframe was bound
+export function refreshRemoteHost(id: string): void {
+  const { remoteHost } = settings[id]
+  setRemoteHost(id)
+  if (settings[id].remoteHost !== remoteHost) setTargetOrigin(id)
+}
+
 export function getPostMessageTarget(iframe: HTMLIFrameElement): void {
   const { id } = iframe
   if (settings[id].postMessageTarget === null)

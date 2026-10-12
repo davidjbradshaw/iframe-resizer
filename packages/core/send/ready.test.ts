@@ -1,16 +1,22 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ error: vi.fn(), event: vi.fn() }))
+vi.mock('../console', () => ({ error: vi.fn(), event: vi.fn(), warn: vi.fn() }))
 vi.mock('../values/settings', () => ({
   default: {
     a: {
+      checkOrigin: true,
+      iframe: { src: 'https://a.com/page.html' },
       initChild: vi.fn(),
       postMessageTarget: 'win',
+      remoteHost: 'https://a.com',
       targetOrigin: ['https://a.com'],
     },
     b: {
+      checkOrigin: true,
+      iframe: { src: 'https://a.com/page.html' },
       initChild: vi.fn(),
       postMessageTarget: 'other',
+      remoteHost: 'https://a.com',
       targetOrigin: ['https://a.com'],
     },
   },
@@ -26,6 +32,8 @@ const entry = (id) => [id, settings[id]]
 describe('core/send/ready', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    settings.a.iframe.src = 'https://a.com/page.html'
+    settings.a.remoteHost = 'https://a.com'
     settings.a.targetOrigin = ['https://a.com']
   })
 
@@ -53,6 +61,15 @@ describe('core/send/ready', () => {
       'a',
       expect.stringContaining('https://other.com'),
     )
+  })
+
+  test('connects to a page from the origin the src was changed to', () => {
+    settings.a.iframe.src = 'https://other.com/page.html'
+    ready({ source: 'win', origin: 'https://other.com' })
+
+    expect(settings.a.targetOrigin).toEqual(['https://other.com'])
+    expect(settings.a.initChild).toHaveBeenCalled()
+    expect(error).not.toHaveBeenCalled()
   })
 
   test('accepts any origin when checkOrigin is off', () => {
