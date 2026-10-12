@@ -3,6 +3,7 @@ import { WIDTH, WIDTH_EDGE } from '@iframe-resizer/common/consts'
 import settings from '../values/settings'
 import getAutoSize from './auto'
 import getMaxElement from './max-element'
+import scrollOffset from './scroll-offset'
 
 const getWidth = {
   label: WIDTH,
@@ -13,7 +14,7 @@ const getWidth = {
     Math.max(
       document.documentElement.getBoundingClientRect().right,
       document.body.getBoundingClientRect().right,
-    ),
+    ) + scrollOffset(WIDTH_EDGE),
   documentElementScroll: () => document.documentElement.scrollWidth,
   taggedElement: () => getMaxElement(WIDTH_EDGE),
 }

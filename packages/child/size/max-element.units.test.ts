@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import state from '../values/state'
 import { getAllElements } from './all'
@@ -35,6 +35,10 @@ describe('child/size/max-element unit tests', () => {
     state.hasOverflow = false
     state.overflowedNodeSet = new Set()
     state.taggedElements = []
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
   })
 
   describe('getSelectedElements', () => {
@@ -268,6 +272,61 @@ describe('child/size/max-element unit tests', () => {
 
       expect(result.maxEl).toBe(document.documentElement)
       expect(result.maxVal).toBe(0)
+    })
+
+    // getBoundingClientRect() is viewport-relative, so a scrolled page needs
+    // its scroll offset added back on the measured side
+    test('adds the vertical scroll to a bottom measured on a scrolled page', () => {
+      const el = document.createElement('div')
+      document.body.append(el)
+      el.getBoundingClientRect = () => ({ bottom: 300, right: 50 }) as DOMRect
+      vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+        getPropertyValue: () => '10',
+      } as unknown as CSSStyleDeclaration)
+      vi.stubGlobal('scrollY', 200)
+      vi.stubGlobal('scrollX', 40)
+      state.hasTags = true
+
+      const result = findMaxElement([el], 'bottom')
+
+      expect(result.maxEl).toBe(el)
+      expect(result.maxVal).toBe(510) // 300 + 200 scrolled + 10 margin
+    })
+
+    test('adds the horizontal scroll to a right measured on a scrolled page', () => {
+      const el = document.createElement('div')
+      document.body.append(el)
+      el.getBoundingClientRect = () => ({ bottom: 50, right: 300 }) as DOMRect
+      vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+        getPropertyValue: () => '0',
+      } as unknown as CSSStyleDeclaration)
+      vi.stubGlobal('scrollY', 200)
+      vi.stubGlobal('scrollX', 40)
+      state.hasTags = true
+
+      const result = findMaxElement([el], 'right')
+
+      expect(result.maxEl).toBe(el)
+      expect(result.maxVal).toBe(340)
+    })
+
+    test('adds the scroll to the <html> floor as well as the elements', () => {
+      const el = document.createElement('div')
+      document.body.append(el)
+      el.getBoundingClientRect = () => ({ bottom: 100, right: 0 }) as DOMRect
+      vi.spyOn(
+        document.documentElement,
+        'getBoundingClientRect',
+      ).mockReturnValue({ bottom: 400, right: 0 } as DOMRect)
+      vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+        getPropertyValue: () => '0',
+      } as unknown as CSSStyleDeclaration)
+      vi.stubGlobal('scrollY', 200)
+
+      const result = findMaxElement([el], 'bottom')
+
+      expect(result.maxEl).toBe(document.documentElement)
+      expect(result.maxVal).toBe(600)
     })
 
     test('handles single element that exceeds baseline', () => {

@@ -11,6 +11,7 @@ import { PREF_END, PREF_START } from '../observers/perf'
 import settings from '../values/settings'
 import state from '../values/state'
 import { getAllElements } from './all'
+import scrollOffset from './scroll-offset'
 
 export function getSelectedElements(): Element[] | NodeListOf<Element> {
   const { hasOverflow, hasTags, overflowedNodeSet, taggedElements } = state
@@ -44,6 +45,7 @@ export function findMaxElement(
   side: string,
 ): { maxEl: Element; maxVal: number } {
   const marginSide = `margin-${side}`
+  const scroll = scrollOffset(side)
 
   let elVal
   let maxEl: Element = document.documentElement
@@ -54,14 +56,15 @@ export function findMaxElement(
   let maxVal = MIN_SIZE
   if (!state.hasTags) {
     if (side === HEIGHT_EDGE)
-      maxVal = document.documentElement.getBoundingClientRect().bottom
+      maxVal = document.documentElement.getBoundingClientRect().bottom + scroll
     else if (side === WIDTH_EDGE && settings.maxContentWidth)
-      maxVal = contentRight()
+      maxVal = contentRight() + scroll
   }
 
   for (const element of targetElements) {
     elVal =
       element.getBoundingClientRect()[side] +
+      scroll +
       parseFloat(getComputedStyle(element).getPropertyValue(marginSide))
 
     if (elVal > maxVal) {

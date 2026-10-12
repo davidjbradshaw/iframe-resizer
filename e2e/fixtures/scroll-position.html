@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer scroll position e2e</title>
+    <script type="text/javascript" src="../../js/iframe-resizer.parent.js"></script>
+    <style>
+      /* The iframe shows 200px of the child whatever size it is given, so
+         the child can scroll: in horizontal-inline the parent sets only the
+         width, and in vertical the height it sets is capped */
+      iframe { width: 400px; height: 200px; }
+      iframe[data-direction='vertical'] { max-height: 200px; }
+    </style>
+  </head>
+
+  <body>
+    <h2>Scroll position</h2>
+    <p>Direction: <code id="direction"></code></p>
+
+    <div style="margin: 20px">
+      <iframe src="child/frame.scroll-position.html"></iframe>
+    </div>
+
+    <script type="text/javascript">
+      // ?direction=<value> chooses the direction
+      const query = new URLSearchParams(location.search)
+      const direction = query.get('direction') || 'horizontal-inline'
+      document.getElementById('direction').textContent = direction
+      document.querySelector('iframe').dataset.direction = direction
+
+      iframeResize({
+        license: 'GPLv3',
+        log: true,
+        direction,
+        scrolling: true,
+      })
+    </script>
+  </body>
+</html>

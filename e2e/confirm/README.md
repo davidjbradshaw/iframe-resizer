@@ -5,7 +5,7 @@ Each test here reproduces one finding from the October 2026 code review, numbere
 Build first (`npm run build:dev`), then run from the repo root:
 
 ```bash
-npx playwright test -c e2e/confirm/playwright.config.js e2e/confirm/19-scroll-reset.spec.js
+npx playwright test -c e2e/confirm/playwright.config.js e2e/confirm/28-title-observer.spec.js
 npx vitest run -c e2e/confirm/vitest.config.mjs e2e/confirm/46-angular-ssr.test.ts
 ```
 

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Confirm 19 child</title>
+    <title>Scroll position child</title>
     <script>
       window.iframeResizer = {
         onReady() {
@@ -14,13 +14,14 @@
     <style>
       body { margin: 8px; font-family: sans-serif; }
       #tall { height: 2000px; background: linear-gradient(#eee, #999); }
+      #log .block { display: block; height: 100px; background: wheat; }
     </style>
   </head>
   <body>
     <p>Ready: <span id="ready-status">pending</span></p>
-    <!-- Stands in for a clock or carousel: the test appends a node here to
-         raise a childList mutation that does not change the page size -->
+    <div id="tall">Tall content so the iframe scrolls.</div>
+    <!-- Stands in for a clock or a feed: the test appends nodes here, below
+         what the user is looking at, with or without a change of size -->
     <div id="log"></div>
-    <div id="tall" data-iframe-resize>Tall content so the iframe scrolls.</div>
   </body>
 </html>

@@ -3,6 +3,7 @@ import { HEIGHT, HEIGHT_EDGE } from '@iframe-resizer/common/consts'
 import settings from '../values/settings'
 import getAutoSize from './auto'
 import getMaxElement from './max-element'
+import scrollOffset from './scroll-offset'
 
 const getHeight = {
   label: HEIGHT,
@@ -13,7 +14,7 @@ const getHeight = {
     Math.max(
       document.documentElement.getBoundingClientRect().bottom,
       document.body.getBoundingClientRect().bottom,
-    ),
+    ) + scrollOffset(HEIGHT_EDGE),
   documentElementScroll: () => document.documentElement.scrollHeight,
   taggedElement: () => getMaxElement(HEIGHT_EDGE),
 }

@@ -65,6 +65,7 @@ jobs:
           - message-source
           - parent
           - react
+          - scroll-position
           - send-message
           - solid
           - svelte
