@@ -46,4 +46,29 @@ describe('core/monitor/common', () => {
     expect(consoleMod.event).toHaveBeenCalledWith('i1', 'stopPageInfo')
     expect(listeners.removeEventListener).toHaveBeenCalled()
   })
+
+  test('starting a monitor again stops the one already running', () => {
+    const observers = []
+    globalThis.ResizeObserver = function (cb) {
+      this.observe = vi.fn()
+      this.disconnect = vi.fn()
+      this._cb = cb
+      observers.push(this)
+    }
+    const start = mod.startInfoMonitor(vi.fn(), 'ParentInfo')
+
+    start('i1')
+    const firstStop = settings.i1.stopParentInfo
+    vi.mocked(listeners.removeEventListener).mockClear()
+
+    start('i1')
+
+    expect(settings.i1.stopParentInfo).not.toBe(firstStop)
+    expect(consoleMod.event).toHaveBeenCalledWith('i1', 'stopParentInfo')
+    expect(observers[0].disconnect).toHaveBeenCalled()
+    expect(observers[1].disconnect).toHaveBeenCalled()
+    expect(observers[2].disconnect).not.toHaveBeenCalled()
+    expect(observers[3].disconnect).not.toHaveBeenCalled()
+    expect(listeners.removeEventListener).toHaveBeenCalled()
+  })
 })

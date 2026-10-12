@@ -16,17 +16,23 @@ const { notExpected } = await import('./utils')
 
 describe('child/received/parent-info', () => {
   beforeEach(() => {
-    state.onParentInfo = undefined
+    state.parentInfo = null
+    state.parentInfoListeners.clear()
     vi.clearAllMocks()
   })
 
-  test('calls user onParentInfo when provided', async () => {
-    const spy = vi.fn()
-    state.onParentInfo = spy
+  test('calls every subscriber and keeps the data', async () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    state.parentInfoListeners.add(first)
+    state.parentInfoListeners.add(second)
     const { default: parentInfo } = await import('./parent-info')
     parentInfo({ data: 'x' })
 
-    expect(spy).toHaveBeenCalledWith({ pi: false })
+    expect(first).toHaveBeenCalledWith({ pi: false })
+    expect(second).toHaveBeenCalledWith({ pi: false })
+    expect(state.parentInfo).toEqual({ pi: false })
+    expect(notExpected).not.toHaveBeenCalled()
   })
 
   test('sends notExpected when no handler', async () => {
@@ -34,5 +40,6 @@ describe('child/received/parent-info', () => {
     parentInfo({ data: 'x' })
 
     expect(notExpected).toHaveBeenCalled()
+    expect(state.parentInfo).toBe(null)
   })
 })
