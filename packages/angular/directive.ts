@@ -6,9 +6,11 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   NgZone,
   Output,
+  PLATFORM_ID,
   type SimpleChanges,
 } from '@angular/core'
 import { esModuleInterop } from '@iframe-resizer/common'
@@ -78,6 +80,7 @@ export class IframeResizerDirective {
   constructor(
     private elementRef: ElementRef,
     private zone: NgZone,
+    @Inject(PLATFORM_ID) private platformId: string,
   ) {}
 
   // Emits inside the zone, so a bound handler updates its template. An
@@ -164,6 +167,10 @@ export class IframeResizerDirective {
   }
 
   ngAfterViewInit(): void {
+    // Angular also runs this when rendering on the server, where there is no
+    // window; this is the test isPlatformBrowser() makes, without @angular/common
+    if (this.platformId !== 'browser') return
+
     const id = this.elementRef.nativeElement?.id
 
     // auto-console-group queues microtasks, which inside the zone would cost

@@ -35,6 +35,7 @@ describe('Angular IframeResizerDirective with core loaded as CommonJS', () => {
     const directive = new IframeResizerDirective(
       { nativeElement: iframe },
       zone as unknown as NgZone,
+      'browser',
     )
 
     directive.ngAfterViewInit()
