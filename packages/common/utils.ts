@@ -40,3 +40,12 @@ export const hasOwn = (o: object, k: PropertyKey): boolean =>
 export const esModuleInterop = <T = any>(mod: any): T =>
   // eslint-disable-next-line no-underscore-dangle
   mod?.__esModule ? mod.default : mod
+
+// The origin of a URL, or null when it is not an absolute URL
+export const getOrigin = (url: string): string | null => {
+  try {
+    return new URL(url).origin
+  } catch {
+    return null
+  }
+}
