@@ -6,6 +6,7 @@ import {
 
 import { log, warn } from '../console'
 import init from '../init'
+import { resumeParentProps } from '../methods/parent-props'
 import state from '../values/state'
 
 type InitEvent =
@@ -32,13 +33,14 @@ export default function initFromParent(event: InitEvent): void {
     return
   }
 
+  const sameOrigin = 'sameOrigin' in event && event.sameOrigin
+
   // A later init would change where the page sends its messages
   if (!state.firstRun) {
     log('Already initialised, ignoring init message')
+    if (sameOrigin || isAncestor(event.source)) resumeParentProps()
     return
   }
-
-  const sameOrigin = 'sameOrigin' in event && event.sameOrigin
 
   if (!sameOrigin && !state.testHarness && !isAncestor(event.source)) {
     warn('Ignored an init message from a window that is not above this page')
