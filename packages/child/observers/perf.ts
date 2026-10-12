@@ -34,23 +34,20 @@ export function startTimingCheck(): void {
     if (timings.length < MIN_SAMPLES) return
     if (detail.hasTags && detail.len < 25) return
 
-    timings.sort()
-
-    const average = Math.min(
-      timings.reduce((a, b) => a + b, 0) / timings.length,
-      timings[Math.floor(timings.length / 2)],
-    )
+    // Sort a copy by value: sort() alone compares as strings, and sorting in
+    // place would make the rolling window drop the smallest, not the oldest
+    const sorted = [...timings].sort((a, b) => a - b)
+    const mean = timings.reduce((a, b) => a + b, 0) / timings.length
+    const median = sorted[Math.floor(sorted.length / 2)]
+    const average = Math.min(mean, median)
 
     const roundedAverage = round(average)
 
     if (roundedAverage > oldAverage) {
       oldAverage = roundedAverage
       event('performanceObserver')
-      log('Mean time:', round(timings[Math.floor(timings.length / 2)]))
-      log(
-        'Median time:',
-        round(timings.reduce((a, b) => a + b, 0) / timings.length),
-      )
+      log('Mean time:', round(mean))
+      log('Median time:', round(median))
       log('Average time:', roundedAverage)
       log('Max time:', round(Math.max(...timings)))
       // debug('Timings:', JSON.parse(JSON.stringify(timings.map(round))))
