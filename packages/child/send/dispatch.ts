@@ -28,6 +28,15 @@ export function setTargetOrigin(
   return targetOrigin
 }
 
+// Once the window's origin is known, post only to that entry of the list
+export const narrowOrigins = (
+  origins: string | string[],
+  origin: string | undefined,
+): string[] => {
+  if (!Array.isArray(origins)) return [origins]
+  return origin && origins.includes(origin) ? [origin] : origins
+}
+
 export function dispatchToParent(
   message: string,
   targetOrigin: string | undefined,
@@ -45,8 +54,10 @@ export function dispatchToParent(
     }
   else {
     assert(target, 'Internal error: postMessage target is undefined')
-    const origins = setTargetOrigin(targetOrigin)
-    const originList = Array.isArray(origins) ? origins : [origins]
+    const originList = narrowOrigins(
+      setTargetOrigin(targetOrigin),
+      state.origin,
+    )
 
     for (const origin of originList) {
       ;(target as Window).postMessage(MESSAGE_ID + message, origin)

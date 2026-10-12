@@ -178,6 +178,36 @@ test.describe('child targetOrigin list', () => {
     await page.waitForFunction(() => window.readyCount === 1)
   })
 
+  test('posts only to the parent origin, so the browser logs no mismatch', async ({
+    page,
+  }) => {
+    // Logged by Chrome for each post to a listed origin the parent is not on
+    const mismatch = /target origin provided \('https:\/\/b\.example'\)/
+    const mismatches = []
+    page.on('console', (message) => {
+      if (mismatch.test(message.text())) mismatches.push(message.text())
+    })
+
+    await page.goto(
+      parentPage({ src: childPage(`${PARENT_ORIGIN},https://b.example`) }),
+    )
+    await page.waitForFunction(() => window.readyCount === 1)
+
+    // One more send after init
+    const iframeHeight = () =>
+      page.evaluate(() => document.getElementById('myIframe').offsetHeight)
+    const before = await iframeHeight()
+    const child = page.frames().find((frame) => frame !== page.mainFrame())
+    await child.evaluate(() => {
+      const block = document.createElement('div')
+      block.style.height = '200px'
+      document.body.append(block)
+    })
+    await expect.poll(iframeHeight).toBeGreaterThan(before)
+
+    expect(mismatches).toEqual([])
+  })
+
   test('does not reach a parent whose origin is not in the list', async ({
     page,
   }) => {
