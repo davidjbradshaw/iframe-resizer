@@ -100,6 +100,9 @@ export class IframeResizerDirective {
 
       onMessage: (event: IFrameMessageData) => this.emit(this.onMessage, event),
 
+      // Passing both turns on mouse events in the child, so an Output that is
+      // subscribed after init, as through @ViewChild, still fires. Unbound,
+      // their messages cost no change detection
       onMouseEnter: (event: IFrameMouseData) =>
         this.emit(this.onMouseEnter, event),
 
