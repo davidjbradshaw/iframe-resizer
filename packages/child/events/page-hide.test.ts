@@ -6,12 +6,14 @@ import setupOnPageHide from './page-hide'
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 vi.mock('../console', () => ({ event: vi.fn(), info: vi.fn(), log: vi.fn() }))
 const sendMessage = (await import('../send/message')).default
+const settings = (await import('../values/settings')).default
 
 describe('child/events/page-hide', () => {
   let addSpy
   beforeEach(() => {
     addSpy = vi.spyOn(window, 'addEventListener')
     tearDownList.length = 0
+    settings.version = '6.0.0'
   })
 
   afterEach(() => {
@@ -44,5 +46,14 @@ describe('child/events/page-hide', () => {
     expect(sendMessage).toHaveBeenCalled()
     expect(td1).toHaveBeenCalled()
     expect(td2).toHaveBeenCalled()
+  })
+
+  test('does not tell a parent before v5 the page is unloading', () => {
+    delete settings.version
+    setupOnPageHide()
+    const handler = addSpy.mock.calls[0][1]
+    handler({ persisted: false })
+
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })
