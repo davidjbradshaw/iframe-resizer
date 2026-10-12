@@ -179,3 +179,13 @@ test.describe('child targetOrigin list', () => {
     expect(await page.evaluate(() => window.readyCount)).toBe(0)
   })
 })
+
+// A data: page has an opaque origin, so the parent can only message it with *
+test.describe('data: URL iframe', () => {
+  test('connects with the default checkOrigin', async ({ page }) => {
+    await page.goto('/e2e/fixtures/data-url.html')
+
+    // The shared fixture fails the test if postMessage throws
+    await page.waitForFunction(() => window.childReady === true)
+  })
+})

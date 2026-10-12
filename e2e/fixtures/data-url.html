@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Confirm 9: data: URL iframe target origin</title>
+    <title>iframe-resizer data: URL iframe</title>
     <style>
       iframe {
         width: 100%;
@@ -10,7 +10,7 @@
         border: 0;
       }
     </style>
-    <script src="/js/iframe-resizer.parent.js"></script>
+    <script src="../../js/iframe-resizer.parent.js"></script>
   </head>
   <body>
     <p>Parent ready: <span id="parent-ready">pending</span></p>
@@ -28,9 +28,6 @@
   </body>
 </html>`
 
-      const checkOrigin = !location.search.includes('checkOrigin=false')
-
-      window.events = []
       window.childReady = false
 
       const iframe = document.createElement('iframe')
@@ -41,14 +38,9 @@
       iframeResize(
         {
           license: 'GPLv3',
-          checkOrigin,
-          warningTimeout: 3000,
           onReady() {
             window.childReady = true
             document.getElementById('parent-ready').textContent = 'ready'
-          },
-          onResized(data) {
-            window.events.push({ type: data.type, height: data.height })
           },
         },
         iframe,

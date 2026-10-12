@@ -1,8 +1,13 @@
+import { getOrigin } from '@iframe-resizer/common'
+
 import { warn } from '../console'
 import settings from '../values/settings'
 
+// A page with an opaque origin ('null'), such as a data: URL, can only be
+// messaged with '*'
 export const getTargetOrigin = (remoteHost: string): string =>
   remoteHost === '' ||
+  remoteHost === 'null' ||
   remoteHost.match(/^(about:blank|javascript:|file:\/\/)/) !== null
     ? '*'
     : remoteHost
@@ -11,7 +16,7 @@ export const getTargetOrigin = (remoteHost: string): string =>
 // to message the parent when checkOrigin is true
 export function setRemoteHost(id: string): void {
   const { iframe } = settings[id]
-  settings[id].remoteHost = iframe.src.split('/').slice(0, 3).join('/')
+  settings[id].remoteHost = getOrigin(iframe.src) ?? ''
 }
 
 export function setTargetOrigin(id: string): void {
