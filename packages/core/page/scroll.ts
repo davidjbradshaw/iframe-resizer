@@ -27,16 +27,18 @@ export function getElementPosition(target: HTMLIFrameElement): Position {
   }
 }
 
-export function scrollToLink(id: string): void {
+// Returns false when onScroll cancelled the scroll
+export function scrollToLink(id: string): boolean {
   const { x, y } = getStoredPagePosition()
   const iframe = settings[id]?.iframe
 
   if (on(id, 'onScroll', { iframe, top: y, left: x, x, y }) === false) {
     unsetPagePosition()
-    return
+    return false
   }
 
   setPagePosition(id)
+  return true
 }
 
 export function scrollBy(messageData: MessageData): void {
