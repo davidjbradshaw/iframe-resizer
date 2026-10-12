@@ -38,6 +38,22 @@ describe('child/size/max-element', () => {
     expect(val).toBe(280)
   })
 
+  test('leaves out an element marked data-iframe-ignore, even when it is the widest', () => {
+    const content = document.createElement('p')
+    const menu = document.createElement('nav')
+    menu.toggleAttribute('data-iframe-ignore', true)
+    const link = document.createElement('a')
+    menu.append(link)
+
+    content.getBoundingClientRect = () => ({ bottom: 0, right: 400 })
+    menu.getBoundingClientRect = () => ({ bottom: 0, right: 700 })
+    link.getBoundingClientRect = () => ({ bottom: 0, right: 650 })
+
+    document.body.append(content, menu)
+
+    expect(getMaxElement('right')).toBe(400)
+  })
+
   test('includes margin in calculation', () => {
     const d = document.createElement('div')
     d.getBoundingClientRect = () => ({ bottom: 250, right: 0 })

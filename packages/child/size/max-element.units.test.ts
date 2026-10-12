@@ -4,7 +4,11 @@ import state from '../values/state'
 import { getAllElements } from './all'
 import { findMaxElement, getSelectedElements } from './max-element'
 
-vi.mock('../console', () => ({ info: vi.fn() }))
+vi.mock('../console', () => ({
+  endAutoGroup: vi.fn(),
+  event: vi.fn(),
+  info: vi.fn(),
+}))
 vi.mock('../values/settings', () => ({
   default: { logging: false },
 }))
@@ -82,7 +86,25 @@ describe('child/size/max-element unit tests', () => {
       const result = getSelectedElements()
 
       expect(getAllElements).toHaveBeenCalledWith(document.documentElement)
-      expect(result).toBe(mockElements)
+      expect(Array.from(result)).toEqual(mockElements)
+    })
+
+    test('leaves ignored elements and their children out of the all-elements scan', () => {
+      const ignored = document.createElement('nav')
+      ignored.toggleAttribute('data-iframe-ignore', true)
+      const inside = document.createElement('a')
+      ignored.append(inside)
+      const outside = document.createElement('p')
+      document.body.append(ignored, outside)
+      vi.mocked(getAllElements).mockReturnValue([
+        ignored,
+        inside,
+        outside,
+      ] as unknown as NodeListOf<Element>)
+
+      const result = getSelectedElements()
+
+      expect(Array.from(result)).toEqual([outside])
     })
 
     test('returns empty array from getAllElements by default', () => {
