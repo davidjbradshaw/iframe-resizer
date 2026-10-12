@@ -54,6 +54,24 @@ type Callback = (...args: unknown[]) => unknown
 
 type StyleProp = JSX.CSSProperties | string | undefined
 
+const IMPORTANT = /\s*!important$/i
+
+// The declarations of a style string or object, by property name. A string is
+// parsed into the same form, so it can be applied a property at a time.
+function toDeclarations(value: StyleProp): Record<string, unknown> {
+  if (typeof value !== 'string') return (value ?? {}) as Record<string, unknown>
+
+  const { style } = document.createElement('div')
+  style.cssText = value
+
+  return Object.fromEntries(
+    Array.from(style, (name) => {
+      const important = style.getPropertyPriority(name) ? ' !important' : ''
+      return [name, `${style.getPropertyValue(name)}${important}`]
+    }),
+  )
+}
+
 // Solid re-sets every property of a style object whenever an element's props
 // are re-assigned, which would overwrite the size iframe-resizer has set on
 // the iframe with the size the page started it at. So the style prop is
@@ -64,24 +82,22 @@ function applyStyle(
   value: StyleProp,
   prev: StyleProp,
 ): StyleProp {
-  if (typeof value !== 'object') {
-    el.style.cssText = value ?? ''
-    return value
-  }
-
-  const previous = (typeof prev === 'object' ? prev : {}) as Record<
-    string,
-    unknown
-  >
-  if (typeof prev === 'string') el.style.cssText = ''
+  const next = toDeclarations(value)
+  const previous = toDeclarations(prev)
 
   for (const name of Object.keys(previous)) {
-    if (!(name in value)) el.style.removeProperty(name)
+    if (!(name in next)) el.style.removeProperty(name)
   }
 
-  for (const [name, v] of Object.entries(value)) {
-    if (v !== previous[name])
-      el.style.setProperty(name, v == null ? '' : `${v}`)
+  for (const [name, v] of Object.entries(next)) {
+    if (v !== previous[name]) {
+      const css = v == null ? '' : `${v}`
+      el.style.setProperty(
+        name,
+        css.replace(IMPORTANT, ''),
+        IMPORTANT.test(css) ? 'important' : '',
+      )
+    }
   }
 
   return value
