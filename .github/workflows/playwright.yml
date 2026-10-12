@@ -63,6 +63,7 @@ jobs:
           - jquery
           - legacy
           - message-source
+          - mutation-backlog
           - parent
           - react
           - send-message
