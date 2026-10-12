@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 import { defineConfig } from 'vite'
 
@@ -11,6 +12,7 @@ const TOOLCHAIN = 'build-scripts/angular'
 const NGC = `${TOOLCHAIN}/node_modules/.bin/ngc`
 // ngc's output, passed to it as --outDir so this is the only place it is set
 const NGC_OUT = 'node_modules/.cache/angular-ngc'
+const ENTRY = `${NGC_OUT}/directive.js`
 // Hash of the lockfile the toolchain was last installed from
 const INSTALLED = `${TOOLCHAIN}/node_modules/.lockfile-hash`
 
@@ -53,6 +55,15 @@ const angularCompiler = () => {
         { stdio: 'inherit' },
       )
     },
+    // ngc's map leads back to directive.ts, but Vite reads no maps from the
+    // files it loads, so pass it on
+    load(id) {
+      if (id !== resolve(ENTRY)) return null
+      return {
+        code: readFileSync(id, 'utf8'),
+        map: readFileSync(`${id}.map`, 'utf8'),
+      }
+    },
     closeBundle() {
       compiled = false
       copyFileSync(`${NGC_OUT}/directive.d.ts`, 'dist/angular/directive.d.ts')
@@ -63,7 +74,7 @@ const angularCompiler = () => {
 export default defineConfig({
   build: {
     lib: {
-      entry: `./${NGC_OUT}/directive.js`,
+      entry: `./${ENTRY}`,
       formats: ['es', 'cjs'],
       // Analog's build only links files under fesm20*
       fileName: (format) => (format === 'es' ? ANGULAR_ESM : 'index.cjs.js'),
