@@ -158,7 +158,7 @@ export default function createMutationObserver(
   }) => void,
 ): { disconnect: () => void } {
   const observer = new window.MutationObserver(mutationObserved)
-  const target = document.body || document.documentElement
+  let target = document.body || document.documentElement
 
   processMutations = createProcessMutations(callback)
 
@@ -166,11 +166,32 @@ export default function createMutationObserver(
 
   info('Attached%c MutationObserver%c to body', HIGHLIGHT, FOREGROUND)
 
+  // Turbo Drive and the like replace <body> itself, which the observer above
+  // can't see, so move to the new body and pass on the change of content
+  const bodyObserver = new window.MutationObserver(() => {
+    const { body } = document
+    if (!body || body === target) return
+
+    const pending = observer.takeRecords()
+    const { childNodes: removed } = target
+    target = body
+    observer.disconnect()
+    observer.observe(target, config)
+    info('Moved%c MutationObserver%c to new body', HIGHLIGHT, FOREGROUND)
+
+    mutationObserved([
+      ...pending,
+      { addedNodes: body.childNodes, removedNodes: removed } as MutationRecord,
+    ])
+  })
+  bodyObserver.observe(document.documentElement, { childList: true })
+
   return {
     disconnect: () => {
       addedNodes.clear()
       removedNodes.clear()
       observer.disconnect()
+      bodyObserver.disconnect()
       info('Detached%c MutationObserver', HIGHLIGHT)
     },
   }
