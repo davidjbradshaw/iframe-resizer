@@ -7,6 +7,9 @@ const START_WIDTH = '400px'
 const iframeWidth = (page) =>
   page.locator('iframe').evaluate((el) => el.style.width)
 
+const iframeHeight = (page) =>
+  page.locator('iframe').evaluate((el) => parseFloat(el.style.height))
+
 // The right edge of the element the child is told to measure
 const contentWidth = (page) =>
   page
@@ -136,6 +139,40 @@ test.describe('Horizontal', () => {
 
     await page.waitForTimeout(1000)
     expect(await iframeWidth(page)).toBe(first)
+  })
+})
+
+test.describe('Both directions', () => {
+  // The overflow observer watches the bottom edge in 'both' mode, so an
+  // element overflowing it says nothing about which element is widest
+  test('a bottom-overflowing element does not drop a wide element from the width', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.both-overflow.html', 'both')
+    const child = page.frameLocator('iframe')
+
+    const innerRight = await child
+      .locator('#inner')
+      .evaluate((el) => el.getBoundingClientRect().right)
+    expect(innerRight).toBeGreaterThan(parseFloat(START_WIDTH))
+
+    // With nothing overflowing, the width search covers every element and
+    // the iframe is sized to the 800px inner div
+    await expect
+      .poll(async () => parseFloat(await iframeWidth(page)))
+      .toBeCloseTo(innerRight, 1)
+    const heightBefore = await iframeHeight(page)
+
+    // An unrelated, narrow element starts overflowing the bottom of the page
+    await child.locator('body').evaluate(() => window.showFooter())
+    await expect(child.locator('#footer')).toHaveAttribute(
+      'data-iframe-overflowed',
+    )
+
+    // The height grows to the footer, so the size calculated with the
+    // overflow has been applied; the width must still fit the inner div
+    await expect.poll(() => iframeHeight(page)).toBeGreaterThan(heightBefore)
+    expect(parseFloat(await iframeWidth(page))).toBeCloseTo(innerRight, 1)
   })
 })
 
