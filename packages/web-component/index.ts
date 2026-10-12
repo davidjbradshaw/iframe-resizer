@@ -106,6 +106,8 @@ export class IframeResizerElement extends HTMLBase {
 
   private iframe: HTMLIFrameElement | null = null
 
+  private attributeObserver: MutationObserver | null = null
+
   static get observedAttributes(): string[] {
     return Object.keys(RESIZER_ATTR_MAP)
   }
@@ -114,8 +116,9 @@ export class IframeResizerElement extends HTMLBase {
     return this.resizerOptions
   }
 
-  set options(val: Partial<IFrameOptions>) {
-    this.resizerOptions = val
+  // A framework sets undefined for an unset binding, so treat that as none
+  set options(val: Partial<IFrameOptions> | null | undefined) {
+    this.resizerOptions = val ?? {}
     this.rebind()
   }
 
@@ -191,6 +194,7 @@ export class IframeResizerElement extends HTMLBase {
 
     this.iframe = iframe
     this.append(iframe)
+    this.watchAttributes()
 
     this.resizer = connectResizer(this.buildOptions())(iframe) ?? null
 
@@ -217,11 +221,28 @@ export class IframeResizerElement extends HTMLBase {
   }
 
   disconnectedCallback(): void {
+    this.attributeObserver?.disconnect()
+    this.attributeObserver = null
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
     this.resizer = null
     this.iframe?.remove()
     this.iframe = null
+  }
+
+  // Passes later changes to the element's other attributes, such as src, on
+  // to the iframe. Not the id, as core keeps the iframe's settings under it
+  private watchAttributes(): void {
+    this.attributeObserver = new MutationObserver((mutations) => {
+      for (const { attributeName: name } of mutations) {
+        if (!name || name === 'id' || RESIZER_ATTR_MAP[name]) continue
+
+        const value = this.getAttribute(name)
+        if (value === null) this.iframe?.removeAttribute(name)
+        else this.iframe?.setAttribute(name, value)
+      }
+    })
+    this.attributeObserver.observe(this, { attributes: true })
   }
 }
 
