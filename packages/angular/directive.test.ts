@@ -551,6 +551,47 @@ describe('Angular IframeResizerDirective', () => {
     expect(calls[1].options.onMouseLeave).toEqual(expect.any(Function))
   })
 
+  test('a callback given in [options] runs in the zone with the Output', async () => {
+    const calls = await mockConnect()
+    const seen: string[] = []
+    directive.options = {
+      license: '',
+      onResized: () => seen.push(`option in zone: ${zone.inAngular}`),
+    }
+    directive.onResized.subscribe(() =>
+      seen.push(`output in zone: ${zone.inAngular}`),
+    )
+
+    directive.ngAfterViewInit()
+    fromCore(() =>
+      calls[0].options.onResized({ iframe: mockIframe, height: 1, width: 1 }),
+    )
+
+    expect(seen).toEqual(['option in zone: true', 'output in zone: true'])
+  })
+
+  test('an onScroll given in [options] can cancel the scroll', async () => {
+    const calls = await mockConnect()
+    directive.options = { license: '', onScroll: () => false }
+
+    directive.ngAfterViewInit()
+    const result = fromCore(() =>
+      calls[0].options.onScroll({ iframe: mockIframe, top: 1, left: 0 }),
+    )
+
+    expect(result).toBe(false)
+  })
+
+  test('a mouse callback given in [options] turns mouse events on', async () => {
+    const calls = await mockConnect()
+    directive.options = { license: '', onMouseEnter: vi.fn() }
+
+    directive.ngAfterViewInit()
+
+    expect(calls[0].options.onMouseEnter).toEqual(expect.any(Function))
+    expect(calls[0].options.onMouseLeave).toEqual(expect.any(Function))
+  })
+
   test('a bound Output still emits without Subject.observed (RxJS 6)', async () => {
     const calls = await mockConnect()
     const handler = vi.fn()
