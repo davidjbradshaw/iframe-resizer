@@ -1,18 +1,22 @@
 import isAllowedOrigin from '../checks/allowed-origin'
 import { error, event } from '../console'
+import { refreshRemoteHost } from '../setup/target-origin'
 import settings from '../values/settings'
 
 export const sendIframeReady =
   ({ source, origin }: Pick<MessageEvent, 'source' | 'origin'>) =>
-  ([id, { initChild, postMessageTarget, targetOrigin }]: [
+  ([id, { initChild, postMessageTarget }]: [
     string,
     {
       initChild: () => void
       postMessageTarget: MessageEventSource | null
-      targetOrigin?: string[]
     },
   ]): void => {
     if (source !== postMessageTarget) return
+
+    // The src may have changed since the target origins were last set
+    refreshRemoteHost(id)
+    const { targetOrigin } = settings[id]
 
     if (targetOrigin && !isAllowedOrigin(targetOrigin, origin)) {
       event(id, 'originNotAllowed')

@@ -67,6 +67,18 @@ test.describe('checkOrigin', () => {
     })
   })
 
+  test.describe('src changed to another origin', () => {
+    test('connects to the page the src now points at', async ({ page }) => {
+      await page.goto(parentPage())
+      await page.waitForFunction(() => window.readyCount === 1)
+
+      await setIframeSrc(page)
+
+      // The shared fixture fails the test if any error was logged
+      await page.waitForFunction(() => window.readyCount === 2)
+    })
+  })
+
   test.describe('disabled', () => {
     test('connects to a page from another origin without an error', async ({
       page,

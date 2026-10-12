@@ -4,6 +4,7 @@ import settings from '../values/settings'
 import {
   getPostMessageTarget,
   getTargetOrigin,
+  refreshRemoteHost,
   setRemoteHost,
   setTargetOrigin,
 } from './target-origin'
@@ -46,6 +47,33 @@ describe('core/setup/target-origin', () => {
     setRemoteHost('later')
 
     expect(settings.later.remoteHost).toBe('https://later.example')
+  })
+
+  it('refreshRemoteHost re-derives the target origin when the src changed', () => {
+    settings.moved = {
+      checkOrigin: true,
+      iframe: { src: 'https://new.example/page.html' },
+      remoteHost: 'https://old.example',
+      targetOrigin: ['https://old.example'],
+    }
+    refreshRemoteHost('moved')
+
+    expect(settings.moved.remoteHost).toBe('https://new.example')
+    expect(settings.moved.targetOrigin).toEqual(['https://new.example'])
+  })
+
+  it('refreshRemoteHost leaves the target origin alone when the src is unchanged', async () => {
+    const { warn } = await import('../console')
+    settings.same = {
+      checkOrigin: [],
+      iframe: { src: 'https://same.example/page.html' },
+      remoteHost: 'https://same.example',
+      targetOrigin: ['kept'],
+    }
+    refreshRemoteHost('same')
+
+    expect(settings.same.targetOrigin).toEqual(['kept'])
+    expect(warn).not.toHaveBeenCalled()
   })
 
   it('setTargetOrigin sets based on checkOrigin and remoteHost', () => {
