@@ -11,7 +11,6 @@
     "useDefineForClassFields": false,
     "skipLibCheck": true,
     "strict": true,
-    "outDir": "../../node_modules/.cache/angular-ngc",
     "rootDir": "../../packages/angular",
     "baseUrl": ".",
     "paths": {

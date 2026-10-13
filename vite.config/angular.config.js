@@ -10,6 +10,7 @@ import { createPluginsProd } from './shared/plugins.js'
 
 const TOOLCHAIN = 'build-scripts/angular'
 const NGC = `${TOOLCHAIN}/node_modules/.bin/ngc`
+// ngc's output, passed to it as --outDir so this is the only place it is set
 const NGC_OUT = 'node_modules/.cache/angular-ngc'
 const ENTRY = `${NGC_OUT}/directive.js`
 // Hash of the lockfile the toolchain was last installed from
@@ -48,9 +49,11 @@ const angularCompiler = () => {
       if (compiled) return
       compiled = true
       installToolchain()
-      execFileSync(NGC, ['-p', `${TOOLCHAIN}/tsconfig.json`], {
-        stdio: 'inherit',
-      })
+      execFileSync(
+        NGC,
+        ['-p', `${TOOLCHAIN}/tsconfig.json`, '--outDir', NGC_OUT],
+        { stdio: 'inherit' },
+      )
     },
     // ngc's map leads back to directive.ts, but Vite reads no maps from the
     // files it loads, so pass it on
