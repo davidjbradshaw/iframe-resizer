@@ -72,7 +72,9 @@ describe('child/received/update', () => {
     settings.bodyPadding = ''
     settings.offsetHeight = 0
     settings.offsetWidth = 0
+    settings.autoResize = true
     state.pageSettings = []
+    state.fromParent = {}
   })
 
   it('re-sends the size when the offset changes, as setOffsetSize does', () => {
@@ -113,6 +115,36 @@ describe('child/received/update', () => {
 
     expect(settings.offsetHeight).toBe(50)
     expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  it('keeps an offset the page set with setOffsetSize() while the parent sends the same one', () => {
+    // A parent with no offsetSize sends an empty field, read as 0
+    state.fromParent = { offsetHeight: 0, offsetWidth: 0 }
+    settings.offsetHeight = 50
+
+    updateFromParent(buildEvent('edge1', { logging: 'true' }))
+
+    expect(settings.offsetHeight).toBe(50)
+    expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  it('applies an offset the parent has changed over the one the page set', () => {
+    state.fromParent = { offsetHeight: 0, offsetWidth: 0 }
+    settings.offsetHeight = 50
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '100' }))
+
+    expect(settings.offsetHeight).toBe(100)
+    expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
+  })
+
+  it('keeps autoResize off when the page turned it off and the parent sends the same value', () => {
+    state.fromParent = { autoResize: true }
+    settings.autoResize = false
+
+    updateFromParent(buildEvent('edge1', { autoResize: 'true' }))
+
+    expect(settings.autoResize).toBe(false)
   })
 
   it('updates console settings on every update', () => {

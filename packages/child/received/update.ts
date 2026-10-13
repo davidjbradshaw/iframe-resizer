@@ -12,6 +12,10 @@ import settings from '../values/settings'
 import state from '../values/state'
 import { getData } from './utils'
 
+// Settings the page can change with parentIframe.autoResize() and
+// setOffsetSize()
+const METHOD_SETTINGS = ['autoResize', 'offsetHeight', 'offsetWidth']
+
 export default function updateFromParent(event: MessageEvent): void {
   const previous = {
     bodyBackground: settings.bodyBackground,
@@ -25,10 +29,18 @@ export default function updateFromParent(event: MessageEvent): void {
 
   const data = getData(event).split(SEPARATOR)
   const incoming = readDataFromParent(data)
+  const lastSent = state.fromParent
+  state.fromParent = { ...incoming }
 
   // Options set on the page in window.iframeResizer win over the parent, on
   // init and on every update
   for (const key of state.pageSettings) delete incoming[key]
+
+  // An update resends every option, so keep a value the page set with a
+  // method, unless the parent has changed its own since
+  for (const key of METHOD_SETTINGS) {
+    if (incoming[key] === lastSent[key]) delete incoming[key]
+  }
 
   map2settings(incoming)
 
