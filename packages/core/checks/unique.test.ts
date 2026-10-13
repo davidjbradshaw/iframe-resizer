@@ -36,7 +36,7 @@ describe('core/checks/unique', () => {
     expect(coreConsole.advise).toHaveBeenCalled()
   })
 
-  it('returns false immediately for already shown duplicate warning', () => {
+  it('refuses a duplicate ID again without a second message', () => {
     vi.spyOn(coreConsole, 'advise').mockImplementation(() => {})
     Object.defineProperty(window, 'CSS', {
       configurable: true,
@@ -52,11 +52,11 @@ describe('core/checks/unique', () => {
     expect(checkUniqueId('dup2')).toBe(false)
     const firstCallCount = coreConsole.advise.mock.calls.length
 
-    // Second call warns, without the advice again
+    // The second iframe is refused without the advice again, or a warning
     vi.spyOn(coreConsole, 'warn').mockImplementation(() => {})
     expect(checkUniqueId('dup2')).toBe(false)
     expect(coreConsole.advise.mock.calls.length).toBe(firstCallCount)
-    expect(coreConsole.warn).toHaveBeenCalled()
+    expect(coreConsole.warn).not.toHaveBeenCalled()
   })
 
   it('binds an iframe once its duplicate has gone', () => {
