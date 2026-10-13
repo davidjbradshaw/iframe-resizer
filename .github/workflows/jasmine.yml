@@ -13,6 +13,11 @@ on:
     branches: [ "master", "dev" ]
   workflow_dispatch: # Allow manual trigger
 
+# A newer commit to a PR cancels its older runs; each push runs in full
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
 jobs:
   integration-tests:
     name: Integration tests on Karma
