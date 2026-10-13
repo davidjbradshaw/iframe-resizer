@@ -160,4 +160,11 @@ describe('core/setup/target-origin', () => {
 
     expect(getPostMessageTarget('nested')).toBe(nested)
   })
+
+  it('getPostMessageTarget returns null for an ID with no iframe bound', () => {
+    // A duplicate ID is not bound, but logging has already set up its console
+    settings.duplicate = { console: {} }
+
+    expect(getPostMessageTarget('duplicate')).toBeNull()
+  })
 })
