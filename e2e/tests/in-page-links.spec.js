@@ -30,4 +30,25 @@ test.describe('In-page links', () => {
     expect(await page.evaluate(() => window.scrollY)).toBe(expectedScrollY)
     expect(await page.evaluate(() => window.location.hash)).toBe('#section')
   })
+
+  test('Back and Forward work for a link whose scroll onScroll did itself', async ({
+    page,
+  }) => {
+    await page.goto(PAGE)
+    await waitForResizer(page)
+    await waitForChildText(page, '#ready-status', 'ready')
+    const url = () => page.evaluate(() => window.location.href)
+    const start = await url()
+
+    const child = page.frame({ url: /frame\.onscroll-cancel\.html$/ })
+    await child.locator('#link').click()
+    await expect.poll(url).toBe(`${start}#section`)
+
+    // pushState() adds a history entry, as setting location.hash does, so
+    // Back stays on this page and only drops the hash
+    await page.goBack()
+    await expect.poll(url).toBe(start)
+    await page.goForward()
+    await expect.poll(url).toBe(`${start}#section`)
+  })
 })
