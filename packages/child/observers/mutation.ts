@@ -18,7 +18,6 @@ const MUTATION = 'Mutation'
 export const addedNodes = new Set<Node>()
 export const removedNodes = new Set<Node>()
 export const removedAddedNodes = new Set<Node>()
-export const newMutations: MutationRecord[][] = []
 
 const config = {
   attributes: true,
@@ -126,9 +125,6 @@ export const createProcessMutations =
     }
 
     delayCount = 1
-
-    newMutations.forEach(flatFilterMutations)
-    newMutations.length = 0
     pending = false
 
     logMutations()
@@ -140,7 +136,10 @@ export const createProcessMutations =
   }
 
 function mutationObserved(mutations: MutationRecord[]): void {
-  newMutations.push(mutations)
+  // Fold the records into the node sets now, rather than keep them for the
+  // next frame: rAF pauses in an offscreen cross-origin iframe, and the
+  // records would keep every removed subtree alive until it runs
+  flatFilterMutations(mutations)
   if (pending) return
 
   perfMon = performance.now()
@@ -167,7 +166,6 @@ export default function createMutationObserver(
     disconnect: () => {
       addedNodes.clear()
       removedNodes.clear()
-      newMutations.length = 0
       observer.disconnect()
       info('Detached%c MutationObserver', HIGHLIGHT)
     },

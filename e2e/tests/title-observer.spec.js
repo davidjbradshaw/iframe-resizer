@@ -1,7 +1,7 @@
-import { expect, test } from '../tests/shared/test'
-import { waitForChildText, waitForResizer } from '../tests/shared/utils'
+import { expect, test } from './shared/test'
+import { waitForChildText, waitForResizer } from './shared/utils'
 
-const BASE = '/e2e/fixtures/confirm/28-title-observer.html'
+const BASE = '/e2e/fixtures/title-observer.html'
 const TITLE_TIMEOUT = 3000
 
 const iframeTitle = (page) =>
@@ -16,11 +16,11 @@ async function loadChild(page, child) {
 
 const childFrame = (page) => page.frames().find((f) => f.parentFrame() !== null)
 
-test.describe('Finding 28: title observer target', () => {
+test.describe('Title observer', () => {
   test('control: editing the existing <title> in place reaches the parent', async ({
     page,
   }) => {
-    await loadChild(page, '28-title-observer-replace.html')
+    await loadChild(page, 'frame.title-replace.html')
     await expect
       .poll(() => iframeTitle(page), { timeout: TITLE_TIMEOUT })
       .toBe('First Title')
@@ -37,7 +37,7 @@ test.describe('Finding 28: title observer target', () => {
   test('a title set by replacing the <title> element reaches the parent', async ({
     page,
   }) => {
-    await loadChild(page, '28-title-observer-replace.html')
+    await loadChild(page, 'frame.title-replace.html')
 
     // Sanity: the initial title was synced
     await expect
@@ -58,7 +58,7 @@ test.describe('Finding 28: title observer target', () => {
   test('document.title set on a page whose only <title> is in an SVG reaches the parent', async ({
     page,
   }) => {
-    await loadChild(page, '28-title-observer-svg.html')
+    await loadChild(page, 'frame.title-svg.html')
 
     // Setting document.title creates a <title> in <head>
     await childFrame(page).evaluate(() => {

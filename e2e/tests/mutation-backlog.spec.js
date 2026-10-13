@@ -1,7 +1,7 @@
-import { expect, test } from '../tests/shared/test'
-import { waitForResizer } from '../tests/shared/utils'
+import { expect, test } from './shared/test'
+import { waitForResizer } from './shared/utils'
 
-const PAGE = '/e2e/fixtures/confirm/30-mutation-backlog.html'
+const PAGE = '/e2e/fixtures/mutation-backlog.html'
 const CHILD_HOST = '127.0.0.1'
 const UPDATES = 20 // feed updates, each its own MutationObserver batch
 const ROWS = 200 // nodes in each removed subtree
@@ -46,7 +46,7 @@ async function setup(page, bare = false) {
   return frame
 }
 
-test.describe('Finding 30: mutation records kept while rAF is paused', () => {
+test.describe('Mutation records while rAF is paused', () => {
   test('control: removed subtrees are collectable once a frame has run', async ({
     page,
   }) => {
@@ -73,7 +73,8 @@ test.describe('Finding 30: mutation records kept while rAF is paused', () => {
     const ticksAtScroll = await rafTicks(frame)
     await page.waitForTimeout(500)
     const ticksLater = await rafTicks(frame)
-    expect(ticksLater, 'precondition: rAF is paused while offscreen').toBe(ticksAtScroll)
+    // Without paused frames there is no backlog to test
+    test.skip(ticksLater !== ticksAtScroll, 'rAF keeps running offscreen here')
 
     // The live feed keeps replacing list items while the iframe is offscreen
     await feedUpdates(frame)

@@ -65,11 +65,13 @@ jobs:
           - jquery
           - legacy
           - message-source
+          - mutation-backlog
           - parent
           - react
           - send-message
           - solid
           - svelte
+          - title-observer
           - v5-child
           - vue
           - web-component
