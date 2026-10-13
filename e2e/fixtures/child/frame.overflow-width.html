@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>E2E Overflowing Width Child</title>
+    <script type="text/javascript" src="/js/iframe-resizer.child.js"></script>
+    <script>
+      window.iframeResizer = {
+        onReady() {
+          document.getElementById('ready-status').textContent = 'ready'
+        },
+      }
+    </script>
+    <style>
+      html {
+        padding: 8px 10px;
+      }
+      #bar {
+        width: 402px;
+        height: 20px;
+        background: rgb(135, 248, 180);
+      }
+      /* Overflows the page, but is narrower than #bar */
+      #abs {
+        position: absolute;
+        width: 200px;
+        height: 60px;
+        background: wheat;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Ready: <span id="ready-status">pending</span></p>
+    <div id="bar"></div>
+    <div id="abs"></div>
+  </body>
+</html>

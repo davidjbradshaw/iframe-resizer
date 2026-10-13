@@ -1,0 +1,18 @@
+{
+  "name": "e2e-astro",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "astro build"
+  },
+  "dependencies": {
+    "@iframe-resizer/astro": "file:../../../dist/astro",
+    "@iframe-resizer/common": "file:../../../dist/common",
+    "@iframe-resizer/core": "file:../../../dist/core",
+    "astro": "^7.3.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
+  }
+}

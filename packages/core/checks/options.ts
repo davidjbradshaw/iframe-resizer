@@ -1,0 +1,37 @@
+import {
+  AUTO_RESIZE,
+  BOTH,
+  HORIZONTAL_BLOCK,
+  HORIZONTAL_INLINE,
+  NONE,
+  VERTICAL,
+} from '@iframe-resizer/common/consts'
+
+import { advise } from '../console'
+
+export default function checkOptions(
+  id: string,
+  options: Record<string, any> | undefined,
+): Record<string, any> {
+  if (!options) return {}
+
+  if (
+    'sizeWidth' in options ||
+    'sizeHeight' in options ||
+    AUTO_RESIZE in options
+  ) {
+    advise(
+      id,
+      `<rb>Deprecated Option</>
+
+The <b>sizeWidth</>, <b>sizeHeight</> and <b>autoResize</> options have been replaced with new <b>direction</> option which expects values of <bb>${VERTICAL}</>, <bb>${HORIZONTAL_INLINE}</>, <bb>${HORIZONTAL_BLOCK}</>, <bb>${BOTH}</> or <bb>${NONE}</>.
+`,
+    )
+  }
+
+  // An option passed as undefined is treated as not passed, so it does not
+  // replace the default, or the current value on update
+  return Object.fromEntries(
+    Object.entries(options).filter(([, value]) => value !== undefined),
+  )
+}

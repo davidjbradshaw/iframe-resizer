@@ -30,7 +30,7 @@ spyOn(msgObject.source, 'postMessage')
 **After (Playwright):**
 ```javascript
 // Real browser automation
-await page.goto('/example/html/index.html')
+await page.goto('/e2e/fixtures/index.html')
 const iframe = page.frameLocator('iframe')
 await expect(iframe.locator('body')).toBeVisible()
 ```
@@ -68,7 +68,7 @@ import { test, expect } from '@playwright/test'
 
 test('should work', async ({ page }) => {
   // Modern async/await
-  await page.goto('/example/html/index.html')
+  await page.goto('/e2e/fixtures/index.html')
   await expect(page.locator('h2')).toBeVisible()
 })
 ```
@@ -100,7 +100,7 @@ npm run test:e2e:ui
 **Playwright Approach:**
 ```javascript
 test('should resize iframe when content changes', async ({ page }) => {
-  await page.goto('/example/html/index.html')
+  await page.goto('/e2e/fixtures/index.html')
   await page.waitForLoadState('networkidle')
   
   const iframeElement = page.locator('iframe')
@@ -155,6 +155,6 @@ workers: process.env.CI ? 1 : undefined,
 ## Resources
 
 - [Playwright Documentation](https://playwright.dev/)
-- [E2E Test Examples](e2e/iframe-resize.spec.js)
+- [E2E Test Examples](tests/)
 - [Configuration](playwright.config.js)
 - [Contributing Guide](CONTRIBUTING.md)

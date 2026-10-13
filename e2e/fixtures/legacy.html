@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer legacy parent</title>
+    <style>
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+    </style>
+    <script>
+      // ?parent=v1..v5 loads that release's parent script, else the current
+      // one; ?child=v1..v5 does the same for the page in the iframe
+      const query = new URLSearchParams(location.search)
+      window.parentVersion = query.get('parent')
+      window.childVersion = query.get('child')
+
+      const scripts = {
+        v1: [
+          '/node_modules/jquery/dist/jquery.min.js',
+          'legacy/v1/jquery.iframeResizer.js',
+        ],
+        v2: ['legacy/v2/iframeResizer.js'],
+        v3: ['legacy/v3/iframeResizer.js'],
+        v4: ['legacy/v4/iframeResizer.js'],
+        v5: ['legacy/v5/iframeResizer.js'],
+      }[window.parentVersion] ?? ['../../js/iframe-resizer.parent.js']
+
+      for (const src of scripts) {
+        document.write(`<script src="${src}"><\/script>`)
+      }
+    </script>
+  </head>
+  <body>
+    <iframe id="legacy" scrolling="no"></iframe>
+    <script>
+      // A parent before v5 sends no license, so the child page sets it
+      const childQuery = new URLSearchParams()
+      if (window.childVersion) childQuery.set('child', window.childVersion)
+      if (['v1', 'v2', 'v3', 'v4'].includes(window.parentVersion)) {
+        childQuery.set('license', 'GPLv3')
+      }
+      document.getElementById('legacy').src =
+        `child/frame.legacy.html?${childQuery}`
+
+      // Each release's own way of binding an iframe
+      switch (window.parentVersion) {
+        case 'v1':
+          window.jQuery('#legacy').iFrameResize({})
+          break
+        case 'v2':
+        case 'v3':
+        case 'v4':
+          window.iFrameResize({}, '#legacy')
+          break
+        default:
+          window.iframeResize({ license: 'GPLv3' }, '#legacy')
+      }
+    </script>
+  </body>
+</html>

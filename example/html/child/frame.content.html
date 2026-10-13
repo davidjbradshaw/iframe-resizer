@@ -7,12 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script
       type="text/javascript"
-      src="../../../js-dist/iframe-resizer.child.js"
+      src="/js-dist/iframe-resizer.child.js"
     ></script>
-    <!-- <script
-      type="text/javascript"
-      src="../../dist/legacy/js/iframeResizer.contentWindow.js"
-    ></script> -->
     <script>
       function toggle() {
         const { style } = document.getElementsByTagName('p')[1]
@@ -23,7 +19,7 @@
     <script>
       window.iframeResizer = {
         onMessage(message) {
-          alert(message, parentIFrame.getId())
+          alert(`${message} ${parentIframe.getId()}`)
         },
       }
     </script>
@@ -39,9 +35,9 @@
         style.opacity = '0.7'
         style.position = 'absolute'
         style.top = `${document.body.scrollHeight - 10}px`
-        
-        div.innerContent = 'Overflowing content'
-        document.body.lastChild.append(div)
+
+        div.textContent = 'Overflowing content'
+        document.body.append(div)
         return false
       }
     </script>
@@ -72,19 +68,19 @@
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.size(250);return false;"
-      >Size(250)</a
+      onclick="if ('parentIframe' in window) window.parentIframe.resize(250);return false;"
+      >Resize(250)</a
     >
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.autoResize(true);return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.autoResize(true);return false;"
       >autoResize(true)</a
     >
 
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.autoResize(false);return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.autoResize(false);return false;"
       >autoResize(false)</a
     >
 
@@ -104,14 +100,16 @@
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.sendMessage('Hello from the iFrame');return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.sendMessage('Hello from the iFrame');return false;"
       >Send Message</a
     >
-    <a href="../width.html" target="_top">Width</a>
+    <a href="../width-inline.html" target="_top">Width (inline)</a>
+    &nbsp;
+    <a href="../width-block.html" target="_top">Width (block)</a>
     &nbsp; &nbsp;
     <a
       href="#"
-      onclick="if ('parentIFrame' in window) window.parentIFrame.close();return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.close();return false;"
       >Close</a
     >
 

@@ -1,0 +1,243 @@
+/* eslint import/first: 0, simple-import-sort/imports: 0, react/react-in-jsx-scope: 0 */
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+const mockResizer = {
+  disconnect: vi.fn(),
+  moveToAnchor: vi.fn(),
+  sendMessage: vi.fn(),
+}
+
+let capturedOptions: Record<string, any> = {}
+
+vi.mock('@iframe-resizer/core', () => ({
+  default: vi.fn((options: Record<string, any>) => {
+    capturedOptions = options
+    return vi.fn(() => mockResizer)
+  }),
+}))
+
+vi.mock('auto-console-group', () => ({
+  default: () => ({
+    event: vi.fn(),
+    label: vi.fn(),
+    expand: vi.fn(),
+    log: vi.fn(),
+    warn: vi.fn(),
+    endAutoGroup: vi.fn(),
+  }),
+}))
+
+import { createSignal } from 'solid-js'
+import { render } from 'solid-js/web'
+import IframeResizer from './IframeResizer'
+import connectResizer from '@iframe-resizer/core'
+
+describe('Solid IframeResizer lifecycle', () => {
+  let container: HTMLDivElement
+  let dispose: () => void
+
+  beforeEach(() => {
+    container = document.createElement('div')
+    document.body.append(container)
+    capturedOptions = {}
+    vi.clearAllMocks()
+  })
+
+  afterEach(() => {
+    dispose?.()
+    container.remove()
+  })
+
+  it('mounts and calls connectResizer', () => {
+    dispose = render(() => <IframeResizer license="GPLv3" />, container)
+
+    expect(connectResizer).toHaveBeenCalled()
+  })
+
+  it('calls disconnect on unmount', () => {
+    dispose = render(() => <IframeResizer license="GPLv3" />, container)
+    dispose()
+
+    expect(mockResizer.disconnect).toHaveBeenCalled()
+  })
+
+  it('uses the latest callback prop without re-binding', () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    const [onMessage, setOnMessage] =
+      createSignal<(data: unknown) => void>(first)
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onMessage={onMessage()} />,
+      container,
+    )
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+    const bound = capturedOptions.onMessage
+
+    setOnMessage(() => second)
+
+    // A new callback identity alone does not re-bind...
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    // ...but core still reaches the latest one
+    bound({ message: 'hi' })
+    expect(second).toHaveBeenCalledWith({ message: 'hi' })
+    expect(first).not.toHaveBeenCalled()
+  })
+
+  it('re-binds when a callback is added', () => {
+    const [onMouseEnter, setOnMouseEnter] = createSignal<
+      ((data: unknown) => void) | undefined
+    >()
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onMouseEnter={onMouseEnter()} />,
+      container,
+    )
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    setOnMouseEnter(() => vi.fn())
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(typeof capturedOptions.onMouseEnter).toBe('function')
+  })
+
+  it('keeps the size set by iframe-resizer when the props are re-applied', () => {
+    const [extra, setExtra] = createSignal<Record<string, unknown>>({})
+
+    dispose = render(
+      () => (
+        <IframeResizer
+          license="GPLv3"
+          {...extra()}
+          style={{ height: '100vh', width: '50%' }}
+        />
+      ),
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    expect(iframe.style.height).toBe('100vh')
+
+    // core sets the size straight onto the element
+    iframe.style.height = '800px'
+
+    setExtra({ bodyBackground: 'red' })
+
+    expect(iframe.style.height).toBe('800px')
+    expect(iframe.style.width).toBe('50%')
+  })
+
+  it('applies only the style values that changed', () => {
+    const [width, setWidth] = createSignal('50%')
+
+    dispose = render(
+      () => (
+        <IframeResizer
+          license="GPLv3"
+          style={{ height: '100vh', width: width() }}
+        />
+      ),
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setWidth('60%')
+
+    expect(iframe.style.width).toBe('60%')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('renders an iframe element', () => {
+    dispose = render(
+      () => <IframeResizer id="test-frame" license="GPLv3" />,
+      container,
+    )
+
+    const iframe = container.querySelector('iframe')
+    expect(iframe).toBeTruthy()
+    expect(iframe!.id).toBe('test-frame')
+  })
+
+  it('exposes getElement via ref', () => {
+    let api: any
+    dispose = render(
+      () => (
+        <IframeResizer id="test-frame" license="GPLv3" ref={(r) => (api = r)} />
+      ),
+      container,
+    )
+
+    const iframe = container.querySelector('iframe')
+    expect(iframe).toBeTruthy()
+    expect(api.getElement()).toBe(iframe)
+  })
+
+  it('exposes moveToAnchor via ref', () => {
+    let api: any
+    dispose = render(
+      () => <IframeResizer license="GPLv3" ref={(r) => (api = r)} />,
+      container,
+    )
+
+    api.moveToAnchor('section-1')
+    expect(mockResizer.moveToAnchor).toHaveBeenCalledWith('section-1')
+  })
+
+  it('exposes sendMessage via ref', () => {
+    let api: any
+    dispose = render(
+      () => <IframeResizer license="GPLv3" ref={(r) => (api = r)} />,
+      container,
+    )
+
+    api.sendMessage('hello', '*')
+    expect(mockResizer.sendMessage).toHaveBeenCalledWith('hello', '*')
+  })
+
+  it('calls onResized callback', () => {
+    const onResized = vi.fn()
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onResized={onResized} />,
+      container,
+    )
+
+    capturedOptions.onResized({ width: 100, height: 200 })
+    expect(onResized).toHaveBeenCalledWith({ width: 100, height: 200 })
+  })
+
+  it('calls onMessage callback', () => {
+    const onMessage = vi.fn()
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onMessage={onMessage} />,
+      container,
+    )
+
+    capturedOptions.onMessage({ message: 'hello' })
+    expect(onMessage).toHaveBeenCalledWith({ message: 'hello' })
+  })
+
+  it('calls onReady callback', () => {
+    const onReady = vi.fn()
+    dispose = render(
+      () => <IframeResizer license="GPLv3" onReady={onReady} />,
+      container,
+    )
+
+    capturedOptions.onReady({ iframe: {} })
+    expect(onReady).toHaveBeenCalledWith({ iframe: {} })
+  })
+
+  it('logs when log option is set', () => {
+    dispose = render(() => <IframeResizer license="GPLv3" log />, container)
+
+    expect(connectResizer).toHaveBeenCalled()
+  })
+
+  it('onBeforeClose returns false and warns', () => {
+    dispose = render(() => <IframeResizer license="GPLv3" />, container)
+
+    const result = capturedOptions.onBeforeClose()
+    expect(result).toBe(false)
+  })
+})

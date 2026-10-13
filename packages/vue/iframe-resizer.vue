@@ -1,130 +1,140 @@
 <template>
-  <iframe ref="iframe" v-bind="$attrs"></iframe>
+  <iframe ref="iframeRef" v-bind="$attrs"></iframe>
 </template>
 
-<script>
+<script setup lang="ts">
+  import { onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+  import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
+  import type {
+    IFrameComponent,
+    IFrameLogOption,
+    IFrameMessageData,
+    IFrameMouseData,
+    IFrameObject,
+    IFrameResizedData,
+    IFrameScrollData,
+  } from '@iframe-resizer/core'
+  import { esModuleInterop } from '@iframe-resizer/common'
+  import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
-
-  const EXPAND = 'expanded'
-  const COLLAPSE = 'collapsed'
-
-  const esModuleInterop = (mod) =>
-    // eslint-disable-next-line no-underscore-dangle
-    mod?.__esModule ? mod.default : mod
 
   // Deal with UMD not converting default exports to named exports
   const createAutoConsoleGroup = esModuleInterop(acg)
 
-  export default {
-    name: 'IframeResizer',
+  defineOptions({ name: 'IframeResizer' })
 
-    props: {
-      license: {
-        type: String,
-        required: true
-      },
-      bodyBackground: {
-        type: String,
-      },
-      bodyMargin: {
-        type: String,
-      },
-      bodyPadding: {
-        type: String,
-      },
-      checkOrigin: {
-        type: Boolean,
-        default: true,
-      },
-      direction: {
-        type: String,
-      },
-      log: {
-        type: [String, Boolean, Number],
-        validator: (value) => {
-          switch (value) {
-            case COLLAPSE:
-            case EXPAND:
-            case false:
-            case true:
-            case -1:
-              return true
-            default:
-              return false
-          }
-        },
-        default: undefined,
-      },
-      inPageLinks: {
-        type: Boolean,
-      },
-      offset: {
-        type: Number,
-      },
-      scrolling: {
-        type: Boolean,
-      },
-      tolerance: {
-        type: Number,
-      },
-      warningTimeout: {
-        type: Number,
-      },
+  const props = defineProps({
+    license: {
+      type: String,
+      required: true,
     },
-
-    mounted() {
-      const self = this
-      const { iframe } = this.$refs
-      const options = {
-        ...Object.fromEntries(
-          Object
-            .entries(this.$props)
-            .filter(([key, value]) => value !== undefined)
-        ),
-        waitForLoad: true,
-
-        onBeforeClose: () => {
-          consoleGroup.event('Blocked Close Event')
-          consoleGroup.warn('Close method is disabled, use Vue to remove iframe')
-          return false
-        },
-        onReady: (...args) => self.$emit('onReady', ...args),
-        onMessage: (...args) => self.$emit('onMessage', ...args),
-        onResized: (...args) => self.$emit('onResized', ...args),
-      }
-
-      const connectWithOptions = connectResizer(options)
-      self.resizer = connectWithOptions(iframe)
-
-      const consoleOptions = {
-        label: `vue(${iframe.id})`,
-        expand: options.logExpand, // set inside connectResizer
-      }
-
-      const consoleGroup = createAutoConsoleGroup(consoleOptions)
-      consoleGroup.event('setup')
-
-      if ([COLLAPSE, EXPAND, true].includes(options.log)) {
-        consoleGroup.log('Created Vue component')
-      }
+    bodyBackground: String,
+    bodyMargin: String,
+    bodyPadding: String,
+    checkOrigin: {
+      type: Boolean,
+      default: true,
     },
-
-    beforeUnmount() {
-      this.resizer?.disconnect()
+    direction: String,
+    log: {
+      type: [String, Boolean, Number] as PropType<IFrameLogOption>,
+      validator: (value: IFrameLogOption) => {
+        switch (value) {
+          case COLLAPSE:
+          case EXPAND:
+          case false:
+          case true:
+          case -1:
+          case 0:
+          case 1:
+          case 2:
+            return true
+          default:
+            return false
+        }
+      },
+      default: undefined,
     },
+    inPageLinks: Boolean,
+    offsetSize: Number,
+    scrolling: Boolean,
+    tolerance: Number,
+    warningTimeout: Number,
+  })
 
-    methods: {
-      moveToAnchor(anchor) {
-        this.resizer.moveToAnchor(anchor)
+  const emit = defineEmits<{
+    onReady: [iframe: IFrameComponent]
+    onMessage: [data: IFrameMessageData]
+    onResized: [data: IFrameResizedData]
+    onScroll: [data: IFrameScrollData]
+    onMouseEnter: [data: IFrameMouseData]
+    onMouseLeave: [data: IFrameMouseData]
+  }>()
+
+  const iframeRef = ref<HTMLIFrameElement | null>(null)
+  const resizer = ref<IFrameObject | null>(null)
+  const consoleGroup = createAutoConsoleGroup()
+
+  function buildOptions(): any {
+    return {
+      ...Object.fromEntries(
+        Object.entries(toRaw(props)).filter(([, value]) => value !== undefined),
+      ),
+      onBeforeClose: () => {
+        consoleGroup.event('Blocked Close Event')
+        consoleGroup.warn('Close method is disabled, use Vue to remove iframe')
+        return false
       },
-      resize() {
-        this.resizer.resize()
+      onReady: (iframe: IFrameComponent) => emit('onReady', iframe),
+      onMessage: (data: IFrameMessageData) => emit('onMessage', data),
+      onResized: (data: IFrameResizedData) => emit('onResized', data),
+      // An emit has no return value, so a scroll requested by the child
+      // cannot be cancelled from the handler as it can with onScroll
+      onScroll: (data: IFrameScrollData) => {
+        emit('onScroll', data)
+        return true
       },
-      sendMessage(msg, target) {
-        this.resizer.sendMessage(msg, target)
-      },
-    },
+      // Passing the mouse handlers enables mouse events in the child; whether
+      // the page listens to them cannot be told here
+      onMouseEnter: (data: IFrameMouseData) => emit('onMouseEnter', data),
+      onMouseLeave: (data: IFrameMouseData) => emit('onMouseLeave', data),
+    }
   }
 
+  onMounted(() => {
+    // Template refs are guaranteed populated before onMounted fires
+    const iframe = iframeRef.value!
+    const options = buildOptions()
+
+    consoleGroup.label(`vue(${iframe.id})`)
+    consoleGroup.event('setup')
+
+    resizer.value = connectResizer(options)(iframe)
+
+    consoleGroup.expand(props.log === EXPAND || props.log === LOG_EXPANDED)
+    if ([COLLAPSE, EXPAND, true].includes(options.log as any)) {
+      consoleGroup.log('Created Vue component')
+    }
+  })
+
+  // Re-bind on prop changes; subsequent calls take the update path in core
+  // and dispatch an UPDATE message to the child. Watch the reactive props
+  // object itself: reading a toRaw() copy inside a getter tracks nothing.
+  watch(props, () => {
+    const iframe = iframeRef.value
+    if (!iframe) return
+    connectResizer(buildOptions())(iframe)
+  })
+
+  onBeforeUnmount(() => {
+    resizer.value?.disconnect()
+    consoleGroup.endAutoGroup()
+  })
+
+  defineExpose({
+    moveToAnchor: (anchor: string) => resizer.value?.moveToAnchor(anchor),
+    sendMessage: (msg: any, target?: string) =>
+      resizer.value?.sendMessage(msg, target),
+  })
 </script>

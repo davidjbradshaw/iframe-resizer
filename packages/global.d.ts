@@ -1,0 +1,46 @@
+/**
+ * Global type augmentations for iframe-resizer.
+ *
+ * Extends Window and HTMLIFrameElement with custom properties
+ * used by iframe-resizer's parent and child scripts.
+ */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+declare global {
+  interface Window {
+    // Parent IIFE/UMD globals (may not be present on every page)
+    iframeResize?: (...args: any[]) => any
+
+    // Child page configuration
+    iframeResizer: any
+
+    // Child public API
+    parentIframe: any
+
+    // Same-origin message bridge
+    iframeParentListener?: (data: any) => void
+    iframeChildListener?: (data: string) => void
+
+    // Test hook
+    mockMsgListener?: (...args: any[]) => any
+
+    // AMD
+    define?: any
+
+    // jQuery
+    jQuery: any
+
+    // Chrome detection
+    chrome: any
+
+    // Astro view transitions guard
+    __iframeResizerAstroInstalled?: boolean
+  }
+
+  interface HTMLIFrameElement {
+    iframeResizer: any
+  }
+}
+
+export {}

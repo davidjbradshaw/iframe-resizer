@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.build.json",
+  "include": [
+    "packages/global.d.ts",
+    "packages/common/**/*.ts",
+    "packages/core/**/*.ts",
+    "packages/vue/**/*.ts",
+    "packages/vue/**/*.vue"
+  ],
+  "exclude": ["packages/**/*.test.*"]
+}
