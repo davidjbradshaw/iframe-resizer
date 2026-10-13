@@ -45,8 +45,25 @@ describe('core/setup/init', () => {
     init('if11')
     vi.runAllTimers()
 
-    expect(createOutgoingMessage).toHaveBeenCalledWith('if11')
+    expect(createOutgoingMessage).toHaveBeenCalledWith('if11', {
+      autoResize: true,
+    })
     expect(trigger).toHaveBeenCalledWith(INIT, 'msg', 'if11')
+  })
+
+  test('starts a new page auto-resizing, whatever an earlier page set with autoResize()', () => {
+    // As the router keeps an earlier page's parentIframe.autoResize(false)
+    settings.if13 = { direction: 'vertical', autoResize: false }
+    setInitMessage('if13')
+    expect(createOutgoingMessage).toHaveBeenLastCalledWith('if13', {
+      autoResize: true,
+    })
+
+    settings.if13.direction = 'none'
+    setInitMessage('if13')
+    expect(createOutgoingMessage).toHaveBeenLastCalledWith('if13', {
+      autoResize: false,
+    })
   })
 
   test('sends the init message as refreshed after the options changed', () => {
