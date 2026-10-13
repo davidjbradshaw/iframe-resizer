@@ -89,6 +89,27 @@ describe('core/received/preflight', () => {
     expect(preflight.isMessageFromIframe(messageData, goodEvent)).toBe(true)
   })
 
+  test('isMessageFromIframe matches checkOrigin entries written as URLs', () => {
+    // The ready check accepts these, so the replies must be accepted too
+    const contentWindow = {}
+    settings.i6u = {
+      checkOrigin: ['https://good.example/', 'https://other.example/page.html'],
+      iframe: { contentWindow },
+    }
+    const messageData = { id: 'i6u' }
+    const fromEach = ['https://good.example', 'https://other.example']
+
+    for (const origin of fromEach) {
+      const event = {
+        data: 'x',
+        origin,
+        source: contentWindow,
+        sameOrigin: false,
+      }
+      expect(preflight.isMessageFromIframe(messageData, event)).toBe(true)
+    }
+  })
+
   test('isMessageFromIframe checks single origin when not array', () => {
     const contentWindow = {}
     settings.i7 = {

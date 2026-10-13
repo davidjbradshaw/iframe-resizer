@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+  import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type {
@@ -14,6 +14,7 @@
     IFrameObject,
     IFrameResizedData,
     IFrameScrollData,
+    IFrameScrollOption,
   } from '@iframe-resizer/core'
   import { esModuleInterop } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
@@ -30,15 +31,17 @@
       required: true,
     },
     bodyBackground: String,
-    bodyMargin: String,
-    bodyPadding: String,
+    // The types core takes, with Boolean first so a bare attribute is true
+    bodyMargin: [String, Number],
+    bodyPadding: [String, Number],
     checkOrigin: {
-      type: Boolean,
+      type: [Boolean, Array] as PropType<boolean | string[]>,
       default: true,
     },
     direction: String,
     log: {
-      type: [String, Boolean, Number] as PropType<IFrameLogOption>,
+      // Boolean first, so Vue reads a bare `log` attribute as true, not ''
+      type: [Boolean, String, Number] as PropType<IFrameLogOption>,
       validator: (value: IFrameLogOption) => {
         switch (value) {
           case COLLAPSE:
@@ -58,7 +61,7 @@
     },
     inPageLinks: Boolean,
     offsetSize: Number,
-    scrolling: Boolean,
+    scrolling: [Boolean, String] as PropType<IFrameScrollOption>,
     tolerance: Number,
     warningTimeout: Number,
   })
@@ -118,10 +121,12 @@
     }
   })
 
-  // Re-bind on prop changes; subsequent calls take the update path in core
-  // and dispatch an UPDATE message to the child. Watch the reactive props
-  // object itself: reading a toRaw() copy inside a getter tracks nothing.
-  watch(props, () => {
+  // Re-bind when a prop's value changes; later calls take core's update
+  // path. Compare a key, as an array or object prop can be a new object
+  // with the same value each time the parent renders
+  const propsKey = computed(() => JSON.stringify(props))
+
+  watch(propsKey, () => {
     const iframe = iframeRef.value
     if (!iframe) return
     connectResizer(buildOptions())(iframe)

@@ -61,6 +61,7 @@ jobs:
           - check-origin
           - horizontal
           - jquery
+          - legacy
           - message-source
           - parent
           - react

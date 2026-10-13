@@ -1,23 +1,16 @@
-import { getOrigin } from '@iframe-resizer/common'
-
+import isAllowedOrigin from '../checks/allowed-origin'
 import { error, event } from '../console'
+import { getPostMessageTarget, refreshRemoteHost } from '../setup/target-origin'
 import settings from '../values/settings'
-
-// The browser drops messages to a page whose origin is not a target origin
-const isAllowedOrigin = (targetOrigin: string[], origin: string): boolean =>
-  targetOrigin.some((target) => target === '*' || getOrigin(target) === origin)
 
 export const sendIframeReady =
   ({ source, origin }: Pick<MessageEvent, 'source' | 'origin'>) =>
-  ([id, { initChild, postMessageTarget, targetOrigin }]: [
-    string,
-    {
-      initChild: () => void
-      postMessageTarget: MessageEventSource | null
-      targetOrigin?: string[]
-    },
-  ]): void => {
-    if (source !== postMessageTarget) return
+  ([id, { initChild }]: [string, { initChild: () => void }]): void => {
+    if (!source || source !== getPostMessageTarget(id)) return
+
+    // The src may have changed since the target origins were last set
+    refreshRemoteHost(id)
+    const { targetOrigin } = settings[id]
 
     if (targetOrigin && !isAllowedOrigin(targetOrigin, origin)) {
       event(id, 'originNotAllowed')
