@@ -2,6 +2,7 @@ import { isIframe } from '@iframe-resizer/common'
 import { MESSAGE_ID, MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
+import isAllowedOrigin from '../checks/allowed-origin'
 import { log, warn } from '../console'
 import type { MessageData } from '../message-data'
 import settings from '../values/settings'
@@ -72,13 +73,7 @@ export function isMessageFromIframe(
         HIGHLIGHT,
       )
 
-      for (const element of checkOrigin) {
-        if (element === origin) {
-          return true
-        }
-      }
-
-      return false
+      return isAllowedOrigin(checkOrigin, origin)
     }
 
     function checkSingle(): boolean {
