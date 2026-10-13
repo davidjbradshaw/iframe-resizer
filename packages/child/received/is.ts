@@ -1,15 +1,11 @@
+import { isBooleanString } from '@iframe-resizer/common'
 import {
-  FALSE,
   MESSAGE_ID,
   MESSAGE_ID_LENGTH,
   SEPARATOR,
-  TRUE,
 } from '@iframe-resizer/common/consts'
 
 const IFRAME_RESIZE = 'iframeResize'
-const BOOLEANS = new Set([TRUE, FALSE])
-
-const isBoolean = (field: string | undefined): boolean => BOOLEANS.has(field)
 
 export const isMessageForUs = (event: MessageEvent): boolean =>
   MESSAGE_ID === `${event.data}`.slice(0, MESSAGE_ID_LENGTH)
@@ -23,5 +19,9 @@ export const isMiddleTier = (): boolean =>
 // type, which can hold ':true:' by chance but does not match all three.
 export const isInitMessage = (event: MessageEvent): boolean => {
   const data = event.data.split(SEPARATOR)
-  return isBoolean(data[2]) && isBoolean(data[3]) && isBoolean(data[5])
+  return (
+    isBooleanString(data[2]) &&
+    isBooleanString(data[3]) &&
+    isBooleanString(data[5])
+  )
 }

@@ -1,4 +1,4 @@
-import { SEPARATOR } from './consts'
+import { FALSE, SEPARATOR, TRUE } from './consts'
 import { isDef } from './type-check'
 
 export const capitalizeFirstLetter = (string: string): string =>
@@ -10,6 +10,12 @@ export const round = (value: number): number =>
   Math.round(value * ROUNDING) / ROUNDING
 
 export const lower = (str: string): string => str.toLowerCase()
+
+const BOOLEAN_STRINGS = new Set([TRUE, FALSE])
+
+// Whether a message field is a boolean written as a string
+export const isBooleanString = (value: string | undefined): boolean =>
+  BOOLEAN_STRINGS.has(value)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getElementName(el: any): string {

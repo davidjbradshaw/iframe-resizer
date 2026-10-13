@@ -6,6 +6,7 @@ import {
   getElementName,
   getOrigin,
   hasOwn,
+  isBooleanString,
   lower,
   round,
   unescapeField,
@@ -158,6 +159,17 @@ describe('utils', () => {
       expect(escapeField()).toBe('')
       expect(escapeField(8)).toBe('8')
       expect(escapeField(false)).toBe('false')
+    })
+  })
+
+  describe('isBooleanString', () => {
+    test('is true only for a boolean written as a string', () => {
+      expect(isBooleanString('true')).toBe(true)
+      expect(isBooleanString('false')).toBe(true)
+      expect(isBooleanString('TRUE')).toBe(false)
+      expect(isBooleanString('toString')).toBe(false)
+      expect(isBooleanString('')).toBe(false)
+      expect(isBooleanString()).toBe(false)
     })
   })
 })
