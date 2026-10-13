@@ -14,6 +14,7 @@ vi.mock('../console', () => ({
   updateConsoleExpand: vi.fn(),
 }))
 vi.mock('./target-origin', () => ({ setTargetOrigin: vi.fn() }))
+vi.mock('./init', () => ({ setInitMessage: vi.fn() }))
 vi.mock('./scrolling', () => ({ default: vi.fn() }))
 vi.mock('../send/offset', () => ({ default: vi.fn() }))
 vi.mock('../checks/options', () => ({
@@ -33,10 +34,11 @@ const meetsMinChildVersion = (await import('../checks/min-child-version'))
   .default
 const setScrolling = (await import('./scrolling')).default
 const setOffsetSize = (await import('../send/offset')).default
-const { updateConsoleExpand } = await import('../console')
+const { setInitMessage } = await import('./init')
+const { advise, updateConsoleExpand } = await import('../console')
 const settings = (await import('../values/settings')).default
 const { setMode } = await import('@iframe-resizer/common')
-const updateIframe = (await import('./update')).default
+const { default: updateIframe, sendPendingUpdate } = await import('./update')
 
 describe('core/setup/update', () => {
   beforeEach(() => {
@@ -52,18 +54,124 @@ describe('core/setup/update', () => {
       updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true }),
     ).toThrow(RangeError)
     expect(trigger).not.toHaveBeenCalled()
+    expect(settings.edge1.log).toBeUndefined()
   })
 
-  it('throws a helpful error, before the version check, when the child has not initialised', () => {
-    settings.edge1 = { mode: 0, direction: 'vertical', initialised: false }
+  describe('before the child has initialised', () => {
+    const iframe = { id: 'edge1' } as HTMLIFrameElement
 
-    expect(() =>
-      updateIframe({ id: 'edge1' } as HTMLIFrameElement, { tolerance: 5 }),
-    ).toThrow('Wait for onReady')
+    beforeEach(() => {
+      settings.edge1 = { mode: 0, direction: 'vertical', initialised: false }
+    })
 
-    expect(settings.edge1.tolerance).toBeUndefined()
-    expect(trigger).not.toHaveBeenCalled()
-    expect(meetsMinChildVersion).not.toHaveBeenCalled()
+    it('merges the options at once and queues the update for the child', () => {
+      const onReady = () => {}
+
+      expect(() =>
+        updateIframe(iframe, { tolerance: 5, scrolling: true, onReady }),
+      ).not.toThrow()
+
+      // Parent-side settings and effects are in place straight away
+      expect(settings.edge1).toMatchObject({
+        tolerance: 5,
+        scrolling: true,
+        onReady,
+        updatePending: true,
+      })
+      expect(setScrolling).toHaveBeenCalledWith(iframe)
+      // The init message now carries the new values, should it go out later
+      expect(setInitMessage).toHaveBeenCalledWith('edge1')
+      // Nothing is sent, and the child's version cannot be checked yet
+      expect(trigger).not.toHaveBeenCalled()
+      expect(meetsMinChildVersion).not.toHaveBeenCalled()
+    })
+
+    it('keeps the latest value of each option across several early updates', () => {
+      updateIframe(iframe, { tolerance: 5, bodyBackground: 'red' })
+      updateIframe(iframe, { tolerance: 7 })
+      updateIframe(iframe, { bodyBackground: 'blue' })
+
+      expect(settings.edge1).toMatchObject({
+        tolerance: 7,
+        bodyBackground: 'blue',
+        updatePending: true,
+      })
+      expect(trigger).not.toHaveBeenCalled()
+    })
+
+    it('still throws on an invalid direction, leaving the settings as they were', () => {
+      expect(() =>
+        updateIframe(iframe, { direction: 'horizonal', tolerance: 5 }),
+      ).toThrow('Direction value of "horizonal" is not valid')
+
+      expect(settings.edge1).toMatchObject({
+        direction: 'vertical',
+        initialised: false,
+      })
+      expect(settings.edge1.tolerance).toBeUndefined()
+      expect(settings.edge1.updatePending).toBeUndefined()
+      expect(setInitMessage).not.toHaveBeenCalled()
+    })
+
+    it('queues an update made while the child page navigates', () => {
+      // BEFORE_UNLOAD has reset initialised, the old page's version is known
+      settings.edge1.childVersion = '6.0.0'
+
+      updateIframe(iframe, { tolerance: 5 })
+
+      expect(settings.edge1.tolerance).toBe(5)
+      expect(settings.edge1.updatePending).toBe(true)
+      expect(trigger).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('sendPendingUpdate', () => {
+    it('sends the queued update once the child has initialised', () => {
+      vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+      settings.edge1 = { initialised: true, updatePending: true }
+
+      sendPendingUpdate('edge1')
+
+      expect(createOutgoingMessage).toHaveBeenCalledWith('edge1')
+      expect(trigger).toHaveBeenCalledWith(
+        'update',
+        'update:edge1:8:true:rest',
+        'edge1',
+      )
+      expect(settings.edge1.updatePending).toBe(false)
+      expect(advise).not.toHaveBeenCalled()
+    })
+
+    it('advises, rather than throws, when the child is older than v6', () => {
+      vi.mocked(meetsMinChildVersion).mockReturnValueOnce(false)
+      settings.edge1 = { initialised: true, updatePending: true }
+
+      expect(() => sendPendingUpdate('edge1')).not.toThrow()
+
+      expect(trigger).not.toHaveBeenCalled()
+      expect(advise).toHaveBeenCalledWith(
+        'edge1',
+        expect.stringContaining('before v6'),
+      )
+      expect(settings.edge1.updatePending).toBe(false)
+    })
+
+    it('does nothing when no update was queued', () => {
+      settings.edge1 = { initialised: true, updatePending: false }
+
+      sendPendingUpdate('edge1')
+
+      expect(trigger).not.toHaveBeenCalled()
+      expect(advise).not.toHaveBeenCalled()
+      expect(meetsMinChildVersion).not.toHaveBeenCalled()
+    })
+
+    it('does nothing for an iframe disconnected before the child initialised', () => {
+      expect(() => sendPendingUpdate('gone')).not.toThrow()
+
+      expect(trigger).not.toHaveBeenCalled()
+      expect(advise).not.toHaveBeenCalled()
+    })
   })
 
   it('throws on an invalid direction and leaves the settings as they were', () => {
@@ -125,6 +233,9 @@ describe('core/setup/update', () => {
       'update:edge1:8:true:rest',
       'edge1',
     )
+    expect(settings.edge1.updatePending).toBeUndefined()
+    // A page loaded in the iframe later is initialised with the new values
+    expect(setInitMessage).toHaveBeenCalledWith('edge1')
   })
 
   it('re-applies side-effect setup steps', () => {

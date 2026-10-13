@@ -9,10 +9,8 @@ npx playwright test -c e2e/confirm/playwright.config.js e2e/confirm/19-scroll-re
 npx vitest run -c e2e/confirm/vitest.config.mjs e2e/confirm/46-angular-ssr.test.ts
 ```
 
-Three tests need an app built first:
+One test needs an app built first:
 
-- 16.1 (React): `bash build-scripts/build-e2e-app.sh react`
-- 16.2 (Solid): `cd e2e/apps/solid/confirm-16.2 && npx vite build`
 - 47 (Angular): `bash build-scripts/build-e2e-app.sh angular`
 
 The Angular server-side rendering test (46) installs its own small project in `angular-ssr/` on first run.

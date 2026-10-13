@@ -37,6 +37,7 @@ vi.mock('./page/scroll', () => ({
 vi.mock('./page/title', () => ({ setTitle: vi.fn() }))
 vi.mock('./received/message', () => ({ default: vi.fn(() => 'body') }))
 vi.mock('./setup/first-run', () => ({ default: vi.fn() }))
+vi.mock('./setup/update', () => ({ sendPendingUpdate: vi.fn() }))
 
 const routeMessage = (await import('./router')).default
 const settings = (await import('./values/settings')).default
@@ -52,6 +53,7 @@ const { setTitle } = await import('./page/title')
 const checkValidMessage = (await import('./checks/valid-message')).default
 const { info } = await import('./console')
 const firstRun = (await import('./setup/first-run')).default
+const { sendPendingUpdate } = await import('./setup/update')
 
 describe('core/router', () => {
   const id = 'i1'
@@ -91,6 +93,27 @@ describe('core/router', () => {
     expect(settings[id].initialised).toBe(true)
     expect(on).toHaveBeenCalledWith(id, 'onReady', iframe)
     expect(firstRun).toHaveBeenCalledWith(id, 0)
+  })
+
+  test('INIT sends an update queued before it, once the child version is known and before onReady', () => {
+    let initialisedWhenSent: boolean | undefined
+    vi.mocked(sendPendingUpdate).mockImplementationOnce(() => {
+      initialisedWhenSent = settings[id].initialised
+    })
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(sendPendingUpdate).toHaveBeenCalledWith(id)
+    expect(initialisedWhenSent).toBe(true)
+
+    const order = (mock: { mock: { invocationCallOrder: number[] } }) =>
+      mock.mock.invocationCallOrder[0]
+    expect(order(vi.mocked(checkVersion))).toBeLessThan(
+      order(vi.mocked(sendPendingUpdate)),
+    )
+    expect(order(vi.mocked(sendPendingUpdate))).toBeLessThan(
+      order(vi.mocked(on)),
+    )
   })
 
   test('updates AUTO_RESIZE from message body', async () => {
