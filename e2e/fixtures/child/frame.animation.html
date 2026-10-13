@@ -8,7 +8,7 @@
       const script = document.createElement('script')
       script.src =
         new URLSearchParams(location.search).get('child') === 'v5'
-          ? 'v5/iframeResizer.contentWindow.js'
+          ? '../legacy/v5/iframeResizer.contentWindow.js'
           : '/js/iframe-resizer.child.js'
       script.async = false
       document.head.append(script)

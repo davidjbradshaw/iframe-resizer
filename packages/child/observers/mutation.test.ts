@@ -5,8 +5,8 @@ import {
   addedMutation,
   addedNodes,
   createProcessMutations,
+  flatFilterMutations,
   logMutations,
-  newMutations,
   removedAddedNodes,
   removedMutation,
   removedNodes,
@@ -40,7 +40,6 @@ describe('child/observers/mutation units', () => {
     addedNodes.clear()
     removedNodes.clear()
     removedAddedNodes.clear()
-    newMutations.length = 0
   })
 
   describe('shouldSkip', () => {
@@ -146,20 +145,33 @@ describe('child/observers/mutation units', () => {
   })
 
   describe('createProcessMutations', () => {
-    it('processes queued mutations and calls callback', () => {
+    it('passes the observed nodes to the callback, then clears them', () => {
       vi.spyOn(performance, 'now').mockReturnValue(0)
 
-      const callback = vi.fn()
-      const process = createProcessMutations(callback)
+      let seen: Node[] = []
+      const process = createProcessMutations(({ addedNodes: added }) => {
+        seen = [...added]
+      })
       const el = document.createElement('div')
 
-      newMutations.push([makeMutation([el])])
+      flatFilterMutations([makeMutation([el])])
       process()
 
-      expect(callback).toHaveBeenCalled()
-      expect(newMutations).toHaveLength(0)
+      expect(seen).toEqual([el])
+      expect(addedNodes.size).toBe(0)
 
       performance.now.mockRestore()
+    })
+
+    it('keeps no node that was added and removed before processing', () => {
+      const el = document.createElement('div')
+
+      // As a live feed does, while rAF is paused in an offscreen iframe
+      flatFilterMutations([makeMutation([el]), makeMutation([], [el])])
+
+      expect(addedNodes.has(el)).toBe(false)
+      expect(removedNodes.has(el)).toBe(false)
+      expect(removedAddedNodes.has(el)).toBe(false)
     })
 
     // Throttle tests are in mutation.deeper.test.ts (require module-level processMutations)
