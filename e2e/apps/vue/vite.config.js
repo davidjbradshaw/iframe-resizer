@@ -7,6 +7,12 @@ export default defineConfig({
   build: {
     outDir: '../../fixtures/vue',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        'early-update': 'early-update.html',
+      },
+    },
   },
   resolve: {
     preserveSymlinks: true,

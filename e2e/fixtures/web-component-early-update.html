@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Web component options set before the child is ready</title>
+    <script type="text/javascript" src="/js/iframe-resizer.web-component.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>
+      Direction: <span id="direction">vertical</span>
+      Ready: <span id="status">pending</span>
+    </p>
+    <iframe-resizer
+      id="frame"
+      license="GPLv3"
+      log
+      src="child/frame.early-update.html"
+      style="width: 600px; height: 100px"
+    ></iframe-resizer>
+
+    <script type="text/javascript">
+      // The element is bound as the parser connects it, so options set here
+      // change before its child is ready. The child page holds its script
+      // back until told to go, so the change always comes before init. ?late
+      // sets them after onReady instead, as a control.
+      const EARLY = {
+        direction: 'horizontal-inline',
+        bodyBackground: 'rgb(0, 128, 0)',
+      }
+      const LATE = location.search.includes('late')
+      const el = document.querySelector('iframe-resizer')
+
+      function apply() {
+        el.options = EARLY
+        document.getElementById('direction').textContent = EARLY.direction
+      }
+
+      el.addEventListener('iframe-resizer:ready', () => {
+        if (LATE) apply()
+        document.getElementById('status').textContent = 'ready'
+      })
+
+      window.addEventListener('message', (event) => {
+        if (event.data !== 'early-update:loaded') return
+        el.querySelector('iframe').contentWindow.postMessage('early-update:go', '*')
+      })
+
+      if (!LATE) apply()
+    </script>
+  </body>
+</html>

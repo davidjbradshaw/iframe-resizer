@@ -37,6 +37,7 @@ import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import getMessageBody from './received/message'
 import firstRun from './setup/first-run'
+import { sendPendingUpdate } from './setup/update'
 import settings from './values/settings'
 
 export default function routeMessage(messageData: MessageData): void {
@@ -70,6 +71,8 @@ export default function routeMessage(messageData: MessageData): void {
       checkSameDomain(id)
       checkVersion(id, message)
       settings[id].initialised = true
+      // Options changed before now reach the child before onReady fires
+      sendPendingUpdate(id)
       on(id, 'onReady', iframe)
       break
 

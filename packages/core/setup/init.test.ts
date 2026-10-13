@@ -5,6 +5,7 @@ vi.useFakeTimers()
 vi.mock('../../common/listeners', () => ({ addEventListener: vi.fn() }))
 vi.mock('../console', () => ({ event: vi.fn(), info: vi.fn(), warn: vi.fn() }))
 vi.mock('../methods/reset', () => ({ default: vi.fn() }))
+vi.mock('../send/outgoing', () => ({ default: vi.fn(() => 'msg') }))
 vi.mock('../send/timeout', () => ({ default: vi.fn() }))
 vi.mock('../send/trigger', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({ default: {} }))
@@ -12,10 +13,11 @@ vi.mock('../values/settings', () => ({ default: {} }))
 const { addEventListener } = await import('../../common/listeners')
 const { event: consoleEvent, info, warn } = await import('../console')
 const resetIframe = (await import('../methods/reset')).default
+const createOutgoingMessage = (await import('../send/outgoing')).default
 const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
 const settings = (await import('../values/settings')).default
-const init = (await import('./init')).default
+const { default: init, setInitMessage } = await import('./init')
 const { INIT, INIT_FROM_IFRAME, ONLOAD } =
   await import('@iframe-resizer/common/consts')
 
@@ -28,17 +30,63 @@ describe('core/setup/init', () => {
     settings.if1 = {
       iframe: { isConnected: true, loading: 'eager', src: '', srcdoc: '' },
     }
-    init('if1', 'm')
+    init('if1')
     vi.runAllTimers()
 
     expect(consoleEvent).toHaveBeenCalledWith('if1', 'noContent')
     expect(info).toHaveBeenCalled()
   })
 
+  test('sends the init message built from the settings at setup', () => {
+    settings.if11 = {
+      iframe: { isConnected: true, loading: 'eager', src: 'x' },
+      firstRun: true,
+    }
+    init('if11')
+    vi.runAllTimers()
+
+    expect(createOutgoingMessage).toHaveBeenCalledWith('if11', {
+      autoResize: true,
+    })
+    expect(trigger).toHaveBeenCalledWith(INIT, 'msg', 'if11')
+  })
+
+  test('starts a new page auto-resizing, whatever an earlier page set with autoResize()', () => {
+    // As the router keeps an earlier page's parentIframe.autoResize(false)
+    settings.if13 = { direction: 'vertical', autoResize: false }
+    setInitMessage('if13')
+    expect(createOutgoingMessage).toHaveBeenLastCalledWith('if13', {
+      autoResize: true,
+    })
+
+    settings.if13.direction = 'none'
+    setInitMessage('if13')
+    expect(createOutgoingMessage).toHaveBeenLastCalledWith('if13', {
+      autoResize: false,
+    })
+  })
+
+  test('sends the init message as refreshed after the options changed', () => {
+    const iframe = { isConnected: true, loading: 'eager', src: 'x' }
+    settings.if12 = { iframe, firstRun: true }
+    init('if12')
+
+    // An update before the child replies rebuilds the message
+    vi.mocked(createOutgoingMessage).mockReturnValueOnce('updated')
+    setInitMessage('if12')
+    vi.runAllTimers()
+
+    expect(trigger).toHaveBeenCalledWith(INIT, 'updated', 'if12')
+
+    // And every later init, such as a page loading in the iframe, uses it
+    settings.if12.initChild()
+    expect(trigger).toHaveBeenCalledWith(INIT_FROM_IFRAME, 'updated', 'if12')
+  })
+
   test('creates initChild for INIT and INIT_FROM_IFRAME; onload listener registered', () => {
     const iframe = { isConnected: true, loading: 'eager', src: 'x', srcdoc: '' }
     settings.if2 = { iframe, firstRun: false }
-    init('if2', 'msg')
+    init('if2')
 
     // onload listener registered
     const onloadCall = addEventListener.mock.calls.find(
@@ -71,7 +119,7 @@ describe('core/setup/init', () => {
       firstRun: false,
       heightCalculationMethod: 'max',
     }
-    init('if3', 'z')
+    init('if3')
     vi.runAllTimers()
     // allow checkReset evaluation after INIT path
     expect(resetIframe).toHaveBeenCalled()
@@ -84,7 +132,7 @@ describe('core/setup/init', () => {
     }
 
     const triggerCallsBefore = trigger.mock.calls.length
-    init('if4', 'msg')
+    init('if4')
     vi.runAllTimers()
 
     // trigger should not be called for INIT path (only initChild and onload setups)
@@ -98,7 +146,7 @@ describe('core/setup/init', () => {
     }
 
     const warnCallsBefore = warnOnNoResponse.mock.calls.length
-    init('if5', 'msg')
+    init('if5')
     vi.runAllTimers()
 
     // warnOnNoResponse should be called for INIT, but would not be called if lazy check works
@@ -114,7 +162,7 @@ describe('core/setup/init', () => {
 
     const triggerCallsBefore = trigger.mock.calls.length
     const warnCallsBefore = warnOnNoResponse.mock.calls.length
-    init('if10', 'msg')
+    init('if10')
     vi.runAllTimers()
 
     expect(consoleEvent).toHaveBeenCalledWith('if10', 'notInDocument')
@@ -139,7 +187,7 @@ describe('core/setup/init', () => {
   test('takes the remote host from a src set after bind when the iframe loads', () => {
     const iframe = { isConnected: true, loading: 'eager', src: '', srcdoc: '' }
     settings.if7 = { iframe, checkOrigin: true, firstRun: true }
-    init('if7', 'msg')
+    init('if7')
     vi.runAllTimers()
 
     expect(settings.if7.remoteHost).toBeUndefined()
@@ -169,7 +217,7 @@ describe('core/setup/init', () => {
       remoteHost: 'https://first.example',
       targetOrigin: ['https://first.example'],
     }
-    init('if8', 'msg')
+    init('if8')
     vi.runAllTimers()
 
     iframe.src = 'https://second.example/b.html'
@@ -192,7 +240,7 @@ describe('core/setup/init', () => {
       remoteHost: 'https://same.example',
       targetOrigin: [],
     }
-    init('if9', 'msg')
+    init('if9')
     vi.runAllTimers()
     settings.if9.initChild()
 
@@ -205,7 +253,7 @@ describe('core/setup/init', () => {
       iframe: { isConnected: true, loading: 'eager', src: 'x' },
       firstRun: true,
     }
-    init('if6', 'msg')
+    init('if6')
 
     // Save initChild reference before deleting settings
     const { initChild } = settings.if6

@@ -10,7 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'index.html',
-        'confirm-16.1': 'confirm-16.1.html',
+        'early-update': 'early-update.html',
       },
     },
   },
