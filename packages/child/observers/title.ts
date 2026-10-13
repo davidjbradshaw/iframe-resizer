@@ -11,8 +11,9 @@ const config: MutationObserverInit = {
 export default function createTitleObserver(callback: () => void): {
   disconnect: () => void
 } {
-  const target =
-    document.querySelector('title') ?? document.head ?? document.documentElement
+  // Watch <head>, not its <title>, as a head manager can swap the element,
+  // and setting document.title on a page without one adds it to <head>
+  const target = document.head ?? document.documentElement
   const observer = new MutationObserver(callback)
 
   observer.observe(target, config)

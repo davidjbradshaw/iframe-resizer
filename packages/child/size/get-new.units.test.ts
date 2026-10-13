@@ -60,6 +60,17 @@ describe('callOnBeforeResize', () => {
     )
   })
 
+  test.each([['480px'], ['480'], [{}], [Infinity], [null]])(
+    'throws TypeError when onBeforeResize returns %o',
+    (value) => {
+      settings.onBeforeResize = vi.fn(() => value)
+
+      expect(() => callOnBeforeResize(50, 'resize', WIDTH)).toThrow(
+        'Invalid value returned from onBeforeResize()',
+      )
+    },
+  )
+
   test('throws RangeError when onBeforeResize returns below MIN_SIZE', () => {
     settings.onBeforeResize = vi.fn(() => MIN_SIZE - 1)
 

@@ -53,14 +53,14 @@ describe('child/observers/title', () => {
     })
   })
 
-  test('observes title element directly when one exists in document', () => {
+  test('observes head even when a title element exists, as it can be swapped', () => {
     const titleEl = document.createElement('title')
     document.head.append(titleEl)
 
     const cb = vi.fn()
     createTitleObserver(cb)
 
-    expect(observedTarget).toBe(titleEl)
+    expect(observedTarget).toBe(document.head)
 
     titleEl.remove()
   })
