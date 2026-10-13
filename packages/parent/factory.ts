@@ -7,13 +7,17 @@ import connectResizer, {
 
 const id = `[${LABEL}] `
 
+type Connect = (iframe: HTMLIFrameElement) => IFrameObject | undefined
+
 export default function createIframeResize() {
-  let connectWithOptions: (
-    iframe: HTMLIFrameElement,
-  ) => IFrameObject | undefined
+  let connectWithOptions: Connect
   let iframes: HTMLIFrameElement[]
 
-  function setupDisconnectedIframe(element: HTMLIFrameElement): void {
+  // Passed in, as a later iframeResize() call replaces the shared one
+  function setupDisconnectedIframe(
+    element: HTMLIFrameElement,
+    connectWithOptions: Connect,
+  ): void {
     const observer = new MutationObserver(() => {
       if (element.isConnected) {
         connectWithOptions(element)
@@ -42,7 +46,7 @@ export default function createIframeResize() {
         if (iframe.isConnected) {
           connectWithOptions(iframe)
         } else {
-          setupDisconnectedIframe(iframe)
+          setupDisconnectedIframe(iframe, connectWithOptions)
         }
 
         iframes.push(iframe)

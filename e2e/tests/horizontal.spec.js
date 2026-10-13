@@ -7,6 +7,9 @@ const START_WIDTH = '400px'
 const iframeWidth = (page) =>
   page.locator('iframe').evaluate((el) => el.style.width)
 
+const iframeHeight = (page) =>
+  page.locator('iframe').evaluate((el) => parseFloat(el.style.height))
+
 // The right edge of the element the child is told to measure
 const contentWidth = (page) =>
   page
@@ -25,6 +28,23 @@ async function loadChild(page, child, direction = 'horizontal-inline') {
     { timeout: 5000 },
   )
 }
+
+// The page's own right edge: <body> wraps its content, plus the margin and
+// padding around it
+const pageRight = (page) =>
+  page
+    .frameLocator('iframe')
+    .locator('body')
+    .evaluate((body) => {
+      const html = document.documentElement
+      const px = (el, property) =>
+        parseFloat(getComputedStyle(el).getPropertyValue(property))
+      return (
+        body.getBoundingClientRect().right +
+        px(body, 'margin-right') +
+        px(html, 'padding-right')
+      )
+    })
 
 // style.width reads back rounded to three decimals
 async function expectIframeToFitContent(page) {
@@ -78,21 +98,33 @@ test.describe('Horizontal', () => {
       'data-iframe-overflowed',
     )
 
-    // The page's own right edge: <body> wraps its content, plus the margin
-    // and padding around it
-    const pageRight = await child.locator('body').evaluate((body) => {
-      const html = document.documentElement
-      const px = (el, property) =>
-        parseFloat(getComputedStyle(el).getPropertyValue(property))
-      return (
-        body.getBoundingClientRect().right +
-        px(body, 'margin-right') +
-        px(html, 'padding-right')
-      )
-    })
     await expect
       .poll(async () => parseFloat(await iframeWidth(page)))
-      .toBeCloseTo(pageRight, 1)
+      .toBeCloseTo(await pageRight(page), 1)
+  })
+
+  test('an element marked data-iframe-ignore is left out of the width scan', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.ignored-width.html')
+    const child = page.frameLocator('iframe')
+
+    // Sanity check on the fixture: the ignored nav sticks out past the page
+    const expected = await pageRight(page)
+    const navRight = await child
+      .locator('#menu')
+      .evaluate((el) => el.getBoundingClientRect().right)
+    expect(navRight).toBeGreaterThan(expected + 250)
+
+    // A mutation that does not change the page width, so the width is
+    // measured again by the element scan rather than from <html>
+    await child
+      .locator('#content')
+      .evaluate((el) => el.setAttribute('data-touched', 'yes'))
+    await page.waitForTimeout(1000)
+
+    // Once settled, the iframe is as wide as the page, not the ignored nav
+    expect(parseFloat(await iframeWidth(page))).toBeCloseTo(expected, 1)
   })
 
   test('with horizontal-block, fluid content does not shrink the iframe on every resize', async ({
@@ -107,6 +139,40 @@ test.describe('Horizontal', () => {
 
     await page.waitForTimeout(1000)
     expect(await iframeWidth(page)).toBe(first)
+  })
+})
+
+test.describe('Both directions', () => {
+  // The overflow observer watches the bottom edge in 'both' mode, so an
+  // element overflowing it says nothing about which element is widest
+  test('a bottom-overflowing element does not drop a wide element from the width', async ({
+    page,
+  }) => {
+    await loadChild(page, 'frame.both-overflow.html', 'both')
+    const child = page.frameLocator('iframe')
+
+    const innerRight = await child
+      .locator('#inner')
+      .evaluate((el) => el.getBoundingClientRect().right)
+    expect(innerRight).toBeGreaterThan(parseFloat(START_WIDTH))
+
+    // With nothing overflowing, the width search covers every element and
+    // the iframe is sized to the 800px inner div
+    await expect
+      .poll(async () => parseFloat(await iframeWidth(page)))
+      .toBeCloseTo(innerRight, 1)
+    const heightBefore = await iframeHeight(page)
+
+    // An unrelated, narrow element starts overflowing the bottom of the page
+    await child.locator('body').evaluate(() => window.showFooter())
+    await expect(child.locator('#footer')).toHaveAttribute(
+      'data-iframe-overflowed',
+    )
+
+    // The height grows to the footer, so the size calculated with the
+    // overflow has been applied; the width must still fit the inner div
+    await expect.poll(() => iframeHeight(page)).toBeGreaterThan(heightBefore)
+    expect(parseFloat(await iframeWidth(page))).toBeCloseTo(innerRight, 1)
   })
 })
 

@@ -2,7 +2,7 @@ import { expect, test } from './shared/test'
 import { waitForResizer } from './shared/utils'
 
 // A v6 parent with the last v5 child, as a site gets when it updates the
-// parent first. The child is e2e/fixtures/child/v5/iframeResizer.contentWindow.js
+// parent first. The child is e2e/fixtures/legacy/v5/iframeResizer.contentWindow.js
 const BASE = '/e2e/fixtures/animation.html'
 const V5 = '5.5.9'
 

@@ -16,13 +16,12 @@ describe('jquery/plugin branch behavior', () => {
     vi.resetModules()
   })
 
-  test('warns when iframeResize is already assigned to jQuery.fn', async () => {
-    // In the plugin switch(true), `case window.jQuery.fn.iframeResize:` uses
-    // strict equality (===), so iframeResize must be exactly `true` (not just truthy)
-    // to match. This covers the branch that warns when it's already assigned.
+  test('warns and keeps an iframeResize plugin that is already assigned', async () => {
+    // As when a second copy of the plugin, or the v4 one, loads first
+    const existing = function iframeResize() {}
     window.jQuery = {
       fn: {
-        iframeResize: true,
+        iframeResize: existing,
       },
     }
 
@@ -33,6 +32,7 @@ describe('jquery/plugin branch behavior', () => {
       '',
       expect.stringContaining('already assigned'),
     )
+    expect(window.jQuery.fn.iframeResize).toBe(existing)
   })
 
   test('warns when jQuery is undefined', async () => {

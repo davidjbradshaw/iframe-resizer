@@ -1,12 +1,17 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
+import settings from '../values/settings'
 import state from '../values/state'
 import { getAllElements } from './all'
 import { findMaxElement, getSelectedElements } from './max-element'
 
-vi.mock('../console', () => ({ info: vi.fn() }))
+vi.mock('../console', () => ({
+  endAutoGroup: vi.fn(),
+  event: vi.fn(),
+  info: vi.fn(),
+}))
 vi.mock('../values/settings', () => ({
-  default: { logging: false },
+  default: { calculateHeight: true, logging: false },
 }))
 vi.mock('../values/state', () => ({
   default: {
@@ -31,6 +36,7 @@ describe('child/size/max-element unit tests', () => {
       [] as unknown as NodeListOf<Element>,
     )
     document.body.innerHTML = ''
+    settings.calculateHeight = true
     state.hasTags = false
     state.hasOverflow = false
     state.overflowedNodeSet = new Set()
@@ -44,7 +50,7 @@ describe('child/size/max-element unit tests', () => {
       state.hasTags = true
       state.taggedElements = [el1, el2]
 
-      const result = getSelectedElements()
+      const result = getSelectedElements('bottom')
 
       expect(result).toEqual([el1, el2])
     })
@@ -55,9 +61,37 @@ describe('child/size/max-element unit tests', () => {
       state.hasOverflow = true
       state.overflowedNodeSet = new Set([el1, el2])
 
-      const result = getSelectedElements()
+      const result = getSelectedElements('bottom')
 
       expect(Array.from(result)).toEqual([el1, el2])
+    })
+
+    // The overflow observer watches the bottom edge whenever the height is
+    // calculated, so in 'both' mode its set says nothing about the width
+    test('scans all elements for the width when only the bottom edge is watched', () => {
+      const overflowed = document.createElement('div')
+      const all = [document.createElement('p')]
+      state.hasOverflow = true
+      state.overflowedNodeSet = new Set([overflowed])
+      vi.mocked(getAllElements).mockReturnValue(
+        all as unknown as NodeListOf<Element>,
+      )
+
+      const result = getSelectedElements('right')
+
+      expect(Array.from(result)).toEqual(all)
+    })
+
+    test('uses the overflow set for the width when the right edge is watched', () => {
+      const overflowed = document.createElement('div')
+      settings.calculateHeight = false
+      state.hasOverflow = true
+      state.overflowedNodeSet = new Set([overflowed])
+
+      const result = getSelectedElements('right')
+
+      expect(Array.from(result)).toEqual([overflowed])
+      expect(getAllElements).not.toHaveBeenCalled()
     })
 
     test('prefers taggedElements over overflowedNodeSet', () => {
@@ -68,7 +102,7 @@ describe('child/size/max-element unit tests', () => {
       state.taggedElements = [tagged]
       state.overflowedNodeSet = new Set([overflowed])
 
-      const result = getSelectedElements()
+      const result = getSelectedElements('bottom')
 
       expect(result).toEqual([tagged])
     })
@@ -79,14 +113,32 @@ describe('child/size/max-element unit tests', () => {
         mockElements as unknown as NodeListOf<Element>,
       )
 
-      const result = getSelectedElements()
+      const result = getSelectedElements('bottom')
 
       expect(getAllElements).toHaveBeenCalledWith(document.documentElement)
-      expect(result).toBe(mockElements)
+      expect(Array.from(result)).toEqual(mockElements)
+    })
+
+    test('leaves ignored elements and their children out of the all-elements scan', () => {
+      const ignored = document.createElement('nav')
+      ignored.toggleAttribute('data-iframe-ignore', true)
+      const inside = document.createElement('a')
+      ignored.append(inside)
+      const outside = document.createElement('p')
+      document.body.append(ignored, outside)
+      vi.mocked(getAllElements).mockReturnValue([
+        ignored,
+        inside,
+        outside,
+      ] as unknown as NodeListOf<Element>)
+
+      const result = getSelectedElements('bottom')
+
+      expect(Array.from(result)).toEqual([outside])
     })
 
     test('returns empty array from getAllElements by default', () => {
-      const result = getSelectedElements()
+      const result = getSelectedElements('right')
 
       expect(getAllElements).toHaveBeenCalled()
       expect(Array.from(result)).toEqual([])

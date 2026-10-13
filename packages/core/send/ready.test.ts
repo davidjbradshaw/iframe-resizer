@@ -1,16 +1,22 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ error: vi.fn(), event: vi.fn() }))
+vi.mock('../console', () => ({ error: vi.fn(), event: vi.fn(), warn: vi.fn() }))
 vi.mock('../values/settings', () => ({
   default: {
     a: {
+      checkOrigin: true,
+      iframe: { src: 'https://a.com/page.html' },
       initChild: vi.fn(),
       postMessageTarget: 'win',
+      remoteHost: 'https://a.com',
       targetOrigin: ['https://a.com'],
     },
     b: {
+      checkOrigin: true,
+      iframe: { src: 'https://a.com/page.html' },
       initChild: vi.fn(),
       postMessageTarget: 'other',
+      remoteHost: 'https://a.com',
       targetOrigin: ['https://a.com'],
     },
   },
@@ -26,6 +32,8 @@ const entry = (id) => [id, settings[id]]
 describe('core/send/ready', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    settings.a.iframe.src = 'https://a.com/page.html'
+    settings.a.remoteHost = 'https://a.com'
     settings.a.targetOrigin = ['https://a.com']
   })
 
@@ -55,6 +63,15 @@ describe('core/send/ready', () => {
     )
   })
 
+  test('connects to a page from the origin the src was changed to', () => {
+    settings.a.iframe.src = 'https://other.com/page.html'
+    ready({ source: 'win', origin: 'https://other.com' })
+
+    expect(settings.a.targetOrigin).toEqual(['https://other.com'])
+    expect(settings.a.initChild).toHaveBeenCalled()
+    expect(error).not.toHaveBeenCalled()
+  })
+
   test('accepts any origin when checkOrigin is off', () => {
     settings.a.targetOrigin = ['*']
     ready({ source: 'win', origin: 'https://other.com' })
@@ -76,6 +93,30 @@ describe('core/send/ready', () => {
 
     expect(settings.a.initChild).toHaveBeenCalled()
     expect(error).not.toHaveBeenCalled()
+  })
+
+  test('matches the window the iframe has now when no postMessageTarget is given', () => {
+    settings.a.postMessageTarget = null
+    settings.a.iframe.contentWindow = 'new-win'
+    ready({ source: 'win', origin: 'https://a.com' })
+
+    expect(settings.a.initChild).not.toHaveBeenCalled()
+
+    ready({ source: 'new-win', origin: 'https://a.com' })
+
+    expect(settings.a.initChild).toHaveBeenCalled()
+    settings.a.postMessageTarget = 'win'
+    delete settings.a.iframe.contentWindow
+  })
+
+  test('ignores a message with no source for an iframe with no window', () => {
+    settings.a.postMessageTarget = null
+    settings.a.iframe.contentWindow = null
+    ready({ source: null, origin: 'https://a.com' })
+
+    expect(settings.a.initChild).not.toHaveBeenCalled()
+    settings.a.postMessageTarget = 'win'
+    delete settings.a.iframe.contentWindow
   })
 
   test('does not report another iframe', () => {

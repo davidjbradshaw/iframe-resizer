@@ -62,12 +62,14 @@ jobs:
           - check-origin
           - horizontal
           - jquery
+          - legacy
           - message-source
           - parent
           - react
           - send-message
           - solid
           - svelte
+          - title-observer
           - v5-child
           - vue
           - web-component
