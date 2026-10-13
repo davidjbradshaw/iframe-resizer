@@ -38,7 +38,7 @@ function mergeOptions(
 
     updateOptionNames(id)
     setupBodyMargin(id)
-    setDirection(id)
+    setDirection(id, previous)
     setScrolling(iframe)
     setOffsetSize(id)
     setTargetOrigin(id)

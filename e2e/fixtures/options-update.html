@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer options update test</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+  </head>
+
+  <body>
+    <h2>Options update</h2>
+    <p>
+      The child is 400px tall. Updating an option should keep an offset or
+      autoResize setting the child changed itself.
+    </p>
+
+    <div style="margin: 20px">
+      <iframe
+        src="child/frame.options-update.html"
+        style="width: 400px; height: 150px"
+      ></iframe>
+    </div>
+
+    <script type="text/javascript">
+      // Every message the child sends to the parent, on either route
+      window.sentMessages = []
+      const record = (data) => {
+        if (typeof data === 'string' && data.startsWith('[iFrameSizer]'))
+          window.sentMessages.push(data)
+      }
+      window.addEventListener('message', (event) => record(event.data))
+
+      iframeResize({ license: 'GPLv3' })
+
+      // Set up by iframeResize(); the same-origin child calls it directly
+      const listener = window.iframeParentListener
+      window.iframeParentListener = (data) => {
+        record(data)
+        return listener(data)
+      }
+    </script>
+  </body>
+</html>

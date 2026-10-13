@@ -117,7 +117,8 @@ function startIframeResizerChild({
 export default function (data: string[]): void {
   if (!state.firstRun) return
 
-  map2settings(readDataFromParent(data))
+  state.fromParent = readDataFromParent(data)
+  map2settings(state.fromParent)
   startLogging(settings)
 
   // Page settings are applied last so they win over the parent; remember
