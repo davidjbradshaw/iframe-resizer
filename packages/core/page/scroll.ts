@@ -95,8 +95,11 @@ const scrollRequestFromChild =
       HIGHLIGHT,
     )
 
-    if (target) scrollParent(target, newPosition)
-    else reposition(newPosition)
+    if (target) {
+      scrollParent(target, newPosition)
+      // This page does not scroll, so drop the position read for the offset
+      unsetPagePosition()
+    } else reposition(newPosition)
   }
 
 export const scrollTo = scrollRequestFromChild(false)
