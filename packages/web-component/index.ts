@@ -236,15 +236,18 @@ export class IframeResizerElement extends HTMLBase {
   }
 
   // Passes later changes to the element's other attributes, such as src, on
-  // to the iframe. Not the id, as core keeps the iframe's settings under it
+  // to the iframe. A new id is passed on too, so core can report that a bound
+  // iframe cannot change its id
   private watchAttributes(): void {
     this.attributeObserver = new MutationObserver((mutations) => {
       for (const { attributeName: name } of mutations) {
-        if (!name || name === 'id' || RESIZER_ATTR_MAP[name]) continue
+        if (!name || RESIZER_ATTR_MAP[name]) continue
 
         const value = this.getAttribute(name)
         if (value === null) this.iframe?.removeAttribute(name)
         else this.iframe?.setAttribute(name, value)
+
+        if (name === 'id') this.rebind()
       }
     })
     this.attributeObserver.observe(this, { attributes: true })
