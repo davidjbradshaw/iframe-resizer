@@ -58,7 +58,9 @@ jobs:
           - angular
           - animation
           - astro
+          - body-background
           - check-origin
+          - colon-id
           - horizontal
           - jquery
           - legacy
@@ -69,6 +71,7 @@ jobs:
           - send-message
           - solid
           - svelte
+          - title
           - title-observer
           - v5-child
           - vue
