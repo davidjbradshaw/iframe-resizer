@@ -34,7 +34,7 @@ import type VueIframeResizer from '@iframe-resizer/vue'
 import type { IFrameOptions as VueOptions } from '@iframe-resizer/vue'
 import type VueSfc from '@iframe-resizer/vue/sfc'
 import type { IframeResizerElement } from '@iframe-resizer/web-component'
-import type { ComponentProps } from 'svelte'
+import type { ComponentEvents, ComponentProps } from 'svelte'
 
 export type Published = [
   IframeResizerDirective,
@@ -93,3 +93,10 @@ export const svelteOnResized: SvelteProps = {
   // @ts-expect-error onResized is an event of the Svelte component, not a prop
   onResized: () => {},
 }
+
+// Its events carry the data core passes to the callbacks
+type SvelteEvents = ComponentEvents<SvelteIframeResizer>
+export const svelteResized = (event: SvelteEvents['resized']): number =>
+  event.detail.height
+// @ts-expect-error resize is not one of its events
+export type SvelteNotAnEvent = SvelteEvents['resize']
