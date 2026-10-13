@@ -49,13 +49,14 @@ function onAnimationFrame(): void {
   // errorBoundary re-throws anything that is not an Error
   state.viewportResized = viewportResized
   try {
-    safeSendSize(trigger, desc)
+    // Without renaming the console event, which is this animation frame
+    safeResize(trigger, desc)
   } finally {
     state.viewportResized = false
   }
 }
 
-function sendSize(
+function resize(
   triggerEvent: string,
   triggerEventDesc: string,
   customHeight?: number,
@@ -68,8 +69,6 @@ function sendSize(
   // Manual and parent resize requests are explicit, so they are sent even
   // when the page is hidden, a send is pending or autoResize is off
   const isExplicitRequest = triggerEvent in IGNORE_DISABLE_RESIZE
-
-  consoleEvent(triggerEvent)
 
   switch (true) {
     case isHidden === true && !isExplicitRequest: {
@@ -127,6 +126,17 @@ function sendSize(
   endAutoGroup()
 }
 
-const safeSendSize = errorBoundary(sendSize)
+const safeResize = errorBoundary(resize)
 
-export default safeSendSize
+function sendSize(
+  triggerEvent: string,
+  triggerEventDesc: string,
+  customHeight?: number,
+  customWidth?: number,
+  msg?: string,
+): void {
+  consoleEvent(triggerEvent)
+  safeResize(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+}
+
+export default sendSize
