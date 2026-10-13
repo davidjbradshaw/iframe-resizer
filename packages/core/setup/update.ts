@@ -8,7 +8,6 @@ import { checkTitle } from '../page/title'
 import setOffsetSize from '../send/offset'
 import createOutgoingMessage from '../send/outgoing'
 import trigger from '../send/trigger'
-import getBoundId from '../values/bound-id'
 import settings from '../values/settings'
 import setupBodyMargin from './body-margin'
 import setDirection from './direction'
@@ -22,7 +21,7 @@ function mergeOptions(
   iframe: HTMLIFrameElement,
   options: Record<string, any>,
 ): void {
-  const id = getBoundId(iframe)
+  const { id } = iframe
   const previous = settings[id]
 
   normalizeLog(options)
@@ -56,12 +55,8 @@ export default function updateIframe(
   iframe: HTMLIFrameElement,
   options: Record<string, any>,
 ): void {
-  const id = getBoundId(iframe)
+  const { id } = iframe
   consoleEvent(id, UPDATE)
-
-  if (iframe.id !== id) {
-    log(id, `The iframe's id is now ${iframe.id}, it stays connected as ${id}`)
-  }
 
   if (!settings[id].initialised) {
     throw new Error(

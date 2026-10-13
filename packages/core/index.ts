@@ -1,6 +1,7 @@
 import { isObject } from '@iframe-resizer/common'
 import { LABEL } from '@iframe-resizer/common/consts'
 
+import checkBoundId from './checks/bound-id'
 import ensureHasId from './checks/id'
 import checkManualLogging from './checks/manual-logging'
 import { errorBoundary } from './console'
@@ -9,7 +10,6 @@ import setupIframe from './setup'
 import setupLogging from './setup/logging'
 import updateIframe from './setup/update'
 import type { IFrameComponent, IFrameObject, IFrameOptions } from './types'
-import getBoundId from './values/bound-id'
 
 export type * from './types'
 export {
@@ -17,6 +17,14 @@ export {
   LOG_DISABLED,
   LOG_EXPANDED,
 } from '@iframe-resizer/common/consts'
+
+function updateBoundIframe(
+  iframe: HTMLIFrameElement,
+  options: IFrameOptions,
+): void {
+  checkBoundId(iframe)
+  updateIframe(iframe, options)
+}
 
 export default function connectResizer(
   options: IFrameOptions,
@@ -27,11 +35,10 @@ export default function connectResizer(
   checkManualLogging(options)
 
   return (iframe: HTMLIFrameElement) => {
-    const id =
-      LABEL in iframe ? getBoundId(iframe) : ensureHasId(iframe, options)
+    const id = ensureHasId(iframe, options)
 
     if (LABEL in iframe) {
-      errorBoundary(id, updateIframe)(iframe, options)
+      errorBoundary(id, updateBoundIframe)(iframe, options)
     } else {
       setupLogging(id, options)
       errorBoundary(id, setupIframe)(iframe, options)

@@ -3,11 +3,10 @@ import { HIGHLIGHT } from 'auto-console-group'
 import { log, warn } from '../console'
 import on from '../events/wrapper'
 import type { IFrameComponent } from '../types'
-import getBoundId from '../values/bound-id'
 import disconnect from './disconnect'
 
 export default function closeIframe(iframe: IFrameComponent): void {
-  const id = getBoundId(iframe)
+  const { id } = iframe
 
   if (on(id, 'onBeforeClose', id) === false) {
     log(id, 'Close iframe cancelled by onBeforeClose')

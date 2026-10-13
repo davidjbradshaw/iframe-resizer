@@ -127,24 +127,6 @@ describe('core/setup/update', () => {
     )
   })
 
-  it('updates the iframe under the id it was bound with after its id changes', () => {
-    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    const iframe = { id: 'renamed' } as HTMLIFrameElement
-    settings.bound = {
-      iframe,
-      initialised: true,
-      mode: 0,
-      direction: 'vertical',
-      log: false,
-    }
-
-    updateIframe(iframe, { log: true })
-
-    expect(settings.bound.log).toBe(true)
-    expect(settings.renamed).toBeUndefined()
-    expect(trigger).toHaveBeenCalledWith('update', expect.any(String), 'bound')
-  })
-
   it('re-applies side-effect setup steps', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
     settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
