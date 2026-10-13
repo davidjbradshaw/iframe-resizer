@@ -76,6 +76,7 @@ npm run test:watch                               # Watch mode
 - Use extensionless imports in tests
 - Reset Vitest module state per test when relying on internal singletons
 - Prefer `vi.mock` with factory functions; call `vi.restoreAllMocks()` in `beforeEach`
+- Unit tests run on jsdom's own window (`pool: 'vmThreads'`), where `window`, `window.top` and `window.location` can't be redefined. Override `self` or `parent`, use `window.history.replaceState` for the URL, and put server-side rendering tests in a `// @vitest-environment node` file
 
 ## Linting
 

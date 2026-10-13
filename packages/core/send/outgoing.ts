@@ -1,3 +1,4 @@
+import { escapeField } from '@iframe-resizer/common'
 import { CHILD, SEPARATOR } from '@iframe-resizer/common/consts'
 
 import page from '../values/page'
@@ -32,18 +33,20 @@ export default function createOutgoingMessage(id: string): string {
     widthCalculationMethod,
   } = settings[id]
 
+  // The id and body styles are free text, so a colon in one, as in React's
+  // useId() or url(https://...), must not shift the fields after it
   return [
-    id,
+    escapeField(id),
     V1_PADDING,
     sizeWidth,
     log,
     INTERVAL,
     PUBLIC_METHODS,
     autoResize,
-    bodyMargin,
+    escapeField(bodyMargin),
     heightCalculationMethod,
-    bodyBackground,
-    bodyPadding,
+    escapeField(bodyBackground),
+    escapeField(bodyPadding),
     tolerance,
     inPageLinks,
     RESIZE_FROM,

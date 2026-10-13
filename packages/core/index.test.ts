@@ -1,5 +1,6 @@
 import { beforeEach, expect, it, vi } from 'vitest'
 
+vi.mock('./checks/bound-id', () => ({ default: vi.fn() }))
 vi.mock('./checks/id', () => ({ default: vi.fn(() => 'abc') }))
 vi.mock('./listeners', () => ({ default: vi.fn() }))
 vi.mock('./setup/logging', () => ({ default: vi.fn() }))
@@ -40,6 +41,20 @@ it('runs update flow and returns existing api when already setup', async () => {
 
   expect(updateMod.default).toHaveBeenCalledWith(iframe, options)
   expect(api).toBe(iframe.iframeResizer)
+})
+
+it('reports a bound iframe whose id has changed, rather than updating it', async () => {
+  const { default: connectResizer } = await import('./index')
+  const { default: checkBoundId } = await import('./checks/bound-id')
+  const updateMod = await import('./setup/update')
+  vi.mocked(checkBoundId).mockImplementationOnce(() => {
+    throw new ReferenceError('changed')
+  })
+  const iframe = { iframeResizer: { api: true } }
+
+  expect(() => connectResizer({})(iframe)).toThrow(ReferenceError)
+  expect(checkBoundId).toHaveBeenCalledWith(iframe)
+  expect(updateMod.default).not.toHaveBeenCalled()
 })
 
 it('sets up logging and wraps setupIframe via errorBoundary', async () => {

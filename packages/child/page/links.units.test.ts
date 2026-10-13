@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { addEventListener } from '../events/listeners'
 import sendMessage from '../send/message'
@@ -182,76 +182,35 @@ describe('child/page/links unit tests', () => {
   })
 
   describe('checkLocationHash', () => {
-    test('calls findTarget when location has a hash', () => {
-      const originalLocation = window.location
+    // window.location can't be redefined, so change the URL instead
+    const { href } = window.location
 
-      Object.defineProperty(window, 'location', {
-        value: {
-          ...originalLocation,
-          hash: '#test',
-          href: 'http://localhost/#test',
-        },
-        configurable: true,
-        writable: true,
-      })
+    afterEach(() => {
+      window.history.replaceState(null, '', href)
+    })
+
+    test('calls findTarget when location has a hash', () => {
+      window.history.replaceState(null, '', '#test')
 
       checkLocationHash()
 
       expect(sendMessage).toHaveBeenCalled()
-
-      Object.defineProperty(window, 'location', {
-        value: originalLocation,
-        configurable: true,
-        writable: true,
-      })
     })
 
     test('does nothing when hash is empty', () => {
-      const originalLocation = window.location
-
-      Object.defineProperty(window, 'location', {
-        value: {
-          ...originalLocation,
-          hash: '',
-          href: 'http://localhost/',
-        },
-        configurable: true,
-        writable: true,
-      })
+      window.history.replaceState(null, '', '/')
 
       checkLocationHash()
 
       expect(sendMessage).not.toHaveBeenCalled()
-
-      Object.defineProperty(window, 'location', {
-        value: originalLocation,
-        configurable: true,
-        writable: true,
-      })
     })
 
     test('does nothing when hash is just #', () => {
-      const originalLocation = window.location
-
-      Object.defineProperty(window, 'location', {
-        value: {
-          ...originalLocation,
-          hash: '#',
-          href: 'http://localhost/#',
-        },
-        configurable: true,
-        writable: true,
-      })
+      window.history.replaceState(null, '', '#')
 
       checkLocationHash()
 
       expect(sendMessage).not.toHaveBeenCalled()
-
-      Object.defineProperty(window, 'location', {
-        value: originalLocation,
-        configurable: true,
-        writable: true,
-      })
     })
   })
 

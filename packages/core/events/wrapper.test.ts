@@ -47,7 +47,7 @@ describe('core/events/wrapper', () => {
   test('calls isolateUserCode for non-onBeforeClose/onScroll handlers', () => {
     const res = on('id', 'onResized', {})
 
-    // isolateUserCode returns a setTimeout handle
-    expect(typeof res).toBe('object')
+    // isolateUserCode returns the browser's setTimeout id
+    expect(res).toEqual(expect.any(Number))
   })
 })

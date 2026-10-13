@@ -16,12 +16,13 @@
     <script src="../../js/iframe-resizer.parent.js"></script>
     <script>
       // ?checkOrigin=false turns the check off and a comma-separated list sets
-      // the allowed origins; it is on by default. ?src= sets the child page.
+      // the allowed origins; it is on by default. ?src= sets the child page,
+      // and an empty ?src= leaves the iframe without one.
       const params = new URLSearchParams(window.location.search)
       const checkOrigin = params.get('checkOrigin')
+      const src = params.get('src') ?? 'child/frame.content.html'
 
-      document.getElementById('myIframe').src =
-        params.get('src') ?? 'child/frame.content.html'
+      if (src !== '') document.getElementById('myIframe').src = src
 
       window.readyCount = 0
 

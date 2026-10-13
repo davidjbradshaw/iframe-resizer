@@ -1,4 +1,5 @@
-import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
+import { unescapeField } from '@iframe-resizer/common'
+import { MESSAGE_ID_LENGTH, SEPARATOR } from '@iframe-resizer/common/consts'
 
 import type { MessageData } from '../message-data'
 import settings from '../values/settings'
@@ -29,15 +30,17 @@ export function getBorderEnds(compStyle: CSSStyleDeclaration): number {
 }
 
 const getMessageFields = (msg: string): string[] =>
-  msg.slice(MESSAGE_ID_LENGTH).split(':')
+  msg.slice(MESSAGE_ID_LENGTH).split(SEPARATOR)
 
-// The id is the first field, so it needs no further decoding
-export const getIframeId = (msg: string): string => getMessageFields(msg)[0]
+// The child echoes the id as the parent sent it, with its colons escaped
+export const getIframeId = (msg: string): string =>
+  unescapeField(getMessageFields(msg)[0])
 
 export default function decodeMessage(msg: string): MessageData {
   const data = getMessageFields(msg)
+  const id = unescapeField(data[0])
   const height = data[1] ? Number(data[1]) : 0
-  const iframe = settings[data[0]]?.iframe
+  const iframe = settings[id]?.iframe
   const compStyle = iframe ? getComputedStyle(iframe) : null
   const paddingAndBorder = compStyle
     ? getPaddingEnds(compStyle) + getBorderEnds(compStyle)
@@ -45,7 +48,7 @@ export default function decodeMessage(msg: string): MessageData {
 
   const messageData: MessageData = {
     iframe,
-    id: data[0],
+    id,
     height: height + paddingAndBorder,
     width: Number(data[2]),
     type: data[3],

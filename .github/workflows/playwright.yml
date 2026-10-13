@@ -8,9 +8,9 @@ permissions:
 
 on:
   push:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
 
 jobs:
   build:
@@ -58,14 +58,21 @@ jobs:
           - angular
           - animation
           - astro
+          - body-background
           - check-origin
+          - colon-id
           - horizontal
           - jquery
+          - legacy
+          - message-source
+          - mutation-backlog
           - parent
           - react
           - send-message
           - solid
           - svelte
+          - title
+          - title-observer
           - v5-child
           - vue
           - web-component

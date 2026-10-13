@@ -20,5 +20,14 @@ import IframeResizer from '@iframe-resizer/astro'
       inPageLinks
       src="child/frame.test.html"
     />
+    <script is:inline>
+      // The e2e tests set cancelScroll to check the event can stop a scroll
+      window.cancelScroll = false
+      window.scrollEvents = 0
+      document.addEventListener('iframe-resizer:scroll', (event) => {
+        window.scrollEvents += 1
+        if (window.cancelScroll) event.preventDefault()
+      })
+    </script>
   </body>
 </html>

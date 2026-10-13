@@ -29,6 +29,20 @@ describe('core/received/decode', () => {
     expect(getIframeId('[iFrameSizer]i1:100:200:message:i2')).toBe('i1')
   })
 
+  test('restores the colons the parent escaped in the id', () => {
+    settings[':r1:'] = { iframe: document.createElement('iframe') }
+    const msg = '[iFrameSizer]%3Ar1%3A:100:200:init:6.0.0:0'
+
+    expect(getIframeId(msg)).toBe(':r1:')
+
+    const data = decodeMessage(msg)
+    expect(data.id).toBe(':r1:')
+    expect(data.iframe).toBe(settings[':r1:'].iframe)
+    expect(data.type).toBe('init')
+    expect(data.message).toBe('6.0.0')
+    delete settings[':r1:']
+  })
+
   test('calculates padding and border ends', () => {
     const comp = global.getComputedStyle()
 
