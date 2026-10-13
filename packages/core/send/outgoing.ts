@@ -10,7 +10,11 @@ const INTERVAL = '32'
 const RESIZE_FROM = CHILD
 const PUBLIC_METHODS = true
 
-export default function createOutgoingMessage(id: string): string {
+// overrides replaces settings in this message only
+export default function createOutgoingMessage(
+  id: string,
+  overrides: Record<string, unknown> = {},
+): string {
   const {
     autoResize,
     bodyBackground,
@@ -31,7 +35,7 @@ export default function createOutgoingMessage(id: string): string {
     tolerance,
     maxContentWidth,
     widthCalculationMethod,
-  } = settings[id]
+  } = { ...settings[id], ...overrides }
 
   // The id and body styles are free text, so a colon in one, as in React's
   // useId() or url(https://...), must not shift the fields after it

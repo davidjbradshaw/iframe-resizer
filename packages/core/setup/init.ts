@@ -5,6 +5,7 @@ import {
   LAZY,
   LOAD,
   MIN_SIZE,
+  NONE,
   ONLOAD,
   RESET_REQUIRED_METHODS,
 } from '@iframe-resizer/common/consts'
@@ -75,7 +76,10 @@ function sendInit(id: string, initChild: () => void): void {
 // options at setup and again after each update, so a page loaded later, or
 // one still loading when the options change, starts with the current ones.
 export function setInitMessage(id: string): void {
-  settings[id].initMessage = createOutgoingMessage(id)
+  settings[id].initMessage = createOutgoingMessage(id, {
+    // Not what an earlier page set with autoResize(), which the router keeps
+    autoResize: settings[id].direction !== NONE,
+  })
 }
 
 // We have to call trigger twice, as we can not be sure if all
