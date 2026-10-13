@@ -11,6 +11,7 @@ describe('child/size/max-element', () => {
     state.hasOverflow = false
     state.overflowedNodeSet = new Set()
     state.taggedElements = []
+    settings.calculateHeight = true
     settings.maxContentWidth = false
 
     // Reset DOM
@@ -36,6 +37,22 @@ describe('child/size/max-element', () => {
     const val = getMaxElement('bottom')
 
     expect(val).toBe(280)
+  })
+
+  test('leaves out an element marked data-iframe-ignore, even when it is the widest', () => {
+    const content = document.createElement('p')
+    const menu = document.createElement('nav')
+    menu.toggleAttribute('data-iframe-ignore', true)
+    const link = document.createElement('a')
+    menu.append(link)
+
+    content.getBoundingClientRect = () => ({ bottom: 0, right: 400 })
+    menu.getBoundingClientRect = () => ({ bottom: 0, right: 700 })
+    link.getBoundingClientRect = () => ({ bottom: 0, right: 650 })
+
+    document.body.append(content, menu)
+
+    expect(getMaxElement('right')).toBe(400)
   })
 
   test('includes margin in calculation', () => {
@@ -136,6 +153,7 @@ describe('child/size/max-element', () => {
   }
 
   test('floors a content-sized width at the body edge, not the overflowed element', () => {
+    settings.calculateHeight = false
     settings.maxContentWidth = true
     state.hasOverflow = true
     const overflowed = document.createElement('div')
@@ -147,6 +165,7 @@ describe('child/size/max-element', () => {
   })
 
   test('the floor follows the body when the page pins <html> wider', () => {
+    settings.calculateHeight = false
     settings.maxContentWidth = true
     state.hasOverflow = true
     const overflowed = document.createElement('div')
@@ -159,6 +178,7 @@ describe('child/size/max-element', () => {
   })
 
   test('an overflowed element wider than the page still sets the width', () => {
+    settings.calculateHeight = false
     settings.maxContentWidth = true
     state.hasOverflow = true
     const overflowed = document.createElement('div')
@@ -181,6 +201,7 @@ describe('child/size/max-element', () => {
   })
 
   test('a block width has no floor', () => {
+    settings.calculateHeight = false
     settings.maxContentWidth = false
     state.hasOverflow = true
     const overflowed = document.createElement('div')
@@ -189,6 +210,22 @@ describe('child/size/max-element', () => {
     mockContentRight({ body: 900, html: 900 })
 
     expect(getMaxElement('right')).toBe(330)
+  })
+
+  // In 'both' mode the overflow observer watches the bottom edge only, so an
+  // element overflowing it says nothing about which element is widest
+  test('both: a bottom overflow does not narrow the width search to the overflowed element', () => {
+    settings.calculateHeight = true
+    state.hasOverflow = true
+    const wide = document.createElement('div')
+    const footer = document.createElement('div')
+    wide.getBoundingClientRect = () => ({ bottom: 40, right: 800 })
+    footer.getBoundingClientRect = () => ({ bottom: 1050, right: 100 })
+    document.body.append(wide, footer)
+    state.overflowedNodeSet = new Set([footer])
+
+    expect(getMaxElement('right')).toBe(800)
+    expect(getMaxElement('bottom')).toBe(1050)
   })
 
   test('converts overflowedNodeSet to array', () => {
