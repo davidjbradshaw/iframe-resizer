@@ -5,9 +5,6 @@ const EVENT = (data): { data: unknown } => ({ data })
 describe('child/received/is', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    // Clean window globals between tests
-    delete window.iframeResize
-    delete window.jQuery
   })
 
   it('detects messages intended for iframe-resizer', async () => {
@@ -25,18 +22,6 @@ describe('child/received/is', () => {
     expect(mod.isFromOwnIframe({ source: parentPage } as any)).toBe(false)
     expect(mod.isFromOwnIframe({ source: null } as any)).toBe(false)
     expect(mod.isFromOwnIframe({ data: 'x' } as any)).toBe(false)
-  })
-
-  it('detects middle tier via window.iframeResize', async () => {
-    const mod = await import('./is')
-    window.iframeResize = () => {}
-    expect(mod.isMiddleTier()).toBe(true)
-  })
-
-  it('detects middle tier via jQuery prototype', async () => {
-    const mod = await import('./is')
-    window.jQuery = { prototype: { iframeResize: () => {} } }
-    expect(mod.isMiddleTier()).toBe(true)
   })
 
   it('identifies an init message by the booleans the parent sends', async () => {

@@ -8,7 +8,6 @@ vi.mock('../console', () => ({
 vi.mock('./is', () => ({
   isFromOwnIframe: vi.fn(() => false),
   isMessageForUs: vi.fn(() => true),
-  isMiddleTier: vi.fn(() => false),
 }))
 vi.mock('./utils', () => ({ getMessageType: vi.fn(() => 'unknown') }))
 vi.mock('./process-request', () => ({ default: { known: vi.fn() } }))
@@ -16,15 +15,13 @@ vi.mock('./source', () => ({ default: vi.fn(() => true) }))
 
 const { default: receiver } = await import('./index')
 const { warn } = await import('../console')
-const { isFromOwnIframe, isMiddleTier } = await import('./is')
+const { isFromOwnIframe } = await import('./is')
 const { getMessageType } = await import('./utils')
 const processRequest = (await import('./process-request')).default
-const state = (await import('../values/state')).default
 const isMessageFromParent = (await import('./source')).default
 
 describe('child/received/index', () => {
   beforeEach(() => {
-    state.firstRun = true
     vi.clearAllMocks()
   })
 
@@ -55,16 +52,7 @@ describe('child/received/index', () => {
     expect(warn).not.toHaveBeenCalled()
   })
 
-  test('warns when firstRun and isMiddleTier on unknown type', () => {
-    getMessageType.mockReturnValue('mystery')
-    isMiddleTier.mockReturnValue(true)
-    receiver({ data: 'whatever' })
-
-    expect(warn).toHaveBeenCalled()
-  })
-
-  test('warns unexpected message when not firstRun', () => {
-    state.firstRun = false
+  test('warns about a message type from the parent it does not know', () => {
     getMessageType.mockReturnValue('surprise')
     receiver({ data: 'x' })
     expect(warn).toHaveBeenCalled()
