@@ -2,7 +2,7 @@ import { CHILD_READY_MESSAGE } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, log } from '../console'
-import { narrowOrigins } from '../send/dispatch'
+import narrowOrigins from '../utils/narrow-origins'
 import state from '../values/state'
 
 // Normally the parent kicks things off when it detects the iframe has loaded.
