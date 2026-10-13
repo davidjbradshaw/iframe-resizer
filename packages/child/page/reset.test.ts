@@ -47,6 +47,10 @@ describe('child/page/reset', () => {
     expect(sendMessage).toHaveBeenCalledWith(800, 20, 'resetPage')
     expect(state.height).toBe(800)
     expect(state.width).toBe(20)
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      'Reset trigger event: %cresetPage',
+      expect.any(String),
+    )
   })
 
   test('triggerReset applies onBeforeResize', () => {

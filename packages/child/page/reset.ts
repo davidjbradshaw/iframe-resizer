@@ -23,8 +23,10 @@ function lockTrigger(): void {
 }
 
 export function triggerReset(triggerEvent: string): void {
+  log(`Reset trigger event: %c${triggerEvent}`, HIGHLIGHT)
+
   // Measured like any other size, which a reset always stores
-  getContentSize(triggerEvent, `Reset trigger event: ${triggerEvent}`)
+  getContentSize(triggerEvent, triggerEvent)
   sendMessage(state.height, state.width, triggerEvent)
 }
 
