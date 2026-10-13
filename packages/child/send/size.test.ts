@@ -142,6 +142,22 @@ describe('child/send/size', () => {
       expect(dispatch).toHaveBeenCalledTimes(2)
     })
 
+    test('a deferred trigger is logged under the animation frame', () => {
+      sendSize('evt', 'first')
+      sendSize('visibilityObserver', 'Visibility changed')
+      vi.mocked(consoleMod.event).mockClear()
+
+      endFrame()
+
+      // The frame's event is named, and not replaced by the trigger
+      expect(consoleMod.event).toHaveBeenCalledWith('requestAnimationFrame')
+      expect(consoleMod.event).not.toHaveBeenCalledWith('visibilityObserver')
+      expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
+        'visibilityObserver',
+        'Visibility changed',
+      ])
+    })
+
     test('a deferred viewport resize is measured as one', () => {
       const seen = []
       getContentSize.mockImplementation(() => {
