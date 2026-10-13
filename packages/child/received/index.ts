@@ -2,6 +2,7 @@ import { errorBoundary, event as consoleEvent, warn } from '../console'
 import state from '../values/state'
 import { isMessageForUs, isMiddleTier } from './is'
 import processRequest from './process-request'
+import isMessageFromParent from './source'
 import { getMessageType } from './utils'
 
 function receiver(event: MessageEvent): void {
@@ -9,6 +10,8 @@ function receiver(event: MessageEvent): void {
   const messageType = getMessageType(event)
 
   consoleEvent(messageType)
+
+  if (!isMessageFromParent(event, messageType)) return
 
   switch (true) {
     case messageType in processRequest:
