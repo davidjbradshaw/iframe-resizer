@@ -13,6 +13,13 @@ const iframeHeight = (page) =>
 const forge = (page, to, data) =>
   page.evaluate(([to, data]) => window.forge(to, data), [to, data])
 
+// What the child page's onMessage has been given
+const childMessages = (page) =>
+  page
+    .frameLocator('#myIframe')
+    .locator('body')
+    .evaluate(() => window.messages)
+
 test.describe('message source', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(PAGE)
@@ -60,6 +67,33 @@ test.describe('message source', () => {
       .evaluate(() => window.grow(500))
 
     await expect.poll(() => iframeHeight(page)).toBeGreaterThan(before + 400)
+  })
+
+  test('a user message from another window does not reach the child', async ({
+    page,
+  }) => {
+    await forge(page, 'child', '[iFrameSizer]message:{"forged":1}')
+    await page.waitForTimeout(300)
+
+    // One from the parent still arrives, so the forged one was dropped
+    // rather than lost on the way
+    await page.evaluate(() =>
+      document.getElementById('myIframe').iframeResizer.sendMessage('real'),
+    )
+
+    await expect
+      .poll(async () => (await childMessages(page)).length)
+      .toBeGreaterThan(0)
+    expect(await childMessages(page)).toEqual(['real'])
+  })
+
+  test('a moveToAnchor message from another window does not scroll the host page', async ({
+    page,
+  }) => {
+    await forge(page, 'child', '[iFrameSizer]moveToAnchor:anchor')
+    await page.waitForTimeout(300)
+
+    expect(await page.evaluate(() => window.scrolls)).toEqual([])
   })
 })
 
