@@ -3,6 +3,7 @@ import { INIT, MESSAGE_ID } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 
 import { advise, assert, info, log } from '../console'
+import narrowOrigins from '../utils/narrow-origins'
 import settings from '../values/settings'
 import state from '../values/state'
 
@@ -26,15 +27,6 @@ export function setTargetOrigin(
   if (undefined === targetOrigin) targetOrigin = settings.targetOrigin
   else log(`Message targetOrigin: %c${targetOrigin}`, HIGHLIGHT)
   return targetOrigin
-}
-
-// Once the window's origin is known, post only to that entry of the list
-export const narrowOrigins = (
-  origins: string | string[],
-  origin: string | undefined,
-): string[] => {
-  if (!Array.isArray(origins)) return [origins]
-  return origin && origins.includes(origin) ? [origin] : origins
 }
 
 export function dispatchToParent(
