@@ -32,6 +32,7 @@ const entry = (id) => [id, settings[id]]
 describe('core/send/ready', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    delete settings.duplicate
     settings.a.iframe.src = 'https://a.com/page.html'
     settings.a.remoteHost = 'https://a.com'
     settings.a.targetOrigin = ['https://a.com']
@@ -44,6 +45,16 @@ describe('core/send/ready', () => {
 
     expect(settings.a.initChild).toHaveBeenCalled()
     expect(settings.b.initChild).not.toHaveBeenCalled()
+  })
+
+  test('skips an ID that has no iframe bound', () => {
+    // A duplicate ID is not bound, but logging has already set up its console
+    settings.duplicate = { console: {} }
+
+    expect(() =>
+      ready({ source: 'win', origin: 'https://a.com' }),
+    ).not.toThrow()
+    expect(settings.a.initChild).toHaveBeenCalled()
   })
 
   test('default export iterates settings and calls when source matches', () => {
