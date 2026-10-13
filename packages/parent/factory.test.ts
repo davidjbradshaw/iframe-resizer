@@ -73,6 +73,33 @@ describe('createIframeResize - Disconnected iframes', () => {
     expect(mockIframe.isConnected).toBe(true)
   })
 
+  it('connects a disconnected iframe with the options it was passed', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    const connected = []
+    connectResizer.mockImplementation((options) => (iframe) => {
+      connected.push([iframe.id, options.direction])
+    })
+
+    iframeResize({ direction: 'horizontal-inline' }, mockIframe)
+
+    // A later call, before the first iframe is in the page
+    const other = document.createElement('iframe')
+    other.id = 'other'
+    document.body.append(other)
+    iframeResize({ direction: 'vertical' }, other)
+
+    document.body.append(mockIframe)
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50)
+    })
+
+    expect(connected).toEqual([
+      ['other', 'vertical'],
+      ['test-iframe', 'horizontal-inline'],
+    ])
+    connectResizer.mockImplementation(() => vi.fn())
+  })
+
   it('should handle multiple disconnected iframes', () => {
     const iframe1 = document.createElement('iframe')
     iframe1.id = 'iframe-1'

@@ -20,6 +20,7 @@ const RESIZER_ATTR_MAP: Record<string, string> = {
   offsetsize: 'offsetSize',
   scrolling: 'scrolling',
   tolerance: 'tolerance',
+  waitforload: 'waitForLoad',
   warningtimeout: 'warningTimeout',
 }
 
@@ -38,6 +39,7 @@ const BOOLEAN_ATTRS = new Set([
   'inpagelinks',
   'log',
   'scrolling',
+  'waitforload',
 ])
 
 // Attributes that should be parsed as whitespace-separated arrays
@@ -58,6 +60,7 @@ const RESIZER_ATTR_DEFAULTS: Record<string, unknown> = {
   offsetSize: 0,
   scrolling: false,
   tolerance: 0,
+  waitForLoad: false,
   warningTimeout: 5000,
 }
 
@@ -106,6 +109,8 @@ export class IframeResizerElement extends HTMLBase {
 
   private iframe: HTMLIFrameElement | null = null
 
+  private attributeObserver: MutationObserver | null = null
+
   static get observedAttributes(): string[] {
     return Object.keys(RESIZER_ATTR_MAP)
   }
@@ -114,8 +119,9 @@ export class IframeResizerElement extends HTMLBase {
     return this.resizerOptions
   }
 
-  set options(val: Partial<IFrameOptions>) {
-    this.resizerOptions = val
+  // A framework sets undefined for an unset binding, so treat that as none
+  set options(val: Partial<IFrameOptions> | null | undefined) {
+    this.resizerOptions = val ?? {}
     this.rebind()
   }
 
@@ -172,9 +178,11 @@ export class IframeResizerElement extends HTMLBase {
     } as IFrameOptions
   }
 
-  private rebind(overrides: Record<string, unknown> = {}): void {
+  // Defaults go first, so a value set through the options property still
+  // wins over the default for an attribute that was removed
+  private rebind(defaults: Record<string, unknown> = {}): void {
     if (!this.iframe || !this.resizer) return
-    connectResizer({ ...this.buildOptions(), ...overrides })(this.iframe)
+    connectResizer({ ...defaults, ...this.buildOptions() })(this.iframe)
   }
 
   connectedCallback(): void {
@@ -191,6 +199,7 @@ export class IframeResizerElement extends HTMLBase {
 
     this.iframe = iframe
     this.append(iframe)
+    this.watchAttributes()
 
     this.resizer = connectResizer(this.buildOptions())(iframe) ?? null
 
@@ -217,11 +226,28 @@ export class IframeResizerElement extends HTMLBase {
   }
 
   disconnectedCallback(): void {
+    this.attributeObserver?.disconnect()
+    this.attributeObserver = null
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
     this.resizer = null
     this.iframe?.remove()
     this.iframe = null
+  }
+
+  // Passes later changes to the element's other attributes, such as src, on
+  // to the iframe. Not the id, as core keeps the iframe's settings under it
+  private watchAttributes(): void {
+    this.attributeObserver = new MutationObserver((mutations) => {
+      for (const { attributeName: name } of mutations) {
+        if (!name || name === 'id' || RESIZER_ATTR_MAP[name]) continue
+
+        const value = this.getAttribute(name)
+        if (value === null) this.iframe?.removeAttribute(name)
+        else this.iframe?.setAttribute(name, value)
+      }
+    })
+    this.attributeObserver.observe(this, { attributes: true })
   }
 }
 

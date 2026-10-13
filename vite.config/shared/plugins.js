@@ -32,16 +32,21 @@ export const injectVersion = () => [versionTag()]
 
 const BANNER_FORMATS = { es: 'esm', cjs: 'cjs', umd: 'umd', iife: 'iife' }
 
-// Adds the banner after minification, labelled with each output's format
+// Adds the banner after minification, labelled with each output's format.
+// Rolldown only: the Rollup build (jQuery) sets its banner in output().
 export const formatBanner = (file) => ({
   name: 'iframe-resizer:banner',
-  outputOptions: (options) => ({
-    ...options,
-    postBanner: createBanner(
-      file,
-      BANNER_FORMATS[options.format] ?? options.format,
-    ),
-  }),
+  outputOptions(options) {
+    if (!this.meta.rolldownVersion) return null
+
+    return {
+      ...options,
+      postBanner: createBanner(
+        file,
+        BANNER_FORMATS[options.format] ?? options.format,
+      ),
+    }
+  },
 })
 
 // Removes the child's test hooks. Runs first, while the TEST CODE comments
