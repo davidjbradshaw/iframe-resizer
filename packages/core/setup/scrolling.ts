@@ -1,14 +1,13 @@
 import { AUTO, HIDDEN, OMIT } from '@iframe-resizer/common/consts'
 
 import { log } from '../console'
-import getBoundId from '../values/bound-id'
 import settings from '../values/settings'
 
 const YES = 'yes'
 const NO = 'no'
 
 export default function setScrolling(iframe: HTMLIFrameElement): void {
-  const id = getBoundId(iframe)
+  const { id } = iframe
 
   log(
     id,

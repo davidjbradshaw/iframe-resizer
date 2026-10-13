@@ -4,9 +4,9 @@ import trigger from '../send/trigger'
 import settings from '../values/settings'
 
 const sendTriggerMsg = (eventName: string, event: string): void =>
-  Object.entries(settings)
-    .filter(([, { autoResize, firstRun }]) => autoResize && !firstRun)
-    .forEach(([id]) => trigger(eventName, event, id))
+  Object.values(settings)
+    .filter(({ autoResize, firstRun }) => autoResize && !firstRun)
+    .forEach(({ iframe }) => trigger(eventName, event, iframe.id))
 
 export default function tabVisible(): void {
   if (document.hidden === true) return
