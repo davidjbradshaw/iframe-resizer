@@ -29,18 +29,44 @@ describe('child/received/is', () => {
     expect(mod.isMiddleTier()).toBe(true)
   })
 
-  it('identifies init message by boolean flag in third segment', async () => {
-    const { SEPARATOR, MESSAGE_ID } =
-      await import('@iframe-resizer/common/consts')
+  it('identifies an init message by the booleans the parent sends', async () => {
+    const { MESSAGE_ID } = await import('@iframe-resizer/common/consts')
     const mod = await import('./is')
+
+    // The current parent and the v1 parent, which sends only seven fields
     expect(
-      mod.isInitMessage(EVENT(`${MESSAGE_ID}${SEPARATOR}x${SEPARATOR}true`)),
+      mod.isInitMessage(
+        EVENT(`${MESSAGE_ID}myId:8:false:true:32:true:true:8px:auto`),
+      ),
     ).toBe(true)
     expect(
-      mod.isInitMessage(EVENT(`${MESSAGE_ID}${SEPARATOR}x${SEPARATOR}false`)),
+      mod.isInitMessage(EVENT(`${MESSAGE_ID}myId:0:true:false:32:false:true`)),
     ).toBe(true)
+
+    // An iframe id that is also a message type
     expect(
-      mod.isInitMessage(EVENT(`${MESSAGE_ID}${SEPARATOR}x${SEPARATOR}maybe`)),
-    ).toBe(false)
+      mod.isInitMessage(EVENT(`${MESSAGE_ID}message:8:false:false:32:true`)),
+    ).toBe(true)
+
+    expect(mod.isInitMessage(EVENT(`${MESSAGE_ID}resize`))).toBe(false)
+    expect(mod.isInitMessage(EVENT(`${MESSAGE_ID}x:y:maybe`))).toBe(false)
+  })
+
+  it('does not take a user message with a boolean in its body for init', async () => {
+    const { MESSAGE_ID } = await import('@iframe-resizer/common/consts')
+    const mod = await import('./is')
+
+    for (const body of [
+      '["mode:true:1"]',
+      '"feature:true:on"',
+      '"a:false:b"',
+      '"a:valueOf:b"',
+      '"a:toString:b"',
+      '{"x":"y:true:z"}',
+    ]) {
+      expect(mod.isInitMessage(EVENT(`${MESSAGE_ID}message:${body}`))).toBe(
+        false,
+      )
+    }
   })
 })
