@@ -69,7 +69,7 @@ npx playwright test --project=webkit
 
 Specs live in `e2e/tests/` and load pages from `e2e/fixtures/`, served from the repo root on localhost:8080.
 
-- **One spec per package**: `parent`, `jquery`, `web-component`, `react`, `vue`, `angular`, `svelte`, `solid`, `alpine` and `astro`. Each runs the shared suites in `e2e/tests/shared/` (`parent-events.js`, `parent-methods.js` and `child-methods.js`) against its own page. The framework pages are built from `e2e/apps/<framework>` by `build-scripts/build-e2e-examples.sh`.
+- **One spec per package**: `parent`, `jquery`, `web-component`, `react`, `vue`, `angular`, `svelte`, `solid`, `alpine` and `astro`. Each runs the shared suites in `e2e/tests/shared/` (`parent-events.js`, `parent-methods.js` and `child-methods.js`) against its own page. The `web-component`, `react`, `vue` and `solid` specs also run `early-update.js`, which changes options before the child is ready, against a second page. The framework pages are built from `e2e/apps/<framework>` by `build-scripts/build-e2e-examples.sh`.
 - **Behaviour specs**:
   - `animation.spec.js` checks the iframe matches its content on every paint.
   - `horizontal.spec.js` and `width-modes.spec.js` cover the width directions.

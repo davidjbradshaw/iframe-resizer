@@ -1,14 +1,21 @@
-import { childTests, parentEventTests, parentMethodTests } from './shared'
+import {
+  childTests,
+  earlyUpdateTests,
+  parentEventTests,
+  parentMethodTests,
+} from './shared'
 import { expect, test } from './shared/test'
 import { waitForChildText, waitForResizer } from './shared/utils'
 
 const BASE = '/e2e/fixtures/web-component/index.html'
 const OPTIONS_UNDEFINED = '/e2e/fixtures/web-component-options.html'
+const EARLY_UPDATE = '/e2e/fixtures/web-component-early-update.html'
 
 test.describe('Web Component', () => {
   parentEventTests(BASE)
   parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
+  earlyUpdateTests(EARLY_UPDATE)
 
   // A framework assigns undefined to the options property for an unset
   // binding. That has to count as no options, not make every callback throw.

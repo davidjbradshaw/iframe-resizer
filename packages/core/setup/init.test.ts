@@ -13,11 +13,12 @@ vi.mock('../values/settings', () => ({ default: {} }))
 const { addEventListener } = await import('../../common/listeners')
 const { event: consoleEvent, info, warn } = await import('../console')
 const resetIframe = (await import('../methods/reset')).default
+const createOutgoingMessage = (await import('../send/outgoing')).default
 const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
 const createOutgoingMessage = (await import('../send/outgoing')).default
 const settings = (await import('../values/settings')).default
-const init = (await import('./init')).default
+const { default: init, setInitMessage } = await import('./init')
 const { INIT, INIT_FROM_IFRAME, ONLOAD } =
   await import('@iframe-resizer/common/consts')
 
@@ -35,6 +36,35 @@ describe('core/setup/init', () => {
 
     expect(consoleEvent).toHaveBeenCalledWith('if1', 'noContent')
     expect(info).toHaveBeenCalled()
+  })
+
+  test('sends the init message built from the settings at setup', () => {
+    settings.if11 = {
+      iframe: { isConnected: true, loading: 'eager', src: 'x' },
+      firstRun: true,
+    }
+    init('if11')
+    vi.runAllTimers()
+
+    expect(createOutgoingMessage).toHaveBeenCalledWith('if11')
+    expect(trigger).toHaveBeenCalledWith(INIT, 'msg', 'if11')
+  })
+
+  test('sends the init message as refreshed after the options changed', () => {
+    const iframe = { isConnected: true, loading: 'eager', src: 'x' }
+    settings.if12 = { iframe, firstRun: true }
+    init('if12')
+
+    // An update before the child replies rebuilds the message
+    vi.mocked(createOutgoingMessage).mockReturnValueOnce('updated')
+    setInitMessage('if12')
+    vi.runAllTimers()
+
+    expect(trigger).toHaveBeenCalledWith(INIT, 'updated', 'if12')
+
+    // And every later init, such as a page loading in the iframe, uses it
+    settings.if12.initChild()
+    expect(trigger).toHaveBeenCalledWith(INIT_FROM_IFRAME, 'updated', 'if12')
   })
 
   test('creates initChild for INIT and INIT_FROM_IFRAME; onload listener registered', () => {
