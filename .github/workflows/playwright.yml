@@ -62,9 +62,11 @@ jobs:
           - check-origin
           - colon-id
           - horizontal
+          - in-page-links
           - jquery
           - legacy
           - message-source
+          - middle-tier
           - mutation-backlog
           - parent
           - react

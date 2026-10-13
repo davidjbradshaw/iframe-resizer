@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Confirm 37: onScroll false does not stop the hash jump</title>
+    <title>iframe-resizer onScroll cancel test</title>
     <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
     <style>
       body {
@@ -37,7 +37,7 @@
 
     <div style="margin: 20px">
       <iframe
-        src="/e2e/fixtures/confirm/37-onscroll-cancel-child.html"
+        src="child/frame.onscroll-cancel.html"
         style="width: 400px; height: 100px"
       ></iframe>
     </div>
@@ -51,7 +51,6 @@
 
       iframeResize({
         license: 'GPLv3',
-        log: true,
         inPageLinks: true,
         // Cancel the library's scroll and do our own, allowing for the header
         onScroll({ top, left }) {
