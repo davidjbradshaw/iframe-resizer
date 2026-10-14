@@ -21,7 +21,9 @@ for dir in example/*/; do
   if [ -f "$dir/package.json" ]; then
     echo "=== Updating $dir ==="
     cd "$dir"
-    ncu -u $NCU_TARGET
+    # By its full name, so no global install is needed: the npm package
+    # called ncu is something else
+    npx --yes npm-check-updates -u $NCU_TARGET
     if $BETA; then
       for pkg in $(grep -o '"@iframe-resizer/[^"]*"' package.json | tr -d '"'); do
         npm i "${pkg}@beta"
