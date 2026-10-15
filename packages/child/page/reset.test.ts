@@ -42,7 +42,7 @@ describe('child/page/reset', () => {
   })
 
   test('triggerReset sends the measured size and stores it', () => {
-    triggerReset('resetPage')
+    triggerReset('resetPage', 'Reset by test')
 
     expect(sendMessage).toHaveBeenCalledWith(800, 20, 'resetPage')
     expect(state.height).toBe(800)
@@ -53,10 +53,19 @@ describe('child/page/reset', () => {
     )
   })
 
+  test('triggerReset gives the size log its description', () => {
+    triggerReset('resetPage', 'Reset by test')
+
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      'Resize event: %cReset by test',
+      expect.any(String),
+    )
+  })
+
   test('triggerReset applies onBeforeResize', () => {
     settings.onBeforeResize = vi.fn((size: number) => Math.min(size, 500))
 
-    triggerReset('resetPage')
+    triggerReset('resetPage', 'Reset by test')
 
     expect(settings.onBeforeResize).toHaveBeenCalledWith(
       800,
@@ -71,7 +80,7 @@ describe('child/page/reset', () => {
     state.height = 800
     state.width = 20
 
-    triggerReset('resetPage')
+    triggerReset('resetPage', 'Reset by test')
 
     expect(sendMessage).toHaveBeenCalledWith(800, 20, 'resetPage')
   })
@@ -88,6 +97,10 @@ describe('child/page/reset', () => {
 
     expect(state.triggerLocked).toBe(false)
     expect(sendMessage).toHaveBeenCalledWith(800, 20, 'reset')
+    expect(consoleMod.log).toHaveBeenCalledWith(
+      'Resize event: %cdesc',
+      expect.any(String),
+    )
     expect(settings.heightCalcMode).toBe('max')
     settings.heightCalcMode = 'auto'
     globalThis.requestAnimationFrame = raf

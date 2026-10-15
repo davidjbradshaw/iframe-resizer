@@ -1,4 +1,4 @@
-import { HEIGHT_CALC_MODE_DEFAULT } from '@iframe-resizer/common/consts'
+import { HEIGHT_CALC_MODE_DEFAULT, RESET } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
 import { debug, log } from '../console'
@@ -22,11 +22,14 @@ function lockTrigger(): void {
   })
 }
 
-export function triggerReset(triggerEvent: string): void {
+export function triggerReset(
+  triggerEvent: string,
+  triggerEventDesc: string,
+): void {
   log(`Reset trigger event: %c${triggerEvent}`, HIGHLIGHT)
 
   // Measured like any other size, which a reset always stores
-  getContentSize(triggerEvent, triggerEvent)
+  getContentSize(triggerEvent, triggerEventDesc)
   sendMessage(state.height, state.width, triggerEvent)
 }
 
@@ -36,6 +39,6 @@ export function resetIframe(triggerEventDesc: string): void {
   log(`Reset trigger event: %c${triggerEventDesc}`, HIGHLIGHT)
   settings.heightCalcMode = HEIGHT_CALC_MODE_DEFAULT
   lockTrigger()
-  triggerReset('reset')
+  triggerReset(RESET, triggerEventDesc)
   settings.heightCalcMode = hcm
 }

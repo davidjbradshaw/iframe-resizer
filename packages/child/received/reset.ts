@@ -11,5 +11,5 @@ export default function reset(): void {
   }
 
   log('Page size reset by host page')
-  triggerReset(RESET_PAGE)
+  triggerReset(RESET_PAGE, 'Parent window requested size reset')
 }

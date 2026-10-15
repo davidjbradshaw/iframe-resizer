@@ -25,6 +25,9 @@ describe('child/received/reset', () => {
     const { default: reset } = await import('./reset')
     reset()
 
-    expect(triggerReset).toHaveBeenCalledWith('resetPage')
+    expect(triggerReset).toHaveBeenCalledWith(
+      'resetPage',
+      'Parent window requested size reset',
+    )
   })
 })
