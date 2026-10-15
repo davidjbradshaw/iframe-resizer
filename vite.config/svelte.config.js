@@ -1,6 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { defineConfig } from 'vite'
 
+import svelteConfig from '../svelte.config.js'
 import { createPluginsProd, terserMinify } from './shared/plugins.js'
 
 export default defineConfig({
@@ -25,12 +26,7 @@ export default defineConfig({
     sourcemap: process.env.BETA === '1',
   },
   plugins: [
-    svelte({
-      configFile: false,
-      compilerOptions: {
-        customElement: false,
-      },
-    }),
+    svelte({ ...svelteConfig, configFile: false }),
     ...createPluginsProd('svelte'),
   ],
 })

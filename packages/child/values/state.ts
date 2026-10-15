@@ -16,6 +16,9 @@ export default {
   sameOrigin: false,
   taggedElements: [] as unknown as NodeListOf<Element>,
   target: window?.parent as MessageEventSource | null,
+  // Set by the test hook in index.ts, whose specs stand in for the parent
+  // window with a plain object
+  testHarness: false,
   timerActive: false,
   totalTime: 0,
   triggerLocked: false,

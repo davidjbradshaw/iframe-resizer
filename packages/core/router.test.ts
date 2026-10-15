@@ -127,10 +127,13 @@ describe('core/router', () => {
     expect(stopParentInfoMonitor).toHaveBeenCalledWith(id)
   })
 
-  test('TITLE sets title via setTitle', () => {
-    routeMessage({ ...base, type: TITLE })
+  test('TITLE sets the whole message body as the title', async () => {
+    const getBody = (await import('./received/message')).default
+    getBody.mockReturnValue('Docs: Getting started')
+    routeMessage({ ...base, type: TITLE, message: 'Docs' })
 
-    expect(setTitle).toHaveBeenCalledWith(id, 'm')
+    expect(getBody).toHaveBeenCalledWith(id, 4)
+    expect(setTitle).toHaveBeenCalledWith(id, 'Docs: Getting started')
   })
 
   test('delegates to checkValidMessage for unknown types', () => {

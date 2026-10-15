@@ -34,7 +34,7 @@ const state = (await import('../values/state')).default
 const dispatch = (await import('./dispatch')).default
 const checkOverflow = (await import('../check/overflow')).default
 const sendSize = (await import('./size')).default
-const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST, SET_OFFSET_SIZE } =
+const { INIT, OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST, SET_OFFSET_SIZE } =
   await import('@iframe-resizer/common/consts')
 
 describe('child/send/size', () => {
@@ -140,6 +140,22 @@ describe('child/send/size', () => {
       // The deferred send starts a frame of its own, with nothing deferred
       endFrame()
       expect(dispatch).toHaveBeenCalledTimes(2)
+    })
+
+    test('a deferred trigger is logged under the animation frame', () => {
+      sendSize('evt', 'first')
+      sendSize('visibilityObserver', 'Visibility changed')
+      vi.mocked(consoleMod.event).mockClear()
+
+      endFrame()
+
+      // The frame's event is named, and not replaced by the trigger
+      expect(consoleMod.event).toHaveBeenCalledWith('requestAnimationFrame')
+      expect(consoleMod.event).not.toHaveBeenCalledWith('visibilityObserver')
+      expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
+        'visibilityObserver',
+        'Visibility changed',
+      ])
     })
 
     test('a deferred viewport resize is measured as one', () => {
@@ -261,6 +277,14 @@ describe('child/send/size', () => {
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
 
     expect(getContentSize).not.toHaveBeenCalled()
+  })
+
+  test('sends the init reply when autoResize is off', () => {
+    // direction 'none' turns autoResize off; the parent waits for this reply
+    settings.autoResize = false
+    sendSize(INIT, 'Init message from host page', undefined, undefined, '6:2')
+
+    expect(dispatch).toHaveBeenCalledWith(10, 20, INIT, '6:2')
   })
 
   test('default path calls getContentSize and dispatch, then resets pending in raf', () => {

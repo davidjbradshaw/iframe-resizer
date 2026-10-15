@@ -7,9 +7,9 @@ permissions:
 
 on:
   push:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
 
 # A newer commit to a PR cancels its older runs; each push runs in full
 concurrency:

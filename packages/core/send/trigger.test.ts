@@ -67,12 +67,86 @@ describe('core/send/trigger', () => {
     )
   })
 
-  test('warns when id not found', async () => {
-    const s = (await import('../values/settings')).default
-    delete s.a.postMessageTarget
-    trigger('resize', 'msg', 'a')
+  test('posts only to the targetOrigin given for this message', () => {
+    settings.d = {
+      iframe: { contentWindow: {}, id: 'd' },
+      postMessageTarget: { postMessage: vi.fn() },
+      sameOrigin: false,
+      targetOrigin: ['https://x.com', 'https://y.com'],
+    }
 
-    expect(warn).toHaveBeenCalled()
+    trigger('message', 'message:"hi"', 'd', 'https://y.com')
+
+    expect(settings.d.postMessageTarget.postMessage).toHaveBeenCalledTimes(1)
+    expect(settings.d.postMessageTarget.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://y.com',
+    )
+  })
+
+  test('drops a message for another origin on the same-origin route, as postMessage would', () => {
+    const iframeChildListener = vi.fn()
+    settings.e = {
+      iframe: { contentWindow: { iframeChildListener }, id: 'e' },
+      postMessageTarget: { postMessage: vi.fn() },
+      sameOrigin: true,
+      targetOrigin: ['*'],
+    }
+
+    trigger('message', 'message:"hi"', 'e', 'https://other.example')
+
+    expect(iframeChildListener).not.toHaveBeenCalled()
+    expect(settings.e.postMessageTarget.postMessage).not.toHaveBeenCalled()
+
+    trigger('message', 'message:"hi"', 'e', window.location.origin)
+    trigger('message', 'message:"hi"', 'e', '*')
+    trigger('message', 'message:"hi"', 'e', '/')
+
+    expect(iframeChildListener).toHaveBeenCalledTimes(3)
+  })
+
+  test('warns when id not found', () => {
+    trigger('resize', 'msg', 'gone')
+
+    expect(warn).toHaveBeenCalledWith('gone', 'Iframe not found')
+  })
+
+  test('posts to the window the iframe has now', () => {
+    const iframe = { contentWindow: { postMessage: vi.fn() }, id: 'f' }
+    settings.f = {
+      iframe,
+      postMessageTarget: null,
+      sameOrigin: false,
+      targetOrigin: ['https://x.com'],
+    }
+    trigger('resize', 'resize:msg', 'f')
+
+    expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://x.com',
+    )
+
+    // The iframe was moved in the page, so it has a new window
+    iframe.contentWindow = { postMessage: vi.fn() }
+    trigger('resize', 'resize:msg', 'f')
+
+    expect(iframe.contentWindow.postMessage).toHaveBeenCalledTimes(1)
+  })
+
+  test('warns, without sending, while the iframe has no window', () => {
+    settings.g = {
+      iframe: { contentWindow: null, id: 'g' },
+      postMessageTarget: null,
+      sameOrigin: true,
+      targetOrigin: ['*'],
+    }
+
+    expect(() => trigger('resize', 'resize:msg', 'g')).not.toThrow()
+    expect(warn).toHaveBeenCalledWith(
+      'g',
+      expect.stringContaining('not in the document'),
+    )
+    expect(settings.g.sameOrigin).toBe(true)
   })
 
   test('falls back to postMessage when same-origin throws for non-init event', () => {

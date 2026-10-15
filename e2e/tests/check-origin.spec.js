@@ -22,6 +22,19 @@ const navigateIframe = (page) =>
     document.getElementById('myIframe').contentWindow.location.href = url
   }, OTHER_PAGE)
 
+const setIframeSrc = (page) =>
+  page.evaluate((url) => {
+    document.getElementById('myIframe').src = url
+  }, OTHER_PAGE)
+
+// Moving the iframe gives it a new window, which loads the page again
+const moveIframe = (page) =>
+  page.evaluate(() => {
+    const container = document.createElement('div')
+    document.body.append(container)
+    container.append(document.getElementById('myIframe'))
+  })
+
 const waitForOriginError = (page) =>
   page.waitForEvent(
     'console',
@@ -44,6 +57,45 @@ test.describe('checkOrigin', () => {
 
       expect((await originError).text()).toContain(OTHER_ORIGIN)
       expect(await page.evaluate(() => window.readyCount)).toBe(1)
+    })
+  })
+
+  // The allowed origin comes from the src the iframe has when it loads,
+  // not the one it had when it was bound
+  test.describe('iframe bound before it has a src', () => {
+    test('connects to a page from another origin set as the src later', async ({
+      page,
+    }) => {
+      await page.goto(parentPage({ src: '' }))
+
+      await setIframeSrc(page)
+
+      // The shared fixture fails the test if any error was logged
+      await page.waitForFunction(() => window.readyCount === 1)
+    })
+  })
+
+  test.describe('src changed to another origin', () => {
+    test('connects to the page the src now points at', async ({ page }) => {
+      await page.goto(parentPage())
+      await page.waitForFunction(() => window.readyCount === 1)
+
+      await setIframeSrc(page)
+
+      // The shared fixture fails the test if any error was logged
+      await page.waitForFunction(() => window.readyCount === 2)
+    })
+  })
+
+  test.describe('cross-origin iframe moved in the page', () => {
+    test('connects to the page loaded in its new window', async ({ page }) => {
+      await page.goto(parentPage({ src: OTHER_PAGE }))
+      await page.waitForFunction(() => window.readyCount === 1)
+
+      await moveIframe(page)
+
+      // The shared fixture fails the test if any error was logged
+      await page.waitForFunction(() => window.readyCount === 2)
     })
   })
 
@@ -72,6 +124,22 @@ test.describe('checkOrigin', () => {
 
       await navigateIframe(page)
 
+      await page.waitForFunction(() => window.readyCount === 2)
+    })
+
+    test('accepts entries written as URLs, with a path or a trailing slash', async ({
+      page,
+    }) => {
+      await page.goto(
+        parentPage({
+          checkOrigin: `${PARENT_ORIGIN}/,${OTHER_ORIGIN}/e2e/fixtures/`,
+        }),
+      )
+      await page.waitForFunction(() => window.readyCount === 1)
+
+      await navigateIframe(page)
+
+      // The shared fixture fails the test if a reply is rejected
       await page.waitForFunction(() => window.readyCount === 2)
     })
 
@@ -129,5 +197,15 @@ test.describe('child targetOrigin list', () => {
     await page.waitForTimeout(500)
 
     expect(await page.evaluate(() => window.readyCount)).toBe(0)
+  })
+})
+
+// A data: page has an opaque origin, so the parent can only message it with *
+test.describe('data: URL iframe', () => {
+  test('connects with the default checkOrigin', async ({ page }) => {
+    await page.goto('/e2e/fixtures/data-url.html')
+
+    // The shared fixture fails the test if postMessage throws
+    await page.waitForFunction(() => window.childReady === true)
   })
 })

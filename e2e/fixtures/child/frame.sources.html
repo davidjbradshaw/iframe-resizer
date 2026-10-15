@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>E2E Sources Child</title>
+    <script type="text/javascript" src="/js/iframe-resizer.child.js"></script>
+    <script>
+      // The messages onMessage receives; none should be from another window
+      window.messages = []
+
+      window.iframeResizer = {
+        onReady() {
+          document.getElementById('ready-status').textContent = 'ready'
+        },
+        onMessage(message) {
+          window.messages.push(message)
+        },
+      }
+
+      // The test grows the page to check the real parent still gets the size
+      window.grow = (px) => {
+        const div = document.createElement('div')
+        div.style.height = `${px}px`
+        document.body.append(div)
+      }
+    </script>
+    <style>
+      body { margin: 8px; font-family: sans-serif; }
+    </style>
+  </head>
+  <body>
+    <p>Ready: <span id="ready-status">pending</span></p>
+    <!-- A moveToAnchor from another window must not scroll the host to this -->
+    <h2 id="anchor">Anchor</h2>
+  </body>
+</html>

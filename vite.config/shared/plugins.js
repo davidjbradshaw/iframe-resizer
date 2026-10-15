@@ -61,14 +61,19 @@ export const stripTestCode = () => ({
 
 const stripInclude = ['**/*.js', '**/*.ts']
 
+// Production builds remove log() and debug() calls; other builds remove purge()
+const stripCalls = (stripLog) =>
+  strip({
+    include: stripInclude,
+    functions: stripLog ? ['log', 'debug'] : ['purge'],
+  })
+
+// For the UMD post-builds, which do not use pluginsBase
+export const stripLogging = () => [stripCalls(stripLog)]
+
 export const pluginsBase =
   (stripLog, skipVI = false) =>
   () => {
-    const delog = [
-      strip({ include: stripInclude, functions: ['log', 'debug'] }),
-    ]
-    const log = [strip({ include: stripInclude, functions: ['purge'] })]
-
     const babelPlugin = babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
@@ -76,7 +81,7 @@ export const pluginsBase =
 
     const base = skipVI ? [babelPlugin] : [babelPlugin, versionTag()]
 
-    return stripLog ? delog.concat(base) : log.concat(base)
+    return [stripCalls(stripLog), ...base]
   }
 
 const fixVersion = (file) => {
@@ -110,7 +115,7 @@ const createTransform = (file) => (contents) =>
 
 export const createPluginsProd = (
   file,
-  { skipVersionInjector = false } = {},
+  { skipVersionInjector = false, skipPackageJson = false } = {},
 ) => {
   const dest = `dist/${file}`
   const src = `packages`
@@ -124,11 +129,15 @@ export const createPluginsProd = (
 
   return [
     clear({ targets: [dest] }),
-    generatePackageJson({
-      ...fixVersion(file),
-      baseContents: createPkgJson(file),
-      outputFolder: dest,
-    }),
+    ...(skipPackageJson
+      ? []
+      : [
+          generatePackageJson({
+            ...fixVersion(file),
+            baseContents: createPkgJson(file),
+            outputFolder: dest,
+          }),
+        ]),
     copy({
       hook: 'closeBundle',
       targets,

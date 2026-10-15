@@ -5,10 +5,16 @@ import { advise } from '../console'
 const shownDuplicateIdWarning: Record<string, boolean> = {}
 
 export default function checkUniqueId(id: string): boolean {
-  if (shownDuplicateIdWarning[id] === true) return false
-
   const elements = document.querySelectorAll(`iframe#${CSS.escape(id)}`)
-  if (elements.length <= 1) return true
+
+  // Unique again, so a later duplicate is advised afresh
+  if (elements.length <= 1) {
+    delete shownDuplicateIdWarning[id]
+    return true
+  }
+
+  // The advice already listed every iframe with this ID
+  if (shownDuplicateIdWarning[id] === true) return false
 
   shownDuplicateIdWarning[id] = true
 

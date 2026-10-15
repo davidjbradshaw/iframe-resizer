@@ -32,6 +32,8 @@ This is a manual monorepo (no npm workspaces). Packages under `packages/` do not
 
 `build-scripts/build-all.js` builds every package from its `vite.config/<package>.config.js` (Vite with Rolldown; jQuery uses Rollup), runs any `vite.config/<package>.post-build.js` (UMD builds and type files), then builds the browser bundles (`build-scripts/build-browser.js`) and, for test builds, the Karma bundles (`build-scripts/build-tests.js`). Shared plugins live in `vite.config/shared/`.
 
+The Angular directive is first compiled by Angular 16's `ngc` in partial-Ivy mode, so apps on Angular 16 and later can link it. That toolchain pins TypeScript 5.1, so it lives in `build-scripts/angular/` with its own `package.json`, installed on the first build and again when its lockfile changes. Its output is left unminified, as Angular libraries are; apps minify it in their own builds.
+
 ```bash
 npm run build:dev      # DEBUG=1, all packages to dist/ and js/, logging kept, with a build number
 npm run build:prod     # Full production build: eslint + all formats to dist/ and js/
@@ -74,6 +76,7 @@ npm run test:watch                               # Watch mode
 - Use extensionless imports in tests
 - Reset Vitest module state per test when relying on internal singletons
 - Prefer `vi.mock` with factory functions; call `vi.restoreAllMocks()` in `beforeEach`
+- Unit tests run on jsdom's own window (`pool: 'vmThreads'`), where `window`, `window.top` and `window.location` can't be redefined. Override `self` or `parent`, use `window.history.replaceState` for the URL, and put server-side rendering tests in a `// @vitest-environment node` file
 
 ## Linting
 

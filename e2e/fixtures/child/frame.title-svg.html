@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Deliberately no <title> in head -->
+    <script>
+      window.iframeResizer = {
+        onReady() {
+          document.getElementById('ready-status').textContent = 'ready'
+        },
+      }
+    </script>
+  </head>
+  <body>
+    <!-- An inline SVG icon with an accessible <title>, which querySelector('title') matches -->
+    <svg width="24" height="24" viewBox="0 0 24 24" role="img">
+      <title>SVG Icon Title</title>
+      <circle cx="12" cy="12" r="10" fill="steelblue" />
+    </svg>
+    <p>Ready: <span id="ready-status">pending</span></p>
+    <!-- Child script loaded after the SVG is in the DOM, as a bundled app would -->
+    <script src="/js/iframe-resizer.child.js"></script>
+  </body>
+</html>

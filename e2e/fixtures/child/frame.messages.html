@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>E2E Messages Child</title>
+    <script>
+      // Records each message the parent sends, for the test to read
+      window.received = []
+      window.iframeResizer = {
+        onMessage(message) {
+          window.received.push(message)
+        },
+      }
+    </script>
+    <script type="text/javascript" src="/js/iframe-resizer.child.js"></script>
+    <style>
+      body { margin: 8px; font-family: sans-serif; }
+    </style>
+  </head>
+  <body>
+    <p>Messages child</p>
+  </body>
+</html>

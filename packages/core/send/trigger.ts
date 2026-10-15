@@ -1,3 +1,4 @@
+import { getOrigin } from '@iframe-resizer/common'
 import {
   INIT_EVENTS,
   MESSAGE_ID,
@@ -6,6 +7,7 @@ import {
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, info, log, warn } from '../console'
+import { getPostMessageTarget } from '../setup/target-origin'
 import settings from '../values/settings'
 
 export const filterMsg = (msg: string): string =>
@@ -14,16 +16,41 @@ export const filterMsg = (msg: string): string =>
     .filter((_, index) => index !== 19)
     .join(SEPARATOR)
 
-export function dispatch(calleeMsg: string, msg: string, id: string): void {
+// What postMessage checks before it delivers a message to a page
+const isForOrigin = (targetOrigin: string, origin: string): boolean =>
+  targetOrigin === '*' ||
+  targetOrigin === '/' ||
+  getOrigin(targetOrigin) === origin
+
+export function dispatch(
+  calleeMsg: string,
+  msg: string,
+  id: string,
+  targetOrigin?: string,
+): void {
   function logSent(route: string): void {
     const displayMsg = calleeMsg in INIT_EVENTS ? filterMsg(msg) : msg
     info(id, route, HIGHLIGHT, FOREGROUND, HIGHLIGHT)
     info(id, `Message data: %c${displayMsg}`, HIGHLIGHT)
   }
 
-  const { iframe, postMessageTarget, sameOrigin, targetOrigin } = settings[id]
+  const { iframe, sameOrigin } = settings[id]
+
+  // A targetOrigin given with this message replaces the configured ones
+  const origins = targetOrigin ? [targetOrigin] : settings[id].targetOrigin
 
   if (sameOrigin) {
+    // This route skips postMessage, so it drops the message as postMessage
+    // would; a same-origin iframe is on this page's origin
+    if (targetOrigin && !isForOrigin(targetOrigin, window.location.origin)) {
+      log(
+        id,
+        `Message not sent, the iframe is not on %c${targetOrigin}`,
+        HIGHLIGHT,
+      )
+      return
+    }
+
     try {
       iframe.contentWindow.iframeChildListener(MESSAGE_ID + msg)
       logSent(`Sending message to iframe %c${id}%c via same origin%c`)
@@ -39,23 +66,35 @@ export function dispatch(calleeMsg: string, msg: string, id: string): void {
   }
 
   logSent(
-    `Sending message to iframe: %c${id}%c targetOrigin: %c${targetOrigin.join(', ')}`,
+    `Sending message to iframe: %c${id}%c targetOrigin: %c${origins.join(', ')}`,
   )
 
-  for (const origin of targetOrigin) {
-    postMessageTarget.postMessage(MESSAGE_ID + msg, origin)
+  const target = getPostMessageTarget(id)
+
+  for (const origin of origins) {
+    target.postMessage(MESSAGE_ID + msg, origin)
   }
 }
 
-function trigger(calleeMsg: string, msg: string, id: string): void {
+function trigger(
+  calleeMsg: string,
+  msg: string,
+  id: string,
+  targetOrigin?: string,
+): void {
   consoleEvent(id, calleeMsg)
 
-  if (!settings[id]?.postMessageTarget) {
+  if (!settings[id]) {
     warn(id, `Iframe not found`)
     return
   }
 
-  dispatch(calleeMsg, msg, id)
+  if (!getPostMessageTarget(id)) {
+    warn(id, 'Message not sent, the iframe is not in the document')
+    return
+  }
+
+  dispatch(calleeMsg, msg, id, targetOrigin)
 }
 
 export default trigger

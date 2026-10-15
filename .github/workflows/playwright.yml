@@ -12,7 +12,7 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
 
 # A newer commit to a PR cancels its older runs; each push runs in full
 concurrency:
@@ -65,14 +65,24 @@ jobs:
           - angular
           - animation
           - astro
+          - body-background
+          - box-sizing
           - check-origin
+          - colon-id
           - horizontal
+          - in-page-links
           - jquery
           - legacy
+          - message-source
+          - middle-tier
+          - mutation-backlog
           - parent
           - react
+          - send-message
           - solid
           - svelte
+          - title
+          - title-observer
           - v5-child
           - vue
           - web-component

@@ -8,7 +8,7 @@ import defaults from '../values/defaults'
 import settings from '../values/settings'
 import setDirection from './direction'
 import hasMouseEvents from './has-mouse-events'
-import { getPostMessageTarget, setTargetOrigin } from './target-origin'
+import { setRemoteHost, setTargetOrigin } from './target-origin'
 import updateOptionNames from './update-option-names'
 
 export default function processOptions(
@@ -19,7 +19,6 @@ export default function processOptions(
   settings[id] = {
     ...settings[id],
     iframe,
-    remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
     ...defaults,
     ...checkOptions(id, options),
     mouseEvents: hasMouseEvents(options),
@@ -31,6 +30,6 @@ export default function processOptions(
   setDirection(id)
   setOffsetSize(id)
   checkWarningTimeout(id)
-  getPostMessageTarget(iframe)
+  setRemoteHost(id)
   setTargetOrigin(id)
 }

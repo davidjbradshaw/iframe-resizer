@@ -7,6 +7,12 @@ export default defineConfig({
   build: {
     outDir: '../../fixtures/react',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        'confirm-16.1': 'confirm-16.1.html',
+      },
+    },
   },
   resolve: {
     preserveSymlinks: true,

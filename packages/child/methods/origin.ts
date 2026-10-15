@@ -6,7 +6,10 @@ import { log } from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
 
-export const getParentOrigin = (): string | undefined => state.origin
+// The same-origin route passes no origin, and there the parent's origin is
+// this page's own
+export const getParentOrigin = (): string =>
+  state.origin ?? window.location.origin
 
 export function setTargetOrigin(targetOrigin: string): void {
   typeAssert(
