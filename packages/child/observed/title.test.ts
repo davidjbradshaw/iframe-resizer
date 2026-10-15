@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ log: vi.fn() }))
+vi.mock('../console', () => ({ event: vi.fn(), log: vi.fn() }))
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 
-const { log } = await import('../console')
+const { event, log } = await import('../console')
 const sendMessage = (await import('../send/message')).default
 const { TITLE } = await import('@iframe-resizer/common/consts')
 const settings = (await import('../values/settings')).default
@@ -42,7 +42,11 @@ describe('child/observed/title', () => {
     titleChanged()
     document.title = prev
 
-    expect(log).toHaveBeenCalled()
+    // With nothing sent, only the observer names the event
+    expect(event).toHaveBeenCalledWith(TITLE)
+    expect(vi.mocked(event).mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(log).mock.invocationCallOrder[0],
+    )
     expect(sendMessage).not.toHaveBeenCalled()
   })
 
