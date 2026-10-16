@@ -13,12 +13,16 @@ import settings from '../values/settings'
 
 const WRONG_MODE = `Auto Resize can not be changed when <b>direction</> is set to '${NONE}'.`
 
-export default function autoResize(enable: boolean): boolean {
+export default function autoResize(enable?: boolean): boolean {
+  const { calculateHeight, calculateWidth } = settings
+  const noDirection = calculateWidth === false && calculateHeight === false
+
+  // No argument just reads the current state
+  if (enable === undefined) return !noDirection && settings.autoResize
+
   typeAssert(enable, BOOLEAN, 'parentIframe.autoResize(enable) enable')
 
-  const { calculateHeight, calculateWidth } = settings
-
-  if (calculateWidth === false && calculateHeight === false) {
+  if (noDirection) {
     consoleEvent(ENABLE)
     advise(WRONG_MODE)
     return false

@@ -125,6 +125,26 @@ describe('child/observers/mutation deeper', () => {
     obs.disconnect()
   })
 
+  test('names its event before it logs the records', () => {
+    const obs = createMutationObserver(vi.fn())
+    vi.clearAllMocks()
+
+    callbacks.cb([
+      { addedNodes: [document.createElement('div')], removedNodes: [] },
+    ])
+
+    expect(consoleMod.event).toHaveBeenCalledWith('mutationObserver')
+    expect(consoleMod.info).toHaveBeenCalledWith(
+      'Mutations:',
+      expect.any(Array),
+    )
+    expect(
+      vi.mocked(consoleMod.event).mock.invocationCallOrder[0],
+    ).toBeLessThan(vi.mocked(consoleMod.info).mock.invocationCallOrder[0])
+
+    obs.disconnect()
+  })
+
   test('falls back to documentElement when document.body is null', () => {
     const bodyDescriptor = Object.getOwnPropertyDescriptor(
       Document.prototype,

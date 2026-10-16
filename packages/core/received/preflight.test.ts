@@ -33,6 +33,15 @@ describe('core/received/preflight', () => {
     expect(preflight.isMessageForUs(msg)).toBe(true)
   })
 
+  test('isMessageForUs finds an id that contains colons by its escaped form', () => {
+    settings[':r1:'] = {}
+
+    expect(preflight.isMessageForUs(`${MESSAGE_ID}%3Ar1%3A:1:2:init`)).toBe(
+      true,
+    )
+    expect(preflight.isMessageForUs(`${MESSAGE_ID}:r1::1:2:init`)).toBe(false)
+  })
+
   test('isMessageFromIframe throws for unmatched origin when checkOrigin is set', () => {
     const contentWindow = {}
     settings.i4 = {

@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer bodyBackground test</title>
+    <style>
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+    </style>
+    <script src="../../js/iframe-resizer.parent.js"></script>
+  </head>
+  <body>
+    <iframe id="myIframe" scrolling="no"></iframe>
+    <script>
+      // ?child=v1..v5 loads that release's child script in the iframe
+      const query = new URLSearchParams(location.search)
+      const childQuery = new URLSearchParams()
+      if (query.has('child')) childQuery.set('child', query.get('child'))
+      document.getElementById('myIframe').src =
+        `child/frame.legacy.html?${childQuery}`
+
+      // Body styles with colons in them, as a URL or a data URL has
+      window.bodyBackground =
+        'url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)'
+      window.ready = false
+      iframeResize(
+        {
+          license: 'GPLv3',
+          bodyBackground: window.bodyBackground,
+          bodyPadding: '10px',
+          onReady: () => {
+            window.ready = true
+          },
+        },
+        '#myIframe',
+      )
+    </script>
+  </body>
+</html>

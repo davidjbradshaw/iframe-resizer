@@ -12,7 +12,9 @@ import type { IFrameVersion as CommonVersion } from '@iframe-resizer/common'
 import type {
   IFrameDirection,
   IFrameLogOption,
+  IFrameMouseData,
   IFrameOptions,
+  IFrameScrollData,
   IFrameScrollOption,
 } from '@iframe-resizer/core'
 import type iframeResize from '@iframe-resizer/parent'
@@ -34,7 +36,7 @@ import type VueIframeResizer from '@iframe-resizer/vue'
 import type { IFrameOptions as VueOptions } from '@iframe-resizer/vue'
 import type VueSfc from '@iframe-resizer/vue/sfc'
 import type { IframeResizerElement } from '@iframe-resizer/web-component'
-import type { ComponentProps } from 'svelte'
+import type { ComponentEvents, ComponentProps } from 'svelte'
 
 export type Published = [
   IframeResizerDirective,
@@ -71,6 +73,15 @@ export const log: IFrameLogOption = 'loud'
 // @ts-expect-error not a scrolling option
 export const scrolling: IFrameScrollOption = 'sometimes'
 
+// The React component's onScroll and mouse callbacks get iframe-resizer
+// data, not React's DOM events, so typed handlers must be accepted
+export const reactCallbacks: ReactProps = {
+  license: 'GPLv3',
+  onScroll: (data: IFrameScrollData) => data.top > 0,
+  onMouseEnter: (data: IFrameMouseData) => console.log(data.iframe.id),
+  onMouseLeave: (data) => console.log(data.iframe.id),
+}
+
 // The Vue and Svelte types only offer the options the components take, so
 // these stop being errors if they advertise every core option again
 type VueProps = InstanceType<typeof VueSfc>['$props']
@@ -93,3 +104,10 @@ export const svelteOnResized: SvelteProps = {
   // @ts-expect-error onResized is an event of the Svelte component, not a prop
   onResized: () => {},
 }
+
+// Its events carry the data core passes to the callbacks
+type SvelteEvents = ComponentEvents<SvelteIframeResizer>
+export const svelteResized = (event: SvelteEvents['resized']): number =>
+  event.detail.height
+// @ts-expect-error resize is not one of its events
+export type SvelteNotAnEvent = SvelteEvents['resize']

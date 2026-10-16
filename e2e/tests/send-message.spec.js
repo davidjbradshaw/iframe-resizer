@@ -54,3 +54,26 @@ test.describe('sendMessage targetOrigin', () => {
     expect(await received(page)).toEqual(['right', 'any'])
   })
 })
+
+test.describe('sendMessage bodies', () => {
+  test('a message whose text looks like an init field is delivered', async ({
+    page,
+  }) => {
+    await page.goto(PAGE)
+    await page.waitForFunction(() => window.ready)
+
+    // Each has 'true', 'false' or an Object.prototype name as its third
+    // colon-separated segment, which must not make it an init message
+    const messages = [
+      'mode:true:1',
+      'feature:false:on',
+      'a:valueOf:b',
+      ['mode:true:1'],
+      { flag: 'x:true:y' },
+    ]
+    for (const message of messages) await send(page, message)
+    await settle(page)
+
+    expect(await received(page)).toEqual(messages)
+  })
+})

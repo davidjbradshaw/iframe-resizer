@@ -1,10 +1,14 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as coreConsole from '../console'
 import settings from '../values/settings'
 import disconnect from './disconnect'
 
 describe('core/methods/disconnect', () => {
+  beforeEach(() => {
+    vi.spyOn(coreConsole, 'event').mockImplementation(() => {})
+  })
+
   afterEach(() => {
     vi.restoreAllMocks()
     for (const key of Object.keys(settings)) delete settings[key]
@@ -21,6 +25,19 @@ describe('core/methods/disconnect', () => {
     expect(coreConsole.log).toHaveBeenCalled()
     expect(settings.disc).toBeUndefined()
     expect(iframe.iframeResizer).toBeUndefined()
+  })
+
+  it('names the disconnect event before it logs', () => {
+    const { event } = coreConsole
+    const log = vi.spyOn(coreConsole, 'log').mockImplementation(() => {})
+    const iframe = document.createElement('iframe')
+    iframe.id = 'named'
+    disconnect(iframe)
+
+    expect(event).toHaveBeenCalledWith('named', 'disconnect')
+    expect(event.mock.invocationCallOrder[0]).toBeLessThan(
+      log.mock.invocationCallOrder[0],
+    )
   })
 
   it('clears msgTimeout, removes load listener, and stops info monitors', () => {

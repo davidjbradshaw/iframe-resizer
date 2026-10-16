@@ -1,12 +1,15 @@
+import { CLOSE } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { log, warn } from '../console'
+import { event, log, warn } from '../console'
 import on from '../events/wrapper'
 import type { IFrameComponent } from '../types'
 import disconnect from './disconnect'
 
 export default function closeIframe(iframe: IFrameComponent): void {
   const { id } = iframe
+
+  event(id, CLOSE)
 
   if (on(id, 'onBeforeClose', id) === false) {
     log(id, 'Close iframe cancelled by onBeforeClose')
