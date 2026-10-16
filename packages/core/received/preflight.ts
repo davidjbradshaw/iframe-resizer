@@ -6,6 +6,7 @@ import isAllowedOrigin from '../checks/allowed-origin'
 import { log, warn } from '../console'
 import type { MessageData } from '../message-data'
 import settings from '../values/settings'
+import { getIframeId } from './decode'
 
 const ABOVE_TYPES: Record<string, number> = { true: 1, false: 1, undefined: 1 }
 
@@ -98,7 +99,7 @@ export function isMessageFromIframe(
 
 export const isMessageForUs = (message: any): boolean =>
   MESSAGE_ID === `${message}`.slice(0, MESSAGE_ID_LENGTH) &&
-  message.slice(MESSAGE_ID_LENGTH).split(':')[0] in settings
+  getIframeId(message) in settings
 
 export function isMessageFromMetaParent(messageData: MessageData): boolean {
   const { id, type } = messageData

@@ -11,8 +11,13 @@ function jumpToTarget(id: string, hash: string, target: HTMLElement): void {
 
   page.position = { x, y }
 
-  scrollToLink(id)
-  window.location.hash = hash
+  if (scrollToLink(id)) {
+    window.location.hash = hash
+    return
+  }
+
+  // Setting location.hash would jump to the target, so just update the URL
+  window.history.pushState(null, '', `#${hash}`)
 }
 
 function jumpToParent(id: string, hash: string): void {

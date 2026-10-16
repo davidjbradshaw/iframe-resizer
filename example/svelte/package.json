@@ -9,12 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/child": "^6.0.0-beta.13",
-    "@iframe-resizer/svelte": "^6.0.0-beta.13",
-    "svelte": "^5.55.3"
+    "@iframe-resizer/child": "^6.0.0-beta.14",
+    "@iframe-resizer/svelte": "^6.0.0-beta.14",
+    "svelte": "^5.57.2"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "vite": "^8.0.8"
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "vite": "^8.3.4"
   }
 }

@@ -64,13 +64,20 @@ describe('web-component attributes set after connecting', () => {
     expect(iframe.hasAttribute('title')).toBe(false)
   })
 
-  it('keeps option attributes and a new id off the iframe', async () => {
+  it('keeps option attributes off the iframe', async () => {
     el.setAttribute('tolerance', '10')
-    el.setAttribute('id', 'second')
     await mutationsDelivered()
 
     expect(iframe.hasAttribute('tolerance')).toBe(false)
-    expect(iframe.id).toBe('first')
+  })
+
+  it('passes a new id on to the iframe, and rebinds so core can report it', async () => {
+    el.setAttribute('id', 'second')
+    await mutationsDelivered()
+
+    expect(iframe.id).toBe('second')
+    expect(mockConnect).toHaveBeenCalledTimes(2)
+    expect(mockConnect).toHaveBeenLastCalledWith(iframe)
   })
 
   it('stops passing attributes on once disconnected', async () => {
