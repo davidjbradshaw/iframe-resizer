@@ -65,6 +65,7 @@ jobs:
           - angular
           - animation
           - astro
+          - body-replace
           - body-background
           - box-sizing
           - check-origin
