@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as sendMessage from '../send/message'
 import state from '../values/state'
-import { getParentProps } from './parent-props'
+import { getParentProps, resumeParentProps } from './parent-props'
 
 vi.mock('@iframe-resizer/common', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@iframe-resizer/common')>()),
@@ -78,5 +78,21 @@ describe('child/methods/parent-props', () => {
 
     expect(state.parentInfoListeners.size).toBe(1)
     expect(sent()).toEqual(['parentInfo'])
+  })
+
+  it('asks the parent for info again only while subscribed', () => {
+    resumeParentProps()
+
+    expect(sent()).toEqual([])
+
+    const unsub = getParentProps(() => {})
+    resumeParentProps()
+
+    expect(sent()).toEqual(['parentInfo', 'parentInfo'])
+
+    unsub()
+    resumeParentProps()
+
+    expect(sent()).toEqual(['parentInfo', 'parentInfo', 'parentInfoStop'])
   })
 })
