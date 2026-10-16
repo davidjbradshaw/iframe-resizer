@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('@iframe-resizer/common', () => ({ typeAssert: vi.fn() }))
+vi.mock('@iframe-resizer/common', async (importOriginal) => ({
+  typeAssert: vi.fn(
+    (await importOriginal<typeof import('@iframe-resizer/common')>())
+      .typeAssert,
+  ),
+}))
 vi.mock('../console', () => ({ advise: vi.fn(), event: vi.fn() }))
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
@@ -73,5 +78,31 @@ describe('child/methods/auto-resize', () => {
     expect(settings.autoResize).toBe(false)
     expect(sendSize).not.toHaveBeenCalled()
     expect(sendMessage).toHaveBeenCalledWith(0, 0, AUTO_RESIZE, 'false')
+  })
+
+  test('returns the current state without an argument', () => {
+    settings.autoResize = true
+    expect(autoResize()).toBe(true)
+
+    settings.autoResize = false
+    expect(autoResize()).toBe(false)
+
+    expect(settings.autoResize).toBe(false)
+    expect(sendMessage).not.toHaveBeenCalled()
+    expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  test('returns false without an argument when direction is none', () => {
+    settings.autoResize = true
+    settings.calculateHeight = false
+    settings.calculateWidth = false
+
+    expect(autoResize()).toBe(false)
+    expect(advise).not.toHaveBeenCalled()
+  })
+
+  test('throws for an argument that is not a boolean', () => {
+    expect(() => autoResize('true' as any)).toThrow(TypeError)
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })

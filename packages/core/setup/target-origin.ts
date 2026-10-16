@@ -43,6 +43,7 @@ export function refreshRemoteHost(id: string): void {
 
 // The window given as the postMessageTarget option, or else the iframe's
 // current window, which changes when the iframe is moved and is null
-// while it is out of the document
+// while it is out of the document. An ID left unbound as a duplicate
+// has settings for its console but no iframe
 export const getPostMessageTarget = (id: string): MessageEventSource | null =>
-  settings[id].postMessageTarget ?? settings[id].iframe.contentWindow
+  settings[id].postMessageTarget ?? settings[id].iframe?.contentWindow ?? null

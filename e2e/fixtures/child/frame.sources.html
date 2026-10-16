@@ -5,9 +5,15 @@
     <title>E2E Sources Child</title>
     <script type="text/javascript" src="/js/iframe-resizer.child.js"></script>
     <script>
+      // The messages onMessage receives; none should be from another window
+      window.messages = []
+
       window.iframeResizer = {
         onReady() {
           document.getElementById('ready-status').textContent = 'ready'
+        },
+        onMessage(message) {
+          window.messages.push(message)
         },
       }
 
@@ -24,5 +30,7 @@
   </head>
   <body>
     <p>Ready: <span id="ready-status">pending</span></p>
+    <!-- A moveToAnchor from another window must not scroll the host to this -->
+    <h2 id="anchor">Anchor</h2>
   </body>
 </html>

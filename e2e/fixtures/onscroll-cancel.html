@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer onScroll cancel test</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+      #header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: #333;
+        color: #fff;
+      }
+      #spacer-top {
+        height: 300px;
+      }
+      #section {
+        height: 200px;
+        background: #cfc;
+      }
+      #spacer-bottom {
+        height: 3000px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="header">Fixed header (100px)</div>
+    <div id="spacer-top"></div>
+
+    <div style="margin: 20px">
+      <iframe
+        src="child/frame.onscroll-cancel.html"
+        style="width: 400px; height: 100px"
+      ></iframe>
+    </div>
+
+    <div id="section">Section targeted by the in-page link</div>
+    <div id="spacer-bottom"></div>
+
+    <script type="text/javascript">
+      window.HEADER_HEIGHT = 100
+      window.onScrollCalls = []
+
+      iframeResize({
+        license: 'GPLv3',
+        inPageLinks: true,
+        // Cancel the library's scroll and do our own, allowing for the header
+        onScroll({ top, left }) {
+          window.onScrollCalls.push({ top, left })
+          window.scrollTo(left, top - window.HEADER_HEIGHT)
+          return false
+        },
+      })
+    </script>
+  </body>
+</html>

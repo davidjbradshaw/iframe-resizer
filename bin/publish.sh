@@ -86,13 +86,10 @@ then
   exit 0
 fi
 
-# Bump the example dependencies first, so the lock files that
-# update-example-versions.js regenerates include them
-echo "Updating example dependencies"
-bin/update-examples.sh --minor
-
-echo "Updating examples to v$VERSION"
-node build-scripts/update-example-versions.js
+# Bumps the examples' dependencies, points them at this version and
+# installs each afresh, so their lock files are committed with the release
+echo "Updating the examples to v$VERSION"
+npm run update:examples
 
 echo "Updating GitHub build"
 rm -fv iframe-resizer.zip
