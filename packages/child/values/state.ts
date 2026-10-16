@@ -12,6 +12,8 @@ export default {
   // Setting names the page provided in window.iframeResizer; these win over
   // values sent by the parent, on init and on update
   pageSettings: [] as string[],
+  // The values the parent last sent, so an update can tell which it changed
+  fromParent: {} as Record<string, unknown>,
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [] as unknown as NodeListOf<Element>,

@@ -38,6 +38,84 @@ test.describe('Parent offset', () => {
   })
 })
 
+test.describe('Options update', () => {
+  // Message format: [iFrameSizer]<id>:<height>:<width>:<type>[:<body>]
+  const heightOf = (messages, type) =>
+    messages
+      .map((msg) => msg.replace('[iFrameSizer]', '').split(':'))
+      .findLast((fields) => fields[3] === type)?.[1]
+
+  // The child page is 400px tall
+  const setup = async (page) => {
+    await page.goto('/e2e/fixtures/options-update.html')
+    const iframeHeight = () =>
+      page.locator('iframe').evaluate((el) => parseFloat(el.style.height))
+    await expect.poll(iframeHeight).toBe(400)
+    const child = page.frame({ url: /frame\.options-update\.html$/ })
+
+    // Updates an option the test does not check, then waits for the child
+    // to apply it
+    const update = async () => {
+      await page.evaluate(() =>
+        iframeResize(
+          { license: 'GPLv3', bodyBackground: 'rgb(1, 2, 3)' },
+          'iframe',
+        ),
+      )
+      await expect
+        .poll(() =>
+          child.evaluate(() => getComputedStyle(document.body).backgroundColor),
+        )
+        .toBe('rgb(1, 2, 3)')
+    }
+
+    return { child, iframeHeight, update }
+  }
+
+  test('keeps the offset the child set with setOffsetSize()', async ({
+    page,
+  }) => {
+    const { child, iframeHeight, update } = await setup(page)
+    await child.evaluate(() => window.parentIframe.setOffsetSize(50))
+    await expect.poll(iframeHeight).toBe(450)
+
+    await update()
+
+    // A new measurement still includes the offset
+    const before = await page.evaluate(() => window.sentMessages.length)
+    await child.evaluate(() => window.parentIframe.resize())
+    await expect
+      .poll(async () =>
+        heightOf(
+          await page.evaluate((n) => window.sentMessages.slice(n), before),
+          'manualResize',
+        ),
+      )
+      .toBe('450')
+    expect(await iframeHeight()).toBe(450)
+  })
+
+  test('keeps autoResize off when the child turned it off', async ({
+    page,
+  }) => {
+    const { child, iframeHeight, update } = await setup(page)
+    await child.evaluate(() => {
+      window.parentIframe.autoResize(false)
+      window.parentIframe.resize(300)
+    })
+    await expect.poll(iframeHeight).toBe(300)
+
+    await update()
+
+    // A content change resizes the iframe only if autoResize is back on
+    await child.evaluate(async () => {
+      document.getElementById('content').style.height = '500px'
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    })
+    expect(await iframeHeight()).toBe(300)
+  })
+})
+
 test.describe('Parent (vanilla)', () => {
   test('the init event passed to onResized carries only the size', async ({
     page,

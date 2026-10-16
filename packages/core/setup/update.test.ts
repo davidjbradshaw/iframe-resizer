@@ -154,6 +154,54 @@ describe('core/setup/update', () => {
     expect(settings.edge1.sizeHeight).toBe(false)
   })
 
+  it('keeps autoResize off when the child turned it off', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    // As the router stores the child's parentIframe.autoResize(false)
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'vertical',
+      autoResize: false,
+    }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true })
+
+    expect(settings.edge1.autoResize).toBe(false)
+  })
+
+  it('turns autoResize off for direction none, and back on after it', () => {
+    vi.mocked(meetsMinChildVersion)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'vertical',
+      autoResize: true,
+    }
+    const iframe = { id: 'edge1' } as HTMLIFrameElement
+
+    updateIframe(iframe, { direction: 'none' })
+    expect(settings.edge1.autoResize).toBe(false)
+
+    updateIframe(iframe, { direction: 'vertical' })
+    expect(settings.edge1.autoResize).toBe(true)
+  })
+
+  it('still ignores the deprecated autoResize option', () => {
+    vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'vertical',
+      autoResize: true,
+    }
+
+    updateIframe({ id: 'edge1' } as HTMLIFrameElement, { autoResize: false })
+
+    expect(settings.edge1.autoResize).toBe(true)
+  })
+
   it('translates deprecated option names', () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
     settings.edge1 = { initialised: true, mode: 0, direction: 'vertical' }
