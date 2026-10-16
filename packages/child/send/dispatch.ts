@@ -1,4 +1,10 @@
-import { checkMode, getModeData, once, round } from '@iframe-resizer/common'
+import {
+  checkMode,
+  escapeField,
+  getModeData,
+  once,
+  round,
+} from '@iframe-resizer/common'
 import { INIT, MESSAGE_ID } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 
@@ -69,7 +75,8 @@ export default function dispatch(
   const { parentId } = settings
   const { sameOrigin } = state
   const size = `${height}:${width}`
-  const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
+  // The id goes back as the parent sent it, with its colons escaped
+  const message = `${escapeField(parentId)}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
   if (settings.mode < -1) return
 

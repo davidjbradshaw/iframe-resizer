@@ -22,10 +22,11 @@
     "eslint:sarif": "eslint packages/ build-scripts/ vite.config/ *.js *.cjs *.mjs --ext .js,.jsx,.mjs,.cjs,.ts,.tsx --color --no-error-on-unmatched-pattern --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "publish": "time bin/publish.sh latest",
     "publish:beta": "time bin/publish.sh beta",
+    "update:examples": "bin/update-examples.sh --minor && node build-scripts/update-example-versions.js",
     "vite:beta": "BETA=1 node build-scripts/build-all.js",
     "vite:debug": "DEBUG=1 node build-scripts/build-all.js",
     "vite:watch": "DEBUG=1 node build-scripts/watch.js",
-    "typecheck": "tsc --noEmit -p tsconfig.build.json && tsc --noEmit -p packages/solid/tsconfig.json && svelte-check --tsconfig ./tsconfig.svelte.json --threshold error && vue-tsc --noEmit -p tsconfig.vue.json",
+    "typecheck": "tsc --noEmit -p tsconfig.build.json && tsc --noEmit -p packages/solid/tsconfig.json && svelte-check --tsconfig ./tsconfig.svelte.json --config ./svelte.config.js --threshold error && vue-tsc --noEmit -p tsconfig.vue.json",
     "vite:test": "npm run eslint:fix && npm run typecheck && TEST=1 node build-scripts/build-all.js",
     "vite:test:ci": "npm run typecheck && TEST=1 node build-scripts/build-all.js",
     "vite:prod": "npm run eslint:fix && npm run typecheck && node build-scripts/build-all.js",
@@ -45,7 +46,7 @@
     "test:watch": "vitest",
     "test:int": "karma start --single-run --browsers ChromeHeadless karma.conf.cjs",
     "test:int:watch": "karma start --browsers Chrome karma.conf.cjs",
-    "upgrade": "time npm-check-updates -i && npm run build:clean"
+    "upgrade": "time npx --yes npm-check-updates -i && npm run build:clean"
   },
   "description": "Keep iframes sized to their content.",
   "repository": {
