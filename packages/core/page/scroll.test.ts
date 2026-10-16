@@ -39,7 +39,7 @@ describe('core/page/scroll', () => {
   })
 
   test('scrollToLink calls onScroll and setPagePosition', () => {
-    scrollMod.scrollToLink('id')
+    expect(scrollMod.scrollToLink('id')).toBe(true)
 
     expect(on).toHaveBeenCalled()
     expect(position.setPagePosition).toHaveBeenCalledWith('id')
@@ -54,7 +54,7 @@ describe('core/page/scroll', () => {
 
   test('scrollToLink unsets position when onScroll returns false', () => {
     on.mockReturnValueOnce(false)
-    scrollMod.scrollToLink('id')
+    expect(scrollMod.scrollToLink('id')).toBe(false)
 
     expect(on).toHaveBeenCalled()
     expect(position.unsetPagePosition).toHaveBeenCalled()

@@ -1,6 +1,7 @@
 import { INIT, RESET } from '@iframe-resizer/common/consts'
 
 import { log } from '../console'
+import withBoxSizing from '../events/box-sizing'
 import setSize from '../events/size'
 import type { MessageData } from '../message-data'
 import { getPagePosition } from '../page/position'
@@ -15,6 +16,6 @@ export default function resetIframe(messageData: MessageData): void {
   )
 
   getPagePosition(id)
-  setSize(messageData)
+  setSize(withBoxSizing(messageData))
   trigger(RESET, RESET, id)
 }
