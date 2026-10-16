@@ -7,10 +7,17 @@ permissions:
   contents: read
 
 on:
+  # dev and dev-review are tested by their open PRs, #1570 and #1729, so a
+  # push to them ran every job twice. Add one back here if its PR closes.
   push:
-    branches: [ "master", "dev", "dev-review" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master", "dev", "dev-review" ]
+
+# A newer commit to a PR cancels its older runs; each push runs in full
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -58,17 +65,23 @@ jobs:
           - angular
           - animation
           - astro
+          - body-background
+          - box-sizing
           - check-origin
+          - colon-id
           - horizontal
+          - in-page-links
           - jquery
           - legacy
           - message-source
+          - middle-tier
           - mutation-backlog
           - parent
           - react
           - send-message
           - solid
           - svelte
+          - title
           - title-observer
           - v5-child
           - vue

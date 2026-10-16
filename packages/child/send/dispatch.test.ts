@@ -113,6 +113,15 @@ describe('child/send/dispatch', () => {
     expect(message).toMatch(/pid:100:200:evt$/)
   })
 
+  test('dispatch sends an id that contains colons in its escaped form', () => {
+    settings.parentId = ':r1:'
+    dispatch(100, 200, 'evt')
+    settings.parentId = 'pid'
+
+    const message = state.target.postMessage.mock.calls[0][0]
+    expect(message).toMatch(/]%3Ar1%3A:100:200:evt$/)
+  })
+
   test('dispatch with msg includes message suffix', () => {
     dispatch(100, 200, 'evt', 'custom')
 

@@ -4,7 +4,7 @@ vi.mock('../console', () => ({ info: vi.fn(), log: vi.fn() }))
 vi.mock('../values/page', () => ({ default: { position: null } }))
 vi.mock('./scroll', () => ({
   getElementPosition: vi.fn(() => ({ x: 10, y: 20 })),
-  scrollToLink: vi.fn(),
+  scrollToLink: vi.fn(() => true),
 }))
 
 const inPageLink = (await import('./in-page-link')).default
@@ -25,6 +25,7 @@ describe('core/page/in-page-link', () => {
   })
 
   test('jumps to target when element exists', () => {
+    const pushState = vi.spyOn(window.history, 'pushState')
     const el = document.createElement('a')
     el.id = 'foo'
     document.body.append(el)
@@ -33,6 +34,21 @@ describe('core/page/in-page-link', () => {
     expect(getElementPosition).toHaveBeenCalled()
     expect(scrollToLink).toHaveBeenCalled()
     expect(window.location.hash).toBe('#foo')
+    expect(pushState).not.toHaveBeenCalled()
+  })
+
+  test('updates the URL with pushState when onScroll cancels', () => {
+    const el = document.createElement('a')
+    el.id = 'cancel'
+    document.body.append(el)
+    const pushState = vi.spyOn(window.history, 'pushState')
+    vi.mocked(scrollToLink).mockReturnValueOnce(false)
+
+    inPageLink('id', 'http://x/#cancel')
+
+    expect(pushState).toHaveBeenCalledWith(null, '', '#cancel')
+    expect(window.location.hash).toBe('#cancel')
+    pushState.mockRestore()
   })
 
   test('logs not found when top === self and element missing', () => {

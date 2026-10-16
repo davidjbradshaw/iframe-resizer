@@ -140,3 +140,28 @@ test.describe('Parent (vanilla)', () => {
   parentMethodTests(BASE)
   childTests(BASE)
 })
+
+test.describe('Parent: changing the id of a bound iframe', () => {
+  test.use({ allowedErrors: [/The id of a bound iframe cannot be changed/] })
+
+  test('is reported as a ReferenceError', async ({ page }) => {
+    const errors = []
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text())
+    })
+    await page.goto(BASE)
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+    const boundId = await page.evaluate(() => document.querySelector('iframe').id)
+
+    // A framework re-rendering the id prop does this
+    await page.evaluate(() => {
+      const iframe = document.querySelector('iframe')
+      iframe.id = 'renamed'
+      window.iframeResize({ license: 'GPLv3', tolerance: 5 }, iframe)
+    })
+
+    await expect
+      .poll(() => errors.join('\n'))
+      .toContain(`ReferenceError: The id of a bound iframe cannot be changed, from "${boundId}" to "renamed"`)
+  })
+})

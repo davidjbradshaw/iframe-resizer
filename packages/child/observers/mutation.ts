@@ -3,6 +3,7 @@ import {
   IGNORE_ATTR,
   IGNORE_TAGS,
   LEGACY_SIZE_ATTR,
+  MUTATION_OBSERVER,
   SIZE_ATTR,
 } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
@@ -136,6 +137,9 @@ export const createProcessMutations =
   }
 
 function mutationObserved(mutations: MutationRecord[]): void {
+  // The records are logged a frame before sendSize() names the event
+  event(MUTATION_OBSERVER)
+
   // Fold the records into the node sets now, rather than keep them for the
   // next frame: rAF pauses in an offscreen cross-origin iframe, and the
   // records would keep every removed subtree alive until it runs
