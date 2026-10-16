@@ -1,4 +1,4 @@
-import { typeAssert } from '@iframe-resizer/common'
+import { isolateUserCode, typeAssert } from '@iframe-resizer/common'
 import {
   FUNCTION,
   PARENT_INFO,
@@ -16,11 +16,21 @@ export function getParentProps(callback: (info: any) => void): () => void {
     'parentIframe.getParentProps(callback) callback',
   )
 
-  state.onParentInfo = callback
-  sendMessage(0, 0, PARENT_INFO)
+  // Wrapped, so the same callback subscribed twice is two subscriptions
+  const listener = (info: any): void => callback(info)
+  const { parentInfo, parentInfoListeners } = state
+
+  parentInfoListeners.add(listener)
+
+  // The parent monitors once for every subscriber; later ones get its last data
+  if (parentInfoListeners.size === 1) sendMessage(0, 0, PARENT_INFO)
+  else if (parentInfo) isolateUserCode(listener, parentInfo)
 
   return () => {
-    state.onParentInfo = null
+    if (!parentInfoListeners.delete(listener) || parentInfoListeners.size > 0)
+      return
+
+    state.parentInfo = null
     sendMessage(0, 0, PARENT_INFO_STOP)
   }
 }

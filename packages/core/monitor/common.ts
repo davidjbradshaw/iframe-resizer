@@ -100,6 +100,8 @@ export const startInfoMonitor =
 
       if (!settings[id]) return
 
+      // Replace a monitor already running for this iframe, rather than leak it
+      stopInfoMonitor(`stop${type}`)(id)
       settings[id][`stop${type}`] = stop
       addEventListener(settings[id].iframe, LOAD, stop)
       start()
