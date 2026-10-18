@@ -18,8 +18,11 @@ export interface IFramePageOptions {
   sizeSelector?: string
   /** Restrict which parent origins can communicate with the iframe. */
   targetOrigin?: string | string[]
-  /** Called before new size is set. Return a number to modify the new size. */
-  onBeforeResize?(newSize: number): number
+  /**
+   * Called before a new size is set, with the event that triggered the
+   * resize. Return a number to modify the new size.
+   */
+  onBeforeResize?(newSize: number, eventType: string): number
   /** Receive message posted from the parent page. */
   onMessage?(message: any): void
   /** Called once iframe-resizer has been initialized. */
