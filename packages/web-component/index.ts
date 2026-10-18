@@ -1,4 +1,4 @@
-import { esModuleInterop } from '@iframe-resizer/common'
+import { esModuleInterop, setStyleKeepingSize } from '@iframe-resizer/common'
 import { VERTICAL } from '@iframe-resizer/common/consts'
 import type { IFrameObject, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
@@ -244,6 +244,13 @@ export class IframeResizerElement extends HTMLBase {
         if (!name || RESIZER_ATTR_MAP[name]) continue
 
         const value = this.getAttribute(name)
+
+        // A wholesale style write would wipe the size core set on the iframe
+        if (name === 'style') {
+          if (this.iframe) setStyleKeepingSize(this.iframe, value)
+          continue
+        }
+
         if (value === null) this.iframe?.removeAttribute(name)
         else this.iframe?.setAttribute(name, value)
 
