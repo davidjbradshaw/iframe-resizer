@@ -114,8 +114,8 @@ describe('child/send/size', () => {
       sendSize('evt', 'first')
       expect(dispatch).toHaveBeenCalledTimes(1)
 
-      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
-      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(200)')
+      sendSize('evt-two', 'second')
+      sendSize('evt-three', 'third')
 
       expect(consoleMod.log).toHaveBeenCalledWith(
         'Resize already pending - Deferred to next animation frame',
@@ -127,15 +127,11 @@ describe('child/send/size', () => {
       // The last deferred trigger is measured; the trailing custom sizes
       // are undefined, so compare the leading arguments
       expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
-        SET_OFFSET_SIZE,
-        'parentIframe.setOffsetSize(200)',
+        'evt-three',
+        'third',
       ])
       expect(dispatch).toHaveBeenCalledTimes(2)
-      expect(dispatch.mock.lastCall.slice(0, 3)).toEqual([
-        10,
-        20,
-        SET_OFFSET_SIZE,
-      ])
+      expect(dispatch.mock.lastCall.slice(0, 3)).toEqual([10, 20, 'evt-three'])
 
       // The deferred send starts a frame of its own, with nothing deferred
       endFrame()
@@ -254,11 +250,12 @@ describe('child/send/size', () => {
       getContentSize.mockImplementation(() => ({ height: 10, width: 20 }))
     })
 
-    test('an offset change while hidden is ignored', () => {
+    test('an offset change is sent even while hidden', () => {
+      // Explicit, like parentIframe.resize(), which also sends while hidden
       state.isHidden = true
       sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
 
-      expect(dispatch).not.toHaveBeenCalled()
+      expect(dispatch).toHaveBeenCalledWith(10, 20, SET_OFFSET_SIZE, undefined)
     })
   })
 
@@ -277,6 +274,14 @@ describe('child/send/size', () => {
     sendSize(OVERFLOW_OBSERVER, 'Overflow updated')
 
     expect(getContentSize).not.toHaveBeenCalled()
+  })
+
+  test('sends a setOffsetSize while autoResize is off', () => {
+    // parentIframe.setOffsetSize() is explicit, like parentIframe.resize()
+    settings.autoResize = false
+    sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
+
+    expect(dispatch).toHaveBeenCalledWith(10, 20, SET_OFFSET_SIZE, undefined)
   })
 
   test('sends the init reply when autoResize is off', () => {
