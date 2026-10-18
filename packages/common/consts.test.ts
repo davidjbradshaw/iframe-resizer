@@ -39,8 +39,9 @@ describe('common/consts', () => {
       consts.PARENT_RESIZE_REQUEST,
       1,
     )
-    expect(consts.IGNORE_DISABLE_RESIZE).not.toHaveProperty(
+    expect(consts.IGNORE_DISABLE_RESIZE).toHaveProperty(
       consts.SET_OFFSET_SIZE,
+      1,
     )
   })
 })
