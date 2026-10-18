@@ -8,6 +8,7 @@ import {
   createEffect,
   createMemo,
   createRenderEffect,
+  mergeProps,
   onCleanup,
   onMount,
   splitProps,
@@ -174,10 +175,11 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
     connectResizer(untrack(buildOptions))(iframeEl)
   })
 
-  // The server has no element to style, so it writes the style into the markup
-  const serverStyle = isServer ? styleProp : {}
+  // The server has no element to style, so the style is merged back into the
+  // markup there; the client keeps it out of the spread and applies it below
+  const attrs = isServer ? mergeProps(iframeProps, styleProp) : iframeProps
   // eslint-disable-next-line jsx-a11y/iframe-has-title
-  const iframe = <iframe {...iframeProps} {...serverStyle} ref={iframeEl} />
+  const iframe = <iframe {...attrs} ref={iframeEl} />
 
   if (!isServer) {
     let prevStyle: StyleProp
