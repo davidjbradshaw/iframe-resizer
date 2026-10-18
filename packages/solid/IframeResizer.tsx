@@ -1,4 +1,4 @@
-import { esModuleInterop } from '@iframe-resizer/common'
+import { esModuleInterop, setStyleKeepingSize } from '@iframe-resizer/common'
 import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 import type { IFrameComponent, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
@@ -54,53 +54,56 @@ type Callback = (...args: unknown[]) => unknown
 
 type StyleProp = JSX.CSSProperties | string | undefined
 
-const IMPORTANT = /\s*!important$/i
+// Touches only the properties whose value changed, so core's size survives
+function applyStyleObject(
+  el: HTMLElement,
+  value: Record<string, unknown>,
+  previous: Record<string, unknown>,
+): void {
+  for (const name of Object.keys(previous)) {
+    if (!(name in value)) el.style.removeProperty(name)
+  }
 
-// The declarations of a style string or object, by property name. A string is
-// parsed into the same form, so it can be applied a property at a time.
-function toDeclarations(value: StyleProp): Record<string, unknown> {
-  if (typeof value !== 'string') return (value ?? {}) as Record<string, unknown>
-
-  const { style } = document.createElement('div')
-  style.cssText = value
-
-  return Object.fromEntries(
-    Array.from(style, (name) => {
-      const important = style.getPropertyPriority(name) ? ' !important' : ''
-      return [name, `${style.getPropertyValue(name)}${important}`]
-    }),
-  )
+  for (const [name, v] of Object.entries(value)) {
+    if (v !== previous[name])
+      el.style.setProperty(name, v == null ? '' : `${v}`)
+  }
 }
 
 // Solid re-sets every property of a style object whenever an element's props
 // are re-assigned, which would overwrite the size iframe-resizer has set on
 // the iframe with the size the page started it at. So the style prop is
-// applied here instead, touching only the properties whose value changed.
-// Returns the applied value, to be passed back as prev on the next call.
+// applied here instead. Returns the value to pass back as prev on the next
+// call.
 function applyStyle(
   el: HTMLElement,
   value: StyleProp,
   prev: StyleProp,
 ): StyleProp {
-  const next = toDeclarations(value)
-  const previous = toDeclarations(prev)
+  if (value === prev) return prev
 
-  for (const name of Object.keys(previous)) {
-    if (!(name in next)) el.style.removeProperty(name)
+  // A string, or anything falsy, goes through the browser's own parser, which
+  // keeps the forms a parsed diff loses, such as var() inside a shorthand
+  if (typeof value !== 'object' || value === null) {
+    setStyleKeepingSize(el, typeof value === 'string' ? value : '')
+    return value
   }
 
-  for (const [name, v] of Object.entries(next)) {
-    if (v !== previous[name]) {
-      const css = v == null ? '' : `${v}`
-      el.style.setProperty(
-        name,
-        css.replace(IMPORTANT, ''),
-        IMPORTANT.test(css) ? 'important' : '',
-      )
-    }
-  }
+  // A previous string is cleared wholesale, so the object starts clean
+  if (typeof prev === 'string') setStyleKeepingSize(el, '')
 
-  return value
+  applyStyleObject(
+    el,
+    value as Record<string, unknown>,
+    (typeof prev === 'object' && prev !== null ? prev : {}) as Record<
+      string,
+      unknown
+    >,
+  )
+
+  // A copy, so a style object mutated in place still diffs against what was
+  // applied last time
+  return { ...value }
 }
 
 export default function IframeResizer(props: IFrameResizerProps): JSX.Element {

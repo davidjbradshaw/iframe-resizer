@@ -189,6 +189,59 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(iframe.style.height).toBe('800px')
   })
 
+  it('clears the style without throwing when it turns falsy', () => {
+    const [on, setOn] = createSignal(true)
+
+    dispose = render(
+      () => (
+        <IframeResizer
+          license="GPLv3"
+          style={(on() && 'border: 1px solid red') as any}
+        />
+      ),
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setOn(false)
+
+    expect(iframe.style.borderTopWidth).toBe('')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('re-applies a style object mutated in place', () => {
+    const styles: any = { width: '50%' }
+    const [style, setStyle] = createSignal(styles, { equals: false })
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={style()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    expect(iframe.style.width).toBe('50%')
+
+    styles.width = '60%'
+    setStyle(styles)
+
+    expect(iframe.style.width).toBe('60%')
+  })
+
+  it('applies a string style whole, keeping var() in a shorthand', () => {
+    // Cast, as the style-prop lint rules would turn a string into an object,
+    // and the string form is the path under test
+    const css = 'border: var(--b); width: 50%'
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={css as any} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+
+    expect(iframe.style.width).toBe('50%')
+    expect(iframe.getAttribute('style')).toContain('var(--b)')
+  })
+
   it('renders an iframe element', () => {
     dispose = render(
       () => <IframeResizer id="test-frame" license="GPLv3" />,
