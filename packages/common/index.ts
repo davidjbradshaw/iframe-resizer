@@ -9,6 +9,7 @@ export {
   getModeLabel,
   default as setMode,
 } from './mode'
+export { default as setStyleKeepingSize } from './set-style'
 export * from './type-check'
 export type { IFrameVersion } from './types'
 export * from './utils'

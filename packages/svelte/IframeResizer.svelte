@@ -11,7 +11,7 @@
     IFrameScrollData,
     IFrameScrollOption,
   } from '@iframe-resizer/core'
-  import { esModuleInterop } from '@iframe-resizer/common'
+  import { esModuleInterop, setStyleKeepingSize } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
 
@@ -122,6 +122,11 @@
     lastOptionsKey = optionsKey
   }
 
+  // A style in the spread would be re-written wholesale on change, wiping the
+  // size core set, so it is split out and applied keeping the size
+  $: ({ style: styleAttr, ...attrs } = $$restProps)
+  $: if (iframe && styleAttr !== undefined) setStyleKeepingSize(iframe, styleAttr)
+
   onDestroy(() => {
     resizer?.disconnect()
     consoleGroup.endAutoGroup()
@@ -136,4 +141,4 @@
   }
 </script>
 
-<iframe bind:this={iframe} {...$$restProps}></iframe>
+<iframe bind:this={iframe} {...attrs}></iframe>
