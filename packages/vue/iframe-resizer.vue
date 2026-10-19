@@ -137,11 +137,17 @@
   const attrs = useAttrs()
   const propsKey = computed(() => JSON.stringify([attrs.id, props]))
 
-  watch(propsKey, () => {
-    const iframe = iframeRef.value
-    if (!iframe) return
-    connectResizer(buildOptions())(iframe)
-  })
+  // After the DOM updates, so a changed id is on the iframe before core reads
+  // it: watchers are pre-flush by default, which would re-bind with the old id
+  watch(
+    propsKey,
+    () => {
+      const iframe = iframeRef.value
+      if (!iframe) return
+      connectResizer(buildOptions())(iframe)
+    },
+    { flush: 'post' },
+  )
 
   onBeforeUnmount(() => {
     resizer.value?.disconnect()

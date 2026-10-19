@@ -8,11 +8,16 @@ const mockResizer = {
 }
 
 let capturedOptions: Record<string, any> = {}
+// The ids core was handed, read from the element as core does
+const boundIds: (string | undefined)[] = []
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options: Record<string, any>) => {
     capturedOptions = options
-    return vi.fn(() => mockResizer)
+    return vi.fn((iframe: any) => {
+      boundIds.push(iframe?.id)
+      return mockResizer
+    })
   }),
 }))
 
@@ -114,6 +119,8 @@ describe('Solid IframeResizer lifecycle', () => {
     setId('renamed')
 
     expect(connectResizer).toHaveBeenCalledTimes(2)
+    // The element core is handed carries the new id
+    expect(boundIds.at(-1)).toBe('renamed')
   })
 
   it('keeps the size set by iframe-resizer when the props are re-applied', () => {

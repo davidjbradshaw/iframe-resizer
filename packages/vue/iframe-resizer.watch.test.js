@@ -1,8 +1,14 @@
 /* eslint import/first: 0, simple-import-sort/imports: 0 */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+// The ids core was handed, read from the element as core does
+const boundIds = []
+
 vi.mock('@iframe-resizer/core', () => ({
-  default: vi.fn(() => () => ({ disconnect: vi.fn() })),
+  default: vi.fn(() => (iframe) => {
+    boundIds.push(iframe?.id)
+    return { disconnect: vi.fn() }
+  }),
 }))
 
 vi.mock('auto-console-group', () => ({
@@ -89,5 +95,8 @@ describe('Vue iframe-resizer re-binding', () => {
     await nextTick()
 
     expect(connectResizer).toHaveBeenCalledTimes(2)
+    // Vue watchers are pre-flush by default, so this one has to be post-flush
+    // for the new id to be on the element when core reads it
+    expect(boundIds.at(-1)).toBe('renamed')
   })
 })

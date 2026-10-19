@@ -98,12 +98,18 @@ describe('Angular IframeResizerDirective', () => {
   // the iframe step it returns each ran inside the zone
   async function mockConnect() {
     const connectResizer = (await import('@iframe-resizer/core')).default
-    const calls: { options: any; inAngular: boolean[] }[] = []
+    const calls: {
+      options: any
+      inAngular: boolean[]
+      boundId?: string
+    }[] = []
     connectResizer.mockImplementation((options: any) => {
       const call = { options, inAngular: [zone.inAngular] }
       calls.push(call)
       return (iframe: any) => {
         call.inAngular.push(zone.inAngular)
+        // The id core reads from the element, not from the options
+        call.boundId = iframe.id
         iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
         return iframe.iframeResizer
       }
@@ -521,6 +527,8 @@ describe('Angular IframeResizerDirective', () => {
 
     expect(mockElementRef.nativeElement.id).toBe('renamed')
     expect(calls).toHaveLength(2)
+    // What matters: core was handed the element carrying the new id
+    expect(calls[1].boundId).toBe('renamed')
   })
 
   test('connectResizer runs outside the Angular zone', async () => {

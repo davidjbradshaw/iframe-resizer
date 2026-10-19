@@ -120,6 +120,13 @@
       lastOptionsKey !== undefined &&
       optionsKey !== lastOptionsKey
     ) {
+      // Svelte patches the DOM after this block, so a changed id is written
+      // here: core reads the id from the element, not from the options.
+      // setAttribute, as assigning iframe.id compiles to a state mutation,
+      // which would re-run every statement that reads iframe, re-applying
+      // the style prop over the size core set
+      if ($$restProps.id !== undefined)
+        iframe.setAttribute('id', $$restProps.id)
       connectResizer(buildOptions())(iframe)
     }
     lastOptionsKey = optionsKey
