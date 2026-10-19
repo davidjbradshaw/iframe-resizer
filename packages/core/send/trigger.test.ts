@@ -31,7 +31,7 @@ vi.mock('../values/settings', () => ({
 
 const trigger = (await import('./trigger')).default
 const settings = (await import('../values/settings')).default
-const { event, warn } = await import('../console')
+const { event, log, warn } = await import('../console')
 
 describe('core/send/trigger', () => {
   beforeEach(() => vi.clearAllMocks())
@@ -133,7 +133,7 @@ describe('core/send/trigger', () => {
     expect(iframe.contentWindow.postMessage).toHaveBeenCalledTimes(1)
   })
 
-  test('warns, without sending, while the iframe has no window', () => {
+  test('logs, without sending, while the iframe has no window', () => {
     settings.g = {
       iframe: { contentWindow: null, id: 'g' },
       postMessageTarget: null,
@@ -142,7 +142,12 @@ describe('core/send/trigger', () => {
     }
 
     expect(() => trigger('resize', 'resize:msg', 'g')).not.toThrow()
-    expect(warn).toHaveBeenCalledWith(
+    // Out of the page for now; the iframe observer reports a real removal
+    expect(log).toHaveBeenCalledWith(
+      'g',
+      expect.stringContaining('not in the document'),
+    )
+    expect(warn).not.toHaveBeenCalledWith(
       'g',
       expect.stringContaining('not in the document'),
     )

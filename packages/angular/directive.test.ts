@@ -343,6 +343,8 @@ describe('Angular IframeResizerDirective', () => {
     directive.ngAfterViewInit()
 
     const result = capturedOptions.onBeforeClose('test-iframe')
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
 
     // The directive always returns false to prevent iframe removal
     expect(result).toBe(false)

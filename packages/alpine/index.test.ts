@@ -285,6 +285,8 @@ describe('Alpine IframeResizer plugin', () => {
     callback(mockIframe, { expression: '' }, ctx)
 
     const result = capturedOptions.onBeforeClose()
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
 
     expect(result).toBe(false)
     expect(mockGroupEvent).toHaveBeenCalledWith('close')

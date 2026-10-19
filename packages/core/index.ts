@@ -1,5 +1,4 @@
 import { isObject } from '@iframe-resizer/common'
-import { LABEL } from '@iframe-resizer/common/consts'
 
 import checkBoundId from './checks/bound-id'
 import ensureHasId from './checks/id'
@@ -10,6 +9,7 @@ import setupIframe from './setup'
 import setupLogging from './setup/logging'
 import updateIframe from './setup/update'
 import type { IFrameComponent, IFrameObject, IFrameOptions } from './types'
+import settings from './values/settings'
 
 export type * from './types'
 export {
@@ -26,6 +26,10 @@ function updateBoundIframe(
   updateIframe(iframe, options)
 }
 
+// Bound while core holds settings for it; its methods can outlive that
+const isBound = (iframe: HTMLIFrameElement): boolean =>
+  Object.values(settings).some((entry) => entry.iframe === iframe)
+
 export default function connectResizer(
   options: IFrameOptions,
 ): (iframe: HTMLIFrameElement) => IFrameObject | undefined {
@@ -37,7 +41,7 @@ export default function connectResizer(
   return (iframe: HTMLIFrameElement) => {
     const id = ensureHasId(iframe, options)
 
-    if (LABEL in iframe) {
+    if (isBound(iframe)) {
       errorBoundary(id, updateBoundIframe)(iframe, options)
     } else {
       setupLogging(id, options)
