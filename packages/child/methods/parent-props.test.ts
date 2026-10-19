@@ -97,17 +97,17 @@ describe('child/methods/parent-props', () => {
   })
 
   it('asks the parent for info again only while subscribed', () => {
-    resumeParentProps()
-
+    expect(resumeParentProps()).toBe(false)
     expect(sent()).toEqual([])
 
     const unsub = getParentProps(() => {})
-    resumeParentProps()
 
+    expect(resumeParentProps()).toBe(true)
     expect(sent()).toEqual(['parentInfo', 'parentInfo'])
 
     unsub()
-    resumeParentProps()
+
+    expect(resumeParentProps()).toBe(false)
 
     expect(sent()).toEqual(['parentInfo', 'parentInfo', 'parentInfoStop'])
   })
