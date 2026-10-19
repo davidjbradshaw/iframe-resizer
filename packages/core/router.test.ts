@@ -93,6 +93,25 @@ describe('core/router', () => {
     expect(firstRun).toHaveBeenCalledWith(id, 0)
   })
 
+  test('INIT starts the new page auto-resizing again', () => {
+    // As stored when the old page called parentIframe.autoResize(false)
+    settings[id].autoResize = false
+    settings[id].direction = 'vertical'
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(settings[id].autoResize).toBe(true)
+  })
+
+  test('INIT keeps auto-resizing off for direction none', () => {
+    settings[id].autoResize = false
+    settings[id].direction = 'none'
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(settings[id].autoResize).toBe(false)
+  })
+
   test('updates AUTO_RESIZE from message body', async () => {
     const getBody = (await import('./received/message')).default
     getBody.mockReturnValue('true')
