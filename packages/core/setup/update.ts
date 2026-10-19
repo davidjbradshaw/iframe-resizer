@@ -12,6 +12,7 @@ import {
 import { checkTitle } from '../page/title'
 import setOffsetSize from '../send/offset'
 import createOutgoingMessage from '../send/outgoing'
+import warnOnNoResponse from '../send/timeout'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
 import setupBodyMargin from './body-margin'
@@ -107,6 +108,8 @@ export default function updateIframe(
   if (!initialised) {
     settings[id].updatePending = true
     log(id, 'Child not initialised, update queued until it is')
+    // A page that never initialises would hold the queue silently for good
+    warnOnNoResponse(id, settings)
     return
   }
 

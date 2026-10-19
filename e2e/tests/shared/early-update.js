@@ -14,13 +14,20 @@ async function expectChangeApplied(page) {
     timeout: READY_TIMEOUT,
   })
 
-  // The iframe narrows from its start width to that of the child's content
+  // The iframe narrows from its start width to that of the child's content:
+  // a 250px box, two 1px borders and the body's 8px margins
   await expect
-    .poll(() => page.locator('iframe').evaluate((el) => el.style.width), {
-      message: 'iframe width should shrink to its content',
-      timeout: 3000,
-    })
-    .not.toBe(START_WIDTH)
+    .poll(
+      () =>
+        page
+          .locator('iframe')
+          .evaluate((el) => Math.round(parseFloat(el.style.width))),
+      {
+        message: 'iframe width should shrink to its content',
+        timeout: 3000,
+      },
+    )
+    .toBe(268)
 
   await expect
     .poll(
@@ -35,9 +42,10 @@ async function expectChangeApplied(page) {
 }
 
 /**
- * Shared early-update tests, for the packages that re-bind when their
- * options change. The page changes its options before the child is ready,
- * or after onReady with ?late.
+ * Shared early-update tests, run by the react, solid, vue and web-component
+ * specs. Angular, Svelte and Alpine also re-bind on option changes, but have
+ * no early-update page yet. The page changes its options before the child is
+ * ready, or after onReady with ?late.
  */
 export function earlyUpdateTests(pageUrl) {
   test('options changed before the child is ready are applied once it is', async ({
