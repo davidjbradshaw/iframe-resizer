@@ -89,8 +89,10 @@ function trigger(
     return
   }
 
+  // Out of the page for now, as with Vue's <KeepAlive>; the iframe observer
+  // reports one that was removed for good
   if (!getPostMessageTarget(id)) {
-    warn(id, 'Message not sent, the iframe is not in the document')
+    log(id, 'Message not sent, the iframe is not in the document')
     return
   }
 

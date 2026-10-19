@@ -121,6 +121,8 @@ describe('Vue iframe-resizer branches', () => {
     await nextTick()
 
     const result = capturedOptions.onBeforeClose()
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
 
     expect(acg.event).toHaveBeenCalledWith('Blocked Close Event')
     expect(acg.warn).toHaveBeenCalled()

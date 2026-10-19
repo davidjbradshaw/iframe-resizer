@@ -92,6 +92,8 @@
       ...Object.fromEntries(
         Object.entries(toRaw(props)).filter(([, value]) => value !== undefined),
       ),
+      // This component disconnects when it unmounts
+      disconnectOnRemove: false,
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
         consoleGroup.warn('Close method is disabled, use Vue to remove iframe')

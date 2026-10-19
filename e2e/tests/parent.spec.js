@@ -328,3 +328,71 @@ test.describe('Parent: changing the id of a bound iframe', () => {
       )
   })
 })
+
+test.describe('Parent iframe observer', () => {
+  const REMOVED = /Iframe removed while connected/
+
+  const advice = (page) => {
+    const seen = []
+    page.on('console', (message) => {
+      if (REMOVED.test(message.text())) seen.push(message.text())
+    })
+    return seen
+  }
+
+  test('an iframe removed while connected is disconnected, with advice', async ({
+    page,
+  }) => {
+    const seen = advice(page)
+    await page.goto(BASE)
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+
+    await page.evaluate(() => {
+      window.removedIframe = document.querySelector('iframe')
+      window.removedIframe.remove()
+    })
+
+    await expect.poll(() => seen.length).toBe(1)
+    expect(seen[0]).toContain('disconnect()')
+
+    // The page's own disconnect() still works; the shared fixture fails on errors
+    await page.evaluate(() => window.removedIframe.iframeResizer.disconnect())
+
+    // Put back and bound again, it connects afresh
+    await page.evaluate(() => {
+      window.lastResized = null
+      document.body.append(window.removedIframe)
+      window.iframeResize(
+        { license: 'GPLv3', onResized: (data) => (window.lastResized = data) },
+        window.removedIframe,
+      )
+    })
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+    expect(seen).toHaveLength(1)
+  })
+
+  test('an iframe moved within the page stays connected, without advice', async ({
+    page,
+  }) => {
+    const seen = advice(page)
+    await page.goto(BASE)
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+
+    // Moving reloads the page in the iframe, which connects again
+    await page.evaluate(() => {
+      window.lastResized = null
+      const iframe = document.querySelector('iframe')
+      const elsewhere = document.createElement('div')
+      document.body.append(elsewhere)
+      elsewhere.append(iframe)
+    })
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+
+    expect(
+      await page.evaluate(() =>
+        Boolean(document.querySelector('iframe').iframeResizer),
+      ),
+    ).toBe(true)
+    expect(seen).toEqual([])
+  })
+})

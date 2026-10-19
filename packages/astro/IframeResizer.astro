@@ -88,6 +88,8 @@ for (const [key, value] of Object.entries(Astro.props)) {
         connectResizer({
           ...options as IFrameOptions,
           ...eventHandlers,
+          // This component disconnects before a view transition swaps the page
+          disconnectOnRemove: false,
           onBeforeClose: () => false,
         })(iframe)
       })

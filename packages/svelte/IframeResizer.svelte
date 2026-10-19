@@ -51,6 +51,8 @@
       scrolling,
       tolerance,
       warningTimeout,
+      // This component disconnects when it unmounts
+      disconnectOnRemove: false,
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
         consoleGroup.warn(

@@ -7,6 +7,7 @@ export default Object.freeze({
   bodyPadding: null,
   checkOrigin: true,
   direction: VERTICAL,
+  disconnectOnRemove: true,
   firstRun: true,
   inPageLinks: false,
   heightCalculationMethod: AUTO,

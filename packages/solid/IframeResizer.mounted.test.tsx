@@ -353,6 +353,8 @@ describe('Solid IframeResizer lifecycle', () => {
     dispose = render(() => <IframeResizer license="GPLv3" />, container)
 
     const result = capturedOptions.onBeforeClose()
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
     expect(result).toBe(false)
   })
 })

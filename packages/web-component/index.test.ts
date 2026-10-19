@@ -167,6 +167,8 @@ describe('web-component/IframeResizerElement', () => {
 
     const options = vi.mocked(connectResizer).mock.calls[0][0]
     expect(options.onBeforeClose!()).toBe(false)
+    // The component disconnects itself, so core must not on removal
+    expect(options.disconnectOnRemove).toBe(false)
   })
 
   it('accepts programmatic options and exposes them via the getter', () => {

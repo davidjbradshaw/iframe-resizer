@@ -130,6 +130,8 @@ export class IframeResizerDirective {
 
       // Angular owns the iframe, so the close is always cancelled. A bound
       // Output can remove it, once core has finished with the close
+      // This component disconnects when it unmounts
+      disconnectOnRemove: false,
       onBeforeClose: () => {
         this.consoleGroup.event('close')
         if (hasSubscribers(this.onBeforeClose)) {

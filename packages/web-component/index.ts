@@ -168,6 +168,8 @@ export class IframeResizerElement extends HTMLBase {
       ...(attrOptions as unknown as IFrameOptions),
       ...this.resizerOptions,
       ...eventHandlers,
+      // The element disconnects when it is removed from the page
+      disconnectOnRemove: false,
       onBeforeClose: () => {
         this.consoleGroup.event('close')
         this.consoleGroup.warn(

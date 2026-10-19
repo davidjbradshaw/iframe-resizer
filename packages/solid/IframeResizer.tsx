@@ -144,6 +144,8 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
 
   const buildOptions = (): IFrameOptions => ({
     ...pickWireOptions(local),
+    // This component disconnects when it unmounts
+    disconnectOnRemove: false,
     onBeforeClose,
     ...callbackOptions(),
   })

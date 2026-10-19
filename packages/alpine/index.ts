@@ -68,6 +68,8 @@ export default function IframeResizer(Alpine: Alpine): void {
         getOptions((evaluated) => {
           const bound = connectResizer({
             ...toOptions(evaluated),
+            // The directive disconnects when Alpine cleans up its element
+            disconnectOnRemove: false,
             onBeforeClose,
           })(el)
 
