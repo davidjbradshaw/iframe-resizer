@@ -1,4 +1,4 @@
-import { typeAssert } from '@iframe-resizer/common'
+import { isolateUserCode, typeAssert } from '@iframe-resizer/common'
 import {
   FUNCTION,
   PARENT_INFO,
@@ -8,8 +8,14 @@ import {
 import sendMessage from '../send/message'
 import state from '../values/state'
 
-// eslint-disable-next-line import/prefer-default-export
-export function getParentProps(callback: (info: any) => void): () => void {
+type Listener = (info: any) => void
+
+// Skipped if the listener unsubscribed before its turn came
+export function deliverParentInfo(listener: Listener, info: object): void {
+  if (state.parentInfoListeners.has(listener)) listener(info)
+}
+
+export function getParentProps(callback: Listener): () => void {
   typeAssert(
     callback,
     FUNCTION,
@@ -17,19 +23,21 @@ export function getParentProps(callback: (info: any) => void): () => void {
   )
 
   // Wrapped, so the same callback subscribed twice is two subscriptions
-  const listener = (info: any): void => callback(info)
-  const { parentInfoListeners } = state
+  const listener: Listener = (info) => callback(info)
+  const { parentInfo, parentInfoListeners } = state
 
   parentInfoListeners.add(listener)
 
-  // The parent restarts its monitor, which sends every subscriber the
-  // current info
-  sendMessage(0, 0, PARENT_INFO)
+  // One monitor on the parent serves every subscriber; later ones get its
+  // last update
+  if (parentInfoListeners.size === 1) sendMessage(0, 0, PARENT_INFO)
+  else if (parentInfo) isolateUserCode(deliverParentInfo, listener, parentInfo)
 
   return () => {
     if (!parentInfoListeners.delete(listener) || parentInfoListeners.size > 0)
       return
 
+    state.parentInfo = null
     sendMessage(0, 0, PARENT_INFO_STOP)
   }
 }

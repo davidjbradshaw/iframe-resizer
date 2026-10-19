@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as sendMessage from '../send/message'
 import state from '../values/state'
@@ -9,9 +9,15 @@ const sent = (): string[] =>
 
 describe('child/methods/parent-props', () => {
   beforeEach(() => {
+    vi.useFakeTimers()
     vi.restoreAllMocks()
     vi.spyOn(sendMessage, 'default').mockImplementation(() => {})
+    state.parentInfo = null
     state.parentInfoListeners.clear()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('subscribes, asks the parent for info and returns an unsubscribe', () => {
@@ -27,13 +33,34 @@ describe('child/methods/parent-props', () => {
     expect(sent()).toEqual(['parentInfo', 'parentInfoStop'])
   })
 
-  it('asks the parent again for each subscription, keeping the first', () => {
-    getParentProps(() => {})
-    getParentProps(() => {})
+  it('asks the parent once, and gives a later subscription its last update', () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    const info = { iframe: {} }
 
-    // The parent restarts its monitor, which sends to both
-    expect(sent()).toEqual(['parentInfo', 'parentInfo'])
-    expect(state.parentInfoListeners.size).toBe(2)
+    getParentProps(first)
+    state.parentInfo = info
+    getParentProps(second)
+
+    // One monitor on the parent serves both
+    expect(sent()).toEqual(['parentInfo'])
+    expect(second).not.toHaveBeenCalled()
+
+    vi.runAllTimers()
+
+    expect(second).toHaveBeenCalledWith(info)
+    expect(first).not.toHaveBeenCalled()
+  })
+
+  it('does not give the last update to a subscription already cancelled', () => {
+    getParentProps(() => {})
+    state.parentInfo = { iframe: {} }
+    const late = vi.fn()
+
+    getParentProps(late)()
+    vi.runAllTimers()
+
+    expect(late).not.toHaveBeenCalled()
   })
 
   it('an unsubscribe cancels only its own subscription', () => {
@@ -53,6 +80,7 @@ describe('child/methods/parent-props', () => {
     unsubSecond()
 
     expect(state.parentInfoListeners.size).toBe(0)
+    expect(state.parentInfo).toBe(null)
     expect(sent()).toEqual(['parentInfoStop'])
   })
 

@@ -8,6 +8,7 @@ vi.mock('./utils', () => ({
   parseFrozen: (data) => Object.freeze(JSON.parse(data)),
 }))
 vi.mock('../console', () => ({ log: vi.fn() }))
+vi.mock('../send/message', () => ({ default: vi.fn() }))
 
 const { notExpected } = await import('./utils')
 const { default: parentInfo } = await import('./parent-info')
@@ -18,6 +19,7 @@ describe('child/received/parent-info', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     vi.clearAllMocks()
+    state.parentInfo = null
     state.parentInfoListeners.clear()
   })
 
@@ -42,7 +44,7 @@ describe('child/received/parent-info', () => {
     expect(notExpected).not.toHaveBeenCalled()
   })
 
-  test('gives each subscriber its own copy', () => {
+  test('gives every subscriber the same update, and keeps it', () => {
     const first = vi.fn()
     const second = vi.fn()
     state.parentInfoListeners.add(first)
@@ -51,7 +53,8 @@ describe('child/received/parent-info', () => {
     parentInfo(EVENT)
     vi.runAllTimers()
 
-    expect(first.mock.calls[0][0]).not.toBe(second.mock.calls[0][0])
+    expect(first.mock.calls[0][0]).toBe(second.mock.calls[0][0])
+    expect(state.parentInfo).toBe(first.mock.calls[0][0])
   })
 
   test('skips a subscriber that unsubscribed before its turn', () => {
@@ -71,5 +74,6 @@ describe('child/received/parent-info', () => {
     parentInfo(EVENT)
 
     expect(notExpected).toHaveBeenCalled()
+    expect(state.parentInfo).toBe(null)
   })
 })
