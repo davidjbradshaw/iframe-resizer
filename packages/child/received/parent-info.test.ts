@@ -1,45 +1,75 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import state from '../values/state'
 
 vi.mock('./utils', () => ({
-  getData: () => '{"pi":false}',
+  getData: (event) => event.data.slice(event.data.indexOf(':') + 1),
   notExpected: vi.fn(),
-  parseFrozen: (s) => Object.freeze(JSON.parse(s)),
+  parseFrozen: (data) => Object.freeze(JSON.parse(data)),
 }))
 vi.mock('../console', () => ({ log: vi.fn() }))
-vi.mock('@iframe-resizer/common', () => ({
-  isolateUserCode: (fn, arg) => fn?.(arg),
-}))
 
 const { notExpected } = await import('./utils')
+const { default: parentInfo } = await import('./parent-info')
+
+const EVENT = { data: '[iFrameSizer]parentInfo:{"iframe":{"top":10}}' }
 
 describe('child/received/parent-info', () => {
   beforeEach(() => {
-    state.parentInfo = null
-    state.parentInfoListeners.clear()
+    vi.useFakeTimers()
     vi.clearAllMocks()
+    state.parentInfoListeners.clear()
   })
 
-  test('calls every subscriber and keeps the data', async () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  test('calls every subscriber, after the current task', () => {
     const first = vi.fn()
     const second = vi.fn()
     state.parentInfoListeners.add(first)
     state.parentInfoListeners.add(second)
-    const { default: parentInfo } = await import('./parent-info')
-    parentInfo({ data: 'x' })
 
-    expect(first).toHaveBeenCalledWith({ pi: false })
-    expect(second).toHaveBeenCalledWith({ pi: false })
-    expect(state.parentInfo).toEqual({ pi: false })
+    parentInfo(EVENT)
+
+    expect(first).not.toHaveBeenCalled()
+
+    vi.runAllTimers()
+
+    expect(first).toHaveBeenCalledWith({ iframe: { top: 10 } })
+    expect(second).toHaveBeenCalledWith({ iframe: { top: 10 } })
     expect(notExpected).not.toHaveBeenCalled()
   })
 
-  test('sends notExpected when no handler', async () => {
-    const { default: parentInfo } = await import('./parent-info')
-    parentInfo({ data: 'x' })
+  test('gives each subscriber its own copy', () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    state.parentInfoListeners.add(first)
+    state.parentInfoListeners.add(second)
+
+    parentInfo(EVENT)
+    vi.runAllTimers()
+
+    expect(first.mock.calls[0][0]).not.toBe(second.mock.calls[0][0])
+  })
+
+  test('skips a subscriber that unsubscribed before its turn', () => {
+    const first = vi.fn(() => state.parentInfoListeners.delete(second))
+    const second = vi.fn()
+    state.parentInfoListeners.add(first)
+    state.parentInfoListeners.add(second)
+
+    parentInfo(EVENT)
+    vi.runAllTimers()
+
+    expect(first).toHaveBeenCalled()
+    expect(second).not.toHaveBeenCalled()
+  })
+
+  test('sends notExpected when no one is subscribed', () => {
+    parentInfo(EVENT)
 
     expect(notExpected).toHaveBeenCalled()
-    expect(state.parentInfo).toBe(null)
   })
 })

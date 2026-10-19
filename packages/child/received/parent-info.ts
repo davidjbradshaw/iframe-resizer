@@ -5,18 +5,22 @@ import { log } from '../console'
 import state from '../values/state'
 import { getData, notExpected, parseFrozen } from './utils'
 
+// Skipped if the listener unsubscribed before its turn came
+function deliver(listener: (info: any) => void, data: string): void {
+  if (state.parentInfoListeners.has(listener)) listener(parseFrozen(data))
+}
+
 export default function parentInfo(event: MessageEvent): void {
   const { parentInfoListeners } = state
-  const messageBody = parseFrozen(getData(event))
+  const data = getData(event)
 
-  log(`ParentInfo received from parent:`, messageBody)
+  log(`ParentInfo received from parent:`, parseFrozen(data))
 
   if (parentInfoListeners.size === 0) {
     notExpected(PARENT_INFO)
     return
   }
 
-  state.parentInfo = messageBody
   for (const listener of parentInfoListeners)
-    isolateUserCode(listener, messageBody)
+    isolateUserCode(deliver, listener, data)
 }

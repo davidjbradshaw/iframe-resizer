@@ -1,19 +1,10 @@
-import { isolateUserCode } from '@iframe-resizer/common'
 import { PAGE_INFO } from '@iframe-resizer/common/consts'
 
 import { log } from '../console'
-import state from '../values/state'
-import { getData, notExpected, parse, parseFrozen } from './utils'
+import { getData, notExpected, parseFrozen } from './utils'
 
+// The child has had no getPageInfo() since v6, so ask the parent to stop
 export default function pageInfo(event: MessageEvent): void {
-  const { onPageInfo } = state
-  const messageBody = getData(event)
-
-  log(`PageInfo received from parent:`, parseFrozen(messageBody))
-
-  if (onPageInfo) {
-    isolateUserCode(onPageInfo, parse(messageBody))
-  } else {
-    notExpected(PAGE_INFO)
-  }
+  log(`PageInfo received from parent:`, parseFrozen(getData(event)))
+  notExpected(PAGE_INFO)
 }

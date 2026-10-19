@@ -60,6 +60,14 @@ test.describe('Parent (vanilla)', () => {
     const calls = (name) =>
       child.evaluate((key) => window.propsCalls[key], name)
     const received = () => child.evaluate(() => window.parentInfoReceived)
+    // The parent's monitor sends from resize observers, at most once a frame
+    const nextFrames = () =>
+      page.evaluate(
+        () =>
+          new Promise((resolve) => {
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          }),
+      )
 
     await child.evaluate(() => {
       // Count the parentInfo messages from the same-origin parent
@@ -82,6 +90,9 @@ test.describe('Parent (vanilla)', () => {
     await expect.poll(() => calls('first')).toBeGreaterThan(0)
     await expect.poll(() => calls('second')).toBeGreaterThan(0)
 
+    // The counter below sees the messages that reach the subscribers
+    expect(await received()).toBeGreaterThan(0)
+
     // The second subscription keeps getting updates after the first goes
     await child.evaluate(() => window.unsubscribeFirst())
     const first = await calls('first')
@@ -93,10 +104,10 @@ test.describe('Parent (vanilla)', () => {
 
     // Once the last one goes, the parent stops sending
     await child.evaluate(() => window.unsubscribeSecond())
-    await page.waitForTimeout(100)
+    await nextFrames()
     const count = await received()
     await page.setViewportSize({ width: 800, height: 500 })
-    await page.waitForTimeout(300)
+    await nextFrames()
 
     expect(await received()).toBe(count)
   })
@@ -116,7 +127,9 @@ test.describe('Parent: changing the id of a bound iframe', () => {
     })
     await page.goto(BASE)
     await page.waitForFunction(() => window.lastResized?.type === 'init')
-    const boundId = await page.evaluate(() => document.querySelector('iframe').id)
+    const boundId = await page.evaluate(
+      () => document.querySelector('iframe').id,
+    )
 
     // A framework re-rendering the id prop does this
     await page.evaluate(() => {
@@ -127,6 +140,8 @@ test.describe('Parent: changing the id of a bound iframe', () => {
 
     await expect
       .poll(() => errors.join('\n'))
-      .toContain(`ReferenceError: The id of a bound iframe cannot be changed, from "${boundId}" to "renamed"`)
+      .toContain(
+        `ReferenceError: The id of a bound iframe cannot be changed, from "${boundId}" to "renamed"`,
+      )
   })
 })
