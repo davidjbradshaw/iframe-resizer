@@ -16,15 +16,24 @@
     </style>
   </head>
   <body>
-    <div id="content">Content</div>
+    <div id="content">
+      Content
+      <div id="child-anchor" style="margin-top: 200px">Child anchor</div>
+    </div>
     <script>
       // ?child=v1..v5 loads that release's child script, else the current
       // one. ?license= sets the license here, as a parent before v5 sends none.
       const query = new URLSearchParams(location.search)
       const child = query.get('child')
-      if (query.has('license')) {
-        window.iframeResizer = { license: query.get('license') }
-      }
+
+      // What the parent sends, under each release's own config and name
+      window.received = []
+      const onMessage = (message) => window.received.push(message)
+      const license = query.has('license') ? { license: query.get('license') } : {}
+      if (child === 'v3') window.iFrameResizer = { messageCallback: onMessage }
+      else if (child === 'v4') window.iFrameResizer = { onMessage }
+      else window.iframeResizer = { ...license, onMessage }
+
       const src = child
         ? `../legacy/${child}/iframeResizer.contentWindow.js`
         : '../../../js/iframe-resizer.child.js'

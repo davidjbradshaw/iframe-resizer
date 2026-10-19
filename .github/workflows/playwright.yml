@@ -73,6 +73,7 @@ jobs:
           - in-page-links
           - jquery
           - legacy
+          - legacy-api
           - message-source
           - middle-tier
           - mutation-backlog
