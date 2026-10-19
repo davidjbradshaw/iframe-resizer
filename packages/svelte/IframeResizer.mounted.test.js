@@ -10,11 +10,16 @@ const mockResizer = {
 
 let capturedOptions = {}
 let mockConsoleGroup
+// The ids core was handed, read from the element as core does
+const boundIds = []
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options) => {
     capturedOptions = options
-    return vi.fn(() => mockResizer)
+    return vi.fn((iframe) => {
+      boundIds.push(iframe?.id)
+      return mockResizer
+    })
   }),
 }))
 
@@ -77,6 +82,9 @@ describe('Svelte IframeResizer lifecycle', () => {
     flushSync()
 
     expect(connectResizer).toHaveBeenCalledTimes(2)
+    // Svelte patches the DOM after its reactive blocks, so the component has
+    // to write the new id itself for core to see it
+    expect(boundIds.at(-1)).toBe('renamed')
     unmount(component)
   })
 

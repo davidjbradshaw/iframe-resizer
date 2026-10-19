@@ -141,10 +141,12 @@ describe('Alpine IframeResizer plugin', () => {
     expect(connectResizer).toHaveBeenCalledTimes(1)
 
     mockIframe.id = 'renamed'
-    // MutationObserver callbacks run as a microtask
+    // MutationObserver callbacks run as a microtask, so the new id is already
+    // on the element when core reads it
     await Promise.resolve()
 
     expect(connectResizer).toHaveBeenCalledTimes(2)
+    expect(mockIframe.id).toBe('renamed')
 
     // The observer goes with the directive
     ctx.runCleanup()
