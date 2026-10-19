@@ -17,9 +17,14 @@ vi.mock('./target-origin', () => ({ setTargetOrigin: vi.fn() }))
 vi.mock('./init', () => ({ setInitMessage: vi.fn() }))
 vi.mock('./scrolling', () => ({ default: vi.fn() }))
 vi.mock('../send/offset', () => ({ default: vi.fn() }))
-vi.mock('../checks/options', () => ({
-  default: vi.fn((_id, options) => options || {}),
+// The real checkOptions, so the tests keep its contract: an option passed as
+// undefined does not replace the current value on update
+vi.mock('../checks/options', async (importOriginal) => ({
+  default: vi.fn(
+    (await importOriginal<typeof import('../checks/options')>()).default,
+  ),
 }))
+vi.mock('../send/timeout', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({
   default: {} as Record<string, any>,
 }))
@@ -122,6 +127,15 @@ describe('core/setup/update', () => {
       expect(settings.edge1.tolerance).toBe(5)
       expect(settings.edge1.updatePending).toBe(true)
       expect(trigger).not.toHaveBeenCalled()
+    })
+
+    it('arms the no-response warning when it queues', async () => {
+      // A page that never initialises must not hold the queue silently
+      const warnOnNoResponse = (await import('../send/timeout')).default
+
+      updateIframe(iframe, { tolerance: 5 })
+
+      expect(warnOnNoResponse).toHaveBeenCalledWith('edge1', settings)
     })
   })
 
