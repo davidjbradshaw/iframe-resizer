@@ -4,11 +4,6 @@ import * as sendMessage from '../send/message'
 import state from '../values/state'
 import { getParentProps } from './parent-props'
 
-vi.mock('@iframe-resizer/common', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@iframe-resizer/common')>()),
-  isolateUserCode: (fn, arg) => fn(arg),
-}))
-
 const sent = (): string[] =>
   vi.mocked(sendMessage.default).mock.calls.map((call) => call[2])
 
@@ -16,7 +11,6 @@ describe('child/methods/parent-props', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
     vi.spyOn(sendMessage, 'default').mockImplementation(() => {})
-    state.parentInfo = null
     state.parentInfoListeners.clear()
   })
 
@@ -33,30 +27,24 @@ describe('child/methods/parent-props', () => {
     expect(sent()).toEqual(['parentInfo', 'parentInfoStop'])
   })
 
-  it('keeps the first subscription when a second one is added', () => {
-    const first = vi.fn()
-    const second = vi.fn()
-    const info = { iframe: {} }
+  it('asks the parent again for each subscription, keeping the first', () => {
+    getParentProps(() => {})
+    getParentProps(() => {})
 
-    getParentProps(first)
-    state.parentInfo = info
-    getParentProps(second)
-
-    // The second gets the last data at once, without asking the parent again
-    expect(second).toHaveBeenCalledWith(info)
-    expect(first).not.toHaveBeenCalled()
-    expect(sent()).toEqual(['parentInfo'])
+    // The parent restarts its monitor, which sends to both
+    expect(sent()).toEqual(['parentInfo', 'parentInfo'])
     expect(state.parentInfoListeners.size).toBe(2)
   })
 
   it('an unsubscribe cancels only its own subscription', () => {
     const unsubFirst = getParentProps(() => {})
     const unsubSecond = getParentProps(() => {})
+    vi.mocked(sendMessage.default).mockClear()
 
     unsubFirst()
 
     expect(state.parentInfoListeners.size).toBe(1)
-    expect(sent()).toEqual(['parentInfo'])
+    expect(sent()).toEqual([])
 
     unsubFirst()
 
@@ -65,18 +53,18 @@ describe('child/methods/parent-props', () => {
     unsubSecond()
 
     expect(state.parentInfoListeners.size).toBe(0)
-    expect(state.parentInfo).toBe(null)
-    expect(sent()).toEqual(['parentInfo', 'parentInfoStop'])
+    expect(sent()).toEqual(['parentInfoStop'])
   })
 
   it('treats the same callback subscribed twice as two subscriptions', () => {
     const cb = vi.fn()
     const unsubFirst = getParentProps(cb)
     getParentProps(cb)
+    vi.mocked(sendMessage.default).mockClear()
 
     unsubFirst()
 
     expect(state.parentInfoListeners.size).toBe(1)
-    expect(sent()).toEqual(['parentInfo'])
+    expect(sent()).toEqual([])
   })
 })
