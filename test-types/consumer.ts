@@ -73,12 +73,13 @@ export const log: IFrameLogOption = 'loud'
 // @ts-expect-error not a scrolling option
 export const scrolling: IFrameScrollOption = 'sometimes'
 
-// onBeforeResize receives the trigger event; a callback written without it
-// still assigns
+// onBeforeResize now declares the trigger event as its second parameter
 export const pageOptions: IFramePageOptions = {
   onBeforeResize: (newSize, eventType) =>
     eventType === 'init' ? newSize : Math.min(newSize, 600),
 }
+// A callback from before the event was added, typed with only newSize, must
+// still assign: this line breaks if widening the signature ever breaks users
 export const legacyPageOptions: IFramePageOptions = {
   onBeforeResize: (newSize: number) => newSize,
 }
