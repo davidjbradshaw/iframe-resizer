@@ -85,6 +85,7 @@ export const IGNORE_DISABLE_RESIZE = {
   [INIT]: 1,
   [MANUAL_RESIZE_REQUEST]: 1,
   [PARENT_RESIZE_REQUEST]: 1,
+  [SET_OFFSET_SIZE]: 1,
 }
 
 export const RESIZE_OBSERVER = 'resizeObserver'
