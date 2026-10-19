@@ -177,7 +177,8 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
 
   // The server has no element to style, so the style is merged back into the
   // markup there; the client keeps it out of the spread and applies it below
-  const attrs = isServer ? mergeProps(iframeProps, styleProp) : iframeProps
+  const serverAttrs = mergeProps(iframeProps, styleProp)
+  const attrs = isServer ? serverAttrs : iframeProps
   // eslint-disable-next-line jsx-a11y/iframe-has-title
   const iframe = <iframe {...attrs} ref={iframeEl} />
 
