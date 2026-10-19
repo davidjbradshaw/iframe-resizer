@@ -8,7 +8,6 @@ vi.mock('../console', () => ({
   log: vi.fn(),
 }))
 vi.mock('../methods/attach', () => ({ default: vi.fn() }))
-vi.mock('../send/outgoing', () => ({ default: vi.fn((id) => `msg:${id}`) }))
 vi.mock('./body-margin', () => ({ default: vi.fn() }))
 vi.mock('./init', () => ({ default: vi.fn() }))
 vi.mock('./process-options', () => ({ default: vi.fn() }))
@@ -42,7 +41,7 @@ describe('core/setup/index', () => {
     expect(preModeCheck).toHaveBeenCalledWith('if1')
     expect(setScrolling).toHaveBeenCalledWith(iframe)
     expect(setupBodyMargin).toHaveBeenCalledWith('if1')
-    expect(init).toHaveBeenCalledWith('if1', 'msg:if1')
+    expect(init).toHaveBeenCalledWith('if1')
     expect(attachMethods).toHaveBeenCalledWith('if1')
     expect(log).toHaveBeenCalledWith('if1', 'Setup complete')
     expect(endAutoGroup).toHaveBeenCalledWith('if1')

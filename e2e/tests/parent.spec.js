@@ -50,6 +50,32 @@ test.describe('Parent (vanilla)', () => {
     expect(keys.sort()).toEqual(['height', 'id', 'iframe', 'type', 'width'])
   })
 
+  test('a page that reloads in the iframe gets the options as updated', async ({
+    page,
+  }) => {
+    await page.goto(BASE)
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+
+    const GREEN = 'rgb(0, 128, 0)'
+    const childBody = page.frameLocator('iframe').first().locator('body')
+    await page.evaluate((bodyBackground) => {
+      window.iframeResize(
+        { license: 'GPLv3', bodyBackground },
+        document.querySelector('iframe'),
+      )
+    }, GREEN)
+    await expect(childBody).toHaveCSS('background-color', GREEN)
+
+    // The page in the iframe reloads and is initialised again
+    await page.evaluate(() => {
+      window.lastResized = null
+      document.querySelector('iframe').contentWindow.location.reload()
+    })
+    await page.waitForFunction(() => window.lastResized?.type === 'init')
+
+    await expect(childBody).toHaveCSS('background-color', GREEN)
+  })
+
   test('a getParentProps() unsubscribe cancels only its own subscription', async ({
     page,
   }) => {
