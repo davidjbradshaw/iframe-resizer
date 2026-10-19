@@ -58,6 +58,24 @@ describe('Svelte IframeResizer style', () => {
     expect(iframe.style.height).toBe('800px')
   })
 
+  it('clears a removed style and keeps the size', () => {
+    component = createClassComponent({
+      component: IframeResizer,
+      target,
+      props: { license: 'GPLv3', style: 'border: 1px solid red' },
+    })
+    flushSync()
+
+    const iframe = target.querySelector('iframe')
+    iframe.style.height = '800px'
+
+    component.$set({ style: undefined })
+    flushSync()
+
+    expect(iframe.style.borderTopWidth).toBe('')
+    expect(iframe.style.height).toBe('800px')
+  })
+
   it('leaves the iframe alone when no style is passed', () => {
     component = createClassComponent({
       component: IframeResizer,
