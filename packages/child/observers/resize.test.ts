@@ -66,16 +66,17 @@ describe('child/observers/resize', () => {
     const oldBody = document.body
 
     // Nothing to do until the body changes
-    api.observeBody()
+    expect(api.observeBody()).toBe(false)
     expect(unobserve).not.toHaveBeenCalled()
 
     // What Turbo Drive does on navigation
     const newBody = document.createElement('body')
     oldBody.replaceWith(newBody)
-    api.observeBody()
+    expect(api.observeBody()).toBe(true)
 
-    expect(unobserve).toHaveBeenCalledWith(oldBody)
-    expect(observed).toContain(newBody)
+    // Identity, as empty bodies compare equal under toHaveBeenCalledWith
+    expect(unobserve.mock.calls[0][0]).toBe(oldBody)
+    expect(observed.at(-1)).toBe(newBody)
 
     api.disconnect()
   })

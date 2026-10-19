@@ -4,6 +4,7 @@ import migrateLegacySizeAttr from '../check/migrate-size-attr'
 import checkOverflow from '../check/overflow'
 import checkAndSetupTags from '../check/tags'
 import { endAutoGroup, event as consoleEvent, info } from '../console'
+import applyBodySetup from '../page/body-setup'
 import sendSize from '../send/size'
 import { getAllElements } from '../size/all'
 import state from '../values/state'
@@ -65,7 +66,9 @@ function contentMutated({
 
   removeObservers(removedNodes)
   addObservers(addedNodes)
-  observers.resize.observeBody()
+
+  // A replaced body also needs the inline styles init gave the old one
+  if (observers.resize.observeBody()) applyBodySetup()
 }
 
 export default function mutationObserved(mutations: {
