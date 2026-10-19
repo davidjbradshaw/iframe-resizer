@@ -11,6 +11,7 @@ import {
 
 import { event as consoleEvent, info } from '../console'
 import resetIframe from '../methods/reset'
+import createOutgoingMessage from '../send/outgoing'
 import warnOnNoResponse from '../send/timeout'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
@@ -73,7 +74,7 @@ function sendInit(id: string, initChild: () => void): void {
 // We have to call trigger twice, as we can not be sure if all
 // iframes have completed loading when this code runs. The
 // event listener also catches the page changing in the iframe.
-export default function init(id: string, message: string): void {
+export default function init(id: string): void {
   const createInitChild = (eventType: string) => (): void => {
     if (!settings[id]) return // iframe removed before load event
 
@@ -82,7 +83,8 @@ export default function init(id: string, message: string): void {
     if (firstRun) settings[id].sameOrigin = true
 
     refreshRemoteHost(id)
-    trigger(eventType, message, id)
+    // Built now, so a page that reloads gets the options as they are now
+    trigger(eventType, createOutgoingMessage(id), id)
     if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
     if (!firstRun) checkReset(id)
