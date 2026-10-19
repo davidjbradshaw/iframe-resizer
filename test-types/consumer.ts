@@ -78,11 +78,6 @@ export const pageOptions: IFramePageOptions = {
   onBeforeResize: (newSize, eventType) =>
     eventType === 'init' ? newSize : Math.min(newSize, 600),
 }
-// A callback from before the event was added, typed with only newSize, must
-// still assign: this line breaks if widening the signature ever breaks users
-export const legacyPageOptions: IFramePageOptions = {
-  onBeforeResize: (newSize: number) => newSize,
-}
 
 // The React component's onScroll and mouse callbacks get iframe-resizer
 // data, not React's DOM events, so typed handlers must be accepted
