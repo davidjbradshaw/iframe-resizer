@@ -69,4 +69,25 @@ describe('Vue iframe-resizer re-binding', () => {
       expect.objectContaining({ checkOrigin: ['https://b.example'] }),
     )
   })
+
+  it('passes an id change to core, so it can report the error', async () => {
+    const id = ref('first')
+
+    const Parent = defineComponent({
+      setup: () => () =>
+        h('div', [h(IframeResizer, { license: 'GPLv3', id: id.value })]),
+    })
+
+    app = createApp(Parent)
+    app.mount(container)
+    await nextTick()
+
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    id.value = 'renamed'
+    await nextTick()
+    await nextTick()
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+  })
 })

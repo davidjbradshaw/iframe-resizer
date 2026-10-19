@@ -64,6 +64,22 @@ describe('Svelte IframeResizer lifecycle', () => {
     unmount(component)
   })
 
+  it('passes an id change to core, so it can report the error', () => {
+    const component = createClassComponent({
+      component: IframeResizer,
+      target,
+      props: { license: 'GPLv3', id: 'first' },
+    })
+    flushSync()
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    component.$set({ id: 'renamed' })
+    flushSync()
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    unmount(component)
+  })
+
   it('re-binds when a resizer prop changes, not when it is unchanged', () => {
     const component = createClassComponent({
       component: IframeResizer,

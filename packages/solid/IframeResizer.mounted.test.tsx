@@ -102,6 +102,20 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(typeof capturedOptions.onMouseEnter).toBe('function')
   })
 
+  it('passes an id change to core, so it can report the error', () => {
+    const [id, setId] = createSignal('first')
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" id={id()} />,
+      container,
+    )
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    setId('renamed')
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+  })
+
   it('keeps the size set by iframe-resizer when the props are re-applied', () => {
     const [extra, setExtra] = createSignal<Record<string, unknown>>({})
 

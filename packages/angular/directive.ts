@@ -75,6 +75,10 @@ export class IframeResizerDirective {
     license: '',
   }
 
+  // Declared so a changed id reaches the iframe and re-binds, letting core
+  // report that a bound iframe cannot change its id
+  @Input() id?: string
+
   @Input() debug: boolean = false
 
   constructor(
@@ -189,10 +193,14 @@ export class IframeResizerDirective {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    // An id input shadows the DOM binding, so pass it on to the iframe
+    if (changes.id && this.id !== undefined)
+      this.elementRef.nativeElement.id = this.id
+
     // Re-bind when @Input options change. Skip the first call: the view isn't
     // ready, and ngAfterViewInit connects. Not tested on this.resizer, as a
     // first connect that fails, such as on an invalid option, leaves it unset
-    if (!this.viewReady || !changes.options) return
+    if (!this.viewReady || !(changes.options || changes.id)) return
     if (this.debug) this.consoleGroup.log('ngOnChanges: options updated')
     this.resizer = this.connect() ?? this.resizer
   }
