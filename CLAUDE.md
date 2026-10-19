@@ -106,6 +106,7 @@ ESLint config: `.eslintrc.json` (extends eslint-config-auto). Prettier: no semic
 
 ## Key rules
 - **Always run `npm run eslint:fix` before every commit/check-in.** This is mandatory — do not skip it.
+- **Don't delete code kept for backwards compatibility** — support for older parents and children (v1–v5), deprecated options, attributes and messages — even when it looks dead or a review suggests removing it. Ask first.
 - `js-dist/` is just for the distribution of the latest published version. It should never be updated, except by running `npm run publish`
  - `js-dist/` should not be used for testing
  - `example-test` should never be checked in to git or used with test scripts. It is just for manual testing.
