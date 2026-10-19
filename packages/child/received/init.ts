@@ -37,8 +37,9 @@ export default function initFromParent(event: InitEvent): void {
 
   // A later init would change where the page sends its messages
   if (!state.firstRun) {
-    log('Already initialised, ignoring init message')
-    if (sameOrigin || isAncestor(event.source)) resumeParentProps()
+    if ((sameOrigin || isAncestor(event.source)) && resumeParentProps())
+      log('Already initialised, asking the parent for getParentProps() again')
+    else log('Already initialised, ignoring init message')
     return
   }
 

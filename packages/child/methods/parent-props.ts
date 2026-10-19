@@ -42,7 +42,11 @@ export function getParentProps(callback: Listener): () => void {
   }
 }
 
-// The parent stops monitoring when the iframe loads, then sends init again
-export function resumeParentProps(): void {
-  if (state.parentInfoListeners.size > 0) sendMessage(0, 0, PARENT_INFO)
+// The parent stops monitoring when the iframe loads, then sends init again.
+// Returns whether there were subscribers to ask for.
+export function resumeParentProps(): boolean {
+  if (state.parentInfoListeners.size === 0) return false
+
+  sendMessage(0, 0, PARENT_INFO)
+  return true
 }
