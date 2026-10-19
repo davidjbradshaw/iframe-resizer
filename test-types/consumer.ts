@@ -73,6 +73,12 @@ export const log: IFrameLogOption = 'loud'
 // @ts-expect-error not a scrolling option
 export const scrolling: IFrameScrollOption = 'sometimes'
 
+// onBeforeResize now declares the trigger event as its second parameter
+export const pageOptions: IFramePageOptions = {
+  onBeforeResize: (newSize, eventType) =>
+    eventType === 'init' ? newSize : Math.min(newSize, 600),
+}
+
 // The React component's onScroll and mouse callbacks get iframe-resizer
 // data, not React's DOM events, so typed handlers must be accepted
 export const reactCallbacks: ReactProps = {

@@ -27,6 +27,8 @@ export default {
   viewportResized: false,
   width: 0,
   win: window,
+  // Kept for backwards compatibility
+  onPageInfo: null,
   // Subscribers from getParentProps(), and the last update sent to them
   parentInfo: null as object | null,
   parentInfoListeners: new Set<(info: any) => void>(),
