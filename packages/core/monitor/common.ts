@@ -44,6 +44,13 @@ export const startInfoMonitor =
   // eslint-disable-next-line @typescript-eslint/no-shadow
   (sendInfoToIframe: (requestType: string, id: string) => void, type: string) =>
     (id: string): void => {
+      if (!settings[id]) return
+
+      const key = `stop${type}`
+
+      // Replace a monitor already running for this iframe, rather than leak it
+      stopInfoMonitor(key)(id)
+
       let pending: string | false = false
 
       const sendInfo = (requestType: string) => (): void => {
@@ -82,13 +89,15 @@ export const startInfoMonitor =
       }
 
       function stop(): void {
-        event(id, `stop${type}`)
+        event(id, key)
         setListener('Remove ', removeEventListener)
         pageObserver.disconnect()
         iframeObserver.disconnect()
-        if (settings[id]) {
-          removeEventListener(settings[id].iframe, LOAD, stop)
-        }
+        if (!settings[id]) return
+
+        removeEventListener(settings[id].iframe, LOAD, stop)
+        // Unless a newer monitor has replaced this one
+        if (settings[id][key] === stop) delete settings[id][key]
       }
 
       function start(): void {
@@ -98,9 +107,7 @@ export const startInfoMonitor =
         iframeObserver.observe(settings[id].iframe)
       }
 
-      if (!settings[id]) return
-
-      settings[id][`stop${type}`] = stop
+      settings[id][key] = stop
       addEventListener(settings[id].iframe, LOAD, stop)
       start()
     }

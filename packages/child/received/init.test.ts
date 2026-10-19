@@ -9,6 +9,9 @@ vi.mock('../console', () => ({
 const mockInit = vi.fn()
 vi.mock('../init', () => ({ default: mockInit }))
 
+const mockResume = vi.fn()
+vi.mock('../methods/parent-props', () => ({ resumeParentProps: mockResume }))
+
 const mockState = {
   target: null,
   origin: null,
@@ -27,6 +30,7 @@ describe('child/received/init', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
     mockInit.mockReset()
+    mockResume.mockReset()
     mockState.target = null
     mockState.origin = null
     mockState.firstRun = true
@@ -121,5 +125,44 @@ describe('child/received/init', () => {
 
     expect(mockState.target).toBe(parentWindow)
     expect(mockInit).not.toHaveBeenCalled()
+  })
+
+  it('resumes getParentProps on a later init from the parent', async () => {
+    const { log } = await import('../console')
+    vi.mocked(log).mockClear()
+    const mod = await import('./init')
+    mockState.firstRun = false
+    mockResume.mockReturnValueOnce(true)
+
+    mod.default({ data: 'prefix:a:b', source: parentWindow, origin: 'ori' })
+
+    expect(mockResume).toHaveBeenCalled()
+    expect(mockInit).not.toHaveBeenCalled()
+    expect(log).toHaveBeenCalledWith(
+      'Already initialised, asking the parent for getParentProps() again',
+    )
+  })
+
+  it('says a later init is ignored when there is nothing to resume', async () => {
+    const { log } = await import('../console')
+    vi.mocked(log).mockClear()
+    const mod = await import('./init')
+    mockState.firstRun = false
+    mockResume.mockReturnValueOnce(false)
+
+    mod.default({ data: 'prefix:a:b', source: parentWindow, origin: 'ori' })
+
+    expect(log).toHaveBeenCalledWith(
+      'Already initialised, ignoring init message',
+    )
+  })
+
+  it('does not resume getParentProps for a later init from another window', async () => {
+    const mod = await import('./init')
+    mockState.firstRun = false
+
+    mod.default({ data: 'prefix:a:b', source: {}, origin: 'ori' })
+
+    expect(mockResume).not.toHaveBeenCalled()
   })
 })

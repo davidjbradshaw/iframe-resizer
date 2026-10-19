@@ -99,7 +99,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
       })
 
       it('getParentProps', (done) => {
-        win.parentIframe.getParentProps((pageInfo) => {
+        const unsubscribe = win.parentIframe.getParentProps((pageInfo) => {
           expect(pageInfo.iframeHeight).toBe(500)
 
           expect(pageInfo.iframeWidth).toBe(300)
@@ -123,6 +123,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           expect(pageInfo.clientHeight).toBe(645)
 
           expect(pageInfo.clientWidth).toBe(1295)
+          unsubscribe()
           setTimeout(done, 1)
         })
 

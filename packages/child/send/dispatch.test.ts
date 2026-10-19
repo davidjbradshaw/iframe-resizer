@@ -38,6 +38,7 @@ describe('child/send/dispatch', () => {
     vi.clearAllMocks()
     state.sameOrigin = false
     state.target = { postMessage: vi.fn() }
+    state.origin = undefined
     settings.mode = 0
   })
 
@@ -200,5 +201,27 @@ describe('child/send/dispatch', () => {
       expect.any(String),
       'https://single.com',
     )
+  })
+
+  test('dispatchToParent sends only to the parent origin once it is known', () => {
+    settings.targetOrigin = ['https://a.com', 'https://b.com']
+    state.origin = 'https://b.com'
+
+    dispatchToParent('m')
+
+    expect(state.target.postMessage).toHaveBeenCalledTimes(1)
+    expect(state.target.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://b.com',
+    )
+  })
+
+  test('dispatchToParent keeps the list when the parent origin is not in it', () => {
+    settings.targetOrigin = ['https://a.com', 'https://b.com']
+    state.origin = 'https://c.com'
+
+    dispatchToParent('m')
+
+    expect(state.target.postMessage).toHaveBeenCalledTimes(2)
   })
 })
