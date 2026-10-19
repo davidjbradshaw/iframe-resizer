@@ -1,4 +1,4 @@
-import { SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
+import { ENABLE, SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import settings from '../values/settings'
@@ -77,6 +77,39 @@ describe('child/received/update', () => {
     state.fromParent = {}
   })
 
+  it('re-measures when the parent re-enables autoResize', async () => {
+    settings.autoResize = false
+    state.fromParent = { autoResize: false }
+
+    updateFromParent(buildEvent('frame', { autoResize: 'true' }))
+
+    expect(settings.autoResize).toBe(true)
+    // The send is queued as a microtask, as parentIframe.autoResize(true) does
+    await Promise.resolve()
+    expect(sendSize).toHaveBeenCalledWith(
+      ENABLE,
+      'Auto Resize enabled by parent',
+    )
+  })
+
+  it('lets the parent offsets through when the axes change', () => {
+    // The page set an offset while only the height was calculated
+    settings.offsetHeight = 50
+    state.fromParent = {
+      autoResize: true,
+      calculateHeight: true,
+      calculateWidth: false,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    }
+
+    updateFromParent(buildEvent('frame', { sizeWidth: 'true' }))
+
+    expect(settings.calculateWidth).toBe(true)
+    expect(settings.offsetHeight).toBe(0)
+    expect(settings.offsetWidth).toBe(0)
+  })
+
   it('re-sends the size when the offset changes, as setOffsetSize does', () => {
     updateFromParent(buildEvent('edge1', { offsetHeight: '100' }))
 
@@ -119,7 +152,12 @@ describe('child/received/update', () => {
 
   it('keeps an offset the page set with setOffsetSize() while the parent sends the same one', () => {
     // A parent with no offsetSize sends an empty field, read as 0
-    state.fromParent = { offsetHeight: 0, offsetWidth: 0 }
+    state.fromParent = {
+      calculateHeight: true,
+      calculateWidth: false,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    }
     settings.offsetHeight = 50
 
     updateFromParent(buildEvent('edge1', { logging: 'true' }))

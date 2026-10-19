@@ -1,4 +1,8 @@
-import { SEPARATOR, SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
+import {
+  ENABLE,
+  SEPARATOR,
+  SET_OFFSET_SIZE,
+} from '@iframe-resizer/common/consts'
 
 import { log, setConsoleOptions } from '../console'
 import setupMouseEvents from '../events/mouse'
@@ -16,8 +20,30 @@ import { getData } from './utils'
 // setOffsetSize()
 const METHOD_SETTINGS = ['autoResize', 'offsetHeight', 'offsetWidth']
 
+// Options set on the page in window.iframeResizer win over the parent, and a
+// value the page set with a method is kept, unless the parent has changed its
+// own since
+function keepPageValues(
+  incoming: Record<string, any>,
+  lastSent: Record<string, any>,
+): void {
+  for (const key of state.pageSettings) delete incoming[key]
+
+  // A direction change redraws the axes, so kept offsets no longer match the
+  // page's setOffsetSize() intent; let the parent's values through
+  const axesChanged =
+    incoming.calculateHeight !== lastSent.calculateHeight ||
+    incoming.calculateWidth !== lastSent.calculateWidth
+
+  for (const key of METHOD_SETTINGS) {
+    if (axesChanged && key !== 'autoResize') continue
+    if (incoming[key] === lastSent[key]) delete incoming[key]
+  }
+}
+
 export default function updateFromParent(event: MessageEvent): void {
   const previous = {
+    autoResize: settings.autoResize,
     bodyBackground: settings.bodyBackground,
     bodyMarginStr: settings.bodyMarginStr,
     bodyPadding: settings.bodyPadding,
@@ -32,16 +58,7 @@ export default function updateFromParent(event: MessageEvent): void {
   const lastSent = state.fromParent
   state.fromParent = { ...incoming }
 
-  // Options set on the page in window.iframeResizer win over the parent, on
-  // init and on every update
-  for (const key of state.pageSettings) delete incoming[key]
-
-  // An update resends every option, so keep a value the page set with a
-  // method, unless the parent has changed its own since
-  for (const key of METHOD_SETTINGS) {
-    if (incoming[key] === lastSent[key]) delete incoming[key]
-  }
-
+  keepPageValues(incoming, lastSent)
   map2settings(incoming)
 
   setConsoleOptions({
@@ -60,6 +77,11 @@ export default function updateFromParent(event: MessageEvent): void {
 
   if (settings.mouseEvents && !previous.mouseEvents) setupMouseEvents(settings)
   if (settings.inPageLinks && !previous.inPageLinks) setupInPageLinks(true)
+
+  // Re-enabling measures at once, as parentIframe.autoResize(true) does, so
+  // content that changed while sizing was off is picked up
+  if (settings.autoResize && !previous.autoResize)
+    queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled by parent'))
 
   // The direction may have changed
   setContentWidth()
