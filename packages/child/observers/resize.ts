@@ -54,7 +54,7 @@ export default (
 ): {
   attachObserverToNonStaticElements: (nodeList: Iterable<Node>) => void
   detachObservers: (nodeList: Iterable<Node>) => void
-  observeBody: () => void
+  observeBody: () => boolean
   disconnect: () => void
 } => {
   let { body } = document
@@ -71,15 +71,16 @@ export default (
       observed,
       logRemoveResize,
     ),
-    // Follows <body> when it is replaced, as by Turbo Drive
-    observeBody: () => {
-      if (!document.body || document.body === body) return
+    // Follows <body> when it is replaced, as by Turbo Drive; says if it moved
+    observeBody: (): boolean => {
+      if (!document.body || document.body === body) return false
       observer.unobserve(body)
       observed.delete(body)
       body = document.body
       observer.observe(body)
       observed.add(body)
       info('Moved%c ResizeObserver%c to new body', HIGHLIGHT, FOREGROUND)
+      return true
     },
     disconnect: () => {
       observer.disconnect()

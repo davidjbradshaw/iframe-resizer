@@ -1,7 +1,7 @@
 import { NEW_LINE } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT, NORMAL } from 'auto-console-group'
 
-import { debug, error, info } from '../console'
+import { debug, info } from '../console'
 
 export const metaCreateDebugObserved =
   (text: string = '') =>
@@ -15,22 +15,12 @@ export const metaCreateDebugObserved =
     }
   }
 
-export const metaCreateErrorObserved =
-  (text: string = '') =>
-  (type: string) =>
-  (observed: Set<any>): void => {
-    if (observed.size > 0) {
-      error(
-        `${type}Observer ${text}:`,
-        ...Array.from(observed).flatMap((node) => [NEW_LINE, node]),
-      )
-    }
-  }
-
 export const createLogNewlyObserved = metaCreateDebugObserved('attached to')
 
+// A debug log, not an error: Turbo's data-turbo-permanent moves nodes into a
+// replaced body after its snapshot, so meeting them again is expected
 export const createWarnAlreadyObserved =
-  metaCreateErrorObserved('already attached')
+  metaCreateDebugObserved('already attached')
 
 const createLogNewlyRemoved = metaCreateDebugObserved('detached from')
 

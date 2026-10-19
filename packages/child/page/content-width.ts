@@ -25,6 +25,21 @@ function setMaxContentWidth(): void {
   log(`Set HTML & body width: %c${MAX_CONTENT} !important`, HIGHLIGHT)
 }
 
+// A replacement <body> carries its own inline width: save that in the body's
+// slot, so a later restore puts it back, and re-apply the override
+export function reapplyBodyWidth(): void {
+  if (!pageWidths) return
+
+  const { body } = document
+  pageWidths[1] = [
+    body.style.getPropertyValue(WIDTH),
+    body.style.getPropertyPriority(WIDTH),
+  ]
+  body.style.setProperty(WIDTH, MAX_CONTENT, IMPORTANT)
+
+  log(`Set body width: %c${MAX_CONTENT} !important`, HIGHLIGHT)
+}
+
 function restorePageWidths(): void {
   for (const [i, el] of elements().entries()) {
     const [value, priority] = pageWidths[i]

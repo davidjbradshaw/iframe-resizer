@@ -5,5 +5,5 @@ Each test here reproduces one finding from the October 2026 code review, numbere
 Build first (`npm run build:dev`), then run from the repo root:
 
 ```bash
-npx playwright test -c e2e/confirm/playwright.config.js e2e/confirm/29-body-replace.spec.js
+npx playwright test -c e2e/confirm/playwright.config.js e2e/confirm/35-target-origin-array.spec.js
 ```

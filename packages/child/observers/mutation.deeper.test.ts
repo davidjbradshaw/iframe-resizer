@@ -196,15 +196,28 @@ describe('child/observers/mutation deeper', () => {
       childList: true,
     })
 
-    // What Turbo Drive does on navigation
+    // What Turbo Drive does on navigation, with a record still queued on the
+    // old body when the move happens
     const newBody = document.createElement('body')
     const newChild = document.createElement('div')
     newBody.append(newChild)
+    const queuedChild = document.createElement('span')
+    main.takeRecords.mockReturnValueOnce([
+      { addedNodes: [queuedChild], removedNodes: [] },
+    ])
     document.body.replaceWith(newBody)
     bodyWatcher.cb([])
 
-    expect(main.observe).toHaveBeenLastCalledWith(newBody, expect.any(Object))
-    expect(seen).toEqual({ added: [newChild], removed: [oldChild] })
+    expect(main.takeRecords).toHaveBeenCalled()
+    expect(main.disconnect).toHaveBeenCalled()
+    expect(main.observe).toHaveBeenLastCalledWith(
+      newBody,
+      expect.objectContaining({ childList: true, subtree: true }),
+    )
+    expect(seen).toEqual({
+      added: [queuedChild, newChild],
+      removed: [oldChild],
+    })
 
     obs.disconnect()
 

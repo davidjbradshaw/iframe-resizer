@@ -23,7 +23,15 @@
         block.style.height = `${px}px`
         block.style.background = '#cde'
         block.textContent = `grown by ${px}px`
+        block.className = 'grown'
         document.body.append(block)
+      }
+
+      // A size change with no DOM mutation: only the resize observer on the
+      // body can see this
+      window.styleGrow = (px) => {
+        const block = document.querySelector('.grown')
+        block.style.height = `${parseFloat(block.style.height) + px}px`
       }
     </script>
     <script src="/js/iframe-resizer.child.js"></script>
