@@ -34,7 +34,21 @@
   </head>
   <body>
     <iframe id="legacy" scrolling="no"></iframe>
+    <!-- Room to scroll, and an anchor for in-page links to the parent page -->
+    <div style="height: 2000px"></div>
+    <div id="parent-anchor">Parent anchor</div>
+    <div style="height: 2000px"></div>
     <script>
+      // What the child sends, for the API tests
+      window.received = []
+      window.resized = 0
+      window.mouse = []
+      const onMessage = ({ message }) => window.received.push(message)
+      const onResized = () => {
+        window.resized += 1
+      }
+      const onMouse = (type) => () => window.mouse.push(type)
+
       // A parent before v5 sends no license, so the child page sets it
       const childQuery = new URLSearchParams()
       if (window.childVersion) childQuery.set('child', window.childVersion)
@@ -44,18 +58,52 @@
       document.getElementById('legacy').src =
         `child/frame.legacy.html?${childQuery}`
 
-      // Each release's own way of binding an iframe
+      // Each release's own way of binding an iframe, with its callback names
+      const mouse = {
+        onMouseEnter: onMouse('enter'),
+        onMouseLeave: onMouse('leave'),
+      }
       switch (window.parentVersion) {
         case 'v1':
           window.jQuery('#legacy').iFrameResize({})
           break
+
         case 'v2':
-        case 'v3':
-        case 'v4':
-          window.iFrameResize({}, '#legacy')
+          window.iFrameResize(
+            { messageCallback: onMessage, resizedCallback: onResized },
+            '#legacy',
+          )
           break
+
+        case 'v3':
+          window.iFrameResize(
+            {
+              inPageLinks: true,
+              messageCallback: onMessage,
+              resizedCallback: onResized,
+            },
+            '#legacy',
+          )
+          break
+
+        case 'v4':
+          window.iFrameResize(
+            { inPageLinks: true, onMessage, onResized, ...mouse },
+            '#legacy',
+          )
+          break
+
         default:
-          window.iframeResize({ license: 'GPLv3' }, '#legacy')
+          window.iframeResize(
+            {
+              license: 'GPLv3',
+              inPageLinks: true,
+              onMessage,
+              onResized,
+              ...mouse,
+            },
+            '#legacy',
+          )
       }
     </script>
   </body>
