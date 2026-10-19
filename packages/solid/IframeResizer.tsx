@@ -162,14 +162,15 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   // and callback presence only; the options are then built untracked so a
   // new callback identity does not re-run it.
   let isFirstUpdate = true
-  // Reading the id tracks it, so a changed id re-binds and core can report
-  // that a bound iframe cannot change its id
-  const trackBindId = (props: { id?: string }): string | undefined => props.id
 
   createEffect(() => {
     pickWireOptions(local)
     callbackPresence()
-    trackBindId(iframeProps)
+
+    // Reading the id tracks it, so a changed id re-binds and core can report
+    // that a bound iframe cannot change its id
+    if (iframeProps.id !== undefined)
+      consoleGroup.label(`solid(${iframeProps.id})`)
 
     if (isFirstUpdate) {
       isFirstUpdate = false
