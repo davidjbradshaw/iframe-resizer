@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Confirm 36 child</title>
+    <title>iframe-resizer getParentProps load child</title>
     <script>
       window.parentInfoCount = 0
       window.propsSubscribed = false
@@ -30,6 +30,6 @@
   <body>
     <p>Child content</p>
     <!-- The test intercepts this request and holds it to delay the load event -->
-    <img src="/e2e/fixtures/confirm/36-slow-image.png" alt="" width="10" height="10" />
+    <img src="slow-image.png" alt="" width="10" height="10" />
   </body>
 </html>

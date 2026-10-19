@@ -60,6 +60,34 @@ describe('child/events/ready', () => {
     window.iframeResizer = {}
   })
 
+  test('posts only to the parent origin the browser reports', async () => {
+    vi.resetModules()
+    const state = (await import('../values/state')).default
+    state.firstRun = true
+
+    window.iframeResizer = { targetOrigin: ['https://a.com', 'https://b.com'] }
+    Object.defineProperty(window.location, 'ancestorOrigins', {
+      configurable: true,
+      value: ['https://b.com'],
+    })
+
+    const postMessage = vi
+      .spyOn(window, 'postMessage')
+      .mockImplementation(() => {})
+
+    const { default: ready } = await import('./ready')
+    ready()
+
+    expect(postMessage).toHaveBeenCalledTimes(1)
+    expect(postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://b.com',
+    )
+
+    Reflect.deleteProperty(window.location, 'ancestorOrigins')
+    window.iframeResizer = {}
+  })
+
   test('posts CHILD_READY_MESSAGE to both parent and top when they differ', async () => {
     vi.resetModules()
     const state = (await import('../values/state')).default
@@ -79,5 +107,43 @@ describe('child/events/ready', () => {
 
     expect(parent.postMessage).toHaveBeenCalledTimes(1)
     expect(topPostMessage).toHaveBeenCalledTimes(1)
+  })
+
+  test('posts to the parent and top each at their own origin', async () => {
+    vi.resetModules()
+    const state = (await import('../values/state')).default
+    state.firstRun = true
+
+    // The page two iframes down: ancestorOrigins lists parent first, top last
+    window.iframeResizer = { targetOrigin: ['https://a.com', 'https://b.com'] }
+    Object.defineProperty(window.location, 'ancestorOrigins', {
+      configurable: true,
+      value: ['https://a.com', 'https://b.com'],
+    })
+    const parent = { postMessage: vi.fn() }
+    Object.defineProperty(window, 'parent', {
+      configurable: true,
+      value: parent,
+    })
+    const topPostMessage = vi
+      .spyOn(window, 'postMessage')
+      .mockImplementation(() => {})
+
+    const { default: ready } = await import('./ready')
+    ready()
+
+    expect(parent.postMessage).toHaveBeenCalledTimes(1)
+    expect(parent.postMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://a.com',
+    )
+    expect(topPostMessage).toHaveBeenCalledTimes(1)
+    expect(topPostMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      'https://b.com',
+    )
+
+    Reflect.deleteProperty(window.location, 'ancestorOrigins')
+    window.iframeResizer = {}
   })
 })
