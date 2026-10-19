@@ -14,6 +14,20 @@ describe('child/utils/narrow-origins', () => {
     expect(narrowOrigins(LIST, 'https://c.com')).toEqual(LIST)
   })
 
+  test('matches an entry written as a URL', () => {
+    const urls = ['https://a.com/', 'https://B.com:443/path']
+    expect(narrowOrigins(urls, 'https://b.com')).toEqual([
+      'https://B.com:443/path',
+    ])
+  })
+
+  test('does not treat * as a match', () => {
+    expect(narrowOrigins(['*', 'https://b.com'], 'https://b.com')).toEqual([
+      'https://b.com',
+    ])
+    expect(narrowOrigins(['*'], 'https://b.com')).toEqual(['*'])
+  })
+
   test('wraps a single origin', () => {
     expect(narrowOrigins('*', 'https://b.com')).toEqual(['*'])
   })
