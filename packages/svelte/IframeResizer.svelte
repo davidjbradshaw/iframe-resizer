@@ -125,7 +125,7 @@
   // A style in the spread would be re-written wholesale on change, wiping the
   // size core set, so it is split out and applied keeping the size
   $: ({ style: styleAttr, ...attrs } = $$restProps)
-  $: if (iframe && styleAttr !== undefined) setStyleKeepingSize(iframe, styleAttr)
+  $: if (iframe) setStyleKeepingSize(iframe, styleAttr)
 
   onDestroy(() => {
     resizer?.disconnect()
