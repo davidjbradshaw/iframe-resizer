@@ -3,7 +3,15 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+  import {
+    computed,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    toRaw,
+    useAttrs,
+    watch,
+  } from 'vue'
   import type { PropType } from 'vue'
   import connectResizer from '@iframe-resizer/core'
   import type {
@@ -123,8 +131,11 @@
 
   // Re-bind when a prop's value changes; later calls take core's update
   // path. Compare a key, as an array or object prop can be a new object
-  // with the same value each time the parent renders
-  const propsKey = computed(() => JSON.stringify(props))
+  // with the same value each time the parent renders. The id travels in
+  // $attrs: a changed id re-binds, so core can report that a bound iframe
+  // cannot change its id
+  const attrs = useAttrs()
+  const propsKey = computed(() => JSON.stringify([attrs.id, props]))
 
   watch(propsKey, () => {
     const iframe = iframeRef.value

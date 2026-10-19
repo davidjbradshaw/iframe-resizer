@@ -510,6 +510,19 @@ describe('Angular IframeResizerDirective', () => {
     )
   })
 
+  test('passes an id change to the iframe and re-binds', async () => {
+    const calls = await mockConnect()
+
+    directive.ngAfterViewInit()
+    expect(calls).toHaveLength(1)
+
+    directive.id = 'renamed'
+    directive.ngOnChanges({ id: {} } as any)
+
+    expect(mockElementRef.nativeElement.id).toBe('renamed')
+    expect(calls).toHaveLength(2)
+  })
+
   test('connectResizer runs outside the Angular zone', async () => {
     const calls = await mockConnect()
 

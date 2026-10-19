@@ -99,6 +99,9 @@
   let lastOptionsKey: string | undefined
   $: {
     const optionsKey = JSON.stringify([
+      // A changed id re-binds, so core can report that a bound iframe
+      // cannot change its id
+      $$restProps.id,
       license,
       bodyBackground,
       bodyMargin,

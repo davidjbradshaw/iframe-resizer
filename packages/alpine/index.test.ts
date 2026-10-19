@@ -130,6 +130,30 @@ describe('Alpine IframeResizer plugin', () => {
     expect(connectResizer).toHaveBeenCalled()
   })
 
+  test('passes an id change to core, so it can report the error', async () => {
+    const mockAlpine = createMockAlpine()
+    IframeResizer(mockAlpine as any)
+
+    const callback = mockAlpine.getCallback()!
+    const ctx = createMockContext({ license: 'TEST' })
+
+    callback(mockIframe, { expression: 'options' }, ctx)
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    mockIframe.id = 'renamed'
+    // MutationObserver callbacks run as a microtask
+    await Promise.resolve()
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+
+    // The observer goes with the directive
+    ctx.runCleanup()
+    mockIframe.id = 'again'
+    await Promise.resolve()
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+  })
+
   test('directive calls disconnect on cleanup', () => {
     const mockAlpine = createMockAlpine()
     IframeResizer(mockAlpine as any)
