@@ -42,7 +42,7 @@ describe('core/observers/iframe', () => {
       'removed',
       expect.stringContaining('disconnect()'),
     )
-    expect(disconnect).toHaveBeenCalledWith(iframe)
+    expect(disconnect).toHaveBeenCalledWith(iframe, 'removed')
   })
 
   test('lets the methods go with the disconnect, so a later close() throws', async () => {
@@ -57,6 +57,17 @@ describe('core/observers/iframe', () => {
     expect(iframe.iframeResizer).toBeUndefined()
   })
 
+  test('disconnects it under the id it was bound with', async () => {
+    const iframe = bind('bound')
+    // The page renamed the element after binding, so its own id is no longer
+    // the one core keeps its settings under
+    iframe.id = 'renamed'
+    iframe.remove()
+    await afterMutations()
+
+    expect(disconnect).toHaveBeenCalledWith(iframe, 'bound')
+  })
+
   test('disconnects an iframe removed with the element around it', async () => {
     const container = document.createElement('div')
     document.body.append(container)
@@ -64,7 +75,7 @@ describe('core/observers/iframe', () => {
     container.remove()
     await afterMutations()
 
-    expect(disconnect).toHaveBeenCalledWith(iframe)
+    expect(disconnect).toHaveBeenCalledWith(iframe, 'nested')
   })
 
   test('leaves an iframe moved within the page alone', async () => {

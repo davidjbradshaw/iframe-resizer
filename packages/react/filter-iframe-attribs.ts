@@ -5,6 +5,7 @@ export default ({
   bodyPadding,
   checkOrigin,
   direction,
+  disconnectOnRemove,
   inPageLinks,
   log,
   logExpand,

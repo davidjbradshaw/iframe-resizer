@@ -5,8 +5,11 @@ import { event, log } from '../console'
 import type { IFrameComponent } from '../types'
 import settings from '../values/settings'
 
-export default function disconnect(iframe: IFrameComponent): void {
-  const { id } = iframe
+export default function disconnect(
+  iframe: IFrameComponent,
+  // The id it was bound with, for a page that has renamed the element since
+  id = iframe.id,
+): void {
   event(id, 'disconnect')
   log(id, 'Disconnected from iframe')
 
