@@ -65,13 +65,6 @@ describe('core/send/outgoing', () => {
     expect(parts).toHaveLength(25)
   })
 
-  test('takes overrides in place of the settings, for this message only', () => {
-    const parts = createOutgoingMessage('abc', { autoResize: false }).split(':')
-
-    expect(parts[6]).toBe('false') // autoResize
-    expect(createOutgoingMessage('abc').split(':')[6]).toBe('true')
-  })
-
   test('escapes the colons in the iframe id', () => {
     const parts = createOutgoingMessage(':r1:').split(':')
 
