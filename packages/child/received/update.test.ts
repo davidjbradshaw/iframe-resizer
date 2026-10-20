@@ -92,9 +92,11 @@ describe('child/received/update', () => {
     )
   })
 
-  it('lets the parent offsets through when the axes change', () => {
-    // The page set an offset while only the height was calculated
+  it("lets the parent's offset through for an axis it has just started sizing", () => {
+    // The page set an offset while only the height was calculated, so the
+    // width's offset was zeroed and the height's is the page's own
     settings.offsetHeight = 50
+    settings.offsetWidth = 0
     state.fromParent = {
       autoResize: true,
       calculateHeight: true,
@@ -106,8 +108,28 @@ describe('child/received/update', () => {
     updateFromParent(buildEvent('frame', { sizeWidth: 'true' }))
 
     expect(settings.calculateWidth).toBe(true)
-    expect(settings.offsetHeight).toBe(0)
+    // The width axis changed, so the parent's value for it goes through
     expect(settings.offsetWidth).toBe(0)
+    // The height axis did not, so the page's offset for it survives
+    expect(settings.offsetHeight).toBe(50)
+  })
+
+  it('keeps both offsets when neither axis changes', () => {
+    settings.offsetHeight = 50
+    settings.offsetWidth = 20
+    state.fromParent = {
+      autoResize: true,
+      calculateHeight: true,
+      calculateWidth: true,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    }
+
+    updateFromParent(buildEvent('frame', { sizeWidth: 'true', tolerance: '5' }))
+
+    expect(settings.tolerance).toBe(5)
+    expect(settings.offsetHeight).toBe(50)
+    expect(settings.offsetWidth).toBe(20)
   })
 
   it('re-sends the size when the offset changes, as setOffsetSize does', () => {

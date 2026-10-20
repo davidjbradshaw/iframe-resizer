@@ -21,6 +21,11 @@ The <b>${HORIZONTAL}</> direction has been renamed <b>${HORIZONTAL_BLOCK}</>, wh
 `,
   )
 
+// What autoResize is for a page that has not changed it itself: the default,
+// unless the direction turns sizing off altogether
+export const autoResizeFor = (direction: string): boolean =>
+  direction === NONE ? false : defaults.autoResize
+
 // previous is the iframe's settings before an update, if this is one
 export default function setDirection(
   id: string,
@@ -38,7 +43,7 @@ export default function setDirection(
   settings[id].autoResize =
     previous && previous.direction !== NONE
       ? previous.autoResize
-      : defaults.autoResize
+      : autoResizeFor(direction)
 
   if (direction === HORIZONTAL && !settings[id].horizontalAdvised) {
     adviseHorizontal(id)

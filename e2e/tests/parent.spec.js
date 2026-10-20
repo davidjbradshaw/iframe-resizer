@@ -108,11 +108,17 @@ test.describe('Options update', () => {
     await update()
 
     // A content change resizes the iframe only if autoResize is back on
-    await child.evaluate(async () => {
+    await child.evaluate(() => {
       document.getElementById('content').style.height = '500px'
-      await new Promise((resolve) => setTimeout(resolve, 500))
     })
+    await page.waitForTimeout(500)
     expect(await iframeHeight()).toBe(300)
+
+    // The channel is alive, so the height above was unchanged because
+    // autoResize is off, not because nothing was listening: an explicit
+    // request still gets through
+    await child.evaluate(() => window.parentIframe.resize(400))
+    await expect.poll(iframeHeight).toBe(400)
   })
 })
 

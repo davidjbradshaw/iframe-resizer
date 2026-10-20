@@ -29,14 +29,17 @@ function keepPageValues(
 ): void {
   for (const key of state.pageSettings) delete incoming[key]
 
-  // A direction change redraws the axes, so kept offsets no longer match the
-  // page's setOffsetSize() intent; let the parent's values through
-  const axesChanged =
-    incoming.calculateHeight !== lastSent.calculateHeight ||
-    incoming.calculateWidth !== lastSent.calculateWidth
+  // An axis the parent has just started or stopped sizing no longer matches
+  // the offset setOffsetSize() worked out for it, so its value goes through.
+  // The other axis, and autoResize, are kept as the page left them.
+  const released = new Set<string>()
+  if (incoming.calculateHeight !== lastSent.calculateHeight)
+    released.add('offsetHeight')
+  if (incoming.calculateWidth !== lastSent.calculateWidth)
+    released.add('offsetWidth')
 
   for (const key of METHOD_SETTINGS) {
-    if (axesChanged && key !== 'autoResize') continue
+    if (released.has(key)) continue
     if (incoming[key] === lastSent[key]) delete incoming[key]
   }
 }
