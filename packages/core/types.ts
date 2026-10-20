@@ -109,9 +109,8 @@ export interface IFrameOptions {
   direction?: IFrameDirection
   /**
    * Disconnect the iframe when it is removed from the page, with a warning to
-   * call disconnect() first. Set to false if the page removes the iframe and
-   * puts it back later. Framework components set it to false, as they
-   * disconnect when they unmount.
+   * call disconnect() first. For the framework components, which set it to
+   * false and disconnect when they unmount.
    */
   disconnectOnRemove?: boolean
   /** Custom iframe id. */

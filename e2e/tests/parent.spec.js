@@ -355,8 +355,10 @@ test.describe('Parent iframe observer', () => {
     await expect.poll(() => seen.length).toBe(1)
     expect(seen[0]).toContain('disconnect()')
 
-    // The page's own disconnect() still works; the shared fixture fails on errors
-    await page.evaluate(() => window.removedIframe.iframeResizer.disconnect())
+    // The methods go with the disconnect, so a later close() throws
+    expect(
+      await page.evaluate(() => 'iframeResizer' in window.removedIframe),
+    ).toBe(false)
 
     // Put back and bound again, it connects afresh
     await page.evaluate(() => {

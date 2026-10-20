@@ -34,9 +34,7 @@ it('throws TypeError when options is not an object', async () => {
 it('runs update flow and returns existing api when already setup', async () => {
   const { default: connectResizer } = await import('./index')
   const updateMod = await import('./setup/update')
-  const settings = (await import('./values/settings')).default
   const iframe = { iframeResizer: { api: true } }
-  settings.abc = { iframe }
   const options = { y: 2 }
   const fn = connectResizer(options)
   const api = fn(iframe)
@@ -52,25 +50,10 @@ it('reports a bound iframe whose id has changed, rather than updating it', async
   vi.mocked(checkBoundId).mockImplementationOnce(() => {
     throw new ReferenceError('changed')
   })
-  const settings = (await import('./values/settings')).default
   const iframe = { iframeResizer: { api: true } }
-  settings.abc = { iframe }
 
   expect(() => connectResizer({})(iframe)).toThrow(ReferenceError)
   expect(checkBoundId).toHaveBeenCalledWith(iframe)
-  expect(updateMod.default).not.toHaveBeenCalled()
-})
-
-it('sets up afresh an iframe that kept its methods after being disconnected', async () => {
-  const { default: connectResizer } = await import('./index')
-  const setupMod = await import('./setup')
-  const updateMod = await import('./setup/update')
-  // The iframe observer leaves the methods on an iframe it disconnects
-  const iframe = { iframeResizer: { api: true } }
-
-  connectResizer({})(iframe)
-
-  expect(setupMod.default).toHaveBeenCalled()
   expect(updateMod.default).not.toHaveBeenCalled()
 })
 
