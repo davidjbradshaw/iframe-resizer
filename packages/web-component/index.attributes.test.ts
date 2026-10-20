@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mockConnect = vi.fn(() => ({ disconnect: vi.fn() }))
+// The id on each element core was handed: core reads the id from the
+// element, not from the options, so this is what it actually sees
+const boundIds: (string | undefined)[] = []
+
+const mockConnect = vi.fn((iframe?: any) => {
+  boundIds.push(iframe?.id)
+  return { disconnect: vi.fn() }
+})
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn(() => mockConnect),
@@ -78,6 +85,9 @@ describe('web-component attributes set after connecting', () => {
     expect(iframe.id).toBe('second')
     expect(mockConnect).toHaveBeenCalledTimes(2)
     expect(mockConnect).toHaveBeenLastCalledWith(iframe)
+    // The mirror writes the id before re-binding, so the element core is
+    // given already carries the new id
+    expect(boundIds.at(-1)).toBe('second')
   })
 
   it('stops passing attributes on once disconnected', async () => {
