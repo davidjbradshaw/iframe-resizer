@@ -8,6 +8,7 @@ vi.mock('../values/settings', () => ({
 const { log } = await import('../console')
 const settings = (await import('../values/settings')).default
 const setContentWidth = (await import('./content-width')).default
+const { reapplyBodyWidth } = await import('./content-width')
 
 const widths = () =>
   [document.documentElement, document.body].map((el) => [
@@ -74,6 +75,50 @@ describe('child/page/content-width', () => {
       ['', ''],
       ['600px', ''],
     ])
+  })
+
+  describe('reapplyBodyWidth, for a replaced body', () => {
+    test('overrides the new body, and restores its own width later', () => {
+      update(true, true)
+      expect(widths()).toEqual(MAX_CONTENT)
+
+      // As a fresh body (Turbo Drive) arrives, carrying its own width
+      document.body.style.setProperty('width', '480px')
+      reapplyBodyWidth()
+
+      expect(widths()).toEqual(MAX_CONTENT)
+
+      // The restore puts back the new body's width, not the old body's
+      update(false, false)
+      expect(widths()).toEqual([
+        ['', ''],
+        ['480px', ''],
+      ])
+    })
+
+    test('restores no width when the new body had none', () => {
+      document.body.style.setProperty('width', '600px')
+      update(true, true)
+
+      document.body.style.removeProperty('width')
+      reapplyBodyWidth()
+      expect(widths()).toEqual(MAX_CONTENT)
+
+      update(false, false)
+      expect(widths()).toEqual(UNTOUCHED)
+    })
+
+    test('does nothing when the width is not being overridden', () => {
+      document.body.style.setProperty('width', '480px')
+
+      reapplyBodyWidth()
+
+      expect(widths()).toEqual([
+        ['', ''],
+        ['480px', ''],
+      ])
+      expect(log).not.toHaveBeenCalled()
+    })
   })
 
   test('follows the parent changing its mind', () => {
