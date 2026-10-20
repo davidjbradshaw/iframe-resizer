@@ -11,6 +11,11 @@ const getBoolean = castDefined(strBool)
 const getNumber = castDefined(Number)
 const getText = castDefined(unescapeField)
 
+// An offset the parent has no value for arrives as an empty field, which is
+// not the same as one it has set to zero to clear what the page set itself
+const getOffset = (data: string | undefined): number | undefined =>
+  data === '' ? undefined : getNumber(data)
+
 export default (data: string[]): Record<string, any> => ({
   parentId: getText(data[0]),
   bodyMargin: getNumber(data[1]),
@@ -27,8 +32,8 @@ export default (data: string[]): Record<string, any> => ({
   // data[13] no longer used (was resizeFrom)
   // data[14] no longer used (was widthCalcMode)
   mouseEvents: getBoolean(data[15]),
-  offsetHeight: getNumber(data[16]),
-  offsetWidth: getNumber(data[17]),
+  offsetHeight: getOffset(data[16]),
+  offsetWidth: getOffset(data[17]),
   calculateHeight: getBoolean(data[18]),
   key: data[19],
   version: data[20],

@@ -95,6 +95,22 @@ test.describe('Options update', () => {
     expect(await iframeHeight()).toBe(450)
   })
 
+  test('clears the offset the child set when the parent sends one of zero', async ({
+    page,
+  }) => {
+    const { child, iframeHeight } = await setup(page)
+    await child.evaluate(() => window.parentIframe.setOffsetSize(50))
+    await expect.poll(iframeHeight).toBe(450)
+
+    // The parent had no offsetSize of its own, so this is the only way it has
+    // of saying it wants none
+    await page.evaluate(() =>
+      iframeResize({ license: 'GPLv3', offsetSize: 0 }, 'iframe'),
+    )
+
+    await expect.poll(iframeHeight).toBe(400)
+  })
+
   test('keeps autoResize off when the child turned it off', async ({
     page,
   }) => {
