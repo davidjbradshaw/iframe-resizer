@@ -316,7 +316,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'init')
       })
 
-      it('should handle close on already removed iframe', (done) => {
+      it('should take the methods with it when the iframe is removed', (done) => {
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
@@ -328,14 +328,10 @@ define(['iframeResizerParent'], (iframeResize) => {
             parent.removeChild(iframeEl)
 
             setTimeout(() => {
-              // Try to close already removed iframe
-              iframeEl.iframeResizer.close()
-
-              setTimeout(() => {
-                // Should not crash
-                expect(document.getElementById('method16')).toBeNull()
-                setTimeout(done, 1)
-              }, 50)
+              // Disconnected by the observer, so a later close() throws
+              expect(document.getElementById('method16')).toBeNull()
+              expect(iframeEl.iframeResizer).not.toBeDefined()
+              setTimeout(done, 1)
             }, 10)
           },
         })[0]

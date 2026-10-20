@@ -22,9 +22,13 @@ type IframeProps = React.DetailedHTMLProps<
 type ResizerCallbacks = 'onScroll' | 'onMouseEnter' | 'onMouseLeave'
 
 // onBeforeClose is overridden and onAfterClose never fires: close is
-// ignored in React, remove the component instead
+// ignored in React, remove the component instead. disconnectOnRemove is the
+// component's own, as it disconnects when it unmounts
 export type IFrameResizerProps = Omit<
   IframeProps,
   'scrolling' | ResizerCallbacks
 > &
-  Omit<IFrameOptions, 'id' | 'onBeforeClose' | 'onAfterClose'>
+  Omit<
+    IFrameOptions,
+    'id' | 'onBeforeClose' | 'onAfterClose' | 'disconnectOnRemove'
+  >
