@@ -48,8 +48,9 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     'child',
     'auto',
     fields.mouseEvents ?? 'false',
-    fields.offsetHeight ?? '0',
-    fields.offsetWidth ?? '0',
+    // A parent with no offsetSize of its own sends empty fields
+    fields.offsetHeight ?? '',
+    fields.offsetWidth ?? '',
     fields.sizeHeight ?? 'true',
     '',
     '',
@@ -173,19 +174,31 @@ describe('child/received/update', () => {
   })
 
   it('keeps an offset the page set with setOffsetSize() while the parent sends the same one', () => {
-    // A parent with no offsetSize sends an empty field, read as 0
     state.fromParent = {
       calculateHeight: true,
       calculateWidth: false,
-      offsetHeight: 0,
-      offsetWidth: 0,
+      offsetHeight: 50,
+      offsetWidth: undefined,
     }
     settings.offsetHeight = 50
 
-    updateFromParent(buildEvent('edge1', { logging: 'true' }))
+    updateFromParent(buildEvent('edge1', { offsetHeight: '50' }))
 
     expect(settings.offsetHeight).toBe(50)
     expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  it('clears the offset the page set when the parent sends one of zero', () => {
+    // An update from a parent with no offsetSize of its own, whose empty
+    // field is not the zero it sends to clear the offset the page set
+    updateFromParent(buildEvent('edge1', { logging: 'true' }))
+    settings.offsetHeight = 50
+    vi.clearAllMocks()
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '0' }))
+
+    expect(settings.offsetHeight).toBe(0)
+    expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
   })
 
   it('applies an offset the parent has changed over the one the page set', () => {
