@@ -12,14 +12,10 @@ function disconnectRemoved(id: string, iframe: IFrameComponent): void {
     id,
     `<rb>Iframe removed while connected</>
 
-The iframe (<i>${id}</>) was removed from the page without first calling <b>disconnect()</>, so <i>iframe-resizer</> has disconnected it. Call <b>iframe.iframeResizer.disconnect()</> before removing an iframe, or set the <b>disconnectOnRemove</> option to <bb>false</> if the page puts it back later.
+The iframe (<i>${id}</>) was removed from the page without first calling <b>disconnect()</>, so <i>iframe-resizer</> has disconnected it. Call <b>iframe.iframeResizer.disconnect()</> before removing an iframe.
 `,
   )
-  // Its methods stay, so a later close() or disconnect() from the page does
-  // nothing rather than throw
-  const { iframeResizer } = iframe
   disconnect(iframe)
-  iframe.iframeResizer = iframeResizer
 }
 
 // Runs after the task that changed the page, so an iframe moved within it is

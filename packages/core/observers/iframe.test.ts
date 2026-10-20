@@ -45,17 +45,16 @@ describe('core/observers/iframe', () => {
     expect(disconnect).toHaveBeenCalledWith(iframe)
   })
 
-  test('keeps the methods on the iframe, for the page to call later', async () => {
+  test('lets the methods go with the disconnect, so a later close() throws', async () => {
     const iframe = bind('later')
-    const methods = { close() {}, disconnect() {} }
-    iframe.iframeResizer = methods
+    iframe.iframeResizer = { close() {}, disconnect() {} }
     disconnect.mockImplementationOnce((el) => {
       delete el.iframeResizer
     })
     iframe.remove()
     await afterMutations()
 
-    expect(iframe.iframeResizer).toBe(methods)
+    expect(iframe.iframeResizer).toBeUndefined()
   })
 
   test('disconnects an iframe removed with the element around it', async () => {
