@@ -96,6 +96,20 @@ describe('child/page/content-width', () => {
       ])
     })
 
+    test('keeps nothing to restore from a body that carries the override', () => {
+      update(true, true)
+
+      // Turbo Drive caches a snapshot of the body this already styled, so the
+      // body that comes back has the override on it
+      document.body.style.setProperty('width', 'max-content', 'important')
+      reapplyBodyWidth()
+      expect(widths()).toEqual(MAX_CONTENT)
+
+      // Which is not a width to put back, or the body stays content-sized
+      update(false, false)
+      expect(widths()).toEqual(UNTOUCHED)
+    })
+
     test('restores no width when the new body had none', () => {
       document.body.style.setProperty('width', '600px')
       update(true, true)
