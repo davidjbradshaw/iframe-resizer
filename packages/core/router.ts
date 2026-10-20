@@ -7,7 +7,6 @@ import {
   MESSAGE,
   MOUSE_ENTER,
   MOUSE_LEAVE,
-  NONE,
   PAGE_INFO,
   PAGE_INFO_STOP,
   PARENT_INFO,
@@ -37,6 +36,7 @@ import inPageLink from './page/in-page-link'
 import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import getMessageBody from './received/message'
+import { autoResizeFor } from './setup/direction'
 import firstRun from './setup/first-run'
 import settings from './values/settings'
 
@@ -68,7 +68,7 @@ export default function routeMessage(messageData: MessageData): void {
     case INIT:
       // A new page starts auto-resizing: what the old page set with
       // parentIframe.autoResize() died with it
-      settings[id].autoResize = settings[id].direction !== NONE
+      settings[id].autoResize = autoResizeFor(settings[id].direction)
       // The version and mode are for the parent, not the onResized callback
       resizeIframe({ id, iframe, height, width, type })
       checkSameDomain(id)
