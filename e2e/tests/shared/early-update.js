@@ -5,7 +5,6 @@ import { expect, test } from './test'
 // ready, with no error. Each page makes the same change: direction to
 // horizontal-inline, which sizes the iframe to its content, and a body
 // background, which travels to the child in the same message.
-const START_WIDTH = '600px'
 const GREEN = 'rgb(0, 128, 0)'
 const READY_TIMEOUT = 10_000
 

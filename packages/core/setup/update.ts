@@ -18,7 +18,6 @@ import settings from '../values/settings'
 import setupBodyMargin from './body-margin'
 import setDirection from './direction'
 import hasMouseEvents from './has-mouse-events'
-import { setInitMessage } from './init'
 import normalizeLog from './normalize-log'
 import setScrolling from './scrolling'
 import { setTargetOrigin } from './target-origin'
@@ -51,7 +50,6 @@ function mergeOptions(
     setTargetOrigin(id)
     updateConsoleExpand(id)
     settings[id].syncTitle = checkTitle(id)
-    setInitMessage(id)
   } catch (error) {
     // An invalid option, such as direction, leaves the iframe as it was
     settings[id] = previous

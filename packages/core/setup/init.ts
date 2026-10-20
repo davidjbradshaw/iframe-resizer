@@ -5,7 +5,6 @@ import {
   LAZY,
   LOAD,
   MIN_SIZE,
-  NONE,
   ONLOAD,
   RESET_REQUIRED_METHODS,
 } from '@iframe-resizer/common/consts'
@@ -72,16 +71,6 @@ function sendInit(id: string, initChild: () => void): void {
   }
 }
 
-// The message a page in the iframe is initialised with. It is built from the
-// options at setup and again after each update, so a page loaded later, or
-// one still loading when the options change, starts with the current ones.
-export function setInitMessage(id: string): void {
-  settings[id].initMessage = createOutgoingMessage(id, {
-    // Not what an earlier page set with autoResize(), which the router keeps
-    autoResize: settings[id].direction !== NONE,
-  })
-}
-
 // We have to call trigger twice, as we can not be sure if all
 // iframes have completed loading when this code runs. The
 // event listener also catches the page changing in the iframe.
@@ -89,7 +78,7 @@ export default function init(id: string): void {
   const createInitChild = (eventType: string) => (): void => {
     if (!settings[id]) return // iframe removed before load event
 
-    const { firstRun, iframe, initMessage } = settings[id]
+    const { firstRun, iframe } = settings[id]
 
     if (firstRun) settings[id].sameOrigin = true
 
@@ -103,7 +92,6 @@ export default function init(id: string): void {
 
   const { iframe } = settings[id]
 
-  setInitMessage(id)
   settings[id].initChild = createInitChild(INIT_FROM_IFRAME)
   addLoadListener(id, iframe, createInitChild(ONLOAD))
   sendInit(id, createInitChild(INIT))
