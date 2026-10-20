@@ -68,7 +68,11 @@ function contentMutated({
   addObservers(addedNodes)
 
   // A replaced body also needs the inline styles init gave the old one
-  if (observers.resize.observeBody()) applyBodySetup()
+  if (observers.resize.observeBody()) {
+    consoleEvent('bodyReplaced')
+    applyBodySetup()
+    endAutoGroup()
+  }
 }
 
 export default function mutationObserved(mutations: {

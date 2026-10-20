@@ -25,7 +25,8 @@ async function grow(page, label) {
   let grew = true
   try {
     await page.waitForFunction(
-      (target) => parseFloat(document.querySelector('iframe').style.height) >= target,
+      (target) =>
+        parseFloat(document.querySelector('iframe').style.height) >= target,
       before + GROW,
       { timeout: WAIT },
     )
@@ -72,11 +73,13 @@ test.describe('Body element replaced in the child', () => {
 
     // The behaviour under test: content added to the new body resizes the iframe
     const after = await grow(page, 'after body swap')
-    expect(after.after, 'iframe height after adding content to the new body')
-      .toBeGreaterThanOrEqual(after.before + GROW)
+    expect(
+      after.after,
+      'iframe height after adding content to the new body',
+    ).toBeGreaterThanOrEqual(after.before + GROW)
 
-    // A style-only change has no mutation, so only the resize observer the
-    // follow moved to the new body can report it
+    // A style-only change has no mutation, so only the resize observer that
+    // moved to the new body can report it
     const before = await iframeHeight(page)
     await inChild(page, `window.styleGrow(${GROW})`)
     await page.waitForFunction(

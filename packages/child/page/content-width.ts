@@ -31,10 +31,14 @@ export function reapplyBodyWidth(): void {
   if (!pageWidths) return
 
   const { body } = document
-  pageWidths[1] = [
-    body.style.getPropertyValue(WIDTH),
-    body.style.getPropertyPriority(WIDTH),
-  ]
+  const value = body.style.getPropertyValue(WIDTH)
+  const priority = body.style.getPropertyPriority(WIDTH)
+
+  // A cached copy of a body this already styled, as Turbo Drive restores,
+  // carries the override, which is not a width the page set
+  const isOverride = value === MAX_CONTENT && priority === IMPORTANT
+
+  pageWidths[1] = isOverride ? ['', ''] : [value, priority]
   body.style.setProperty(WIDTH, MAX_CONTENT, IMPORTANT)
 
   log(`Set body width: %c${MAX_CONTENT} !important`, HIGHLIGHT)
