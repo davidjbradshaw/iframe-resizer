@@ -120,6 +120,28 @@ test.describe('Options update', () => {
     await child.evaluate(() => window.parentIframe.resize(400))
     await expect.poll(iframeHeight).toBe(400)
   })
+
+  test('starts a page that reloads auto-resizing again', async ({ page }) => {
+    const { child, iframeHeight } = await setup(page)
+    await child.evaluate(() => {
+      window.parentIframe.autoResize(false)
+      window.parentIframe.resize(300)
+    })
+    await expect.poll(iframeHeight).toBe(300)
+
+    // What the old page turned off dies with it, so the new page is sized
+    await page.evaluate(() => {
+      document.querySelector('iframe').contentWindow.location.reload()
+    })
+    await expect.poll(iframeHeight).toBe(400)
+
+    // And a content change in the new page resizes the iframe
+    const reloaded = page.frame({ url: /frame\.options-update\.html$/ })
+    await reloaded.evaluate(() => {
+      document.getElementById('content').style.height = '500px'
+    })
+    await expect.poll(iframeHeight).toBe(500)
+  })
 })
 
 test.describe('Parent (vanilla)', () => {

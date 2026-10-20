@@ -55,6 +55,9 @@ export default function routeMessage(messageData: MessageData): void {
     case BEFORE_UNLOAD:
       info(id, 'Ready state reset')
       settings[id].initialised = false
+      // What the old page set with parentIframe.autoResize() dies with it, and
+      // this is before the init message for the next page is built
+      settings[id].autoResize = autoResizeFor(settings[id].direction)
       break
 
     case CLOSE:
@@ -66,9 +69,6 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     case INIT:
-      // A new page starts auto-resizing: what the old page set with
-      // parentIframe.autoResize() died with it
-      settings[id].autoResize = autoResizeFor(settings[id].direction)
       // The version and mode are for the parent, not the onResized callback
       resizeIframe({ id, iframe, height, width, type })
       checkSameDomain(id)

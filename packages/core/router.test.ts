@@ -93,19 +93,9 @@ describe('core/router', () => {
     expect(firstRun).toHaveBeenCalledWith(id, 0)
   })
 
-  test('INIT starts the new page auto-resizing again', () => {
-    // As stored when the old page called parentIframe.autoResize(false)
+  test('INIT leaves the page in the iframe to say if it is auto-resizing', () => {
     settings[id].autoResize = false
     settings[id].direction = 'vertical'
-
-    routeMessage({ ...base, type: INIT })
-
-    expect(settings[id].autoResize).toBe(true)
-  })
-
-  test('INIT keeps auto-resizing off for direction none', () => {
-    settings[id].autoResize = false
-    settings[id].direction = 'none'
 
     routeMessage({ ...base, type: INIT })
 
@@ -126,6 +116,25 @@ describe('core/router', () => {
 
     expect(info).toHaveBeenCalled()
     expect(settings[id].initialised).toBe(false)
+  })
+
+  test('BEFORE_UNLOAD starts the next page auto-resizing again', () => {
+    // As stored when the old page called parentIframe.autoResize(false)
+    settings[id].autoResize = false
+    settings[id].direction = 'vertical'
+
+    routeMessage({ ...base, type: BEFORE_UNLOAD })
+
+    expect(settings[id].autoResize).toBe(true)
+  })
+
+  test('BEFORE_UNLOAD keeps auto-resizing off for direction none', () => {
+    settings[id].autoResize = false
+    settings[id].direction = 'none'
+
+    routeMessage({ ...base, type: BEFORE_UNLOAD })
+
+    expect(settings[id].autoResize).toBe(false)
   })
 
   test('CLOSE and RESET dispatch to methods', () => {
