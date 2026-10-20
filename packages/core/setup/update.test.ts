@@ -14,7 +14,6 @@ vi.mock('../console', () => ({
   updateConsoleExpand: vi.fn(),
 }))
 vi.mock('./target-origin', () => ({ setTargetOrigin: vi.fn() }))
-vi.mock('./init', () => ({ setInitMessage: vi.fn() }))
 vi.mock('./scrolling', () => ({ default: vi.fn() }))
 vi.mock('../send/offset', () => ({ default: vi.fn() }))
 // The real checkOptions, so the tests keep its contract: an option passed as
@@ -39,7 +38,6 @@ const meetsMinChildVersion = (await import('../checks/min-child-version'))
   .default
 const setScrolling = (await import('./scrolling')).default
 const setOffsetSize = (await import('../send/offset')).default
-const { setInitMessage } = await import('./init')
 const { advise, updateConsoleExpand } = await import('../console')
 const settings = (await import('../values/settings')).default
 const { setMode } = await import('@iframe-resizer/common')
@@ -84,8 +82,6 @@ describe('core/setup/update', () => {
         updatePending: true,
       })
       expect(setScrolling).toHaveBeenCalledWith(iframe)
-      // The init message now carries the new values, should it go out later
-      expect(setInitMessage).toHaveBeenCalledWith('edge1')
       // Nothing is sent, and the child's version cannot be checked yet
       expect(trigger).not.toHaveBeenCalled()
       expect(meetsMinChildVersion).not.toHaveBeenCalled()
@@ -115,7 +111,6 @@ describe('core/setup/update', () => {
       })
       expect(settings.edge1.tolerance).toBeUndefined()
       expect(settings.edge1.updatePending).toBeUndefined()
-      expect(setInitMessage).not.toHaveBeenCalled()
     })
 
     it('queues an update made while the child page navigates', () => {
@@ -248,8 +243,6 @@ describe('core/setup/update', () => {
       'edge1',
     )
     expect(settings.edge1.updatePending).toBeUndefined()
-    // A page loaded in the iframe later is initialised with the new values
-    expect(setInitMessage).toHaveBeenCalledWith('edge1')
   })
 
   it('re-applies side-effect setup steps', () => {

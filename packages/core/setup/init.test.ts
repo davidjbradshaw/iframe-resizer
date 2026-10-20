@@ -16,9 +16,8 @@ const resetIframe = (await import('../methods/reset')).default
 const createOutgoingMessage = (await import('../send/outgoing')).default
 const warnOnNoResponse = (await import('../send/timeout')).default
 const trigger = (await import('../send/trigger')).default
-const createOutgoingMessage = (await import('../send/outgoing')).default
 const settings = (await import('../values/settings')).default
-const { default: init, setInitMessage } = await import('./init')
+const init = (await import('./init')).default
 const { INIT, INIT_FROM_IFRAME, ONLOAD } =
   await import('@iframe-resizer/common/consts')
 
@@ -38,50 +37,20 @@ describe('core/setup/init', () => {
     expect(info).toHaveBeenCalled()
   })
 
-  test('sends the init message built from the settings at setup', () => {
-    settings.if11 = {
-      iframe: { isConnected: true, loading: 'eager', src: 'x' },
-      firstRun: true,
-    }
+  test('builds the init message afresh for every init', () => {
+    const iframe = { isConnected: true, loading: 'eager', src: 'x' }
+    settings.if11 = { iframe, firstRun: true }
     init('if11')
     vi.runAllTimers()
 
-    expect(createOutgoingMessage).toHaveBeenCalledWith('if11', {
-      autoResize: true,
-    })
     expect(trigger).toHaveBeenCalledWith(INIT, 'msg', 'if11')
-  })
 
-  test('starts a new page auto-resizing, whatever an earlier page set with autoResize()', () => {
-    // As the router keeps an earlier page's parentIframe.autoResize(false)
-    settings.if13 = { direction: 'vertical', autoResize: false }
-    setInitMessage('if13')
-    expect(createOutgoingMessage).toHaveBeenLastCalledWith('if13', {
-      autoResize: true,
-    })
+    // A page loading later gets the options as they are then, not as they
+    // were at setup
+    vi.mocked(createOutgoingMessage).mockReturnValueOnce('current')
+    settings.if11.initChild()
 
-    settings.if13.direction = 'none'
-    setInitMessage('if13')
-    expect(createOutgoingMessage).toHaveBeenLastCalledWith('if13', {
-      autoResize: false,
-    })
-  })
-
-  test('sends the init message as refreshed after the options changed', () => {
-    const iframe = { isConnected: true, loading: 'eager', src: 'x' }
-    settings.if12 = { iframe, firstRun: true }
-    init('if12')
-
-    // An update before the child replies rebuilds the message
-    vi.mocked(createOutgoingMessage).mockReturnValueOnce('updated')
-    setInitMessage('if12')
-    vi.runAllTimers()
-
-    expect(trigger).toHaveBeenCalledWith(INIT, 'updated', 'if12')
-
-    // And every later init, such as a page loading in the iframe, uses it
-    settings.if12.initChild()
-    expect(trigger).toHaveBeenCalledWith(INIT_FROM_IFRAME, 'updated', 'if12')
+    expect(trigger).toHaveBeenCalledWith(INIT_FROM_IFRAME, 'current', 'if11')
   })
 
   test('creates initChild for INIT and INIT_FROM_IFRAME; onload listener registered', () => {
