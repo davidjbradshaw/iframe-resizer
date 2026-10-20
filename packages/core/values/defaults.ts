@@ -2,8 +2,6 @@ import { AUTO, VERTICAL } from '@iframe-resizer/common/consts'
 
 export default Object.freeze({
   autoResize: true,
-  // What the child last reported with parentIframe.autoResize()
-  childAutoResize: true,
   bodyBackground: null,
   bodyMargin: null,
   bodyPadding: null,
