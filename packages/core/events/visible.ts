@@ -5,7 +5,7 @@ import settings from '../values/settings'
 
 const sendTriggerMsg = (eventName: string, event: string): void =>
   Object.values(settings)
-    .filter(({ autoResize, firstRun }) => autoResize && !firstRun)
+    .filter(({ childAutoResize, firstRun }) => childAutoResize && !firstRun)
     .forEach(({ iframe }) => trigger(eventName, event, iframe.id))
 
 export default function tabVisible(): void {

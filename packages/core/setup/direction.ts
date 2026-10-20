@@ -29,7 +29,7 @@ export const autoResizeFor = (direction: string): boolean =>
 // previous is the iframe's settings before an update, if this is one
 export default function setDirection(
   id: string,
-  previous?: { autoResize: boolean; direction: string },
+  previous?: { autoResize: boolean },
 ): void {
   const { direction } = settings[id]
 
@@ -38,12 +38,14 @@ export default function setDirection(
   settings[id].sizeWidth = defaults.sizeWidth
   settings[id].sizeHeight = defaults.sizeHeight
 
-  // An update keeps the child's own autoResize(), unless direction none had
-  // turned it off
-  settings[id].autoResize =
-    previous && previous.direction !== NONE
-      ? previous.autoResize
-      : autoResizeFor(direction)
+  // The parent's own setting, worked out from the options every time
+  settings[id].autoResize = autoResizeFor(direction)
+
+  // The child adopts a value the parent sends only when it has changed, and
+  // keeps its own parentIframe.autoResize() otherwise, so what the parent
+  // records of the child follows the same rule
+  if (!previous || previous.autoResize !== settings[id].autoResize)
+    settings[id].childAutoResize = settings[id].autoResize
 
   if (direction === HORIZONTAL && !settings[id].horizontalAdvised) {
     adviseHorizontal(id)
@@ -66,7 +68,6 @@ export default function setDirection(
     case NONE:
       settings[id].sizeWidth = false
       settings[id].sizeHeight = false
-      settings[id].autoResize = false
       break
 
     default:
