@@ -93,13 +93,23 @@ describe('core/router', () => {
     expect(firstRun).toHaveBeenCalledWith(id, 0)
   })
 
-  test('INIT leaves the page in the iframe to say if it is auto-resizing', () => {
-    settings[id].autoResize = false
-    settings[id].direction = 'vertical'
+  test("INIT starts the new page from the parent's own setting", () => {
+    // As recorded when the old page called parentIframe.autoResize(false)
+    settings[id].autoResize = true
+    settings[id].childAutoResize = false
 
     routeMessage({ ...base, type: INIT })
 
-    expect(settings[id].autoResize).toBe(false)
+    expect(settings[id].childAutoResize).toBe(true)
+  })
+
+  test('INIT leaves it off when the parent is not sizing', () => {
+    settings[id].autoResize = false
+    settings[id].childAutoResize = false
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(settings[id].childAutoResize).toBe(false)
   })
 
   test('updates AUTO_RESIZE from message body', async () => {
@@ -107,7 +117,9 @@ describe('core/router', () => {
     getBody.mockReturnValue('true')
     routeMessage({ ...base, type: AUTO_RESIZE })
 
-    expect(settings[id].autoResize).toBe(true)
+    // What the child reports is recorded apart from the parent's own setting
+    expect(settings[id].childAutoResize).toBe(true)
+    expect(settings[id].autoResize).toBeUndefined()
   })
 
   test('BEFORE_UNLOAD resets initialised', () => {
@@ -116,25 +128,6 @@ describe('core/router', () => {
 
     expect(info).toHaveBeenCalled()
     expect(settings[id].initialised).toBe(false)
-  })
-
-  test('BEFORE_UNLOAD starts the next page auto-resizing again', () => {
-    // As stored when the old page called parentIframe.autoResize(false)
-    settings[id].autoResize = false
-    settings[id].direction = 'vertical'
-
-    routeMessage({ ...base, type: BEFORE_UNLOAD })
-
-    expect(settings[id].autoResize).toBe(true)
-  })
-
-  test('BEFORE_UNLOAD keeps auto-resizing off for direction none', () => {
-    settings[id].autoResize = false
-    settings[id].direction = 'none'
-
-    routeMessage({ ...base, type: BEFORE_UNLOAD })
-
-    expect(settings[id].autoResize).toBe(false)
   })
 
   test('CLOSE and RESET dispatch to methods', () => {

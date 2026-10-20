@@ -154,19 +154,48 @@ describe('core/setup/update', () => {
     expect(settings.edge1.sizeHeight).toBe(false)
   })
 
-  it('keeps autoResize off when the child turned it off', () => {
+  it("keeps the child's autoResize, and its own, through an update", () => {
     vi.mocked(meetsMinChildVersion).mockReturnValueOnce(true)
-    // As the router stores the child's parentIframe.autoResize(false)
+    // As the router records the child's parentIframe.autoResize(false)
     settings.edge1 = {
       initialised: true,
       mode: 0,
       direction: 'vertical',
-      autoResize: false,
+      autoResize: true,
+      childAutoResize: false,
     }
 
     updateIframe({ id: 'edge1' } as HTMLIFrameElement, { log: true })
 
+    // The parent's own setting is unchanged, so the message carries the same
+    // value as before and the child keeps its own
+    expect(settings.edge1.autoResize).toBe(true)
+    expect(settings.edge1.childAutoResize).toBe(false)
+  })
+
+  it('expects the child to follow a change the parent makes', () => {
+    vi.mocked(meetsMinChildVersion)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+    const iframe = { id: 'edge1' } as HTMLIFrameElement
+    settings.edge1 = {
+      initialised: true,
+      mode: 0,
+      direction: 'vertical',
+      autoResize: true,
+      childAutoResize: false,
+    }
+
+    updateIframe(iframe, { direction: 'none' })
+
     expect(settings.edge1.autoResize).toBe(false)
+    expect(settings.edge1.childAutoResize).toBe(false)
+
+    updateIframe(iframe, { direction: 'vertical' })
+
+    // The parent's value changed, so the child adopts it
+    expect(settings.edge1.autoResize).toBe(true)
+    expect(settings.edge1.childAutoResize).toBe(true)
   })
 
   it('turns autoResize off for direction none, and back on after it', () => {

@@ -5,6 +5,8 @@ vi.mock('../values/settings', () => ({
   default: {
     abc: {
       autoResize: true,
+      // The child turned resizing off with parentIframe.autoResize(false)
+      childAutoResize: false,
       bodyBackground: 'url(https://cdn.example/bg.png)',
       bodyMargin: 8,
       bodyPadding: '0',
@@ -47,6 +49,8 @@ describe('core/send/outgoing', () => {
     // Verify key field positions match expected settings values
     expect(parts[2]).toBe('false') // sizeWidth
     expect(parts[3]).toBe('true') // log
+    // The parent's own setting, never what the child last reported, so an
+    // update cannot echo the child's value back at it
     expect(parts[6]).toBe('true') // autoResize
     expect(parts[7]).toBe('8') // bodyMargin
     expect(parts[8]).toBe('auto') // heightCalculationMethod

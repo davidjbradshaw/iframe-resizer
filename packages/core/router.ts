@@ -36,7 +36,6 @@ import inPageLink from './page/in-page-link'
 import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import getMessageBody from './received/message'
-import { autoResizeFor } from './setup/direction'
 import firstRun from './setup/first-run'
 import settings from './values/settings'
 
@@ -49,15 +48,12 @@ export default function routeMessage(messageData: MessageData): void {
 
   switch (type) {
     case AUTO_RESIZE:
-      settings[id].autoResize = JSON.parse(getMessageBody(id, 9))
+      settings[id].childAutoResize = JSON.parse(getMessageBody(id, 9))
       break
 
     case BEFORE_UNLOAD:
       info(id, 'Ready state reset')
       settings[id].initialised = false
-      // What the old page set with parentIframe.autoResize() dies with it, and
-      // this is before the init message for the next page is built
-      settings[id].autoResize = autoResizeFor(settings[id].direction)
       break
 
     case CLOSE:
@@ -69,6 +65,9 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     case INIT:
+      // A new page starts from the parent's own setting: what the old page
+      // set with parentIframe.autoResize() died with it
+      settings[id].childAutoResize = settings[id].autoResize
       // The version and mode are for the parent, not the onResized callback
       resizeIframe({ id, iframe, height, width, type })
       checkSameDomain(id)
