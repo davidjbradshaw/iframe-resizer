@@ -11,9 +11,9 @@
   "dependencies": {
     "@iframe-resizer/alpine": "^6.0.0-beta.14",
     "@iframe-resizer/child": "^6.0.0-beta.14",
-    "alpinejs": "^3.17.4"
+    "alpinejs": "^3.17.5"
   },
   "devDependencies": {
-    "vite": "^8.3.4"
+    "vite": "^8.3.5"
   }
 }
