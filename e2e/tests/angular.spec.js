@@ -1,8 +1,14 @@
-import { childTests, parentEventTests, parentMethodTests } from './shared'
+import {
+  childTests,
+  earlyUpdateTests,
+  parentEventTests,
+  parentMethodTests,
+} from './shared'
 import { expect, test } from './shared/test'
 import { waitForChildText, waitForResizer } from './shared/utils'
 
 const BASE = '/e2e/fixtures/angular/index.html'
+const EARLY_UPDATE = '/e2e/fixtures/angular/early-update.html'
 const ZONE = '/e2e/fixtures/angular/zone.html'
 
 // The same app, with and without zone.js
@@ -31,6 +37,7 @@ test.describe('Angular', () => {
   parentEventTests(BASE)
   parentMethodTests(BASE, { hasDisconnect: false, updateControl: true })
   childTests(BASE)
+  earlyUpdateTests(EARLY_UPDATE)
 
   for (const [name, { url, typeOfZone }] of Object.entries(APPS)) {
     test(`a bound Output updates the template (${name})`, async ({ page }) => {
