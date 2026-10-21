@@ -54,7 +54,15 @@ npm run test:e2e:debug
 ### Run a specific test file
 
 ```bash
-npx playwright test e2e/tests/parent.spec.js
+npx playwright test e2e/tests/core/parent.spec.js
+```
+
+### Run one runner's tests
+
+```bash
+npx playwright test e2e/tests/react.spec.js   # one platform
+npx playwright test e2e/tests/core            # the core suite
+npx playwright test e2e/tests/legacy          # the legacy suite
 ```
 
 ### Run tests in a specific browser
@@ -67,23 +75,20 @@ npx playwright test --project=webkit
 
 ## Test Structure
 
-Specs live in `e2e/tests/` and load pages from `e2e/fixtures/`, served from the repo root on localhost:8080.
+Specs live in `e2e/tests/` and load pages from `e2e/fixtures/`, served from the repo root on localhost:8080. They are grouped by the CI runner that owns them: one runner per platform, plus `core` and `legacy`.
 
-- **One spec per package**: `parent`, `jquery`, `web-component`, `react`, `vue`, `angular`, `svelte`, `solid`, `alpine` and `astro`. Each runs the shared suites in `e2e/tests/shared/` (`parent-events.js`, `parent-methods.js` and `child-methods.js`) against its own page. The `web-component`, `react`, `vue` and `solid` specs also run `early-update.js`, which changes options before the child is ready, against a second page. The framework pages are built from `e2e/apps/<framework>` by `build-scripts/build-e2e-examples.sh`.
-- **Behaviour specs**:
-  - `animation.spec.js` checks the iframe matches its content on every paint.
-  - `horizontal.spec.js` and `width-modes.spec.js` cover the width directions.
-  - `check-origin.spec.js` covers `checkOrigin` and lists of target origins.
-  - `v5-child.spec.js` runs the last v5 child against the current parent.
+- **One spec per platform**, at the top of `e2e/tests/`: `jquery`, `web-component`, `react`, `vue`, `angular`, `svelte`, `solid`, `alpine` and `astro`. Each runs the shared suites in `e2e/tests/shared/` (`parent-events.js`, `parent-methods.js` and `child-methods.js`) against its own page, so the same behaviour is proved through every wrapper. The `web-component`, `react`, `vue` and `solid` specs also run `early-update.js`, which changes options before the child is ready, against a second page. The platform pages are built from `e2e/apps/<platform>` by `build-scripts/build-e2e-examples.sh`.
+- **`e2e/tests/core/`**: the plain parent and child, and everything that behaves the same whichever wrapper is used, so there is nothing to gain from running it ten times. `parent.spec.js` runs the shared suites without a wrapper; the rest cover one behaviour each — the width directions (`horizontal`, `width-modes`), `checkOrigin` and target origin lists (`check-origin`, `message-source`), child measurement (`animation`, `body-background`, `body-replace`, `box-sizing`, `mutation-backlog`), and the rest of the API (`colon-id`, `in-page-links`, `middle-tier`, `send-message`, `title`, `title-observer`).
+- **`e2e/tests/legacy/`**: this release against the earlier ones, in both directions — `legacy` and `legacy-api` for the released parents and children in `e2e/fixtures/legacy`, and `v5-child` for the last v5 child against the current parent.
 
 The pages load the local builds, `js/` for browser bundles and `dist/` for the framework apps, so build first (`npm run build:dev`).
 
 ## Writing New Tests
 
-Add a `.spec.js` file to `e2e/tests/`, and its page to `e2e/fixtures/`. Import `test` and `expect` from `./shared/test`, not from `@playwright/test`. The shared `test` fails if anything is logged with `console.error`, or an uncaught error reaches the page. To expect a specific error, list it with `test.use({ allowedErrors: [/pattern/] })`.
+Add a `.spec.js` file to `e2e/tests/core/` — or to `e2e/tests/` if it is a new platform, named after it — and its page to `e2e/fixtures/`. A behaviour that a wrapper could get wrong belongs in a shared suite, so every platform runs it; one that cannot belongs in `core`. Import `test` and `expect` from `../shared/test`, not from `@playwright/test`. The shared `test` fails if anything is logged with `console.error`, or an uncaught error reaches the page. To expect a specific error, list it with `test.use({ allowedErrors: [/pattern/] })`.
 
 ```javascript
-import { expect, test } from './shared/test'
+import { expect, test } from '../shared/test'
 
 test.describe('My feature', () => {
   test('does something', async ({ page }) => {
@@ -93,7 +98,7 @@ test.describe('My feature', () => {
 })
 ```
 
-Add the spec's name to the matrix in `.github/workflows/playwright.yml` so it runs in CI.
+A spec in `core/` or `legacy/` needs no CI change, as its runner takes the whole folder. A new platform is added to the `platform` matrix in `.github/workflows/playwright.yml`.
 
 ## Configuration
 

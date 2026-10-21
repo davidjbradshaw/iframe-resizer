@@ -1,5 +1,5 @@
-import { expect, test } from './shared/test'
-import { waitForChildText, waitForResizer } from './shared/utils'
+import { expect, test } from '../shared/test'
+import { waitForChildText, waitForResizer } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/onscroll-cancel.html'
 

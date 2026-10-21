@@ -70,7 +70,7 @@ npm run test:watch                               # Watch mode
 
 **Integration tests (Karma + Jasmine):** In `spec/`. Uses RequireJS + ChromeHeadless. Tests real postMessage between parent/child.
 
-**E2E tests (Playwright):** Specs in `e2e/tests/*.spec.js`, pages in `e2e/fixtures/` (framework apps built from `e2e/apps/`). The repo is served on localhost:8080 (`npm run serve:e2e`). Tests fail on any `console.error` in the page.
+**E2E tests (Playwright):** Specs in `e2e/tests/`, grouped by CI runner: one `<platform>.spec.js` per wrapper, running the shared suites in `e2e/tests/shared/`, plus `e2e/tests/core/` for what does not vary by wrapper and `e2e/tests/legacy/` for the earlier releases. Pages in `e2e/fixtures/` (platform apps built from `e2e/apps/`). The repo is served on localhost:8080 (`npm run serve:e2e`). Tests fail on any `console.error` in the page.
 
 ### Test conventions
 - Use extensionless imports in tests

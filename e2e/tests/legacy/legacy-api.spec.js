@@ -1,4 +1,4 @@
-import { expect, test } from './shared/test'
+import { expect, test } from '../shared/test'
 
 // Each earlier release's API, used against the current parent or child: the
 // methods a page written for that release calls, some deprecated or removed

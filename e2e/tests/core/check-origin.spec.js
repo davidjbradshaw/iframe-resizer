@@ -1,4 +1,4 @@
-import { expect, test } from './shared/test'
+import { expect, test } from '../shared/test'
 
 const BASE = '/e2e/fixtures/check-origin.html'
 

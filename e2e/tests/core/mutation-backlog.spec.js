@@ -1,5 +1,5 @@
-import { expect, test } from './shared/test'
-import { waitForResizer } from './shared/utils'
+import { expect, test } from '../shared/test'
+import { waitForResizer } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/mutation-backlog.html'
 const CHILD_HOST = '127.0.0.1'

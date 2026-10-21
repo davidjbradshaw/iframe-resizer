@@ -1,5 +1,5 @@
-import { expect, test } from './shared/test'
-import { waitForResizer } from './shared/utils'
+import { expect, test } from '../shared/test'
+import { waitForResizer } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/animation.html'
 
