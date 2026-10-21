@@ -63,7 +63,12 @@
       >
       &nbsp;
       <a href="#test" class="back">Jump to iFrame anchor</a>
+      &nbsp;
       <a href="#anchorParentTest" class="back">Jump to parent anchor</a>
+      &nbsp;
+      <a href="#" class="back" id="ignore" onclick="return toggleIgnore()"
+        >Ignore the overflow: off</a
+      >
     </p>
     <p>
       This page has an absolute position element that take it out side the
@@ -89,6 +94,21 @@
         mollit anim id est laborum.
       </span>
     </div>
+
+    <script type="text/javascript">
+      // data-iframe-ignore is in the mutation observer's attributeFilter, so
+      // toggling it re-measures the page without asking for a resize
+      function toggleIgnore() {
+        const on = document
+          .getElementById('abs')
+          .toggleAttribute('data-iframe-ignore')
+
+        document.getElementById('ignore').textContent =
+          `Ignore the overflow: ${on ? 'on' : 'off'}`
+
+        return false
+      }
+    </script>
 
     <script
       type="text/javascript"
