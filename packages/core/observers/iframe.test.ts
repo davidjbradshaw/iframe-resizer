@@ -38,9 +38,15 @@ describe('core/observers/iframe', () => {
     iframe.remove()
     await afterMutations()
 
+    // Both halves of the advice: what to do instead, and what to do if the
+    // page puts the iframe back
     expect(advise).toHaveBeenCalledWith(
       'removed',
       expect.stringContaining('disconnect()'),
+    )
+    expect(advise).toHaveBeenCalledWith(
+      'removed',
+      expect.stringContaining('connected again'),
     )
     expect(disconnect).toHaveBeenCalledWith(iframe, 'removed')
   })
