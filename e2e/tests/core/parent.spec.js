@@ -1,5 +1,5 @@
-import { childTests, parentEventTests, parentMethodTests } from './shared'
-import { expect, test } from './shared/test'
+import { childTests, parentEventTests, parentMethodTests } from '../shared'
+import { expect, test } from '../shared/test'
 
 const BASE = '/e2e/fixtures/index.html'
 

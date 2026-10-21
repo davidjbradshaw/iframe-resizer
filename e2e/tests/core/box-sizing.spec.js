@@ -1,4 +1,4 @@
-import { expect, test } from './shared/test'
+import { expect, test } from '../shared/test'
 
 // A border-box iframe with a 2px border and 10px padding: 24px between its
 // size and its content on each axis

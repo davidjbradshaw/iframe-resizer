@@ -1,4 +1,4 @@
-import { expect, test } from './shared/test'
+import { expect, test } from '../shared/test'
 
 const PAGE = '/e2e/fixtures/middle-tier.html'
 const UNEXPECTED = /Unexpected message|Ignored message/

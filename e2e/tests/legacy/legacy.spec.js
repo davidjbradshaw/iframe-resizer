@@ -1,4 +1,4 @@
-import { expect, test } from './shared/test'
+import { expect, test } from '../shared/test'
 
 // The current parent with each earlier release's child, and the current
 // child with each earlier release's parent, as a site gets while it updates
