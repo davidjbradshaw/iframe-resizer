@@ -21,6 +21,23 @@
         /* border-width: 0; */
       }
 
+      #modal {
+        width: 80%;
+        border: 2px solid #999;
+        border-radius: 7px;
+        margin: 16px auto;
+        color: #555;
+        background-color: #fef6d5;
+        justify-content: center;
+        align-items: center;
+        font-family: ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, Roboto, sans-serif;
+      }
+
+      #modal iframe {
+        height: 0;
+      }
+
       .message-data {
         margin-top: 20px;
         padding: 16px;
@@ -36,6 +53,12 @@
         margin: 0;
         overflow: auto;
       }
+
+      .scroll-space {
+        height: 100vh;
+        color: #999;
+        font-size: 13px;
+      }
     </style>
     <script
       type="text/javascript"
@@ -48,16 +71,39 @@
     <h2>Automagically resizing iFrame</h2>
     <p>
       Resize window or click one of the links in the iFrame to watch it resize.
-      Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.
+      Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>, or
+      a <a name="anchorModalTest" href="#modal" onclick="openModal()">modal
+      iFrame</a>.
     </p>
+
+    <!-- A lazily loaded iframe in a dialog: it has no size until the dialog
+         opens, so this shows iframe-resizer picking it up when it does -->
+    <dialog id="modal">
+      <h2 style="margin: 0 0 8px 0">Modal</h2>
+      <iframe src="child/frame.content.html" id="modalFrame" loading="lazy"></iframe>
+      <button id="closeDialog" style="margin-top: 16px">Close</button>
+    </dialog>
+
+    <script type="text/javascript">
+      const dialog = document.getElementById('modal')
+
+      function openModal() {
+        dialog.showModal()
+      }
+
+      document.getElementById('closeDialog').addEventListener('click', () => {
+        dialog.close()
+      })
+    </script>
 
     <div id="iframeContainer" style="margin: 20px">
       <iframe
         src="child/frame.content.html"
+        id="testFrame"
         scrolling="no"
       ></iframe>
     </div>
-    
+
     <div class="message-data" id="event-display" style="display: none">
       <h3>Event Data:</h3>
       <pre id="event-data"></pre>
@@ -92,6 +138,15 @@
         inPageLinks: true,
         license: 'GPLv3',
         log: true,
+
+        bodyMargin: 8,
+        bodyPadding: '0 8px',
+        bodyBackground: '#f7f7f7',
+
+        onReady() {
+          // Callback fn when the iframe is initialised
+          showData({ type: 'ready' })
+        },
 
         onResized(messageData) {
           // Callback fn when resize is received
@@ -129,8 +184,7 @@
       })
 
       function toggle() {
-        const iframes = document.querySelectorAll('iframe')
-        const iframe = iframes[0]
+        const iframe = document.getElementById('testFrame')
 
         iframe.style.display =
           iframe.style.display === 'none' ? 'block' : 'none'
@@ -138,5 +192,9 @@
 
       document.getElementById('toggle').addEventListener('click', toggle)
     </script>
+
+    <div class="scroll-space">
+      Scroll space, so the scroll examples in the iFrame have somewhere to go.
+    </div>
   </body>
 </html>

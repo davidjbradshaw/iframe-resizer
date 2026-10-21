@@ -36,6 +36,12 @@
         margin: 0;
         overflow: auto;
       }
+
+      .scroll-space {
+        height: 100vh;
+        color: #999;
+        font-size: 13px;
+      }
     </style>
     <script
       type="text/javascript"
@@ -43,11 +49,12 @@
     ></script>
     <script
       type="text/javascript"
-      src="../../js-dist/iframe-resizer.parent.js"
+      src="../../js-dist/iframe-resizer.jquery.js"
     ></script>
   </head>
 
   <body>
+    <a href="#" id="toggle" class="toggle">Toggle iFrame</a>
     <h2>Automagically resizing iFrame</h2>
     <p>
       Resize window or click one of the links in the iFrame to watch it resize.
@@ -75,7 +82,7 @@
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iframeResize({ license: 'YOUR-LICENSE' })
+       *   $('iframe').iframeResize({ license: 'YOUR-LICENSE' })
        *
        */
 
@@ -91,7 +98,7 @@
         )
       }
 
-      const iframes = iframeResize({
+      $('iframe').iframeResize({
         inPageLinks: true,
         license: 'GPLv3',
         log: true,
@@ -120,6 +127,11 @@
           )
         },
 
+        onReady() {
+          // Callback fn when the child page is ready
+          showData({ type: 'ready' })
+        },
+
         onAfterClose(id) {
           // Callback fn when iFrame is closed
           showData({ id, type: 'close' })
@@ -130,7 +142,19 @@
           showData(messageData)
         },
       })
-      
+
+      function toggle() {
+        const iframe = document.querySelector('iframe')
+
+        iframe.style.display =
+          iframe.style.display === 'none' ? 'block' : 'none'
+      }
+
+      document.getElementById('toggle').addEventListener('click', toggle)
     </script>
+
+    <div class="scroll-space">
+      Scroll space, so the scroll examples in the iFrame have somewhere to go.
+    </div>
   </body>
 </html>
