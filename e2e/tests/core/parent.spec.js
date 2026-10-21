@@ -1,7 +1,13 @@
-import { childTests, parentEventTests, parentMethodTests } from '../shared'
+import {
+  childTests,
+  earlyUpdateTests,
+  parentEventTests,
+  parentMethodTests,
+} from '../shared'
 import { expect, test } from '../shared/test'
 
 const BASE = '/e2e/fixtures/index.html'
+const EARLY_UPDATE = '/e2e/fixtures/early-update.html'
 
 test.describe('Parent offset', () => {
   // Message format: [iFrameSizer]<id>:<height>:<width>:<type>[:<body>]
@@ -298,6 +304,7 @@ test.describe('Parent (vanilla)', () => {
   parentEventTests(BASE, { blocksClose: false })
   parentMethodTests(BASE)
   childTests(BASE)
+  earlyUpdateTests(EARLY_UPDATE)
 })
 
 test.describe('Parent: changing the id of a bound iframe', () => {

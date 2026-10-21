@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Options set before the child is ready</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>
+      Direction: <span id="direction">vertical</span>
+      Ready: <span id="status">pending</span>
+    </p>
+    <iframe
+      id="frame"
+      src="child/frame.early-update.html"
+      style="width: 600px; height: 100px"
+    ></iframe>
+
+    <script type="text/javascript">
+      // A second iframeResize() call changes the options while the child is
+      // still loading. The child page holds its script back until told to go,
+      // so the change always comes before init. ?late makes the same change
+      // after onReady instead, as a control.
+      const EARLY = {
+        direction: 'horizontal-inline',
+        bodyBackground: 'rgb(0, 128, 0)',
+      }
+      const LATE = location.search.includes('late')
+      const iframe = document.getElementById('frame')
+
+      function apply() {
+        iframeResize({ license: 'GPLv3', log: true, ...EARLY }, iframe)
+        document.getElementById('direction').textContent = EARLY.direction
+      }
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          log: true,
+          onReady() {
+            if (LATE) apply()
+            document.getElementById('status').textContent = 'ready'
+          },
+        },
+        iframe,
+      )
+
+      window.addEventListener('message', (event) => {
+        if (event.data !== 'early-update:loaded') return
+        iframe.contentWindow.postMessage('early-update:go', '*')
+      })
+
+      if (!LATE) apply()
+    </script>
+  </body>
+</html>
