@@ -9,11 +9,11 @@
     "@iframe-resizer/vue": "file:../../../dist/vue",
     "@iframe-resizer/common": "file:../../../dist/common",
     "@iframe-resizer/core": "file:../../../dist/core",
-    "vue": "^3.5.32"
+    "vue": "^3.5.44"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.6",
-    "vite": "^7.3.2"
+    "@vitejs/plugin-vue": "^6.0.10",
+    "vite": "^7.3.7"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,
