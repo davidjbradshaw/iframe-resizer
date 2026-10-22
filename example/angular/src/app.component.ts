@@ -31,7 +31,7 @@ const withoutIframe = (key: string, value: unknown): unknown =>
   imports: [IframeResizerDirective],
   template: `
     <h2>&#64;iframe-resizer/angular example: {{ title }}</h2>
-    <nav>
+    <nav id="anchorParentTest">
       <a href="index.html">One iframe</a>
       <a href="two.html">Two iframes</a>
       <a href="width-inline.html">Width (inline)</a>
