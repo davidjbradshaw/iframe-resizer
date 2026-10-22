@@ -34,7 +34,7 @@ export default defineConfig({
         '**/example/**',
         '**/example-test/**',
         '**/spec/**',
-        '**/test-js/**',
+        '**/test/js/**',
         'packages/**/*.test.*',
         'packages/**/*.d.ts',
         // Exclude type-only and thin wrapper modules

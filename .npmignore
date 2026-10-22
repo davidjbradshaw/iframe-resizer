@@ -15,7 +15,7 @@ docs
 example
 img
 test
-test-js
+test
 spec
 packages
 npm-debug.log
@@ -23,7 +23,6 @@ bower_components
 bower.json
 gruntfile.js
 karma.conf.js
-test-main.js
 package-lock.json
 coverage*
 FUNDING.md

@@ -48,7 +48,7 @@ jobs:
         path: |
           dist/
           js/
-          test-js/
+          test/js/
         retention-days: 1
 
   platform:
@@ -115,7 +115,7 @@ jobs:
       if: failure()
       with:
         name: playwright-screenshots-${{ matrix.platform }}
-        path: test-results/
+        path: test/results/
         retention-days: 30
 
   suite:
@@ -173,5 +173,5 @@ jobs:
       if: failure()
       with:
         name: playwright-screenshots-${{ matrix.suite }}
-        path: test-results/
+        path: test/results/
         retention-days: 30

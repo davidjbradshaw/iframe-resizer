@@ -43,7 +43,7 @@ npm run build:beta     # Beta build with sourcemaps
 **Output directories:**
 - `dist/` — npm-publishable packages (ESM/CJS/UMD per package)
 - `js/` — Browser IIFE bundles
-- `test-js/` — UMD builds for Karma integration tests
+- `test/js/` — UMD builds for Karma integration tests
 - `js-dist/` — Copy of js/ from the last full release, used by the public examples; only updated by `npm run publish`
 
 **Build environment flags:** `DEBUG=1`, `BETA=1`, `TEST=1`. Dev and test builds add a build number to the version (`6.0.0+build.<number>`), so a parent and child from different builds report a version mismatch.
@@ -57,7 +57,7 @@ Three test tiers:
 ```bash
 npm test              # Full suite: eslint + build + e2e + integration + unit
 npm run test:unit     # Vitest only (fast, use during development)
-npm run test:int      # Karma/Jasmine integration tests (needs test-js/ built)
+npm run test:int      # Karma/Jasmine integration tests (needs test/js/ built)
 npm run test:e2e      # Playwright e2e (needs js/ and dist/ built)
 npm run test:types    # Compile the published types in dist as a strict consumer would
 ```
