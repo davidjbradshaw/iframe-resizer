@@ -16,6 +16,7 @@ export default defineConfig({
         zone: 'zone.html',
         zoneless: 'zoneless.html',
         'early-update': 'early-update.html',
+        detach: 'detach.html',
       },
     },
   },
