@@ -1,7 +1,7 @@
 import { HEIGHT_CALC_MODE_DEFAULT } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT } from 'auto-console-group'
 
-import { debug, log } from '../console'
+import { event as consoleEvent, log } from '../console'
 import sendMessage from '../send/message'
 import { getHeight, getWidth } from '../size'
 import settings from '../values/settings'
@@ -14,12 +14,15 @@ function lockTrigger(): void {
   }
 
   state.triggerLocked = true
-  debug('Trigger event lock on')
+  log('Trigger event lock on')
 
-  // Nothing is logged as the lock comes off: it is the only thing to happen
-  // in that frame, so its line would show as an empty console group
+  // The lock coming off is all that happens in that frame, so it names its
+  // own group. Logged, not debugged: the console hides debug lines unless it
+  // is set to verbose, which would leave the group looking empty
   requestAnimationFrame(() => {
     state.triggerLocked = false
+    consoleEvent('eventLock')
+    log('Trigger event lock off')
   })
 }
 
