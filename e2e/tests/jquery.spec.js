@@ -4,7 +4,13 @@ import {
   parentEventTests,
   parentMethodTests,
 } from './shared'
-import { test } from './shared/test'
+import {
+  expectBodyBackground,
+  expectConnected,
+  GREEN,
+  watchRemovalAdvice,
+} from './shared/hide-restore'
+import { expect, test } from './shared/test'
 
 const BASE = '/e2e/fixtures/jquery.html'
 const DETACHED = '/e2e/fixtures/jquery-detached.html'
@@ -33,5 +39,34 @@ test.describe('jQuery', () => {
 
       await page.waitForFunction(() => window.readyCount === 1)
     })
+  })
+})
+
+test.describe('jQuery hide and restore', () => {
+  test('an iframe bound while detached, then moved, keeps an updated option', async ({
+    page,
+  }) => {
+    const advice = watchRemovalAdvice(page)
+    await page.goto(DETACHED)
+    await page.waitForFunction(() => window.readyCount === 1)
+
+    await page.evaluate(
+      (colour) =>
+        window
+          .jQuery('#myIframe')
+          .iframeResize({ license: 'GPLv3', bodyBackground: colour }),
+      GREEN,
+    )
+
+    // Moving reloads the page in the iframe, which connects again
+    await page.evaluate(() =>
+      window.jQuery('#myIframe').appendTo(window.jQuery('<div>').appendTo('body')),
+    )
+    await page.waitForFunction(() => window.readyCount === 2)
+
+    await expectBodyBackground(page, '#myIframe', GREEN)
+    await expectConnected(page, '#myIframe')
+    // Neither the detached bind nor the move is taken for a removal
+    expect(advice).toEqual([])
   })
 })
