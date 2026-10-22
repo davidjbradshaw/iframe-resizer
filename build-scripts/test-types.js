@@ -1,5 +1,5 @@
 // Checks the published types as a user sees them: copies the built packages
-// into a scratch project and compiles test-types/consumer.ts against them,
+// into a scratch project and compiles test/types/consumer.ts against them,
 // strictly and without skipLibCheck, under each module resolution.
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -94,7 +94,7 @@ try {
     symlinkSync(join(root, 'node_modules', dep), link)
   }
 
-  cpSync(join(root, 'test-types/consumer.ts'), join(project, 'consumer.ts'))
+  cpSync(join(root, 'test/types/consumer.ts'), join(project, 'consumer.ts'))
 
   for (const svelte of SVELTE_VERSIONS) {
     const link = join(modules, 'svelte')

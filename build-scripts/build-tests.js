@@ -12,12 +12,12 @@ const configs = [
   {
     input: 'packages/child/index.ts',
     output: {
-      file: 'test-js/iframe-resizer.child.js',
+      file: 'test/js/iframe-resizer.child.js',
       format: 'iife',
     },
     plugins: [
       typescriptChild(),
-      clear({ targets: ['test-js'] }),
+      clear({ targets: ['test/js'] }),
       resolve(),
       ...injectVersion(),
     ],
@@ -25,7 +25,7 @@ const configs = [
   {
     input: 'packages/parent/umd.ts',
     output: {
-      file: 'test-js/iframe-resizer.parent.js',
+      file: 'test/js/iframe-resizer.parent.js',
       format: 'umd',
       name: 'iframeResize',
     },
@@ -34,7 +34,7 @@ const configs = [
   {
     input: 'packages/jquery/plugin.js',
     output: {
-      file: 'test-js/iframe-resizer.jquery.js',
+      file: 'test/js/iframe-resizer.jquery.js',
       format: 'umd',
       name: 'iframeResize',
     },

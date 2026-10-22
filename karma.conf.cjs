@@ -21,10 +21,10 @@ module.exports = function (config) {
     files: [
       // jQuery must be global before the jQuery plugin loads
       'node_modules/jquery/dist/jquery.js',
-      'test-main.js',
+      'test/karma-main.js',
       'spec/lib/*.js',
       { pattern: 'js/*.js', included: false },
-      { pattern: 'test-js/*.js', included: false },
+      { pattern: 'test/js/*.js', included: false },
       { pattern: 'dist/parent/*.js', included: false },
       { pattern: 'dist/child/*.js', included: false },
       { pattern: 'dist/jquery/*.js', included: false },

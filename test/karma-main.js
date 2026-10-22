@@ -21,9 +21,9 @@ require.config({
   paths: {
     'auto-console-group': 'node_modules/auto-console-group/dist/index',
     jquery: 'node_modules/jquery/dist/jquery',
-    iframeResizerParent: 'test-js/iframe-resizer.parent',
-    iframeResizerJquery: 'test-js/iframe-resizer.jquery',
-    iframeResizerChild: 'test-js/iframe-resizer.child',
+    iframeResizerParent: 'test/js/iframe-resizer.parent',
+    iframeResizerJquery: 'test/js/iframe-resizer.jquery',
+    iframeResizerChild: 'test/js/iframe-resizer.child',
   },
 
   // dynamically load all test files

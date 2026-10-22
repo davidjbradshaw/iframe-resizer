@@ -7,7 +7,7 @@ example/react/src/message-data.jsx
 example-test/react/src/message-data.jsx
 example-test/
 spec/
-test-js/
+test/js/
 js-dist/
 packages/**/dist/
 packages/common/mode.js

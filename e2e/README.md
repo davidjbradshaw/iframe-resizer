@@ -107,13 +107,13 @@ See `playwright.config.js` in the root directory for configuration options.
 ## Debugging Failed Tests
 
 When a test fails, Playwright automatically:
-- Takes a screenshot (saved in `test-results/`)
+- Takes a screenshot (saved in `test/results/`)
 - Creates a trace (for the first retry)
 
 To view traces:
 
 ```bash
-npx playwright show-trace test-results/path-to-trace.zip
+npx playwright show-trace test/results/path-to-trace.zip
 ```
 
 ## CI Integration
