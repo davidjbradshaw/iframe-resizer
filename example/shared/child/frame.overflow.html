@@ -40,6 +40,20 @@
         margin: 5px;
       }
     </style>
+    <script>
+      window.iframeResizer = {
+        // The same effect as the attribute on #abs below, by selector instead
+        // ignoreSelector: '#abs',
+        license: 'GPLv3',
+      }
+
+      // data-iframe-ignore is in the mutation observer's attributeFilter, so
+      // toggling it re-measures the page without asking for a resize
+      function toggleIgnore() {
+        document.getElementById('abs').toggleAttribute('data-iframe-ignore')
+        return false
+      }
+    </script>
   </head>
 
   <body>
@@ -48,27 +62,7 @@
 
       <a href="frame.content.html" class="back">Back to page 1</a>
       &nbsp;
-      <a
-        href="#"
-        class="back"
-        onclick="if ('parentIframe' in window) window.parentIframe.scrollTo(0,99999);return false;"
-        >Bottom</a
-      >
-      &nbsp;
-      <a
-        href="#"
-        class="back"
-        onclick="if ('parentIframe' in window) window.parentIframe.scrollToOffset(0,0);return false;"
-        >Scroll to iFrame</a
-      >
-      &nbsp;
-      <a href="#test" class="back">Jump to iFrame anchor</a>
-      &nbsp;
-      <a href="#anchorParentTest" class="back">Jump to parent anchor</a>
-      &nbsp;
-      <a href="#" class="back" id="ignore" onclick="return toggleIgnore()"
-        >Ignore the overflow: off</a
-      >
+      <a href="#" class="back" onclick="return toggleIgnore()">Toggle ignore</a>
     </p>
     <p>
       This page has an absolute position element that take it out side the
@@ -82,7 +76,7 @@
       <span style="display: none">a</span>
     </p>
 
-    <div id="abs">
+    <div id="abs" data-iframe-ignore>
       <p>Overflowing&nbsp;text</p>
       <span style="margin: 1ex 2ex 1em">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -94,21 +88,6 @@
         mollit anim id est laborum.
       </span>
     </div>
-
-    <script type="text/javascript">
-      // data-iframe-ignore is in the mutation observer's attributeFilter, so
-      // toggling it re-measures the page without asking for a resize
-      function toggleIgnore() {
-        const on = document
-          .getElementById('abs')
-          .toggleAttribute('data-iframe-ignore')
-
-        document.getElementById('ignore').textContent =
-          `Ignore the overflow: ${on ? 'on' : 'off'}`
-
-        return false
-      }
-    </script>
 
     <script
       type="text/javascript"
