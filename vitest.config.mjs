@@ -94,17 +94,17 @@ export default defineConfig({
         },
       },
       {
-        // Compiles the Solid component for the server, as SolidStart does, and
-        // renders it in-process with the real modules
+        // The server-side tests, in node where window is undefined. Solid's
+        // component is compiled for the server, as SolidStart does
         plugins: [solid({ include: /packages\/solid\//, ssr: true })],
         resolve: {
           alias,
         },
         test: {
-          name: 'solid-ssr',
+          name: 'ssr',
           environment: 'node',
           globals: true,
-          include: ['packages/solid/**/*.ssr.test.{js,ts,jsx,tsx}'],
+          include: ['packages/**/*.ssr.test.{js,ts,jsx,tsx}'],
         },
       },
     ],

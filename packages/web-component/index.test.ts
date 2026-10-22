@@ -331,6 +331,41 @@ describe('web-component/IframeResizerElement', () => {
     expect((el as any).iframeResizer).toBe(mockResizer)
   })
 
+  it('has no iframeResizer when core does not bind the iframe', () => {
+    mockConnect.mockReturnValueOnce()
+    createElement({ license: 'GPLv3' })
+    document.body.append(el)
+
+    expect((el as any).iframeResizer).toBeNull()
+  })
+
+  it('does not rebind for an attribute set to the value it has', () => {
+    createElement({ license: 'GPLv3', tolerance: '5' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+
+    el.setAttribute('tolerance', '5')
+
+    expect(connectResizer).not.toHaveBeenCalled()
+  })
+
+  it('ignores a change to an attribute that is not an option', () => {
+    createElement({ license: 'GPLv3' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+    ;(el as any).attributeChangedCallback('title', 'a', 'b')
+
+    expect(connectResizer).not.toHaveBeenCalled()
+  })
+
+  it('leaves the element registered when the module loads again', async () => {
+    const registered = customElements.get('iframe-resizer')
+    vi.resetModules()
+    await import('./index')
+
+    expect(customElements.get('iframe-resizer')).toBe(registered)
+  })
+
   it('clears the offset when the offsetsize attribute is removed', () => {
     createElement({ license: 'GPLv3', offsetsize: '20' })
     document.body.append(el)
