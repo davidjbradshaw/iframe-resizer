@@ -145,8 +145,14 @@ describe('child/send/size', () => {
 
       endFrame()
 
-      // The frame's event is named, and not replaced by the trigger
+      // The frame's event is named, and not replaced by the trigger, and the
+      // measurement is logged rather than debugged: the console hides debug
+      // lines, which would leave the group looking empty
       expect(consoleMod.event).toHaveBeenCalledWith('deferredObserver')
+      expect(consoleMod.log).toHaveBeenCalledWith(
+        expect.stringContaining('Measuring deferred resize'),
+        expect.anything(),
+      )
       expect(consoleMod.event).not.toHaveBeenCalledWith('visibilityObserver')
       expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
         'visibilityObserver',
