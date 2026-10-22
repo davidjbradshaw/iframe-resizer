@@ -57,4 +57,15 @@ describe('core/setup/process-options', () => {
 
     expect(settings.if2.mouseEvents).toBe(false)
   })
+
+  test('numbers each binding, even of the same iframe', () => {
+    const iframe = { id: 'if3', src: 'https://c/d' }
+
+    processOptions(iframe, {})
+    const first = settings.if3.bindId
+    processOptions(iframe, { bindId: first })
+
+    expect(first).toEqual(expect.any(Number))
+    expect(settings.if3.bindId).toBeGreaterThan(first)
+  })
 })
