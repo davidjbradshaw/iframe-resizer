@@ -73,7 +73,7 @@
         div.className = 'overflow'
 
         div.appendChild(innerDiv)
-        document.body.lastChild.append(div)
+        document.body.append(div)
 
         return false
       }
@@ -128,14 +128,14 @@
       <b>Backwards compatibility test: this page loads the v1 child script</b>
     </div>
 
-    <p class="versions">
+    <div class="versions">
       Child script: <a href="frame.content.html">current child</a>
       <b>v1</b>
       <a href="frame.2.html">v2</a>
       <a href="frame.3.html">v3</a>
       <a href="frame.4.html">v4</a>
       <a href="frame.5.html">v5</a>
-    </p>
+    </div>
 
     <b>iframe</b>
     <a href="#" onclick="toggle()">Toggle content</a>
