@@ -3,7 +3,6 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import checkOverflow from '../check/overflow'
 import {
-  debug,
   endAutoGroup,
   errorBoundary,
   event as consoleEvent,
@@ -32,16 +31,13 @@ function onAnimationFrame(): void {
   sendPending = false
   rafId = null
 
-  // Nothing was deferred, so this frame only cleared the pending flag. It
-  // names no console event: a group whose one line is a debug line shows as
-  // an empty group, as the console hides those unless it is set to verbose
   if (deferred === null) return
-
-  consoleEvent('deferredObserver')
 
   const { trigger, desc, viewportResized } = deferred
   deferred = null
-  debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
+
+  consoleEvent('deferredObserver')
+  log(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
 
   // The overflow attributes are already current; reading them now means
   // overflowObserved() finds no change, so this frame is measured once
