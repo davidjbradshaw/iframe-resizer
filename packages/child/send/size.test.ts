@@ -146,7 +146,7 @@ describe('child/send/size', () => {
       endFrame()
 
       // The frame's event is named, and not replaced by the trigger
-      expect(consoleMod.event).toHaveBeenCalledWith('requestAnimationFrame')
+      expect(consoleMod.event).toHaveBeenCalledWith('deferredObserver')
       expect(consoleMod.event).not.toHaveBeenCalledWith('visibilityObserver')
       expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
         'visibilityObserver',
@@ -297,10 +297,13 @@ describe('child/send/size', () => {
 
     expect(getContentSize).toHaveBeenCalled()
     expect(dispatch).toHaveBeenCalledWith(10, 20, 'evt', undefined)
+    vi.mocked(consoleMod.event).mockClear()
     vi.runAllTimers()
 
-    expect(consoleMod.event).toHaveBeenCalledWith('requestAnimationFrame')
-    expect(consoleMod.debug).toHaveBeenCalled()
+    // Nothing was deferred, so the frame only cleared the pending flag and
+    // names no console event: a group whose one line is a debug line shows
+    // as an empty group, the console hiding those unless set to verbose
+    expect(consoleMod.event).not.toHaveBeenCalled()
   })
 
   test('does not call dispatch when getContentSize returns null', () => {

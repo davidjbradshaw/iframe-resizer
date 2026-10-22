@@ -31,12 +31,13 @@ let deferred: {
 function onAnimationFrame(): void {
   sendPending = false
   rafId = null
-  consoleEvent('requestAnimationFrame')
 
-  if (deferred === null) {
-    debug('Reset sendPending')
-    return
-  }
+  // Nothing was deferred, so this frame only cleared the pending flag. It
+  // names no console event: a group whose one line is a debug line shows as
+  // an empty group, as the console hides those unless it is set to verbose
+  if (deferred === null) return
+
+  consoleEvent('deferredObserver')
 
   const { trigger, desc, viewportResized } = deferred
   deferred = null
