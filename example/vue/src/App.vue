@@ -36,7 +36,7 @@
 
 <template>
   <h2>@iframe-resizer/vue example: {{ TITLES[example] }}</h2>
-  <nav>
+  <nav id="anchorParentTest">
     <a href="index.html">One iframe</a>
     <a href="two.html">Two iframes</a>
     <a href="width-inline.html">Width (inline)</a>
