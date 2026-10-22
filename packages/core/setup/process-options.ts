@@ -11,6 +11,10 @@ import hasMouseEvents from './has-mouse-events'
 import { setRemoteHost, setTargetOrigin } from './target-origin'
 import updateOptionNames from './update-option-names'
 
+// Numbers each binding, so a child whose page stayed loaded can tell being
+// bound again, as by React's <Activity>, from a repeat of the same init
+let bindCount = 0
+
 export default function processOptions(
   iframe: HTMLIFrameElement,
   options: Record<string, any>,
@@ -24,6 +28,7 @@ export default function processOptions(
     mouseEvents: hasMouseEvents(options),
     mode: setMode(options),
     syncTitle: checkTitle(id),
+    bindId: (bindCount += 1),
   }
 
   updateOptionNames(id)

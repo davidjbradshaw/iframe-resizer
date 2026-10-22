@@ -24,6 +24,7 @@ vi.mock('../values/settings', () => ({
       tolerance: 0,
       widthCalculationMethod: 'scroll',
       maxContentWidth: true,
+      bindId: 3,
     },
     ':r1:': {
       bodyBackground: '#fff',
@@ -61,8 +62,9 @@ describe('core/send/outgoing', () => {
     expect(parts[12]).toBe('true') // inPageLinks
     expect(parts[14]).toBe('scroll') // widthCalculationMethod
     expect(parts[23]).toBe('false') // logExpand
-    expect(parts[24]).toBe('true') // maxContentWidth, the last field
-    expect(parts).toHaveLength(25)
+    expect(parts[24]).toBe('true') // maxContentWidth
+    expect(parts[25]).toBe('3') // bindId, the last field
+    expect(parts).toHaveLength(26)
   })
 
   test('escapes the colons in the iframe id', () => {
@@ -70,6 +72,6 @@ describe('core/send/outgoing', () => {
 
     expect(parts[0]).toBe('%3Ar1%3A')
     expect(parts[7]).toBe('8') // bodyMargin, still in its field
-    expect(parts).toHaveLength(25)
+    expect(parts).toHaveLength(26)
   })
 })
