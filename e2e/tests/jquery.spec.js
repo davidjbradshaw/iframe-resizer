@@ -15,7 +15,7 @@ const OTHER_PAGE = 'http://127.0.0.1:8080/e2e/fixtures/child/frame.content.html'
 
 test.describe('jQuery', () => {
   parentEventTests(BASE, { blocksClose: false })
-  parentMethodTests(BASE)
+  parentMethodTests(BASE, { updateControl: true })
   childTests(BASE)
   earlyUpdateTests(EARLY_UPDATE)
 

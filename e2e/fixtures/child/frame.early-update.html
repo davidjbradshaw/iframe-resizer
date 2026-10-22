@@ -12,15 +12,22 @@
         },
       }
       let started = false
+      let announcing
       window.addEventListener('message', (event) => {
         if (event.data !== 'early-update:go' || started) return
         started = true
+        clearInterval(announcing)
         const script = document.createElement('script')
         script.src = '/js/iframe-resizer.child.js'
         document.head.appendChild(script)
       })
       window.addEventListener('load', () => {
-        window.parent.postMessage('early-update:loaded', '*')
+        // Keep announcing until the parent answers: a page that sets up from a
+        // deferred script, as the Alpine one does, may not be listening yet
+        const announce = () =>
+          window.parent.postMessage('early-update:loaded', '*')
+        announce()
+        announcing = setInterval(announce, 100)
       })
     </script>
     <style>
