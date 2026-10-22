@@ -28,6 +28,7 @@ export interface ChildSettings {
   targetOrigin: string | string[]
   tolerance: number
   maxContentWidth: boolean
+  bindId?: string
   widthCalcMode: string
   onBeforeResize:
     | ((

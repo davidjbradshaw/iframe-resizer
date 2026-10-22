@@ -44,7 +44,8 @@ function keepPageValues(
   }
 }
 
-export default function updateFromParent(event: MessageEvent): void {
+// Applies the options in an update or a repeat init from the parent
+export function applyFromParent(data: string[]): void {
   const previous = {
     autoResize: settings.autoResize,
     bodyBackground: settings.bodyBackground,
@@ -56,7 +57,6 @@ export default function updateFromParent(event: MessageEvent): void {
     offsetWidth: settings.offsetWidth,
   }
 
-  const data = getData(event).split(SEPARATOR)
   const incoming = readDataFromParent(data)
   const lastSent = state.fromParent
   state.fromParent = { ...incoming }
@@ -103,4 +103,8 @@ export default function updateFromParent(event: MessageEvent): void {
     'Settings updated from parent',
     (({ key, key2, ...rest }) => rest)(settings),
   )
+}
+
+export default function updateFromParent(event: MessageEvent): void {
+  applyFromParent(getData(event).split(SEPARATOR))
 }
