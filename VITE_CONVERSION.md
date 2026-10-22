@@ -48,7 +48,7 @@ Vite uses Rollup under the hood for production builds. This conversion:
 The build generates the same output structure as before:
 - **dist/**: NPM packages with multiple formats (UMD, ESM, CJS)
 - **js/**: Browser-ready IIFE bundles
-- **test-js/**: Test builds (when TEST=1)
+- **test/js/**: Test builds (when TEST=1)
 
 ## Verification
 
