@@ -44,9 +44,10 @@ async function expectChangeApplied(page) {
  * Shared early-update tests, run by every platform and by core. The page
  * changes its options before the child is ready, or after onReady with ?late.
  *
- * Astro is the exception: its component binds each iframe once, from the
- * options rendered into a data attribute, and skips any iframe already bound,
- * so an Astro page has no way to change options after the iframe is bound.
+ * Astro is the exception, by design: its component binds each iframe once,
+ * from the options rendered into a data attribute, and skips any iframe
+ * already bound. Astro builds content sites, where the options are known when
+ * the page is rendered, so there is nothing to change afterwards.
  */
 export function earlyUpdateTests(pageUrl) {
   test('options changed before the child is ready are applied once it is', async ({
