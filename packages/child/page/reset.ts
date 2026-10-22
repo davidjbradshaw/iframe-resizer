@@ -16,9 +16,10 @@ function lockTrigger(): void {
   state.triggerLocked = true
   debug('Trigger event lock on')
 
+  // Nothing is logged as the lock comes off: it is the only thing to happen
+  // in that frame, so its line would show as an empty console group
   requestAnimationFrame(() => {
     state.triggerLocked = false
-    debug('Trigger event lock off')
   })
 }
 
