@@ -224,6 +224,26 @@ describe('child/observers/mutation deeper', () => {
     expect(bodyWatcher.disconnect).toHaveBeenCalled()
   })
 
+  test('stays on the body when a change under <html> leaves it in place', () => {
+    const instances: any[] = []
+    globalThis.MutationObserver = function (cb) {
+      instances.push(this)
+      this.cb = cb
+      this.observe = vi.fn()
+      this.disconnect = vi.fn()
+      this.takeRecords = vi.fn(() => [])
+    }
+    const obs = createMutationObserver(() => {})
+    const [main, bodyWatcher] = instances
+
+    // A change to <html>'s children, such as to <head>, with the body as it was
+    bodyWatcher.cb([])
+
+    expect(main.takeRecords).not.toHaveBeenCalled()
+    expect(main.disconnect).not.toHaveBeenCalled()
+    obs.disconnect()
+  })
+
   test('skips non-element removed nodes (shouldSkip branch)', () => {
     const callback = vi.fn()
     const obs = createMutationObserver(callback)

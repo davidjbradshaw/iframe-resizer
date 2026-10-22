@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 
 import IframeResizer from './IframeResizer'
 
-// Rendered in-process by the solid-ssr vitest project, which compiles the
+// Rendered in-process by the ssr vitest project, which compiles the
 // component for the server as SolidStart does, with the real core and common
 const renderPage = (props: Record<string, unknown> = {}): string =>
   renderToString(() =>

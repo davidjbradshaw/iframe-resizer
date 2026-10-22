@@ -95,6 +95,15 @@ describe('core/observers/iframe', () => {
     expect(advise).not.toHaveBeenCalled()
   })
 
+  test('does nothing when the page only adds nodes', async () => {
+    const iframe = bind('added')
+    document.body.append(document.createElement('p'))
+    await afterMutations()
+
+    expect(disconnect).not.toHaveBeenCalled()
+    expect(iframe.isConnected).toBe(true)
+  })
+
   test('leaves an iframe alone when disconnectOnRemove is false', async () => {
     const iframe = bind('kept', { disconnectOnRemove: false })
     iframe.remove()

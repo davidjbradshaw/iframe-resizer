@@ -81,6 +81,19 @@ describe('core/monitor/common', () => {
     expect(listeners.removeEventListener).toHaveBeenCalled()
   })
 
+  test('a replaced monitor stopping again leaves the newer one in place', () => {
+    const start = mod.startInfoMonitor(vi.fn(), 'ParentInfo')
+
+    start('i1')
+    const firstStop = settings.i1.stopParentInfo
+    start('i1')
+    const secondStop = settings.i1.stopParentInfo
+
+    firstStop()
+
+    expect(settings.i1.stopParentInfo).toBe(secondStop)
+  })
+
   test('a monitor stopped before a restart does not stop again', () => {
     const start = mod.startInfoMonitor(vi.fn(), 'ParentInfo')
 
