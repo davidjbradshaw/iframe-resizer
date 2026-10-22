@@ -1,11 +1,11 @@
 ## Fixes from the code review (#1729)
 
-Ticked: merged into `dev-review`. Unticked: PR still open, or not started where no PR is given.
+Every item below is merged into `dev-review`. Two findings were closed without a change, as the fix would have cost more than the fault: a measurement that scrolls the page in the iframe back to the top (#1791) and `reset()` not applying `onBeforeResize` (#1784).
 
 ### Security
 - [x] Messages are checked against the iframe's own window, and a `'null'` origin no longer skips `checkOrigin`, so another iframe on the page can't send commands as yours (#1730)
 - [x] The child accepts `init` only once, and only from a window above it, so another window can't redirect its messages (#1730)
-- [ ] The child checks its other incoming messages against the window that initialised it (item 60)
+- [x] The child checks its other incoming messages against the window that initialised it (#1803)
 
 ### Behaviour changes
 - [x] An invalid `direction` in an options update throws before anything changes, so the previous options stay in place (#1731)
@@ -14,10 +14,13 @@ Ticked: merged into `dev-review`. Unticked: PR still open, or not started where 
 - [x] `sendMessage()` with no message throws on the sending side, instead of failing to parse on the receiving side (#1734)
 - [x] The `targetOrigin` argument of `sendMessage(message, targetOrigin)` is used, as documented (#1735)
 - [x] `onBeforeResize` must return a finite number: a string (even `'480'`), an object or `Infinity` throws a `TypeError` (#1786)
-- [ ] `parentIframe.autoResize()` with no argument returns the current state, instead of throwing (#1788)
-- [ ] When `onScroll` returns `false` for an in-page link, the URL is updated with `history.pushState()`, so `hashchange` doesn't fire (#1795)
+- [x] `parentIframe.autoResize()` with no argument returns the current state, instead of throwing (#1788)
+- [x] When `onScroll` returns `false` for an in-page link, the URL is updated with `history.pushState()`, so `hashchange` doesn't fire (#1795)
 - [x] For a border-box iframe, `onResized` reports the width with its padding and border included, as it already did for the height (#1767)
 - [x] A message sent to a bound iframe that has been removed from the page warns that it was not sent, instead of going to the discarded window (#1749)
+- [x] Changing the id of a bound iframe reports a `ReferenceError` from every framework component, instead of silently leaving the iframe bound under its old id (#1815)
+- [x] An iframe removed from the page while still connected is disconnected, with advice to call `disconnect()` first, or to connect it again if the page returns it. The new `disconnectOnRemove` option turns that off, and the framework components set it, as they disconnect when they unmount (#1818, #1822)
+- [x] `onBeforeResize` is typed with the event type it has always been called with (#1813)
 
 ### Connecting
 - [x] `direction: 'none'` completes the connection, so `onReady` fires (#1743)
@@ -33,32 +36,35 @@ Ticked: merged into `dev-review`. Unticked: PR still open, or not started where 
 - [x] A parent message whose text contains `:true:` or `:false:` is no longer dropped by the child (#1769)
 
 ### Options updates
-- [ ] An options update no longer turns `autoResize` back on, or clears an offset, that the child page set (#1801)
-- [ ] Options changed before the child is ready are applied once it connects, instead of being lost with a console error, in React, Solid, Vue and the web component (item 16)
+- [x] An options update no longer turns `autoResize` back on, or clears an offset, that the child page set (#1801)
+- [x] Options changed before the child is ready are applied once it connects, instead of being lost with a console error, in React, Solid, Vue and the web component (#1804)
+- [x] A page that reloads in the iframe is initialised with the options as they stand then, not those the iframe was bound with, so an update before a reload is not lost (#1816)
+- [x] An options update no longer tells the child to resume auto resizing after the page in it called `parentIframe.autoResize(false)`, so the two no longer disagree (#1821)
+- [x] `offsetSize: 0` in an update clears an offset the page set with `setOffsetSize()`. A parent with no offset of its own could not clear one before (#1801)
 
 ### Sizing
-- [ ] Measuring no longer scrolls the page in the iframe back to the top (#1791)
-- [ ] `parentIframe.reset()` applies `onBeforeResize`, and the size it sends sticks (#1784)
 - [x] A positive `offsetSize` is counted once after `reset()` (#1785)
 - [x] Elements marked `data-iframe-ignore` are left out of the width (#1792)
 - [x] With `direction: 'both'`, the width is no longer cut short while an element overflows the bottom (#1793)
 - [x] Mouse coordinates and scroll positions are no longer offset by a border-box iframe's padding and border (#1766)
 - [x] A border-box iframe sized by width is no longer too narrow by its side padding and border (#1767)
-- [ ] Replacing `<body>`, as Turbo Drive does, no longer stops resizing (#1753)
+- [x] Replacing `<body>`, as Turbo Drive does, no longer stops resizing (#1753)
 - [x] Mutation records no longer pile up while an offscreen cross-origin iframe is paused (#1754)
 - [x] Performance entries no longer pile up on pages using `data-iframe-size` (#1750)
 - [x] The slow-performance warning is calculated correctly (#1751)
+- [x] `parentIframe.setOffsetSize()` resizes the iframe while `autoResize(false)`, instead of storing the offset and dropping the send (#1812)
 
 ### Child page
 - [x] A title change is detected when the `<title>` element is replaced, and on SVG pages (#1752)
-- [ ] A page that is both an iframe and a host no longer warns about messages from its own iframes (#1787)
+- [x] A page that is both an iframe and a host no longer warns about messages from its own iframes (#1787)
 - [x] `getParentProps()` can be subscribed more than once, each unsubscribe cancels only its own subscription, and the parent no longer leaks a monitor (#1789)
 - [x] A `getParentProps()` subscription made before the iframe's `load` event keeps receiving updates (#1794)
 - [x] With a list of `targetOrigin`s, the child posts only to the parent's origin, so Chrome no longer logs a mismatch for every message (#1790)
+- [x] An animation frame with nothing to report no longer writes an empty group to the console (#1829)
 
 ### Parent page
-- [ ] `onScroll` returning `false` stops an in-page link from jumping to its target (#1795)
-- [ ] `scrollToOffset` from a nested page no longer makes the page jump back on the next resize (#1796)
+- [x] `onScroll` returning `false` stops an in-page link from jumping to its target (#1795)
+- [x] `scrollToOffset` from a nested page no longer makes the page jump back on the next resize (#1796)
 - [x] In Firefox and Safari, warnings keep element names such as `<html>` and `<style>` (#1797)
 
 ### React
@@ -66,22 +72,23 @@ Ticked: merged into `dev-review`. Unticked: PR still open, or not started where 
 - [x] Changing the `id` prop no longer logs an error or leaks the old listener (#1756)
 
 ### Solid
-- [ ] Server-side rendering, as in SolidStart, no longer crashes (#1798)
-- [ ] A reactive string `style` no longer resets the iframe's size (#1799)
+- [x] Server-side rendering, as in SolidStart, no longer crashes (#1798)
+- [x] A reactive string `style` no longer resets the iframe's size (#1799)
 
 ### Angular
-- [ ] Server-side rendering no longer throws `window is not defined` (#1757)
-- [ ] Core runs outside NgZone, so cross-origin messages no longer trigger extra change detection (#1728)
-- [ ] Mouse messages are sent only when `onMouseEnter` or `onMouseLeave` is bound (#1728)
-- [ ] The `onBeforeClose` output is emitted (#1758)
-- [ ] A failed first connect no longer blocks later `[options]` updates (#1759)
-- [ ] Callbacks passed in `[options]` are used, so `onScroll` can return `false` (#1761)
+- [x] Server-side rendering no longer throws `window is not defined` (#1757)
+- [x] Core runs outside NgZone, so cross-origin messages no longer trigger extra change detection (#1728)
+- [x] Mouse messages are sent only when `onMouseEnter` or `onMouseLeave` is bound (#1728)
+- [x] The `onBeforeClose` output is emitted (#1758)
+- [x] A failed first connect no longer blocks later `[options]` updates (#1759)
+- [x] Callbacks passed in `[options]` are used, so `onScroll` can return `false` (#1761)
 
 ### Vue and Svelte
 - [x] `checkOrigin`, `scrolling` and `bodyMargin` accept their documented values without "Invalid prop" warnings (#1778)
 - [x] A bare `log` attribute turns logging on (#1777)
 - [x] The prop types list only the options the components pass on (#1781)
 - [x] The Vue component no longer re-binds on every parent render when passed an array or object literal (#1779)
+- [x] In Svelte, a reactive string `style` no longer wipes the size set on the iframe (#1814)
 
 ### Web component
 - [x] A single origin in `checkorigin` works (#1736)
@@ -89,6 +96,7 @@ Ticked: merged into `dev-review`. Unticked: PR still open, or not started where 
 - [x] `el.options = undefined` is treated as no options (#1774)
 - [x] Removing an attribute keeps a value set through the `options` property (#1775)
 - [x] The `waitforload` attribute is mapped (#1773)
+- [x] A changed `style` attribute no longer wipes the size set on the inner iframe (#1814)
 
 ### Astro
 - [x] The `iframe-resizer:scroll` event can be cancelled, as with the web component (#1776)

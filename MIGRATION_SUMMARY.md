@@ -40,7 +40,7 @@ mono/
 ├── build-scripts/            # NEW: Build orchestration
 │   ├── build-all.js          # Main orchestrator
 │   ├── build-browser.js      # js/ IIFE builds
-│   └── build-tests.js        # test-js/ UMD builds
+│   └── build-tests.js        # test/js/ UMD builds
 ```
 
 ### Key Improvements
