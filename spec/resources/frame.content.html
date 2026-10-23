@@ -9,8 +9,11 @@
         float: right;
       }
     </style>
-    <!-- <script src="../../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../../test/js/iframeResizer.child.js"></script> -->
+    <!--
+      No child script runs here on purpose: the specs that use this page mock
+      the child's init so they can drive the parent directly. A page that runs
+      @iframe-resizer/child for real is frame.child.html.
+    -->
   </head>
 
   <body>
@@ -217,10 +220,6 @@
 
             case 'pageChange':
               location.href = '/base/example/frame.hover.html'
-              break
-
-            case 'nested':
-              location.href = 'frame.nested.html'
               break
 
             case 'size':

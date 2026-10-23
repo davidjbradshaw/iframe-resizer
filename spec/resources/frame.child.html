@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer real child</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #content {
+        height: 345px;
+        width: 200px;
+      }
+    </style>
+
+    <!-- Set before the child script runs, which reads it on load -->
+    <script type="text/javascript">
+      window.iframeResizer = {
+        license: 'GPLv3',
+        log: true,
+
+        onMessage: (message) => {
+          const content = document.getElementById('content')
+
+          switch (message) {
+            case 'grow':
+              content.style.height = '500px'
+              break
+
+            case 'widen':
+              content.style.width = '400px'
+              break
+
+            case 'close':
+              window.parentIframe.close()
+              break
+
+            case 'sendId':
+              window.parentIframe.sendMessage(window.parentIframe.getId())
+              break
+
+            case 'resize':
+              window.parentIframe.resize()
+              break
+
+            default:
+              console.warn(`[Test] message ${message} not recognised`)
+          }
+        },
+      }
+    </script>
+
+    <script src="/base/test/js/iframe-resizer.child.js"></script>
+  </head>
+
+  <body>
+    <div id="content"></div>
+  </body>
+</html>
