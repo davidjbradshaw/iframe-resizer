@@ -123,14 +123,10 @@ define(['iframeResizerParent'], (iframeResize) => {
             iframe.iframeResizer.sendMessage('Hello')
 
             setTimeout(() => {
-              // Should have sent message
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              const calls = iframe.contentWindow.postMessage.calls.all()
-              const hasMessage = calls.some((call) =>
-                call.args[0].includes('"Hello"'),
+              expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+                '[iFrameSizer]message:"Hello"',
+                '*',
               )
-
-              expect(hasMessage).toBe(true)
               setTimeout(done, 1)
             }, 50)
           },
@@ -152,15 +148,10 @@ define(['iframeResizerParent'], (iframeResize) => {
             iframe.iframeResizer.sendMessage({ type: 'test', data: 123 })
 
             setTimeout(() => {
-              // Should have sent JSON stringified message
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              const calls = iframe.contentWindow.postMessage.calls.all()
-              const hasMessage = calls.some(
-                (call) =>
-                  call.args[0].includes('test') && call.args[0].includes('123'),
+              expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+                '[iFrameSizer]message:{"type":"test","data":123}',
+                '*',
               )
-
-              expect(hasMessage).toBe(true)
               setTimeout(done, 1)
             }, 50)
           },
@@ -182,8 +173,10 @@ define(['iframeResizerParent'], (iframeResize) => {
             iframe.iframeResizer.sendMessage([1, 2, 3])
 
             setTimeout(() => {
-              // Should have sent message
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
+              expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+                '[iFrameSizer]message:[1,2,3]',
+                '*',
+              )
               setTimeout(done, 1)
             }, 50)
           },
@@ -205,8 +198,10 @@ define(['iframeResizerParent'], (iframeResize) => {
             iframe.iframeResizer.sendMessage(null)
 
             setTimeout(() => {
-              // Should have sent message
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
+              expect(iframe.contentWindow.postMessage).toHaveBeenCalledWith(
+                '[iFrameSizer]message:null',
+                '*',
+              )
               setTimeout(done, 1)
             }, 50)
           },
@@ -385,7 +380,10 @@ define(['iframeResizerParent'], (iframeResize) => {
               iframeEl.iframeResizer.sendMessage('after reset')
 
               setTimeout(() => {
-                expect(iframeEl.contentWindow.postMessage).toHaveBeenCalled()
+                expect(iframeEl.contentWindow.postMessage).toHaveBeenCalledWith(
+                  '[iFrameSizer]message:"after reset"',
+                  '*',
+                )
                 setTimeout(done, 1)
               }, 50)
             }, 50)

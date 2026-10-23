@@ -22,8 +22,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'invalid',
         })[0]
 
-        // Error should be logged
         expect(console.error).toHaveBeenCalled()
+        expect(String(console.error.calls.mostRecent().args)).toContain(
+          'Direction value of "invalid" is not valid',
+        )
       })
 
       it('should resize height when direction is vertical', (done) => {
@@ -138,7 +140,9 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           sizeWidth: true,
           onReady: () => {
-            expect(console.warn).toHaveBeenCalled()
+            expect(adviceGiven(console.warn)).toContain(
+              'options have been replaced with new',
+            )
             setTimeout(done, 1)
           },
         })[0]
@@ -156,7 +160,9 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           sizeHeight: true,
           onReady: () => {
-            expect(console.warn).toHaveBeenCalled()
+            expect(adviceGiven(console.warn)).toContain(
+              'options have been replaced with new',
+            )
             setTimeout(done, 1)
           },
         })[0]
@@ -175,7 +181,9 @@ define(['iframeResizerParent'], (iframeResize) => {
           sizeWidth: true,
           sizeHeight: false,
           onReady: () => {
-            expect(console.warn).toHaveBeenCalled()
+            expect(adviceGiven(console.warn)).toContain(
+              'options have been replaced with new',
+            )
             setTimeout(done, 1)
           },
         })[0]

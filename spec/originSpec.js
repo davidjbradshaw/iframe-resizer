@@ -24,21 +24,19 @@ define(['iframeResizerParent'], (iframeResize) => {
       return iframe
     }
 
-    it('sends to the iframe origin, not *, when checkOrigin is on', (done) => {
+    it('sends to the iframe origin, not *, when checkOrigin is on', async () => {
       bind('origin1')
 
-      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      const postMessage = await spyOnIframeMessages(iframe)
       window.postMessage('[iframeResizerChild]Ready', '*')
+      await delay(50)
 
-      setTimeout(() => {
-        expect(initMsgFields(postMessage))
-          .withContext('no init message was sent')
-          .toBeDefined()
+      expect(initMsgFields(postMessage))
+        .withContext('no init message was sent')
+        .toBeDefined()
 
-        expect(postMessage.calls.first().args[1]).toBe(getTarget(iframe))
-        expect(postMessage.calls.first().args[1]).not.toBe('*')
-        setTimeout(done, 1)
-      }, 50)
+      expect(postMessage.calls.first().args[1]).toBe(getTarget(iframe))
+      expect(postMessage.calls.first().args[1]).not.toBe('*')
     })
 
     it('rejects a resize from an origin outside checkOrigin', async () => {
