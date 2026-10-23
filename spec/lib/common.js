@@ -179,6 +179,28 @@ function iframeLoaded(iframe) {
   })
 }
 
+// For a real handshake, where the final size arrives over several messages
+// and the parent may momentarily reset the iframe to 1px on the way
+function waitFor(predicate, timeout = 2000) {
+  return new Promise((resolve) => {
+    if (predicate()) {
+      resolve(true)
+      return
+    }
+
+    const started = Date.now()
+    const timer = setInterval(() => {
+      if (predicate()) {
+        clearInterval(timer)
+        resolve(true)
+      } else if (Date.now() - started > timeout) {
+        clearInterval(timer)
+        resolve(false)
+      }
+    }, 20)
+  })
+}
+
 const delay = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms)
