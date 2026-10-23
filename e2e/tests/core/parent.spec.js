@@ -4,6 +4,12 @@ import {
   parentEventTests,
   parentMethodTests,
 } from '../shared'
+import {
+  expectBodyBackground,
+  expectConnected,
+  GREEN,
+  watchRemovalAdvice,
+} from '../shared/hide-restore'
 import { expect, test } from '../shared/test'
 
 const BASE = '/e2e/fixtures/index.html'
@@ -403,5 +409,81 @@ test.describe('Parent iframe observer', () => {
       ),
     ).toBe(true)
     expect(seen).toEqual([])
+  })
+})
+
+test.describe('Parent hide and restore', () => {
+  // The vanilla page binds every iframe; these tests use the first
+  const recolour = (page, extra = {}) =>
+    page.evaluate(
+      ([colour, options]) =>
+        window.iframeResize(
+          { license: 'GPLv3', bodyBackground: colour, ...options },
+          document.querySelector('iframe'),
+        ),
+      [GREEN, extra],
+    )
+
+  const waitForInit = (page) =>
+    page.waitForFunction(() => window.lastResized?.type === 'init')
+
+  test('a moved iframe keeps an option updated before the move', async ({
+    page,
+  }) => {
+    const advice = watchRemovalAdvice(page)
+    await page.goto(BASE)
+    await waitForInit(page)
+    await recolour(page)
+
+    // Moving reloads the page in the iframe, which connects again
+    await page.evaluate(() => {
+      window.lastResized = null
+      const holder = document.createElement('div')
+      holder.id = 'holder'
+      document.body.append(holder)
+      holder.append(document.querySelector('iframe'))
+    })
+    await waitForInit(page)
+
+    await expectBodyBackground(page, '#holder iframe', GREEN)
+    await expectConnected(page, '#holder iframe')
+    expect(advice).toEqual([])
+  })
+
+  test('with disconnectOnRemove off, an iframe put back later keeps an option changed while out', async ({
+    page,
+  }) => {
+    const advice = watchRemovalAdvice(page)
+    await page.goto(BASE)
+    await waitForInit(page)
+    await page.evaluate(() =>
+      window.iframeResize(
+        { license: 'GPLv3', disconnectOnRemove: false },
+        document.querySelector('iframe'),
+      ),
+    )
+
+    // Out of the page, then an option changes before it is put back
+    await page.evaluate(() => {
+      window.lastResized = null
+      window.keptIframe = document.querySelector('iframe')
+      window.keptIframe.remove()
+    })
+    await page.waitForTimeout(100)
+    await page.evaluate(
+      (colour) =>
+        window.iframeResize(
+          { license: 'GPLv3', bodyBackground: colour },
+          window.keptIframe,
+        ),
+      GREEN,
+    )
+    await page.evaluate(() => document.body.prepend(window.keptIframe))
+    await waitForInit(page)
+
+    const kept = 'body > iframe:first-child'
+    await expectBodyBackground(page, kept, GREEN)
+    await expectConnected(page, kept)
+    expect(advice).toEqual([])
   })
 })

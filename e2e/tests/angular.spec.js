@@ -4,10 +4,17 @@ import {
   parentEventTests,
   parentMethodTests,
 } from './shared'
+import {
+  expectBodyBackground,
+  expectConnected,
+  GREEN,
+  watchRemovalAdvice,
+} from './shared/hide-restore'
 import { expect, test } from './shared/test'
 import { waitForChildText, waitForResizer } from './shared/utils'
 
 const BASE = '/e2e/fixtures/angular/index.html'
+const DETACH = '/e2e/fixtures/angular/detach.html'
 const EARLY_UPDATE = '/e2e/fixtures/angular/early-update.html'
 const ZONE = '/e2e/fixtures/angular/zone.html'
 
@@ -110,4 +117,27 @@ test.describe('Angular zone', () => {
       expect(after - before).toBe(0)
     })
   }
+})
+
+test.describe('Angular detached view', () => {
+  test('a detached iframe comes back with an option changed while detached', async ({
+    page,
+  }) => {
+    const advice = watchRemovalAdvice(page)
+    await page.goto(DETACH)
+    await page.waitForFunction(() => window.readyCount === 1)
+
+    // Detached, as by route reuse: the directive lives on, its iframe is out
+    await page.click('#hide')
+    await expect(page.locator('#kept')).toHaveCount(0)
+    await page.click('#recolour')
+
+    // Inserted again: the page in the iframe reloads, and connects again
+    await page.click('#show')
+    await page.waitForFunction(() => window.readyCount === 2)
+
+    await expectBodyBackground(page, '#kept', GREEN)
+    await expectConnected(page, '#kept')
+    expect(advice).toEqual([])
+  })
 })
