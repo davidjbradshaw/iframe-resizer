@@ -34,7 +34,7 @@ const state = (await import('../values/state')).default
 const dispatch = (await import('./dispatch')).default
 const checkOverflow = (await import('../check/overflow')).default
 const sendSize = (await import('./size')).default
-const { OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST, SET_OFFSET_SIZE } =
+const { INIT, OVERFLOW_OBSERVER, MANUAL_RESIZE_REQUEST, SET_OFFSET_SIZE } =
   await import('@iframe-resizer/common/consts')
 
 describe('child/send/size', () => {
@@ -114,8 +114,8 @@ describe('child/send/size', () => {
       sendSize('evt', 'first')
       expect(dispatch).toHaveBeenCalledTimes(1)
 
-      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
-      sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(200)')
+      sendSize('evt-two', 'second')
+      sendSize('evt-three', 'third')
 
       expect(consoleMod.log).toHaveBeenCalledWith(
         'Resize already pending - Deferred to next animation frame',
@@ -127,19 +127,37 @@ describe('child/send/size', () => {
       // The last deferred trigger is measured; the trailing custom sizes
       // are undefined, so compare the leading arguments
       expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
-        SET_OFFSET_SIZE,
-        'parentIframe.setOffsetSize(200)',
+        'evt-three',
+        'third',
       ])
       expect(dispatch).toHaveBeenCalledTimes(2)
-      expect(dispatch.mock.lastCall.slice(0, 3)).toEqual([
-        10,
-        20,
-        SET_OFFSET_SIZE,
-      ])
+      expect(dispatch.mock.lastCall.slice(0, 3)).toEqual([10, 20, 'evt-three'])
 
       // The deferred send starts a frame of its own, with nothing deferred
       endFrame()
       expect(dispatch).toHaveBeenCalledTimes(2)
+    })
+
+    test('a deferred trigger is logged under the animation frame', () => {
+      sendSize('evt', 'first')
+      sendSize('visibilityObserver', 'Visibility changed')
+      vi.mocked(consoleMod.event).mockClear()
+
+      endFrame()
+
+      // The frame's event is named, and not replaced by the trigger, and the
+      // measurement is logged rather than debugged: the console hides debug
+      // lines, which would leave the group looking empty
+      expect(consoleMod.event).toHaveBeenCalledWith('deferredObserver')
+      expect(consoleMod.log).toHaveBeenCalledWith(
+        expect.stringContaining('Measuring deferred resize'),
+        expect.anything(),
+      )
+      expect(consoleMod.event).not.toHaveBeenCalledWith('visibilityObserver')
+      expect(getContentSize.mock.lastCall.slice(0, 2)).toEqual([
+        'visibilityObserver',
+        'Visibility changed',
+      ])
     })
 
     test('a deferred viewport resize is measured as one', () => {
@@ -238,11 +256,12 @@ describe('child/send/size', () => {
       getContentSize.mockImplementation(() => ({ height: 10, width: 20 }))
     })
 
-    test('an offset change while hidden is ignored', () => {
+    test('an offset change is sent even while hidden', () => {
+      // Explicit, like parentIframe.resize(), which also sends while hidden
       state.isHidden = true
       sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
 
-      expect(dispatch).not.toHaveBeenCalled()
+      expect(dispatch).toHaveBeenCalledWith(10, 20, SET_OFFSET_SIZE, undefined)
     })
   })
 
@@ -263,15 +282,34 @@ describe('child/send/size', () => {
     expect(getContentSize).not.toHaveBeenCalled()
   })
 
+  test('sends a setOffsetSize while autoResize is off', () => {
+    // parentIframe.setOffsetSize() is explicit, like parentIframe.resize()
+    settings.autoResize = false
+    sendSize(SET_OFFSET_SIZE, 'parentIframe.setOffsetSize(100)')
+
+    expect(dispatch).toHaveBeenCalledWith(10, 20, SET_OFFSET_SIZE, undefined)
+  })
+
+  test('sends the init reply when autoResize is off', () => {
+    // direction 'none' turns autoResize off; the parent waits for this reply
+    settings.autoResize = false
+    sendSize(INIT, 'Init message from host page', undefined, undefined, '6:2')
+
+    expect(dispatch).toHaveBeenCalledWith(10, 20, INIT, '6:2')
+  })
+
   test('default path calls getContentSize and dispatch, then resets pending in raf', () => {
     sendSize('evt', 'd')
 
     expect(getContentSize).toHaveBeenCalled()
     expect(dispatch).toHaveBeenCalledWith(10, 20, 'evt', undefined)
+    vi.mocked(consoleMod.event).mockClear()
     vi.runAllTimers()
 
-    expect(consoleMod.event).toHaveBeenCalledWith('requestAnimationFrame')
-    expect(consoleMod.debug).toHaveBeenCalled()
+    // Nothing was deferred, so the frame only cleared the pending flag and
+    // names no console event: a group whose one line is a debug line shows
+    // as an empty group, the console hiding those unless set to verbose
+    expect(consoleMod.event).not.toHaveBeenCalled()
   })
 
   test('does not call dispatch when getContentSize returns null', () => {

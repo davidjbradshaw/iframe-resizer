@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-vi.mock('../console', () => ({ log: vi.fn(), warn: vi.fn() }))
+vi.mock('../console', () => ({ event: vi.fn(), log: vi.fn(), warn: vi.fn() }))
 vi.mock('../events/wrapper', () => ({ default: vi.fn(() => true) }))
 vi.mock('./disconnect', () => ({ default: vi.fn() }))
 
-const { log, warn } = await import('../console')
+const { event, log, warn } = await import('../console')
 const on = (await import('../events/wrapper')).default
 const disconnect = (await import('./disconnect')).default
 const { default: closeIframe } = await import('./close')
@@ -26,6 +26,16 @@ describe('core/methods/close', () => {
 
     expect(iframe.remove).not.toHaveBeenCalled()
     expect(disconnect).not.toHaveBeenCalled()
+  })
+
+  test('names the close event before it logs', () => {
+    const iframe = { id: 'if0', remove: vi.fn(), parentNode: {} }
+    closeIframe(iframe)
+
+    expect(event).toHaveBeenCalledWith('if0', 'close')
+    expect(event.mock.invocationCallOrder[0]).toBeLessThan(
+      log.mock.invocationCallOrder[0],
+    )
   })
 
   test('removes iframe and disconnects when allowed', () => {

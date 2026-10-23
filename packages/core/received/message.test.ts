@@ -15,4 +15,13 @@ describe('core/received/message', () => {
     expect(body).toBe(expected)
     delete settings.i6
   })
+
+  test('returns a title that contains the separator in full', () => {
+    settings.i7 = {
+      lastMessage: '[iFrameSizer]i7:0:0:title:Docs: Getting started',
+    }
+
+    expect(getMessageBody('i7', 4)).toBe('Docs: Getting started')
+    delete settings.i7
+  })
 })

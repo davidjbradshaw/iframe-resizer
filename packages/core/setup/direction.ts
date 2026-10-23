@@ -21,14 +21,31 @@ The <b>${HORIZONTAL}</> direction has been renamed <b>${HORIZONTAL_BLOCK}</>, wh
 `,
   )
 
-export default function setDirection(id: string): void {
+// What autoResize is for a page that has not changed it itself: the default,
+// unless the direction turns sizing off altogether
+export const autoResizeFor = (direction: string): boolean =>
+  direction === NONE ? false : defaults.autoResize
+
+// previous is the iframe's settings before an update, if this is one
+export default function setDirection(
+  id: string,
+  previous?: { autoResize: boolean },
+): void {
   const { direction } = settings[id]
 
   // Reset to defaults first so re-running on option update doesn't leave
   // stale flags from a previous direction.
   settings[id].sizeWidth = defaults.sizeWidth
   settings[id].sizeHeight = defaults.sizeHeight
-  settings[id].autoResize = defaults.autoResize
+
+  // The parent's own setting, worked out from the options every time
+  settings[id].autoResize = autoResizeFor(direction)
+
+  // The child adopts a value the parent sends only when it has changed, and
+  // keeps its own parentIframe.autoResize() otherwise, so what the parent
+  // records of the child follows the same rule
+  if (!previous || previous.autoResize !== settings[id].autoResize)
+    settings[id].childAutoResize = settings[id].autoResize
 
   if (direction === HORIZONTAL && !settings[id].horizontalAdvised) {
     adviseHorizontal(id)
@@ -51,7 +68,6 @@ export default function setDirection(id: string): void {
     case NONE:
       settings[id].sizeWidth = false
       settings[id].sizeHeight = false
-      settings[id].autoResize = false
       break
 
     default:

@@ -37,6 +37,7 @@ import { scrollBy, scrollTo, scrollToOffset } from './page/scroll'
 import { setTitle } from './page/title'
 import getMessageBody from './received/message'
 import firstRun from './setup/first-run'
+import { sendPendingUpdate } from './setup/update'
 import settings from './values/settings'
 
 export default function routeMessage(messageData: MessageData): void {
@@ -48,7 +49,7 @@ export default function routeMessage(messageData: MessageData): void {
 
   switch (type) {
     case AUTO_RESIZE:
-      settings[id].autoResize = JSON.parse(getMessageBody(id, 9))
+      settings[id].childAutoResize = JSON.parse(getMessageBody(id, 9))
       break
 
     case BEFORE_UNLOAD:
@@ -65,11 +66,16 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     case INIT:
+      // A new page starts from the parent's own setting: what the old page
+      // set with parentIframe.autoResize() died with it
+      settings[id].childAutoResize = settings[id].autoResize
       // The version and mode are for the parent, not the onResized callback
       resizeIframe({ id, iframe, height, width, type })
       checkSameDomain(id)
       checkVersion(id, message)
       settings[id].initialised = true
+      // Options changed before now reach the child before onReady fires
+      sendPendingUpdate(id)
       on(id, 'onReady', iframe)
       break
 
@@ -118,7 +124,8 @@ export default function routeMessage(messageData: MessageData): void {
       break
 
     case TITLE:
-      setTitle(id, message)
+      // The whole body, as the title itself can contain the separator
+      setTitle(id, getMessageBody(id, 4))
       break
 
     default:

@@ -7,12 +7,13 @@ describe('createFormatAdvise', () => {
     mockFormatLogMsg = vi.fn() // Mock the formatLogMsg function
   })
 
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   test('should format the message with encoded styles in Chrome', () => {
     // Properly mock the Chrome environment
-    Object.defineProperty(global, 'window', {
-      value: { chrome: true },
-      writable: true,
-    })
+    vi.stubGlobal('chrome', true)
 
     const msg = '<rb>Error:</> <b>Something went wrong</><br><i>Details</>'
     const formatAdvise = createFormatAdvise(mockFormatLogMsg)
@@ -26,10 +27,7 @@ describe('createFormatAdvise', () => {
 
   test('should remove formatting tags in non-Chrome environments', () => {
     // Simulate a non-Chrome environment
-    Object.defineProperty(global, 'window', {
-      value: {},
-      writable: true,
-    })
+    vi.stubGlobal('chrome')
 
     const msg = '<rb>Error:</> <b>Something went wrong</><br><i>Details</></>'
     const formatAdvise = createFormatAdvise(mockFormatLogMsg)
@@ -38,6 +36,19 @@ describe('createFormatAdvise', () => {
     const expectedOutput = 'Error: Something went wrong\nDetails'
 
     expect(mockFormatLogMsg).toHaveBeenCalledWith(expectedOutput)
+  })
+
+  test('keeps element names in angle brackets in non-Chrome environments', () => {
+    vi.stubGlobal('chrome')
+
+    const msg =
+      'Set to 100px on the <b><html></> element via an inline <style> block.'
+    const formatAdvise = createFormatAdvise(mockFormatLogMsg)
+    formatAdvise(msg)
+
+    expect(mockFormatLogMsg).toHaveBeenCalledWith(
+      'Set to 100px on the <html> element via an inline <style> block.',
+    )
   })
 
   test('should handle empty messages gracefully', () => {
@@ -49,10 +60,7 @@ describe('createFormatAdvise', () => {
   })
 
   test('unknown tags in Chrome environment produce empty string via ?? fallback', () => {
-    Object.defineProperty(global, 'window', {
-      value: { chrome: true },
-      writable: true,
-    })
+    vi.stubGlobal('chrome', true)
 
     // <iy> is not a known tag, so lookup returns '' via the ?? '' fallback
     const msg = '<iy>text</>'
@@ -66,10 +74,7 @@ describe('createFormatAdvise', () => {
   })
 
   test('passes non-string messages through unchanged', () => {
-    Object.defineProperty(global, 'window', {
-      value: { chrome: true },
-      writable: true,
-    })
+    vi.stubGlobal('chrome', true)
 
     const nonStringMsg = { error: 'object message' }
     const formatAdvise = createFormatAdvise(mockFormatLogMsg)

@@ -1,4 +1,4 @@
-import { SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
+import { ENABLE, SET_OFFSET_SIZE } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import settings from '../values/settings'
@@ -48,8 +48,9 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     'child',
     'auto',
     fields.mouseEvents ?? 'false',
-    fields.offsetHeight ?? '0',
-    fields.offsetWidth ?? '0',
+    // A parent with no offsetSize of its own sends empty fields
+    fields.offsetHeight ?? '',
+    fields.offsetWidth ?? '',
     fields.sizeHeight ?? 'true',
     '',
     '',
@@ -72,7 +73,64 @@ describe('child/received/update', () => {
     settings.bodyPadding = ''
     settings.offsetHeight = 0
     settings.offsetWidth = 0
+    settings.autoResize = true
     state.pageSettings = []
+    state.fromParent = {}
+  })
+
+  it('re-measures when the parent re-enables autoResize', async () => {
+    settings.autoResize = false
+    state.fromParent = { autoResize: false }
+
+    updateFromParent(buildEvent('frame', { autoResize: 'true' }))
+
+    expect(settings.autoResize).toBe(true)
+    // The send is queued as a microtask, as parentIframe.autoResize(true) does
+    await Promise.resolve()
+    expect(sendSize).toHaveBeenCalledWith(
+      ENABLE,
+      'Auto Resize enabled by parent',
+    )
+  })
+
+  it("lets the parent's offset through for an axis it has just started sizing", () => {
+    // The page set an offset while only the height was calculated, so the
+    // width's offset was zeroed and the height's is the page's own
+    settings.offsetHeight = 50
+    settings.offsetWidth = 0
+    state.fromParent = {
+      autoResize: true,
+      calculateHeight: true,
+      calculateWidth: false,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    }
+
+    updateFromParent(buildEvent('frame', { sizeWidth: 'true' }))
+
+    expect(settings.calculateWidth).toBe(true)
+    // The width axis changed, so the parent's value for it goes through
+    expect(settings.offsetWidth).toBe(0)
+    // The height axis did not, so the page's offset for it survives
+    expect(settings.offsetHeight).toBe(50)
+  })
+
+  it('keeps both offsets when neither axis changes', () => {
+    settings.offsetHeight = 50
+    settings.offsetWidth = 20
+    state.fromParent = {
+      autoResize: true,
+      calculateHeight: true,
+      calculateWidth: true,
+      offsetHeight: 0,
+      offsetWidth: 0,
+    }
+
+    updateFromParent(buildEvent('frame', { sizeWidth: 'true', tolerance: '5' }))
+
+    expect(settings.tolerance).toBe(5)
+    expect(settings.offsetHeight).toBe(50)
+    expect(settings.offsetWidth).toBe(20)
   })
 
   it('re-sends the size when the offset changes, as setOffsetSize does', () => {
@@ -113,6 +171,53 @@ describe('child/received/update', () => {
 
     expect(settings.offsetHeight).toBe(50)
     expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  it('keeps an offset the page set with setOffsetSize() while the parent sends the same one', () => {
+    state.fromParent = {
+      calculateHeight: true,
+      calculateWidth: false,
+      offsetHeight: 50,
+      offsetWidth: undefined,
+    }
+    settings.offsetHeight = 50
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '50' }))
+
+    expect(settings.offsetHeight).toBe(50)
+    expect(sendSize).not.toHaveBeenCalled()
+  })
+
+  it('clears the offset the page set when the parent sends one of zero', () => {
+    // An update from a parent with no offsetSize of its own, whose empty
+    // field is not the zero it sends to clear the offset the page set
+    updateFromParent(buildEvent('edge1', { logging: 'true' }))
+    settings.offsetHeight = 50
+    vi.clearAllMocks()
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '0' }))
+
+    expect(settings.offsetHeight).toBe(0)
+    expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
+  })
+
+  it('applies an offset the parent has changed over the one the page set', () => {
+    state.fromParent = { offsetHeight: 0, offsetWidth: 0 }
+    settings.offsetHeight = 50
+
+    updateFromParent(buildEvent('edge1', { offsetHeight: '100' }))
+
+    expect(settings.offsetHeight).toBe(100)
+    expect(sendSize).toHaveBeenCalledWith(SET_OFFSET_SIZE, expect.any(String))
+  })
+
+  it('keeps autoResize off when the page turned it off and the parent sends the same value', () => {
+    state.fromParent = { autoResize: true }
+    settings.autoResize = false
+
+    updateFromParent(buildEvent('edge1', { autoResize: 'true' }))
+
+    expect(settings.autoResize).toBe(false)
   })
 
   it('updates console settings on every update', () => {

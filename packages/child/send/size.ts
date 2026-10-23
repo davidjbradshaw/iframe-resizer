@@ -3,7 +3,6 @@ import { HIGHLIGHT } from 'auto-console-group'
 
 import checkOverflow from '../check/overflow'
 import {
-  debug,
   endAutoGroup,
   errorBoundary,
   event as consoleEvent,
@@ -31,16 +30,14 @@ let deferred: {
 function onAnimationFrame(): void {
   sendPending = false
   rafId = null
-  consoleEvent('requestAnimationFrame')
 
-  if (deferred === null) {
-    debug('Reset sendPending')
-    return
-  }
+  if (deferred === null) return
 
   const { trigger, desc, viewportResized } = deferred
   deferred = null
-  debug(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
+
+  consoleEvent('deferredObserver')
+  log(`Measuring deferred resize: %c${trigger}`, HIGHLIGHT)
 
   // The overflow attributes are already current; reading them now means
   // overflowObserved() finds no change, so this frame is measured once
@@ -49,13 +46,14 @@ function onAnimationFrame(): void {
   // errorBoundary re-throws anything that is not an Error
   state.viewportResized = viewportResized
   try {
-    safeSendSize(trigger, desc)
+    // Without renaming the console event, which is this animation frame
+    safeResize(trigger, desc)
   } finally {
     state.viewportResized = false
   }
 }
 
-function sendSize(
+function resize(
   triggerEvent: string,
   triggerEventDesc: string,
   customHeight?: number,
@@ -68,8 +66,6 @@ function sendSize(
   // Manual and parent resize requests are explicit, so they are sent even
   // when the page is hidden, a send is pending or autoResize is off
   const isExplicitRequest = triggerEvent in IGNORE_DISABLE_RESIZE
-
-  consoleEvent(triggerEvent)
 
   switch (true) {
     case isHidden === true && !isExplicitRequest: {
@@ -127,6 +123,17 @@ function sendSize(
   endAutoGroup()
 }
 
-const safeSendSize = errorBoundary(sendSize)
+const safeResize = errorBoundary(resize)
 
-export default safeSendSize
+function sendSize(
+  triggerEvent: string,
+  triggerEventDesc: string,
+  customHeight?: number,
+  customWidth?: number,
+  msg?: string,
+): void {
+  consoleEvent(triggerEvent)
+  safeResize(triggerEvent, triggerEventDesc, customHeight, customWidth, msg)
+}
+
+export default sendSize

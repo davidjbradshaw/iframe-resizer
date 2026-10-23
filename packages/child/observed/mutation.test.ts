@@ -16,6 +16,7 @@ vi.mock('../console', () => ({
   event: vi.fn(),
   info: vi.fn(),
 }))
+vi.mock('../page/body-setup', () => ({ default: vi.fn() }))
 vi.mock('../send/size', () => ({ default: vi.fn() }))
 vi.mock('../size/all', () => ({ getAllElements: vi.fn(() => []) }))
 vi.mock('../values/state', () => ({ default: { applySelectors: vi.fn() } }))
@@ -25,12 +26,14 @@ vi.mock('./observers', () => ({
     resize: {
       attachObserverToNonStaticElements: vi.fn(),
       detachObservers: vi.fn(),
+      observeBody: vi.fn(),
     },
   },
 }))
 
 // Removed unused consoleEvent variable assignment
 const sendSize = (await import('../send/size')).default
+const applyBodySetup = (await import('../page/body-setup')).default
 const observers = (await import('./observers')).default
 const mutationObserved = (await import('./mutation')).default
 
@@ -46,5 +49,17 @@ describe('child/observed/mutation', () => {
     ).toHaveBeenCalled()
 
     expect(sendSize).toHaveBeenCalledWith('mutation', 'Mutation Observed')
+
+    // The resize observer is asked to follow a replaced body every time
+    expect(observers.resize.observeBody).toHaveBeenCalled()
+    expect(applyBodySetup).not.toHaveBeenCalled()
+  })
+
+  test('re-applies the body setup when the body was replaced', () => {
+    vi.mocked(observers.resize.observeBody).mockReturnValueOnce(true)
+
+    mutationObserved({ addedNodes: new Set(), removedNodes: new Set() })
+
+    expect(applyBodySetup).toHaveBeenCalled()
   })
 })

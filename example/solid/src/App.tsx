@@ -30,7 +30,7 @@ const ids = example === 'two' ? ['myIframe1', 'myIframe2'] : ['myIframe']
 
 function Nav() {
   return (
-    <nav>
+    <nav id="anchorParentTest">
       <a href="index.html">One iframe</a>
       <a href="two.html">Two iframes</a>
       <a href="width-inline.html">Width (inline)</a>

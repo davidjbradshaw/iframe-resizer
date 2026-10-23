@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer getParentProps load test</title>
+    <style>
+      body { margin: 0; padding: 16px; font-family: sans-serif; }
+      iframe { width: 100%; border: 1px solid #999; }
+    </style>
+  </head>
+  <body>
+    <h1>getParentProps across the iframe load event</h1>
+    <p>Status: <span id="status">pending</span></p>
+    <iframe
+      id="frame"
+      src="child/frame.parent-props-load.html"
+    ></iframe>
+    <script src="/js/iframe-resizer.parent.js"></script>
+    <script>
+      window.iframeLoaded = false
+      window.childReady = false
+
+      // Record when the iframe's own load event fires, which the test holds
+      // back with a slow image inside the child
+      document.getElementById('frame').addEventListener('load', () => {
+        window.iframeLoaded = true
+      })
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          onReady() {
+            window.childReady = true
+            document.getElementById('status').textContent = 'ready'
+          },
+        },
+        '#frame',
+      )
+    </script>
+  </body>
+</html>

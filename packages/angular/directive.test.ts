@@ -1,4 +1,4 @@
-import { ElementRef, EventEmitter } from '@angular/core'
+import { ElementRef, EventEmitter, type NgZone } from '@angular/core'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { IframeResizerDirective } from './directive'
@@ -35,10 +35,28 @@ vi.mock('@iframe-resizer/core', () => ({
   }),
 }))
 
+// Fake NgZone that tracks whether the code it runs is inside the zone
+function createZone() {
+  const zone = { inAngular: true, run: vi.fn(), runOutsideAngular: vi.fn() }
+  const runIn = (inAngular: boolean) => (fn: () => unknown) => {
+    const previous = zone.inAngular
+    zone.inAngular = inAngular
+    try {
+      return fn()
+    } finally {
+      zone.inAngular = previous
+    }
+  }
+  zone.run.mockImplementation(runIn(true))
+  zone.runOutsideAngular.mockImplementation(runIn(false))
+  return zone
+}
+
 describe('Angular IframeResizerDirective', () => {
   let directive: IframeResizerDirective
   let mockIframe: HTMLIFrameElement
   let mockElementRef: ElementRef
+  let zone: ReturnType<typeof createZone>
 
   beforeEach(async () => {
     // Clear mock calls
@@ -68,8 +86,40 @@ describe('Angular IframeResizerDirective', () => {
     mockElementRef = { nativeElement: mockIframe }
 
     // Create directive instance
-    directive = new FreshDirective(mockElementRef)
+    zone = createZone()
+    directive = new FreshDirective(
+      mockElementRef,
+      zone as unknown as NgZone,
+      'browser',
+    )
   })
+
+  // Mocks connectResizer to record the options it gets, and whether it and
+  // the iframe step it returns each ran inside the zone
+  async function mockConnect() {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    const calls: {
+      options: any
+      inAngular: boolean[]
+      boundId?: string
+    }[] = []
+    connectResizer.mockImplementation((options: any) => {
+      const call = { options, inAngular: [zone.inAngular] }
+      calls.push(call)
+      return (iframe: any) => {
+        call.inAngular.push(zone.inAngular)
+        // The id core reads from the element, not from the options
+        call.boundId = iframe.id
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+        return iframe.iframeResizer
+      }
+    })
+    return calls
+  }
+
+  // Core calls the option callbacks from outside the zone
+  const fromCore = (callback: () => unknown): unknown =>
+    zone.runOutsideAngular(callback)
 
   test('directive has expected properties and methods', () => {
     expect(directive).toBeTruthy()
@@ -131,14 +181,15 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const nextSpy = vi.spyOn(directive.onReady, 'next')
+    const handler = vi.fn()
+    directive.onReady.subscribe(handler)
 
     directive.ngAfterViewInit()
 
     const iframeElement = { id: 'test-iframe' }
     capturedOptions.onReady(iframeElement)
 
-    expect(nextSpy).toHaveBeenCalledWith(iframeElement)
+    expect(handler).toHaveBeenCalledWith(iframeElement)
   })
 
   test('onMessage callback emits EventEmitter', async () => {
@@ -153,14 +204,15 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const nextSpy = vi.spyOn(directive.onMessage, 'next')
+    const handler = vi.fn()
+    directive.onMessage.subscribe(handler)
 
     directive.ngAfterViewInit()
 
     const messageData = { iframe: { id: 'test' }, message: 'test message' }
     capturedOptions.onMessage(messageData)
 
-    expect(nextSpy).toHaveBeenCalledWith(messageData)
+    expect(handler).toHaveBeenCalledWith(messageData)
   })
 
   test('onResized callback emits EventEmitter', async () => {
@@ -175,7 +227,8 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const nextSpy = vi.spyOn(directive.onResized, 'next')
+    const handler = vi.fn()
+    directive.onResized.subscribe(handler)
 
     directive.ngAfterViewInit()
 
@@ -187,7 +240,7 @@ describe('Angular IframeResizerDirective', () => {
     }
     capturedOptions.onResized(resizeData)
 
-    expect(nextSpy).toHaveBeenCalledWith(resizeData)
+    expect(handler).toHaveBeenCalledWith(resizeData)
   })
 
   test('onMouseEnter callback emits EventEmitter', async () => {
@@ -202,7 +255,8 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const nextSpy = vi.spyOn(directive.onMouseEnter, 'next')
+    const handler = vi.fn()
+    directive.onMouseEnter.subscribe(handler)
 
     directive.ngAfterViewInit()
 
@@ -214,7 +268,7 @@ describe('Angular IframeResizerDirective', () => {
     }
     capturedOptions.onMouseEnter(eventData)
 
-    expect(nextSpy).toHaveBeenCalledWith(eventData)
+    expect(handler).toHaveBeenCalledWith(eventData)
   })
 
   test('onMouseLeave callback emits EventEmitter', async () => {
@@ -229,7 +283,8 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const nextSpy = vi.spyOn(directive.onMouseLeave, 'next')
+    const handler = vi.fn()
+    directive.onMouseLeave.subscribe(handler)
 
     directive.ngAfterViewInit()
 
@@ -241,10 +296,10 @@ describe('Angular IframeResizerDirective', () => {
     }
     capturedOptions.onMouseLeave(eventData)
 
-    expect(nextSpy).toHaveBeenCalledWith(eventData)
+    expect(handler).toHaveBeenCalledWith(eventData)
   })
 
-  test('onScroll callback emits EventEmitter', async () => {
+  test('onScroll callback emits EventEmitter once core has scrolled', async () => {
     const connectResizer = (await import('@iframe-resizer/core')).default
 
     let capturedOptions: any
@@ -256,14 +311,21 @@ describe('Angular IframeResizerDirective', () => {
       }
     })
 
-    const nextSpy = vi.spyOn(directive.onScroll, 'next')
+    const handler = vi.fn()
+    directive.onScroll.subscribe(handler)
 
     directive.ngAfterViewInit()
 
     const scrollData = { iframe: { id: 'test' }, top: 100, left: 0 }
-    capturedOptions.onScroll(scrollData)
+    const result = fromCore(() => capturedOptions.onScroll(scrollData))
 
-    expect(nextSpy).toHaveBeenCalledWith(scrollData)
+    // Core scrolls as soon as the callback returns, so the Output waits
+    expect(result).toBeUndefined()
+    expect(handler).not.toHaveBeenCalled()
+
+    await Promise.resolve()
+
+    expect(handler).toHaveBeenCalledWith(scrollData)
   })
 
   test('onBeforeClose callback returns false and logs warning', async () => {
@@ -281,6 +343,8 @@ describe('Angular IframeResizerDirective', () => {
     directive.ngAfterViewInit()
 
     const result = capturedOptions.onBeforeClose('test-iframe')
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
 
     // The directive always returns false to prevent iframe removal
     expect(result).toBe(false)
@@ -288,6 +352,23 @@ describe('Angular IframeResizerDirective', () => {
     expect(mockGroupWarn).toHaveBeenCalledWith(
       expect.stringContaining('Close event ignored'),
     )
+  })
+
+  test('a bound onBeforeClose gets the iframe once core has cancelled the close', async () => {
+    const calls = await mockConnect()
+    const handler = vi.fn()
+    directive.onBeforeClose.subscribe(handler)
+
+    directive.ngAfterViewInit()
+    const result = fromCore(() => calls[0].options.onBeforeClose('test-iframe'))
+
+    expect(result).toBe(false)
+    expect(handler).not.toHaveBeenCalled()
+
+    await Promise.resolve()
+
+    expect(handler).toHaveBeenCalledWith(mockIframe)
+    expect(mockGroupWarn).not.toHaveBeenCalled()
   })
 
   test('options input is passed to connectResizer', async () => {
@@ -355,6 +436,19 @@ describe('Angular IframeResizerDirective', () => {
     expect(mockGroupEndAutoGroup).toHaveBeenCalledTimes(1)
   })
 
+  test('sets up and ends its console group outside the Angular zone', () => {
+    const inAngular: boolean[] = []
+    mockGroupEvent.mockImplementationOnce(() => inAngular.push(zone.inAngular))
+    mockGroupEndAutoGroup.mockImplementationOnce(() =>
+      inAngular.push(zone.inAngular),
+    )
+
+    directive.ngAfterViewInit()
+    directive.ngOnDestroy()
+
+    expect(inAngular).toEqual([false, false])
+  })
+
   test('debug mode logs in ngAfterViewInit and ngOnDestroy', () => {
     directive.debug = true
     directive.ngAfterViewInit()
@@ -407,7 +501,11 @@ describe('Angular IframeResizerDirective', () => {
     const elementRefNoId = { nativeElement: iframeNoId }
     const { IframeResizerDirective: FreshDirective } =
       await import('./directive')
-    const directiveNoId = new FreshDirective(elementRefNoId)
+    const directiveNoId = new FreshDirective(
+      elementRefNoId,
+      zone as unknown as NgZone,
+      'browser',
+    )
 
     directiveNoId.ngAfterViewInit()
 
@@ -418,5 +516,197 @@ describe('Angular IframeResizerDirective', () => {
     expect(mockGroupWarn).toHaveBeenCalledWith(
       expect.stringContaining('Close event ignored'),
     )
+  })
+
+  test('passes an id change to the iframe and re-binds', async () => {
+    const calls = await mockConnect()
+
+    directive.ngAfterViewInit()
+    expect(calls).toHaveLength(1)
+
+    directive.id = 'renamed'
+    directive.ngOnChanges({ id: {} } as any)
+
+    expect(mockElementRef.nativeElement.id).toBe('renamed')
+    expect(calls).toHaveLength(2)
+    // What matters: core was handed the element carrying the new id
+    expect(calls[1].boundId).toBe('renamed')
+  })
+
+  test('connectResizer runs outside the Angular zone', async () => {
+    const calls = await mockConnect()
+
+    directive.ngAfterViewInit()
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(calls.map((call) => call.inAngular)).toEqual([
+      [false, false],
+      [false, false],
+    ])
+  })
+
+  test('does not start when rendering on the server', async () => {
+    const calls = await mockConnect()
+    const { IframeResizerDirective: FreshDirective } =
+      await import('./directive')
+    const onServer = new FreshDirective(
+      mockElementRef,
+      zone as unknown as NgZone,
+      'server',
+    )
+
+    onServer.ngAfterViewInit()
+    onServer.ngOnChanges({ options: {} } as any)
+    onServer.ngOnDestroy()
+
+    expect(calls).toHaveLength(0)
+    expect(onServer.iframeResizer).toBeUndefined()
+  })
+
+  test('parent methods run outside the Angular zone', () => {
+    const inAngular: boolean[] = []
+    moveToAnchor.mockImplementationOnce(() => inAngular.push(zone.inAngular))
+    sendMessage.mockImplementationOnce(() => inAngular.push(zone.inAngular))
+
+    directive.ngAfterViewInit()
+    directive.moveToAnchor('top')
+    directive.sendMessage('hello')
+
+    expect(inAngular).toEqual([false, false])
+  })
+
+  test('an unbound Output does not emit or enter the zone', async () => {
+    const calls = await mockConnect()
+    const nextSpy = vi.spyOn(directive.onResized, 'next')
+
+    directive.ngAfterViewInit()
+    fromCore(() =>
+      calls[0].options.onResized({ iframe: mockIframe, height: 1, width: 1 }),
+    )
+
+    expect(nextSpy).not.toHaveBeenCalled()
+    expect(zone.run).not.toHaveBeenCalled()
+  })
+
+  test('a bound Output emits inside the zone, synchronously', async () => {
+    const calls = await mockConnect()
+    const seen: boolean[] = []
+    directive.onResized.subscribe(() => seen.push(zone.inAngular))
+
+    directive.ngAfterViewInit()
+    fromCore(() =>
+      calls[0].options.onResized({ iframe: mockIframe, height: 1, width: 1 }),
+    )
+
+    // The subscriber ran inside the zone before the callback returned to core
+    expect(seen).toEqual([true])
+  })
+
+  test('an Output subscribed after init is still emitted', async () => {
+    const calls = await mockConnect()
+    const handler = vi.fn()
+
+    directive.ngAfterViewInit()
+    directive.onReady.subscribe(handler)
+    fromCore(() => calls[0].options.onReady(mockIframe))
+
+    expect(handler).toHaveBeenCalledWith(mockIframe)
+  })
+
+  test('mouse events are only turned on once a mouse Output is bound', async () => {
+    const calls = await mockConnect()
+
+    directive.ngAfterViewInit()
+    directive.onMouseLeave.subscribe(vi.fn())
+    directive.ngOnChanges({ options: {} } as any)
+
+    // Unbound at the first connect, bound by the next [options] change
+    expect(calls[0].options.onMouseEnter).toBeUndefined()
+    expect(calls[0].options.onMouseLeave).toBeUndefined()
+    expect(calls[1].options.onMouseEnter).toEqual(expect.any(Function))
+    expect(calls[1].options.onMouseLeave).toEqual(expect.any(Function))
+  })
+
+  test('a callback given in [options] runs in the zone with the Output', async () => {
+    const calls = await mockConnect()
+    const seen: string[] = []
+    directive.options = {
+      license: '',
+      onResized: () => seen.push(`option in zone: ${zone.inAngular}`),
+    }
+    directive.onResized.subscribe(() =>
+      seen.push(`output in zone: ${zone.inAngular}`),
+    )
+
+    directive.ngAfterViewInit()
+    fromCore(() =>
+      calls[0].options.onResized({ iframe: mockIframe, height: 1, width: 1 }),
+    )
+
+    expect(seen).toEqual(['option in zone: true', 'output in zone: true'])
+  })
+
+  test('an onScroll given in [options] can cancel the scroll', async () => {
+    const calls = await mockConnect()
+    directive.options = { license: '', onScroll: () => false }
+
+    directive.ngAfterViewInit()
+    const result = fromCore(() =>
+      calls[0].options.onScroll({ iframe: mockIframe, top: 1, left: 0 }),
+    )
+
+    expect(result).toBe(false)
+  })
+
+  test('a mouse callback given in [options] turns mouse events on', async () => {
+    const calls = await mockConnect()
+    directive.options = { license: '', onMouseEnter: vi.fn() }
+
+    directive.ngAfterViewInit()
+
+    expect(calls[0].options.onMouseEnter).toEqual(expect.any(Function))
+    expect(calls[0].options.onMouseLeave).toEqual(expect.any(Function))
+  })
+
+  test('a bound Output still emits without Subject.observed (RxJS 6)', async () => {
+    const calls = await mockConnect()
+    const handler = vi.fn()
+    directive.onResized.subscribe(handler)
+    Object.defineProperty(directive.onResized, 'observed', { value: undefined })
+
+    directive.ngAfterViewInit()
+    const resizeData = { iframe: mockIframe, height: 1, width: 1, type: 'init' }
+    fromCore(() => calls[0].options.onResized(resizeData))
+
+    expect(handler).toHaveBeenCalledWith(resizeData)
+  })
+
+  test('connects on a later [options] change when the first connect failed', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    let attempts = 0
+    connectResizer.mockImplementation(() => (iframe: any) => {
+      attempts += 1
+      // The first fails, as core's error boundary does on an invalid option
+      if (attempts > 1) {
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+      }
+      return iframe.iframeResizer
+    })
+
+    directive.ngAfterViewInit()
+    expect(directive.iframeResizer).toBeUndefined()
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(attempts).toBe(2)
+    expect(directive.iframeResizer).toBe(mockIframe.iframeResizer)
+  })
+
+  test('ignores [options] changes before the view is ready', async () => {
+    const calls = await mockConnect()
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(calls).toHaveLength(0)
   })
 })

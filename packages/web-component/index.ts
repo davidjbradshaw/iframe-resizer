@@ -1,4 +1,4 @@
-import { esModuleInterop } from '@iframe-resizer/common'
+import { esModuleInterop, setStyleKeepingSize } from '@iframe-resizer/common'
 import { VERTICAL } from '@iframe-resizer/common/consts'
 import type { IFrameObject, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
@@ -20,6 +20,7 @@ const RESIZER_ATTR_MAP: Record<string, string> = {
   offsetsize: 'offsetSize',
   scrolling: 'scrolling',
   tolerance: 'tolerance',
+  waitforload: 'waitForLoad',
   warningtimeout: 'warningTimeout',
 }
 
@@ -38,6 +39,7 @@ const BOOLEAN_ATTRS = new Set([
   'inpagelinks',
   'log',
   'scrolling',
+  'waitforload',
 ])
 
 // Attributes that should be parsed as whitespace-separated arrays
@@ -58,6 +60,7 @@ const RESIZER_ATTR_DEFAULTS: Record<string, unknown> = {
   offsetSize: 0,
   scrolling: false,
   tolerance: 0,
+  waitForLoad: false,
   warningTimeout: 5000,
 }
 
@@ -84,8 +87,8 @@ function parseAttrValue(
   if (value === 'true') return true
   if (value === 'false') return false
   if (value === '' && BOOLEAN_ATTRS.has(name)) return true
-  if (ARRAY_ATTRS.has(name) && /\s/.test(value))
-    return value.trim().split(/\s+/)
+  // Core only reads a list, so even a single value is passed as one
+  if (ARRAY_ATTRS.has(name)) return value.trim().split(/\s+/)
 
   return value
 }
@@ -99,12 +102,13 @@ const HTMLBase =
 export class IframeResizerElement extends HTMLBase {
   private resizer: IFrameObject | null = null
 
-  // eslint-disable-next-line new-cap
   private consoleGroup = createAutoConsoleGroup()
 
   private resizerOptions: Partial<IFrameOptions> = {}
 
   private iframe: HTMLIFrameElement | null = null
+
+  private attributeObserver: MutationObserver | null = null
 
   static get observedAttributes(): string[] {
     return Object.keys(RESIZER_ATTR_MAP)
@@ -114,8 +118,9 @@ export class IframeResizerElement extends HTMLBase {
     return this.resizerOptions
   }
 
-  set options(val: Partial<IFrameOptions>) {
-    this.resizerOptions = val
+  // A framework sets undefined for an unset binding, so treat that as none
+  set options(val: Partial<IFrameOptions> | null | undefined) {
+    this.resizerOptions = val ?? {}
     this.rebind()
   }
 
@@ -162,6 +167,8 @@ export class IframeResizerElement extends HTMLBase {
       ...(attrOptions as unknown as IFrameOptions),
       ...this.resizerOptions,
       ...eventHandlers,
+      // The element disconnects when it is removed from the page
+      disconnectOnRemove: false,
       onBeforeClose: () => {
         this.consoleGroup.event('close')
         this.consoleGroup.warn(
@@ -172,9 +179,11 @@ export class IframeResizerElement extends HTMLBase {
     } as IFrameOptions
   }
 
-  private rebind(overrides: Record<string, unknown> = {}): void {
+  // Defaults go first, so a value set through the options property still
+  // wins over the default for an attribute that was removed
+  private rebind(defaults: Record<string, unknown> = {}): void {
     if (!this.iframe || !this.resizer) return
-    connectResizer({ ...this.buildOptions(), ...overrides })(this.iframe)
+    connectResizer({ ...defaults, ...this.buildOptions() })(this.iframe)
   }
 
   connectedCallback(): void {
@@ -191,6 +200,7 @@ export class IframeResizerElement extends HTMLBase {
 
     this.iframe = iframe
     this.append(iframe)
+    this.watchAttributes()
 
     this.resizer = connectResizer(this.buildOptions())(iframe) ?? null
 
@@ -217,11 +227,38 @@ export class IframeResizerElement extends HTMLBase {
   }
 
   disconnectedCallback(): void {
+    this.attributeObserver?.disconnect()
+    this.attributeObserver = null
     this.consoleGroup.endAutoGroup()
     this.resizer?.disconnect()
     this.resizer = null
     this.iframe?.remove()
     this.iframe = null
+  }
+
+  // Passes later changes to the element's other attributes, such as src, on
+  // to the iframe. A new id is passed on too, so core can report that a bound
+  // iframe cannot change its id
+  private watchAttributes(): void {
+    this.attributeObserver = new MutationObserver((mutations) => {
+      for (const { attributeName: name } of mutations) {
+        if (!name || RESIZER_ATTR_MAP[name]) continue
+
+        const value = this.getAttribute(name)
+
+        // A wholesale style write would wipe the size core set on the iframe
+        if (name === 'style') {
+          if (this.iframe) setStyleKeepingSize(this.iframe, value)
+          continue
+        }
+
+        if (value === null) this.iframe?.removeAttribute(name)
+        else this.iframe?.setAttribute(name, value)
+
+        if (name === 'id') this.rebind()
+      }
+    })
+    this.attributeObserver.observe(this, { attributes: true })
   }
 }
 

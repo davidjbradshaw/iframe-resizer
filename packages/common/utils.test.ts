@@ -1,6 +1,16 @@
 import { describe, expect, test } from 'vitest'
 
-import { esModuleInterop, getElementName, hasOwn, lower, round } from './utils'
+import {
+  escapeField,
+  esModuleInterop,
+  getElementName,
+  getOrigin,
+  hasOwn,
+  isBooleanString,
+  lower,
+  round,
+  unescapeField,
+} from './utils'
 
 describe('utils', () => {
   describe('round', () => {
@@ -108,6 +118,58 @@ describe('utils', () => {
     test('should return module when __esModule is empty string', () => {
       const mockModule = { __esModule: '', default: 'default-export' }
       expect(esModuleInterop(mockModule)).toBe(mockModule)
+    })
+  })
+
+  describe('getOrigin', () => {
+    test('returns the origin of an absolute URL, dropping any path', () => {
+      expect(getOrigin('https://a.example')).toBe('https://a.example')
+      expect(getOrigin('https://a.example/')).toBe('https://a.example')
+      expect(getOrigin('https://a.example:8080/page.html?x=1')).toBe(
+        'https://a.example:8080',
+      )
+    })
+
+    test('returns null when the value is not an absolute URL', () => {
+      expect(getOrigin('')).toBeNull()
+      expect(getOrigin('*')).toBeNull()
+      expect(getOrigin('/')).toBeNull()
+      expect(getOrigin('not a url')).toBeNull()
+    })
+  })
+
+  describe('escapeField', () => {
+    test('escapes the colons in a field and restores them', () => {
+      const value =
+        'url(https://a.example/bg.png), url(data:image/gif;base64,AA==)'
+
+      expect(escapeField(value)).not.toContain(':')
+      expect(escapeField(value).split(':')).toHaveLength(1)
+      expect(unescapeField(escapeField(value))).toBe(value)
+    })
+
+    test('leaves a value without a colon as it is', () => {
+      expect(escapeField('#fff')).toBe('#fff')
+      expect(escapeField('5%')).toBe('5%')
+      expect(unescapeField('10px 5%')).toBe('10px 5%')
+    })
+
+    test('joins null, undefined and numbers as join() does', () => {
+      expect(escapeField(null)).toBe('')
+      expect(escapeField()).toBe('')
+      expect(escapeField(8)).toBe('8')
+      expect(escapeField(false)).toBe('false')
+    })
+  })
+
+  describe('isBooleanString', () => {
+    test('is true only for a boolean written as a string', () => {
+      expect(isBooleanString('true')).toBe(true)
+      expect(isBooleanString('false')).toBe(true)
+      expect(isBooleanString('TRUE')).toBe(false)
+      expect(isBooleanString('toString')).toBe(false)
+      expect(isBooleanString('')).toBe(false)
+      expect(isBooleanString()).toBe(false)
     })
   })
 })

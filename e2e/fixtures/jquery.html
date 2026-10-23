@@ -27,7 +27,7 @@
     ></script>
     <script
       type="text/javascript"
-      src="../../js/iframe-resizer.parent.js"
+      src="../../js/iframe-resizer.jquery.js"
     ></script>
   </head>
 
@@ -38,13 +38,21 @@
       Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>.
     </p>
 
+    <!-- Option changes applied after init by the e2e tests, one button per
+         step, as the framework apps have -->
+    <button id="update-styles">Update styles</button>
+    <button id="update-offset">Update offset</button>
+    <button id="update-tolerance">Update tolerance</button>
+    <button id="update-links">Update links</button>
+    <button id="update-direction">Update direction</button>
+
     <div id="iframeContainer" style="margin: 20px">
       <iframe
         src="child/frame.test.html"
         scrolling="no"
       ></iframe>
     </div>
-    
+
     <p id="callback"></p>
     <div style="margin: 8px 0 0 24px; font-size: 13px">
       For details on how this works, see
@@ -56,13 +64,13 @@
        * If you do not understand what the code below does, then please just use the
        * following call in your own code.
        *
-       *   iframeResize({ license: 'YOUR-LICENSE' })
+       *   $('iframe').iframeResize({ license: 'YOUR-LICENSE' })
        *
        */
 
       const callbackDisplay = document.querySelector('p#callback')
 
-      const iframes = iframeResize({
+      $('iframe').iframeResize({
         inPageLinks: true,
         license: 'GPLv3',
         log: true,
@@ -70,7 +78,7 @@
 
         onResized(messageData) {
           // Callback fn when resize is received
-          callbackDisplay.innerHTML = 
+          callbackDisplay.innerHTML =
           `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Height:</b> ${messageData.height} <br><b>Width:</b> ${messageData.width} <br><b>Event type:</b> ${messageData.type}`
         },
 
@@ -103,7 +111,32 @@
           callbackDisplay.innerHTML = `<b>Iframe ID:</b> ${messageData.iframe.id} <br><b>Top:</b> ${messageData.top} <br><b>Left:</b> ${messageData.left}`
         },
       })
-      
+
+      // The same values the shared suite's UPDATES holds, applied one step at
+      // a time by calling the plugin again, which is how a jQuery page
+      // updates its options
+      const UPDATES = {
+        styles: {
+          bodyBackground: 'rgb(0, 128, 0)',
+          bodyPadding: '6px',
+          bodyMargin: 12,
+          scrolling: true,
+          checkOrigin: [window.location.origin],
+        },
+        offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
+        tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
+        links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
+        direction: {
+          bodyBackground: 'rgb(0, 128, 128)',
+          direction: 'horizontal-inline',
+        },
+      }
+
+      for (const step of Object.keys(UPDATES)) {
+        $(`#update-${step}`).on('click', () => {
+          $('iframe').iframeResize({ license: 'GPLv3', ...UPDATES[step] })
+        })
+      }
     </script>
   </body>
 </html>

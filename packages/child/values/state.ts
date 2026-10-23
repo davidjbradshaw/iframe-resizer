@@ -12,10 +12,15 @@ export default {
   // Setting names the page provided in window.iframeResizer; these win over
   // values sent by the parent, on init and on update
   pageSettings: [] as string[],
+  // The values the parent last sent, so an update can tell which it changed
+  fromParent: {} as Record<string, unknown>,
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [] as unknown as NodeListOf<Element>,
   target: window?.parent as MessageEventSource | null,
+  // Set by the test hook in index.ts, whose specs stand in for the parent
+  // window with a plain object
+  testHarness: false,
   timerActive: false,
   totalTime: 0,
   triggerLocked: false,
@@ -24,6 +29,9 @@ export default {
   viewportResized: false,
   width: 0,
   win: window,
+  // Kept for backwards compatibility
   onPageInfo: null,
-  onParentInfo: null,
+  // Subscribers from getParentProps(), and the last update sent to them
+  parentInfo: null as object | null,
+  parentInfoListeners: new Set<(info: any) => void>(),
 }

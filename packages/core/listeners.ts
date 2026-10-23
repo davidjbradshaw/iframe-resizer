@@ -9,6 +9,7 @@ import {
 import meetsMinChildVersion from './checks/min-child-version'
 import { debug, errorBoundary, event as consoleEvent } from './console'
 import tabVisible from './events/visible'
+import createIframeObserver from './observers/iframe'
 import decodeMessage, { getIframeId } from './received/decode'
 import {
   checkIframeExists,
@@ -81,5 +82,6 @@ function iframeParentListener(data: string): void {
 export default once(() => {
   addEventListener(window, MESSAGE, iframeListener as EventListener)
   addEventListener(document, 'visibilitychange', tabVisible)
+  createIframeObserver()
   ;(window as any).iframeParentListener = iframeParentListener
 })

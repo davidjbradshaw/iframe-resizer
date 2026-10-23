@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alpine options set before the child is ready</title>
+  </head>
+  <body>
+    <!--
+      x-init runs after the directive has bound the iframe, so the change it
+      makes lands before the child is ready. The child page holds its script
+      back until told to go, so the change always comes before init. ?late
+      makes the same change after onReady instead, as a control.
+    -->
+    <div
+      x-data="{
+        early: {
+          direction: 'horizontal-inline',
+          bodyBackground: 'rgb(0, 128, 0)',
+        },
+        late: location.search.includes('late'),
+        extra: {},
+        status: 'pending',
+        apply() {
+          this.extra = this.early
+        },
+        get iframeOptions() {
+          const self = this
+          return {
+            license: 'GPLv3',
+            log: true,
+            ...this.extra,
+            onReady() {
+              if (self.late) self.apply()
+              self.status = 'ready'
+            },
+          }
+        },
+      }"
+      x-init="
+        window.addEventListener('message', (event) => {
+          if (event.data !== 'early-update:loaded') return
+          document
+            .getElementById('frame')
+            .contentWindow.postMessage('early-update:go', '*')
+        });
+        if (!late) apply()
+      "
+    >
+      <p>
+        Direction:
+        <span id="direction" x-text="extra.direction ?? 'vertical'"></span>
+        Ready: <span id="status" x-text="status"></span>
+      </p>
+
+      <iframe
+        x-iframe-resizer="iframeOptions"
+        id="frame"
+        src="child/frame.early-update.html"
+        style="width: 600px; height: 100px"
+      ></iframe>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

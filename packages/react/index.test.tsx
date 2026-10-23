@@ -31,8 +31,13 @@ const moveToAnchor = vi.fn()
 const sendMessage = vi.fn()
 const getVersion = vi.fn(() => ({ parent: '6.0.0', child: '6.0.0' }))
 
+// The id on each element core was handed: core reads the id from the
+// element, not from the options, so this is what it actually sees
+const boundIds: (string | undefined)[] = []
+
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn(() => (iframe: any) => {
+    boundIds.push(iframe?.id)
     // Expose a minimal API similar to production
     iframe.iframeResizer = {
       disconnect,
@@ -56,6 +61,23 @@ describe('React IframeResizer component', () => {
     moveToAnchor.mockClear()
     sendMessage.mockClear()
     consoleGroup.expand.mockClear()
+    boundIds.length = 0
+  })
+
+  test('a changed id reaches core on the element, so it can report it', async () => {
+    await act(async () => {
+      root.render(<IframeResizer license="GPLv3" id="first" />)
+    })
+
+    expect(boundIds).toEqual(['first'])
+
+    await act(async () => {
+      root.render(<IframeResizer license="GPLv3" id="renamed" />)
+    })
+
+    // React commits the DOM before effects run, so the element core is given
+    // already carries the new id
+    expect(boundIds.at(-1)).toBe('renamed')
   })
 
   test('renders an iframe and wires ref methods', async () => {
@@ -269,6 +291,8 @@ describe('React IframeResizer component', () => {
 
     // Call the onBeforeClose callback
     const result = capturedOptions.onBeforeClose()
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
 
     expect(result).toBe(false)
 

@@ -9,12 +9,12 @@ coverage*
 .idea
 js/*
 dist
-test-js
+test/js
 example-test
 .eslintcache
 
 # Playwright
-/test-results/
+/test/results/
 /playwright-report/
 /playwright/.cache/
 

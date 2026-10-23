@@ -10,6 +10,5 @@ export default function message(event: MessageEvent): void {
 
   log(`onMessage called from parent:%c`, HIGHLIGHT, parseFrozen(msgBody))
 
-  // eslint-disable-next-line sonarjs/no-extra-arguments
   isolateUserCode(settings.onMessage, parse(msgBody))
 }

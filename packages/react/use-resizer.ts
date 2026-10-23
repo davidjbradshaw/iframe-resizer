@@ -64,6 +64,8 @@ export default function useResizer(props: IFrameResizerProps) {
       propsRef.current as IFrameResizerProps & { logExpand?: unknown }
     const options: IFrameOptions = {
       ...coreProps,
+      // This component disconnects when it unmounts
+      disconnectOnRemove: false,
       onBeforeClose: onBeforeCloseRef.current,
     }
     const callbacks = options as Partial<Record<Callback, Wrapper>>

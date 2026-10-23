@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer message source test</title>
+    <style>
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+      #other {
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cross-origin, so it talks to the page by postMessage. First in the
+         page, so the other frame can reach it as parent.frames[0] -->
+    <iframe
+      id="myIframe"
+      src="http://127.0.0.1:8080/e2e/fixtures/child/frame.sources.html"
+    ></iframe>
+
+    <!-- A sandboxed frame has an opaque origin. It posts whatever the test
+         gives it, to the page or to the resized iframe, as another window
+         on the page could -->
+    <iframe
+      id="other"
+      sandbox="allow-scripts"
+      srcdoc="<script>
+        addEventListener('message', (event) => {
+          if (event.source !== parent) return
+          const { to, data } = event.data
+          const target = to === 'child' ? parent.frames[0] : parent
+          target.postMessage(data, '*')
+        })
+      </script>"
+    ></iframe>
+
+    <script src="../../js/iframe-resizer.parent.js"></script>
+    <script>
+      window.ready = false
+      window.messages = []
+      window.scrolls = []
+
+      iframeResize(
+        {
+          license: 'GPLv3',
+          inPageLinks: true,
+          onReady: () => {
+            window.ready = true
+          },
+          onMessage: ({ message }) => {
+            window.messages.push(message)
+          },
+          onScroll: (data) => {
+            window.scrolls.push(data)
+            return false
+          },
+        },
+        '#myIframe',
+      )
+
+      window.forge = (to, data) =>
+        document.getElementById('other').contentWindow.postMessage({ to, data }, '*')
+    </script>
+  </body>
+</html>

@@ -9,8 +9,9 @@
     IFrameObject,
     IFrameOptions,
     IFrameScrollData,
+    IFrameScrollOption,
   } from '@iframe-resizer/core'
-  import { esModuleInterop } from '@iframe-resizer/common'
+  import { esModuleInterop, setStyleKeepingSize } from '@iframe-resizer/common'
   import { COLLAPSE, EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
   import acg from 'auto-console-group'
 
@@ -19,14 +20,14 @@
 
   export let license: string
   export let bodyBackground: string | undefined = undefined
-  export let bodyMargin: string | undefined = undefined
-  export let bodyPadding: string | undefined = undefined
-  export let checkOrigin: boolean | undefined = undefined
+  export let bodyMargin: number | string | undefined = undefined
+  export let bodyPadding: number | string | undefined = undefined
+  export let checkOrigin: boolean | string[] | undefined = undefined
   export let direction: IFrameDirection | undefined = undefined
   export let log: IFrameLogOption | undefined = undefined
   export let inPageLinks: boolean | undefined = undefined
   export let offsetSize: number | undefined = undefined
-  export let scrolling: boolean | undefined = undefined
+  export let scrolling: IFrameScrollOption | undefined = undefined
   export let tolerance: number | undefined = undefined
   export let warningTimeout: number | undefined = undefined
 
@@ -50,6 +51,8 @@
       scrolling,
       tolerance,
       warningTimeout,
+      // This component disconnects when it unmounts
+      disconnectOnRemove: false,
       onBeforeClose: () => {
         consoleGroup.event('Blocked Close Event')
         consoleGroup.warn(
@@ -98,6 +101,9 @@
   let lastOptionsKey: string | undefined
   $: {
     const optionsKey = JSON.stringify([
+      // A changed id re-binds, so core can report that a bound iframe
+      // cannot change its id
+      $$restProps.id,
       license,
       bodyBackground,
       bodyMargin,
@@ -116,10 +122,22 @@
       lastOptionsKey !== undefined &&
       optionsKey !== lastOptionsKey
     ) {
+      // Svelte patches the DOM after this block, so a changed id is written
+      // here: core reads the id from the element, not from the options.
+      // setAttribute, as assigning iframe.id compiles to a state mutation,
+      // which would re-run every statement that reads iframe, re-applying
+      // the style prop over the size core set
+      if ($$restProps.id !== undefined)
+        iframe.setAttribute('id', $$restProps.id)
       connectResizer(buildOptions())(iframe)
     }
     lastOptionsKey = optionsKey
   }
+
+  // A style in the spread would be re-written wholesale on change, wiping the
+  // size core set, so it is split out and applied keeping the size
+  $: ({ style: styleAttr, ...attrs } = $$restProps)
+  $: if (iframe) setStyleKeepingSize(iframe, styleAttr)
 
   onDestroy(() => {
     resizer?.disconnect()
@@ -135,4 +153,4 @@
   }
 </script>
 
-<iframe bind:this={iframe} {...$$restProps}></iframe>
+<iframe bind:this={iframe} {...attrs}></iframe>

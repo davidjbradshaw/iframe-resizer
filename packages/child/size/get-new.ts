@@ -19,7 +19,8 @@ export function callOnBeforeResize(
     )
   }
 
-  if (Number.isNaN(returnedSize))
+  // isFinite() does not coerce, so strings and objects fail too
+  if (!Number.isFinite(returnedSize))
     throw new TypeError(
       `Invalid value returned from onBeforeResize(): ${returnedSize}, expected Number`,
     )

@@ -12,7 +12,7 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
 
 # A newer commit to a PR cancels its older runs; each push runs in full
 concurrency:
@@ -48,11 +48,11 @@ jobs:
         path: |
           dist/
           js/
-          test-js/
+          test/js/
         retention-days: 1
 
-  e2e:
-    name: ${{ matrix.framework }}
+  platform:
+    name: ${{ matrix.platform }}
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -60,23 +60,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        framework:
+        # One runner per platform, each running the shared suites through that
+        # wrapper. Anything that does not vary by platform is in core.
+        platform:
           - alpine
           - angular
-          - animation
           - astro
-          - check-origin
-          - horizontal
           - jquery
-          - legacy
-          - parent
           - react
           - solid
           - svelte
-          - v5-child
           - vue
           - web-component
-          - width-modes
 
     steps:
     - uses: actions/checkout@v6
@@ -102,16 +97,16 @@ jobs:
         name: build-output
 
     - name: Build e2e app
-      run: bash build-scripts/build-e2e-app.sh ${{ matrix.framework }}
+      run: bash build-scripts/build-e2e-app.sh ${{ matrix.platform }}
 
     - name: Run Playwright tests
-      run: npx playwright test e2e/tests/${{ matrix.framework }}.spec.js
+      run: npx playwright test e2e/tests/${{ matrix.platform }}.spec.js
 
     - name: Upload test results
       uses: actions/upload-artifact@v7
       if: always()
       with:
-        name: playwright-report-${{ matrix.framework }}
+        name: playwright-report-${{ matrix.platform }}
         path: playwright-report/
         retention-days: 30
 
@@ -119,6 +114,64 @@ jobs:
       uses: actions/upload-artifact@v7
       if: failure()
       with:
-        name: playwright-screenshots-${{ matrix.framework }}
-        path: test-results/
+        name: playwright-screenshots-${{ matrix.platform }}
+        path: test/results/
+        retention-days: 30
+
+  suite:
+    name: ${{ matrix.suite }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # core: the plain parent and child, and everything that behaves the
+        # same whichever wrapper is used. legacy: this release against the
+        # earlier ones, in both directions.
+        suite:
+          - core
+          - legacy
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Use Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: 26.x
+        cache: 'npm'
+
+    - name: Use npm 12
+      run: npm install -g npm@12
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v7
+      with:
+        name: build-output
+
+    - name: Run Playwright tests
+      run: npx playwright test e2e/tests/${{ matrix.suite }}
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: playwright-report-${{ matrix.suite }}
+        path: playwright-report/
+        retention-days: 30
+
+    - name: Upload test screenshots
+      uses: actions/upload-artifact@v7
+      if: failure()
+      with:
+        name: playwright-screenshots-${{ matrix.suite }}
+        path: test/results/
         retention-days: 30
