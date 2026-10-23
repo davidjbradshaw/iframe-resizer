@@ -102,7 +102,6 @@ const HTMLBase =
 export class IframeResizerElement extends HTMLBase {
   private resizer: IFrameObject | null = null
 
-  // eslint-disable-next-line new-cap
   private consoleGroup = createAutoConsoleGroup()
 
   private resizerOptions: Partial<IFrameOptions> = {}

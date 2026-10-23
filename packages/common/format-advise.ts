@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 /* eslint-disable security/detect-non-literal-regexp */
 
 import { NEW_LINE } from './consts'
@@ -39,4 +38,3 @@ export default (formatLogMessage: FormatLogMessageFn) =>
     )
 
 /* eslint-enable security/detect-non-literal-regexp */
-/* eslint-enable no-useless-escape */
