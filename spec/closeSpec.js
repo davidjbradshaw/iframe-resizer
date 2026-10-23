@@ -6,17 +6,14 @@ define(['iframeResizerParent'], (iframeResize) => {
       loadIFrame('iframe600.html')
     })
 
-    it('closes from parent', (done) => {
-
+    it('closes when the child asks', (done) => {
       iframe = iframeResize({
         license: 'GPLv3',
         id: 'close2',
-        onAfterClose: () => {
+        onAfterClose: (id) => {
+          expect(id).toBe('close2')
+          expect(document.getElementById('close2')).toBeNull()
           setTimeout(done)
-        },
-        onReady: (iframe) => {
-          console.log('>>> close from parent')
-          iframe.iframeResizer.sendMessage('close')
         },
       })[0]
 

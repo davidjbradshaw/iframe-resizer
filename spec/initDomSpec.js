@@ -13,6 +13,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframe) => {
             if (called) return
             called = true
+
             expect(iframe.iframeResizer).toBeDefined()
             tearDown(iframe)
             setTimeout(done, 1)
@@ -39,6 +40,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframe) => {
             if (called) return
             called = true
+
             expect(iframe.iframeResizer).toBeDefined()
             tearDown(iframe)
             setTimeout(done, 1)

@@ -1,5 +1,5 @@
+// These helpers are globals for every spec file, so they read as unused here
 /* eslint-disable no-unused-vars */
-/* eslint-disable prefer-template */
 
 const LOG = true
 
@@ -15,6 +15,7 @@ const fixturesCache = {}
 
 // Preload every fixture Karma serves, so loadIFrame() can stay synchronous
 beforeAll(async () => {
+  // eslint-disable-next-line no-underscore-dangle
   const files = Object.keys(window.__karma__.files).filter((file) =>
     file.startsWith(FIXTURES_PATH),
   )
@@ -74,16 +75,16 @@ function loadIFrame(filename) {
   removeFixtures()
   const container = document.createElement('div')
   container.id = FIXTURES_ID
-  container.innerHTML = readFixture(filename)
+  const parsed = new DOMParser().parseFromString(
+    readFixture(filename),
+    'text/html',
+  )
+  container.append(...parsed.body.childNodes)
   document.body.append(container)
 }
 
 function getTarget(iframe) {
   return iframe.src.split('/').slice(0, 3).join('/')
-}
-
-function mockPostMsgViaHook(testIFrame, id, msg, callback) {
-  return testIFrame('[iFrameSizer]' + id + ':' + msg, callback)
 }
 
 function mockPostMsg(id, msg) {
@@ -96,33 +97,67 @@ function mockMsgFromIFrame(iframe, msg) {
   mockPostMsg(iframe.id, '0:0:' + msg)
 }
 
-function mockInitFromParent(testIFrame, id, log, callback) {
-  return mockPostMsgViaHook(
-    testIFrame,
-    id,
-    '8:false:' + log + ':0:true:false:null:max:wheat:null:0:true:child:scroll',
-    callback,
+// Dispatch a message as if it came from the iframe on a chosen origin, which
+// window.postMessage cannot do: it always stamps this page's own origin.
+// Pass source explicitly to post as something other than the iframe.
+function mockMsgFromOrigin(iframe, origin, msg, source = iframe.contentWindow) {
+  window.dispatchEvent(
+    new MessageEvent('message', {
+      data: '[iFrameSizer]' + iframe.id + ':' + msg,
+      origin,
+      source,
+    }),
   )
 }
 
-function spyOnPostMessage(target) {
-  spyOn(target, 'postMessage')
+// The init message the parent sent to this iframe, split into its fields.
+// It is the only message whose second field is the v1 padding, so it can be
+// picked out without depending on the order the parent sends messages in.
+const INIT_MSG = /^\[iFrameSizer].*?:8:/
+
+function initMsgFields(postMessageSpy) {
+  const call = postMessageSpy.calls.all().find((c) => INIT_MSG.test(c.args[0]))
+  return call === undefined
+    ? undefined
+    : call.args[0].slice('[iFrameSizer]'.length).split(':')
 }
 
-function spyOnWindowPostMessage() {
-  spyOnPostMessage(window.parent)
-  return window.parent.postMessage
+// The payload of the last type:{json} message sent to the iframe
+function lastJsonMsg(postMessageSpy, type) {
+  const prefix = '[iFrameSizer]' + type + ':'
+  const call = postMessageSpy.calls
+    .all()
+    .reverse()
+    .find((c) => c.args[0].startsWith(prefix))
+  return call === undefined
+    ? undefined
+    : JSON.parse(call.args[0].slice(prefix.length))
 }
 
-function spyOnIFramePostMessage(iframe) {
-  spyOnPostMessage(iframe.contentWindow)
+function countJsonMsgs(postMessageSpy, type) {
+  const prefix = '[iFrameSizer]' + type + ':'
+  return postMessageSpy.calls.all().filter((c) => c.args[0].startsWith(prefix))
+    .length
 }
 
-function closeChild(window, done) {
-  window.parentIframe.close()
-  done()
+const delay = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+
+// document.hidden is a getter on Document.prototype. A spec that fakes it
+// defines an own property, which shadows the real one for every later spec
+// unless it is deleted again — including when the spec fails part way through
+function setDocumentHidden(value) {
+  Object.defineProperty(document, 'hidden', {
+    writable: true,
+    configurable: true,
+    value,
+  })
 }
 
-function strEnd(str, num) {
-  return str.slice(-num)
-}
+afterEach(() => {
+  if (Object.hasOwn(document, 'hidden')) delete document.hidden
+})
+
+/* eslint-enable no-unused-vars */

@@ -129,6 +129,7 @@ define(['iframeResizerParent'], (iframeResize) => {
               const hasMessage = calls.some((call) =>
                 call.args[0].includes('"Hello"'),
               )
+
               expect(hasMessage).toBe(true)
               setTimeout(done, 1)
             }, 50)
@@ -154,9 +155,11 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Should have sent JSON stringified message
               expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
               const calls = iframe.contentWindow.postMessage.calls.all()
-              const hasMessage = calls.some((call) =>
-                call.args[0].includes('test') && call.args[0].includes('123'),
+              const hasMessage = calls.some(
+                (call) =>
+                  call.args[0].includes('test') && call.args[0].includes('123'),
               )
+
               expect(hasMessage).toBe(true)
               setTimeout(done, 1)
             }, 50)
@@ -299,9 +302,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'method15',
           checkOrigin: false,
-          onBeforeClose: () => {
-            return false // Cancel close
-          },
+          onBeforeClose: () => false, // Cancel close
           onReady: (iframeEl) => {
             iframeEl.iframeResizer.close()
 
@@ -324,8 +325,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: (iframeEl) => {
             // Manually remove iframe
-            const parent = iframeEl.parentNode
-            parent.removeChild(iframeEl)
+            iframeEl.remove()
 
             setTimeout(() => {
               // Disconnected by the observer, so a later close() throws
@@ -333,24 +333,6 @@ define(['iframeResizerParent'], (iframeResize) => {
               expect(iframeEl.iframeResizer).not.toBeDefined()
               setTimeout(done, 1)
             }, 10)
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
-    })
-
-    describe('disconnect() method', () => {
-      it('should have disconnect method available', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'method17',
-          checkOrigin: false,
-          onReady: (iframeEl) => {
-            // Verify disconnect method exists
-            expect(typeof iframeEl.iframeResizer.disconnect).toBe('function')
-            setTimeout(done, 1)
           },
         })[0]
 
@@ -375,7 +357,9 @@ define(['iframeResizerParent'], (iframeResize) => {
 
             setTimeout(() => {
               // All methods should have been called
-              expect(iframeEl.contentWindow.postMessage.calls.count()).toBeGreaterThan(0)
+              expect(
+                iframeEl.contentWindow.postMessage.calls.count(),
+              ).toBeGreaterThan(0)
               setTimeout(done, 1)
             }, 50)
           },

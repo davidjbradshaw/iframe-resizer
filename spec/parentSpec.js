@@ -27,7 +27,10 @@ define(['iframeResizerParent'], (iframeResize) => {
         // Send init first, then a resize message
         mockMsgFromIFrame(iframe, 'init')
         setTimeout(() => {
-          window.postMessage(`[iFrameSizer]${testId}:100:200:mutationObserver`, '*')
+          window.postMessage(
+            `[iFrameSizer]${testId}:100:200:mutationObserver`,
+            '*',
+          )
         }, 10)
       })
 
@@ -154,6 +157,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       }
 
       afterEach(() => {
+        // The rem spec changes it, and a later spec's rem sizes depend on it
+        document.querySelector('html').style.fontSize = ''
         tearDown(iframe)
       })
 
