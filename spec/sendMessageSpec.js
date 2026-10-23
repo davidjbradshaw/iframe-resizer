@@ -17,7 +17,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       spyOn(iframe.contentWindow, 'postMessage')
 
-      const iframe1 = iframeResize({
+      iframeResize({
         license: 'GPLv3',
         log,
         id: 'sendMessage1',
@@ -34,7 +34,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
           setTimeout(done, 1)
         },
-      })[0]
+      })
 
       // Mock the init message from child
       mockMsgFromIFrame(iframe, 'init')
@@ -77,7 +77,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           expect(messageData.message).toBe('message: test string')
           setTimeout(done, 1)
         },
-      })[0]
+      })
 
       // Mock the init message from child
       mockMsgFromIFrame(iframe, 'init')

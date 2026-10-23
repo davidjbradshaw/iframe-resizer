@@ -4,7 +4,6 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     beforeAll(() => {
       loadIFrame('iframe600WithId.html')
-      spyOn(console, 'warn')
     })
 
     afterAll(() => {
@@ -17,7 +16,10 @@ define(['iframeResizerParent'], (iframeResize) => {
       }
 
       iframe = iframeResize({ license: 'GPLv3', log: true }, '#doubleTest')[0]
-      const result = iframeResize({ license: 'GPLv3', log: true }, '#doubleTest')
+      const result = iframeResize(
+        { license: 'GPLv3', log: true },
+        '#doubleTest',
+      )
 
       expect(iframe.iframeResizer).toBeDefined()
       expect(result[0].iframeResizer).toBeDefined()
