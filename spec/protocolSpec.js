@@ -10,8 +10,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    // Sending the init message needs the child to look ready, as no child
-    // script runs in the fixture
+    // sendInit sends the init message by itself once the iframe is in the
+    // page, so nothing has to stand in for the child here
     async function bind(id, options) {
       iframe = document.getElementsByTagName('iframe')[0]
       iframe.id = id
@@ -23,7 +23,6 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       const postMessage = await spyOnIframeMessages(iframe)
-      window.postMessage('[iframeResizerChild]Ready', '*')
       await delay(50)
 
       return initMsgFields(postMessage)
