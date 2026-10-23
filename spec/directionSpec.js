@@ -12,23 +12,23 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     // What the parent tells the child to size, read off the init message:
     // sizeWidth is field 2, sizeHeight 18 and maxContentWidth 24
-    function sizingFor(id, direction) {
+    async function sizingFor(id, direction) {
       iframe = document.getElementsByTagName('iframe')[0]
       iframe.id = id
 
       iframeResize({ license: 'GPLv3', id, checkOrigin: false, direction })
 
-      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      const postMessage = await spyOnIframeMessages(iframe)
       window.postMessage('[iframeResizerChild]Ready', '*')
+      await delay(50)
 
-      return delay(50).then(() => {
-        const fields = initMsgFields(postMessage)
-        return {
-          sizeWidth: fields[2],
-          sizeHeight: fields[18],
-          maxContentWidth: fields[24],
-        }
-      })
+      const fields = initMsgFields(postMessage)
+
+      return {
+        sizeWidth: fields[2],
+        sizeHeight: fields[18],
+        maxContentWidth: fields[24],
+      }
     }
 
     it('vertical sizes height only', async () => {
