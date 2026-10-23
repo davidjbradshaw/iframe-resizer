@@ -153,9 +153,11 @@
         "spyOnProperty": true,
         "spyOnAllFunctions": true,
         "LOG": true,
+        "adviceGiven": true,
         "countJsonMsgs": true,
         "delay": true,
         "getTarget": true,
+        "iframeLoaded": true,
         "initMsgFields": true,
         "lastJsonMsg": true,
         "loadIFrame": true,
@@ -165,6 +167,7 @@
         "readFixture": true,
         "removeFixtures": true,
         "setDocumentHidden": true,
+        "spyOnIframeMessages": true,
         "tearDown": true
       },
       "rules": {

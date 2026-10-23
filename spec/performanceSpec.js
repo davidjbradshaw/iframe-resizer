@@ -111,82 +111,75 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     describe('Page info monitoring', () => {
-      it('should start page info monitoring on request', (done) => {
+      it('should start page info monitoring on request', async () => {
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
           id: 'perf5',
           checkOrigin: false,
-          onReady: () => {
-            // Spy on postMessage to verify info is sent
-            spyOn(iframe.contentWindow, 'postMessage')
-
-            // Request page info monitoring
-            mockMsgFromIFrame(iframe, 'pageInfo')
-
-            setTimeout(() => {
-              // Should have sent page info
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              setTimeout(done, 1)
-            }, 100)
-          },
         })[0]
 
         mockMsgFromIFrame(iframe, 'init')
+        await iframeLoaded(iframe)
+        await delay(50)
+
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+
+        mockMsgFromIFrame(iframe, 'pageInfo')
+        await delay(100)
+
+        expect(countJsonMsgs(postMessage, 'pageInfo')).toBeGreaterThan(0)
+
+        mockMsgFromIFrame(iframe, 'pageInfoStop')
       })
 
-      it('should send page info when asked', (done) => {
+      it('should send page info when asked', async () => {
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
           id: 'perf7',
           checkOrigin: false,
-          onReady: () => {
-            let callCount = 0
-            spyOn(iframe.contentWindow, 'postMessage').and.callFake(() => {
-              callCount++
-            })
-
-            // Request page info monitoring
-            mockMsgFromIFrame(iframe, 'pageInfo')
-
-            setTimeout(() => {
-              // Should have sent multiple page info updates
-              expect(callCount).toBeGreaterThan(0)
-
-              // Stop monitoring
-              mockMsgFromIFrame(iframe, 'pageInfoStop')
-              setTimeout(done, 1)
-            }, 150)
-          },
         })[0]
 
         mockMsgFromIFrame(iframe, 'init')
+        await iframeLoaded(iframe)
+        await delay(50)
+
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+
+        mockMsgFromIFrame(iframe, 'pageInfo')
+        await delay(150)
+
+        const info = lastJsonMsg(postMessage, 'pageInfo')
+
+        expect(info).withContext('no pageInfo was sent').toBeDefined()
+        expect(info.iframeWidth).toBe(iframe.getBoundingClientRect().width)
+
+        mockMsgFromIFrame(iframe, 'pageInfoStop')
       })
     })
 
     describe('Parent info monitoring', () => {
-      it('should start parent info monitoring on request', (done) => {
+      it('should start parent info monitoring on request', async () => {
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
           id: 'perf8',
           checkOrigin: false,
-          onReady: () => {
-            spyOn(iframe.contentWindow, 'postMessage')
-
-            // Request parent info monitoring
-            mockMsgFromIFrame(iframe, 'parentInfo')
-
-            setTimeout(() => {
-              // Should have sent parent info
-              expect(iframe.contentWindow.postMessage).toHaveBeenCalled()
-              setTimeout(done, 1)
-            }, 100)
-          },
         })[0]
 
         mockMsgFromIFrame(iframe, 'init')
+        await iframeLoaded(iframe)
+        await delay(50)
+
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+
+        mockMsgFromIFrame(iframe, 'parentInfo')
+        await delay(100)
+
+        expect(countJsonMsgs(postMessage, 'parentInfo')).toBeGreaterThan(0)
+
+        mockMsgFromIFrame(iframe, 'parentInfoStop')
       })
 
       it('should send parent info when asked', (done) => {

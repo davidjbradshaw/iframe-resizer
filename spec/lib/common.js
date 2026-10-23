@@ -140,6 +140,33 @@ function countJsonMsgs(postMessageSpy, type) {
     .length
 }
 
+// advise() turns its <b> markers into ANSI colour codes under Chrome, so
+// match on fragments of the text that do not span one
+function adviceGiven(warnSpy) {
+  return warnSpy.calls
+    .all()
+    .map((call) => String(call.args[0]))
+    .join('\n')
+}
+
+// The fixture iframe loads its page asynchronously, and the load replaces
+// contentWindow — so a spy installed before it lands on the wrong window
+async function spyOnIframeMessages(iframe) {
+  await iframeLoaded(iframe)
+  return spyOn(iframe.contentWindow, 'postMessage')
+}
+
+function iframeLoaded(iframe) {
+  return new Promise((resolve) => {
+    if (iframe.contentWindow?.document?.readyState === 'complete') {
+      resolve()
+      return
+    }
+
+    iframe.addEventListener('load', () => resolve(), { once: true })
+  })
+}
+
 const delay = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms)
