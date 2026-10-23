@@ -1,10 +1,14 @@
 {
   "extends": ["auto"],
   "ignorePatterns": [
-    "js/*",
-    "dist/*",
-    "*.d.ts",
-    "coverage/**"
+    "coverage/",
+    "dist/",
+    "js/",
+    "js-dist/",
+    "test/js/",
+    "example/",
+    "example-test/",
+    "*.d.ts"
   ],
   "env": {
     "amd": true,
@@ -62,7 +66,7 @@
     "react/prop-types": 0,
     "sonarjs/no-nested-template-literals": 0,
     "switch-case/no-case-curly": 0,
-    "valid-typeof": 0,
+    "valid-typeof": [2, { "requireStringLiterals": false }],
     "unicorn/consistent-function-scoping": 0,
     "unicorn/no-array-callback-reference": 0,
     "unicorn/no-array-reduce": 0,
@@ -91,7 +95,7 @@
       }
     },
     {
-      "files": ["build/**/*.js", "build-scripts/**/*.js", "vite.config/**/*.js"],
+      "files": ["build-scripts/**/*.js", "vite.config/**/*.js"],
       "parser": "@babel/eslint-parser",
       "parserOptions": {
         "requireConfigFile": false,
