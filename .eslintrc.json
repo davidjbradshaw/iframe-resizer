@@ -173,7 +173,8 @@
         "removeFixtures": true,
         "setDocumentHidden": true,
         "spyOnIframeMessages": true,
-        "tearDown": true
+        "tearDown": true,
+        "waitFor": true
       },
       "rules": {
         "no-console": 0,
