@@ -26,7 +26,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           setTimeout(done, 1)
         },
       })
-      
+
       // Mock init message
       const iframe = document.getElementsByTagName('iframe')[0]
       mockMsgFromIFrame(iframe, 'init')
@@ -51,7 +51,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           setTimeout(done, 1)
         },
       })[0]
-      
+
       // Mock init message
       mockMsgFromIFrame(iframe2, 'init')
     })
@@ -62,12 +62,13 @@ define(['iframeResizerParent'], (iframeResize) => {
         moveToAnchor: (hash) => {
           if (called) return
           called = true
+
           expect(hash).toBe('anchorNotOnParent')
           tearDown(iframe3)
           setTimeout(done, 1)
         },
       }
-      
+
       const iframe3 = iframeResize({
         license: 'GPLv3',
         log: true,
@@ -78,11 +79,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           // Anchor not on this page, so core forwards it to window.parentIframe
           setTimeout(() => {
             mockMsgFromIFrame(iframe3, 'inPageLink:#anchorNotOnParent')
-            
           }, 10)
         },
       })[0]
-      
+
       // Mock init message
       mockMsgFromIFrame(iframe3, 'init')
     })
