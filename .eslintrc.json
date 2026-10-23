@@ -162,6 +162,7 @@
         "lastJsonMsg": true,
         "loadIFrame": true,
         "mockMsgFromIFrame": true,
+        "mockChildReady": true,
         "mockMsgFromOrigin": true,
         "mockPostMsg": true,
         "readFixture": true,

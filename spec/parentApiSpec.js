@@ -22,7 +22,6 @@ define(['iframeResizerParent'], (iframeResize) => {
         bind('api1')
 
         const postMessage = await spyOnIframeMessages(iframe)
-        window.postMessage('[iframeResizerChild]Ready', '*')
         await delay(50)
 
         const fields = initMsgFields(postMessage)

@@ -110,6 +110,18 @@ function mockMsgFromOrigin(iframe, origin, msg, source = iframe.contentWindow) {
   )
 }
 
+// The real ready message a late-loading child sends. It must come from the
+// iframe's own window, and the spelling is part of the wire protocol.
+function mockChildReady(iframe, origin = window.location.origin) {
+  window.dispatchEvent(
+    new MessageEvent('message', {
+      data: '[iFrameResizerChild]Ready',
+      origin,
+      source: iframe.contentWindow,
+    }),
+  )
+}
+
 // The init message the parent sent to this iframe, split into its fields.
 // It is the only message whose second field is the v1 padding, so it can be
 // picked out without depending on the order the parent sends messages in.
