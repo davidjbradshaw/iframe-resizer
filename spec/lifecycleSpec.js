@@ -12,15 +12,12 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     describe('onReady', () => {
       it('should call onReady when iframe initializes', (done) => {
-        let readyCalled = false
-
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
           id: 'lifecycle1',
           checkOrigin: false,
           onReady: (iframeEl) => {
-            readyCalled = true
             expect(iframeEl).toBe(iframe)
             expect(iframeEl.iframeResizer).toBeDefined()
             setTimeout(done, 1)
@@ -57,7 +54,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'lifecycle3',
           checkOrigin: false,
-          onReady: (iframeEl) => {
+          onReady: () => {
             // Check that the iframe has been initialized
             expect(initComplete).toBe(true)
             setTimeout(done, 1)
@@ -80,6 +77,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onBeforeClose: (id) => {
             beforeCloseCalled = true
+
             expect(id).toBe('lifecycle5')
             expect(document.getElementById('lifecycle5')).toBeTruthy()
             return true
@@ -106,9 +104,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           log: true,
           id: 'lifecycle6',
           checkOrigin: false,
-          onBeforeClose: () => {
-            return false // Cancel the close
-          },
+          onBeforeClose: () => false, // Cancel the close
           onAfterClose: () => {
             afterCloseCalled = true
           },
@@ -288,7 +284,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             callOrder.push('onReady')
-            
+
             setTimeout(() => {
               expect(callOrder).toEqual(['onReady'])
               setTimeout(done, 1)
@@ -319,7 +315,12 @@ define(['iframeResizerParent'], (iframeResize) => {
           },
           onAfterClose: () => {
             callOrder.push('onAfterClose')
-            expect(callOrder).toEqual(['onReady', 'onBeforeClose', 'onAfterClose'])
+
+            expect(callOrder).toEqual([
+              'onReady',
+              'onBeforeClose',
+              'onAfterClose',
+            ])
             setTimeout(done, 1)
           },
         })[0]
@@ -341,6 +342,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           },
           onMouseLeave: () => {
             events.push('leave')
+
             expect(events).toEqual(['enter', 'leave'])
             setTimeout(done, 1)
           },
@@ -357,6 +359,5 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'init')
       })
     })
-
   })
 })

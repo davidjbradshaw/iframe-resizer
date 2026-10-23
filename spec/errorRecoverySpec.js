@@ -27,10 +27,12 @@ define(['iframeResizerParent'], (iframeResize) => {
           // Should have warned about no response
           const warnCalls = console.warn.calls.all()
           const hasTimeoutWarning = warnCalls.some((call) =>
-            call.args.some((arg) =>
-              typeof arg === 'string' && arg.includes('has not responded'),
+            call.args.some(
+              (arg) =>
+                typeof arg === 'string' && arg.includes('has not responded'),
             ),
           )
+
           expect(hasTimeoutWarning).toBe(true)
           setTimeout(done, 1)
         }, 200)
@@ -50,10 +52,13 @@ define(['iframeResizerParent'], (iframeResize) => {
               // Should not have warned since iframe responded
               const warnCalls = console.warn.calls.all()
               const hasTimeoutWarning = warnCalls.some((call) =>
-                call.args.some((arg) =>
-                  typeof arg === 'string' && arg.includes('has not responded'),
+                call.args.some(
+                  (arg) =>
+                    typeof arg === 'string' &&
+                    arg.includes('has not responded'),
                 ),
               )
+
               expect(hasTimeoutWarning).toBe(false)
               setTimeout(done, 1)
             }, 100)
@@ -80,10 +85,12 @@ define(['iframeResizerParent'], (iframeResize) => {
           // Should not have warned
           const warnCalls = console.warn.calls.all()
           const hasTimeoutWarning = warnCalls.some((call) =>
-            call.args.some((arg) =>
-              typeof arg === 'string' && arg.includes('has not responded'),
+            call.args.some(
+              (arg) =>
+                typeof arg === 'string' && arg.includes('has not responded'),
             ),
           )
+
           expect(hasTimeoutWarning).toBe(false)
           setTimeout(done, 1)
         }, 150)
@@ -213,10 +220,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             // Send message with unsupported type
-            window.postMessage(
-              '[iFrameSizer]error9:0:0:unsupportedType',
-              '*',
-            )
+            window.postMessage('[iFrameSizer]error9:0:0:unsupportedType', '*')
 
             setTimeout(() => {
               // Should have warned about unsupported message
@@ -228,6 +232,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                     arg.includes('Unsupported message'),
                 ),
               )
+
               expect(hasUnsupportedWarning).toBe(true)
               setTimeout(done, 1)
             }, 50)
@@ -296,8 +301,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             // Remove iframe from DOM
-            const parent = iframe.parentNode
-            parent.removeChild(iframe)
+            iframe.remove()
 
             // Try to send message to removed iframe
             setTimeout(() => {
@@ -369,7 +373,9 @@ define(['iframeResizerParent'], (iframeResize) => {
                     arg.includes('Ignoring message with 0'),
                 ),
               )
+
               expect(hasIgnoreLog).toBe(true)
+              expect(iframe.style.height).toBe(initialHeight)
               setTimeout(done, 1)
             }, 50)
           },
@@ -401,6 +407,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                     arg.includes('Ignoring message with 0'),
                 ),
               )
+
               expect(hasIgnoreLog).toBe(true)
               setTimeout(done, 1)
             }, 50)
@@ -420,10 +427,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: () => {
             // Send unsupported type with zero dimensions
-            window.postMessage(
-              '[iFrameSizer]error17:0:0:unknownType',
-              '*',
-            )
+            window.postMessage('[iFrameSizer]error17:0:0:unknownType', '*')
 
             setTimeout(() => {
               // Should warn about unsupported message
@@ -436,6 +440,7 @@ define(['iframeResizerParent'], (iframeResize) => {
                       arg.includes('later version')),
                 ),
               )
+
               expect(hasWarning).toBe(true)
               setTimeout(done, 1)
             }, 50)
@@ -450,12 +455,7 @@ define(['iframeResizerParent'], (iframeResize) => {
       it('should ignore resize requests when page is hidden', (done) => {
         spyOn(console, 'log')
 
-        // Mock document.hidden
-        Object.defineProperty(document, 'hidden', {
-          writable: true,
-          configurable: true,
-          value: true,
-        })
+        setDocumentHidden(true)
 
         iframe = iframeResize({
           license: 'GPLv3',
@@ -472,18 +472,11 @@ define(['iframeResizerParent'], (iframeResize) => {
               const hasHiddenLog = logCalls.some((call) =>
                 call.args.some(
                   (arg) =>
-                    typeof arg === 'string' &&
-                    arg.includes('Page hidden'),
+                    typeof arg === 'string' && arg.includes('Page hidden'),
                 ),
               )
-              expect(hasHiddenLog).toBe(true)
 
-              // Restore document.hidden
-              Object.defineProperty(document, 'hidden', {
-                writable: true,
-                configurable: true,
-                value: false,
-              })
+              expect(hasHiddenLog).toBe(true)
 
               setTimeout(done, 1)
             }, 50)
@@ -495,37 +488,45 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     describe('Callback error handling', () => {
-      it('should handle errors in callbacks', (done) => {
-        let errorThrown = false
+      it('should handle errors in callbacks', async () => {
+        let calls = 0
+        let ready = false
 
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'error19',
-          checkOrigin: false,
-          onResized: () => {
-            errorThrown = true
-            // Note: Errors in callbacks are isolated by setTimeout
-            // so they don't crash the main execution
-          },
-          onReady: () => {
-            // Send resize to trigger onResized
-            window.postMessage(
-              '[iFrameSizer]error19:100:200:mutationObserver',
-              '*',
-            )
+        // Every throw has to land inside this window, as the callback runs
+        // from a setTimeout and the error surfaces as an uncaught one
+        await jasmine.spyOnGlobalErrorsAsync(async (globalErrors) => {
+          iframe = iframeResize({
+            license: 'GPLv3',
+            log: true,
+            id: 'error19',
+            checkOrigin: false,
+            // User code runs from a setTimeout so that a throw here cannot
+            // escape the message listener and stop later messages
+            onResized: () => {
+              calls++
+              throw new Error('deliberate error from onResized')
+            },
+            onReady: () => {
+              ready = true
+            },
+          })[0]
 
-            setTimeout(() => {
-              // Callback should have been called
-              expect(errorThrown).toBe(true)
-              // Iframe should still be functional
-              expect(iframe.iframeResizer).toBeDefined()
-              setTimeout(done, 1)
-            }, 100)
-          },
-        })[0]
+          mockMsgFromIFrame(iframe, 'init')
+          await delay(100)
 
-        mockMsgFromIFrame(iframe, 'init')
+          expect(ready).toBe(true)
+
+          const afterInit = calls
+
+          mockPostMsg('error19', '100:200:mutationObserver')
+          await delay(100)
+          mockPostMsg('error19', '150:200:mutationObserver')
+          await delay(150)
+
+          expect(globalErrors).toHaveBeenCalled()
+          expect(calls).toBe(afterInit + 2)
+          expect(iframe.style.height).toBe('150px')
+        })
       })
 
       it('should continue processing messages after callback completes', (done) => {
@@ -538,10 +539,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           id: 'error20',
           checkOrigin: false,
           onResized: () => {
-            if (!firstResizeCalled) {
-              firstResizeCalled = true
-            } else {
+            if (firstResizeCalled) {
               secondResizeCalled = true
+            } else {
+              firstResizeCalled = true
             }
           },
           onReady: () => {
@@ -574,7 +575,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     describe('Message from meta parent', () => {
       it('should ignore init messages from nested parent pages', (done) => {
-        spyOn(console, 'log')
+        const log = spyOn(console, 'log').and.callThrough()
 
         iframe = iframeResize({
           license: 'GPLv3',
@@ -582,19 +583,28 @@ define(['iframeResizerParent'], (iframeResize) => {
           id: 'error21',
           checkOrigin: false,
           onReady: () => {
-            expect(iframe.iframeResizer).toBeDefined()
-            setTimeout(done, 1)
+            // A type of 'true', 'false' or 'undefined' marks a message from a
+            // parent page above this one, which is not an init for us
+            window.postMessage('[iFrameSizer]error21:0:0:true', '*')
+
+            setTimeout(() => {
+              const ignored = log.calls
+                .all()
+                .some((call) =>
+                  call.args.some(
+                    (arg) =>
+                      typeof arg === 'string' &&
+                      arg.includes('Ignoring init message from meta parent'),
+                  ),
+                )
+
+              expect(ignored).toBe(true)
+              setTimeout(done, 1)
+            }, 50)
           },
         })[0]
 
-        // Send normal init
         mockMsgFromIFrame(iframe, 'init')
-
-        // Try to send another init with meta parent signature
-        // (type is 'true', 'false', or 'undefined' for meta parent)
-        setTimeout(() => {
-          window.postMessage('[iFrameSizer]error21:0:0:true', '*')
-        }, 10)
       })
     })
   })
