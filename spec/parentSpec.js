@@ -83,12 +83,15 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
     })
 
+    // A child that loads after the parent has given up sends a ready
+    // message, which has to start the handshake again. It only counts from
+    // the iframe's own window, and the spelling is part of the protocol.
     describe('late load msg received', () => {
       let iframe
 
       const testId = 'parentPage2'
 
-      beforeEach((done) => {
+      beforeEach(() => {
         loadIFrame('iframe600.html')
         iframe = iframeResize({
           license: 'GPLv3',
@@ -96,29 +99,45 @@ define(['iframeResizerParent'], (iframeResize) => {
           id: testId,
           checkOrigin: false,
         })[0]
-
-        let finished = false
-        spyOn(iframe.contentWindow, 'postMessage').and.callFake(() => {
-          // Call done after first postMessage
-          if (finished) return
-          finished = true
-          setTimeout(done, 1)
-        })
-
-        // Send ready message from child
-        window.postMessage('[iframeResizerChild]Ready', '*')
       })
 
       afterEach(() => {
         tearDown(iframe)
       })
 
-      it('receive message 3', () => {
-        const calls = iframe.contentWindow.postMessage.calls.all()
-        // Verify init message was sent
-        expect(calls.length).toBeGreaterThan(0)
-        expect(calls[0].args[0]).toContain('[iFrameSizer]parentPage2:')
-        expect(calls[0].args[1]).toBe('*')
+      it('sends init again when the child reports ready', async () => {
+        const postMessage = await spyOnIframeMessages(iframe)
+
+        // Past the init that sendInit makes on its own
+        await delay(50)
+        postMessage.calls.reset()
+
+        mockChildReady(iframe)
+        await delay(50)
+
+        const fields = initMsgFields(postMessage)
+
+        expect(fields).withContext('no init message was sent').toBeDefined()
+        expect(fields[0]).toBe(testId)
+        expect(postMessage.calls.first().args[1]).toBe('*')
+      })
+
+      it('ignores a ready message that is not from the iframe', async () => {
+        const postMessage = await spyOnIframeMessages(iframe)
+
+        await delay(50)
+        postMessage.calls.reset()
+
+        window.dispatchEvent(
+          new MessageEvent('message', {
+            data: '[iFrameResizerChild]Ready',
+            origin: window.location.origin,
+            source: window,
+          }),
+        )
+        await delay(50)
+
+        expect(initMsgFields(postMessage)).not.toBeDefined()
       })
     })
 
