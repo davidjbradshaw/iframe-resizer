@@ -10,18 +10,19 @@ define(['iframeResizerParent'], (iframeResize) => {
       tearDown(iframe)
     })
 
-    function bind(id) {
+    async function bind(id) {
       iframe = document.getElementsByTagName('iframe')[0]
       iframe.id = id
       iframeResize({ license: 'GPLv3', id, checkOrigin: false })
       mockMsgFromIFrame(iframe, 'init')
-      return delay(50)
+      await iframeLoaded(iframe)
+      await delay(50)
     }
 
     describe('pageInfo', () => {
       it('sends every field the child reads', async () => {
         await bind('info1')
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+        const postMessage = await spyOnIframeMessages(iframe)
 
         mockMsgFromIFrame(iframe, 'pageInfo')
         await delay(50)
@@ -49,7 +50,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       it('measures the iframe and the page, not placeholders', async () => {
         await bind('info2')
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+        const postMessage = await spyOnIframeMessages(iframe)
 
         mockMsgFromIFrame(iframe, 'pageInfo')
         await delay(50)
@@ -75,7 +76,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     describe('parentInfo', () => {
       it('sends the iframe rect, the document and the viewport', async () => {
         await bind('info3')
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+        const postMessage = await spyOnIframeMessages(iframe)
 
         mockMsgFromIFrame(iframe, 'parentInfo')
         await delay(50)
@@ -130,7 +131,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'parentInfo')
         await delay(50)
 
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+        const postMessage = await spyOnIframeMessages(iframe)
 
         window.dispatchEvent(new Event('resize'))
         await delay(50)
@@ -155,7 +156,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'pageInfo')
         await delay(50)
 
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+        const postMessage = await spyOnIframeMessages(iframe)
 
         window.dispatchEvent(new Event('resize'))
         await delay(50)

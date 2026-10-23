@@ -110,6 +110,18 @@ function mockMsgFromOrigin(iframe, origin, msg, source = iframe.contentWindow) {
   )
 }
 
+// The real ready message a late-loading child sends. It must come from the
+// iframe's own window, and the spelling is part of the wire protocol.
+function mockChildReady(iframe, origin = window.location.origin) {
+  window.dispatchEvent(
+    new MessageEvent('message', {
+      data: '[iFrameResizerChild]Ready',
+      origin,
+      source: iframe.contentWindow,
+    }),
+  )
+}
+
 // The init message the parent sent to this iframe, split into its fields.
 // It is the only message whose second field is the v1 padding, so it can be
 // picked out without depending on the order the parent sends messages in.
@@ -138,6 +150,33 @@ function countJsonMsgs(postMessageSpy, type) {
   const prefix = '[iFrameSizer]' + type + ':'
   return postMessageSpy.calls.all().filter((c) => c.args[0].startsWith(prefix))
     .length
+}
+
+// advise() turns its <b> markers into ANSI colour codes under Chrome, so
+// match on fragments of the text that do not span one
+function adviceGiven(warnSpy) {
+  return warnSpy.calls
+    .all()
+    .map((call) => String(call.args[0]))
+    .join('\n')
+}
+
+// The fixture iframe loads its page asynchronously, and the load replaces
+// contentWindow — so a spy installed before it lands on the wrong window
+async function spyOnIframeMessages(iframe) {
+  await iframeLoaded(iframe)
+  return spyOn(iframe.contentWindow, 'postMessage')
+}
+
+function iframeLoaded(iframe) {
+  return new Promise((resolve) => {
+    if (iframe.contentWindow?.document?.readyState === 'complete') {
+      resolve()
+      return
+    }
+
+    iframe.addEventListener('load', () => resolve(), { once: true })
+  })
 }
 
 const delay = (ms) =>

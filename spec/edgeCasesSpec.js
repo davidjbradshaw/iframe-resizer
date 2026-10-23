@@ -272,33 +272,39 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       it('should handle re-initialization attempt', (done) => {
-        spyOn(console, 'warn')
-
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
           id: 'edge6',
           checkOrigin: false,
           onReady: () => {
-            // Try to re-initialize the same iframe
+            // Re-binding takes the update path, which has to replace the
+            // options the parent sizes with
             iframeResize(
               {
                 license: 'GPLv3',
                 log: true,
                 checkOrigin: false,
+                direction: 'both',
               },
               iframe,
             )
 
             setTimeout(() => {
-              // Should have warned about already setup
-              expect(console.warn).toHaveBeenCalled()
-              setTimeout(done, 1)
+              mockPostMsg('edge6', '120:300:mutationObserver')
+
+              setTimeout(() => {
+                expect(iframe.style.height).toBe('120px')
+                expect(iframe.style.width).toBe('300px')
+                setTimeout(done, 1)
+              }, 50)
             }, 100)
           },
         })[0]
 
-        mockMsgFromIFrame(iframe, 'init')
+        // A v6 child, so the re-bound options are sent rather than left
+        // pending for a child too old to take them
+        mockPostMsg('edge6', '0:0:init:6.0.0')
       })
     })
 

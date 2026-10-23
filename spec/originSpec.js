@@ -24,21 +24,18 @@ define(['iframeResizerParent'], (iframeResize) => {
       return iframe
     }
 
-    it('sends to the iframe origin, not *, when checkOrigin is on', (done) => {
+    it('sends to the iframe origin, not *, when checkOrigin is on', async () => {
       bind('origin1')
 
-      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
-      window.postMessage('[iframeResizerChild]Ready', '*')
+      const postMessage = await spyOnIframeMessages(iframe)
+      await delay(50)
 
-      setTimeout(() => {
-        expect(initMsgFields(postMessage))
-          .withContext('no init message was sent')
-          .toBeDefined()
+      expect(initMsgFields(postMessage))
+        .withContext('no init message was sent')
+        .toBeDefined()
 
-        expect(postMessage.calls.first().args[1]).toBe(getTarget(iframe))
-        expect(postMessage.calls.first().args[1]).not.toBe('*')
-        setTimeout(done, 1)
-      }, 50)
+      expect(postMessage.calls.first().args[1]).toBe(getTarget(iframe))
+      expect(postMessage.calls.first().args[1]).not.toBe('*')
     })
 
     it('rejects a resize from an origin outside checkOrigin', async () => {
@@ -83,6 +80,43 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       expect(iframe.style.height).toBe(before)
+    })
+
+    // The parent cannot message a page on an origin checkOrigin does not
+    // allow, so it reports that rather than sending an init the browser
+    // would drop
+    it('does not init a child that reports ready from a blocked origin', async () => {
+      bind('origin6', { checkOrigin: ['https://allowed.example'] })
+
+      const postMessage = await spyOnIframeMessages(iframe)
+      const error = spyOn(console, 'error')
+
+      await delay(50)
+      postMessage.calls.reset()
+
+      mockChildReady(iframe, OTHER_ORIGIN)
+      await delay(50)
+
+      expect(initMsgFields(postMessage)).not.toBeDefined()
+      expect(String(error.calls.mostRecent()?.args)).toContain(
+        'which the checkOrigin option does not allow',
+      )
+    })
+
+    it('inits a child that reports ready from an allowed origin', async () => {
+      bind('origin7', { checkOrigin: [window.location.origin] })
+
+      const postMessage = await spyOnIframeMessages(iframe)
+
+      await delay(50)
+      postMessage.calls.reset()
+
+      mockChildReady(iframe)
+      await delay(50)
+
+      expect(initMsgFields(postMessage))
+        .withContext('no init message was sent')
+        .toBeDefined()
     })
 
     // Checked before the origin, so it holds even with checkOrigin off: a

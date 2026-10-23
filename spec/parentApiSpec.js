@@ -18,19 +18,16 @@ define(['iframeResizerParent'], (iframeResize) => {
     }
 
     describe('getVersion()', () => {
-      it('reports the parent version that went into the init message', (done) => {
+      it('reports the parent version that went into the init message', async () => {
         bind('api1')
 
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
-        window.postMessage('[iframeResizerChild]Ready', '*')
+        const postMessage = await spyOnIframeMessages(iframe)
+        await delay(50)
 
-        setTimeout(() => {
-          const fields = initMsgFields(postMessage)
+        const fields = initMsgFields(postMessage)
 
-          expect(iframe.iframeResizer.getVersion().parent).toBe(fields[20])
-          expect(iframe.iframeResizer.getVersion().parent).toMatch(/^\d+\./)
-          setTimeout(done, 1)
-        }, 50)
+        expect(iframe.iframeResizer.getVersion().parent).toBe(fields[20])
+        expect(iframe.iframeResizer.getVersion().parent).toMatch(/^\d+\./)
       })
 
       // A v1-v5 child sends no version field, and the parent has to keep
@@ -83,7 +80,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'parentInfo')
         await delay(50)
 
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+        const postMessage = await spyOnIframeMessages(iframe)
 
         iframe.iframeResizer.disconnect()
         window.dispatchEvent(new Event('resize'))
@@ -122,8 +119,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         await delay(50)
       })
 
-      it('sends a value JSON can encode', () => {
-        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      it('sends a value JSON can encode', async () => {
+        const postMessage = await spyOnIframeMessages(iframe)
 
         iframe.iframeResizer.sendMessage({ a: 1 })
 
