@@ -51,9 +51,11 @@ const DEPENDENCIES = [
 
 // The Svelte package supports Svelte 4 and 5, so the types are checked with
 // each: the repo's own Svelte 5, and Svelte 4 from build-scripts/svelte4
+const SVELTE4_MODULE = join(SVELTE4, 'node_modules/svelte')
+
 const SVELTE_VERSIONS = [
   { name: 'Svelte 5', path: join(root, 'node_modules/svelte') },
-  { name: 'Svelte 4', path: join(SVELTE4, 'node_modules/svelte') },
+  { name: 'Svelte 4', path: SVELTE4_MODULE },
 ]
 
 const RESOLUTIONS = [
@@ -67,12 +69,11 @@ function installSvelte4() {
     .update(readFileSync(join(SVELTE4, 'package-lock.json')))
     .digest('hex')
   const installed = join(SVELTE4, 'node_modules/.lockfile-hash')
-  const svelte = join(SVELTE4, 'node_modules/svelte')
 
   // The hash is not enough on its own: node_modules can be removed, or an
   // install interrupted, after the hash was written
   if (
-    existsSync(svelte) &&
+    existsSync(SVELTE4_MODULE) &&
     existsSync(installed) &&
     readFileSync(installed, 'utf8') === hash
   ) {
