@@ -8,10 +8,8 @@ import stripCode from 'rollup-plugin-strip-code'
 
 import pkg from '../../package.json' with { type: 'json' }
 import createBanner from './banner.js'
+import { stripLog } from './env.js'
 import createPkgJson from './pkgJson.js'
-
-const { BETA, DEBUG, TEST } = process.env
-const stripLog = !(DEBUG === '1' || BETA === '1' || TEST === '1')
 
 // Dev and test builds add the build number (set by build-all.js) to the
 // version, so a parent and child from different builds report a mismatch
