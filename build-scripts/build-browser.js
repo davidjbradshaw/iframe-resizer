@@ -1,7 +1,8 @@
+import { rmSync } from 'node:fs'
+
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import { rollup } from 'rollup'
-import clear from 'rollup-plugin-clear'
 
 import { BETA, DEBUG, stripLog } from '../vite.config/shared/env.js'
 import {
@@ -35,12 +36,7 @@ const configs = [
             }),
           ],
     },
-    plugins: [
-      typescriptParent(),
-      clear({ targets: ['js'] }),
-      resolve(),
-      ...pluginsBase(stripLog)(),
-    ],
+    plugins: [typescriptParent(), resolve(), ...pluginsBase(stripLog)()],
   },
   {
     input: 'packages/child/index.ts',
@@ -110,6 +106,10 @@ const configs = [
 ]
 
 export default async function buildBrowser() {
+  // Emptied here, not by a plugin: a plugin clears while the config is built,
+  // which is on import, so a failed build left js/ holding only one bundle
+  rmSync('js', { recursive: true, force: true })
+
   for (const config of configs) {
     const bundle = await rollup(config)
     await bundle.write(config.output)
