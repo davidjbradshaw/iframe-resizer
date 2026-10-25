@@ -152,22 +152,29 @@ function countJsonMsgs(postMessageSpy, type) {
     .length
 }
 
-// advise() turns its <b> markers into ANSI colour codes under Chrome, so
-// match on fragments of the text that do not span one
-function adviceGiven(warnSpy) {
-  return warnSpy.calls
+// What a console spy was given. advise() turns its <b> markers into ANSI
+// colour codes under Chrome, so match on fragments that do not span one.
+function consoleText(consoleSpy) {
+  return consoleSpy.calls
     .all()
     .map((call) => String(call.args[0]))
     .join('\n')
 }
 
-// The fixture iframe loads its page asynchronously, and the load replaces
-// contentWindow — so a spy installed before it lands on the wrong window
-async function spyOnIframeMessages(iframe) {
-  await iframeLoaded(iframe)
-  return spyOn(iframe.contentWindow, 'postMessage')
+// The messages behind a jasmine.spyOnGlobalErrorsAsync spy, which is handed
+// an ErrorEvent in the browser and an Error elsewhere
+function uncaughtErrors(globalErrorSpy) {
+  return globalErrorSpy.calls
+    .all()
+    .map(({ args: [error] }) =>
+      String(error?.message ?? error?.error?.message ?? error),
+    )
+    .join('\n')
 }
 
+// Await before spying on an iframe's postMessage: the page loads
+// asynchronously and the load replaces contentWindow, so a spy installed
+// before it watches a window nothing will be posted to
 function iframeLoaded(iframe) {
   return new Promise((resolve) => {
     if (iframe.contentWindow?.document?.readyState === 'complete') {

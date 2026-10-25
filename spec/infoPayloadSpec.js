@@ -22,7 +22,8 @@ define(['iframeResizerParent'], (iframeResize) => {
     describe('pageInfo', () => {
       it('sends every field the child reads', async () => {
         await bind('info1')
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         mockMsgFromIFrame(iframe, 'pageInfo')
         await delay(50)
@@ -50,7 +51,8 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       it('measures the iframe and the page, not placeholders', async () => {
         await bind('info2')
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         mockMsgFromIFrame(iframe, 'pageInfo')
         await delay(50)
@@ -76,7 +78,8 @@ define(['iframeResizerParent'], (iframeResize) => {
     describe('parentInfo', () => {
       it('sends the iframe rect, the document and the viewport', async () => {
         await bind('info3')
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         mockMsgFromIFrame(iframe, 'parentInfo')
         await delay(50)
@@ -131,7 +134,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'parentInfo')
         await delay(50)
 
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         window.dispatchEvent(new Event('resize'))
         await delay(50)
@@ -156,7 +160,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'pageInfo')
         await delay(50)
 
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         window.dispatchEvent(new Event('resize'))
         await delay(50)

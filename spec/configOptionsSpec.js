@@ -22,8 +22,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           direction: 'invalid',
         })[0]
 
-        expect(console.error).toHaveBeenCalled()
-        expect(String(console.error.calls.mostRecent().args)).toContain(
+        expect(consoleText(console.error)).toContain(
           'Direction value of "invalid" is not valid',
         )
       })
@@ -140,7 +139,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           sizeWidth: true,
           onReady: () => {
-            expect(adviceGiven(console.warn)).toContain(
+            expect(consoleText(console.warn)).toContain(
               'options have been replaced with new',
             )
             setTimeout(done, 1)
@@ -160,7 +159,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           sizeHeight: true,
           onReady: () => {
-            expect(adviceGiven(console.warn)).toContain(
+            expect(consoleText(console.warn)).toContain(
               'options have been replaced with new',
             )
             setTimeout(done, 1)
@@ -181,7 +180,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           sizeWidth: true,
           sizeHeight: false,
           onReady: () => {
-            expect(adviceGiven(console.warn)).toContain(
+            expect(consoleText(console.warn)).toContain(
               'options have been replaced with new',
             )
             setTimeout(done, 1)

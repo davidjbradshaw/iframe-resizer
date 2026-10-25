@@ -15,7 +15,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       mockMsgFromIFrame(iframe, 'init')
       await delay(50)
 
-      const postMessage = await spyOnIframeMessages(iframe)
+      await iframeLoaded(iframe)
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
       mockMsgFromIFrame(iframe, 'pageInfo')
       await delay(50)
@@ -69,8 +70,10 @@ define(['iframeResizerParent'], (iframeResize) => {
       mockMsgFromIFrame(iframe2, 'pageInfo')
       await delay(50)
 
-      const postMessage1 = await spyOnIframeMessages(iframe1)
-      const postMessage2 = await spyOnIframeMessages(iframe2)
+      await iframeLoaded(iframe1)
+      const postMessage1 = spyOn(iframe1.contentWindow, 'postMessage')
+      await iframeLoaded(iframe2)
+      const postMessage2 = spyOn(iframe2.contentWindow, 'postMessage')
 
       window.dispatchEvent(new Event('resize'))
       await delay(50)
