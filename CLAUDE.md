@@ -91,7 +91,7 @@ ESLint config: `.eslintrc.json` (extends eslint-config-auto). Prettier: no semic
 
 - ES modules (`"type": "module"` in package.json)
 - No semicolons, single quotes, trailing commas
-- Node >= 22 required
+- Node >= 20 required
 
 ## Key Architectural Patterns
 
