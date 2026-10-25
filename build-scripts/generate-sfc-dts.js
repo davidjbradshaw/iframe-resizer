@@ -3,19 +3,21 @@
 /**
  * Generates .d.ts files for SFC components (Vue, Svelte).
  *
- * Reads the public type names from core/types.ts so the SFC declarations
- * stay in sync automatically.
+ * Reads the public type names from core/types.ts, and the props and methods
+ * from the Svelte component, so the SFC declarations stay in sync
+ * automatically. A unit test checks the Vue component still matches.
  */
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const typesSource = readFileSync(
-  resolve(__dirname, '../packages/core/types.ts'),
-  'utf8',
-)
+
+const read = (file) => readFileSync(resolve(__dirname, '..', file), 'utf8')
+
+const typesSource = read('packages/core/types.ts')
+const svelteSource = read('packages/svelte/IframeResizer.svelte')
 
 // Every public IFrame* name (type aliases + interfaces)
 const typeExports = [
@@ -27,6 +29,17 @@ const OPTION_TYPES = [
   ...typesSource.matchAll(/^export type (IFrame\w+)\s*=/gm),
 ].map((m) => m[1])
 
+// The options the components declare as props, and the methods they expose.
+// Their callbacks are emits and events, so the published types offer just
+// these. Taken from the Svelte component, as the two agree
+export const COMPONENT_PROPS = [
+  ...svelteSource.matchAll(/^\s*export let (\w+)/gm),
+].map((m) => m[1])
+
+const COMPONENT_METHODS = [
+  ...svelteSource.matchAll(/^\s*export function (\w+)/gm),
+].map((m) => m[1])
+
 if (typeExports.length === 0) {
   throw new Error('No IFrame* type exports found in core/types.ts')
 }
@@ -35,24 +48,20 @@ if (OPTION_TYPES.length === 0) {
   throw new Error('No IFrame* type aliases found in core/types.ts')
 }
 
-// The options the Vue and Svelte components declare as props. Their
-// callbacks are emits and events, so the published types offer just these
-export const COMPONENT_PROPS = [
-  'license',
-  'bodyBackground',
-  'bodyMargin',
-  'bodyPadding',
-  'checkOrigin',
-  'direction',
-  'log',
-  'inPageLinks',
-  'offsetSize',
-  'scrolling',
-  'tolerance',
-  'warningTimeout',
-]
+if (COMPONENT_PROPS.length === 0) {
+  throw new Error('No props found in IframeResizer.svelte')
+}
 
-const PROPS_UNION = COMPONENT_PROPS.map((prop) => `'${prop}'`).join(' | ')
+if (COMPONENT_METHODS.length === 0) {
+  throw new Error('No methods found in IframeResizer.svelte')
+}
+
+const union = (names) => names.map((name) => `'${name}'`).join(' | ')
+
+const PROPS_UNION = union(COMPONENT_PROPS)
+const METHODS = `Pick<IFrameObject, ${union(COMPONENT_METHODS)}>`
+
+const coreImports = typeExports.map((t) => `  ${t},`).join('\n')
 
 // The events the Svelte component dispatches, and the type of their detail
 const SVELTE_EVENTS = {
@@ -67,14 +76,14 @@ const SVELTE_EVENTS = {
 export function generateVue() {
   return `import type { DefineComponent } from 'vue'
 import type {
-${typeExports.map((t) => `  ${t},`).join('\n')}
+${coreImports}
 } from '@iframe-resizer/core'
 
 export type { ${OPTION_TYPES.join(', ')} }
 
 export type IframeResizerProps = Pick<IFrameOptions, ${PROPS_UNION}>
 
-export type IframeResizerMethods = Pick<IFrameObject, 'moveToAnchor' | 'sendMessage'>
+export type IframeResizerMethods = ${METHODS}
 
 export type IframeResizerEmits = {
   onReady: (iframe: IFrameComponent) => void
@@ -101,19 +110,10 @@ export default IframeResizer
 }
 
 export function generateSvelte() {
-  const svelteBase = 'SvelteComponent'
-  const classDecl = `declare class IframeResizer extends ${svelteBase}<IframeResizerProps, IframeResizerEvents>`
-
   return `import { SvelteComponent } from 'svelte'
 import type { HTMLIframeAttributes } from 'svelte/elements'
 import type {
-${OPTION_TYPES.map((t) => `  ${t},`).join('\n')}
-  IFrameComponent,
-  IFrameMessageData,
-  IFrameMouseData,
-  IFrameOptions,
-  IFrameResizedData,
-  IFrameScrollData,
+${coreImports}
 } from '@iframe-resizer/core'
 
 export type { ${OPTION_TYPES.join(', ')} }
@@ -132,15 +132,15 @@ ${Object.entries(SVELTE_EVENTS)
   .join('\n')}
 }
 
-export interface IframeResizerMethods {
-  moveToAnchor(anchor: string): void
-  sendMessage(msg: any, target?: string): void
-}
+export type IframeResizerMethods = ${METHODS}
 
-${classDecl} {
-  moveToAnchor(anchor: string): void
-  sendMessage(msg: any, target?: string): void
-}
+declare class IframeResizer extends SvelteComponent<
+  IframeResizerProps,
+  IframeResizerEvents
+> {}
+
+// Merged with the class, so an instance has the methods core declares
+interface IframeResizer extends IframeResizerMethods {}
 
 export default IframeResizer
 `
@@ -158,7 +158,10 @@ export default function generateSfcDts() {
   console.log('Generated SFC type declarations')
 }
 
-// Allow running directly: node build-scripts/generate-sfc-dts.js
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Allow running directly: node build-scripts/generate-sfc-dts.js. There is
+// no entry path under node -e, where this module can only be imported
+const entry = process.argv[1]
+
+if (entry && import.meta.url === pathToFileURL(entry).href) {
   generateSfcDts()
 }
