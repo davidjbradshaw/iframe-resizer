@@ -13,10 +13,11 @@ if [ ! -d "$APP_DIR" ]; then
   exit 0
 fi
 
-# Skip if the whole spec is marked as skipped. Anchored, so a mention of
-# describe.skip in a comment or a string does not skip the build
+# Skip only if the whole spec is skipped, which is a describe at column 0.
+# An indented one is a nested block, and the rest of the spec still needs
+# the fixtures; a mention in a comment or a string is not a skip either
 SPEC="$ROOT/e2e/tests/$FRAMEWORK.spec.js"
-if [ -f "$SPEC" ] && grep -qE '^[[:space:]]*(test\.)?describe\.skip' "$SPEC"; then
+if [ -f "$SPEC" ] && grep -qE '^(test\.)?describe\.skip' "$SPEC"; then
   echo "Tests for $FRAMEWORK are skipped (skipping build)"
   exit 0
 fi
