@@ -78,7 +78,7 @@ test('should work', async ({ page }) => {
 ### Old Approach (Karma)
 ```bash
 # Build first
-npm run rollup:test
+npm run vite:test
 
 # Then run integration tests
 npm run test:int
