@@ -67,7 +67,17 @@ function installSvelte4() {
     .update(readFileSync(join(SVELTE4, 'package-lock.json')))
     .digest('hex')
   const installed = join(SVELTE4, 'node_modules/.lockfile-hash')
-  if (existsSync(installed) && readFileSync(installed, 'utf8') === hash) return
+  const svelte = join(SVELTE4, 'node_modules/svelte')
+
+  // The hash is not enough on its own: node_modules can be removed, or an
+  // install interrupted, after the hash was written
+  if (
+    existsSync(svelte) &&
+    existsSync(installed) &&
+    readFileSync(installed, 'utf8') === hash
+  ) {
+    return
+  }
 
   execFileSync('npm', ['ci', '--prefix', SVELTE4, '--no-audit', '--no-fund'], {
     stdio: 'inherit',
