@@ -43,10 +43,12 @@ function setVersions(file) {
 // Without the old lockfile: Angular's packages require each other's exact
 // versions, which npm cannot move together from a lockfile
 async function install(dir) {
-  rmSync(join(dir, 'package-lock.json'), { force: true })
-  rmSync(join(dir, 'node_modules'), { recursive: true, force: true })
-
   for (let attempt = 1; attempt <= ATTEMPTS; attempt += 1) {
+    // Cleared on every attempt: a retry over the tree and lockfile a failed
+    // install left behind tends to keep failing
+    rmSync(join(dir, 'package-lock.json'), { force: true })
+    rmSync(join(dir, 'node_modules'), { recursive: true, force: true })
+
     try {
       execSync('npm install --no-audit --no-fund', {
         cwd: dir,
