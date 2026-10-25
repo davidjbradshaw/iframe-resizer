@@ -3,6 +3,7 @@ import terser from '@rollup/plugin-terser'
 import { rollup } from 'rollup'
 import clear from 'rollup-plugin-clear'
 
+import { BETA, DEBUG, stripLog } from '../vite.config/shared/env.js'
 import {
   createBanner,
   pluginsBase,
@@ -12,9 +13,7 @@ import {
   typescriptWebComponent,
 } from '../vite.config/shared/plugins.js'
 
-const { BETA, DEBUG } = process.env
-const sourcemap = DEBUG || BETA || false
-const stripLog = !(DEBUG || BETA)
+const sourcemap = DEBUG || BETA
 
 const configs = [
   {
