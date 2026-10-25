@@ -13,9 +13,11 @@ if [ ! -d "$APP_DIR" ]; then
   exit 0
 fi
 
-# Skip if tests are marked as skipped
+# Skip only if the whole spec is skipped, which is a describe at column 0.
+# An indented one is a nested block, and the rest of the spec still needs
+# the fixtures; a mention in a comment or a string is not a skip either
 SPEC="$ROOT/e2e/tests/$FRAMEWORK.spec.js"
-if [ -f "$SPEC" ] && grep -q "describe.skip" "$SPEC"; then
+if [ -f "$SPEC" ] && grep -qE '^(test\.)?describe\.skip' "$SPEC"; then
   echo "Tests for $FRAMEWORK are skipped (skipping build)"
   exit 0
 fi
@@ -23,7 +25,9 @@ fi
 echo "Building e2e/$FRAMEWORK..."
 cd "$APP_DIR"
 
-npm install
+# ci, not install, so a transitive release between two runs cannot change
+# what is built, and a local run leaves the lockfile alone
+npm ci
 npm run build
 
 # Add child pages from fixtures
