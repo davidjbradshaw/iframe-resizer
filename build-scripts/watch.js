@@ -16,15 +16,31 @@ const build = () => {
   }
 
   building = true
-  spawn(process.execPath, ['build-scripts/build-all.js'], {
+
+  const child = spawn(process.execPath, ['build-scripts/build-all.js'], {
     stdio: 'inherit',
-  }).on('exit', () => {
+  })
+
+  // A spawn that fails emits 'error' and may never emit 'exit', so both
+  // release the lock and whichever arrives first wins
+  let finished = false
+  const done = () => {
+    if (finished) return
+    finished = true
     building = false
+
     if (changed) {
       changed = false
       build()
     }
+  }
+
+  child.on('error', (error) => {
+    console.error('Could not start the build:', error.message)
+    done()
   })
+
+  child.on('exit', done)
 }
 
 // An editor save can fire several events, so wait for them to settle
