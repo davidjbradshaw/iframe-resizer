@@ -35,11 +35,13 @@ const packages = [
 
 async function buildPackage(pkg) {
   const configPath = join(root, 'vite.config', `${pkg.name}.config.js`)
-  const config = await import(pathToFileURL(configPath).href)
 
   if (pkg.type === 'vite') {
     await viteBuild({ configFile: configPath })
   } else {
+    // Only the rollup build needs the config here; vite loads and evaluates
+    // it itself, so importing it as well ran every config twice
+    const config = await import(pathToFileURL(configPath).href)
     const configs = Array.isArray(config.default)
       ? config.default
       : [config.default]

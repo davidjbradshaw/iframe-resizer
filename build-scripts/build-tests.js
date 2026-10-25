@@ -1,6 +1,7 @@
+import { rmSync } from 'node:fs'
+
 import resolve from '@rollup/plugin-node-resolve'
 import { rollup } from 'rollup'
-import clear from 'rollup-plugin-clear'
 
 import {
   injectVersion,
@@ -15,12 +16,7 @@ const configs = [
       file: 'test/js/iframe-resizer.child.js',
       format: 'iife',
     },
-    plugins: [
-      typescriptChild(),
-      clear({ targets: ['test/js'] }),
-      resolve(),
-      ...injectVersion(),
-    ],
+    plugins: [typescriptChild(), resolve(), ...injectVersion()],
   },
   {
     input: 'packages/parent/umd.ts',
@@ -43,6 +39,9 @@ const configs = [
 ]
 
 export default async function buildTests() {
+  // Emptied here for the same reason as js/ in build-browser.js
+  rmSync('test/js', { recursive: true, force: true })
+
   for (const config of configs) {
     const bundle = await rollup(config)
     await bundle.write(config.output)
