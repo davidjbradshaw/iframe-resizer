@@ -22,10 +22,7 @@ define(['iframeResizerParent'], (iframeResize) => {
         ...options,
       })
 
-      const postMessage = await spyOnIframeMessages(iframe)
-      await delay(50)
-
-      return initMsgFields(postMessage)
+      await iframeLoaded(iframe)
     }
 
     // The init message is a colon-separated string rather than JSON so that a
@@ -33,7 +30,12 @@ define(['iframeResizerParent'], (iframeResize) => {
     // new field inserted before the end, breaks those children, so each one
     // is pinned here by position.
     it('sends the init fields in order', async () => {
-      const fields = await bind('protocol1', { log: true })
+      await bind('protocol1', { log: true })
+
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      await delay(50)
+
+      const fields = initMsgFields(postMessage)
 
       expect(fields).withContext('no init message was sent').toBeDefined()
       expect(fields.slice(0, 20)).toEqual([
@@ -68,7 +70,7 @@ define(['iframeResizerParent'], (iframeResize) => {
     })
 
     it('carries the options that the child acts on', async () => {
-      const fields = await bind('protocol2', {
+      await bind('protocol2', {
         tolerance: 5,
         inPageLinks: true,
         offsetHeight: 12,
@@ -76,6 +78,11 @@ define(['iframeResizerParent'], (iframeResize) => {
         heightCalculationMethod: 'taggedElement',
         bodyMargin: 10,
       })
+
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      await delay(50)
+
+      const fields = initMsgFields(postMessage)
 
       expect(fields.length).toBe(25)
       expect(fields[7]).toBe('10px')
@@ -89,7 +96,12 @@ define(['iframeResizerParent'], (iframeResize) => {
     // The child only sends mouse messages when the parent asks, and it asks
     // only when the page gave it a handler
     it('asks for mouse events only when a handler was given', async () => {
-      const fields = await bind('protocol4', { onMouseEnter: () => {} })
+      await bind('protocol4', { onMouseEnter: () => {} })
+
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      await delay(50)
+
+      const fields = initMsgFields(postMessage)
 
       expect(fields[15]).toBe('true')
     })
@@ -97,9 +109,14 @@ define(['iframeResizerParent'], (iframeResize) => {
     // A colon in free text would shift every field after it, so the parent
     // escapes those fields and the child unescapes them
     it('escapes a colon in a free text field', async () => {
-      const fields = await bind('protocol3', {
+      await bind('protocol3', {
         bodyBackground: 'url(https://example.com/x.png)',
       })
+
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      await delay(50)
+
+      const fields = initMsgFields(postMessage)
 
       expect(fields.length).toBe(25)
       expect(fields[9]).toBe('url(https%3A//example.com/x.png)')
@@ -108,7 +125,12 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     // React's useId() produces ids of this shape
     it('escapes a colon in the id', async () => {
-      const fields = await bind(':r1:', {})
+      await bind(':r1:', {})
+
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+      await delay(50)
+
+      const fields = initMsgFields(postMessage)
 
       expect(fields.length).toBe(25)
       expect(fields[0]).toBe('%3Ar1%3A')

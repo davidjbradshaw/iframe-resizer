@@ -21,7 +21,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       it('reports the parent version that went into the init message', async () => {
         bind('api1')
 
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
         await delay(50)
 
         const fields = initMsgFields(postMessage)
@@ -80,7 +81,8 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromIFrame(iframe, 'parentInfo')
         await delay(50)
 
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         iframe.iframeResizer.disconnect()
         window.dispatchEvent(new Event('resize'))
@@ -120,7 +122,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       it('sends a value JSON can encode', async () => {
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         iframe.iframeResizer.sendMessage({ a: 1 })
 

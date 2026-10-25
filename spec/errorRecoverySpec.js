@@ -523,7 +523,10 @@ define(['iframeResizerParent'], (iframeResize) => {
           mockPostMsg('error19', '150:200:mutationObserver')
           await delay(150)
 
-          expect(globalErrors).toHaveBeenCalled()
+          expect(uncaughtErrors(globalErrors)).toContain(
+            'deliberate error from onResized',
+          )
+
           expect(calls).toBe(afterInit + 2)
           expect(iframe.style.height).toBe('150px')
         })

@@ -157,7 +157,7 @@
         "spyOnProperty": true,
         "spyOnAllFunctions": true,
         "LOG": true,
-        "adviceGiven": true,
+        "consoleText": true,
         "countJsonMsgs": true,
         "delay": true,
         "getTarget": true,
@@ -172,7 +172,7 @@
         "readFixture": true,
         "removeFixtures": true,
         "setDocumentHidden": true,
-        "spyOnIframeMessages": true,
+        "uncaughtErrors": true,
         "tearDown": true,
         "waitFor": true
       },

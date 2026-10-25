@@ -27,7 +27,8 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('sends to the iframe origin, not *, when checkOrigin is on', async () => {
       bind('origin1')
 
-      const postMessage = await spyOnIframeMessages(iframe)
+      await iframeLoaded(iframe)
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
       await delay(50)
 
       expect(initMsgFields(postMessage))
@@ -51,7 +52,9 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromOrigin(iframe, OTHER_ORIGIN, RESIZE)
         await delay(50)
 
-        expect(globalErrors).toHaveBeenCalled()
+        expect(uncaughtErrors(globalErrors)).toContain(
+          `Unexpected message received from: ${OTHER_ORIGIN}`,
+        )
       })
 
       expect(iframe.style.height).toBe(before)
@@ -76,7 +79,9 @@ define(['iframeResizerParent'], (iframeResize) => {
         mockMsgFromOrigin(iframe, OTHER_ORIGIN, RESIZE)
         await delay(50)
 
-        expect(globalErrors).toHaveBeenCalled()
+        expect(uncaughtErrors(globalErrors)).toContain(
+          `Unexpected message received from: ${OTHER_ORIGIN}`,
+        )
       })
 
       expect(iframe.style.height).toBe(before)
@@ -88,7 +93,8 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('does not init a child that reports ready from a blocked origin', async () => {
       bind('origin6', { checkOrigin: ['https://allowed.example'] })
 
-      const postMessage = await spyOnIframeMessages(iframe)
+      await iframeLoaded(iframe)
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
       const error = spyOn(console, 'error')
 
       await delay(50)
@@ -106,7 +112,8 @@ define(['iframeResizerParent'], (iframeResize) => {
     it('inits a child that reports ready from an allowed origin', async () => {
       bind('origin7', { checkOrigin: [window.location.origin] })
 
-      const postMessage = await spyOnIframeMessages(iframe)
+      await iframeLoaded(iframe)
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
       await delay(50)
       postMessage.calls.reset()

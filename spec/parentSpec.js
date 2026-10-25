@@ -106,7 +106,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       it('sends init again when the child reports ready', async () => {
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         // Past the init that sendInit makes on its own
         await delay(50)
@@ -123,7 +124,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       it('ignores a ready message that is not from the iframe', async () => {
-        const postMessage = await spyOnIframeMessages(iframe)
+        await iframeLoaded(iframe)
+        const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
         await delay(50)
         postMessage.calls.reset()
