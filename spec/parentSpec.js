@@ -109,8 +109,9 @@ define(['iframeResizerParent'], (iframeResize) => {
         await iframeLoaded(iframe)
         const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
-        // Past the init that sendInit makes on its own
-        await delay(50)
+        // Past the init the parent sends on its own, from a timer after the
+        // load event, which a busy runner can hold back past any fixed delay
+        await waitFor(() => initMsgFields(postMessage) !== undefined)
         postMessage.calls.reset()
 
         mockChildReady(iframe)
@@ -127,7 +128,9 @@ define(['iframeResizerParent'], (iframeResize) => {
         await iframeLoaded(iframe)
         const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
-        await delay(50)
+        // Past the init the parent sends on its own, from a timer after the
+        // load event, which a busy runner can hold back past any fixed delay
+        await waitFor(() => initMsgFields(postMessage) !== undefined)
         postMessage.calls.reset()
 
         window.dispatchEvent(
