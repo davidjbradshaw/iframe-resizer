@@ -111,30 +111,15 @@
           callbackDisplay.innerHTML = `<b>Iframe ID:</b> ${messageData.iframe.id} <br><b>Top:</b> ${messageData.top} <br><b>Left:</b> ${messageData.left}`
         },
       })
+    </script>
+    <script type="module">
+      import { updates } from '../shared/app.js'
 
-      // The same values the shared suite's UPDATES holds, applied one step at
-      // a time by calling the plugin again, which is how a jQuery page
-      // updates its options
-      const UPDATES = {
-        styles: {
-          bodyBackground: 'rgb(0, 128, 0)',
-          bodyPadding: '6px',
-          bodyMargin: 12,
-          scrolling: true,
-          checkOrigin: [window.location.origin],
-        },
-        offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-        tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-        links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-        direction: {
-          bodyBackground: 'rgb(0, 128, 128)',
-          direction: 'horizontal-inline',
-        },
-      }
-
-      for (const step of Object.keys(UPDATES)) {
+      // Applied one step at a time by calling the plugin again, which is how
+      // a jQuery page updates its options
+      for (const [step, options] of Object.entries(updates(location.origin))) {
         $(`#update-${step}`).on('click', () => {
-          $('iframe').iframeResize({ license: 'GPLv3', ...UPDATES[step] })
+          $('iframe').iframeResize({ license: 'GPLv3', ...options })
         })
       }
     </script>
