@@ -1,5 +1,5 @@
 import { expect, test } from '../shared/test'
-import { waitForChildText, waitForResizer } from '../shared/utils'
+import { openPage, settledIframeWidth } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/horizontal.html'
 const START_WIDTH = '400px'
@@ -18,10 +18,7 @@ const contentWidth = (page) =>
     .evaluate((el) => el.getBoundingClientRect().right)
 
 async function loadChild(page, child, direction = 'horizontal-inline') {
-  await page.goto(`${BASE}?child=${child}&direction=${direction}`)
-  await page.waitForLoadState('networkidle')
-  await waitForResizer(page)
-  await waitForChildText(page, '#ready-status', 'ready')
+  await openPage(page, `${BASE}?child=${child}&direction=${direction}`)
   await page.waitForFunction(
     (start) => document.querySelector('iframe').style.width !== start,
     START_WIDTH,
@@ -134,11 +131,13 @@ test.describe('Horizontal', () => {
 
     // The content is as wide as the iframe less the body margin, so without
     // a guard every resize would narrow the iframe by that margin
-    const first = await iframeWidth(page)
-    expect(parseFloat(first)).toBeGreaterThan(300)
+    const first = await settledIframeWidth(page)
+    expect(first).toBeGreaterThan(300)
 
     await page.waitForTimeout(1000)
-    expect(await iframeWidth(page)).toBe(first)
+    expect(await page.locator('iframe').evaluate((el) => el.offsetWidth)).toBe(
+      first,
+    )
   })
 })
 

@@ -1,5 +1,5 @@
 import { expect, test } from '../shared/test'
-import { waitForChildText, waitForResizer } from '../shared/utils'
+import { openPage } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/title-observer.html'
 const TITLE_TIMEOUT = 3000
@@ -8,10 +8,7 @@ const iframeTitle = (page) =>
   page.locator('iframe').evaluate((el) => el.getAttribute('title'))
 
 async function loadChild(page, child) {
-  await page.goto(`${BASE}?child=${child}`)
-  await page.waitForLoadState('networkidle')
-  await waitForResizer(page)
-  await waitForChildText(page, '#ready-status', 'ready')
+  await openPage(page, `${BASE}?child=${child}`)
 }
 
 const childFrame = (page) => page.frames().find((f) => f.parentFrame() !== null)

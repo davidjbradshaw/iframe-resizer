@@ -1,5 +1,5 @@
 import { expect, test } from '../shared/test'
-import { waitForChildText, waitForResizer } from '../shared/utils'
+import { openPage } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/onscroll-cancel.html'
 
@@ -7,9 +7,7 @@ test.describe('In-page links', () => {
   test('onScroll returning false keeps its own scroll for a link to the parent page', async ({
     page,
   }) => {
-    await page.goto(PAGE)
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, PAGE)
 
     // onScroll scrolls the section to just below the fixed header
     const expectedScrollY = await page.evaluate(
@@ -34,9 +32,7 @@ test.describe('In-page links', () => {
   test('Back and Forward work for a link whose scroll onScroll did itself', async ({
     page,
   }) => {
-    await page.goto(PAGE)
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, PAGE)
     const url = () => page.evaluate(() => window.location.href)
     const start = await url()
 
