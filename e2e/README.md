@@ -67,10 +67,10 @@ npx playwright test e2e/tests/legacy          # the legacy suite
 
 ### Run tests in a specific browser
 
+Only Chromium is configured. To run in Firefox or WebKit as well, uncomment their projects in `playwright.config.js`, then name one:
+
 ```bash
-npx playwright test --project=chromium
 npx playwright test --project=firefox
-npx playwright test --project=webkit
 ```
 
 ## Test Structure

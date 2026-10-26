@@ -1,6 +1,6 @@
 # Earlier releases
 
-The last release of each earlier major version, used by `e2e/tests/legacy.spec.js` to check that the current parent works with an old child page, and the current child with an old parent page. `e2e/tests/legacy-api.spec.js` checks each release's own API the same way, including methods since deprecated or removed. Copied as published; don't edit them.
+The last release of each earlier major version, used by `e2e/tests/legacy/legacy.spec.js` to check that the current parent works with an old child page, and the current child with an old parent page. `e2e/tests/legacy/legacy-api.spec.js` checks each release's own API the same way, including methods since deprecated or removed. Copied as published; don't edit them.
 
 | Folder | Release | Source | Parent | Child |
 | ------ | ------- | ------ | ------ | ----- |
