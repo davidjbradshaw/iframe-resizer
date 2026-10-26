@@ -58,17 +58,12 @@ export function childTests(baseUrl) {
   test('getParentOrigin returns origin', async ({ page }) => {
     await openPage(page, baseUrl)
 
-    const origin = await page.evaluate(() =>
-      document
-        .querySelector('iframe')
-        ?.contentWindow?.parentIframe?.getParentOrigin(),
-    )
+    const origin = await page
+      .frameLocator('iframe')
+      .locator('body')
+      .evaluate(() => window.parentIframe.getParentOrigin())
 
-    // Same-origin iframes use direct bridge (no postMessage origin)
-    // Cross-origin iframes get origin from postMessage event
-    if (origin !== undefined) {
-      expect(origin).toContain('localhost')
-    }
+    expect(origin).toBe(await page.evaluate(() => window.location.origin))
   })
 
   test('getParentProps returns page data', async ({ page }) => {
