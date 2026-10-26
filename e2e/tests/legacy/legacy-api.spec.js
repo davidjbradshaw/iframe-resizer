@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { childFrame, iframeHeight as heightOf } from '../shared/utils'
 
 // Each earlier release's API, used against the current parent or child: the
 // methods a page written for that release calls, some deprecated or removed
@@ -14,8 +15,7 @@ const SLACK = 20
 const versionsOf = (feature) =>
   feature.versions ?? VERSIONS.slice(VERSIONS.indexOf(feature.since))
 
-const iframeHeight = (page) =>
-  page.locator('#legacy').evaluate((el) => el.offsetHeight)
+const iframeHeight = (page) => heightOf(page, '#legacy')
 
 const scrollY = (page) => page.evaluate(() => window.scrollY)
 
@@ -30,14 +30,7 @@ async function load(page, query) {
   await page.goto(`${BASE}?${query}`)
   await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(CONTENT)
 
-  await expect
-    .poll(() =>
-      page.frames().some((frame) => frame.url().includes('frame.legacy')),
-    )
-    .toBe(true)
-  const child = page
-    .frames()
-    .find((frame) => frame.url().includes('frame.legacy'))
+  const child = await childFrame(page, 'frame.legacy')
   await child.waitForFunction(() => window.parentIframe || window.parentIFrame)
 
   // Past the child's init lock, which ignores some requests straight after init

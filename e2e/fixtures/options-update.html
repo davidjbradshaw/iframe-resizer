@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>iframe-resizer options update test</title>
     <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+    <script type="text/javascript" src="sent-messages.js"></script>
   </head>
 
   <body>
@@ -21,22 +22,8 @@
     </div>
 
     <script type="text/javascript">
-      // Every message the child sends to the parent, on either route
-      window.sentMessages = []
-      const record = (data) => {
-        if (typeof data === 'string' && data.startsWith('[iFrameSizer]'))
-          window.sentMessages.push(data)
-      }
-      window.addEventListener('message', (event) => record(event.data))
-
       iframeResize({ license: 'GPLv3' })
-
-      // Set up by iframeResize(); the same-origin child calls it directly
-      const listener = window.iframeParentListener
-      window.iframeParentListener = (data) => {
-        record(data)
-        return listener(data)
-      }
+      recordSentMessages()
     </script>
   </body>
 </html>

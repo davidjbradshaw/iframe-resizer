@@ -95,6 +95,17 @@ export const growTagged = (frame, px) =>
     el.style.paddingBottom = `${padding + by}px`
   }, px)
 
+// The first child frame whose URL contains the given text, once it has one.
+// Not the page itself, whose own URL can name the child in its query.
+export async function childFrame(page, urlPart) {
+  const find = () =>
+    page
+      .frames()
+      .find((f) => f !== page.mainFrame() && f.url().includes(urlPart))
+  await expect.poll(() => find() !== undefined).toBe(true)
+  return find()
+}
+
 // The iframe size once the child has stopped sending resizes: unchanged
 // for at least a quarter of a second. Judged by time, not by consecutive
 // evaluations, as Playwright evaluates the function twice on start. Each call
