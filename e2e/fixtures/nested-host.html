@@ -11,12 +11,6 @@
     </style>
   </head>
   <body>
-    <!-- The wrapper is on another origin, and holds the page to be sized -->
-    <iframe
-      id="wrapper"
-      src="http://127.0.0.1:8080/e2e/fixtures/nested-wrapper.html"
-    ></iframe>
-
     <script src="../../js/iframe-resizer.parent.js"></script>
     <script>
       // The setup from the Google Apps Script guide: wait for the nested
@@ -43,5 +37,13 @@
 
       window.addEventListener('message', startIframeResizer)
     </script>
+
+    <!-- The wrapper is on another origin, and holds the page to be sized.
+         After the scripts, so the nested page cannot say where it is before
+         the listener and iframeResize() are there to hear it -->
+    <iframe
+      id="wrapper"
+      src="http://127.0.0.1:8080/e2e/fixtures/nested-wrapper.html"
+    ></iframe>
   </body>
 </html>
