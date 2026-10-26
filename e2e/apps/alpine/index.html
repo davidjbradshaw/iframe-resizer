@@ -22,12 +22,21 @@
             log: true,
             inPageLinks: true,
             ...this.extra,
-            onResized(data) { self.messageData = data },
+            onReady() { record('onReady') },
+            onResized(data) {
+              record('onResized', { type: data.type })
+              self.messageData = data
+            },
             onMessage(data) {
+              record('onMessage', { message: data.message })
               self.messageData = data
               alert('Message from frame ' + data.iframe.id + ': ' + data.message)
               data.iframe.iframeResizer.sendMessage('Hello back from the parent page')
-            }
+            },
+            onScroll() {
+              record('onScroll')
+              return true
+            },
           }
         }
       }"

@@ -21,13 +21,26 @@ import IframeResizer from '@iframe-resizer/astro'
       src="child/frame.test.html"
     />
     <script is:inline>
+      // As record() in e2e/shared/app.js, which an inline script cannot import
+      window.callbacks = []
+      const record = (callback, detail) =>
+        window.callbacks.push({ callback, ...detail })
+
       // The e2e tests set cancelScroll to check the event can stop a scroll
       window.cancelScroll = false
       window.scrollEvents = 0
       document.addEventListener('iframe-resizer:scroll', (event) => {
+        record('onScroll')
         window.scrollEvents += 1
         if (window.cancelScroll) event.preventDefault()
       })
+      document.addEventListener('iframe-resizer:ready', () => record('onReady'))
+      document.addEventListener('iframe-resizer:resized', (event) =>
+        record('onResized', { type: event.detail.type }),
+      )
+      document.addEventListener('iframe-resizer:message', (event) =>
+        record('onMessage', { message: event.detail.message }),
+      )
     </script>
   </body>
 </html>

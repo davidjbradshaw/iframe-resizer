@@ -24,7 +24,7 @@
 
     <script type="module" src="/src/main.js"></script>
     <script type="module">
-      import { updates } from '../../shared/app.js'
+      import { record, updates } from '../../shared/app.js'
 
       const el = document.querySelector('iframe-resizer')
 
@@ -44,7 +44,13 @@
         })
       }
 
+      el.addEventListener('iframe-resizer:ready', () => record('onReady'))
+      el.addEventListener('iframe-resizer:resized', (e) =>
+        record('onResized', { type: e.detail.type }),
+      )
+      el.addEventListener('iframe-resizer:scroll', () => record('onScroll'))
       el.addEventListener('iframe-resizer:message', (e) => {
+        record('onMessage', { message: e.detail.message })
         alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)
         e.detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
       })

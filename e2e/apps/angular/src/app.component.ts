@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import type { IFrameOptions } from '@iframe-resizer/core'
 import { IframeResizerDirective } from '@iframe-resizer/angular'
-import { updates as optionSteps } from '../../../shared/app'
+import { record, updates as optionSteps } from '../../../shared/app'
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,9 @@ import { updates as optionSteps } from '../../../shared/app'
       src="child/frame.test.html"
       style="width: 100%; height: 100vh"
       (onMessage)="onMessage($event)"
+      (onReady)="onReady()"
       (onResized)="onResized($event)"
+      (onScroll)="onScroll()"
     ></iframe>
   `,
 })
@@ -44,12 +46,21 @@ export class AppComponent {
   // Set by the bound onResized Output, so the e2e tests can see the template update
   resizedHeight = ''
 
+  onReady() {
+    record('onReady')
+  }
+
   onResized(data: any) {
-    console.log('resized', data)
+    record('onResized', { type: data.type })
     this.resizedHeight = `${data.height}px`
   }
 
   onMessage(data: any) {
+    record('onMessage', { message: data.message })
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
+  }
+
+  onScroll() {
+    record('onScroll')
   }
 }

@@ -78,6 +78,16 @@ export async function openPage(page, url) {
   await waitForReady(page)
 }
 
+// The parent callbacks the page has recorded (see e2e/shared/app.js)
+export const callbacks = (page, callback) =>
+  page.evaluate(
+    (name) => (window.callbacks ?? []).filter((c) => c.callback === name),
+    callback,
+  )
+
+export const iframeHeight = (page, selector = 'iframe') =>
+  page.locator(selector).evaluate((el) => el.offsetHeight)
+
 // The iframe size once the child has stopped sending resizes: unchanged
 // for at least a quarter of a second. Judged by time, not by consecutive
 // evaluations, as Playwright evaluates the function twice on start. Each call

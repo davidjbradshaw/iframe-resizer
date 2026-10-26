@@ -1,6 +1,11 @@
 import { updates } from '../../shared/app'
 import { expect, test } from './test'
-import { assertChildText, openPage, settledIframeHeight } from './utils'
+import {
+  assertChildText,
+  callbacks,
+  openPage,
+  settledIframeHeight,
+} from './utils'
 
 // The option steps the pages apply (see e2e/shared/app.js), for the values
 // the tests read; a page's own steps also restrict checkOrigin to its origin
@@ -296,22 +301,12 @@ export function parentMethodTests(
     })
     await assertChildText(page, '#last-message', 'after-update')
 
-    // child -> parent: every page surfaces onMessage as an alert. Handle
-    // dialogs as they arrive (some pages send a reply straight after the
-    // alert) and poll for the one carrying the child's message.
-    const alerts = []
-    page.on('dialog', (dialog) => {
-      alerts.push(dialog.message())
-      dialog.accept().catch(() => {})
-    })
-
+    // child -> parent
     await page.frameLocator('iframe').locator('#btn-send-message').click()
 
     await expect
-      .poll(() =>
-        alerts.some((message) => message.includes('hello from child')),
-      )
-      .toBe(true)
+      .poll(() => callbacks(page, 'onMessage'))
+      .toContainEqual({ callback: 'onMessage', message: 'hello from child' })
   })
 
   if (hasDisconnect) {
