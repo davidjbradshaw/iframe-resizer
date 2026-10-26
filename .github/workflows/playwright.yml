@@ -23,8 +23,15 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      playwright: ${{ steps.playwright.outputs.version }}
     steps:
     - uses: actions/checkout@v6
+
+    # The test jobs run in the Playwright image for the version in the lockfile
+    - name: Read the Playwright version
+      id: playwright
+      run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> "$GITHUB_OUTPUT"
 
     - name: Use Node.js
       uses: actions/setup-node@v6
@@ -56,6 +63,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Playwright's image has Chromium and the system packages it needs, which
+    # --with-deps fetched over apt, at times taking past the job's timeout
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.build.outputs.playwright }}-noble
+      options: --user 1001
 
     strategy:
       fail-fast: false
@@ -87,9 +99,6 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps chromium
 
     - name: Download build artifacts
       uses: actions/download-artifact@v7
@@ -123,6 +132,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Playwright's image has Chromium and the system packages it needs, which
+    # --with-deps fetched over apt, at times taking past the job's timeout
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.build.outputs.playwright }}-noble
+      options: --user 1001
 
     strategy:
       fail-fast: false
@@ -148,9 +162,6 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps chromium
 
     - name: Download build artifacts
       uses: actions/download-artifact@v7
