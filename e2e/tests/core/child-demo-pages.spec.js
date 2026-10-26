@@ -93,9 +93,13 @@ test.describe('Child demo pages', () => {
       // Still connected after all that clicking: a size the child asks for
       // reaches the iframe. Asked for, as each page sizes its content its
       // own way, so content added would grow each by a different amount.
-      await frame.evaluate((height) => window.parentIframe.resize(height), SIZE)
-      await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(SIZE)
-      expect(await iframeHeight(page)).toBeLessThan(SIZE + 20)
+      // autoResize goes off first, or the child answers with its content
+      // height instead, which for frame.absolute.html is already over SIZE.
+      await frame.evaluate((height) => {
+        window.parentIframe.autoResize(false)
+        window.parentIframe.resize(height)
+      }, SIZE)
+      await expect.poll(() => iframeHeight(page)).toBe(SIZE)
     })
   }
 
