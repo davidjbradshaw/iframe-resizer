@@ -101,6 +101,8 @@ test.describe('My feature', () => {
 
 Wait for the page with the helpers in `shared/utils.js`, not `networkidle` or a fixed timeout. `waitForResizer` returns once the child has answered the parent's init with its version, which children from v5 on do; core sets `iframe.iframeResizer` as soon as it binds, before the child has loaded. `openPage` also waits for the child's `onReady` to set `#ready-status`, as `frame.test.html` does, so use it only for a child page that has that element.
 
+`e2e/shared/app.js` holds what the tests and the pages share: the option steps the platform apps apply after init.
+
 A spec in `core/` or `legacy/` needs no CI change, as its runner takes the whole folder. A new platform is added to the `platform` matrix in `.github/workflows/playwright.yml`.
 
 ## Configuration

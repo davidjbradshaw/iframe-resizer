@@ -1,24 +1,13 @@
 <script setup>
   import { ref } from 'vue'
   import IframeResizer from '@iframe-resizer/vue/sfc'
+  import { updates } from '../../../shared/app'
 
   const eventData = ref(null)
   const extra = ref({})
 
   // Option changes applied after init by the e2e tests, one button per step
-  const UPDATES = {
-    styles: {
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: '12px',
-      scrolling: true,
-      checkOrigin: [location.origin],
-    },
-    offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-    tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-    links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-    direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
-  }
+  const UPDATES = updates(location.origin)
 
   const update = (step) => {
     extra.value = { ...extra.value, ...UPDATES[step] }

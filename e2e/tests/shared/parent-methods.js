@@ -1,31 +1,10 @@
+import { updates } from '../../shared/app'
 import { expect, test } from './test'
 import { assertChildText, openPage, settledIframeHeight } from './utils'
 
-// Options changed after init, in steps, each chosen because it has an
-// observable effect: the body styles land in the child, scrolling changes the
-// parent's iframe element, offsetSize grows the iframe, tolerance suppresses
-// a small resize, inPageLinks off restores native anchor behaviour and
-// direction switches which dimension of a resize is applied.
-// Values are distinctive so they cannot be confused with defaults; bodyMargin
-// is numeric to exercise the number -> px conversion. The framework apps
-// hardcode the same values behind their #update-<step> buttons.
-//
-// Every step also sets a distinct bodyBackground, which doubles as a marker
-// that the step has reached the child: the frameworks apply a change
-// asynchronously and the settings travel in one message, so once the colour
-// shows the rest of the step has landed too.
-export const UPDATES = {
-  styles: {
-    bodyBackground: 'rgb(0, 128, 0)',
-    bodyPadding: '6px',
-    bodyMargin: 12,
-    scrolling: true,
-  },
-  offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-  tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-  links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-  direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
-}
+// The option steps the pages apply (see e2e/shared/app.js); the values the
+// tests read do not depend on the origin
+const UPDATES = updates()
 
 // What the test expects to observe after the styles update
 const EXPECTED = {
@@ -121,21 +100,12 @@ export function parentMethodTests(
   async function updateOptions(page, step) {
     const applyThroughFactory = () =>
       page.evaluate(
-        ({ opts, restrictOrigin }) => {
-          const iframe = document.querySelector('iframe')
+        (opts) =>
           window.iframeResize(
-            {
-              license: 'GPLv3',
-              ...opts,
-              // The page's origin is only known here, in the page
-              ...(restrictOrigin
-                ? { checkOrigin: [window.location.origin] }
-                : {}),
-            },
-            iframe,
-          )
-        },
-        { opts: UPDATES[step], restrictOrigin: step === 'styles' },
+            { license: 'GPLv3', ...opts },
+            document.querySelector('iframe'),
+          ),
+        updates(new URL(page.url()).origin)[step],
       )
 
     await (updateControl

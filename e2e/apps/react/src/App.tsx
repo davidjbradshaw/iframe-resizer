@@ -4,24 +4,10 @@ import IframeResizer, {
   type IframeMessageData,
   type IframeResizedData,
 } from '@iframe-resizer/react'
+import { updates } from '../../../shared/app'
 
 // Option changes applied after init by the e2e tests, one button per step
-const UPDATES = {
-  styles: {
-    bodyBackground: 'rgb(0, 128, 0)',
-    bodyPadding: '6px',
-    bodyMargin: 12,
-    scrolling: true,
-    checkOrigin: [location.origin],
-  },
-  offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-  tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-  links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-  direction: {
-    bodyBackground: 'rgb(0, 128, 128)',
-    direction: 'horizontal-inline' as const,
-  },
-}
+const UPDATES = updates(location.origin)
 
 type Extra = Partial<(typeof UPDATES)[keyof typeof UPDATES]>
 
