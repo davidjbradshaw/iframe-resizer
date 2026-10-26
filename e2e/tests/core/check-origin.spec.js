@@ -19,7 +19,7 @@ const parentPage = ({ checkOrigin, src } = {}) => {
 
 const navigateIframe = (page) =>
   page.evaluate((url) => {
-    document.getElementById('myIframe').contentWindow.location.href = url
+    document.getElementById('myIframe').contentWindow.location.replace(url)
   }, OTHER_PAGE)
 
 const setIframeSrc = (page) =>
@@ -55,7 +55,8 @@ test.describe('checkOrigin', () => {
       const originError = waitForOriginError(page)
       await navigateIframe(page)
 
-      expect((await originError).text()).toContain(OTHER_ORIGIN)
+      const error = await originError
+      expect(error.text()).toContain(OTHER_ORIGIN)
       expect(await page.evaluate(() => window.readyCount)).toBe(1)
     })
   })
@@ -155,7 +156,8 @@ test.describe('checkOrigin', () => {
         const originError = waitForOriginError(page)
         await navigateIframe(page)
 
-        expect((await originError).text()).toContain(OTHER_ORIGIN)
+        const error = await originError
+        expect(error.text()).toContain(OTHER_ORIGIN)
         expect(await page.evaluate(() => window.readyCount)).toBe(1)
       })
     })

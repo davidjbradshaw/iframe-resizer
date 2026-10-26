@@ -141,7 +141,10 @@
       "files": ["e2e/**/*.js"],
       "rules": {
         "import/extensions": 0,
-        "import/prefer-default-export": 0
+        "import/prefer-default-export": 0,
+        "jasmine/expect-single-argument": 0,
+        "no-await-in-loop": 0,
+        "pii/no-ip": 0
       }
     },
     {

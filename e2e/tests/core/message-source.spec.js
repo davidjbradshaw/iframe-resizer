@@ -33,9 +33,7 @@ test.describe('message source', () => {
     await expect(page.locator('#myIframe')).toHaveCount(1)
   })
 
-  test('a resize message from another window is ignored', async ({
-    page,
-  }) => {
+  test('a resize message from another window is ignored', async ({ page }) => {
     const before = await iframeHeight(page)
 
     await forge(page, 'parent', `[iFrameSizer]${ID}:999:300:mutationObserver`)
@@ -81,9 +79,7 @@ test.describe('message source', () => {
       document.getElementById('myIframe').iframeResizer.sendMessage('real'),
     )
 
-    await expect
-      .poll(async () => (await childMessages(page)).length)
-      .toBeGreaterThan(0)
+    await expect.poll(() => childMessages(page)).not.toHaveLength(0)
     expect(await childMessages(page)).toEqual(['real'])
   })
 
@@ -108,7 +104,8 @@ test.describe('nested host', () => {
     await expect
       .poll(() =>
         page.evaluate(
-          () => document.getElementById('wrapper').getBoundingClientRect().height,
+          () =>
+            document.getElementById('wrapper').getBoundingClientRect().height,
         ),
       )
       .toBe(316)
