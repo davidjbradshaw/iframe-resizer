@@ -59,7 +59,7 @@
         style.opacity = '0.5'
         style.position = 'absolute'
 
-        div.innerContent = 'New content'
+        div.textContent = 'New content'
         div.className = 'new-content'
 
         return div
@@ -85,10 +85,10 @@
         style.position = 'absolute'
         style.top = `${document.body.scrollHeight - 10}px`
 
-        div.innerContent = 'Overflowing content'
+        div.textContent = 'Overflowing content'
         div.className = 'overflow'
 
-        div.appendChild(innerDiv)
+        div.appendChild(createDiv())
         document.body.append(div)
 
         return false
@@ -102,8 +102,8 @@
           return false
         }
 
-        for(div of elements) {
-          div.parentNode.removeChild(div)
+        for (const div of [...elements]) {
+          div.remove()
         }
 
         return false
@@ -132,7 +132,7 @@
 
   <body>
     <b>iframe</b>
-    <a href="#" onclick="toggle()">Toggle content</a>
+    <a href="#" onclick="toggle(); return false">Toggle content</a>
     &nbsp;
     <a
       href="#"
@@ -184,7 +184,7 @@
     &nbsp;
     <a href="#" onclick="return removeOverflow()">Remove overflow</a>
     &nbsp;
-    <a href="#" onclick="return document.getElementsByTagName('p')[0].textContent = 'This text is different!'">Mutate text node</a>
+    <a href="#" onclick="document.getElementsByTagName('p')[0].textContent = 'This text is different!';return false;">Mutate text node</a>
     &nbsp;
     <a
       href="#"
