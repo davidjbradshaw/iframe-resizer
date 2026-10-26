@@ -1,7 +1,7 @@
 <script setup>
   import { ref } from 'vue'
   import IframeResizer from '@iframe-resizer/vue/sfc'
-  import { updates } from '../../../shared/app'
+  import { record, updates } from '../../../shared/app'
 
   const eventData = ref(null)
   const extra = ref({})
@@ -13,15 +13,21 @@
     extra.value = { ...extra.value, ...UPDATES[step] }
   }
 
+  const onReady = () => record('onReady')
+
   const onResized = (data) => {
+    record('onResized', { type: data.type })
     eventData.value = data
   }
 
   const onMessage = (data) => {
+    record('onMessage', { message: data.message })
     eventData.value = data
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
     data.iframe.iframeResizer.sendMessage('Hello back from the parent page')
   }
+
+  const onScroll = () => record('onScroll')
 </script>
 
 <template>
@@ -42,7 +48,9 @@
     inPageLinks
     v-bind="extra"
     @on-message="onMessage"
+    @on-ready="onReady"
     @on-resized="onResized"
+    @on-scroll="onScroll"
   />
 
   <div v-if="eventData" class="message-data">

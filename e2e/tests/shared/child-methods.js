@@ -1,7 +1,9 @@
 import { expect, test } from './test'
 import {
   assertChildText,
+  callbacks,
   closeCancelled,
+  iframeHeight,
   openPage,
   settledIframeHeight,
   waitForResizer,
@@ -120,12 +122,11 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
   test('sendMessage from child reaches parent', async ({ page }) => {
     await openPage(page, baseUrl)
 
-    page.on('dialog', (dialog) => dialog.accept())
-
     await page.frameLocator('iframe').locator('#btn-send-message').click()
-    await page.waitForTimeout(500)
 
-    await expect(page.locator('iframe')).toBeVisible()
+    await expect
+      .poll(() => callbacks(page, 'onMessage'))
+      .toEqual([{ callback: 'onMessage', message: 'hello from child' }])
   })
 
   test('resize sets iframe dimensions', async ({ page }) => {
@@ -281,25 +282,49 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
 
   // --- Attributes ---
 
-  test('data-iframe-resize element is detected', async ({ page }) => {
+  // The child sizes the page to its data-iframe-resize elements alone, so
+  // growing the tagged element by 50px grows the iframe by exactly that, and
+  // a block added below it, outside every tagged element, is not counted
+  test('data-iframe-resize element sets the height', async ({ page }) => {
     await openPage(page, baseUrl)
+    const before = await settledIframeHeight(page)
 
-    const el = page.frameLocator('iframe').locator('[data-iframe-resize]')
-    await expect(el).toBeVisible()
+    await page
+      .frameLocator('iframe')
+      .locator('body')
+      .evaluate(() => {
+        const block = document.createElement('div')
+        block.style.height = '300px'
+        document.body.append(block)
+        document.querySelector('[data-iframe-resize]').style.paddingBottom =
+          '60px'
+      })
+
+    await expect.poll(() => iframeHeight(page)).not.toBe(before)
+    expect(await settledIframeHeight(page)).toBe(before + 50)
   })
 
+  // Tagged elements set the size on their own, so the tag is removed first to
+  // size the whole page, where the ignored element would count
   test('data-iframe-ignore element does not affect size', async ({ page }) => {
     await openPage(page, baseUrl)
+    const child = page.frameLocator('iframe').locator('body')
 
-    const el = page.frameLocator('iframe').locator('[data-iframe-ignore]')
-    await expect(el).toBeAttached()
-
-    const iframeHeight = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
     // The ignored element is at top: 9999px, height: 5000px
-    // If included, iframe would be ~15000px
-    expect(iframeHeight).toBeLessThan(9000)
+    await child.evaluate(
+      () =>
+        delete document.querySelector('[data-iframe-resize]').dataset
+          .iframeResize,
+    )
+    expect(await settledIframeHeight(page)).toBeLessThan(9000)
+
+    // Control: without the attribute, the same element is counted
+    await child.evaluate(
+      () =>
+        delete document.querySelector('[data-iframe-ignore]').dataset
+          .iframeIgnore,
+    )
+    await expect.poll(() => iframeHeight(page)).toBeGreaterThan(9999)
   })
 
   // --- close (last test) ---

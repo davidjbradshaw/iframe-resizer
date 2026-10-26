@@ -30,3 +30,10 @@ export const updates = (origin) => ({
     direction: 'horizontal-inline',
   },
 })
+
+// Each page records the parent callbacks it receives, for the tests to check
+// that a callback ran rather than only that its effect is visible
+export function record(callback, detail = {}) {
+  window.callbacks ??= []
+  window.callbacks.push({ callback, ...detail })
+}

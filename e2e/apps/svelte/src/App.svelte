@@ -1,6 +1,6 @@
 <script>
   import IframeResizer from '@iframe-resizer/svelte'
-  import { updates } from '../../../shared/app'
+  import { record, updates } from '../../../shared/app'
 
   let extra = {}
 
@@ -11,13 +11,22 @@
     extra = { ...extra, ...UPDATES[step] }
   }
 
+  function onReady() {
+    record('onReady')
+  }
+
   function onResized(event) {
-    console.log('resized', event.detail)
+    record('onResized', { type: event.detail.type })
   }
 
   function onMessage(event) {
     const data = event.detail
+    record('onMessage', { message: data.message })
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
+  }
+
+  function onScroll() {
+    record('onScroll')
   }
 </script>
 
@@ -33,9 +42,10 @@
   log="collapsed"
   inPageLinks
   {...extra}
-  on:ready={onResized}
+  on:ready={onReady}
   on:message={onMessage}
   on:resized={onResized}
+  on:scroll={onScroll}
   src="child/frame.test.html"
   style="width: 100%; height: 100vh"
 />

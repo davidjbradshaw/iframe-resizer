@@ -4,7 +4,7 @@ import IframeResizer, {
   type IframeMessageData,
   type IframeResizedData,
 } from '@iframe-resizer/react'
-import { updates } from '../../../shared/app'
+import { record, updates } from '../../../shared/app'
 
 // Option changes applied after init by the e2e tests, one button per step
 const UPDATES = updates(location.origin)
@@ -17,12 +17,23 @@ function App() {
   const [show, setShow] = useState(true)
   const [extra, setExtra] = useState<Extra>({})
 
-  const onResized = (data: IframeResizedData) => setMessageData(data)
+  const onReady = () => record('onReady')
+
+  const onResized = (data: IframeResizedData) => {
+    record('onResized', { type: data.type })
+    setMessageData(data)
+  }
 
   const onMessage = (data: IframeMessageData) => {
+    record('onMessage', { message: data.message })
     setMessageData(data)
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
     iframeRef.current?.sendMessage('Hello back from the parent page')
+  }
+
+  const onScroll = () => {
+    record('onScroll')
+    return true
   }
 
   return (
@@ -47,7 +58,9 @@ function App() {
             inPageLinks
             {...extra}
             onMessage={onMessage}
+            onReady={onReady}
             onResized={onResized}
+            onScroll={onScroll}
             src="child/frame.test.html"
             style={{ width: '100%', height: '100vh' }}
           />
