@@ -1,14 +1,12 @@
 import { expect, test } from './test'
-import { waitForResizer } from './utils'
+import { openPage } from './utils'
 
 /**
  * Shared parent-side event handler tests.
  */
 export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
   test('onReady fires when iframe initialises', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const status = await page
       .frameLocator('iframe')
@@ -18,9 +16,7 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
   })
 
   test('onResized fires after iframe resizes', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const height = await page
       .locator('iframe')
@@ -29,9 +25,7 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
   })
 
   test('onMessage fires when child sends message', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     // Some frameworks show alerts, some use custom events
     page.on('dialog', (dialog) => dialog.accept())
@@ -44,9 +38,7 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
   })
 
   test('onScroll callback is invoked', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-to').click()
@@ -63,9 +55,7 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
 
   if (blocksClose) {
     test('onBeforeClose blocks close', async ({ page }) => {
-      await page.goto(baseUrl)
-      await page.waitForLoadState('networkidle')
-      await waitForResizer(page)
+      await openPage(page, baseUrl)
 
       await page.frameLocator('iframe').locator('#btn-close').click()
 

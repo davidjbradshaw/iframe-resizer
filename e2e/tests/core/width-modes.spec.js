@@ -18,9 +18,12 @@ const width = (page, content, direction) =>
 test.describe('Width directions', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE)
-    await page.waitForLoadState('networkidle')
     await page.waitForFunction(() =>
-      [...document.querySelectorAll('iframe')].every((el) => el.iframeResizer),
+      [...document.querySelectorAll('iframe')].every(
+        (el) =>
+          el.iframeResizer !== undefined &&
+          el.iframeResizer.getVersion().child !== 'legacy',
+      ),
     )
     await page.waitForTimeout(1000)
   })

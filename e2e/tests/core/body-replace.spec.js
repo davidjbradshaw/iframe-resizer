@@ -1,5 +1,5 @@
 import { expect, test } from '../shared/test'
-import { waitForChildText, waitForResizer } from '../shared/utils'
+import { openPage } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/body-replace.html'
 const GROW = 500
@@ -49,9 +49,7 @@ test.describe('Body element replaced in the child', () => {
   test('content added to the new body still resizes the iframe', async ({
     page,
   }) => {
-    await page.goto(PAGE)
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, PAGE)
     await page.waitForFunction(
       () => document.querySelector('iframe').style.height !== '',
     )

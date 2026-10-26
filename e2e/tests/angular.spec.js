@@ -12,7 +12,7 @@ import {
   watchRemovalAdvice,
 } from './shared/hide-restore'
 import { expect, test } from './shared/test'
-import { waitForChildText, waitForResizer } from './shared/utils'
+import { openPage } from './shared/utils'
 
 const BASE = '/e2e/fixtures/angular/index.html'
 const DETACH = '/e2e/fixtures/angular/detach.html'
@@ -49,10 +49,7 @@ test.describe('Angular', () => {
 
   for (const [name, { url, typeOfZone }] of Object.entries(APPS)) {
     test(`a bound Output updates the template (${name})`, async ({ page }) => {
-      await page.goto(url)
-      await page.waitForLoadState('networkidle')
-      await waitForResizer(page)
-      await waitForChildText(page, '#ready-status', 'ready')
+      await openPage(page, url)
 
       expect(await page.evaluate(() => typeof window.Zone)).toBe(typeOfZone)
 

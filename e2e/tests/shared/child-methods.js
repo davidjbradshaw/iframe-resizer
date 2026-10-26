@@ -1,5 +1,10 @@
 import { expect, test } from './test'
-import { assertChildText, waitForResizer } from './utils'
+import {
+  assertChildText,
+  openPage,
+  settledIframeHeight,
+  waitForResizer,
+} from './utils'
 
 /**
  * Shared child-side tests — events, methods, page events, and attributes.
@@ -7,18 +12,16 @@ import { assertChildText, waitForResizer } from './utils'
 export function childTests(baseUrl) {
   // --- Child events ---
 
+  // Not openPage, which waits for #ready-status itself
   test('onReady fires in child', async ({ page }) => {
     await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
     await assertChildText(page, '#ready-status', 'ready')
   })
 
   test('onMessage receives data from parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.evaluate(() => {
       document.querySelector('iframe').iframeResizer.sendMessage('parent-msg')
@@ -30,9 +33,7 @@ export function childTests(baseUrl) {
   // --- Child methods ---
 
   test('getId returns iframe id', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-get-id').click()
 
@@ -42,6 +43,7 @@ export function childTests(baseUrl) {
         const el = iframe?.contentDocument?.querySelector('#get-id')
         return el?.textContent !== 'unknown'
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -54,9 +56,7 @@ export function childTests(baseUrl) {
   })
 
   test('getParentOrigin returns origin', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const origin = await page.evaluate(() =>
       document
@@ -72,9 +72,7 @@ export function childTests(baseUrl) {
   })
 
   test('getParentProps returns page data', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-get-props').click()
 
@@ -84,6 +82,7 @@ export function childTests(baseUrl) {
         const el = iframe?.contentDocument?.querySelector('#get-props')
         return el?.textContent !== 'unknown'
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -95,9 +94,7 @@ export function childTests(baseUrl) {
   })
 
   test('getVersion returns child and parent versions', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-get-versions').click()
 
@@ -107,6 +104,7 @@ export function childTests(baseUrl) {
         const el = iframe?.contentDocument?.querySelector('#get-versions')
         return el?.textContent !== 'unknown'
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -122,9 +120,7 @@ export function childTests(baseUrl) {
   })
 
   test('sendMessage from child reaches parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     page.on('dialog', (dialog) => dialog.accept())
 
@@ -135,9 +131,7 @@ export function childTests(baseUrl) {
   })
 
   test('resize sets iframe dimensions', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-resize').click()
 
@@ -146,6 +140,7 @@ export function childTests(baseUrl) {
         const iframe = document.querySelector('iframe')
         return iframe && Math.abs(iframe.offsetHeight - 200) < 20
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -159,18 +154,15 @@ export function childTests(baseUrl) {
   test('autoResize(true) restores the content size after a manual resize', async ({
     page,
   }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-    const height = () =>
-      page.locator('iframe').evaluate((el) => el.offsetHeight)
-    const content = await height()
+    await openPage(page, baseUrl)
+    const content = await settledIframeHeight(page)
 
     // A manual resize while autoResize is still on holds until the next
     // content change...
     await page.frameLocator('iframe').locator('#btn-resize-both').click()
     await page.waitForFunction(
       () => Math.abs(document.querySelector('iframe').offsetHeight - 200) < 20,
+      null,
       { timeout: 5000 },
     )
 
@@ -185,9 +177,7 @@ export function childTests(baseUrl) {
   })
 
   test('scrollTo triggers parent scroll', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-to').click()
@@ -200,9 +190,7 @@ export function childTests(baseUrl) {
   })
 
   test('scrollBy triggers parent scroll', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-by').click()
@@ -215,9 +203,7 @@ export function childTests(baseUrl) {
   })
 
   test('scrollToOffset triggers parent scroll', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-offset').click()
@@ -230,9 +216,7 @@ export function childTests(baseUrl) {
   })
 
   test('moveToAnchor from child scrolls parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-move-anchor').click()
@@ -247,13 +231,10 @@ export function childTests(baseUrl) {
   // --- Page events ---
 
   test('content change triggers resize', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
-    const initialHeight = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
+    // Settled, so a late resize from init is not taken for the toggle's
+    const initialHeight = await settledIframeHeight(page)
 
     await page.frameLocator('iframe').locator('#btn-toggle').click()
 
@@ -273,9 +254,7 @@ export function childTests(baseUrl) {
   })
 
   test('initial title syncs to iframe attribute', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.waitForFunction(
       () =>
@@ -288,9 +267,7 @@ export function childTests(baseUrl) {
   })
 
   test('title change syncs to iframe attribute', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-change-title').click()
 
@@ -307,18 +284,14 @@ export function childTests(baseUrl) {
   // --- Attributes ---
 
   test('data-iframe-resize element is detected', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const el = page.frameLocator('iframe').locator('[data-iframe-resize]')
     await expect(el).toBeVisible()
   })
 
   test('data-iframe-ignore element does not affect size', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const el = page.frameLocator('iframe').locator('[data-iframe-ignore]')
     await expect(el).toBeAttached()
@@ -334,9 +307,7 @@ export function childTests(baseUrl) {
   // --- close (last test — removes the iframe) ---
 
   test('close removes iframe from parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     // Framework wrappers block close, vanilla removes iframe
     const iframeRemoved = await page.evaluate(() => {

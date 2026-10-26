@@ -89,14 +89,17 @@ Add a `.spec.js` file to `e2e/tests/core/` — or to `e2e/tests/` if it is a new
 
 ```javascript
 import { expect, test } from '../shared/test'
+import { openPage } from '../shared/utils'
 
 test.describe('My feature', () => {
   test('does something', async ({ page }) => {
-    await page.goto('/e2e/fixtures/index.html')
+    await openPage(page, '/e2e/fixtures/index.html')
     // Your test code here
   })
 })
 ```
+
+Wait for the page with the helpers in `shared/utils.js`, not `networkidle` or a fixed timeout. `waitForResizer` returns once the child has answered the parent's init with its version, which children from v5 on do; core sets `iframe.iframeResizer` as soon as it binds, before the child has loaded. `openPage` also waits for the child's `onReady` to set `#ready-status`, as `frame.test.html` does, so use it only for a child page that has that element.
 
 A spec in `core/` or `legacy/` needs no CI change, as its runner takes the whole folder. A new platform is added to the `platform` matrix in `.github/workflows/playwright.yml`.
 

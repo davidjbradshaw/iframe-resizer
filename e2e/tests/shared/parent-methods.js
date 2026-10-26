@@ -1,10 +1,5 @@
 import { expect, test } from './test'
-import {
-  assertChildText,
-  settledIframeHeight,
-  waitForChildText,
-  waitForResizer,
-} from './utils'
+import { assertChildText, openPage, settledIframeHeight } from './utils'
 
 // Options changed after init, in steps, each chosen because it has an
 // observable effect: the body styles land in the child, scrolling changes the
@@ -66,9 +61,7 @@ export function parentMethodTests(
   { hasDisconnect = true, updateControl = false } = {},
 ) {
   test('sendMessage delivers data to child', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.evaluate(() => {
       document.querySelector('iframe').iframeResizer.sendMessage('test-msg')
@@ -78,9 +71,7 @@ export function parentMethodTests(
   })
 
   test('getVersion returns parent and child versions', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const version = await page.evaluate(() =>
       document.querySelector('iframe').iframeResizer.getVersion(),
@@ -95,9 +86,7 @@ export function parentMethodTests(
   })
 
   test('moveToAnchor scrolls to named anchor', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
 
@@ -116,10 +105,7 @@ export function parentMethodTests(
   // update path, not init) and return once the resizer is ready. Pages with
   // no update control need the global factory to re-bind; skip without it.
   async function loadAndInit(page) {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, baseUrl)
 
     if (updateControl) return
     const hasFactory = await page.evaluate(
@@ -290,6 +276,7 @@ export function parentMethodTests(
     await child.evaluate(() => window.parentIframe.resize(200, 400))
     await page.waitForFunction(
       () => document.querySelector('iframe').style.height === '200px',
+      null,
       { timeout: 5000 },
     )
     const [, widthAfterVertical] = await inlineSize()
@@ -359,9 +346,7 @@ export function parentMethodTests(
 
   if (hasDisconnect) {
     test('disconnect removes iframeResizer from iframe', async ({ page }) => {
-      await page.goto(baseUrl)
-      await page.waitForLoadState('networkidle')
-      await waitForResizer(page)
+      await openPage(page, baseUrl)
 
       await page.evaluate(() => {
         document.querySelector('iframe').iframeResizer.disconnect()

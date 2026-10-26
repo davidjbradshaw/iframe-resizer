@@ -2,9 +2,15 @@ import { expect } from '@playwright/test'
 
 const INIT_TIMEOUT = 10_000
 
+// The iframe is bound and its child has answered the parent's init. Core sets
+// iframeResizer as soon as it binds, before the child has loaded.
 export async function waitForResizer(page) {
   await page.waitForFunction(
-    () => document.querySelector('iframe')?.iframeResizer !== undefined,
+    () => {
+      const resizer = document.querySelector('iframe')?.iframeResizer
+      return resizer !== undefined && resizer.getVersion().child !== 'legacy'
+    },
+    null,
     { timeout: INIT_TIMEOUT },
   )
 }
@@ -25,6 +31,18 @@ export async function assertChildText(page, selector, expected) {
   await waitForChildText(page, selector, expected)
   const text = await page.frameLocator('iframe').locator(selector).textContent()
   expect(text).toBe(expected)
+}
+
+// As waitForResizer, and the child's onReady has run too: it is called a task
+// after init. For pages whose child shows #ready-status, as frame.test.html does.
+export async function waitForReady(page) {
+  await waitForResizer(page)
+  await waitForChildText(page, '#ready-status', 'ready')
+}
+
+export async function openPage(page, url) {
+  await page.goto(url)
+  await waitForReady(page)
 }
 
 // The iframe size once the child has stopped sending resizes: unchanged

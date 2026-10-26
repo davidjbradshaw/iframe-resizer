@@ -1,6 +1,6 @@
 import { childTests, parentEventTests, parentMethodTests } from './shared'
 import { expect, test } from './shared/test'
-import { waitForResizer } from './shared/utils'
+import { openPage } from './shared/utils'
 
 const BASE = '/e2e/fixtures/astro/index.html'
 
@@ -13,9 +13,7 @@ test.describe('Astro', () => {
   test('a cancelled iframe-resizer:scroll event stops the scroll', async ({
     page,
   }) => {
-    await page.goto(BASE)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, BASE)
     await page.evaluate(() => {
       window.cancelScroll = true
     })
