@@ -115,9 +115,9 @@ test.describe('Horizontal', () => {
 
     // A mutation that does not change the page width, so the width is
     // measured again by the element scan rather than from <html>
-    await child
-      .locator('#content')
-      .evaluate((el) => el.setAttribute('data-touched', 'yes'))
+    await child.locator('#content').evaluate((el) => {
+      el.dataset.touched = 'yes'
+    })
     await page.waitForTimeout(1000)
 
     // Once settled, the iframe is as wide as the page, not the ignored nav
