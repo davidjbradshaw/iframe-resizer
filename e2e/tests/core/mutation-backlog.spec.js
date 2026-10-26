@@ -62,18 +62,9 @@ test.describe('Mutation records while rAF is paused', () => {
     // Let the child's rAF-scheduled processMutations run and drain the backlog
     const before = await rafTicks(frame)
     await frame.waitForFunction((n) => window.rafTicks > n + 2, before, POLL)
-    const after = await rafTicks(frame)
 
     await collectGarbage(page, frame)
     const alive = await frame.evaluate(() => window.aliveCount())
-    console.log(
-      JSON.stringify({
-        control: true,
-        rafBefore: before,
-        rafAfter: after,
-        alive,
-      }),
-    )
     expect(
       alive,
       'removed subtrees still reachable after GC (iframe in view)',
@@ -83,7 +74,7 @@ test.describe('Mutation records while rAF is paused', () => {
   // Scroll the iframe out of the viewport (Chromium stops animation frames
   // in offscreen cross-origin iframes), run the feed, GC, and count what
   // is still reachable
-  async function offscreenFeed(page, frame, label) {
+  async function offscreenFeed(page, frame) {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
     await page.waitForTimeout(300)
     const ticksAtScroll = await rafTicks(frame)
@@ -95,27 +86,16 @@ test.describe('Mutation records while rAF is paused', () => {
     // The live feed keeps replacing list items while the iframe is offscreen
     await feedUpdates(frame)
     await page.waitForTimeout(500)
-    const ticksAfterFeed = await rafTicks(frame)
 
     await collectGarbage(page, frame)
-    const alive = await frame.evaluate(() => window.aliveCount())
-    console.log(
-      JSON.stringify({
-        label,
-        ticksAtScroll,
-        ticksAfterFeed,
-        updates: UPDATES,
-        alive,
-      }),
-    )
-    return alive
+    return frame.evaluate(() => window.aliveCount())
   }
 
   test('control: without the child script the browser keeps nothing', async ({
     page,
   }) => {
     const frame = await setup(page, true)
-    const alive = await offscreenFeed(page, frame, 'bare child, offscreen')
+    const alive = await offscreenFeed(page, frame)
     expect(
       alive,
       'removed subtrees still reachable after GC (no child script)',
@@ -126,18 +106,7 @@ test.describe('Mutation records while rAF is paused', () => {
     page,
   }) => {
     const frame = await setup(page)
-    const alive = await offscreenFeed(page, frame, 'resizer child, offscreen')
-
-    // For the record: once the iframe is back in view and a frame has run,
-    // the backlog is processed and everything becomes collectable
-    await page.evaluate(() => window.scrollTo(0, 0))
-    const before = await rafTicks(frame)
-    await frame.waitForFunction((n) => window.rafTicks > n + 2, before, POLL)
-    await collectGarbage(page, frame)
-    const aliveAfterFrame = await frame.evaluate(() => window.aliveCount())
-    console.log(
-      JSON.stringify({ label: 'resizer child, back in view', aliveAfterFrame }),
-    )
+    const alive = await offscreenFeed(page, frame)
 
     // Correct behaviour: the library does not keep every removed subtree
     // alive for as long as the iframe stays offscreen
