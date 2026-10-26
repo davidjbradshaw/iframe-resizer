@@ -5,8 +5,9 @@
 
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = new URL('..', import.meta.url).pathname
+const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const EXAMPLE_DIR = join(ROOT, 'example')
 const METHODS_FILE = join(ROOT, 'packages/child/methods/index.ts')
 const CONSTS_FILE = join(ROOT, 'packages/common/consts.ts')
@@ -18,8 +19,11 @@ const SKIP_DIR = /(^|\/)(node_modules|dist|\.astro)(\/|$)/
 const METHOD_CALL = /\bparentI[Ff]rame\.(\w+)\s*\(/g
 const SIZE_ATTRIBUTE = /\b(data-iframe-[\w-]+)\b/g
 const IN_PAGE_LINK = /<a\b[^>]*href="#"[^>]*>/g
-const PROPERTY_NAME = /(\w+)\s*:/g
+// Shorthand in the child's API object, name: value in the legacy bundles
+const MEMBER_NAME = /^\s*(\w+)\s*[,:]/
 const ONCLICK = /onclick="([^"]*)"/
+const LINK_ID = /\bid="([^"]+)"/
+const LINK_CLASS = /\bclass="([^"]+)"/
 const RETURNS = /\breturn\b|preventDefault/
 // Returning an assignment returns the value assigned, which is truthy
 const RETURNS_ASSIGNMENT = /\breturn\s[^;]*[^!<=>]=[^=]/
@@ -66,21 +70,48 @@ function htmlFiles(dir) {
   return found
 }
 
+// Walks the object literal that opens at "from", collecting the names of its
+// own members. Brace-matched, so a member whose value spans braces, such as a
+// function, neither truncates the list nor leaks its inner names into it.
+function objectMembers(source, from) {
+  const open = source.indexOf('{', from)
+
+  if (open === -1 || from === -1) return null
+
+  const members = new Set()
+  let depth = 0
+
+  for (let i = open; i < source.length; i += 1) {
+    const char = source[i]
+
+    if (char === '{') {
+      depth += 1
+    } else if (char === '}') {
+      depth -= 1
+      if (depth === 0) return members
+    } else if (char === '\n' && depth === 1) {
+      const lineEnd = source.indexOf('\n', i + 1)
+      const name = source.slice(i + 1, lineEnd).match(MEMBER_NAME)
+
+      if (name) members.add(name[1])
+    }
+  }
+
+  return null
+}
+
 // The public API object, so this check follows the library rather than a list
 function childMethods() {
-  const block = read(METHODS_FILE).match(
-    /win\.parentIframe = Object\.freeze\({([^}]*)}/,
+  const source = read(METHODS_FILE)
+  const members = objectMembers(
+    source,
+    source.indexOf('win.parentIframe = Object.freeze('),
   )
 
-  if (!block)
-    throw new Error(`Could not find the API object in ${METHODS_FILE}`)
+  if (!members?.size)
+    throw new Error(`Could not read the API object in ${METHODS_FILE}`)
 
-  return new Set(
-    block[1]
-      .split(',')
-      .map((line) => line.trim())
-      .filter(Boolean),
-  )
+  return members
 }
 
 function sizeAttributes() {
@@ -102,12 +133,16 @@ function legacyApi(version) {
       join(LEGACY_DIR, version, 'iframeResizer.contentWindow.js'),
     )
 
-    legacyCache.set(
-      version,
+    // A minified bundle has had its property names rewritten
+    const members =
       source.split('\n').length < 50
         ? null
-        : new Set([...source.matchAll(PROPERTY_NAME)].map((match) => match[1])),
-    )
+        : objectMembers(source, source.search(/\bparentIFrame\s*=/))
+
+    if (members && members.size === 0)
+      throw new Error(`Could not read the ${version} API object`)
+
+    legacyCache.set(version, members)
   }
 
   return legacyCache.get(version)
@@ -151,6 +186,24 @@ function checkDeprecated(source) {
   )
 }
 
+// A link with no onclick needs a listener, which the page can only bind
+// through the link's id or class, and that listener has to call
+// preventDefault. Looking for preventDefault anywhere in the file would pass
+// any dead link on a page that cancels some other one.
+function hasBoundHandler(source, link) {
+  if (!source.includes('preventDefault')) return false
+
+  const id = link.match(LINK_ID)?.[1]
+  const classes = link.match(LINK_CLASS)?.[1].split(/\s+/) ?? []
+
+  const selectors = [
+    ...(id ? [`getElementById('${id}')`, `#${id}'`] : []),
+    ...classes.map((name) => `.${name}'`),
+  ]
+
+  return selectors.some((selector) => source.includes(selector))
+}
+
 // An onclick that does not return false leaves the page navigating to "#"
 function checkInPageLinks(source) {
   const problems = []
@@ -159,9 +212,7 @@ function checkInPageLinks(source) {
     const onclick = link.match(ONCLICK)?.[1]
 
     if (!onclick) {
-      // The handler may be bound with addEventListener instead, in which case
-      // it has to call preventDefault to stop the link navigating to "#"
-      if (!source.includes('preventDefault')) {
+      if (!hasBoundHandler(source, link)) {
         problems.push(
           `has an href="#" link that nothing cancels: ${link.trim()}`,
         )
