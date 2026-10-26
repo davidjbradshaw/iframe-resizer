@@ -21,7 +21,8 @@ export async function expectConnected(page, selector) {
   const height = () => iframe.evaluate((el) => el.offsetHeight)
   const before = await height()
 
-  const frame = await (await iframe.elementHandle()).contentFrame()
+  const handle = await iframe.elementHandle()
+  const frame = await handle.contentFrame()
   // Inside a data-iframe-resize element if there is one, as the child then
   // sizes the iframe to that element
   await frame.evaluate((growth) => {
@@ -32,6 +33,17 @@ export async function expectConnected(page, selector) {
   }, GROWTH)
 
   await expect.poll(height).toBeGreaterThanOrEqual(before + GROWTH)
+}
+
+// The page counts its onReady calls in window[counter]. Waits for at least
+// the count, then asserts it exactly, so an extra onReady fails here with the
+// count rather than as a timeout.
+export async function expectReadyCount(page, count, counter = 'readyCount') {
+  await page.waitForFunction(
+    ([name, n]) => (window[name] ?? 0) >= n,
+    [counter, count],
+  )
+  expect(await page.evaluate((name) => window[name], counter)).toBe(count)
 }
 
 export const expectBodyBackground = (page, selector, colour) =>

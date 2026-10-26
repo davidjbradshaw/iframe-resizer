@@ -59,6 +59,8 @@ class DetachComponent implements AfterViewInit {
     if (this.view) this.outlet.insert(this.view)
   }
 
+  // Change detection skips a detached view, so the directive gets the new
+  // options when the view is inserted again, as it would in an app
   recolour() {
     this.options = { ...this.options, bodyBackground: 'rgb(0, 128, 0)' }
   }

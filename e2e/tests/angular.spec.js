@@ -7,6 +7,7 @@ import {
 import {
   expectBodyBackground,
   expectConnected,
+  expectReadyCount,
   GREEN,
   watchRemovalAdvice,
 } from './shared/hide-restore'
@@ -125,7 +126,7 @@ test.describe('Angular detached view', () => {
   }) => {
     const advice = watchRemovalAdvice(page)
     await page.goto(DETACH)
-    await page.waitForFunction(() => window.readyCount === 1)
+    await expectReadyCount(page, 1)
 
     // Detached, as by route reuse: the directive lives on, its iframe is out
     await page.click('#hide')
@@ -134,7 +135,7 @@ test.describe('Angular detached view', () => {
 
     // Inserted again: the page in the iframe reloads, and connects again
     await page.click('#show')
-    await page.waitForFunction(() => window.readyCount === 2)
+    await expectReadyCount(page, 2)
 
     await expectBodyBackground(page, '#kept', GREEN)
     await expectConnected(page, '#kept')

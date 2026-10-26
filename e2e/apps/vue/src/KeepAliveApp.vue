@@ -4,7 +4,9 @@
   import FramePane from './FramePane.vue'
   import OtherPane from './OtherPane.vue'
 
-  // The frame's pane is cached while hidden, and its DOM taken out of the page
+  // The frame's pane is cached while hidden, and its DOM taken out of the page.
+  // A cached pane gets no prop updates, so the colour reaches the resizer
+  // when the pane is shown again, as it would in an app
   const shown = ref(true)
   const bodyBackground = ref('rgb(255, 255, 255)')
 </script>

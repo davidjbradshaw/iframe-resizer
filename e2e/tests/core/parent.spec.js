@@ -190,7 +190,6 @@ test.describe('Parent (vanilla)', () => {
     await page.goto(BASE)
     await page.waitForFunction(() => window.lastResized?.type === 'init')
 
-    const GREEN = 'rgb(0, 128, 0)'
     const childBody = page.frameLocator('iframe').first().locator('body')
     await page.evaluate((bodyBackground) => {
       window.iframeResize(
@@ -343,20 +342,10 @@ test.describe('Parent: changing the id of a bound iframe', () => {
 })
 
 test.describe('Parent iframe observer', () => {
-  const REMOVED = /Iframe removed while connected/
-
-  const advice = (page) => {
-    const seen = []
-    page.on('console', (message) => {
-      if (REMOVED.test(message.text())) seen.push(message.text())
-    })
-    return seen
-  }
-
   test('an iframe removed while connected is disconnected, with advice', async ({
     page,
   }) => {
-    const seen = advice(page)
+    const seen = watchRemovalAdvice(page)
     await page.goto(BASE)
     await page.waitForFunction(() => window.lastResized?.type === 'init')
 
@@ -389,7 +378,7 @@ test.describe('Parent iframe observer', () => {
   test('an iframe moved within the page stays connected, without advice', async ({
     page,
   }) => {
-    const seen = advice(page)
+    const seen = watchRemovalAdvice(page)
     await page.goto(BASE)
     await page.waitForFunction(() => window.lastResized?.type === 'init')
 
@@ -414,14 +403,14 @@ test.describe('Parent iframe observer', () => {
 
 test.describe('Parent hide and restore', () => {
   // The vanilla page binds every iframe; these tests use the first
-  const recolour = (page, extra = {}) =>
+  const recolour = (page) =>
     page.evaluate(
-      ([colour, options]) =>
+      (colour) =>
         window.iframeResize(
-          { license: 'GPLv3', bodyBackground: colour, ...options },
+          { license: 'GPLv3', bodyBackground: colour },
           document.querySelector('iframe'),
         ),
-      [GREEN, extra],
+      GREEN,
     )
 
   const waitForInit = (page) =>
@@ -469,7 +458,7 @@ test.describe('Parent hide and restore', () => {
       window.keptIframe = document.querySelector('iframe')
       window.keptIframe.remove()
     })
-    await page.waitForTimeout(100)
+    // The iframe observer has run: it is a microtask of the removal's task
     await page.evaluate(
       (colour) =>
         window.iframeResize(

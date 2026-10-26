@@ -7,6 +7,7 @@ import {
 import {
   expectBodyBackground,
   expectConnected,
+  expectReadyCount,
   GREEN,
   watchRemovalAdvice,
 } from './shared/hide-restore'
@@ -31,13 +32,13 @@ test.describe('jQuery', () => {
     test('connects to a same-origin child once added', async ({ page }) => {
       await page.goto(DETACHED)
 
-      await page.waitForFunction(() => window.readyCount === 1)
+      await expectReadyCount(page, 1)
     })
 
     test('connects to a cross-origin child once added', async ({ page }) => {
       await page.goto(`${DETACHED}?src=${OTHER_PAGE}`)
 
-      await page.waitForFunction(() => window.readyCount === 1)
+      await expectReadyCount(page, 1)
     })
   })
 })
@@ -48,7 +49,7 @@ test.describe('jQuery hide and restore', () => {
   }) => {
     const advice = watchRemovalAdvice(page)
     await page.goto(DETACHED)
-    await page.waitForFunction(() => window.readyCount === 1)
+    await expectReadyCount(page, 1)
 
     await page.evaluate(
       (colour) =>
@@ -60,9 +61,11 @@ test.describe('jQuery hide and restore', () => {
 
     // Moving reloads the page in the iframe, which connects again
     await page.evaluate(() =>
-      window.jQuery('#myIframe').appendTo(window.jQuery('<div>').appendTo('body')),
+      window
+        .jQuery('#myIframe')
+        .appendTo(window.jQuery('<div>').appendTo('body')),
     )
-    await page.waitForFunction(() => window.readyCount === 2)
+    await expectReadyCount(page, 2)
 
     await expectBodyBackground(page, '#myIframe', GREEN)
     await expectConnected(page, '#myIframe')
