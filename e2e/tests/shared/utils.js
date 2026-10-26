@@ -2,6 +2,9 @@ import { expect } from '@playwright/test'
 
 const INIT_TIMEOUT = 10_000
 
+// Core logs this when onBeforeClose returns false; every page has log on
+export const CLOSE_CANCELLED = 'Close iframe cancelled by onBeforeClose'
+
 // The iframe is bound and its child has answered the parent's init, with
 // all: true every iframe on the page. Core sets iframeResizer as soon as it
 // binds, before the child has loaded. A child before v5 sends no version, so

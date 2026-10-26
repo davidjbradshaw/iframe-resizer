@@ -23,7 +23,7 @@ const OTHER_PAGE = 'http://127.0.0.1:8080/e2e/fixtures/child/frame.content.html'
 test.describe('jQuery', () => {
   parentEventTests(BASE, { blocksClose: false })
   parentMethodTests(BASE, { updateControl: true })
-  childTests(BASE)
+  childTests(BASE, { blocksClose: false })
   earlyUpdateTests(EARLY_UPDATE)
 
   // $('<iframe>').iframeResize().appendTo() binds the iframe before it has a

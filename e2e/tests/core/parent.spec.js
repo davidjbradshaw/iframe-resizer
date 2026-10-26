@@ -308,7 +308,7 @@ test.describe('Parent (vanilla)', () => {
 
   parentEventTests(BASE, { blocksClose: false })
   parentMethodTests(BASE)
-  childTests(BASE)
+  childTests(BASE, { blocksClose: false })
   earlyUpdateTests(EARLY_UPDATE)
 })
 

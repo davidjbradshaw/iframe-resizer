@@ -1,6 +1,7 @@
 import { expect, test } from './test'
 import {
   assertChildText,
+  CLOSE_CANCELLED,
   openPage,
   settledIframeHeight,
   waitForResizer,
@@ -8,8 +9,10 @@ import {
 
 /**
  * Shared child-side tests — events, methods, page events, and attributes.
+ *
+ * blocksClose: the parent cancels close(), as the framework wrappers do.
  */
-export function childTests(baseUrl) {
+export function childTests(baseUrl, { blocksClose = true } = {}) {
   // --- Child events ---
 
   // Not openPage, which waits for #ready-status itself
@@ -301,20 +304,28 @@ export function childTests(baseUrl) {
 
   // --- close (last test — removes the iframe) ---
 
-  test('close removes iframe from parent', async ({ page }) => {
+  test(`close ${blocksClose ? 'is blocked by' : 'removes iframe from'} parent`, async ({
+    page,
+  }) => {
     await openPage(page, baseUrl)
 
-    // Framework wrappers block close, vanilla removes iframe
-    const iframeRemoved = await page.evaluate(() => {
-      const iframe = document.querySelector('iframe')
-      iframe.iframeResizer.close()
-      return document.querySelector('iframe') === null
-    })
+    const cancelled =
+      blocksClose &&
+      page.waitForEvent('console', (message) =>
+        message.text().includes(CLOSE_CANCELLED),
+      )
 
-    // Vanilla parent removes the iframe; a framework wrapper keeps it
+    await page.evaluate(() =>
+      document.querySelector('iframe').iframeResizer.close(),
+    )
+
+    // Framework wrappers block close; vanilla and jQuery remove the iframe
     const iframe = page.locator('iframe')
-    await (iframeRemoved
-      ? expect(iframe).toHaveCount(0)
-      : expect(iframe).toBeVisible())
+    if (blocksClose) {
+      await cancelled
+      await expect(iframe).toBeVisible()
+    } else {
+      await expect(iframe).toHaveCount(0)
+    }
   })
 }
