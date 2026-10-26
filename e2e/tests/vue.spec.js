@@ -7,6 +7,7 @@ import {
 import {
   expectBodyBackground,
   expectConnected,
+  expectReadyCount,
   GREEN,
   watchRemovalAdvice,
 } from './shared/hide-restore'
@@ -28,7 +29,7 @@ test.describe('Vue <KeepAlive>', () => {
   }) => {
     const advice = watchRemovalAdvice(page)
     await page.goto(`${BASE}?keepalive`)
-    await page.waitForFunction(() => window.readyCount === 1)
+    await expectReadyCount(page, 1)
 
     // Hidden: the pane is cached and the iframe taken out of the page
     await page.click('#hide')
@@ -37,7 +38,7 @@ test.describe('Vue <KeepAlive>', () => {
 
     // Back: the page in the iframe reloads, and connects again
     await page.click('#show')
-    await page.waitForFunction(() => window.readyCount === 2)
+    await expectReadyCount(page, 2)
 
     await expectBodyBackground(page, '#kept', GREEN)
     await expectConnected(page, '#kept')

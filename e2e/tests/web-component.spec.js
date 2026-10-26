@@ -7,6 +7,7 @@ import {
 import {
   expectBodyBackground,
   expectConnected,
+  expectReadyCount,
   GREEN,
   watchRemovalAdvice,
 } from './shared/hide-restore'
@@ -44,11 +45,10 @@ test.describe('Web Component removed and added back', () => {
     page,
   }) => {
     const advice = watchRemovalAdvice(page)
+    // Connected to its child before it is removed
     await page.goto(BASE)
     await waitForResizer(page)
-    await page.waitForFunction(
-      () => document.querySelector('iframe#myIframe').style.height !== '',
-    )
+    await waitForChildText(page, '#ready-status', 'ready')
 
     // Removed: the element disconnects and takes its iframe out
     await page.evaluate(() => {
@@ -61,12 +61,13 @@ test.describe('Web Component removed and added back', () => {
     })
     await expect(page.locator('iframe#myIframe')).toHaveCount(0)
 
-    // Changed while out, then added back: a new iframe connects
+    // Changed while out, then added back: the element binds a new iframe from
+    // its attributes, so the change reaches the child with the first init
     await page.evaluate((colour) => {
       window.element.setAttribute('bodybackground', colour)
       document.body.append(window.element)
     }, GREEN)
-    await page.waitForFunction(() => window.readyAgain === 1)
+    await expectReadyCount(page, 1, 'readyAgain')
 
     // The host element carries the id too
     await expectBodyBackground(page, 'iframe#myIframe', GREEN)
