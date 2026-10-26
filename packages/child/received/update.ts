@@ -44,8 +44,9 @@ function keepPageValues(
   }
 }
 
-// Applies the options in an update or a repeat init from the parent
-export function applyFromParent(data: string[]): void {
+// Applies the options in an update, or in the init of a new binding, which
+// replies with the size itself, so nothing is sent from here
+export function applyFromParent(data: string[], newBinding = false): void {
   const previous = {
     autoResize: settings.autoResize,
     bodyBackground: settings.bodyBackground,
@@ -62,6 +63,9 @@ export function applyFromParent(data: string[]): void {
   state.fromParent = { ...incoming }
 
   keepPageValues(incoming, lastSent)
+  // The mode is the child's own, from both licence keys when it started;
+  // the parent's field holds its own key's alone
+  delete incoming.mode
   map2settings(incoming)
 
   setConsoleOptions({
@@ -83,7 +87,7 @@ export function applyFromParent(data: string[]): void {
 
   // Re-enabling measures at once, as parentIframe.autoResize(true) does, so
   // content that changed while sizing was off is picked up
-  if (settings.autoResize && !previous.autoResize)
+  if (settings.autoResize && !previous.autoResize && !newBinding)
     queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled by parent'))
 
   // The direction may have changed
@@ -92,8 +96,9 @@ export function applyFromParent(data: string[]): void {
   // A changed offset must trigger a size calculation, exactly as
   // parentIframe.setOffsetSize() does, so the iframe grows or shrinks at once
   if (
-    settings.offsetHeight !== previous.offsetHeight ||
-    settings.offsetWidth !== previous.offsetWidth
+    !newBinding &&
+    (settings.offsetHeight !== previous.offsetHeight ||
+      settings.offsetWidth !== previous.offsetWidth)
   ) {
     sendSize(SET_OFFSET_SIZE, 'Offset size updated from parent')
   }

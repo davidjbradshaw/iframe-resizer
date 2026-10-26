@@ -109,6 +109,22 @@ describe('core/setup/init', () => {
     expect(trigger.mock.calls.length).toBe(triggerCallsBefore)
   })
 
+  test('with waitForLoad, sends init at once to an iframe bound before', () => {
+    // As React's <Activity> rebinds: the page stayed loaded, so no load
+    // event will come
+    const iframe = { isConnected: true, loading: 'eager', src: 'x' }
+    settings.if12 = { iframe, waitForLoad: true }
+    init('if12')
+    vi.runAllTimers()
+    const before = trigger.mock.calls.length
+
+    settings.if12 = { iframe, waitForLoad: true }
+    init('if12')
+    vi.runAllTimers()
+
+    expect(trigger.mock.calls.slice(before)).toEqual([[INIT, 'msg', 'if12']])
+  })
+
   test('does not warn on no response for lazy loading iframe on INIT', () => {
     settings.if5 = {
       iframe: { isConnected: true, loading: 'lazy', src: 'x' },
