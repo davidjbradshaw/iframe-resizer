@@ -58,10 +58,16 @@ function delayInit(id: string, eventName: string, reason: string): void {
   })
 }
 
+// Iframes bound before. Bound again, as React's <Activity> does, the page in
+// one may have stayed loaded, so no load event would come for waitForLoad.
+const boundBefore = new WeakSet<HTMLIFrameElement>()
+
 function sendInit(id: string, initChild: () => void): void {
   const { iframe, waitForLoad } = settings[id]
+  const rebound = boundBefore.has(iframe)
+  boundBefore.add(iframe)
 
-  if (waitForLoad === true) return
+  if (waitForLoad === true && !rebound) return
   if (noContent(iframe)) {
     delayInit(id, 'noContent', 'No content detected in the iframe')
   } else if (iframe.isConnected) {

@@ -8,6 +8,12 @@ import settings from '../values/settings'
 
 let previousTitle: string | undefined
 
+// For a new binding, whose parent has not seen the title yet
+export function resendTitle(): void {
+  previousTitle = undefined
+  titleChanged()
+}
+
 export default function titleChanged(): void {
   const currentTitle = document.title
 
