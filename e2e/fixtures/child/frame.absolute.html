@@ -70,16 +70,16 @@
     <p>
       This page has an absolutely positioned element that extends outside the
       normal document body, which is marked with a red border on this page.
-      iframe-resizer's <b>auto</b> mode detects this element because it has the
-      <b>data-iframe-height</b> attribute, which tells the library to include it
-      when calculating the page height.
+      iframe-resizer's <b>auto</b> mode detects it because the child marks
+      elements that overflow the body with <b>data-iframe-overflowed</b> and
+      sizes the frame to cover them.
     </p>
     <span style="visibility: collapse">a</span>
     <span style="visibility: hidden">a</span>
     <span style="display: none">a</span>
     <a name="test">Test in page anchor</a>
 
-    <div id="abs" data-iframe-height>
+    <div id="abs">
       Absolute positioned element
       <a
         href="#"
