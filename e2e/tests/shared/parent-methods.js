@@ -1,5 +1,10 @@
 import { expect, test } from './test'
-import { assertChildText, waitForChildText, waitForResizer } from './utils'
+import {
+  assertChildText,
+  settledIframeHeight,
+  waitForChildText,
+  waitForResizer,
+} from './utils'
 
 // Options changed after init, in steps, each chosen because it has an
 // observable effect: the body styles land in the child, scrolling changes the
@@ -39,30 +44,6 @@ const EXPECTED = {
 
 // Time allowed for a resize that must NOT happen to show up if it did
 const NO_RESIZE_WAIT_MS = 1000
-
-// The iframe height once the child has stopped sending resizes: unchanged
-// for at least a quarter of a second. Judged by time, not by consecutive
-// evaluations, as Playwright evaluates the function twice on start.
-const SETTLE_MS = 250
-
-async function settledIframeHeight(page) {
-  return page
-    .waitForFunction(
-      (settleMs) => {
-        const iframe = document.querySelector('iframe')
-        const height = iframe.offsetHeight
-        const now = performance.now()
-        if (iframe.settleHeight !== height) {
-          iframe.settleHeight = height
-          iframe.settleSince = now
-        }
-        return now - iframe.settleSince >= settleMs && height
-      },
-      SETTLE_MS,
-      { polling: 50, timeout: 5000 },
-    )
-    .then((handle) => handle.jsonValue())
-}
 
 // Wait for the iframe height to move away from a known value
 async function waitForHeightChange(page, from) {

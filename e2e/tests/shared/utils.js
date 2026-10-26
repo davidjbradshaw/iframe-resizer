@@ -26,3 +26,35 @@ export async function assertChildText(page, selector, expected) {
   const text = await page.frameLocator('iframe').locator(selector).textContent()
   expect(text).toBe(expected)
 }
+
+// The iframe size once the child has stopped sending resizes: unchanged
+// for at least a quarter of a second. Judged by time, not by consecutive
+// evaluations, as Playwright evaluates the function twice on start. Each call
+// starts afresh, so a size left from an earlier one cannot count as settled.
+const SETTLE_MS = 250
+let settleCalls = 0
+
+async function settledIframeSize(page, selector, property) {
+  settleCalls += 1
+  return page
+    .waitForFunction(
+      ({ settleMs, call, sel, prop }) => {
+        const iframe = document.querySelector(sel)
+        const size = iframe[prop]
+        const now = performance.now()
+        if (iframe.settle?.call !== call || iframe.settle.size !== size) {
+          iframe.settle = { call, size, since: now }
+        }
+        return now - iframe.settle.since >= settleMs && size
+      },
+      { settleMs: SETTLE_MS, call: settleCalls, sel: selector, prop: property },
+      { polling: 50, timeout: 5000 },
+    )
+    .then((handle) => handle.jsonValue())
+}
+
+export const settledIframeHeight = (page, selector = 'iframe') =>
+  settledIframeSize(page, selector, 'offsetHeight')
+
+export const settledIframeWidth = (page, selector = 'iframe') =>
+  settledIframeSize(page, selector, 'offsetWidth')
