@@ -33,11 +33,9 @@ function isAncestor(source: MessageEventSource | null | undefined): boolean {
   return false
 }
 
-// The parent bound this iframe again while its page stayed loaded, as
-// React's <Activity> does: a new binding, from the window that set the page
-// up. index.ts already drops messages from other windows; the source is
-// checked here as well, as a new binding changes the page's options. A page
-// stopped by the licence check stays stopped.
+// A new binding while the page stayed loaded, as React's <Activity> makes:
+// from the window that set the page up (index.ts checks it too), and only
+// once the page has passed the licence check
 function isRebind(
   data: string[],
   event: InitEvent,
