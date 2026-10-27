@@ -18,6 +18,14 @@ describe('common/mode', () => {
     expect(getMode(options)).toBe(-1)
   })
 
+  it('returns 0 for a GPLv3 key', () => {
+    expect(getMode({ license: 'GPLv3' })).toBe(0)
+  })
+
+  it('returns -2 for a key with an empty first part', () => {
+    expect(getMode({ license: '-' })).toBe(-2)
+  })
+
   it('returns -2 for invalid credential format', () => {
     const options = { license: 'invalid-code-format' }
     expect(getMode(options)).toBe(-2)

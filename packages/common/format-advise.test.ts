@@ -73,6 +73,16 @@ describe('createFormatAdvise', () => {
     )
   })
 
+  test('drops upper-case tags in Chrome, as the lookup is case sensitive', () => {
+    vi.stubGlobal('chrome', true)
+
+    // The tag pattern ignores case, but TAGS only has lower-case keys
+    const formatAdvise = createFormatAdvise(mockFormatLogMsg)
+    formatAdvise('<B>bold</><BR>next')
+
+    expect(mockFormatLogMsg).toHaveBeenCalledWith('bold\u001B[mnext')
+  })
+
   test('passes non-string messages through unchanged', () => {
     vi.stubGlobal('chrome', true)
 
