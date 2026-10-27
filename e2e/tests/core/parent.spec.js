@@ -11,7 +11,7 @@ import {
   watchRemovalAdvice,
 } from '../shared/hide-restore'
 import { expect, test } from '../shared/test'
-import { settledIframeHeight } from '../shared/utils'
+import { growTagged, settledIframeHeight } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/index.html'
 const EARLY_UPDATE = '/e2e/fixtures/early-update.html'
@@ -318,12 +318,6 @@ test.describe('Parent: one call binding several iframes', () => {
   const FIRST = 'iframe:nth-of-type(1)'
   const SECOND = 'iframe:nth-of-type(2)'
 
-  // Grow the child's data-iframe-resize element, which sets its height
-  const grow = (frame, px) =>
-    frame
-      .locator('[data-iframe-resize]')
-      .evaluate((el, by) => (el.style.paddingBottom = `${10 + by}px`), px)
-
   test('gives each its own id, and sizes and messages each on its own', async ({
     page,
   }) => {
@@ -336,27 +330,38 @@ test.describe('Parent: one call binding several iframes', () => {
     const ids = await page
       .locator('iframe')
       .evaluateAll((iframes) => iframes.map((iframe) => iframe.id))
+    expect(ids).toEqual([expect.any(String), expect.any(String)])
+    expect(ids.every(Boolean)).toBe(true)
     expect(new Set(ids).size).toBe(2)
 
     // Each child's size reaches its own iframe
-    const firstBefore = await settledIframeHeight(page, FIRST)
-    const secondBefore = await settledIframeHeight(page, SECOND)
-    await grow(first, 50)
-    await grow(second, 150)
-    await expect
-      .poll(() => settledIframeHeight(page, FIRST))
-      .toBe(firstBefore + 50)
-    await expect
-      .poll(() => settledIframeHeight(page, SECOND))
-      .toBe(secondBefore + 150)
+    const [firstBefore, secondBefore] = await Promise.all([
+      settledIframeHeight(page, FIRST),
+      settledIframeHeight(page, SECOND),
+    ])
+    await growTagged(first, 50)
+    await growTagged(second, 150)
+    await Promise.all([
+      expect
+        .poll(() => settledIframeHeight(page, FIRST))
+        .toBe(firstBefore + 50),
+      expect
+        .poll(() => settledIframeHeight(page, SECOND))
+        .toBe(secondBefore + 150),
+    ])
 
-    // A message to one iframe reaches only its child
-    await page.evaluate(
-      (sel) => document.querySelector(sel).iframeResizer.sendMessage('second'),
-      SECOND,
-    )
+    // Each message reaches its own child, and only that one: each resizer
+    // must hold its own iframe, not the last one bound
+    const send = (sel, text) =>
+      page.evaluate(
+        ([selector, message]) =>
+          document.querySelector(selector).iframeResizer.sendMessage(message),
+        [sel, text],
+      )
+    await send(FIRST, 'first')
+    await send(SECOND, 'second')
+    await expect(first.locator('#last-message')).toHaveText('first')
     await expect(second.locator('#last-message')).toHaveText('second')
-    await expect(first.locator('#last-message')).toHaveText('none')
   })
 })
 
