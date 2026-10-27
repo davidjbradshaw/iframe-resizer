@@ -5,7 +5,27 @@ import * as commonMode from '../../common/mode'
 import * as childConsole from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
-import checkMode, { showVersion } from './mode'
+import checkMode, { modeFromKeys, showVersion } from './mode'
+
+describe('child/check/mode modeFromKeys', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+    vi.spyOn(commonMode, 'default').mockImplementation(({ key }) =>
+      key === 'high' ? 4 : 1,
+    )
+    vi.spyOn(utils, 'isDef').mockImplementation((v) => v !== undefined)
+  })
+
+  it('takes the higher of the two keys', () => {
+    expect(modeFromKeys('low', 'high')).toBe(4)
+    expect(modeFromKeys('high', 'low')).toBe(4)
+  })
+
+  it('counts a missing key as no licence', () => {
+    expect(modeFromKeys('low')).toBe(1)
+    expect(modeFromKeys()).toBe(-1)
+  })
+})
 
 describe('child/check/mode', () => {
   beforeEach(() => {

@@ -20,6 +20,13 @@ vi.mock('../page/css', () => ({
 vi.mock('../page/links', () => ({ default: vi.fn() }))
 vi.mock('../page/content-width', () => ({ default: vi.fn() }))
 
+// Licence keys and the modes they give
+const MODES: Record<string, number> = { valid: 4, lower: 1, invalid: -2 }
+vi.mock('../check/mode', () => ({
+  modeFromKeys: (key?: string, key2?: string) =>
+    Math.max(MODES[key ?? ''] ?? -1, MODES[key2 ?? ''] ?? -1),
+}))
+
 const updateMod = await import('./update')
 const updateFromParent = updateMod.default
 const { applyFromParent } = updateMod
@@ -54,7 +61,7 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     fields.offsetHeight ?? '',
     fields.offsetWidth ?? '',
     fields.sizeHeight ?? 'true',
-    '',
+    fields.key ?? '',
     '',
     fields.mode ?? '0',
     '',
@@ -81,20 +88,22 @@ describe('child/received/update', () => {
     state.fromParent = {}
   })
 
-  it("keeps the child's own licence mode over the parent's", () => {
-    settings.mode = 5
+  it("keeps the page's licence when the parent's key is invalid", () => {
+    settings.key2 = 'valid'
 
-    updateFromParent(buildEvent('x', { mode: '-2' }))
-
-    expect(settings.mode).toBe(5)
-  })
-
-  it("takes the parent's licence mode when it is higher, as after update()", () => {
-    settings.mode = 1
-
-    updateFromParent(buildEvent('x', { mode: '4' }))
+    updateFromParent(buildEvent('x', { key: 'invalid', mode: '-2' }))
 
     expect(settings.mode).toBe(4)
+  })
+
+  it('takes a licence the parent changed with update(), up or down', () => {
+    settings.key2 = undefined
+
+    updateFromParent(buildEvent('x', { key: 'valid', mode: '4' }))
+    expect(settings.mode).toBe(4)
+
+    updateFromParent(buildEvent('x', { key: 'lower', mode: '1' }))
+    expect(settings.mode).toBe(1)
   })
 
   it('records the binding the options came from', () => {

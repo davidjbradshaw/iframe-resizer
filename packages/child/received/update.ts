@@ -4,6 +4,7 @@ import {
   SET_OFFSET_SIZE,
 } from '@iframe-resizer/common/consts'
 
+import { modeFromKeys } from '../check/mode'
 import { log, setConsoleOptions } from '../console'
 import setupMouseEvents from '../events/mouse'
 import setContentWidth from '../page/content-width'
@@ -63,10 +64,9 @@ export function applyFromParent(data: string[], newBinding = false): void {
   state.fromParent = { ...incoming }
 
   keepPageValues(incoming, lastSent)
-  // The child's mode comes from both licence keys when it started, and the
-  // parent's field from its own key alone, so the higher wins: a licence
-  // upgraded by update() still reaches the child
-  incoming.mode = Math.max(settings.mode, incoming.mode ?? settings.mode)
+  // Worked out from both keys, as at init: the parent's field gives the mode
+  // of its own key alone
+  incoming.mode = modeFromKeys(incoming.key ?? settings.key, settings.key2)
   map2settings(incoming)
 
   setConsoleOptions({
