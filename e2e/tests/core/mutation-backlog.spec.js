@@ -108,6 +108,19 @@ test.describe('Mutation records while rAF is paused', () => {
     const frame = await setup(page)
     const alive = await offscreenFeed(page, frame)
 
+    // Back in view a frame runs, which should free the backlog. Soft, so a
+    // failure below says whether that clean-up was only deferred or a leak.
+    await page.evaluate(() => window.scrollTo(0, 0))
+    const ticks = await rafTicks(frame)
+    await frame.waitForFunction((n) => window.rafTicks > n + 2, ticks, POLL)
+    await collectGarbage(page, frame)
+    expect
+      .soft(
+        await frame.evaluate(() => window.aliveCount()),
+        'removed subtrees still reachable once back in view',
+      )
+      .toBe(0)
+
     // Correct behaviour: the library does not keep every removed subtree
     // alive for as long as the iframe stays offscreen
     expect(
