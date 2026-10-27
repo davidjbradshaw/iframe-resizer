@@ -109,12 +109,18 @@ describe('core/setup/init', () => {
     expect(trigger.mock.calls.length).toBe(triggerCallsBefore)
   })
 
-  test('with waitForLoad, sends init at once to an iframe bound before', () => {
+  const loadEvent = (iframe) =>
+    addEventListener.mock.calls.findLast(
+      (call) => call[0] === iframe && call[1] === 'load',
+    )[2]()
+
+  test('with waitForLoad, sends init at once to an iframe whose page has loaded', () => {
     // As React's <Activity> rebinds: the page stayed loaded, so no load
     // event will come
     const iframe = { isConnected: true, loading: 'eager', src: 'x' }
     settings.if12 = { iframe, waitForLoad: true }
     init('if12')
+    loadEvent(iframe)
     vi.runAllTimers()
     const before = trigger.mock.calls.length
 
@@ -123,6 +129,24 @@ describe('core/setup/init', () => {
     vi.runAllTimers()
 
     expect(trigger.mock.calls.slice(before)).toEqual([[INIT, 'msg', 'if12']])
+  })
+
+  test('with waitForLoad, still waits for the load of an iframe bound twice before it', () => {
+    // As React StrictMode mounts twice in development, before the page loads
+    const iframe = { isConnected: true, loading: 'eager', src: 'x' }
+    settings.if13 = { iframe, waitForLoad: true }
+    init('if13')
+    settings.if13 = { iframe, waitForLoad: true }
+    const before = trigger.mock.calls.length
+    init('if13')
+    vi.runAllTimers()
+
+    expect(trigger.mock.calls.length).toBe(before)
+
+    loadEvent(iframe)
+    vi.runAllTimers()
+
+    expect(trigger.mock.calls.slice(before)).toEqual([[ONLOAD, 'msg', 'if13']])
   })
 
   test('does not warn on no response for lazy loading iframe on INIT', () => {

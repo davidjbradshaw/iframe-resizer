@@ -33,14 +33,20 @@ function checkReset(id: string): void {
   })
 }
 
+// Iframes whose page has loaded. Bound again, as React's <Activity> does, the
+// page may still be loaded, so no load event would come for waitForLoad.
+const loadedBefore = new WeakSet<HTMLIFrameElement>()
+
 function addLoadListener(
   id: string,
   iframe: HTMLIFrameElement,
   initChild: () => void,
 ): void {
   // allow other concurrent events to go first
-  const onload = (): ReturnType<typeof setTimeout> =>
-    setTimeout(initChild, AFTER_EVENT_STACK)
+  const onload = (): ReturnType<typeof setTimeout> => {
+    loadedBefore.add(iframe)
+    return setTimeout(initChild, AFTER_EVENT_STACK)
+  }
   addEventListener(iframe, LOAD, onload)
   settings[id].onLoadListener = onload
 }
@@ -58,16 +64,10 @@ function delayInit(id: string, eventName: string, reason: string): void {
   })
 }
 
-// Iframes bound before. Bound again, as React's <Activity> does, the page in
-// one may have stayed loaded, so no load event would come for waitForLoad.
-const boundBefore = new WeakSet<HTMLIFrameElement>()
-
 function sendInit(id: string, initChild: () => void): void {
   const { iframe, waitForLoad } = settings[id]
-  const rebound = boundBefore.has(iframe)
-  boundBefore.add(iframe)
 
-  if (waitForLoad === true && !rebound) return
+  if (waitForLoad === true && !loadedBefore.has(iframe)) return
   if (noContent(iframe)) {
     delayInit(id, 'noContent', 'No content detected in the iframe')
   } else if (iframe.isConnected) {
