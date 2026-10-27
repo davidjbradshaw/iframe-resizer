@@ -14,17 +14,24 @@ const CHILD_DIR = fileURLToPath(
 const parentFor = (child) =>
   `/e2e/fixtures/check-origin.html?src=child/${child}`
 
+// An anchor in either quote style, so a page is not missed for writing
+// href='#', nor picked up for holding the string in a script or a comment
+const IN_PAGE_LINK = /<a\b[^>]*href=["']#["']/
+
 // Every child page with in-page links, so a page added later is covered too.
 // frame.test.html is left out: the shared suites drive each of its links.
 const PAGES = readdirSync(CHILD_DIR)
   .filter((file) => file.endsWith('.html') && file !== 'frame.test.html')
   .filter((file) =>
-    readFileSync(join(CHILD_DIR, file), 'utf8').includes('href="#"'),
+    IN_PAGE_LINK.test(readFileSync(join(CHILD_DIR, file), 'utf8')),
   )
   .sort()
 
-// Removes the frame, which would end the test rather than exercise the page
-const SKIP = /^close$/i
+// Close detaches the iframe, which would end the test rather than exercise
+// the page. Send Message needs an onMessage on the parent, and this one has
+// none, so core's default only warns; the shared child-methods suite covers
+// it properly. Matched loosely, so a relabelled link is still skipped.
+const SKIP = /\b(close|send message)\b/i
 
 // Not a height any of the pages has of its own
 const SIZE = 777

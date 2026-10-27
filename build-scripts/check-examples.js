@@ -1,14 +1,15 @@
-// Checks the example pages against the library they demonstrate. The examples
+// Checks the demo pages against the library they demonstrate. The examples
 // load js-dist, so they are never exercised by the test suite; this reads them
 // statically instead, which is enough to catch a call or an attribute that no
-// longer exists.
+// longer exists. The e2e child fixtures are the same pages against the current
+// build, and had the same faults, so they are read too.
 
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
-const EXAMPLE_DIR = join(ROOT, 'example')
+const PAGE_DIRS = [join(ROOT, 'example'), join(ROOT, 'e2e/fixtures/child')]
 const METHODS_FILE = join(ROOT, 'packages/child/methods/index.ts')
 const CONSTS_FILE = join(ROOT, 'packages/common/consts.ts')
 const LEGACY_DIR = join(ROOT, 'e2e/fixtures/legacy')
@@ -24,6 +25,7 @@ const MEMBER_NAME = /^\s*(\w+)\s*[,:]/
 const ONCLICK = /onclick="([^"]*)"/
 const LINK_ID = /\bid="([^"]+)"/
 const LINK_CLASS = /\bclass="([^"]+)"/
+const COMPAT_PAGE = /frame\.([1-5])\.html$/
 const RETURNS = /\breturn\b|preventDefault/
 // Returning an assignment returns the value assigned, which is truthy
 const RETURNS_ASSIGNMENT = /\breturn\s[^;]*[^!<=>]=[^=]/
@@ -148,13 +150,19 @@ function legacyApi(version) {
   return legacyCache.get(version)
 }
 
-function isCompatPage(path) {
-  return /frame\.[1-5]\.html$/.test(path)
+// frame.<1-5>.html load one release's child, and the legacy fixture loads
+// whichever its ?child says, so both are meant to use that release's names
+function loadsLegacyChild(path, source) {
+  return COMPAT_PAGE.test(path) || source.includes('/legacy/')
 }
 
-function apiFor(path, current) {
-  const legacy = path.match(/frame\.([1-5])\.html$/)
-  return legacy ? legacyApi(`v${legacy[1]}`) : current
+function apiFor(path, source, current) {
+  const pinned = path.match(COMPAT_PAGE)
+
+  if (pinned) return legacyApi(`v${pinned[1]}`)
+
+  // Its child is chosen at runtime, so no one API applies
+  return loadsLegacyChild(path, source) ? null : current
 }
 
 function checkMethods(source, api) {
@@ -231,14 +239,13 @@ function checkInPageLinks(source) {
 
 function checkFile(path, current, attributes) {
   const source = read(path)
-  const api = apiFor(path, current)
+  const api = apiFor(path, source, current)
 
   const problems = [
     ...checkMethods(source, api),
     ...checkAttributes(source, attributes),
     ...checkInPageLinks(source),
-    // A compat page is meant to show the old names
-    ...(isCompatPage(path) ? [] : checkDeprecated(source)),
+    ...(loadsLegacyChild(path, source) ? [] : checkDeprecated(source)),
   ]
 
   return problems.map((problem) => `${relative(ROOT, path)} ${problem}`)
@@ -246,14 +253,14 @@ function checkFile(path, current, attributes) {
 
 const current = childMethods()
 const attributes = sizeAttributes()
-const files = htmlFiles(EXAMPLE_DIR)
+const files = PAGE_DIRS.flatMap((dir) => htmlFiles(dir))
 const problems = files.flatMap((file) => checkFile(file, current, attributes))
 
 if (problems.length > 0) {
-  console.error(`\nExample pages: ${problems.length} problem(s)\n`)
+  console.error(`\nDemo pages: ${problems.length} problem(s)\n`)
   for (const problem of problems) console.error(`  ${problem}`)
   console.error('')
   process.exitCode = 1
 } else {
-  console.log(`Example pages: ${files.length} checked, no problems found`)
+  console.log(`Demo pages: ${files.length} checked, no problems found`)
 }
