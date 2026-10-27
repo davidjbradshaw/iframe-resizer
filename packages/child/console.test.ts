@@ -1,3 +1,4 @@
+import { BOLD, LABEL } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock auto-console-group to capture calls
@@ -68,6 +69,29 @@ describe('child/console', () => {
     mod.vInfo('1.2.3', 0)
     const style2 = spy.mock.calls.at(-1)[1]
     expect(style2).toContain('font-weight')
+    spy.mockRestore()
+  })
+
+  it('setConsoleOptions falls back to the default label without an id', async () => {
+    const mod = await import('./console')
+    mod.setConsoleOptions({ id: 'named', expand: false, enabled: true })
+    mod.setConsoleOptions({ id: '', expand: false, enabled: true })
+    expect(calls.label.at(-1)).toBe(LABEL)
+  })
+
+  it('vInfo uses normal weight when logging is off and mode is 1 or more', async () => {
+    const mod = await import('./console')
+    const spy = vi.spyOn(console, 'info').mockImplementation(() => {})
+    mod.setConsoleOptions({ id: 'banner', expand: false, enabled: false })
+    mod.vInfo('1.2.3', 1)
+    expect(spy).toHaveBeenCalledWith(
+      '%ciframe-resizer 1.2.3',
+      'font-weight: normal;',
+    )
+
+    // Mode 0 is still shown in bold
+    mod.vInfo('1.2.3', 0)
+    expect(spy.mock.calls.at(-1)[1]).toBe(BOLD)
     spy.mockRestore()
   })
 

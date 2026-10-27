@@ -31,6 +31,19 @@ describe('child/check/migrate-size-attr', () => {
     expect(warnSpy).toHaveBeenCalledTimes(1)
   })
 
+  it('uses the singular "element" when only one element is renamed', () => {
+    const warnSpy = vi.spyOn(childConsole, 'warn').mockImplementation(() => {})
+
+    const el = document.createElement('div')
+    el.dataset.iframeSize = ''
+    document.body.append(el)
+
+    migrateLegacySizeAttr()
+
+    expect(Object.hasOwn(el.dataset, 'iframeResize')).toBe(true)
+    expect(warnSpy.mock.calls[0][0]).toMatch(/on 1 element:$/)
+  })
+
   it('does nothing and does not warn when no legacy elements exist', () => {
     const warnSpy = vi.spyOn(childConsole, 'warn').mockImplementation(() => {})
 

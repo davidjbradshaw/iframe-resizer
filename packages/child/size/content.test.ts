@@ -110,6 +110,28 @@ describe('child/size/content', () => {
     expect(state.width).toBe(400)
   })
 
+  test.each([
+    [INIT, 'init'],
+    [ENABLE, 'enable'],
+  ])(
+    'adopts the measured size for %s even within tolerance',
+    async (event, desc) => {
+      const { info, purge } = await import('../console')
+      const isSizeChangeDetected = (await import('./change-detected')).default
+      isSizeChangeDetected.mockReturnValue(false)
+      state.height = 100
+      state.width = 200
+
+      const result = getContentSize(event, desc)
+
+      expect(result).toBe(state)
+      expect(state.height).toBe(300)
+      expect(state.width).toBe(400)
+      expect(purge).not.toHaveBeenCalled()
+      expect(info).not.toHaveBeenCalled()
+    },
+  )
+
   test('returns null for observer events when no change', async () => {
     const isSizeChangeDetected = (await import('./change-detected')).default
     isSizeChangeDetected.mockReturnValue(false)

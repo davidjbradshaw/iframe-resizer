@@ -321,4 +321,30 @@ describe('child/received/update', () => {
     updateFromParent(buildEvent('edge1', { inPageLinks: 'true' }))
     expect(setupInPageLinks).toHaveBeenCalledTimes(1)
   })
+
+  it('keeps the licence mode when an older parent sends no mode field', () => {
+    settings.mode = 3
+    const fields = buildEvent('old', {})
+      .data.slice('[iFrameSizer]update:'.length)
+      .split(':')
+      .slice(0, 21)
+
+    applyFromParent(fields)
+
+    expect(settings.mode).toBe(3)
+  })
+
+  it('sets the body background and padding when the parent changes them', () => {
+    const fields = buildEvent('edge1', {})
+      .data.slice('[iFrameSizer]update:'.length)
+      .split(':')
+    fields[9] = 'red'
+    fields[10] = '5px'
+
+    applyFromParent(fields)
+
+    expect(cssMod.setBodyStyle).toHaveBeenCalledWith('background', 'red')
+    expect(cssMod.setBodyStyle).toHaveBeenCalledWith('padding', '5px')
+    expect(cssMod.setBodyStyle).toHaveBeenCalledTimes(2)
+  })
 })

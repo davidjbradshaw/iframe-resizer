@@ -57,6 +57,63 @@ describe('child/observers/overflow deeper', () => {
     expect(consoleMod.info).toHaveBeenCalled()
   })
 
+  test('measures the bottom edge when no side is given', () => {
+    const node = document.createElement('div')
+    Object.defineProperty(node, 'offsetParent', { get: () => document.body })
+    document.body.append(node)
+    const obs = createOverflowObserver(vi.fn(), { root: document.body })
+    obs.attachObservers([node])
+
+    const observe = (boundingClientRect) =>
+      globalThis.IntersectionObserver.prototype._cb([
+        {
+          boundingClientRect,
+          rootBounds: { bottom: 150, right: 150 },
+          target: node,
+        },
+      ])
+
+    // Only the bottom edge counts, not the right
+    observe({ bottom: 100, right: 300 })
+    expect(node.hasAttribute(OVERFLOW_ATTR)).toBe(false)
+
+    observe({ bottom: 200, right: 100 })
+    expect(node.hasAttribute(OVERFLOW_ATTR)).toBe(true)
+
+    obs.disconnect()
+  })
+
+  test('does not observe nodes that are not elements', () => {
+    const observe = vi.fn()
+    globalThis.IntersectionObserver = function () {
+      this.observe = observe
+      this.disconnect = vi.fn()
+    }
+
+    const node = document.createElement('div')
+    const text = document.createTextNode('text')
+    document.body.append(node, text)
+    const obs = createOverflowObserver(vi.fn(), {
+      side: 'bottom',
+      root: document.body,
+    })
+
+    obs.attachObservers([text, node])
+
+    expect(observe).toHaveBeenCalledTimes(1)
+    expect(observe).toHaveBeenCalledWith(node)
+    // Counted as one element, so the text node was not
+    expect(consoleMod.info).toHaveBeenCalledWith(
+      expect.stringMatching(/%c1%c element$/),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    )
+
+    obs.disconnect()
+  })
+
   test('skips already observed elements', () => {
     const node = document.createElement('div')
     document.body.append(node)
