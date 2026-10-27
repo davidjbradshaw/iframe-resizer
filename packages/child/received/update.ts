@@ -63,9 +63,10 @@ export function applyFromParent(data: string[], newBinding = false): void {
   state.fromParent = { ...incoming }
 
   keepPageValues(incoming, lastSent)
-  // The mode is the child's own, from both licence keys when it started;
-  // the parent's field holds its own key's alone
-  delete incoming.mode
+  // The child's mode comes from both licence keys when it started, and the
+  // parent's field from its own key alone, so the higher wins: a licence
+  // upgraded by update() still reaches the child
+  incoming.mode = Math.max(settings.mode, incoming.mode ?? settings.mode)
   map2settings(incoming)
 
   setConsoleOptions({

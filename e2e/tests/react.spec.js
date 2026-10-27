@@ -7,6 +7,7 @@ import {
 import {
   expectBodyBackground,
   expectConnected,
+  expectReadyCount,
   GREEN,
   watchRemovalAdvice,
 } from './shared/hide-restore'
@@ -29,7 +30,7 @@ test.describe('React', () => {
   }) => {
     const advice = watchRemovalAdvice(page)
     await page.goto(ACTIVITY)
-    await page.waitForFunction(() => window.readyCount === 1)
+    await expectReadyCount(page, 1)
 
     await page.click('#hide')
     await expect(page.locator('#kept')).toBeHidden()
@@ -38,7 +39,7 @@ test.describe('React', () => {
 
     await expectBodyBackground(page, '#kept', GREEN)
     await expectConnected(page, '#kept')
-    await page.waitForFunction(() => window.readyCount === 2)
+    await expectReadyCount(page, 2)
     expect(advice).toEqual([])
   })
 })
