@@ -1,5 +1,5 @@
 import { expect, test } from '../shared/test'
-import { childFrame, iframeHeight as heightOf } from '../shared/utils'
+import { childFrame, iframeHeight } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/body-background.html'
 
@@ -7,17 +7,21 @@ const PAGE = '/e2e/fixtures/body-background.html'
 const CONTENT = 300
 const GROWN = 500
 
-const iframeHeight = (page) => heightOf(page, '#myIframe')
+const IFRAME = '#myIframe'
 
 const bodyStyle = (frame, property) =>
   frame.evaluate((prop) => getComputedStyle(document.body)[prop], property)
 
 async function expectToFollowContent(page) {
-  await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(CONTENT)
+  await expect
+    .poll(() => iframeHeight(page, IFRAME))
+    .toBeGreaterThanOrEqual(CONTENT)
 
   const child = await childFrame(page, 'frame.legacy')
   await child.evaluate(() => window.grow())
-  await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(GROWN)
+  await expect
+    .poll(() => iframeHeight(page, IFRAME))
+    .toBeGreaterThanOrEqual(GROWN)
 }
 
 test.describe('bodyBackground with a colon in its value', () => {

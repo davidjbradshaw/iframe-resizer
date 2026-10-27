@@ -1,5 +1,5 @@
 import { expect, test } from '../shared/test'
-import { openPage } from '../shared/utils'
+import { childFrame, openPage } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/title-observer.html'
 const TITLE_TIMEOUT = 3000
@@ -7,22 +7,22 @@ const TITLE_TIMEOUT = 3000
 const iframeTitle = (page) =>
   page.locator('iframe').evaluate((el) => el.getAttribute('title'))
 
+// Loads the child page, and returns its frame
 async function loadChild(page, child) {
   await openPage(page, `${BASE}?child=${child}`)
+  return childFrame(page, child)
 }
-
-const childFrame = (page) => page.frames().find((f) => f.parentFrame() !== null)
 
 test.describe('Title observer', () => {
   test('control: editing the existing <title> in place reaches the parent', async ({
     page,
   }) => {
-    await loadChild(page, 'frame.title-replace.html')
+    const frame = await loadChild(page, 'frame.title-replace.html')
     await expect
       .poll(() => iframeTitle(page), { timeout: TITLE_TIMEOUT })
       .toBe('First Title')
 
-    await childFrame(page).evaluate(() => {
+    await frame.evaluate(() => {
       document.title = 'Edited Title'
     })
 
@@ -34,7 +34,7 @@ test.describe('Title observer', () => {
   test('a title set by replacing the <title> element reaches the parent', async ({
     page,
   }) => {
-    await loadChild(page, 'frame.title-replace.html')
+    const frame = await loadChild(page, 'frame.title-replace.html')
 
     // Sanity: the initial title was synced
     await expect
@@ -42,10 +42,8 @@ test.describe('Title observer', () => {
       .toBe('First Title')
 
     // SPA-style navigation: swap the <title> element in <head>
-    await childFrame(page).evaluate(() => window.swapTitle('Second Title'))
-    expect(await childFrame(page).evaluate(() => document.title)).toBe(
-      'Second Title',
-    )
+    await frame.evaluate(() => window.swapTitle('Second Title'))
+    expect(await frame.evaluate(() => document.title)).toBe('Second Title')
 
     await expect
       .poll(() => iframeTitle(page), { timeout: TITLE_TIMEOUT })
@@ -55,14 +53,16 @@ test.describe('Title observer', () => {
   test('document.title set on a page whose only <title> is in an SVG reaches the parent', async ({
     page,
   }) => {
-    await loadChild(page, 'frame.title-svg.html')
+    const frame = await loadChild(page, 'frame.title-svg.html')
 
     // Setting document.title creates a <title> in <head>
-    await childFrame(page).evaluate(() => {
+    await frame.evaluate(() => {
       document.title = 'Set Later'
     })
     expect(
-      await childFrame(page).evaluate(() => document.head.querySelector('title')?.textContent),
+      await frame.evaluate(
+        () => document.head.querySelector('title')?.textContent,
+      ),
     ).toBe('Set Later')
 
     await expect
