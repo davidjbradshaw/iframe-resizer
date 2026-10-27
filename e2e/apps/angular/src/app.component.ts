@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import type { IFrameOptions } from '@iframe-resizer/core'
 import { IframeResizerDirective } from '@iframe-resizer/angular'
-import { updates } from '../../../shared/app'
+import { updates as optionSteps } from '../../../shared/app'
 
 @Component({
   selector: 'app-root',
@@ -32,7 +32,7 @@ export class AppComponent {
   }
 
   // Option changes applied after init by the e2e tests, one button per step
-  updates: Record<string, Partial<IFrameOptions>> = updates(location.origin)
+  updates: Record<string, Partial<IFrameOptions>> = optionSteps(location.origin)
 
   steps = Object.keys(this.updates)
 

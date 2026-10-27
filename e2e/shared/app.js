@@ -20,7 +20,7 @@ export const updates = (origin) => ({
     bodyPadding: '6px',
     bodyMargin: 12,
     scrolling: true,
-    checkOrigin: [origin],
+    ...(origin === undefined ? {} : { checkOrigin: [origin] }),
   },
   offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
   tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
