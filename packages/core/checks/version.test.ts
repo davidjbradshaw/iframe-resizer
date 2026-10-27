@@ -2,11 +2,22 @@ import { VERSION } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as coreConsole from '../console'
+import settings from '../values/settings'
 import checkVersion from './version'
 
 describe('core/checks/version', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
+  })
+
+  it('records the child version on the iframe settings', () => {
+    vi.spyOn(coreConsole, 'log').mockImplementation(() => {})
+    settings.withSettings = {}
+
+    checkVersion('withSettings', '1.2.3')
+
+    expect(settings.withSettings.childVersion).toBe('1.2.3')
+    delete settings.withSettings
   })
 
   it('returns early when versions match', () => {

@@ -135,7 +135,11 @@ describe('core/listeners', () => {
   test('returns early when iframe does not exist', async () => {
     const decode = (await import('./received/decode')).default
     decode.mockReturnValue({ id: 'abc', type: 'INIT' })
+    // Earlier tests leave other preflight results set, so reset them all
+    preflight.isMessageForUs.mockReturnValue(true)
     preflight.checkIframeExists.mockReturnValue(false)
+    preflight.isMessageFromMetaParent.mockReturnValue(false)
+    preflight.isMessageFromIframe.mockReturnValue(true)
 
     const settingsMod = await import('./values/settings')
     settingsMod.default.abc = {}
@@ -145,14 +149,21 @@ describe('core/listeners', () => {
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
     listener({ data: '[iFrameSizer]x' })
 
+    expect(preflight.checkIframeExists).toHaveBeenCalledWith({
+      id: 'abc',
+      type: 'INIT',
+    })
+    expect(preflight.isMessageFromMetaParent).not.toHaveBeenCalled()
     expect(routeMessage).not.toHaveBeenCalled()
   })
 
   test('returns early when message is from meta parent', async () => {
     const decode = (await import('./received/decode')).default
     decode.mockReturnValue({ id: 'abc', type: 'INIT' })
+    preflight.isMessageForUs.mockReturnValue(true)
     preflight.checkIframeExists.mockReturnValue(true)
     preflight.isMessageFromMetaParent.mockReturnValue(true)
+    preflight.isMessageFromIframe.mockReturnValue(true)
 
     const settingsMod = await import('./values/settings')
     settingsMod.default.abc = {}
@@ -162,6 +173,11 @@ describe('core/listeners', () => {
     const listener = addEventListener.mock.calls.find((c) => c[0] === window)[2]
     listener({ data: '[iFrameSizer]x' })
 
+    expect(preflight.isMessageFromMetaParent).toHaveBeenCalledWith({
+      id: 'abc',
+      type: 'INIT',
+    })
+    expect(preflight.isMessageFromIframe).not.toHaveBeenCalled()
     expect(routeMessage).not.toHaveBeenCalled()
   })
 
