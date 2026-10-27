@@ -1,9 +1,9 @@
 import Alpine from 'alpinejs'
 import IframeResizer from '@iframe-resizer/alpine'
-import { record, updates } from '../../../shared/app'
+import { updates } from '../../../shared/app'
 
-// For the x-data expression in index.html, by names its data does not use
-window.record = record
+// For the x-data expression in index.html, by a name its data does not use;
+// record() is already global, from e2e/shared/record.js
 window.e2eUpdates = updates
 
 Alpine.plugin(IframeResizer)

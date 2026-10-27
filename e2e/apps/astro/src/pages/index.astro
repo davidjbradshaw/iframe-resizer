@@ -20,12 +20,8 @@ import IframeResizer from '@iframe-resizer/astro'
       inPageLinks
       src="child/frame.test.html"
     />
+    <script is:inline src="/e2e/shared/record.js"></script>
     <script is:inline>
-      // As record() in e2e/shared/app.js, which an inline script cannot import
-      window.callbacks = []
-      const record = (callback, detail) =>
-        window.callbacks.push({ callback, ...detail })
-
       // The e2e tests set cancelScroll to check the event can stop a scroll
       window.cancelScroll = false
       window.scrollEvents = 0

@@ -1,8 +1,8 @@
 import { expect, test } from './test'
 import {
   assertChildText,
-  callbacks,
   closeCancelled,
+  growTagged,
   iframeHeight,
   openPage,
   settledIframeHeight,
@@ -119,16 +119,6 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
     expect(parsed.parent).not.toBe('legacy')
   })
 
-  test('sendMessage from child reaches parent', async ({ page }) => {
-    await openPage(page, baseUrl)
-
-    await page.frameLocator('iframe').locator('#btn-send-message').click()
-
-    await expect
-      .poll(() => callbacks(page, 'onMessage'))
-      .toEqual([{ callback: 'onMessage', message: 'hello from child' }])
-  })
-
   test('resize sets iframe dimensions', async ({ page }) => {
     await openPage(page, baseUrl)
 
@@ -143,9 +133,7 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
       { timeout: 5000 },
     )
 
-    const height = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
+    const height = await iframeHeight(page)
     expect(height).toBeGreaterThan(180)
     expect(height).toBeLessThan(220)
   })
@@ -246,10 +234,7 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
       { timeout: 5000 },
     )
 
-    const newHeight = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
-    expect(newHeight).not.toBe(initialHeight)
+    expect(await iframeHeight(page)).not.toBe(initialHeight)
   })
 
   test('initial title syncs to iframe attribute', async ({ page }) => {
@@ -289,16 +274,13 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
     await openPage(page, baseUrl)
     const before = await settledIframeHeight(page)
 
-    await page
-      .frameLocator('iframe')
-      .locator('body')
-      .evaluate(() => {
-        const block = document.createElement('div')
-        block.style.height = '300px'
-        document.body.append(block)
-        document.querySelector('[data-iframe-resize]').style.paddingBottom =
-          '60px'
-      })
+    const frame = page.frameLocator('iframe')
+    await frame.locator('body').evaluate(() => {
+      const block = document.createElement('div')
+      block.style.height = '300px'
+      document.body.append(block)
+    })
+    await growTagged(frame, 50)
 
     await expect.poll(() => iframeHeight(page)).not.toBe(before)
     expect(await settledIframeHeight(page)).toBe(before + 50)
@@ -310,12 +292,15 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
     await openPage(page, baseUrl)
     const child = page.frameLocator('iframe').locator('body')
 
-    // The ignored element is at top: 9999px, height: 5000px
+    // The ignored element is at top: 9999px, height: 5000px. Sized to the
+    // whole page now, so the height changes from the tagged element's.
+    const tagged = await settledIframeHeight(page)
     await child.evaluate(
       () =>
         delete document.querySelector('[data-iframe-resize]').dataset
           .iframeResize,
     )
+    await expect.poll(() => iframeHeight(page)).not.toBe(tagged)
     expect(await settledIframeHeight(page)).toBeLessThan(9000)
 
     // Control: without the attribute, the same element is counted

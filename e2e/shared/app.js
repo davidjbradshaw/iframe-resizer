@@ -1,3 +1,5 @@
+import './record.js'
+
 // Shared by the e2e tests, the framework apps and the static pages, so the
 // values the tests expect cannot drift from those the pages use.
 
@@ -31,9 +33,5 @@ export const updates = (origin) => ({
   },
 })
 
-// Each page records the parent callbacks it receives, for the tests to check
-// that a callback ran rather than only that its effect is visible
-export function record(callback, detail = {}) {
-  window.callbacks ??= []
-  window.callbacks.push({ callback, ...detail })
-}
+// Records a parent callback, for the tests to check (see record.js)
+export const record = (callback, detail) => window.record(callback, detail)
