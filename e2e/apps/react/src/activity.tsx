@@ -2,6 +2,10 @@ import { Activity, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import IframeResizer from '@iframe-resizer/react'
 
+// ?origin= serves the child from another origin, to test the postMessage route
+const origin = new URLSearchParams(location.search).get('origin') ?? ''
+const childSrc = `${origin}${location.pathname.replace(/[^/]*$/, '')}child/frame.content.html`
+
 // <Activity mode="hidden"> hides the iframe with display: none, so its page
 // stays loaded, but unmounts the component's effects until it is shown again
 function App() {
@@ -22,7 +26,7 @@ function App() {
       <Activity mode={shown ? 'visible' : 'hidden'}>
         <IframeResizer
           id="kept"
-          src="child/frame.content.html"
+          src={childSrc}
           license="GPLv3"
           bodyBackground={bodyBackground}
           onReady={() => {
