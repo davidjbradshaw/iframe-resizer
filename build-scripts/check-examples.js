@@ -25,10 +25,11 @@ const IN_PAGE_LINK = /<a\b[^>]*href=["']#["'][^>]*>/g
 const MEMBER_NAME = /^\s*(\w+)\s*[,:]/
 // Quoted with either mark, which a backreference closes; the value is the
 // second group, as the first holds the quote itself
-const ONCLICK = /onclick=(["'])(.*?)\1/
-const LINK_ID = /\bid=(["'])(.*?)\1/
-const LINK_CLASS = /\bclass=(["'])(.*?)\1/
+const ONCLICK = /onclick=(["'])(.*?)\1/s
+const LINK_ID = /\bid=(["'])(.*?)\1/s
+const LINK_CLASS = /\bclass=(["'])(.*?)\1/s
 const COMPAT_PAGE = /frame\.([1-5])\.html$/
+const LEGACY_FIXTURE = /frame\.legacy\.html$/
 const RETURNS = /\breturn\b|preventDefault/
 // Returning an assignment returns the value assigned, which is truthy
 const RETURNS_ASSIGNMENT = /\breturn\s[^;]*[^!<=>]=[^=]/
@@ -161,11 +162,12 @@ function apiFor(path, current) {
   return pinned ? legacyApi(`v${pinned[1]}`) : current
 }
 
-// Only the examples teach the current API. The child fixtures are tests, and
-// some drive an old child on purpose: frame.legacy.html sets
-// window.iFrameResizer, which v3 and v4 need.
+// Two pages are meant to use the old names: a frame.<1-5> page calls the
+// old parentIFrame, and frame.legacy.html sets window.iFrameResizer, which
+// v3 and v4 need. Every other page, example or fixture, shows the current
+// ones, and naming them keeps the exemption to the two that earn it.
 function showsCurrentApi(path) {
-  return path.startsWith(EXAMPLE_DIR) && !COMPAT_PAGE.test(path)
+  return !COMPAT_PAGE.test(path) && !LEGACY_FIXTURE.test(path)
 }
 
 function checkMethods(source, api) {
@@ -193,7 +195,7 @@ function checkAttributes(source, attributes) {
 function checkDeprecated(source) {
   return DEPRECATED.filter(({ pattern }) => pattern.test(source)).map(
     ({ old, current }) =>
-      `uses the deprecated ${old}; the examples should show ${current}`,
+      `uses the deprecated ${old}; it should show ${current}`,
   )
 }
 
