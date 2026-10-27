@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock dependencies with factory style to satisfy Vitest v4
 vi.mock('../console', () => ({
+  advise: vi.fn(),
+  error: vi.fn(),
   log: vi.fn(),
   warn: vi.fn(),
 }))
@@ -227,6 +229,17 @@ describe('child/received/init', () => {
       expect(mockResendTitle).toHaveBeenCalled()
       expect(mockInit).not.toHaveBeenCalled()
       expect(mockState.target).toBe(parentWindow)
+    })
+
+    it('still replies, and resumes, when applying the new options throws', async () => {
+      const mod = await import('./init')
+      mockApply.mockImplementation(() => {
+        throw new Error('apply failed')
+      })
+
+      mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
+
+      expect(calls).toEqual(['initReply', 'resume'])
     })
 
     it('tells the new binding that the page turned autoResize off', async () => {

@@ -11,6 +11,7 @@ import { resumeParentProps } from '../methods/parent-props'
 import { resendTitle } from '../observed/title'
 import { BIND_ID_FIELD } from '../read/from-parent'
 import sendInitReply from '../send/init-reply'
+import isolate from '../utils/isolate'
 import settings from '../values/settings'
 import state from '../values/state'
 import { applyFromParent } from './update'
@@ -50,14 +51,19 @@ function isRebind(
 }
 
 // The reply comes first, so the new binding is connected before anything
-// else reaches it; then what the page holds that the parent has not seen
+// else reaches it; isolated, as at init, so a failing step cannot stop it
 function rebind(data: string[]): void {
   log('Bound again by the parent page')
-  applyFromParent(data, true)
-  sendInitReply()
-  if (settings.autoResize !== state.fromParent.autoResize) sendAutoResizeState()
-  resendTitle()
-  resumeParentProps()
+  isolate([
+    () => applyFromParent(data, true),
+    sendInitReply,
+    () => {
+      if (settings.autoResize !== state.fromParent.autoResize)
+        sendAutoResizeState()
+    },
+    resendTitle,
+    resumeParentProps,
+  ])
 }
 
 export default function initFromParent(event: InitEvent): void {
