@@ -4,6 +4,8 @@ import { act } from 'react-dom/test-utils'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import IframeResizer from './index'
+import type { IFrameResizerProps } from './types'
+import useResizer from './use-resizer'
 
 vi.mock('auto-console-group', () => ({
   default: () => ({
@@ -81,6 +83,38 @@ describe('React IframeResizer branches', () => {
     // Element accessors do not depend on the resizer
     expect(fRef.current.getElement()).toBe(iframe)
     expect(fRef.current.getRef().current).toBe(iframe)
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
+  test('skips a re-bind while the hook has no iframe', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    vi.mocked(connectResizer).mockClear()
+
+    // The hook does not own the element, so a caller can stop rendering it
+    function Harness({
+      show,
+      ...props
+    }: IFrameResizerProps & { show: boolean }) {
+      const iframeRef = useResizer(props)
+      return show ? (
+        <iframe id="react-hook" ref={iframeRef} title="hook" />
+      ) : null
+    }
+
+    await act(async () => {
+      root.render(<Harness license="GPLv3" show />)
+    })
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      root.render(<Harness license="GPLv3" show={false} tolerance={5} />)
+    })
+
+    expect(container.querySelector('iframe')).toBeNull()
+    expect(connectResizer).toHaveBeenCalledTimes(1)
 
     await act(async () => {
       root.unmount()

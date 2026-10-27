@@ -13,4 +13,14 @@ describe('web-component - Server-side rendering', () => {
     expect(typeof IframeResizerElement).toBe('function')
     expect(typeof customElements).toBe('undefined')
   })
+
+  it('constructs on the fallback base class', async () => {
+    const { IframeResizerElement } = await import('./index')
+
+    const el = new IframeResizerElement()
+
+    expect(el).toBeInstanceOf(IframeResizerElement)
+    expect(el.options).toEqual({})
+    expect(el.iframeResizer).toBeNull()
+  })
 })
