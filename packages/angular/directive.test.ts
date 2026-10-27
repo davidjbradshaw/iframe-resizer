@@ -702,6 +702,45 @@ describe('Angular IframeResizerDirective', () => {
     expect(directive.iframeResizer).toBe(mockIframe.iframeResizer)
   })
 
+  test('keeps the bound resizer when a re-bind returns none', async () => {
+    const connectResizer = (await import('@iframe-resizer/core')).default
+    // The re-bind fails, as core's error boundary does on an invalid option
+    const failedBind = vi.fn()
+    connectResizer
+      .mockImplementationOnce(() => (iframe: any) => {
+        iframe.iframeResizer = { disconnect, moveToAnchor, sendMessage }
+        return iframe.iframeResizer
+      })
+      .mockImplementation(() => failedBind)
+
+    directive.ngAfterViewInit()
+    const bound = directive.iframeResizer
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(failedBind).toHaveBeenCalledWith(mockIframe)
+    expect(bound).toBeDefined()
+    expect(directive.iframeResizer).toBe(bound)
+  })
+
+  test('logs an [options] change when debug is on', () => {
+    directive.debug = true
+    directive.ngAfterViewInit()
+    mockGroupLog.mockClear()
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(mockGroupLog).toHaveBeenCalledWith('ngOnChanges: options updated')
+  })
+
+  test('does not log an [options] change when debug is off', () => {
+    directive.ngAfterViewInit()
+
+    directive.ngOnChanges({ options: {} } as any)
+
+    expect(mockGroupLog).not.toHaveBeenCalled()
+  })
+
   test('ignores [options] changes before the view is ready', async () => {
     const calls = await mockConnect()
 

@@ -231,6 +231,28 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(iframe.style.height).toBe('800px')
   })
 
+  it('clears style object keys that are dropped or set to null', () => {
+    const [style, setStyle] = createSignal<any>({
+      width: '50%',
+      color: 'red',
+      border: '1px solid red',
+    })
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={style()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setStyle({ width: '50%', border: null })
+
+    expect(iframe.style.color).toBe('')
+    expect(iframe.style.borderTopWidth).toBe('')
+    expect(iframe.style.width).toBe('50%')
+    expect(iframe.style.height).toBe('800px')
+  })
+
   it('re-applies a style object mutated in place', () => {
     const styles: any = { width: '50%' }
     const [style, setStyle] = createSignal(styles, { equals: false })
