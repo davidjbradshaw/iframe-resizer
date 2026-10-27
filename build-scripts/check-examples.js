@@ -9,7 +9,8 @@ import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
-const PAGE_DIRS = [join(ROOT, 'example'), join(ROOT, 'e2e/fixtures/child')]
+const EXAMPLE_DIR = join(ROOT, 'example')
+const FIXTURE_DIR = join(ROOT, 'e2e/fixtures/child')
 const METHODS_FILE = join(ROOT, 'packages/child/methods/index.ts')
 const CONSTS_FILE = join(ROOT, 'packages/common/consts.ts')
 const LEGACY_DIR = join(ROOT, 'e2e/fixtures/legacy')
@@ -19,12 +20,14 @@ const SKIP_DIR = /(^|\/)(node_modules|dist|\.astro)(\/|$)/
 
 const METHOD_CALL = /\bparentI[Ff]rame\.(\w+)\s*\(/g
 const SIZE_ATTRIBUTE = /\b(data-iframe-[\w-]+)\b/g
-const IN_PAGE_LINK = /<a\b[^>]*href="#"[^>]*>/g
+const IN_PAGE_LINK = /<a\b[^>]*href=["']#["'][^>]*>/g
 // Shorthand in the child's API object, name: value in the legacy bundles
 const MEMBER_NAME = /^\s*(\w+)\s*[,:]/
-const ONCLICK = /onclick="([^"]*)"/
-const LINK_ID = /\bid="([^"]+)"/
-const LINK_CLASS = /\bclass="([^"]+)"/
+// Quoted with either mark, which a backreference closes; the value is the
+// second group, as the first holds the quote itself
+const ONCLICK = /onclick=(["'])(.*?)\1/
+const LINK_ID = /\bid=(["'])(.*?)\1/
+const LINK_CLASS = /\bclass=(["'])(.*?)\1/
 const COMPAT_PAGE = /frame\.([1-5])\.html$/
 const RETURNS = /\breturn\b|preventDefault/
 // Returning an assignment returns the value assigned, which is truthy
@@ -150,19 +153,19 @@ function legacyApi(version) {
   return legacyCache.get(version)
 }
 
-// frame.<1-5>.html load one release's child, and the legacy fixture loads
-// whichever its ?child says, so both are meant to use that release's names
-function loadsLegacyChild(path, source) {
-  return COMPAT_PAGE.test(path) || source.includes('/legacy/')
+// A compat page is pinned to one release, so it gets that release's API.
+// Every other page loads the current child, give or take a ?child= override
+// that only a test passes, so today's API is the one to hold it to.
+function apiFor(path, current) {
+  const pinned = path.match(COMPAT_PAGE)
+  return pinned ? legacyApi(`v${pinned[1]}`) : current
 }
 
-function apiFor(path, source, current) {
-  const pinned = path.match(COMPAT_PAGE)
-
-  if (pinned) return legacyApi(`v${pinned[1]}`)
-
-  // Its child is chosen at runtime, so no one API applies
-  return loadsLegacyChild(path, source) ? null : current
+// Only the examples teach the current API. The child fixtures are tests, and
+// some drive an old child on purpose: frame.legacy.html sets
+// window.iFrameResizer, which v3 and v4 need.
+function showsCurrentApi(path) {
+  return path.startsWith(EXAMPLE_DIR) && !COMPAT_PAGE.test(path)
 }
 
 function checkMethods(source, api) {
@@ -201,8 +204,8 @@ function checkDeprecated(source) {
 function hasBoundHandler(source, link) {
   if (!source.includes('preventDefault')) return false
 
-  const id = link.match(LINK_ID)?.[1]
-  const classes = link.match(LINK_CLASS)?.[1].split(/\s+/) ?? []
+  const id = link.match(LINK_ID)?.[2]
+  const classes = link.match(LINK_CLASS)?.[2].split(/\s+/) ?? []
 
   const selectors = [
     ...(id ? [`getElementById('${id}')`, `#${id}'`] : []),
@@ -217,7 +220,7 @@ function checkInPageLinks(source) {
   const problems = []
 
   for (const [link] of source.matchAll(IN_PAGE_LINK)) {
-    const onclick = link.match(ONCLICK)?.[1]
+    const onclick = link.match(ONCLICK)?.[2]
 
     if (!onclick) {
       if (!hasBoundHandler(source, link)) {
@@ -239,13 +242,12 @@ function checkInPageLinks(source) {
 
 function checkFile(path, current, attributes) {
   const source = read(path)
-  const api = apiFor(path, source, current)
 
   const problems = [
-    ...checkMethods(source, api),
+    ...checkMethods(source, apiFor(path, current)),
     ...checkAttributes(source, attributes),
     ...checkInPageLinks(source),
-    ...(loadsLegacyChild(path, source) ? [] : checkDeprecated(source)),
+    ...(showsCurrentApi(path) ? checkDeprecated(source) : []),
   ]
 
   return problems.map((problem) => `${relative(ROOT, path)} ${problem}`)
@@ -253,7 +255,7 @@ function checkFile(path, current, attributes) {
 
 const current = childMethods()
 const attributes = sizeAttributes()
-const files = PAGE_DIRS.flatMap((dir) => htmlFiles(dir))
+const files = [EXAMPLE_DIR, FIXTURE_DIR].flatMap((dir) => htmlFiles(dir))
 const problems = files.flatMap((file) => checkFile(file, current, attributes))
 
 if (problems.length > 0) {
