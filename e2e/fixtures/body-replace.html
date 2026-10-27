@@ -15,16 +15,7 @@
   <body>
     <iframe id="child" src="/e2e/fixtures/child/frame.body-replace.html"></iframe>
     <script>
-      window.resized = []
-      iframeResize(
-        {
-          license: 'GPLv3',
-          onResized(data) {
-            window.resized.push({ type: data.type, height: data.height })
-          },
-        },
-        document.getElementById('child'),
-      )
+      iframeResize({ license: 'GPLv3' }, document.getElementById('child'))
     </script>
   </body>
 </html>
