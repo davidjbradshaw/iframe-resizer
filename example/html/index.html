@@ -71,9 +71,11 @@
     <h2>Automagically resizing iFrame</h2>
     <p>
       Resize window or click one of the links in the iFrame to watch it resize.
-      Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>, or
-      a <a name="anchorModalTest" href="#modal" onclick="openModal()">modal
-      iFrame</a>.
+      Or try with <a name="anchorParentTest" href="two.html">two iFrames</a>, a
+      <a name="anchorModalTest" href="#modal" onclick="openModal()">modal
+      iFrame</a>, or width resizing
+      <a href="width-inline.html">inline</a> and
+      <a href="width-block.html">block</a>.
     </p>
 
     <!-- A lazily loaded iframe in a dialog: it has no size until the dialog
@@ -183,7 +185,9 @@
         },
       })
 
-      function toggle() {
+      function toggle(event) {
+        event.preventDefault()
+
         const iframe = document.getElementById('testFrame')
 
         iframe.style.display =

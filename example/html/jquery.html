@@ -143,7 +143,9 @@
         },
       })
 
-      function toggle() {
+      function toggle(event) {
+        event.preventDefault()
+
         const iframe = document.querySelector('iframe')
 
         iframe.style.display =
