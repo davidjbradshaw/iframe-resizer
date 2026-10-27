@@ -71,7 +71,7 @@ Every item below is merged into `dev-review`. Two findings were closed without a
 ### React
 - [x] The `onScroll`, `onMouseEnter` and `onMouseLeave` props accept iframe-resizer's handler types (#1755)
 - [x] Changing the `id` prop no longer logs an error or leaks the old listener (#1756)
-- [ ] An iframe inside `<Activity>` comes back with the options changed while it was hidden, and `onReady` fires again (#1838)
+- [x] An iframe inside `<Activity>` comes back with the options changed while it was hidden, and `onReady` fires again (#1870)
 
 ### Solid
 - [x] Server-side rendering, as in SolidStart, no longer crashes (#1798)
