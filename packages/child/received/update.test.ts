@@ -89,6 +89,14 @@ describe('child/received/update', () => {
     expect(settings.mode).toBe(5)
   })
 
+  it("takes the parent's licence mode when it is higher, as after update()", () => {
+    settings.mode = 1
+
+    updateFromParent(buildEvent('x', { mode: '4' }))
+
+    expect(settings.mode).toBe(4)
+  })
+
   it('records the binding the options came from', () => {
     updateFromParent(buildEvent('x', { bindId: 'k3x9' }))
 

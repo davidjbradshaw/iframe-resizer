@@ -18,8 +18,10 @@ const calls: string[] = []
 const mockInitReply = vi.fn(() => calls.push('initReply'))
 vi.mock('../send/init-reply', () => ({ default: mockInitReply }))
 
-const mockSendMessage = vi.fn()
-vi.mock('../send/message', () => ({ default: mockSendMessage }))
+const mockSendAutoResize = vi.fn()
+vi.mock('../methods/auto-resize', () => ({
+  sendAutoResizeState: mockSendAutoResize,
+}))
 
 const mockResendTitle = vi.fn()
 vi.mock('../observed/title', () => ({ resendTitle: mockResendTitle }))
@@ -52,7 +54,7 @@ describe('child/received/init', () => {
     mockInit.mockReset()
     mockResume.mockClear()
     mockInitReply.mockClear()
-    mockSendMessage.mockReset()
+    mockSendAutoResize.mockReset()
     mockResendTitle.mockReset()
     mockApply.mockReset()
     calls.length = 0
@@ -234,7 +236,7 @@ describe('child/received/init', () => {
 
       mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
 
-      expect(mockSendMessage).toHaveBeenCalledWith(0, 0, 'autoResize', 'false')
+      expect(mockSendAutoResize).toHaveBeenCalled()
     })
 
     it('says nothing of autoResize when the page left it as the parent set it', async () => {
@@ -243,7 +245,7 @@ describe('child/received/init', () => {
 
       mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
 
-      expect(mockSendMessage).not.toHaveBeenCalled()
+      expect(mockSendAutoResize).not.toHaveBeenCalled()
     })
 
     it('stays stopped when its first init failed the licence check', async () => {
