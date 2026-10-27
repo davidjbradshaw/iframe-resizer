@@ -11,7 +11,7 @@
         messageData: null,
         extra: {},
         // Option changes applied after init by the e2e tests, one button per step
-        updates: updates(location.origin),
+        updates: e2eUpdates(location.origin),
         update(step) {
           this.extra = { ...this.extra, ...this.updates[step] }
         },

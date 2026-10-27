@@ -2,16 +2,16 @@ import { updates } from '../../shared/app'
 import { expect, test } from './test'
 import { assertChildText, openPage, settledIframeHeight } from './utils'
 
-// The option steps the pages apply (see e2e/shared/app.js); the values the
-// tests read do not depend on the origin
+// The option steps the pages apply (see e2e/shared/app.js), for the values
+// the tests read; a page's own steps also restrict checkOrigin to its origin
 const UPDATES = updates()
 
 // What the test expects to observe after the styles update
 const EXPECTED = {
   child: {
-    backgroundColor: 'rgb(0, 128, 0)',
-    padding: '6px',
-    margin: '12px',
+    backgroundColor: UPDATES.styles.bodyBackground,
+    padding: UPDATES.styles.bodyPadding,
+    margin: `${UPDATES.styles.bodyMargin}px`,
   },
   iframe: { scrolling: 'yes', overflow: 'auto' },
 }
