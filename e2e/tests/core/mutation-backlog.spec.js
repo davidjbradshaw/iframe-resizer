@@ -28,7 +28,8 @@ async function collectGarbage(page, frame) {
     await cdp.send('HeapProfiler.enable')
     for (let i = 0; i < 3; i++) await cdp.send('HeapProfiler.collectGarbage')
   } finally {
-    await cdp.detach()
+    // Not in place of an error from above, if the frame has gone
+    await cdp.detach().catch(() => {})
   }
 }
 
@@ -65,8 +66,18 @@ test.describe('Mutation records while rAF is paused', () => {
 
     await collectGarbage(page, frame)
     const alive = await frame.evaluate(() => window.aliveCount())
-    console.log(JSON.stringify({ control: true, rafBefore: before, rafAfter: after, alive }))
-    expect(alive, 'removed subtrees still reachable after GC (iframe in view)').toBe(0)
+    console.log(
+      JSON.stringify({
+        control: true,
+        rafBefore: before,
+        rafAfter: after,
+        alive,
+      }),
+    )
+    expect(
+      alive,
+      'removed subtrees still reachable after GC (iframe in view)',
+    ).toBe(0)
   })
 
   // Scroll the iframe out of the viewport (Chromium stops animation frames
@@ -89,7 +100,13 @@ test.describe('Mutation records while rAF is paused', () => {
     await collectGarbage(page, frame)
     const alive = await frame.evaluate(() => window.aliveCount())
     console.log(
-      JSON.stringify({ label, ticksAtScroll, ticksAfterFeed, updates: UPDATES, alive }),
+      JSON.stringify({
+        label,
+        ticksAtScroll,
+        ticksAfterFeed,
+        updates: UPDATES,
+        alive,
+      }),
     )
     return alive
   }
@@ -99,7 +116,10 @@ test.describe('Mutation records while rAF is paused', () => {
   }) => {
     const frame = await setup(page, true)
     const alive = await offscreenFeed(page, frame, 'bare child, offscreen')
-    expect(alive, 'removed subtrees still reachable after GC (no child script)').toBe(0)
+    expect(
+      alive,
+      'removed subtrees still reachable after GC (no child script)',
+    ).toBe(0)
   })
 
   test('removed subtrees are collectable while the iframe is offscreen', async ({
@@ -115,10 +135,15 @@ test.describe('Mutation records while rAF is paused', () => {
     await frame.waitForFunction((n) => window.rafTicks > n + 2, before, POLL)
     await collectGarbage(page, frame)
     const aliveAfterFrame = await frame.evaluate(() => window.aliveCount())
-    console.log(JSON.stringify({ label: 'resizer child, back in view', aliveAfterFrame }))
+    console.log(
+      JSON.stringify({ label: 'resizer child, back in view', aliveAfterFrame }),
+    )
 
     // Correct behaviour: the library does not keep every removed subtree
     // alive for as long as the iframe stays offscreen
-    expect(alive, 'removed subtrees still reachable after GC (iframe offscreen)').toBe(0)
+    expect(
+      alive,
+      'removed subtrees still reachable after GC (iframe offscreen)',
+    ).toBe(0)
   })
 })

@@ -2,17 +2,30 @@ import { expect } from '@playwright/test'
 
 const INIT_TIMEOUT = 10_000
 
-// The iframe is bound and its child has answered the parent's init. Core sets
-// iframeResizer as soon as it binds, before the child has loaded.
-export async function waitForResizer(page) {
-  await page.waitForFunction(
-    () => {
-      const resizer = document.querySelector('iframe')?.iframeResizer
-      return resizer !== undefined && resizer.getVersion().child !== 'legacy'
-    },
-    null,
-    { timeout: INIT_TIMEOUT },
-  )
+// The iframe is bound and its child has answered the parent's init, with
+// all: true every iframe on the page. Core sets iframeResizer as soon as it
+// binds, before the child has loaded. A child before v5 sends no version, so
+// never counts as answered.
+export async function waitForResizer(page, { all = false } = {}) {
+  await page
+    .waitForFunction(
+      (every) => {
+        const answered = (iframe) =>
+          iframe?.iframeResizer !== undefined &&
+          iframe.iframeResizer.getVersion?.().child !== 'legacy'
+        const iframes = [...document.querySelectorAll('iframe')]
+        return every
+          ? iframes.length > 0 && iframes.every(answered)
+          : answered(iframes[0])
+      },
+      all,
+      { timeout: INIT_TIMEOUT },
+    )
+    .catch((error) => {
+      throw new Error(
+        `No child answered the parent's init; one before v5 never does. ${error.message}`,
+      )
+    })
 }
 
 export async function waitForChildText(page, selector, expected) {
