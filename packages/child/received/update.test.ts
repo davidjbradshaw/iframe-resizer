@@ -77,6 +77,10 @@ describe('child/received/update', () => {
     settings.offsetHeight = 0
     settings.offsetWidth = 0
     settings.autoResize = true
+    // Set by the licence and binding tests, so reset for every test
+    settings.mode = 0
+    settings.key2 = undefined
+    delete settings.bindId
     state.pageSettings = []
     state.fromParent = {}
   })
