@@ -3,6 +3,7 @@ import { expect, test } from './test'
 import {
   assertChildText,
   callbacks,
+  iframeHeight,
   openPage,
   settledIframeHeight,
 } from './utils'
@@ -201,10 +202,7 @@ export function parentMethodTests(
     // not report it and the iframe must keep its height
     await toggle.click()
     await page.waitForTimeout(NO_RESIZE_WAIT_MS)
-    const heightAfter = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
-    expect(heightAfter).toBe(heightBefore)
+    expect(await iframeHeight(page)).toBe(heightBefore)
   })
 
   test('changing inPageLinks after init restores native anchor behaviour', async ({

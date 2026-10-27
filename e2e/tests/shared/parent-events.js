@@ -1,5 +1,10 @@
 import { expect, test } from './test'
-import { callbacks, CLOSE_CANCELLED, openPage } from './utils'
+import {
+  callbacks,
+  closeCancelled,
+  openPage,
+  settledIframeHeight,
+} from './utils'
 
 /**
  * Shared parent-side event handler tests. Each page records the callbacks it
@@ -10,6 +15,10 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
     await openPage(page, baseUrl)
 
     await expect.poll(() => callbacks(page, 'onReady')).toHaveLength(1)
+
+    // And only once, after the messages that follow init
+    await settledIframeHeight(page)
+    expect(await callbacks(page, 'onReady')).toHaveLength(1)
   })
 
   test('onResized fires after iframe resizes', async ({ page }) => {
@@ -18,6 +27,11 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
     await expect
       .poll(() => callbacks(page, 'onResized'))
       .toContainEqual({ callback: 'onResized', type: 'init' })
+
+    // The size reached the iframe, over the page's own 100vh
+    expect(
+      await page.locator('iframe').evaluate((el) => el.style.height),
+    ).toMatch(/^[\d.]+px$/)
   })
 
   test('onMessage fires when child sends message', async ({ page }) => {
@@ -41,21 +55,19 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
       scrollBefore,
       { timeout: 5000 },
     )
-    expect(await callbacks(page, 'onScroll')).toHaveLength(1)
+    await expect.poll(() => callbacks(page, 'onScroll')).toHaveLength(1)
   })
 
   if (blocksClose) {
     test('onBeforeClose blocks close', async ({ page }) => {
       await openPage(page, baseUrl)
-      const cancelled = page.waitForEvent('console', (message) =>
-        message.text().includes(CLOSE_CANCELLED),
-      )
+      const cancelled = await closeCancelled(page)
 
       await page.frameLocator('iframe').locator('#btn-close').click()
 
       // The close reached the parent and was cancelled, so the iframe is
       // still on the page and still connected
-      await cancelled
+      await cancelled()
       await expect(page.locator('iframe')).toBeVisible()
       expect(
         await page.evaluate(

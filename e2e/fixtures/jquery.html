@@ -29,6 +29,7 @@
       type="text/javascript"
       src="../../js/iframe-resizer.jquery.js"
     ></script>
+    <script src="../shared/record.js"></script>
   </head>
 
   <body>
@@ -69,11 +70,6 @@
        */
 
       const callbackDisplay = document.querySelector('p#callback')
-
-      // As record() in e2e/shared/app.js, which a classic script cannot import
-      window.callbacks = []
-      const record = (callback, detail) =>
-        window.callbacks.push({ callback, ...detail })
 
       $('iframe').iframeResize({
         inPageLinks: true,

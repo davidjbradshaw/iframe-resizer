@@ -88,6 +88,13 @@ export const callbacks = (page, callback) =>
 export const iframeHeight = (page, selector = 'iframe') =>
   page.locator(selector).evaluate((el) => el.offsetHeight)
 
+// Grows the child's data-iframe-resize element, which sets its height, by px
+export const growTagged = (frame, px) =>
+  frame.locator('[data-iframe-resize]').evaluate((el, by) => {
+    const padding = parseFloat(getComputedStyle(el).paddingBottom)
+    el.style.paddingBottom = `${padding + by}px`
+  }, px)
+
 // The iframe size once the child has stopped sending resizes: unchanged
 // for at least a quarter of a second. Judged by time, not by consecutive
 // evaluations, as Playwright evaluates the function twice on start. Each call
