@@ -137,12 +137,16 @@ define(['iframeResizerParent'], (iframeResize) => {
         await iframeLoaded(iframe)
         const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
+        // Sent from the next animation frame, which a busy runner can hold
+        // back past any fixed wait
         window.dispatchEvent(new Event('resize'))
-        await delay(50)
+        const sent = await waitFor(
+          () => countJsonMsgs(postMessage, 'parentInfo') > 0,
+        )
 
-        expect(countJsonMsgs(postMessage, 'parentInfo'))
+        expect(sent)
           .withContext('the monitor was not running to begin with')
-          .toBeGreaterThan(0)
+          .toBe(true)
 
         mockMsgFromIFrame(iframe, 'parentInfoStop')
         await delay(50)
@@ -163,12 +167,16 @@ define(['iframeResizerParent'], (iframeResize) => {
         await iframeLoaded(iframe)
         const postMessage = spyOn(iframe.contentWindow, 'postMessage')
 
+        // Sent from the next animation frame, which a busy runner can hold
+        // back past any fixed wait
         window.dispatchEvent(new Event('resize'))
-        await delay(50)
+        const sent = await waitFor(
+          () => countJsonMsgs(postMessage, 'pageInfo') > 0,
+        )
 
-        expect(countJsonMsgs(postMessage, 'pageInfo'))
+        expect(sent)
           .withContext('the monitor was not running to begin with')
-          .toBeGreaterThan(0)
+          .toBe(true)
 
         mockMsgFromIFrame(iframe, 'pageInfoStop')
         await delay(50)
