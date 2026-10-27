@@ -53,7 +53,7 @@ Every item below is merged into `dev-review`. Two findings were closed without a
 - [x] Performance entries no longer pile up on pages using `data-iframe-size` (#1750)
 - [x] The slow-performance warning is calculated correctly (#1751)
 - [x] `parentIframe.setOffsetSize()` resizes the iframe while `autoResize(false)`, instead of storing the offset and dropping the send (#1812)
-- [ ] With `horizontal-block`, an element marked `data-iframe-resize` that fills the page no longer narrows the iframe by the body margin at every content change (#1868)
+- [x] With `horizontal-block`, an element marked `data-iframe-resize` that fills the page no longer narrows the iframe by the body margin at every content change (#1868)
 
 ### Child page
 - [x] A title change is detected when the `<title>` element is replaced, and on SVG pages (#1752)

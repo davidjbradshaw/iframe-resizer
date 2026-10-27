@@ -134,6 +134,3 @@ async function settledIframeSize(page, selector, property) {
 
 export const settledIframeHeight = (page, selector = 'iframe') =>
   settledIframeSize(page, selector, 'offsetHeight')
-
-export const settledIframeWidth = (page, selector = 'iframe') =>
-  settledIframeSize(page, selector, 'offsetWidth')
