@@ -63,5 +63,14 @@ export function parentEventTests(baseUrl, { blocksClose = true } = {}) {
       await page.waitForTimeout(500)
       await expect(page.locator('iframe')).toBeVisible()
     })
+  } else {
+    // The child asking, as its own close link does, rather than the parent
+    test('close from the child removes the iframe', async ({ page }) => {
+      await openPage(page, baseUrl)
+
+      await page.frameLocator('iframe').locator('#btn-close').click()
+
+      await expect(page.locator('iframe')).toHaveCount(0)
+    })
   }
 }

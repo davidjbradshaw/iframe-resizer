@@ -1,7 +1,7 @@
 import { expect, test } from './test'
 import {
   assertChildText,
-  CLOSE_CANCELLED,
+  closeCancelled,
   openPage,
   settledIframeHeight,
   waitForResizer,
@@ -302,18 +302,14 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
     expect(iframeHeight).toBeLessThan(9000)
   })
 
-  // --- close (last test — removes the iframe) ---
+  // --- close (last test) ---
 
   test(`close ${blocksClose ? 'is blocked by' : 'removes iframe from'} parent`, async ({
     page,
   }) => {
     await openPage(page, baseUrl)
 
-    const cancelled =
-      blocksClose &&
-      page.waitForEvent('console', (message) =>
-        message.text().includes(CLOSE_CANCELLED),
-      )
+    const cancelled = await closeCancelled(page)
 
     await page.evaluate(() =>
       document.querySelector('iframe').iframeResizer.close(),
@@ -322,7 +318,7 @@ export function childTests(baseUrl, { blocksClose = true } = {}) {
     // Framework wrappers block close; vanilla and jQuery remove the iframe
     const iframe = page.locator('iframe')
     if (blocksClose) {
-      await cancelled
+      await cancelled()
       await expect(iframe).toBeVisible()
     } else {
       await expect(iframe).toHaveCount(0)

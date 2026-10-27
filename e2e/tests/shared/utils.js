@@ -3,7 +3,24 @@ import { expect } from '@playwright/test'
 const INIT_TIMEOUT = 10_000
 
 // Core logs this when onBeforeClose returns false; every page has log on
-export const CLOSE_CANCELLED = 'Close iframe cancelled by onBeforeClose'
+const CLOSE_CANCELLED = 'Close iframe cancelled by onBeforeClose'
+
+// Call before the close: returns a wait for core's log that onBeforeClose
+// cancelled it. Production builds strip core's log(); dev and test builds keep
+// it and carry a build number in their version, so the wait is only real there.
+export async function closeCancelled(page) {
+  const version = await page.evaluate(
+    () => document.querySelector('iframe').iframeResizer.getVersion().parent,
+  )
+  if (!version.includes('+build')) return () => Promise.resolve()
+
+  const logged = page.waitForEvent('console', (message) =>
+    message.text().includes(CLOSE_CANCELLED),
+  )
+  // Not left to reject unhandled if the test fails before awaiting it
+  logged.catch(() => {})
+  return () => logged
+}
 
 // The iframe is bound and its child has answered the parent's init, with
 // all: true every iframe on the page. Core sets iframeResizer as soon as it
