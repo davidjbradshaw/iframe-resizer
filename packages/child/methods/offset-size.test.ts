@@ -33,6 +33,15 @@ describe('child/methods/offset-size', () => {
     expect(settings.offsetWidth).toBe(0)
   })
 
+  it('leaves the height offset at 0 when height is not calculated', () => {
+    settings.offsetHeight = 7
+    settings.calculateHeight = false
+    setOffsetSize(42)
+
+    expect(settings.offsetHeight).toBe(0)
+    expect(settings.offsetWidth).toBe(42)
+  })
+
   it('throws TypeError for non-number argument', () => {
     // @ts-expect-error testing runtime type check with wrong type
     expect(() => setOffsetSize('abc')).toThrow(TypeError)

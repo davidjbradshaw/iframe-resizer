@@ -55,6 +55,25 @@ describe('child/observed/mutation', () => {
     expect(applyBodySetup).not.toHaveBeenCalled()
   })
 
+  test('skips added nodes that are not elements, such as text', async () => {
+    const { getAllElements } = await import('../size/all')
+    vi.mocked(getAllElements).mockClear()
+    vi.mocked(observers.overflow.attachObservers).mockClear()
+
+    const div = document.createElement('div')
+    const text = document.createTextNode('text')
+    mutationObserved({
+      addedNodes: new Set<Node>([text, div]),
+      removedNodes: new Set(),
+    })
+
+    expect(getAllElements).toHaveBeenCalledTimes(1)
+    expect(getAllElements).toHaveBeenCalledWith(div)
+    expect(observers.overflow.attachObservers).toHaveBeenCalledWith(
+      new Set([div]),
+    )
+  })
+
   test('re-applies the body setup when the body was replaced', () => {
     vi.mocked(observers.resize.observeBody).mockReturnValueOnce(true)
 

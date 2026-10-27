@@ -1,9 +1,13 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as childConsole from '../console'
 import applySelectors, { applySelector } from './apply-selectors'
 
 describe('child/page/apply-selectors', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('applySelector toggles attributes on matching elements and logs', () => {
     vi.spyOn(childConsole, 'log').mockImplementation(() => {})
     const el = document.createElement('div')
@@ -65,5 +69,20 @@ describe('child/page/apply-selectors', () => {
 
     // Should not log anything beyond potentially clearing mocks
     expect(childConsole.log.mock.calls.length).toBe(logCallsBefore)
+  })
+
+  it('skips checking and applying selectors that are not set', () => {
+    const log = vi.spyOn(childConsole, 'log').mockImplementation(() => {})
+    const advise = vi.spyOn(childConsole, 'advise').mockImplementation(() => {})
+    const createFragment = vi.spyOn(document, 'createDocumentFragment')
+    const querySelectorAll = vi.spyOn(document, 'querySelectorAll')
+
+    const run = applySelectors({ resizeSelector: '', ignoreSelector: '' })
+    run()
+
+    expect(createFragment).not.toHaveBeenCalled()
+    expect(advise).not.toHaveBeenCalled()
+    expect(querySelectorAll).not.toHaveBeenCalled()
+    expect(log).not.toHaveBeenCalled()
   })
 })

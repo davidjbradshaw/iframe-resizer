@@ -39,6 +39,22 @@ describe('child/check/mode', () => {
     expect(childConsole.advise).toHaveBeenCalled()
   })
 
+  it('purges, advises and throws when both keys are invalid (mode -2)', () => {
+    commonMode.default.mockReturnValueOnce(-2).mockReturnValueOnce(-2)
+
+    expect(() =>
+      checkMode({ key: 'bad', key2: 'bad', mode: 0, version: undefined }),
+    ).toThrow('data0data2')
+
+    // getModeData(Math.min(-2, -2) + 2) is the invalid-key message
+    expect(childConsole.purge).toHaveBeenCalledTimes(1)
+    expect(childConsole.advise).toHaveBeenCalledWith('data0data2')
+    expect(childConsole.advise).toHaveBeenCalledWith('data9')
+    expect(childConsole.vInfo).not.toHaveBeenCalled()
+    expect(state.firstRun).toBe(false)
+    expect(settings.mode).toBe(0)
+  })
+
   it('logs vInfo and sets session value when version is undefined', () => {
     commonMode.default.mockReturnValueOnce(0).mockReturnValueOnce(0)
     checkMode({ key: 'a', key2: 'b', mode: 0, version: undefined })
