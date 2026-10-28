@@ -262,6 +262,11 @@ export function parentMethodTests(
     // applied and the height left alone. A manual width is not used here as
     // the body reflows when the iframe width changes, which triggers a
     // calculated resize straight after it.
+    //
+    // The height to hold is read here, not taken to still be the manual one:
+    // a calculated resize from the child replaces that at any point while the
+    // parent is vertical. Once the update has landed, nothing sets it again.
+    const [heightBeforeHorizontal] = await inlineSize()
     const contentWidth = await page
       .frameLocator('iframe')
       .locator('[data-iframe-resize]')
@@ -273,7 +278,7 @@ export function parentMethodTests(
       { timeout: 5000 },
     )
     const [heightAfterHorizontal] = await inlineSize()
-    expect(heightAfterHorizontal).toBe('200px')
+    expect(heightAfterHorizontal).toBe(heightBeforeHorizontal)
   })
 
   test('changing checkOrigin keeps messaging working in both directions', async ({
