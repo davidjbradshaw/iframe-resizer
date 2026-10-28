@@ -1,6 +1,8 @@
+import { UNDEFINED } from '@iframe-resizer/common/consts'
+
 // None in server-side rendering, where index.ts sets nothing up; a bare
 // window would throw there as this module loads
-const win = typeof window === 'undefined' ? undefined : window
+const win = typeof window === UNDEFINED ? undefined : window
 
 export default {
   applySelectors: null,
