@@ -86,6 +86,7 @@ describe('child/received/update', () => {
     settings.autoResize = true
     // Set by the licence and binding tests, so reset for every test
     settings.mode = 0
+    settings.key = undefined
     settings.key2 = undefined
     delete settings.bindId
     state.pageSettings = []
@@ -331,16 +332,18 @@ describe('child/received/update', () => {
     expect(setupInPageLinks).toHaveBeenCalledTimes(1)
   })
 
-  it('keeps the licence mode when an older parent sends no mode field', () => {
-    settings.mode = 3
+  // An older parent sends neither the key nor the mode field, so the mode is
+  // worked out from the key it sent at init and the page's own
+  it('keeps the licence when a parent sends a short message', () => {
+    settings.key = 'valid'
     const fields = buildEvent('old', {})
       .data.slice('[iFrameSizer]update:'.length)
       .split(':')
-      .slice(0, 21)
+      .slice(0, 19)
 
     applyFromParent(fields)
 
-    expect(settings.mode).toBe(3)
+    expect(settings.mode).toBe(4)
   })
 
   it('sets the body background and padding when the parent changes them', () => {
