@@ -62,7 +62,7 @@ Every item below is merged into `dev-review`. Two findings were closed without a
 - [x] A `getParentProps()` subscription made before the iframe's `load` event keeps receiving updates (#1794)
 - [x] With a list of `targetOrigin`s, the child posts only to the parent's origin, so Chrome no longer logs a mismatch for every message (#1790)
 - [x] An animation frame with nothing to report no longer writes an empty group to the console (#1829)
-- [ ] Importing the child where there is no `window`, as in server-side rendering, no longer throws a `ReferenceError` (#PR)
+- [ ] Importing the child where there is no `window`, as in server-side rendering, no longer throws a `ReferenceError` (#1882)
 
 ### Parent page
 - [x] `onScroll` returning `false` stops an in-page link from jumping to its target (#1795)
