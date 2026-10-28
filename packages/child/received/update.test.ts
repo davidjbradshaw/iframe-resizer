@@ -20,7 +20,9 @@ vi.mock('../page/css', () => ({
 vi.mock('../page/links', () => ({ default: vi.fn() }))
 vi.mock('../page/content-width', () => ({ default: vi.fn() }))
 
-const updateFromParent = (await import('./update')).default
+const updateMod = await import('./update')
+const updateFromParent = updateMod.default
+const { applyFromParent } = updateMod
 const consoleMod = await import('../console')
 const setupMouseEvents = (await import('../events/mouse')).default
 const cssMod = await import('../page/css')
@@ -54,10 +56,11 @@ const buildEvent = (id: string, fields: Record<string, any>): MessageEvent => {
     fields.sizeHeight ?? 'true',
     '',
     '',
-    '0',
+    fields.mode ?? '0',
     '',
     fields.logExpand ?? 'false',
     fields.maxContentWidth ?? 'false',
+    ...(fields.bindId === undefined ? [] : [fields.bindId]),
   ].join(':')
   return { data: `[iFrameSizer]update:${data}` } as MessageEvent
 }
@@ -74,8 +77,50 @@ describe('child/received/update', () => {
     settings.offsetHeight = 0
     settings.offsetWidth = 0
     settings.autoResize = true
+    // Set by the licence and binding tests, so reset for every test
+    settings.mode = 0
+    settings.key2 = undefined
+    delete settings.bindId
     state.pageSettings = []
     state.fromParent = {}
+  })
+
+  it("keeps the child's own licence mode over the parent's", () => {
+    settings.mode = 5
+
+    updateFromParent(buildEvent('x', { mode: '-2' }))
+
+    expect(settings.mode).toBe(5)
+  })
+
+  it("takes the parent's licence mode when it is higher, as after update()", () => {
+    settings.mode = 1
+
+    updateFromParent(buildEvent('x', { mode: '4' }))
+
+    expect(settings.mode).toBe(4)
+  })
+
+  it('records the binding the options came from', () => {
+    updateFromParent(buildEvent('x', { bindId: 'k3x9' }))
+
+    expect(settings.bindId).toBe('k3x9')
+  })
+
+  it('sends no size for a new binding, as its init reply carries one', async () => {
+    settings.autoResize = false
+    state.fromParent = { autoResize: false }
+    const fields = (event: MessageEvent) =>
+      event.data.slice('[iFrameSizer]update:'.length).split(':')
+
+    applyFromParent(
+      fields(buildEvent('x', { autoResize: 'true', offsetHeight: '50' })),
+      true,
+    )
+    await Promise.resolve()
+
+    expect(settings.offsetHeight).toBe(50)
+    expect(sendSize).not.toHaveBeenCalled()
   })
 
   it('re-measures when the parent re-enables autoResize', async () => {

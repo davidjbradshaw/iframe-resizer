@@ -11,6 +11,11 @@ import hasMouseEvents from './has-mouse-events'
 import { setRemoteHost, setTargetOrigin } from './target-origin'
 import updateOptionNames from './update-option-names'
 
+// Marks each binding, so a child whose page stayed loaded can tell being
+// bound again, as by React's <Activity>, from a repeat of the same init.
+// Random, not counted, so two copies of core on a page cannot repeat one.
+const newBindId = (): string => Math.random().toString(36).slice(2)
+
 export default function processOptions(
   iframe: HTMLIFrameElement,
   options: Record<string, any>,
@@ -24,6 +29,7 @@ export default function processOptions(
     mouseEvents: hasMouseEvents(options),
     mode: setMode(options),
     syncTitle: checkTitle(id),
+    bindId: newBindId(),
   }
 
   updateOptionNames(id)

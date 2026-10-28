@@ -1,43 +1,23 @@
+import { updates } from '../../shared/app'
 import { expect, test } from './test'
 import {
   assertChildText,
+  callbacks,
+  iframeHeight,
+  openPage,
   settledIframeHeight,
-  waitForChildText,
-  waitForResizer,
 } from './utils'
 
-// Options changed after init, in steps, each chosen because it has an
-// observable effect: the body styles land in the child, scrolling changes the
-// parent's iframe element, offsetSize grows the iframe, tolerance suppresses
-// a small resize, inPageLinks off restores native anchor behaviour and
-// direction switches which dimension of a resize is applied.
-// Values are distinctive so they cannot be confused with defaults; bodyMargin
-// is numeric to exercise the number -> px conversion. The framework apps
-// hardcode the same values behind their #update-<step> buttons.
-//
-// Every step also sets a distinct bodyBackground, which doubles as a marker
-// that the step has reached the child: the frameworks apply a change
-// asynchronously and the settings travel in one message, so once the colour
-// shows the rest of the step has landed too.
-export const UPDATES = {
-  styles: {
-    bodyBackground: 'rgb(0, 128, 0)',
-    bodyPadding: '6px',
-    bodyMargin: 12,
-    scrolling: true,
-  },
-  offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-  tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-  links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-  direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
-}
+// The option steps the pages apply (see e2e/shared/app.js), for the values
+// the tests read; a page's own steps also restrict checkOrigin to its origin
+const UPDATES = updates()
 
 // What the test expects to observe after the styles update
 const EXPECTED = {
   child: {
-    backgroundColor: 'rgb(0, 128, 0)',
-    padding: '6px',
-    margin: '12px',
+    backgroundColor: UPDATES.styles.bodyBackground,
+    padding: UPDATES.styles.bodyPadding,
+    margin: `${UPDATES.styles.bodyMargin}px`,
   },
   iframe: { scrolling: 'yes', overflow: 'auto' },
 }
@@ -66,9 +46,7 @@ export function parentMethodTests(
   { hasDisconnect = true, updateControl = false } = {},
 ) {
   test('sendMessage delivers data to child', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.evaluate(() => {
       document.querySelector('iframe').iframeResizer.sendMessage('test-msg')
@@ -78,9 +56,7 @@ export function parentMethodTests(
   })
 
   test('getVersion returns parent and child versions', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const version = await page.evaluate(() =>
       document.querySelector('iframe').iframeResizer.getVersion(),
@@ -95,9 +71,7 @@ export function parentMethodTests(
   })
 
   test('moveToAnchor scrolls to named anchor', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
 
@@ -116,10 +90,7 @@ export function parentMethodTests(
   // update path, not init) and return once the resizer is ready. Pages with
   // no update control need the global factory to re-bind; skip without it.
   async function loadAndInit(page) {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, baseUrl)
 
     if (updateControl) return
     const hasFactory = await page.evaluate(
@@ -135,21 +106,12 @@ export function parentMethodTests(
   async function updateOptions(page, step) {
     const applyThroughFactory = () =>
       page.evaluate(
-        ({ opts, restrictOrigin }) => {
-          const iframe = document.querySelector('iframe')
+        (opts) =>
           window.iframeResize(
-            {
-              license: 'GPLv3',
-              ...opts,
-              // The page's origin is only known here, in the page
-              ...(restrictOrigin
-                ? { checkOrigin: [window.location.origin] }
-                : {}),
-            },
-            iframe,
-          )
-        },
-        { opts: UPDATES[step], restrictOrigin: step === 'styles' },
+            { license: 'GPLv3', ...opts },
+            document.querySelector('iframe'),
+          ),
+        updates(new URL(page.url()).origin)[step],
       )
 
     await (updateControl
@@ -240,10 +202,7 @@ export function parentMethodTests(
     // not report it and the iframe must keep its height
     await toggle.click()
     await page.waitForTimeout(NO_RESIZE_WAIT_MS)
-    const heightAfter = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
-    expect(heightAfter).toBe(heightBefore)
+    expect(await iframeHeight(page)).toBe(heightBefore)
   })
 
   test('changing inPageLinks after init restores native anchor behaviour', async ({
@@ -290,6 +249,7 @@ export function parentMethodTests(
     await child.evaluate(() => window.parentIframe.resize(200, 400))
     await page.waitForFunction(
       () => document.querySelector('iframe').style.height === '200px',
+      null,
       { timeout: 5000 },
     )
     const [, widthAfterVertical] = await inlineSize()
@@ -339,29 +299,17 @@ export function parentMethodTests(
     })
     await assertChildText(page, '#last-message', 'after-update')
 
-    // child -> parent: every page surfaces onMessage as an alert. Handle
-    // dialogs as they arrive (some pages send a reply straight after the
-    // alert) and poll for the one carrying the child's message.
-    const alerts = []
-    page.on('dialog', (dialog) => {
-      alerts.push(dialog.message())
-      dialog.accept().catch(() => {})
-    })
-
+    // child -> parent
     await page.frameLocator('iframe').locator('#btn-send-message').click()
 
     await expect
-      .poll(() =>
-        alerts.some((message) => message.includes('hello from child')),
-      )
-      .toBe(true)
+      .poll(() => callbacks(page, 'onMessage'))
+      .toContainEqual({ callback: 'onMessage', message: 'hello from child' })
   })
 
   if (hasDisconnect) {
     test('disconnect removes iframeResizer from iframe', async ({ page }) => {
-      await page.goto(baseUrl)
-      await page.waitForLoadState('networkidle')
-      await waitForResizer(page)
+      await openPage(page, baseUrl)
 
       await page.evaluate(() => {
         document.querySelector('iframe').iframeResizer.disconnect()

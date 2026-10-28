@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { childFrame, iframeHeight } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/colon-id.html'
 const ID = ':r1:'
@@ -7,21 +8,11 @@ const ID = ':r1:'
 const CONTENT = 300
 const GROWN = 500
 
-const iframeHeight = (page) =>
-  page.locator('iframe').evaluate((el) => el.offsetHeight)
-
-async function childFrame(page) {
-  await expect
-    .poll(() => page.frames().some((frame) => frame.url().includes('frame.legacy')))
-    .toBe(true)
-  return page.frames().find((frame) => frame.url().includes('frame.legacy'))
-}
-
 async function expectToFollowContent(page) {
   await page.waitForFunction(() => window.ready)
   await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(CONTENT)
 
-  const child = await childFrame(page)
+  const child = await childFrame(page, 'frame.legacy')
   await child.evaluate(() => window.grow())
   await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(GROWN)
 }
@@ -33,7 +24,7 @@ test.describe('An iframe id that contains colons', () => {
 
     expect(await page.evaluate(() => window.resizedId)).toBe(ID)
 
-    const child = await childFrame(page)
+    const child = await childFrame(page, 'frame.legacy')
     expect(await child.evaluate(() => window.parentIframe.getId())).toBe(ID)
   })
 

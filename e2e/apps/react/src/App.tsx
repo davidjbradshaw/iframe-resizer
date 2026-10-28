@@ -4,24 +4,10 @@ import IframeResizer, {
   type IframeMessageData,
   type IframeResizedData,
 } from '@iframe-resizer/react'
+import { record, updates } from '../../../shared/app'
 
 // Option changes applied after init by the e2e tests, one button per step
-const UPDATES = {
-  styles: {
-    bodyBackground: 'rgb(0, 128, 0)',
-    bodyPadding: '6px',
-    bodyMargin: 12,
-    scrolling: true,
-    checkOrigin: [location.origin],
-  },
-  offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-  tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-  links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-  direction: {
-    bodyBackground: 'rgb(0, 128, 128)',
-    direction: 'horizontal-inline' as const,
-  },
-}
+const UPDATES = updates(location.origin)
 
 type Extra = Partial<(typeof UPDATES)[keyof typeof UPDATES]>
 
@@ -31,12 +17,23 @@ function App() {
   const [show, setShow] = useState(true)
   const [extra, setExtra] = useState<Extra>({})
 
-  const onResized = (data: IframeResizedData) => setMessageData(data)
+  const onReady = () => record('onReady')
+
+  const onResized = (data: IframeResizedData) => {
+    record('onResized', { type: data.type })
+    setMessageData(data)
+  }
 
   const onMessage = (data: IframeMessageData) => {
+    record('onMessage', { message: data.message })
     setMessageData(data)
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
     iframeRef.current?.sendMessage('Hello back from the parent page')
+  }
+
+  const onScroll = () => {
+    record('onScroll')
+    return true
   }
 
   return (
@@ -61,7 +58,9 @@ function App() {
             inPageLinks
             {...extra}
             onMessage={onMessage}
+            onReady={onReady}
             onResized={onResized}
+            onScroll={onScroll}
             src="child/frame.test.html"
             style={{ width: '100%', height: '100vh' }}
           />

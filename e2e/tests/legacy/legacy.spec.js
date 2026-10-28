@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { childFrame, iframeHeight } from '../shared/utils'
 
 // The current parent with each earlier release's child, and the current
 // child with each earlier release's parent, as a site gets while it updates
@@ -13,24 +14,22 @@ const GROWN = 500
 // v1's child counts the body slightly differently
 const SLACK = 20
 
-const iframeHeight = (page) =>
-  page.locator('#legacy').evaluate((el) => el.offsetHeight)
+const IFRAME = '#legacy'
 
 async function expectSizedTo(page, height) {
-  await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(height)
+  await expect
+    .poll(() => iframeHeight(page, IFRAME))
+    .toBeGreaterThanOrEqual(height)
 
   // Still that size once any messages that follow init have arrived
   await page.waitForTimeout(300)
-  const settled = await iframeHeight(page)
+  const settled = await iframeHeight(page, IFRAME)
   expect(settled).toBeGreaterThanOrEqual(height)
   expect(settled).toBeLessThanOrEqual(height + SLACK)
 }
 
 async function growContent(page) {
-  await expect
-    .poll(() => page.frames().some((frame) => frame.url().includes('frame.legacy')))
-    .toBe(true)
-  const child = page.frames().find((frame) => frame.url().includes('frame.legacy'))
+  const child = await childFrame(page, 'frame.legacy')
   await child.evaluate(() => window.grow())
 }
 

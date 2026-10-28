@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { childFrame, iframeHeight } from '../shared/utils'
 
 // Each earlier release's API, used against the current parent or child: the
 // methods a page written for that release calls, some deprecated or removed
@@ -14,8 +15,7 @@ const SLACK = 20
 const versionsOf = (feature) =>
   feature.versions ?? VERSIONS.slice(VERSIONS.indexOf(feature.since))
 
-const iframeHeight = (page) =>
-  page.locator('#legacy').evaluate((el) => el.offsetHeight)
+const IFRAME = '#legacy'
 
 const scrollY = (page) => page.evaluate(() => window.scrollY)
 
@@ -28,16 +28,11 @@ const topOf = (page, selector) =>
 
 async function load(page, query) {
   await page.goto(`${BASE}?${query}`)
-  await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(CONTENT)
-
   await expect
-    .poll(() =>
-      page.frames().some((frame) => frame.url().includes('frame.legacy')),
-    )
-    .toBe(true)
-  const child = page
-    .frames()
-    .find((frame) => frame.url().includes('frame.legacy'))
+    .poll(() => iframeHeight(page, IFRAME))
+    .toBeGreaterThanOrEqual(CONTENT)
+
+  const child = await childFrame(page, 'frame.legacy')
   await child.waitForFunction(() => window.parentIframe || window.parentIFrame)
 
   // Past the child's init lock, which ignores some requests straight after init
@@ -77,7 +72,7 @@ const watchHeight = (page) =>
 
 async function expectStillSized(page) {
   await page.waitForTimeout(300)
-  const height = await iframeHeight(page)
+  const height = await iframeHeight(page, IFRAME)
   expect(height).toBeGreaterThanOrEqual(CONTENT)
   expect(height).toBeLessThanOrEqual(CONTENT + SLACK)
 
@@ -119,7 +114,7 @@ const OLD_CHILD = [
     since: 'v1',
     async run(page, child) {
       await callChild(child, 'size', 400)
-      await expect.poll(() => iframeHeight(page)).toBe(400)
+      await expect.poll(() => iframeHeight(page, IFRAME)).toBe(400)
     },
   },
   {
@@ -303,7 +298,7 @@ const OLD_PARENT = [
       await page.waitForTimeout(300)
 
       await callParent(page, 'resize')
-      await expect.poll(() => iframeHeight(page)).toBe(GROWN)
+      await expect.poll(() => iframeHeight(page, IFRAME)).toBe(GROWN)
     },
   },
   {

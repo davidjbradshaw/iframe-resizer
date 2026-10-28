@@ -12,7 +12,7 @@ import {
   watchRemovalAdvice,
 } from './shared/hide-restore'
 import { expect, test } from './shared/test'
-import { waitForChildText, waitForResizer } from './shared/utils'
+import { openPage } from './shared/utils'
 
 const BASE = '/e2e/fixtures/web-component/index.html'
 const OPTIONS_UNDEFINED = '/e2e/fixtures/web-component-options.html'
@@ -29,10 +29,7 @@ test.describe('Web Component', () => {
   test('options set to undefined still resizes, without errors', async ({
     page,
   }) => {
-    await page.goto(OPTIONS_UNDEFINED)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, OPTIONS_UNDEFINED)
 
     await expect
       .poll(() => page.evaluate(() => window.resizedEvents.length))
@@ -46,9 +43,7 @@ test.describe('Web Component removed and added back', () => {
   }) => {
     const advice = watchRemovalAdvice(page)
     // Connected to its child before it is removed
-    await page.goto(BASE)
-    await waitForResizer(page)
-    await waitForChildText(page, '#ready-status', 'ready')
+    await openPage(page, BASE)
 
     // Removed: the element disconnects and takes its iframe out
     await page.evaluate(() => {

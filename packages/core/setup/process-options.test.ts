@@ -57,4 +57,16 @@ describe('core/setup/process-options', () => {
 
     expect(settings.if2.mouseEvents).toBe(false)
   })
+
+  test('marks each binding afresh, even of the same iframe', () => {
+    const iframe = { id: 'if3', src: 'https://c/d' }
+
+    processOptions(iframe, {})
+    const first = settings.if3.bindId
+    processOptions(iframe, { bindId: first })
+
+    // Sent in a colon-separated message
+    expect(first).toMatch(/^[\da-z]+$/)
+    expect(settings.if3.bindId).not.toBe(first)
+  })
 })

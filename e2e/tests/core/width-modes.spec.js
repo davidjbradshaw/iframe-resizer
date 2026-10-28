@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { waitForResizer } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/width-modes.html'
 
@@ -18,10 +19,7 @@ const width = (page, content, direction) =>
 test.describe('Width directions', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE)
-    await page.waitForLoadState('networkidle')
-    await page.waitForFunction(() =>
-      [...document.querySelectorAll('iframe')].every((el) => el.iframeResizer),
-    )
+    await waitForResizer(page, { all: true })
     await page.waitForTimeout(1000)
   })
 
@@ -36,9 +34,7 @@ test.describe('Width directions', () => {
     page,
   }) => {
     expect(await width(page, 'article', INLINE)).toBeGreaterThan(1000)
-    expect(await width(page, 'article', BLOCK)).toBeLessThanOrEqual(
-      START_WIDTH,
-    )
+    expect(await width(page, 'article', BLOCK)).toBeLessThanOrEqual(START_WIDTH)
   })
 
   test('a wide table: inline unwraps the text, block wraps it to the table', async ({

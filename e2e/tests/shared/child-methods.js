@@ -1,24 +1,32 @@
 import { expect, test } from './test'
-import { assertChildText, waitForResizer } from './utils'
+import {
+  assertChildText,
+  closeCancelled,
+  growTagged,
+  iframeHeight,
+  openPage,
+  settledIframeHeight,
+  waitForResizer,
+} from './utils'
 
 /**
  * Shared child-side tests — events, methods, page events, and attributes.
+ *
+ * blocksClose: the parent cancels close(), as the framework wrappers do.
  */
-export function childTests(baseUrl) {
+export function childTests(baseUrl, { blocksClose = true } = {}) {
   // --- Child events ---
 
+  // Not openPage, which waits for #ready-status itself
   test('onReady fires in child', async ({ page }) => {
     await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
     await waitForResizer(page)
 
     await assertChildText(page, '#ready-status', 'ready')
   })
 
   test('onMessage receives data from parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.evaluate(() => {
       document.querySelector('iframe').iframeResizer.sendMessage('parent-msg')
@@ -30,9 +38,7 @@ export function childTests(baseUrl) {
   // --- Child methods ---
 
   test('getId returns iframe id', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-get-id').click()
 
@@ -42,6 +48,7 @@ export function childTests(baseUrl) {
         const el = iframe?.contentDocument?.querySelector('#get-id')
         return el?.textContent !== 'unknown'
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -54,27 +61,18 @@ export function childTests(baseUrl) {
   })
 
   test('getParentOrigin returns origin', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
-    const origin = await page.evaluate(() =>
-      document
-        .querySelector('iframe')
-        ?.contentWindow?.parentIframe?.getParentOrigin(),
-    )
+    const origin = await page
+      .frameLocator('iframe')
+      .locator('body')
+      .evaluate(() => window.parentIframe.getParentOrigin())
 
-    // Same-origin iframes use direct bridge (no postMessage origin)
-    // Cross-origin iframes get origin from postMessage event
-    if (origin !== undefined) {
-      expect(origin).toContain('localhost')
-    }
+    expect(origin).toBe(await page.evaluate(() => window.location.origin))
   })
 
   test('getParentProps returns page data', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-get-props').click()
 
@@ -84,6 +82,7 @@ export function childTests(baseUrl) {
         const el = iframe?.contentDocument?.querySelector('#get-props')
         return el?.textContent !== 'unknown'
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -95,9 +94,7 @@ export function childTests(baseUrl) {
   })
 
   test('getVersion returns child and parent versions', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-get-versions').click()
 
@@ -107,6 +104,7 @@ export function childTests(baseUrl) {
         const el = iframe?.contentDocument?.querySelector('#get-versions')
         return el?.textContent !== 'unknown'
       },
+      null,
       { timeout: 5000 },
     )
 
@@ -121,23 +119,8 @@ export function childTests(baseUrl) {
     expect(parsed.parent).not.toBe('legacy')
   })
 
-  test('sendMessage from child reaches parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-
-    page.on('dialog', (dialog) => dialog.accept())
-
-    await page.frameLocator('iframe').locator('#btn-send-message').click()
-    await page.waitForTimeout(500)
-
-    await expect(page.locator('iframe')).toBeVisible()
-  })
-
   test('resize sets iframe dimensions', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-resize').click()
 
@@ -146,12 +129,11 @@ export function childTests(baseUrl) {
         const iframe = document.querySelector('iframe')
         return iframe && Math.abs(iframe.offsetHeight - 200) < 20
       },
+      null,
       { timeout: 5000 },
     )
 
-    const height = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
+    const height = await iframeHeight(page)
     expect(height).toBeGreaterThan(180)
     expect(height).toBeLessThan(220)
   })
@@ -159,18 +141,15 @@ export function childTests(baseUrl) {
   test('autoResize(true) restores the content size after a manual resize', async ({
     page,
   }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-    const height = () =>
-      page.locator('iframe').evaluate((el) => el.offsetHeight)
-    const content = await height()
+    await openPage(page, baseUrl)
+    const content = await settledIframeHeight(page)
 
     // A manual resize while autoResize is still on holds until the next
     // content change...
     await page.frameLocator('iframe').locator('#btn-resize-both').click()
     await page.waitForFunction(
       () => Math.abs(document.querySelector('iframe').offsetHeight - 200) < 20,
+      null,
       { timeout: 5000 },
     )
 
@@ -185,9 +164,7 @@ export function childTests(baseUrl) {
   })
 
   test('scrollTo triggers parent scroll', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-to').click()
@@ -200,9 +177,7 @@ export function childTests(baseUrl) {
   })
 
   test('scrollBy triggers parent scroll', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-by').click()
@@ -215,9 +190,7 @@ export function childTests(baseUrl) {
   })
 
   test('scrollToOffset triggers parent scroll', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-scroll-offset').click()
@@ -230,9 +203,7 @@ export function childTests(baseUrl) {
   })
 
   test('moveToAnchor from child scrolls parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     const scrollBefore = await page.evaluate(() => window.scrollY)
     await page.frameLocator('iframe').locator('#btn-move-anchor').click()
@@ -247,13 +218,10 @@ export function childTests(baseUrl) {
   // --- Page events ---
 
   test('content change triggers resize', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
-    const initialHeight = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
+    // Settled, so a late resize from init is not taken for the toggle's
+    const initialHeight = await settledIframeHeight(page)
 
     await page.frameLocator('iframe').locator('#btn-toggle').click()
 
@@ -266,16 +234,11 @@ export function childTests(baseUrl) {
       { timeout: 5000 },
     )
 
-    const newHeight = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
-    expect(newHeight).not.toBe(initialHeight)
+    expect(await iframeHeight(page)).not.toBe(initialHeight)
   })
 
   test('initial title syncs to iframe attribute', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.waitForFunction(
       () =>
@@ -288,9 +251,7 @@ export function childTests(baseUrl) {
   })
 
   test('title change syncs to iframe attribute', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+    await openPage(page, baseUrl)
 
     await page.frameLocator('iframe').locator('#btn-change-title').click()
 
@@ -306,49 +267,71 @@ export function childTests(baseUrl) {
 
   // --- Attributes ---
 
-  test('data-iframe-resize element is detected', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
+  // The child sizes the page to its data-iframe-resize elements alone, so
+  // growing the tagged element by 50px grows the iframe by exactly that, and
+  // a block added below it, outside every tagged element, is not counted
+  test('data-iframe-resize element sets the height', async ({ page }) => {
+    await openPage(page, baseUrl)
+    const before = await settledIframeHeight(page)
 
-    const el = page.frameLocator('iframe').locator('[data-iframe-resize]')
-    await expect(el).toBeVisible()
-  })
-
-  test('data-iframe-ignore element does not affect size', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-
-    const el = page.frameLocator('iframe').locator('[data-iframe-ignore]')
-    await expect(el).toBeAttached()
-
-    const iframeHeight = await page
-      .locator('iframe')
-      .evaluate((el) => el.offsetHeight)
-    // The ignored element is at top: 9999px, height: 5000px
-    // If included, iframe would be ~15000px
-    expect(iframeHeight).toBeLessThan(9000)
-  })
-
-  // --- close (last test — removes the iframe) ---
-
-  test('close removes iframe from parent', async ({ page }) => {
-    await page.goto(baseUrl)
-    await page.waitForLoadState('networkidle')
-    await waitForResizer(page)
-
-    // Framework wrappers block close, vanilla removes iframe
-    const iframeRemoved = await page.evaluate(() => {
-      const iframe = document.querySelector('iframe')
-      iframe.iframeResizer.close()
-      return document.querySelector('iframe') === null
+    const frame = page.frameLocator('iframe')
+    await frame.locator('body').evaluate(() => {
+      const block = document.createElement('div')
+      block.style.height = '300px'
+      document.body.append(block)
     })
+    await growTagged(frame, 50)
 
-    // Vanilla parent removes the iframe; a framework wrapper keeps it
+    await expect.poll(() => iframeHeight(page)).not.toBe(before)
+    expect(await settledIframeHeight(page)).toBe(before + 50)
+  })
+
+  // Tagged elements set the size on their own, so the tag is removed first to
+  // size the whole page, where the ignored element would count
+  test('data-iframe-ignore element does not affect size', async ({ page }) => {
+    await openPage(page, baseUrl)
+    const child = page.frameLocator('iframe').locator('body')
+
+    // The ignored element is at top: 9999px, height: 5000px. Sized to the
+    // whole page now, so the height changes from the tagged element's.
+    const tagged = await settledIframeHeight(page)
+    await child.evaluate(
+      () =>
+        delete document.querySelector('[data-iframe-resize]').dataset
+          .iframeResize,
+    )
+    await expect.poll(() => iframeHeight(page)).not.toBe(tagged)
+    expect(await settledIframeHeight(page)).toBeLessThan(9000)
+
+    // Control: without the attribute, the same element is counted
+    await child.evaluate(
+      () =>
+        delete document.querySelector('[data-iframe-ignore]').dataset
+          .iframeIgnore,
+    )
+    await expect.poll(() => iframeHeight(page)).toBeGreaterThan(9999)
+  })
+
+  // --- close (last test) ---
+
+  test(`close ${blocksClose ? 'is blocked by' : 'removes iframe from'} parent`, async ({
+    page,
+  }) => {
+    await openPage(page, baseUrl)
+
+    const cancelled = await closeCancelled(page)
+
+    await page.evaluate(() =>
+      document.querySelector('iframe').iframeResizer.close(),
+    )
+
+    // Framework wrappers block close; vanilla and jQuery remove the iframe
     const iframe = page.locator('iframe')
-    await (iframeRemoved
-      ? expect(iframe).toHaveCount(0)
-      : expect(iframe).toBeVisible())
+    if (blocksClose) {
+      await cancelled()
+      await expect(iframe).toBeVisible()
+    } else {
+      await expect(iframe).toHaveCount(0)
+    }
   })
 }

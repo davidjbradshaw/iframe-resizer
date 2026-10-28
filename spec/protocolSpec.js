@@ -66,7 +66,8 @@ define(['iframeResizerParent'], (iframeResize) => {
       expect(fields[22]).toBe('') // 22 sizeSelector, not yet in use
       expect(fields[23]).toBe('false') // 23 logExpand
       expect(fields[24]).toBe('false') // 24 maxContentWidth
-      expect(fields.length).toBe(25)
+      expect(fields[25]).toMatch(/^[\da-z]+$/) // 25 bindId
+      expect(fields.length).toBe(26)
     })
 
     it('carries the options that the child acts on', async () => {
@@ -84,7 +85,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       const fields = initMsgFields(postMessage)
 
-      expect(fields.length).toBe(25)
+      expect(fields.length).toBe(26)
       expect(fields[7]).toBe('10px')
       expect(fields[8]).toBe('taggedElement')
       expect(fields[11]).toBe('5')
@@ -118,7 +119,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       const fields = initMsgFields(postMessage)
 
-      expect(fields.length).toBe(25)
+      expect(fields.length).toBe(26)
       expect(fields[9]).toBe('url(https%3A//example.com/x.png)')
       expect(fields[10]).toBe('')
     })
@@ -132,7 +133,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       const fields = initMsgFields(postMessage)
 
-      expect(fields.length).toBe(25)
+      expect(fields.length).toBe(26)
       expect(fields[0]).toBe('%3Ar1%3A')
     })
   })

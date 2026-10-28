@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { childFrame } from '../shared/utils'
 
 // A border-box iframe with a 2px border and 10px padding: 24px between its
 // size and its content on each axis
@@ -6,20 +7,18 @@ const BASE = '/e2e/fixtures/box-sizing.html'
 const CONTENT_HEIGHT = 300
 const CONTENT_WIDTH = 400
 
-const child = (page) =>
-  page.frames().find((frame) => frame.url().includes('frame.box-sizing'))
-
 test.describe('Border-box iframe', () => {
+  let frame
+
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE)
     await page.waitForFunction(() => window.ready)
+    frame = await childFrame(page, 'frame.box-sizing')
   })
 
-  test('is sized so its content fits inside the padding and border', async ({
-    page,
-  }) => {
+  test('is sized so its content fits inside the padding and border', async () => {
     await expect
-      .poll(() => child(page).evaluate(() => window.innerHeight))
+      .poll(() => frame.evaluate(() => window.innerHeight))
       .toBe(CONTENT_HEIGHT)
   })
 
@@ -36,7 +35,7 @@ test.describe('Border-box iframe', () => {
   test('scrollBy scrolls the parent by exactly the amount asked', async ({
     page,
   }) => {
-    await child(page).evaluate(() => window.parentIframe.scrollBy(0, 100))
+    await frame.evaluate(() => window.parentIframe.scrollBy(0, 100))
 
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(100)
   })
@@ -48,9 +47,10 @@ test.describe('Border-box iframe sized by width', () => {
   }) => {
     await page.goto(`${BASE}?direction=horizontal-inline`)
     await page.waitForFunction(() => window.ready)
+    const frame = await childFrame(page, 'frame.box-sizing')
 
     await expect
-      .poll(() => child(page).evaluate(() => window.innerWidth))
+      .poll(() => frame.evaluate(() => window.innerWidth))
       .toBe(CONTENT_WIDTH)
   })
 })

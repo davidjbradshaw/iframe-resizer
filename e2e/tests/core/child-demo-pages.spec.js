@@ -21,9 +21,12 @@ const IN_PAGE_LINK = /<a\b[^>]*href=["']#["']/
 
 // Every child page with in-page links, so a page added later is covered too.
 // frame.test.html is left out: the shared suites drive each of its links.
+// The paths come from the fixture folder's own listing, so can't be literals.
+// eslint-disable-next-line security/detect-non-literal-fs-filename
 const PAGES = readdirSync(CHILD_DIR)
   .filter((file) => file.endsWith('.html') && file !== 'frame.test.html')
   .filter((file) =>
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
     IN_PAGE_LINK.test(readFileSync(join(CHILD_DIR, file), 'utf8')),
   )
   .sort()

@@ -53,6 +53,7 @@ Every item below is merged into `dev-review`. Two findings were closed without a
 - [x] Performance entries no longer pile up on pages using `data-iframe-size` (#1750)
 - [x] The slow-performance warning is calculated correctly (#1751)
 - [x] `parentIframe.setOffsetSize()` resizes the iframe while `autoResize(false)`, instead of storing the offset and dropping the send (#1812)
+- [x] With `horizontal-block`, an element marked `data-iframe-resize` that fills the page no longer narrows the iframe by the body margin at every content change (#1868)
 
 ### Child page
 - [x] A title change is detected when the `<title>` element is replaced, and on SVG pages (#1752)
@@ -70,6 +71,7 @@ Every item below is merged into `dev-review`. Two findings were closed without a
 ### React
 - [x] The `onScroll`, `onMouseEnter` and `onMouseLeave` props accept iframe-resizer's handler types (#1755)
 - [x] Changing the `id` prop no longer logs an error or leaks the old listener (#1756)
+- [x] An iframe inside `<Activity>` comes back with the options changed while it was hidden, and `onReady` fires again (#1870)
 
 ### Solid
 - [x] Server-side rendering, as in SolidStart, no longer crashes (#1798)

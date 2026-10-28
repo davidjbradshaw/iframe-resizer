@@ -23,6 +23,43 @@ describe('child/size/max-element', () => {
     }))
   })
 
+  describe('the width of a tagged element', () => {
+    // A block that fills the body, in a section with 4px of padding and a
+    // 1px border: its edge is 13px inside the page's own right edge
+    const setUp = () => {
+      const section = document.createElement('section')
+      const block = document.createElement('div')
+      section.append(block)
+      document.body.append(section)
+      block.getBoundingClientRect = () => ({ bottom: 0, right: 387 })
+
+      const styles = new Map<Element, Record<string, string>>([
+        [section, { 'padding-right': '4px', 'border-right-width': '1px' }],
+        [document.body, { 'margin-right': '8px' }],
+      ])
+      global.getComputedStyle = vi.fn((el: Element) => ({
+        getPropertyValue: (prop: string) => styles.get(el)?.[prop] ?? '0',
+      }))
+
+      state.hasTags = true
+      state.taggedElements = [block]
+      settings.calculateHeight = false
+    }
+
+    test('with horizontal-block, reaches the page edge, past the space around it', () => {
+      setUp()
+
+      expect(getMaxElement('right')).toBe(400)
+    })
+
+    test('with horizontal-inline, is its own edge, as the page fits its content', () => {
+      setUp()
+      settings.maxContentWidth = true
+
+      expect(getMaxElement('right')).toBe(387)
+    })
+  })
+
   test('returns max bottom among elements', () => {
     const a = document.createElement('div')
     const b = document.createElement('div')

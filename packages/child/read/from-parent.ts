@@ -16,6 +16,9 @@ const getText = castDefined(unescapeField)
 const getOffset = (data: string | undefined): number | undefined =>
   data === '' ? undefined : getNumber(data)
 
+// The parent's mark for this binding of the iframe (see core/setup/process-options.ts)
+export const BIND_ID_FIELD = 25
+
 export default (data: string[]): Record<string, any> => ({
   parentId: getText(data[0]),
   bodyMargin: getNumber(data[1]),
@@ -41,4 +44,5 @@ export default (data: string[]): Record<string, any> => ({
   // sizeSelector: data[22] // Now only available via page settings
   logExpand: getBoolean(data[23]),
   maxContentWidth: getBoolean(data[24]),
+  bindId: data[BIND_ID_FIELD],
 })

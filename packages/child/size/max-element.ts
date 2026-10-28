@@ -50,6 +50,18 @@ const contentRight = (): number => {
   )
 }
 
+// The space an element's ancestors leave to its right, up to and including
+// <html>. A block's used margin takes up any room its own width leaves.
+const trailingSpace = (element: Element): number => {
+  let space = 0
+  for (let el = element.parentElement; el; el = el.parentElement)
+    space +=
+      px(el, 'padding-right') +
+      px(el, 'border-right-width') +
+      px(el, 'margin-right')
+  return space
+}
+
 export function findMaxElement(
   targetElements: Element[] | NodeListOf<Element>,
   side: string,
@@ -70,10 +82,18 @@ export function findMaxElement(
       maxVal = contentRight()
   }
 
+  // With horizontal-block the page is as wide as the iframe, so a tagged
+  // block ends where the page does, not at its own edge, which sits inside
+  // the body margin. Measured from its edge, a block that fills the page
+  // narrowed the iframe by that margin at every content change.
+  const toPageEdge =
+    side === WIDTH_EDGE && state.hasTags && !settings.maxContentWidth
+
   for (const element of targetElements) {
     elVal =
       element.getBoundingClientRect()[side] +
-      parseFloat(getComputedStyle(element).getPropertyValue(marginSide))
+      parseFloat(getComputedStyle(element).getPropertyValue(marginSide)) +
+      (toPageEdge ? trailingSpace(element) : 0)
 
     if (elVal > maxVal) {
       maxVal = elVal

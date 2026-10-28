@@ -44,7 +44,9 @@ function keepPageValues(
   }
 }
 
-export default function updateFromParent(event: MessageEvent): void {
+// Applies the options in an update, or in the init of a new binding, which
+// replies with the size itself, so nothing is sent from here
+export function applyFromParent(data: string[], newBinding = false): void {
   const previous = {
     autoResize: settings.autoResize,
     bodyBackground: settings.bodyBackground,
@@ -56,12 +58,15 @@ export default function updateFromParent(event: MessageEvent): void {
     offsetWidth: settings.offsetWidth,
   }
 
-  const data = getData(event).split(SEPARATOR)
   const incoming = readDataFromParent(data)
   const lastSent = state.fromParent
   state.fromParent = { ...incoming }
 
   keepPageValues(incoming, lastSent)
+  // The child's mode comes from both licence keys when it started, and the
+  // parent's field from its own key alone, so the higher wins: a licence
+  // upgraded by update() still reaches the child
+  incoming.mode = Math.max(settings.mode, incoming.mode ?? settings.mode)
   map2settings(incoming)
 
   setConsoleOptions({
@@ -83,7 +88,7 @@ export default function updateFromParent(event: MessageEvent): void {
 
   // Re-enabling measures at once, as parentIframe.autoResize(true) does, so
   // content that changed while sizing was off is picked up
-  if (settings.autoResize && !previous.autoResize)
+  if (settings.autoResize && !previous.autoResize && !newBinding)
     queueMicrotask(() => sendSize(ENABLE, 'Auto Resize enabled by parent'))
 
   // The direction may have changed
@@ -92,8 +97,9 @@ export default function updateFromParent(event: MessageEvent): void {
   // A changed offset must trigger a size calculation, exactly as
   // parentIframe.setOffsetSize() does, so the iframe grows or shrinks at once
   if (
-    settings.offsetHeight !== previous.offsetHeight ||
-    settings.offsetWidth !== previous.offsetWidth
+    !newBinding &&
+    (settings.offsetHeight !== previous.offsetHeight ||
+      settings.offsetWidth !== previous.offsetWidth)
   ) {
     sendSize(SET_OFFSET_SIZE, 'Offset size updated from parent')
   }
@@ -103,4 +109,8 @@ export default function updateFromParent(event: MessageEvent): void {
     'Settings updated from parent',
     (({ key, key2, ...rest }) => rest)(settings),
   )
+}
+
+export default function updateFromParent(event: MessageEvent): void {
+  applyFromParent(getData(event).split(SEPARATOR))
 }

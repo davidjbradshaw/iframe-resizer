@@ -1,34 +1,32 @@
 <script>
   import IframeResizer from '@iframe-resizer/svelte'
+  import { record, updates } from '../../../shared/app'
 
   let extra = {}
 
   // Option changes applied after init by the e2e tests, one button per step
-  const UPDATES = {
-    styles: {
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: '12px',
-      scrolling: true,
-      checkOrigin: [location.origin],
-    },
-    offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-    tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-    links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-    direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
-  }
+  const UPDATES = updates(location.origin)
 
   function update(step) {
     extra = { ...extra, ...UPDATES[step] }
   }
 
+  function onReady() {
+    record('onReady')
+  }
+
   function onResized(event) {
-    console.log('resized', event.detail)
+    record('onResized', { type: event.detail.type })
   }
 
   function onMessage(event) {
     const data = event.detail
+    record('onMessage', { message: data.message })
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
+  }
+
+  function onScroll() {
+    record('onScroll')
   }
 </script>
 
@@ -44,9 +42,10 @@
   log="collapsed"
   inPageLinks
   {...extra}
-  on:ready={onResized}
+  on:ready={onReady}
   on:message={onMessage}
   on:resized={onResized}
+  on:scroll={onScroll}
   src="child/frame.test.html"
   style="width: 100%; height: 100vh"
 />

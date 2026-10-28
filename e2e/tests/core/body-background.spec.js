@@ -1,4 +1,5 @@
 import { expect, test } from '../shared/test'
+import { childFrame, iframeHeight } from '../shared/utils'
 
 const PAGE = '/e2e/fixtures/body-background.html'
 
@@ -6,25 +7,21 @@ const PAGE = '/e2e/fixtures/body-background.html'
 const CONTENT = 300
 const GROWN = 500
 
-const iframeHeight = (page) =>
-  page.locator('#myIframe').evaluate((el) => el.offsetHeight)
-
-async function childFrame(page) {
-  await expect
-    .poll(() => page.frames().some((frame) => frame.url().includes('frame.legacy')))
-    .toBe(true)
-  return page.frames().find((frame) => frame.url().includes('frame.legacy'))
-}
+const IFRAME = '#myIframe'
 
 const bodyStyle = (frame, property) =>
   frame.evaluate((prop) => getComputedStyle(document.body)[prop], property)
 
 async function expectToFollowContent(page) {
-  await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(CONTENT)
+  await expect
+    .poll(() => iframeHeight(page, IFRAME))
+    .toBeGreaterThanOrEqual(CONTENT)
 
-  const child = await childFrame(page)
+  const child = await childFrame(page, 'frame.legacy')
   await child.evaluate(() => window.grow())
-  await expect.poll(() => iframeHeight(page)).toBeGreaterThanOrEqual(GROWN)
+  await expect
+    .poll(() => iframeHeight(page, IFRAME))
+    .toBeGreaterThanOrEqual(GROWN)
 }
 
 test.describe('bodyBackground with a colon in its value', () => {
@@ -34,7 +31,7 @@ test.describe('bodyBackground with a colon in its value', () => {
     await page.goto(PAGE)
     await page.waitForFunction(() => window.ready)
 
-    const child = await childFrame(page)
+    const child = await childFrame(page, 'frame.legacy')
     expect(await bodyStyle(child, 'backgroundImage')).toContain(
       'data:image/gif;base64,',
     )

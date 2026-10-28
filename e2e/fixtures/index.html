@@ -25,6 +25,7 @@
       type="text/javascript"
       src="../../js/iframe-resizer.parent.js"
     ></script>
+    <script src="../shared/record.js"></script>
   </head>
 
   <body>
@@ -65,8 +66,13 @@
         log: true,
         waitForLoad: true,
 
+        onReady() {
+          record('onReady')
+        },
+
         onResized(messageData) {
           // Callback fn when resize is received
+          record('onResized', { type: messageData.type })
           window.lastResized = messageData
           callbackDisplay.innerHTML = 
           `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Height:</b> ${messageData.height} <br><b>Width:</b> ${messageData.width} <br><b>Event type:</b> ${messageData.type}`
@@ -84,6 +90,7 @@
 
         onMessage(messageData) {
           // Callback fn when message is received
+          record('onMessage', { message: messageData.message })
           callbackDisplay.innerHTML = `<b>Frame ID:</b> ${messageData.iframe.id} <br><b>Message:</b> ${messageData.message}`
           alert(messageData.message)
           messageData.iframe.iframeResizer.sendMessage(
@@ -98,6 +105,7 @@
 
         onScroll(messageData) {
           // Callback fn when iframe is scrolled
+          record('onScroll')
           callbackDisplay.innerHTML = `<b>Iframe ID:</b> ${messageData.iframe.id} <br><b>Top:</b> ${messageData.top} <br><b>Left:</b> ${messageData.left}`
         },
       })

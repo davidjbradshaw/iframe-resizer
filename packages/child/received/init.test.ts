@@ -1,7 +1,10 @@
+import { MESSAGE_ID_LENGTH } from '@iframe-resizer/common/consts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock dependencies with factory style to satisfy Vitest v4
 vi.mock('../console', () => ({
+  advise: vi.fn(),
+  error: vi.fn(),
   log: vi.fn(),
   warn: vi.fn(),
 }))
@@ -9,13 +12,34 @@ vi.mock('../console', () => ({
 const mockInit = vi.fn()
 vi.mock('../init', () => ({ default: mockInit }))
 
-const mockResume = vi.fn()
+const mockResume = vi.fn(() => calls.push('resume'))
 vi.mock('../methods/parent-props', () => ({ resumeParentProps: mockResume }))
 
-const mockState = {
+const calls: string[] = []
+
+const mockInitReply = vi.fn(() => calls.push('initReply'))
+vi.mock('../send/init-reply', () => ({ default: mockInitReply }))
+
+const mockSendAutoResize = vi.fn()
+vi.mock('../methods/auto-resize', () => ({
+  sendAutoResizeState: mockSendAutoResize,
+}))
+
+const mockResendTitle = vi.fn()
+vi.mock('../observed/title', () => ({ resendTitle: mockResendTitle }))
+
+const mockApply = vi.fn()
+vi.mock('./update', () => ({ applyFromParent: mockApply }))
+
+const mockSettings: Record<string, any> = { mode: 0 }
+vi.mock('../values/settings', () => ({ default: mockSettings }))
+
+const mockState: Record<string, any> = {
   target: null,
   origin: null,
   firstRun: true,
+  started: false,
+  fromParent: {},
   initLock: true,
   testHarness: false,
 }
@@ -30,7 +54,16 @@ describe('child/received/init', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
     mockInit.mockReset()
-    mockResume.mockReset()
+    mockResume.mockClear()
+    mockInitReply.mockClear()
+    mockSendAutoResize.mockReset()
+    mockResendTitle.mockReset()
+    mockApply.mockReset()
+    calls.length = 0
+    delete mockSettings.bindId
+    mockSettings.autoResize = true
+    mockState.started = false
+    mockState.fromParent = {}
     mockState.target = null
     mockState.origin = null
     mockState.firstRun = true
@@ -164,5 +197,114 @@ describe('child/received/init', () => {
     mod.default({ data: 'prefix:a:b', source: {}, origin: 'ori' })
 
     expect(mockResume).not.toHaveBeenCalled()
+  })
+
+  describe('when the parent binds the iframe again', () => {
+    // An init message whose field 25 is the parent's binding number
+    const initWith = (bindId?: string) => {
+      const fields = Array.from({ length: 25 }, (_, i) => `f${i}`)
+      if (bindId !== undefined) fields.push(bindId)
+      return `${'X'.repeat(MESSAGE_ID_LENGTH)}${fields.join(':')}`
+    }
+
+    beforeEach(() => {
+      mockState.firstRun = false
+      mockState.started = true
+      mockState.target = parentWindow
+      mockSettings.bindId = '1'
+    })
+
+    it('applies the new options and replies as at init, before anything else', async () => {
+      const mod = await import('./init')
+      const data = initWith('2')
+
+      mod.default({ data, source: parentWindow, origin: 'ori' })
+
+      // As a new binding, so the options send no size of their own
+      expect(mockApply).toHaveBeenCalledWith(
+        data.slice(MESSAGE_ID_LENGTH).split(':'),
+        true,
+      )
+      expect(calls).toEqual(['initReply', 'resume'])
+      expect(mockResendTitle).toHaveBeenCalled()
+      expect(mockInit).not.toHaveBeenCalled()
+      expect(mockState.target).toBe(parentWindow)
+    })
+
+    it('still replies, and resumes, when applying the new options throws', async () => {
+      const mod = await import('./init')
+      mockApply.mockImplementation(() => {
+        throw new Error('apply failed')
+      })
+
+      mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
+
+      expect(calls).toEqual(['initReply', 'resume'])
+    })
+
+    it('tells the new binding that the page turned autoResize off', async () => {
+      const mod = await import('./init')
+      mockSettings.autoResize = false
+      mockState.fromParent = { autoResize: true }
+
+      mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
+
+      expect(mockSendAutoResize).toHaveBeenCalled()
+    })
+
+    it('says nothing of autoResize when the page left it as the parent set it', async () => {
+      const mod = await import('./init')
+      mockState.fromParent = { autoResize: true }
+
+      mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
+
+      expect(mockSendAutoResize).not.toHaveBeenCalled()
+    })
+
+    it('stays stopped when its first init failed the licence check', async () => {
+      const mod = await import('./init')
+      mockState.started = false
+
+      mod.default({ data: initWith('2'), source: parentWindow, origin: 'ori' })
+
+      expect(mockApply).not.toHaveBeenCalled()
+      expect(mockInitReply).not.toHaveBeenCalled()
+    })
+
+    it('applies the new options passed directly by a same-origin parent', async () => {
+      const mod = await import('./init')
+
+      mod.default({ data: initWith('2'), sameOrigin: true })
+
+      expect(mockApply).toHaveBeenCalled()
+      expect(mockInitReply).toHaveBeenCalled()
+    })
+
+    it('ignores a repeat of the init it was set up with', async () => {
+      const mod = await import('./init')
+
+      mod.default({ data: initWith('1'), source: parentWindow, origin: 'ori' })
+
+      expect(mockApply).not.toHaveBeenCalled()
+      expect(mockInitReply).not.toHaveBeenCalled()
+    })
+
+    it('ignores an init without a binding number, from an older parent', async () => {
+      const mod = await import('./init')
+
+      mod.default({ data: initWith(), source: parentWindow, origin: 'ori' })
+
+      expect(mockApply).not.toHaveBeenCalled()
+      expect(mockInitReply).not.toHaveBeenCalled()
+    })
+
+    it('ignores a new binding number from another window above the page', async () => {
+      const mod = await import('./init')
+
+      mod.default({ data: initWith('2'), source: topWindow, origin: 'ori' })
+
+      expect(mockApply).not.toHaveBeenCalled()
+      expect(mockState.target).toBe(parentWindow)
+    })
   })
 })

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import type { IFrameOptions } from '@iframe-resizer/core'
 import { IframeResizerDirective } from '@iframe-resizer/angular'
+import { record, updates as optionSteps } from '../../../shared/app'
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,9 @@ import { IframeResizerDirective } from '@iframe-resizer/angular'
       src="child/frame.test.html"
       style="width: 100%; height: 100vh"
       (onMessage)="onMessage($event)"
+      (onReady)="onReady()"
       (onResized)="onResized($event)"
+      (onScroll)="onScroll()"
     ></iframe>
   `,
 })
@@ -31,19 +34,7 @@ export class AppComponent {
   }
 
   // Option changes applied after init by the e2e tests, one button per step
-  updates: Record<string, Partial<IFrameOptions>> = {
-    styles: {
-      bodyBackground: 'rgb(0, 128, 0)',
-      bodyPadding: '6px',
-      bodyMargin: 12,
-      scrolling: true,
-      checkOrigin: [location.origin],
-    },
-    offset: { bodyBackground: 'rgb(0, 0, 128)', offsetSize: 100 },
-    tolerance: { bodyBackground: 'rgb(128, 0, 0)', tolerance: 1000 },
-    links: { bodyBackground: 'rgb(128, 128, 0)', inPageLinks: false },
-    direction: { bodyBackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
-  }
+  updates: Record<string, Partial<IFrameOptions>> = optionSteps(location.origin)
 
   steps = Object.keys(this.updates)
 
@@ -55,12 +46,21 @@ export class AppComponent {
   // Set by the bound onResized Output, so the e2e tests can see the template update
   resizedHeight = ''
 
+  onReady() {
+    record('onReady')
+  }
+
   onResized(data: any) {
-    console.log('resized', data)
+    record('onResized', { type: data.type })
     this.resizedHeight = `${data.height}px`
   }
 
   onMessage(data: any) {
+    record('onMessage', { message: data.message })
     alert(`Message from frame ${data.iframe.id}: ${data.message}`)
+  }
+
+  onScroll() {
+    record('onScroll')
   }
 }

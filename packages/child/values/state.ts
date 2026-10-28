@@ -1,6 +1,8 @@
 export default {
   applySelectors: null,
   firstRun: true,
+  // Set once the first init has set the page up, licence check included
+  started: false,
   hasTags: false,
   hasOverflow: false,
   height: 0,

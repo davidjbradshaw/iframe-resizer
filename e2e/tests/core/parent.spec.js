@@ -11,6 +11,7 @@ import {
   watchRemovalAdvice,
 } from '../shared/hide-restore'
 import { expect, test } from '../shared/test'
+import { growTagged, settledIframeHeight } from '../shared/utils'
 
 const BASE = '/e2e/fixtures/index.html'
 const EARLY_UPDATE = '/e2e/fixtures/early-update.html'
@@ -308,8 +309,60 @@ test.describe('Parent (vanilla)', () => {
 
   parentEventTests(BASE, { blocksClose: false })
   parentMethodTests(BASE)
-  childTests(BASE)
+  childTests(BASE, { blocksClose: false })
   earlyUpdateTests(EARLY_UPDATE)
+})
+
+// One iframeResize() call binding two iframes, each with the same child page
+test.describe('Parent: one call binding several iframes', () => {
+  const FIRST = 'iframe:nth-of-type(1)'
+  const SECOND = 'iframe:nth-of-type(2)'
+
+  test('gives each its own id, and sizes and messages each on its own', async ({
+    page,
+  }) => {
+    await page.goto('/e2e/fixtures/two.html')
+    const first = page.frameLocator(FIRST)
+    const second = page.frameLocator(SECOND)
+    await expect(first.locator('#ready-status')).toHaveText('ready')
+    await expect(second.locator('#ready-status')).toHaveText('ready')
+
+    const ids = await page
+      .locator('iframe')
+      .evaluateAll((iframes) => iframes.map((iframe) => iframe.id))
+    expect(ids).toEqual([expect.any(String), expect.any(String)])
+    expect(ids.every(Boolean)).toBe(true)
+    expect(new Set(ids).size).toBe(2)
+
+    // Each child's size reaches its own iframe
+    const [firstBefore, secondBefore] = await Promise.all([
+      settledIframeHeight(page, FIRST),
+      settledIframeHeight(page, SECOND),
+    ])
+    await growTagged(first, 50)
+    await growTagged(second, 150)
+    await Promise.all([
+      expect
+        .poll(() => settledIframeHeight(page, FIRST))
+        .toBe(firstBefore + 50),
+      expect
+        .poll(() => settledIframeHeight(page, SECOND))
+        .toBe(secondBefore + 150),
+    ])
+
+    // Each message reaches its own child, and only that one: each resizer
+    // must hold its own iframe, not the last one bound
+    const send = (sel, text) =>
+      page.evaluate(
+        ([selector, message]) =>
+          document.querySelector(selector).iframeResizer.sendMessage(message),
+        [sel, text],
+      )
+    await send(FIRST, 'first')
+    await send(SECOND, 'second')
+    await expect(first.locator('#last-message')).toHaveText('first')
+    await expect(second.locator('#last-message')).toHaveText('second')
+  })
 })
 
 test.describe('Parent: changing the id of a bound iframe', () => {

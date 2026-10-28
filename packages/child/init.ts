@@ -1,5 +1,5 @@
 import { id, once } from '@iframe-resizer/common'
-import { INIT, VERSION } from '@iframe-resizer/common/consts'
+import { VERSION } from '@iframe-resizer/common/consts'
 
 import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
@@ -29,7 +29,7 @@ import setContentWidth from './page/content-width'
 import setupInPageLinks from './page/links'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
-import sendSize from './send/size'
+import sendInitReply from './send/init-reply'
 import isolate from './utils/isolate'
 import map2settings from './utils/map-settings'
 import settings from './values/settings'
@@ -83,14 +83,7 @@ function startIframeResizerChild({
     setupOnPageHide,
     () => setupPublicMethods(),
 
-    () =>
-      sendSize(
-        INIT,
-        'Init message from host page',
-        undefined,
-        undefined,
-        `${VERSION}:${settings.mode}`,
-      ),
+    sendInitReply,
 
     attachObservers,
     endAutoGroup,
@@ -120,4 +113,7 @@ export default function (data: string[]): void {
   state.applySelectors = createApplySelectors(settings)
 
   startIframeResizerChild(settings)
+
+  // Past the licence check, which throws, so a later binding can take over
+  state.started = true
 }

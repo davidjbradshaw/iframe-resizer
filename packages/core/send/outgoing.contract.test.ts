@@ -29,6 +29,7 @@ vi.mock('../values/settings', () => ({
       tolerance: 7,
       widthCalculationMethod: 'scroll',
       maxContentWidth: true,
+      bindId: 'k3x9',
     },
     // An id of the shape React's useId() produces
     ':r1:': {
@@ -81,16 +82,17 @@ describe('init message contract between core and child', () => {
       mode: 3, // field 21
       logExpand: false, // field 23
       maxContentWidth: true, // field 24
+      bindId: 'k3x9', // field 25
     })
   })
 
   // A v1-v5 child reads up to field 20 and ignores the rest, so a new field
   // may only be appended. Inserting one shifts every field after it and
   // breaks those children, which this length check catches.
-  test('the message is 25 fields, with the legacy ones first', () => {
+  test('the message is 26 fields, with the legacy ones first', () => {
     const fields = fieldsFor('contract')
 
-    expect(fields).toHaveLength(25)
+    expect(fields).toHaveLength(26)
     expect(fields.slice(0, 21)).toEqual([
       'contract', // 0  id
       '8', // 1  v1 bodyPadding

@@ -22,9 +22,15 @@ async function childSession(page, frame) {
   }
 }
 
-async function collectGarbage(cdp) {
-  await cdp.send('HeapProfiler.enable')
-  for (let i = 0; i < 3; i++) await cdp.send('HeapProfiler.collectGarbage')
+async function collectGarbage(page, frame) {
+  const cdp = await childSession(page, frame)
+  try {
+    await cdp.send('HeapProfiler.enable')
+    for (let i = 0; i < 3; i++) await cdp.send('HeapProfiler.collectGarbage')
+  } finally {
+    // Not in place of an error from above, if the frame has gone
+    await cdp.detach().catch(() => {})
+  }
 }
 
 // A live feed replacing list items in the child
@@ -56,18 +62,19 @@ test.describe('Mutation records while rAF is paused', () => {
     // Let the child's rAF-scheduled processMutations run and drain the backlog
     const before = await rafTicks(frame)
     await frame.waitForFunction((n) => window.rafTicks > n + 2, before, POLL)
-    const after = await rafTicks(frame)
 
-    await collectGarbage(await childSession(page, frame))
+    await collectGarbage(page, frame)
     const alive = await frame.evaluate(() => window.aliveCount())
-    console.log(JSON.stringify({ control: true, rafBefore: before, rafAfter: after, alive }))
-    expect(alive, 'removed subtrees still reachable after GC (iframe in view)').toBe(0)
+    expect(
+      alive,
+      'removed subtrees still reachable after GC (iframe in view)',
+    ).toBe(0)
   })
 
   // Scroll the iframe out of the viewport (Chromium stops animation frames
   // in offscreen cross-origin iframes), run the feed, GC, and count what
   // is still reachable
-  async function offscreenFeed(page, frame, label) {
+  async function offscreenFeed(page, frame) {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
     await page.waitForTimeout(300)
     const ticksAtScroll = await rafTicks(frame)
@@ -79,41 +86,46 @@ test.describe('Mutation records while rAF is paused', () => {
     // The live feed keeps replacing list items while the iframe is offscreen
     await feedUpdates(frame)
     await page.waitForTimeout(500)
-    const ticksAfterFeed = await rafTicks(frame)
 
-    await collectGarbage(await childSession(page, frame))
-    const alive = await frame.evaluate(() => window.aliveCount())
-    console.log(
-      JSON.stringify({ label, ticksAtScroll, ticksAfterFeed, updates: UPDATES, alive }),
-    )
-    return alive
+    await collectGarbage(page, frame)
+    return frame.evaluate(() => window.aliveCount())
   }
 
   test('control: without the child script the browser keeps nothing', async ({
     page,
   }) => {
     const frame = await setup(page, true)
-    const alive = await offscreenFeed(page, frame, 'bare child, offscreen')
-    expect(alive, 'removed subtrees still reachable after GC (no child script)').toBe(0)
+    const alive = await offscreenFeed(page, frame)
+    expect(
+      alive,
+      'removed subtrees still reachable after GC (no child script)',
+    ).toBe(0)
   })
 
   test('removed subtrees are collectable while the iframe is offscreen', async ({
     page,
   }) => {
     const frame = await setup(page)
-    const alive = await offscreenFeed(page, frame, 'resizer child, offscreen')
+    const alive = await offscreenFeed(page, frame)
 
-    // For the record: once the iframe is back in view and a frame has run,
-    // the backlog is processed and everything becomes collectable
+    // Back in view a frame runs, which should free the backlog. Soft, so a
+    // failure below says whether that clean-up was only deferred or a leak.
     await page.evaluate(() => window.scrollTo(0, 0))
-    const before = await rafTicks(frame)
-    await frame.waitForFunction((n) => window.rafTicks > n + 2, before, POLL)
-    await collectGarbage(await childSession(page, frame))
-    const aliveAfterFrame = await frame.evaluate(() => window.aliveCount())
-    console.log(JSON.stringify({ label: 'resizer child, back in view', aliveAfterFrame }))
+    const ticks = await rafTicks(frame)
+    await frame.waitForFunction((n) => window.rafTicks > n + 2, ticks, POLL)
+    await collectGarbage(page, frame)
+    expect
+      .soft(
+        await frame.evaluate(() => window.aliveCount()),
+        'removed subtrees still reachable once back in view',
+      )
+      .toBe(0)
 
     // Correct behaviour: the library does not keep every removed subtree
     // alive for as long as the iframe stays offscreen
-    expect(alive, 'removed subtrees still reachable after GC (iframe offscreen)').toBe(0)
+    expect(
+      alive,
+      'removed subtrees still reachable after GC (iframe offscreen)',
+    ).toBe(0)
   })
 })

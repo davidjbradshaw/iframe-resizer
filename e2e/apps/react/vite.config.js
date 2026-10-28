@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         'early-update': 'early-update.html',
+        activity: 'activity.html',
       },
     },
   },
