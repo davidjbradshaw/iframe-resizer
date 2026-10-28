@@ -197,6 +197,8 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
       isFirstUpdate = false
       return
     }
+    // Set as the component renders, before any effect runs
+    /* v8 ignore next */
     if (!iframeEl) return
 
     connectResizer(untrack(buildOptions))(iframeEl)
@@ -206,8 +208,11 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   // markup there; the client keeps it out of the spread and applies it below
   const serverAttrs = mergeProps(iframeProps, styleProp)
   const attrs = isServer ? serverAttrs : iframeProps
+  // The compiled ref has a branch for a function ref, which iframeEl never is
+  /* v8 ignore start */
   // eslint-disable-next-line jsx-a11y/iframe-has-title
   const iframe = <iframe {...attrs} ref={iframeEl} />
+  /* v8 ignore stop */
 
   if (!isServer) {
     let prevStyle: StyleProp
@@ -217,4 +222,7 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   }
 
   return iframe
+  // solid-refresh adds hot reload code here, whose else never runs in tests
+  /* v8 ignore start */
 }
+/* v8 ignore stop */

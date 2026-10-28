@@ -248,6 +248,8 @@ export class IframeResizerElement extends HTMLBase {
 
         // A wholesale style write would wipe the size core set on the iframe
         if (name === 'style') {
+          // Gone only once the observer is disconnected, which drops records
+          /* v8 ignore next */
           if (this.iframe) setStyleKeepingSize(this.iframe, value)
           continue
         }

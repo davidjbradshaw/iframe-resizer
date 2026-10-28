@@ -145,6 +145,8 @@
     propsKey,
     () => {
       const iframe = iframeRef.value
+      // The iframe is always rendered, and the watcher stops on unmount
+      /* v8 ignore next */
       if (!iframe) return
       connectResizer(buildOptions())(iframe)
     },
