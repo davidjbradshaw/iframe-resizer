@@ -1,3 +1,7 @@
+// None in server-side rendering, where index.ts sets nothing up; a bare
+// window would throw there as this module loads
+const win = typeof window === 'undefined' ? undefined : window
+
 export default {
   applySelectors: null,
   firstRun: true,
@@ -19,7 +23,7 @@ export default {
   overflowedNodeSet: new Set(),
   sameOrigin: false,
   taggedElements: [] as unknown as NodeListOf<Element>,
-  target: window?.parent as MessageEventSource | null,
+  target: win?.parent as MessageEventSource | null,
   // Set by the test hook in index.ts, whose specs stand in for the parent
   // window with a plain object
   testHarness: false,
@@ -30,7 +34,7 @@ export default {
   // which inside an iframe means the viewport changed, not the content
   viewportResized: false,
   width: 0,
-  win: window,
+  win: win as Window,
   // Kept for backwards compatibility
   onPageInfo: null,
   // Subscribers from getParentProps(), and the last update sent to them
