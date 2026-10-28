@@ -1,7 +1,8 @@
-// Checks the example pages against the library they demonstrate. The examples
+// Checks the demo pages against the library they demonstrate. The examples
 // load js-dist, so they are never exercised by the test suite; this reads them
 // statically instead, which is enough to catch a call or an attribute that no
-// longer exists.
+// longer exists. The e2e child fixtures are the same pages against the current
+// build, and had the same faults, so they are read too.
 
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -9,6 +10,7 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const EXAMPLE_DIR = join(ROOT, 'example')
+const FIXTURE_DIR = join(ROOT, 'e2e/fixtures/child')
 const METHODS_FILE = join(ROOT, 'packages/child/methods/index.ts')
 const CONSTS_FILE = join(ROOT, 'packages/common/consts.ts')
 const LEGACY_DIR = join(ROOT, 'e2e/fixtures/legacy')
@@ -18,12 +20,16 @@ const SKIP_DIR = /(^|\/)(node_modules|dist|\.astro)(\/|$)/
 
 const METHOD_CALL = /\bparentI[Ff]rame\.(\w+)\s*\(/g
 const SIZE_ATTRIBUTE = /\b(data-iframe-[\w-]+)\b/g
-const IN_PAGE_LINK = /<a\b[^>]*href="#"[^>]*>/g
+const IN_PAGE_LINK = /<a\b[^>]*href=["']#["'][^>]*>/g
 // Shorthand in the child's API object, name: value in the legacy bundles
 const MEMBER_NAME = /^\s*(\w+)\s*[,:]/
-const ONCLICK = /onclick="([^"]*)"/
-const LINK_ID = /\bid="([^"]+)"/
-const LINK_CLASS = /\bclass="([^"]+)"/
+// Quoted with either mark, which a backreference closes; the value is the
+// second group, as the first holds the quote itself
+const ONCLICK = /onclick=(["'])(.*?)\1/s
+const LINK_ID = /\bid=(["'])(.*?)\1/s
+const LINK_CLASS = /\bclass=(["'])(.*?)\1/s
+const COMPAT_PAGE = /frame\.([1-5])\.html$/
+const LEGACY_FIXTURE = /frame\.legacy\.html$/
 const RETURNS = /\breturn\b|preventDefault/
 // Returning an assignment returns the value assigned, which is truthy
 const RETURNS_ASSIGNMENT = /\breturn\s[^;]*[^!<=>]=[^=]/
@@ -148,13 +154,20 @@ function legacyApi(version) {
   return legacyCache.get(version)
 }
 
-function isCompatPage(path) {
-  return /frame\.[1-5]\.html$/.test(path)
+// A compat page is pinned to one release, so it gets that release's API.
+// Every other page loads the current child, give or take a ?child= override
+// that only a test passes, so today's API is the one to hold it to.
+function apiFor(path, current) {
+  const pinned = path.match(COMPAT_PAGE)
+  return pinned ? legacyApi(`v${pinned[1]}`) : current
 }
 
-function apiFor(path, current) {
-  const legacy = path.match(/frame\.([1-5])\.html$/)
-  return legacy ? legacyApi(`v${legacy[1]}`) : current
+// Two pages are meant to use the old names: a frame.<1-5> page calls the
+// old parentIFrame, and frame.legacy.html sets window.iFrameResizer, which
+// v3 and v4 need. Every other page, example or fixture, shows the current
+// ones, and naming them keeps the exemption to the two that earn it.
+function showsCurrentApi(path) {
+  return !COMPAT_PAGE.test(path) && !LEGACY_FIXTURE.test(path)
 }
 
 function checkMethods(source, api) {
@@ -182,7 +195,7 @@ function checkAttributes(source, attributes) {
 function checkDeprecated(source) {
   return DEPRECATED.filter(({ pattern }) => pattern.test(source)).map(
     ({ old, current }) =>
-      `uses the deprecated ${old}; the examples should show ${current}`,
+      `uses the deprecated ${old}; it should show ${current}`,
   )
 }
 
@@ -193,8 +206,8 @@ function checkDeprecated(source) {
 function hasBoundHandler(source, link) {
   if (!source.includes('preventDefault')) return false
 
-  const id = link.match(LINK_ID)?.[1]
-  const classes = link.match(LINK_CLASS)?.[1].split(/\s+/) ?? []
+  const id = link.match(LINK_ID)?.[2]
+  const classes = link.match(LINK_CLASS)?.[2].split(/\s+/) ?? []
 
   const selectors = [
     ...(id ? [`getElementById('${id}')`, `#${id}'`] : []),
@@ -209,7 +222,7 @@ function checkInPageLinks(source) {
   const problems = []
 
   for (const [link] of source.matchAll(IN_PAGE_LINK)) {
-    const onclick = link.match(ONCLICK)?.[1]
+    const onclick = link.match(ONCLICK)?.[2]
 
     if (!onclick) {
       if (!hasBoundHandler(source, link)) {
@@ -231,14 +244,12 @@ function checkInPageLinks(source) {
 
 function checkFile(path, current, attributes) {
   const source = read(path)
-  const api = apiFor(path, current)
 
   const problems = [
-    ...checkMethods(source, api),
+    ...checkMethods(source, apiFor(path, current)),
     ...checkAttributes(source, attributes),
     ...checkInPageLinks(source),
-    // A compat page is meant to show the old names
-    ...(isCompatPage(path) ? [] : checkDeprecated(source)),
+    ...(showsCurrentApi(path) ? checkDeprecated(source) : []),
   ]
 
   return problems.map((problem) => `${relative(ROOT, path)} ${problem}`)
@@ -246,14 +257,14 @@ function checkFile(path, current, attributes) {
 
 const current = childMethods()
 const attributes = sizeAttributes()
-const files = htmlFiles(EXAMPLE_DIR)
+const files = [EXAMPLE_DIR, FIXTURE_DIR].flatMap((dir) => htmlFiles(dir))
 const problems = files.flatMap((file) => checkFile(file, current, attributes))
 
 if (problems.length > 0) {
-  console.error(`\nExample pages: ${problems.length} problem(s)\n`)
+  console.error(`\nDemo pages: ${problems.length} problem(s)\n`)
   for (const problem of problems) console.error(`  ${problem}`)
   console.error('')
   process.exitCode = 1
 } else {
-  console.log(`Example pages: ${files.length} checked, no problems found`)
+  console.log(`Demo pages: ${files.length} checked, no problems found`)
 }

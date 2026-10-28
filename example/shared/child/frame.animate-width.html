@@ -87,20 +87,19 @@
   <body>
     <b>Animated Width iFrame</b>
 
-    <!-- 
-      The data-iframe-resize attribute tells iframe-resizer to use this element
-      to calculate the height of the iframe, when the content overflows the
-      <body> element.     
-    -->
-
     <div id="bar"></div>
 
+    <!--
+      Auto mode sizes the iframe to the content that overflows the <body>
+      element, which is what this page relies on. To size it from the element
+      below alone instead, put data-iframe-resize on it.
+    -->
     <div id="abs">
       <p>This element will animate to a width of 800px using CSS keyframes.</p>
     </div>
 
     <!-- script>
-      // Add some content to to show the effect of using data-iframe-resize above
+      // Add some content, so the body overflows and the sizing above shows
       for (var i = 0; i < 10000; i++) {
         document.write(
           '<div style="position: absolute">This is a test to see if the page will grow to accommodate the content.</div>'
