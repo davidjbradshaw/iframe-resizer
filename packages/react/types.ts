@@ -17,7 +17,18 @@ type IframeProps = React.DetailedHTMLProps<
   HTMLIFrameElement
 >
 
+// The component keeps these off the iframe and calls them with
+// iframe-resizer data, so React's DOM event versions are left out
+type ResizerCallbacks = 'onScroll' | 'onMouseEnter' | 'onMouseLeave'
+
 // onBeforeClose is overridden and onAfterClose never fires: close is
-// ignored in React, remove the component instead
-export type IFrameResizerProps = Omit<IframeProps, 'scrolling'> &
-  Omit<IFrameOptions, 'id' | 'onBeforeClose' | 'onAfterClose'>
+// ignored in React, remove the component instead. disconnectOnRemove is the
+// component's own, as it disconnects when it unmounts
+export type IFrameResizerProps = Omit<
+  IframeProps,
+  'scrolling' | ResizerCallbacks
+> &
+  Omit<
+    IFrameOptions,
+    'id' | 'onBeforeClose' | 'onAfterClose' | 'disconnectOnRemove'
+  >

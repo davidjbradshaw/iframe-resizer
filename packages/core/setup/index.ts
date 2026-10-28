@@ -4,7 +4,6 @@ import { preModeCheck } from '../checks/mode'
 import checkUniqueId from '../checks/unique'
 import { endAutoGroup, event as consoleEvent, log } from '../console'
 import attachMethods from '../methods/attach'
-import createOutgoingMessage from '../send/outgoing'
 import setupBodyMargin from './body-margin'
 import init from './init'
 import processOptions from './process-options'
@@ -20,7 +19,7 @@ function setup(
   preModeCheck(id)
   setScrolling(iframe)
   setupBodyMargin(id)
-  init(id, createOutgoingMessage(id))
+  init(id)
   attachMethods(id)
   log(id, 'Setup complete')
 }

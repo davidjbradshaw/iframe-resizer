@@ -21,6 +21,16 @@ export function showVersion(
   }
 }
 
+// The modes the parent's key and the page's own key give
+const keyModes = (key?: string, key2?: string): [number, number] => [
+  isDef(key) ? setMode({ key }) : -1,
+  isDef(key2) ? setMode({ key: key2 }) : -1,
+]
+
+// The mode the child runs in: the higher of the two
+export const modeFromKeys = (key?: string, key2?: string): number =>
+  Math.max(...keyModes(key, key2))
+
 export default function ({
   key,
   key2,
@@ -33,8 +43,7 @@ export default function ({
   version?: string
 }): void {
   const oMode = mode
-  const pMode = isDef(key) ? setMode({ key }) : -1
-  const cMode = isDef(key2) ? setMode({ key: key2 }) : -1
+  const [pMode, cMode] = keyModes(key, key2)
   let modeData
 
   mode = Math.max(pMode, cMode)

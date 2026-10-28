@@ -1,7 +1,14 @@
 #!/usr/bin/env node
-// Point the public examples at the version of iframe-resizer just published
+// Point the public examples at the version of iframe-resizer just published,
+// and install each one afresh
 import { execSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { dirname, join } from 'node:path'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
@@ -33,13 +40,20 @@ function setVersions(file) {
   return changed
 }
 
-async function updateLockfile(dir) {
+// Without the old lockfile: Angular's packages require each other's exact
+// versions, which npm cannot move together from a lockfile
+async function install(dir) {
   for (let attempt = 1; attempt <= ATTEMPTS; attempt += 1) {
+    // Cleared on every attempt: a retry over the tree and lockfile a failed
+    // install left behind tends to keep failing
+    rmSync(join(dir, 'package-lock.json'), { force: true })
+    rmSync(join(dir, 'node_modules'), { recursive: true, force: true })
+
     try {
-      execSync(
-        'npm install --package-lock-only --ignore-scripts --no-audit --no-fund',
-        { cwd: dir, stdio: 'inherit' },
-      )
+      execSync('npm install --no-audit --no-fund', {
+        cwd: dir,
+        stdio: 'inherit',
+      })
       return
     } catch (error) {
       if (attempt === ATTEMPTS) throw error
@@ -56,7 +70,7 @@ for (const name of readdirSync(examples)) {
 
   console.log(`\nexample/${name}`)
   if (setVersions(file)) console.log(`  @iframe-resizer/* -> ${range}`)
-  await updateLockfile(dir)
+  await install(dir)
 }
 
 console.log(`\nExamples use iframe-resizer ${range}\n`)

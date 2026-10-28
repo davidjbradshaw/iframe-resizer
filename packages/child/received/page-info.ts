@@ -5,6 +5,7 @@ import { log } from '../console'
 import state from '../values/state'
 import { getData, notExpected, parse, parseFrozen } from './utils'
 
+// Kept for backwards compatibility, though nothing in v6 sets onPageInfo
 export default function pageInfo(event: MessageEvent): void {
   const { onPageInfo } = state
   const messageBody = getData(event)

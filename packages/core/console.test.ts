@@ -1,6 +1,13 @@
 import { vi } from 'vitest'
 
-import { advise, log, setupConsole, vInfo, warn } from './console'
+import {
+  advise,
+  log,
+  setupConsole,
+  updateConsoleExpand,
+  vInfo,
+  warn,
+} from './console'
 import settings from './values/settings'
 
 // Mock auto-console-group to control console group instances
@@ -35,6 +42,19 @@ describe('core/console', () => {
     // Clear shared settings state between tests
     Object.keys(settings).forEach((k) => delete settings[k])
     vi.clearAllMocks()
+  })
+
+  test('updateConsoleExpand passes the iframe logExpand to its console', () => {
+    const expand = vi.fn()
+    settings.iframe1 = { console: { expand }, logExpand: true }
+
+    updateConsoleExpand('iframe1')
+
+    expect(expand).toHaveBeenCalledWith(true)
+  })
+
+  test('updateConsoleExpand does nothing for an iframe with no settings', () => {
+    expect(() => updateConsoleExpand('missing')).not.toThrow()
   })
 
   test('log uses instance console when enabled', () => {
@@ -107,14 +127,9 @@ describe('core/console', () => {
 
   test('getMyId returns nested parent label when window.top !== window.self', () => {
     const iframeId = 'nested-f1'
-    const originalTop = window.top
     const originalSelf = window.self
 
-    // Mock nested iframe scenario
-    Object.defineProperty(window, 'top', {
-      configurable: true,
-      value: { name: 'top window' },
-    })
+    // Mock nested iframe scenario; window.top can't be redefined
     Object.defineProperty(window, 'self', {
       configurable: true,
       value: { name: 'self window' },
@@ -127,11 +142,7 @@ describe('core/console', () => {
     // The console group label should include "nested parent"
     expect(settings[iframeId].console.log).toHaveBeenCalledWith('test message')
 
-    // Restore original values
-    Object.defineProperty(window, 'top', {
-      configurable: true,
-      value: originalTop,
-    })
+    // Restore original value
     Object.defineProperty(window, 'self', {
       configurable: true,
       value: originalSelf,

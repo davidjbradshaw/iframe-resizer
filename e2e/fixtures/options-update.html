@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer options update test</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+    <script type="text/javascript" src="sent-messages.js"></script>
+  </head>
+
+  <body>
+    <h2>Options update</h2>
+    <p>
+      The child is 400px tall. Updating an option should keep an offset or
+      autoResize setting the child changed itself.
+    </p>
+
+    <div style="margin: 20px">
+      <iframe
+        src="child/frame.options-update.html"
+        style="width: 400px; height: 150px"
+      ></iframe>
+    </div>
+
+    <script type="text/javascript">
+      iframeResize({ license: 'GPLv3' })
+      recordSentMessages()
+    </script>
+  </body>
+</html>

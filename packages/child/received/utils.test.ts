@@ -29,10 +29,14 @@ it('getData extracts payload after separator', async () => {
 
 it('getMessageType returns INIT for init messages, else extracted type', async () => {
   const { getMessageType } = await import('./utils')
-  expect(getMessageType({ data: '[iFrameSizer]resize:payload:true' })).toBe(
-    'init',
-  )
+  expect(
+    getMessageType({ data: '[iFrameSizer]myId:8:false:true:32:true:true' }),
+  ).toBe('init')
 
-  const { getMessageType: getMsgType2 } = await import('./utils')
-  expect(getMsgType2({ data: '[iFrameSizer]resize:payload' })).toBe('resize')
+  expect(getMessageType({ data: '[iFrameSizer]resize:payload' })).toBe('resize')
+
+  // A user message whose JSON happens to hold ':true:' is still a message
+  expect(getMessageType({ data: '[iFrameSizer]message:["mode:true:1"]' })).toBe(
+    'message',
+  )
 })

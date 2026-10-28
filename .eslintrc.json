@@ -1,10 +1,14 @@
 {
   "extends": ["auto"],
   "ignorePatterns": [
-    "js/*",
-    "dist/*",
-    "*.d.ts",
-    "coverage/**"
+    "coverage/",
+    "dist/",
+    "js/",
+    "js-dist/",
+    "test/js/",
+    "example/",
+    "example-test/",
+    "*.d.ts"
   ],
   "env": {
     "amd": true,
@@ -62,7 +66,7 @@
     "react/prop-types": 0,
     "sonarjs/no-nested-template-literals": 0,
     "switch-case/no-case-curly": 0,
-    "valid-typeof": 0,
+    "valid-typeof": [2, { "requireStringLiterals": false }],
     "unicorn/consistent-function-scoping": 0,
     "unicorn/no-array-callback-reference": 0,
     "unicorn/no-array-reduce": 0,
@@ -91,7 +95,7 @@
       }
     },
     {
-      "files": ["build/**/*.js", "build-scripts/**/*.js", "vite.config/**/*.js"],
+      "files": ["build-scripts/**/*.js", "vite.config/**/*.js"],
       "parser": "@babel/eslint-parser",
       "parserOptions": {
         "requireConfigFile": false,
@@ -137,7 +141,10 @@
       "files": ["e2e/**/*.js"],
       "rules": {
         "import/extensions": 0,
-        "import/prefer-default-export": 0
+        "import/prefer-default-export": 0,
+        "jasmine/expect-single-argument": 0,
+        "no-await-in-loop": 0,
+        "pii/no-ip": 0
       }
     },
     {
@@ -152,17 +159,25 @@
         "spyOn": true,
         "spyOnProperty": true,
         "spyOnAllFunctions": true,
-        "spyOnIFramePostMessage": true,
-        "getTarget": true,
         "LOG": true,
-        "tearDown": true,
+        "consoleText": true,
+        "countJsonMsgs": true,
+        "delay": true,
+        "getTarget": true,
+        "iframeLoaded": true,
+        "initMsgFields": true,
+        "lastJsonMsg": true,
         "loadIFrame": true,
         "mockMsgFromIFrame": true,
-        "loadFixtures": true,
-        "spyPostMsg": true,
-        "msgObject": true,
-        "msgCalled": true,
-        "win": true
+        "mockChildReady": true,
+        "mockMsgFromOrigin": true,
+        "mockPostMsg": true,
+        "readFixture": true,
+        "removeFixtures": true,
+        "setDocumentHidden": true,
+        "uncaughtErrors": true,
+        "tearDown": true,
+        "waitFor": true
       },
       "rules": {
         "no-console": 0,

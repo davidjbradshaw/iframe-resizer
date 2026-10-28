@@ -4,39 +4,44 @@ define(['iframeResizerParent'], (iframeResize) => {
       loadIFrame('iframe600.html')
     })
 
-    it('requested from iFrame', (done) => {
-      let finished = false
-      const iframe1 = iframeResize({
+    it('requested from iFrame', async () => {
+      const iframe = iframeResize({
         license: 'GPLv3',
         log: true,
         id: 'getPageInfo',
         checkOrigin: false,
-        onReady: (iframe) => {
-          setTimeout(() => {
-            mockMsgFromIFrame(iframe, 'pageInfo')
-            mockMsgFromIFrame(iframe, 'pageInfoStop')
-          }, 10)
-        },
       })[0]
 
-      spyOn(iframe1.contentWindow, 'postMessage').and.callFake((msg) => {
-        if (0 !== msg.indexOf('pageInfo')) {
-          expect(
-            msg.indexOf(
-              '"offsetTop":0,"offsetLeft":0,"scrollTop":0,"scrollLeft":0',
-            ),
-          ).not.toEqual(0)
-        }
-        if (0 !== msg.indexOf('pageInfoStop')) {
-          if (finished) return
-          finished = true
-          tearDown(iframe1)
-          setTimeout(done, 1)
-        }
-      })
-      
-      // Mock init message
-      mockMsgFromIFrame(iframe1, 'init')
+      mockMsgFromIFrame(iframe, 'init')
+      await delay(50)
+
+      await iframeLoaded(iframe)
+      const postMessage = spyOn(iframe.contentWindow, 'postMessage')
+
+      mockMsgFromIFrame(iframe, 'pageInfo')
+      await delay(50)
+
+      const info = lastJsonMsg(postMessage, 'pageInfo')
+
+      const rect = iframe.getBoundingClientRect()
+      const body = document.body.getBoundingClientRect()
+
+      expect(info).withContext('no pageInfo was sent').toBeDefined()
+      expect(info.offsetTop).toBe(Math.trunc(rect.top - body.top))
+      expect(info.offsetLeft).toBe(Math.trunc(rect.left - body.left))
+      expect(info.scrollTop).toBe(window.scrollY)
+      expect(info.scrollLeft).toBe(window.scrollX)
+
+      mockMsgFromIFrame(iframe, 'pageInfoStop')
+      await delay(50)
+      postMessage.calls.reset()
+
+      window.dispatchEvent(new Event('resize'))
+      await delay(50)
+
+      expect(countJsonMsgs(postMessage, 'pageInfo')).toBe(0)
+
+      tearDown(iframe)
     })
   })
 
@@ -45,31 +50,47 @@ define(['iframeResizerParent'], (iframeResize) => {
       loadIFrame('twoIFrame600WithId.html')
     })
 
-    it('must send pageInfo to second frame', (done) => {
-      let readyCount = 0
+    // One monitor runs per iframe, so a page change has to reach both
+    it('must send pageInfo to second frame', async () => {
       const iframes = iframeResize({
         license: 'GPLv3',
         log: true,
-        id: '#frame1,#frame2',
         checkOrigin: false,
-        onReady: (iframe) => {
-          readyCount++
-          if (readyCount === 2) {
-            // Both frames are ready
-            expect(iframes.length).toBe(2)
-            tearDown(iframes[0])
-            tearDown(iframes[1])
-            setTimeout(done, 1)
-          }
-        },
       })
 
-      const iframe1 = iframes[0]
-      const iframe2 = iframes[1]
-      
-      // Mock init messages for both frames
+      expect(iframes.length).toBe(2)
+
+      const [iframe1, iframe2] = iframes
+
       mockMsgFromIFrame(iframe1, 'init')
       mockMsgFromIFrame(iframe2, 'init')
+      await delay(50)
+
+      mockMsgFromIFrame(iframe1, 'pageInfo')
+      mockMsgFromIFrame(iframe2, 'pageInfo')
+      await delay(50)
+
+      await iframeLoaded(iframe1)
+      const postMessage1 = spyOn(iframe1.contentWindow, 'postMessage')
+      await iframeLoaded(iframe2)
+      const postMessage2 = spyOn(iframe2.contentWindow, 'postMessage')
+
+      window.dispatchEvent(new Event('resize'))
+      await delay(50)
+
+      expect(countJsonMsgs(postMessage1, 'pageInfo')).toBeGreaterThan(0)
+      expect(countJsonMsgs(postMessage2, 'pageInfo')).toBeGreaterThan(0)
+
+      // The two frames sit one above the other, so the lower one is offset
+      expect(lastJsonMsg(postMessage2, 'pageInfo').offsetTop).toBeGreaterThan(
+        lastJsonMsg(postMessage1, 'pageInfo').offsetTop,
+      )
+
+      mockMsgFromIFrame(iframe1, 'pageInfoStop')
+      mockMsgFromIFrame(iframe2, 'pageInfoStop')
+
+      tearDown(iframe1)
+      tearDown(iframe2)
     })
   })
 })

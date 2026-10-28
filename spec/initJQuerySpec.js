@@ -11,13 +11,17 @@ define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
       tearDown(iframe)
     })
 
-    it('is callable', () => {
-      $(iframe).iframeResize({
+    it('is callable and chainable', () => {
+      const $iframe = $(iframe)
+      const result = $iframe.iframeResize({
         license: 'GPLv3',
         log: true,
         warningTimeout: 100,
         checkOrigin: false,
       })
+
+      expect(result).toBe($iframe)
+      expect(iframe.iframeResizer).toBeDefined()
     })
 
     it('should create iframeResizer object', (done) => {
@@ -31,6 +35,7 @@ define(['iframeResizerJquery', 'jquery'], (iframeResize, $) => {
         onReady: (iframe) => {
           if (finished) return
           finished = true
+
           expect(iframe.iframeResizer).toBeDefined()
           setTimeout(done, 1)
         },

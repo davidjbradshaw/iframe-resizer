@@ -11,10 +11,10 @@ name: ESLint
 
 on:
   push:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "dev-review" ]
   schedule:
     - cron: '43 18 * * 4'
 
@@ -45,6 +45,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # Static, so it needs no build; the examples load js-dist, which no
+      # test tier can cover without gating the branch on the last release
+      - name: Check example pages
+        run: npm run check:examples
 
       - name: Install ESLint
         run: npm install @microsoft/eslint-formatter-sarif@3

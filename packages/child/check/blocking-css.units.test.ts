@@ -370,6 +370,76 @@ describe('blocking-css exported functions', () => {
       cleanup()
     })
 
+    test('treats a stylesheet with null cssRules as having no rules', () => {
+      const linkNode = document.createElement('link')
+      const styleNode = document.createElement('style')
+
+      Object.defineProperty(document, 'styleSheets', {
+        value: [
+          { ownerNode: linkNode, href: 'https://a.com/x.css', cssRules: null },
+          {
+            ownerNode: styleNode,
+            href: null,
+            cssRules: [
+              {
+                selectorText: 'div',
+                style: { getPropertyValue: () => '20px' },
+              },
+            ],
+          },
+        ],
+        configurable: true,
+      })
+
+      const div = document.createElement('div')
+      const result = getStyleSheetCSSPropertyValue(div, 'min-height')
+
+      // Moves on to the next sheet without logging a cross-origin error
+      expect(consoleMod.log).not.toHaveBeenCalled()
+      expect(result).toEqual({
+        source: 'an inline <style> block',
+        value: '20px',
+      })
+
+      cleanup()
+    })
+
+    test('skips at-rules that have no selectorText property', () => {
+      const styleNode = document.createElement('style')
+      const matches = vi.fn(() => true)
+
+      Object.defineProperty(document, 'styleSheets', {
+        value: [
+          {
+            ownerNode: styleNode,
+            href: null,
+            cssRules: [
+              // e.g. an @media rule
+              { style: { getPropertyValue: () => '999px' } },
+              {
+                selectorText: 'div',
+                style: { getPropertyValue: () => '30px' },
+              },
+            ],
+          },
+        ],
+        configurable: true,
+      })
+
+      const div = document.createElement('div')
+      div.matches = matches
+      const result = getStyleSheetCSSPropertyValue(div, 'min-height')
+
+      expect(matches).toHaveBeenCalledTimes(1)
+      expect(matches).toHaveBeenCalledWith('div')
+      expect(result).toEqual({
+        source: 'an inline <style> block',
+        value: '30px',
+      })
+
+      cleanup()
+    })
+
     test('skips rules where the property value is empty', () => {
       const styleNode = document.createElement('style')
 

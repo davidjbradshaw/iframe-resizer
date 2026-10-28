@@ -23,8 +23,10 @@ describe('child/observers/mutation deeper', () => {
       cb()
       return 1
     }
+    delete callbacks.cb
+    // The first observer is the main one; the second watches for a new body
     globalThis.MutationObserver = function (cb) {
-      callbacks.cb = cb
+      callbacks.cb ??= cb
       this.observe = vi.fn()
       this.disconnect = vi.fn()
     }
@@ -123,6 +125,26 @@ describe('child/observers/mutation deeper', () => {
     obs.disconnect()
   })
 
+  test('names its event before it logs the records', () => {
+    const obs = createMutationObserver(vi.fn())
+    vi.clearAllMocks()
+
+    callbacks.cb([
+      { addedNodes: [document.createElement('div')], removedNodes: [] },
+    ])
+
+    expect(consoleMod.event).toHaveBeenCalledWith('mutationObserver')
+    expect(consoleMod.info).toHaveBeenCalledWith(
+      'Mutations:',
+      expect.any(Array),
+    )
+    expect(
+      vi.mocked(consoleMod.event).mock.invocationCallOrder[0],
+    ).toBeLessThan(vi.mocked(consoleMod.info).mock.invocationCallOrder[0])
+
+    obs.disconnect()
+  })
+
   test('falls back to documentElement when document.body is null', () => {
     const bodyDescriptor = Object.getOwnPropertyDescriptor(
       Document.prototype,
@@ -136,20 +158,90 @@ describe('child/observers/mutation deeper', () => {
     try {
       const observe = vi.fn()
       globalThis.MutationObserver = function (cb) {
-        callbacks.cb = cb
+        callbacks.cb ??= cb
         this.observe = observe
         this.disconnect = vi.fn()
       }
 
       const obs = createMutationObserver(vi.fn())
-      expect(observe).toHaveBeenCalledWith(
+      expect(observe).toHaveBeenNthCalledWith(
+        1,
         document.documentElement,
-        expect.any(Object),
+        expect.objectContaining({ subtree: true }),
       )
       obs.disconnect()
     } finally {
       Object.defineProperty(document, 'body', bodyDescriptor)
     }
+  })
+
+  test('moves to a replaced body and passes on the change of content', () => {
+    const instances: any[] = []
+    globalThis.MutationObserver = function (cb) {
+      instances.push(this)
+      this.cb = cb
+      this.observe = vi.fn()
+      this.disconnect = vi.fn()
+      this.takeRecords = vi.fn(() => [])
+    }
+    const oldChild = document.createElement('p')
+    document.body.append(oldChild)
+    let seen: { added: Node[]; removed: Node[] } | undefined
+    const obs = createMutationObserver(({ addedNodes, removedNodes }) => {
+      seen = { added: [...addedNodes], removed: [...removedNodes] }
+    })
+    const [main, bodyWatcher] = instances
+
+    expect(bodyWatcher.observe).toHaveBeenCalledWith(document.documentElement, {
+      childList: true,
+    })
+
+    // What Turbo Drive does on navigation, with a record still queued on the
+    // old body when the move happens
+    const newBody = document.createElement('body')
+    const newChild = document.createElement('div')
+    newBody.append(newChild)
+    const queuedChild = document.createElement('span')
+    main.takeRecords.mockReturnValueOnce([
+      { addedNodes: [queuedChild], removedNodes: [] },
+    ])
+    document.body.replaceWith(newBody)
+    bodyWatcher.cb([])
+
+    expect(main.takeRecords).toHaveBeenCalled()
+    expect(main.disconnect).toHaveBeenCalled()
+    expect(main.observe).toHaveBeenLastCalledWith(
+      newBody,
+      expect.objectContaining({ childList: true, subtree: true }),
+    )
+    expect(seen).toEqual({
+      added: [queuedChild, newChild],
+      removed: [oldChild],
+    })
+
+    obs.disconnect()
+
+    expect(bodyWatcher.disconnect).toHaveBeenCalled()
+  })
+
+  test('stays on the body when a change under <html> leaves it in place', () => {
+    const instances: any[] = []
+    globalThis.MutationObserver = function (cb) {
+      instances.push(this)
+      this.cb = cb
+      this.observe = vi.fn()
+      this.disconnect = vi.fn()
+      this.takeRecords = vi.fn(() => [])
+    }
+    const obs = createMutationObserver(() => {})
+    const [main, bodyWatcher] = instances
+
+    // A change to <html>'s children, such as to <head>, with the body as it was
+    bodyWatcher.cb([])
+
+    expect(main.takeRecords).not.toHaveBeenCalled()
+    expect(main.disconnect).not.toHaveBeenCalled()
+    obs.disconnect()
   })
 
   test('skips non-element removed nodes (shouldSkip branch)', () => {

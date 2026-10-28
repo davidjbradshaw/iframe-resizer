@@ -8,11 +8,16 @@ const mockResizer = {
 }
 
 let capturedOptions: Record<string, any> = {}
+// The ids core was handed, read from the element as core does
+const boundIds: (string | undefined)[] = []
 
 vi.mock('@iframe-resizer/core', () => ({
   default: vi.fn((options: Record<string, any>) => {
     capturedOptions = options
-    return vi.fn(() => mockResizer)
+    return vi.fn((iframe: any) => {
+      boundIds.push(iframe?.id)
+      return mockResizer
+    })
   }),
 }))
 
@@ -102,6 +107,22 @@ describe('Solid IframeResizer lifecycle', () => {
     expect(typeof capturedOptions.onMouseEnter).toBe('function')
   })
 
+  it('passes an id change to core, so it can report the error', () => {
+    const [id, setId] = createSignal('first')
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" id={id()} />,
+      container,
+    )
+    expect(connectResizer).toHaveBeenCalledTimes(1)
+
+    setId('renamed')
+
+    expect(connectResizer).toHaveBeenCalledTimes(2)
+    // The element core is handed carries the new id
+    expect(boundIds.at(-1)).toBe('renamed')
+  })
+
   it('keeps the size set by iframe-resizer when the props are re-applied', () => {
     const [extra, setExtra] = createSignal<Record<string, unknown>>({})
 
@@ -146,6 +167,122 @@ describe('Solid IframeResizer lifecycle', () => {
 
     expect(iframe.style.width).toBe('60%')
     expect(iframe.style.height).toBe('800px')
+  })
+
+  it('keeps the size set by iframe-resizer when a string style changes', () => {
+    const [border, setBorder] = createSignal(1)
+    const css = (): string => `border: ${border()}px solid red; width: 50%`
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={css()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setBorder(2)
+
+    expect(iframe.style.borderTopWidth).toBe('2px')
+    expect(iframe.style.width).toBe('50%')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('keeps the size set by iframe-resizer when the style switches type', () => {
+    const [style, setStyle] = createSignal<any>('width: 50%; color: red')
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={style()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setStyle({ width: '60%' })
+
+    expect(iframe.style.width).toBe('60%')
+    expect(iframe.style.color).toBe('')
+    expect(iframe.style.height).toBe('800px')
+
+    setStyle('width: 70% !important')
+
+    expect(iframe.style.width).toBe('70%')
+    expect(iframe.style.getPropertyPriority('width')).toBe('important')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('clears the style without throwing when it turns falsy', () => {
+    const [on, setOn] = createSignal(true)
+
+    dispose = render(
+      () => (
+        <IframeResizer
+          license="GPLv3"
+          style={(on() && 'border: 1px solid red') as any}
+        />
+      ),
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setOn(false)
+
+    expect(iframe.style.borderTopWidth).toBe('')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('clears style object keys that are dropped or set to null', () => {
+    const [style, setStyle] = createSignal<any>({
+      width: '50%',
+      color: 'red',
+      border: '1px solid red',
+    })
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={style()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    iframe.style.height = '800px'
+
+    setStyle({ width: '50%', border: null })
+
+    expect(iframe.style.color).toBe('')
+    expect(iframe.style.borderTopWidth).toBe('')
+    expect(iframe.style.width).toBe('50%')
+    expect(iframe.style.height).toBe('800px')
+  })
+
+  it('re-applies a style object mutated in place', () => {
+    const styles: any = { width: '50%' }
+    const [style, setStyle] = createSignal(styles, { equals: false })
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={style()} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+    expect(iframe.style.width).toBe('50%')
+
+    styles.width = '60%'
+    setStyle(styles)
+
+    expect(iframe.style.width).toBe('60%')
+  })
+
+  it('applies a string style whole, keeping var() in a shorthand', () => {
+    // Cast, as the style-prop lint rules would turn a string into an object,
+    // and the string form is the path under test
+    const css = 'border: var(--b); width: 50%'
+
+    dispose = render(
+      () => <IframeResizer license="GPLv3" style={css as any} />,
+      container,
+    )
+    const iframe = container.querySelector('iframe')!
+
+    expect(iframe.style.width).toBe('50%')
+    expect(iframe.getAttribute('style')).toContain('var(--b)')
   })
 
   it('renders an iframe element', () => {
@@ -238,6 +375,8 @@ describe('Solid IframeResizer lifecycle', () => {
     dispose = render(() => <IframeResizer license="GPLv3" />, container)
 
     const result = capturedOptions.onBeforeClose()
+    // The component disconnects itself, so core must not on removal
+    expect(capturedOptions.disconnectOnRemove).toBe(false)
     expect(result).toBe(false)
   })
 })

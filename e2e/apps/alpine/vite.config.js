@@ -5,6 +5,12 @@ export default defineConfig({
   build: {
     outDir: '../../fixtures/alpine',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        'early-update': 'early-update.html',
+      },
+    },
   },
   resolve: {
     preserveSymlinks: true,

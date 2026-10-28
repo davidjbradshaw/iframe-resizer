@@ -68,6 +68,8 @@ export default function IframeResizer(Alpine: Alpine): void {
         getOptions((evaluated) => {
           const bound = connectResizer({
             ...toOptions(evaluated),
+            // The directive disconnects when Alpine cleans up its element
+            disconnectOnRemove: false,
             onBeforeClose,
           })(el)
 
@@ -75,7 +77,17 @@ export default function IframeResizer(Alpine: Alpine): void {
         })
       })
 
+      // A changed id re-binds, so core can report that a bound iframe cannot
+      // change its id
+      const idObserver = new MutationObserver(() => {
+        getOptions((evaluated) => {
+          connectResizer({ ...toOptions(evaluated), onBeforeClose })(el)
+        })
+      })
+      idObserver.observe(el, { attributes: true, attributeFilter: ['id'] })
+
       cleanup(() => {
+        idObserver.disconnect()
         resizer?.disconnect()
         consoleGroup.endAutoGroup()
       })

@@ -5,7 +5,27 @@ import * as commonMode from '../../common/mode'
 import * as childConsole from '../console'
 import settings from '../values/settings'
 import state from '../values/state'
-import checkMode, { showVersion } from './mode'
+import checkMode, { modeFromKeys, showVersion } from './mode'
+
+describe('child/check/mode modeFromKeys', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+    vi.spyOn(commonMode, 'default').mockImplementation(({ key }) =>
+      key === 'high' ? 4 : 1,
+    )
+    vi.spyOn(utils, 'isDef').mockImplementation((v) => v !== undefined)
+  })
+
+  it('takes the higher of the two keys', () => {
+    expect(modeFromKeys('low', 'high')).toBe(4)
+    expect(modeFromKeys('high', 'low')).toBe(4)
+  })
+
+  it('counts a missing key as no licence', () => {
+    expect(modeFromKeys('low')).toBe(1)
+    expect(modeFromKeys()).toBe(-1)
+  })
+})
 
 describe('child/check/mode', () => {
   beforeEach(() => {
@@ -37,6 +57,22 @@ describe('child/check/mode', () => {
 
     expect(childConsole.purge).toHaveBeenCalled()
     expect(childConsole.advise).toHaveBeenCalled()
+  })
+
+  it('purges, advises and throws when both keys are invalid (mode -2)', () => {
+    commonMode.default.mockReturnValueOnce(-2).mockReturnValueOnce(-2)
+
+    expect(() =>
+      checkMode({ key: 'bad', key2: 'bad', mode: 0, version: undefined }),
+    ).toThrow('data0data2')
+
+    // getModeData(Math.min(-2, -2) + 2) is the invalid-key message
+    expect(childConsole.purge).toHaveBeenCalledTimes(1)
+    expect(childConsole.advise).toHaveBeenCalledWith('data0data2')
+    expect(childConsole.advise).toHaveBeenCalledWith('data9')
+    expect(childConsole.vInfo).not.toHaveBeenCalled()
+    expect(state.firstRun).toBe(false)
+    expect(settings.mode).toBe(0)
   })
 
   it('logs vInfo and sets session value when version is undefined', () => {

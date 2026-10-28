@@ -61,6 +61,26 @@ describe('child/observers/resize', () => {
     expect(disconnect).toHaveBeenCalled()
   })
 
+  test('moves to a replaced body', () => {
+    const api = setupResizeObserver(vi.fn())
+    const oldBody = document.body
+
+    // Nothing to do until the body changes
+    expect(api.observeBody()).toBe(false)
+    expect(unobserve).not.toHaveBeenCalled()
+
+    // What Turbo Drive does on navigation
+    const newBody = document.createElement('body')
+    oldBody.replaceWith(newBody)
+    expect(api.observeBody()).toBe(true)
+
+    // Identity, as empty bodies compare equal under toHaveBeenCalledWith
+    expect(unobserve.mock.calls[0][0]).toBe(oldBody)
+    expect(observed.at(-1)).toBe(newBody)
+
+    api.disconnect()
+  })
+
   test('skips already observed elements', () => {
     const cb = vi.fn()
     const api = setupResizeObserver(cb)

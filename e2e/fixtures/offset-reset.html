@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer offset reset test</title>
+    <script type="text/javascript" src="/js/iframe-resizer.parent.js"></script>
+    <script type="text/javascript" src="sent-messages.js"></script>
+  </head>
+
+  <body>
+    <h2>Offset and reset</h2>
+    <p>
+      The child is 400px tall with offsetSize 50, so every size message it
+      sends should carry a height of 450.
+    </p>
+
+    <div style="margin: 20px">
+      <iframe
+        src="child/frame.offset-reset.html"
+        style="width: 400px; height: 150px"
+      ></iframe>
+    </div>
+
+    <script type="text/javascript">
+      iframeResize({ license: 'GPLv3' })
+      recordSentMessages()
+    </script>
+  </body>
+</html>

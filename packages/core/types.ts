@@ -107,6 +107,12 @@ export interface IFrameOptions {
    * iframe. `'horizontal'` is deprecated, use `'horizontal-block'`.
    */
   direction?: IFrameDirection
+  /**
+   * Disconnect the iframe when it is removed from the page, with a warning to
+   * call disconnect() first. For the framework components, which set it to
+   * false and disconnect when they unmount.
+   */
+  disconnectOnRemove?: boolean
   /** Custom iframe id. */
   id?: string
   /**

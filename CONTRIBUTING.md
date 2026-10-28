@@ -75,18 +75,19 @@ otherwise you risk spending a lot of time working on something that the
 project's developers might not want to merge into the project.
 
 In lieu of a formal style-guide, take care to maintain the existing coding
-style. Add unit tests for any new or changed functionality. Lint and test
-your code using [Grunt](http://gruntjs.com/).
+style. Add unit tests for any new or changed functionality. Lint your code
+with `npm run eslint:fix` and test it with `npm test`.
 
 ## Testing
 
 This project uses multiple testing approaches:
 
-### Unit Tests (Jest)
-Unit tests are located in `packages/*/` directories with `.test.js` extension.
+### Unit Tests (Vitest)
+Unit tests are co-located in `packages/*/` directories with a `.test.ts` or
+`.test.js` extension.
 
 ```bash
-npm run test:jest        # Run unit tests
+npm run test:unit        # Run unit tests
 npm run test:watch       # Run unit tests in watch mode
 ```
 
@@ -118,15 +119,15 @@ See `e2e/README.md` for more details on writing and running Playwright tests.
 
 ### Full Test Suite
 ```bash
-npm test                 # Run all tests (Jest + build + Karma)
+npm test                 # Run all tests (eslint + build + e2e + integration + unit)
 ```
 
 ### Building
 Before running integration or e2e tests, build the project:
 
 ```bash
-npm run rollup:debug     # Build for development
-npm run rollup:prod      # Build for production
+npm run build:dev        # Build for development
+npm run build:prod       # Build for production
 ```
 
 ## License

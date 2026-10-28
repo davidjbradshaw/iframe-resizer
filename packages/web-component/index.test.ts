@@ -167,6 +167,8 @@ describe('web-component/IframeResizerElement', () => {
 
     const options = vi.mocked(connectResizer).mock.calls[0][0]
     expect(options.onBeforeClose!()).toBe(false)
+    // The component disconnects itself, so core must not on removal
+    expect(options.disconnectOnRemove).toBe(false)
   })
 
   it('accepts programmatic options and exposes them via the getter', () => {
@@ -297,13 +299,13 @@ describe('web-component/IframeResizerElement', () => {
     )
   })
 
-  it('passes single checkOrigin value as string', () => {
+  it('passes a single checkOrigin value as a list, as core only reads a list', () => {
     createElement({ license: 'GPLv3', checkOrigin: 'https://a.com' })
     document.body.append(el)
 
     expect(connectResizer).toHaveBeenCalledWith(
       expect.objectContaining({
-        checkOrigin: 'https://a.com',
+        checkOrigin: ['https://a.com'],
       }),
     )
   })
@@ -327,6 +329,41 @@ describe('web-component/IframeResizerElement', () => {
     document.body.append(el)
 
     expect((el as any).iframeResizer).toBe(mockResizer)
+  })
+
+  it('has no iframeResizer when core does not bind the iframe', () => {
+    mockConnect.mockReturnValueOnce()
+    createElement({ license: 'GPLv3' })
+    document.body.append(el)
+
+    expect((el as any).iframeResizer).toBeNull()
+  })
+
+  it('does not rebind for an attribute set to the value it has', () => {
+    createElement({ license: 'GPLv3', tolerance: '5' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+
+    el.setAttribute('tolerance', '5')
+
+    expect(connectResizer).not.toHaveBeenCalled()
+  })
+
+  it('ignores a change to an attribute that is not an option', () => {
+    createElement({ license: 'GPLv3' })
+    document.body.append(el)
+    vi.mocked(connectResizer).mockClear()
+    ;(el as any).attributeChangedCallback('title', 'a', 'b')
+
+    expect(connectResizer).not.toHaveBeenCalled()
+  })
+
+  it('leaves the element registered when the module loads again', async () => {
+    const registered = customElements.get('iframe-resizer')
+    vi.resetModules()
+    await import('./index')
+
+    expect(customElements.get('iframe-resizer')).toBe(registered)
   })
 
   it('clears the offset when the offsetsize attribute is removed', () => {

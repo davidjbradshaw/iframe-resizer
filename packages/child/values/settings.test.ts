@@ -21,6 +21,11 @@ describe('child/values/settings', () => {
     expect(settings.targetOrigin).toBe('*')
   })
 
+  it('onReady does nothing by default, so a page without one stays quiet', () => {
+    expect(settings.onReady()).toBeUndefined()
+    expect(childConsole.warn).not.toHaveBeenCalled()
+  })
+
   it('onMessage warns by default', () => {
     settings.onMessage()
     expect(childConsole.warn).toHaveBeenCalledWith(

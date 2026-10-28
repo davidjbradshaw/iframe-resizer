@@ -24,32 +24,33 @@
 
     <script type="module" src="/src/main.js"></script>
     <script type="module">
+      import { record, updates } from '../../shared/app.js'
+
       const el = document.querySelector('iframe-resizer')
 
       // Option changes applied after init by the e2e tests, one button per
       // step; each sets the matching attributes
-      const UPDATES = {
-        styles: {
-          bodybackground: 'rgb(0, 128, 0)',
-          bodypadding: '6px',
-          bodymargin: '12',
-          scrolling: '',
-          // Two origins so the attribute parses as an array (a single value stays a string)
-          checkorigin: location.origin + ' https://example.com',
-        },
-        offset: { bodybackground: 'rgb(0, 0, 128)', offsetsize: '100' },
-        tolerance: { bodybackground: 'rgb(128, 0, 0)', tolerance: '1000' },
-        links: { bodybackground: 'rgb(128, 128, 0)', inpagelinks: 'false' },
-        direction: { bodybackground: 'rgb(0, 128, 128)', direction: 'horizontal-inline' },
+      const toAttribute = (value) => {
+        if (value === true) return ''
+        if (Array.isArray(value)) return value.join(' ')
+        return String(value)
       }
 
-      for (const [step, attrs] of Object.entries(UPDATES)) {
+      for (const [step, options] of Object.entries(updates(location.origin))) {
         document.getElementById(`update-${step}`).addEventListener('click', () => {
-          for (const [name, value] of Object.entries(attrs)) el.setAttribute(name, value)
+          for (const [name, value] of Object.entries(options)) {
+            el.setAttribute(name.toLowerCase(), toAttribute(value))
+          }
         })
       }
 
+      el.addEventListener('iframe-resizer:ready', () => record('onReady'))
+      el.addEventListener('iframe-resizer:resized', (e) =>
+        record('onResized', { type: e.detail.type }),
+      )
+      el.addEventListener('iframe-resizer:scroll', () => record('onScroll'))
       el.addEventListener('iframe-resizer:message', (e) => {
+        record('onMessage', { message: e.detail.message })
         alert('Message from frame ' + e.detail.iframe.id + ': ' + e.detail.message)
         e.detail.iframe.iframeResizer.sendMessage('Hello back from the parent page')
       })

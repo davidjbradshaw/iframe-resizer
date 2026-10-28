@@ -1,11 +1,14 @@
 // Checks the published types as a user sees them: copies the built packages
-// into a scratch project and compiles test-types/consumer.ts against them,
+// into a scratch project and compiles test/types/consumer.ts against them,
 // strictly and without skipLibCheck, under each module resolution.
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import {
   cpSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -15,6 +18,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
+const SVELTE4 = join(root, 'build-scripts/svelte4')
 
 const PACKAGES = [
   'alpine',
@@ -31,7 +35,7 @@ const PACKAGES = [
   'web-component',
 ]
 
-// Third-party packages the published types import
+// Third-party packages the published types import, apart from Svelte
 const DEPENDENCIES = [
   '@angular/core',
   '@types/react',
@@ -41,15 +45,48 @@ const DEPENDENCIES = [
   'react',
   'rxjs',
   'solid-js',
-  'svelte',
   'tslib',
   'vue',
+]
+
+// The Svelte package supports Svelte 4 and 5, so the types are checked with
+// each: the repo's own Svelte 5, and Svelte 4 from build-scripts/svelte4
+const SVELTE4_MODULE = join(SVELTE4, 'node_modules/svelte')
+
+const SVELTE_VERSIONS = [
+  { name: 'Svelte 5', path: join(root, 'node_modules/svelte') },
+  { name: 'Svelte 4', path: SVELTE4_MODULE },
 ]
 
 const RESOLUTIONS = [
   { module: 'nodenext', moduleResolution: 'nodenext' },
   { module: 'esnext', moduleResolution: 'bundler' },
 ]
+
+// Installs Svelte 4 on the first run, and again when its lockfile changes
+function installSvelte4() {
+  const hash = createHash('sha256')
+    .update(readFileSync(join(SVELTE4, 'package-lock.json')))
+    .digest('hex')
+  const installed = join(SVELTE4, 'node_modules/.lockfile-hash')
+
+  // The hash is not enough on its own: node_modules can be removed, or an
+  // install interrupted, after the hash was written
+  if (
+    existsSync(SVELTE4_MODULE) &&
+    existsSync(installed) &&
+    readFileSync(installed, 'utf8') === hash
+  ) {
+    return
+  }
+
+  execFileSync('npm', ['ci', '--prefix', SVELTE4, '--no-audit', '--no-fund'], {
+    stdio: 'inherit',
+  })
+  writeFileSync(installed, hash)
+}
+
+installSvelte4()
 
 const project = mkdtempSync(join(tmpdir(), 'iframe-resizer-types-'))
 const modules = join(project, 'node_modules')
@@ -68,33 +105,41 @@ try {
     symlinkSync(join(root, 'node_modules', dep), link)
   }
 
-  cpSync(join(root, 'test-types/consumer.ts'), join(project, 'consumer.ts'))
+  cpSync(join(root, 'test/types/consumer.ts'), join(project, 'consumer.ts'))
 
-  for (const resolution of RESOLUTIONS) {
-    console.log(`Checking published types (${resolution.moduleResolution})`)
+  for (const svelte of SVELTE_VERSIONS) {
+    const link = join(modules, 'svelte')
+    rmSync(link, { force: true })
+    symlinkSync(svelte.path, link)
 
-    writeFileSync(
-      join(project, 'tsconfig.json'),
-      JSON.stringify({
-        compilerOptions: {
-          ...resolution,
-          strict: true,
-          noEmit: true,
-          skipLibCheck: false,
-          target: 'es2022',
-          lib: ['dom', 'es2022'],
-          types: [],
-          experimentalDecorators: true,
-          jsx: 'preserve',
-          jsxImportSource: 'solid-js',
-        },
-        files: ['consumer.ts'],
-      }),
-    )
+    for (const resolution of RESOLUTIONS) {
+      console.log(
+        `Checking published types (${resolution.moduleResolution}, ${svelte.name})`,
+      )
 
-    execFileSync(join(root, 'node_modules/.bin/tsc'), ['-p', project], {
-      stdio: 'inherit',
-    })
+      writeFileSync(
+        join(project, 'tsconfig.json'),
+        JSON.stringify({
+          compilerOptions: {
+            ...resolution,
+            strict: true,
+            noEmit: true,
+            skipLibCheck: false,
+            target: 'es2022',
+            lib: ['dom', 'es2022'],
+            types: [],
+            experimentalDecorators: true,
+            jsx: 'preserve',
+            jsxImportSource: 'solid-js',
+          },
+          files: ['consumer.ts'],
+        }),
+      )
+
+      execFileSync(join(root, 'node_modules/.bin/tsc'), ['-p', project], {
+        stdio: 'inherit',
+      })
+    }
   }
 } finally {
   rmSync(project, { recursive: true, force: true })

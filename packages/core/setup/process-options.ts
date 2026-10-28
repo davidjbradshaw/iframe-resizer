@@ -8,8 +8,13 @@ import defaults from '../values/defaults'
 import settings from '../values/settings'
 import setDirection from './direction'
 import hasMouseEvents from './has-mouse-events'
-import { getPostMessageTarget, setTargetOrigin } from './target-origin'
+import { setRemoteHost, setTargetOrigin } from './target-origin'
 import updateOptionNames from './update-option-names'
+
+// Marks each binding, so a child whose page stayed loaded can tell being
+// bound again, as by React's <Activity>, from a repeat of the same init.
+// Random, not counted, so two copies of core on a page cannot repeat one.
+const newBindId = (): string => Math.random().toString(36).slice(2)
 
 export default function processOptions(
   iframe: HTMLIFrameElement,
@@ -19,18 +24,18 @@ export default function processOptions(
   settings[id] = {
     ...settings[id],
     iframe,
-    remoteHost: iframe?.src.split('/').slice(0, 3).join('/'),
     ...defaults,
     ...checkOptions(id, options),
     mouseEvents: hasMouseEvents(options),
     mode: setMode(options),
     syncTitle: checkTitle(id),
+    bindId: newBindId(),
   }
 
   updateOptionNames(id)
   setDirection(id)
   setOffsetSize(id)
   checkWarningTimeout(id)
-  getPostMessageTarget(iframe)
+  setRemoteHost(id)
   setTargetOrigin(id)
 }

@@ -3,6 +3,7 @@ import {
   IGNORE_ATTR,
   IGNORE_TAGS,
   LEGACY_SIZE_ATTR,
+  MUTATION_OBSERVER,
   SIZE_ATTR,
 } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
@@ -18,7 +19,6 @@ const MUTATION = 'Mutation'
 export const addedNodes = new Set<Node>()
 export const removedNodes = new Set<Node>()
 export const removedAddedNodes = new Set<Node>()
-export const newMutations: MutationRecord[][] = []
 
 const config = {
   attributes: true,
@@ -126,9 +126,6 @@ export const createProcessMutations =
     }
 
     delayCount = 1
-
-    newMutations.forEach(flatFilterMutations)
-    newMutations.length = 0
     pending = false
 
     logMutations()
@@ -140,7 +137,13 @@ export const createProcessMutations =
   }
 
 function mutationObserved(mutations: MutationRecord[]): void {
-  newMutations.push(mutations)
+  // The records are logged a frame before sendSize() names the event
+  event(MUTATION_OBSERVER)
+
+  // Fold the records into the node sets now, rather than keep them for the
+  // next frame: rAF pauses in an offscreen cross-origin iframe, and the
+  // records would keep every removed subtree alive until it runs
+  flatFilterMutations(mutations)
   if (pending) return
 
   perfMon = performance.now()
@@ -155,7 +158,7 @@ export default function createMutationObserver(
   }) => void,
 ): { disconnect: () => void } {
   const observer = new window.MutationObserver(mutationObserved)
-  const target = document.body || document.documentElement
+  let target = document.body || document.documentElement
 
   processMutations = createProcessMutations(callback)
 
@@ -163,12 +166,36 @@ export default function createMutationObserver(
 
   info('Attached%c MutationObserver%c to body', HIGHLIGHT, FOREGROUND)
 
+  // Turbo Drive and the like replace <body> itself, which the observer above
+  // can't see, so move to the new body and pass on the change of content
+  const bodyObserver = new window.MutationObserver(() => {
+    const { body } = document
+    if (!body || body === target) return
+
+    // Copies, as a record's node lists don't change once it is made
+    const queued = observer.takeRecords()
+    const removed = [...target.childNodes]
+    target = body
+    observer.disconnect()
+    observer.observe(target, config)
+    info('Moved%c MutationObserver%c to new body', HIGHLIGHT, FOREGROUND)
+
+    mutationObserved([
+      ...queued,
+      {
+        addedNodes: [...body.childNodes],
+        removedNodes: removed,
+      } as unknown as MutationRecord,
+    ])
+  })
+  bodyObserver.observe(document.documentElement, { childList: true })
+
   return {
     disconnect: () => {
       addedNodes.clear()
       removedNodes.clear()
-      newMutations.length = 0
       observer.disconnect()
+      bodyObserver.disconnect()
       info('Detached%c MutationObserver', HIGHLIGHT)
     },
   }

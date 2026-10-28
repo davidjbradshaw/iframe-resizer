@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 /* eslint-disable security/detect-non-literal-regexp */
 
 import { NEW_LINE } from './consts'
@@ -22,8 +21,9 @@ const lookup = (_: string, tag: string): string =>
 
 const encode = (s: string): string => s.replace(tags, lookup)
 
+// Only the formatting tags, so text such as <html> or <style> is kept
 const filter = (s: string): string =>
-  s.replaceAll('<br>', NEW_LINE).replaceAll(/<\/?[^>]+>/gi, '')
+  s.replaceAll('<br>', NEW_LINE).replace(tags, '')
 
 type FormatLogMessageFn = (message: unknown) => void
 
@@ -38,4 +38,3 @@ export default (formatLogMessage: FormatLogMessageFn) =>
     )
 
 /* eslint-enable security/detect-non-literal-regexp */
-/* eslint-enable no-useless-escape */

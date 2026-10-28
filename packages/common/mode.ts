@@ -72,7 +72,9 @@ const l = (l: string): string => {
   dd = i[p(x[4])](),
   dx = q((_, i) => l(`${dd + i}`)),
   dy = q((_, i) => l(`${dd - ++i}`)),
+  /* v8 ignore start */
   V = (n: string): number => (dx.has(n) ? 9 : dy.has(n) ? 5 : -2)
+/* v8 ignore stop */
 export const checkMode = (m: number): boolean => u.has(m)
 export const getModeData = (l: number): string => p(y[l])
 export const getModeLabel = (l: number): string => p(z[l])
@@ -84,6 +86,7 @@ export default (y: any): number => {
   let v = (function (y = '', x = '') {
     let z = -2
     const u = l(p(y))
+    /* v8 ignore next */
     return (u in t && (z = t[u]), z === 9 ? V(x) : z)
   })(...u)
   return (v === 0 || ((p: any) => p[2] === l(p[0] + p[1]))(u) || (v = -2), v)

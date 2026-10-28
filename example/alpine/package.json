@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iframe-resizer/alpine": "^6.0.0-beta.13",
-    "@iframe-resizer/child": "^6.0.0-beta.13",
-    "alpinejs": "^3.15.11"
+    "@iframe-resizer/alpine": "^6.0.0-beta.14",
+    "@iframe-resizer/child": "^6.0.0-beta.14",
+    "alpinejs": "^3.17.5"
   },
   "devDependencies": {
-    "vite": "^8.0.8"
+    "vite": "^8.3.5"
   }
 }

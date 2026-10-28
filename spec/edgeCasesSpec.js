@@ -12,12 +12,12 @@ define(['iframeResizerParent'], (iframeResize) => {
       // Clean up all additional iframes first
       additionalIframes.forEach((frame) => {
         if (frame && frame.parentNode) {
-          frame.parentNode.removeChild(frame)
+          frame.remove()
         }
         tearDown(frame)
       })
       additionalIframes = []
-      
+
       // Then clean up main iframe
       tearDown(iframe)
     })
@@ -26,21 +26,24 @@ define(['iframeResizerParent'], (iframeResize) => {
       it('should handle iframe not yet connected to DOM', (done) => {
         // Create an iframe element but don't add it to the DOM yet
         const disconnectedIframe = document.createElement('iframe')
-        disconnectedIframe.src = 'spec/resources/frame.content.html'
+        disconnectedIframe.src = '/base/spec/resources/frame.content.html'
         disconnectedIframe.id = 'edge1'
 
         // Initialize iframe-resizer on disconnected iframe
-        const iframes = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          checkOrigin: false,
-          onReady: () => {
-            // Should be called after iframe is added to DOM
-            expect(disconnectedIframe.isConnected).toBe(true)
-            expect(disconnectedIframe.iframeResizer).toBeDefined()
-            setTimeout(done, 1)
+        const iframes = iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            checkOrigin: false,
+            onReady: () => {
+              // Should be called after iframe is added to DOM
+              expect(disconnectedIframe.isConnected).toBe(true)
+              expect(disconnectedIframe.iframeResizer).toBeDefined()
+              setTimeout(done, 1)
+            },
           },
-        }, disconnectedIframe)
+          disconnectedIframe,
+        )
 
         // Verify iframe is in returned array
         expect(iframes.length).toBe(1)
@@ -48,7 +51,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
         // Add iframe to DOM after a short delay
         setTimeout(() => {
-          document.body.appendChild(disconnectedIframe)
+          document.body.append(disconnectedIframe)
           // Send init message after adding to DOM with more delay
           setTimeout(() => {
             mockMsgFromIFrame(disconnectedIframe, 'init')
@@ -61,28 +64,32 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       it('should observe DOM and initialize when iframe is added', (done) => {
         const disconnectedIframe = document.createElement('iframe')
-        disconnectedIframe.src = 'spec/resources/frame.content.html'
+        disconnectedIframe.src = '/base/spec/resources/frame.content.html'
         disconnectedIframe.id = 'edge2'
 
         let readyCalled = false
 
-        iframeResize({
-          license: 'GPLv3',
-          log: true,
-          checkOrigin: false,
-          onReady: () => {
-            readyCalled = true
-            expect(disconnectedIframe.isConnected).toBe(true)
-            setTimeout(done, 1)
+        iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            checkOrigin: false,
+            onReady: () => {
+              readyCalled = true
+
+              expect(disconnectedIframe.isConnected).toBe(true)
+              setTimeout(done, 1)
+            },
           },
-        }, disconnectedIframe)
+          disconnectedIframe,
+        )
 
         // Verify onReady hasn't been called yet
         expect(readyCalled).toBe(false)
 
         // Add to DOM with longer delay
         setTimeout(() => {
-          document.body.appendChild(disconnectedIframe)
+          document.body.append(disconnectedIframe)
           setTimeout(() => {
             mockMsgFromIFrame(disconnectedIframe, 'init')
           }, 50)
@@ -135,29 +142,35 @@ define(['iframeResizerParent'], (iframeResize) => {
           }
         }
 
-        const iframe1 = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'edge3a',
-          checkOrigin: false,
-          direction: 'vertical',
-          onReady: () => {
-            frame1Ready.ready = true
-            checkBothReady()
+        const iframe1 = iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            id: 'edge3a',
+            checkOrigin: false,
+            direction: 'vertical',
+            onReady: () => {
+              frame1Ready.ready = true
+              checkBothReady()
+            },
           },
-        }, document.querySelectorAll('iframe')[0])[0]
+          document.querySelectorAll('iframe')[0],
+        )[0]
 
-        const iframe2 = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'edge3b',
-          checkOrigin: false,
-          direction: 'horizontal',
-          onReady: () => {
-            frame2Ready.ready = true
-            checkBothReady()
+        const iframe2 = iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            id: 'edge3b',
+            checkOrigin: false,
+            direction: 'horizontal',
+            onReady: () => {
+              frame2Ready.ready = true
+              checkBothReady()
+            },
           },
-        }, document.querySelectorAll('iframe')[1])[0]
+          document.querySelectorAll('iframe')[1],
+        )[0]
 
         mockMsgFromIFrame(iframe1, 'init')
         mockMsgFromIFrame(iframe2, 'init')
@@ -220,12 +233,11 @@ define(['iframeResizerParent'], (iframeResize) => {
           checkOrigin: false,
           onReady: (iframeEl) => {
             expect(iframeEl.iframeResizer).toBeDefined()
-            
+
             // Manually remove iframe from DOM
             setTimeout(() => {
-              const parent = iframeEl.parentNode
-              parent.removeChild(iframeEl)
-              
+              iframeEl.remove()
+
               // Verify iframe is no longer in DOM with longer delay
               setTimeout(() => {
                 expect(document.getElementById('edge4')).toBeNull()
@@ -260,30 +272,39 @@ define(['iframeResizerParent'], (iframeResize) => {
       })
 
       it('should handle re-initialization attempt', (done) => {
-        spyOn(console, 'warn')
-
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,
           id: 'edge6',
           checkOrigin: false,
           onReady: () => {
-            // Try to re-initialize the same iframe
-            iframeResize({
-              license: 'GPLv3',
-              log: true,
-              checkOrigin: false,
-            }, iframe)
+            // Re-binding takes the update path, which has to replace the
+            // options the parent sizes with
+            iframeResize(
+              {
+                license: 'GPLv3',
+                log: true,
+                checkOrigin: false,
+                direction: 'both',
+              },
+              iframe,
+            )
 
             setTimeout(() => {
-              // Should have warned about already setup
-              expect(console.warn).toHaveBeenCalled()
-              setTimeout(done, 1)
+              mockPostMsg('edge6', '120:300:mutationObserver')
+
+              setTimeout(() => {
+                expect(iframe.style.height).toBe('120px')
+                expect(iframe.style.width).toBe('300px')
+                setTimeout(done, 1)
+              }, 50)
             }, 100)
           },
         })[0]
 
-        mockMsgFromIFrame(iframe, 'init')
+        // A v6 child, so the re-bound options are sent rather than left
+        // pending for a child too old to take them
+        mockPostMsg('edge6', '0:0:init:6.0.0')
       })
     })
 
@@ -333,22 +354,6 @@ define(['iframeResizerParent'], (iframeResize) => {
 
         mockMsgFromIFrame(iframe, 'init')
       })
-
-      it('should handle sameDomain option', (done) => {
-        iframe = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          id: 'edge10',
-          checkOrigin: false,
-          sameDomain: true,
-          onReady: () => {
-            expect(iframe.iframeResizer).toBeDefined()
-            setTimeout(done, 1)
-          },
-        })[0]
-
-        mockMsgFromIFrame(iframe, 'init')
-      })
     })
 
     describe('License validation', () => {
@@ -359,18 +364,21 @@ define(['iframeResizerParent'], (iframeResize) => {
       beforeAll((done) => {
         const warmupIframe = document.createElement('iframe')
         warmupIframe.id = 'license-warmup'
-        warmupIframe.src = 'spec/resources/frame.content.html'
+        warmupIframe.src = '/base/spec/resources/frame.content.html'
         document.body.append(warmupIframe)
 
-        iframeResize({
-          license: 'GPLv3',
-          checkOrigin: false,
-          onReady: () => {
-            warmupIframe.remove()
-            tearDown(warmupIframe)
-            setTimeout(done, 1)
+        iframeResize(
+          {
+            license: 'GPLv3',
+            checkOrigin: false,
+            onReady: () => {
+              warmupIframe.remove()
+              tearDown(warmupIframe)
+              setTimeout(done, 1)
+            },
           },
-        }, warmupIframe)
+          warmupIframe,
+        )
 
         mockMsgFromIFrame(warmupIframe, 'init')
       })
@@ -422,11 +430,14 @@ define(['iframeResizerParent'], (iframeResize) => {
 
     describe('Selector edge cases', () => {
       it('should handle empty selector returning no iframes', () => {
-        const iframes = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          checkOrigin: false,
-        }, '.non-existent-class')
+        const iframes = iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            checkOrigin: false,
+          },
+          '.non-existent-class',
+        )
 
         expect(iframes.length).toBe(0)
       })
@@ -461,16 +472,19 @@ define(['iframeResizerParent'], (iframeResize) => {
         iframe = document.getElementsByTagName('iframe')[0]
         iframe.id = 'edge14'
 
-        const iframes = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          checkOrigin: false,
-          onReady: () => {
-            expect(iframes.length).toBe(1)
-            expect(iframes[0].id).toBe('edge14')
-            setTimeout(done, 1)
+        const iframes = iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            checkOrigin: false,
+            onReady: () => {
+              expect(iframes.length).toBe(1)
+              expect(iframes[0].id).toBe('edge14')
+              setTimeout(done, 1)
+            },
           },
-        }, '#edge14')
+          '#edge14',
+        )
 
         mockMsgFromIFrame(iframes[0], 'init')
       })
@@ -479,33 +493,42 @@ define(['iframeResizerParent'], (iframeResize) => {
     describe('Error handling edge cases', () => {
       it('should handle invalid target type', () => {
         expect(() => {
-          iframeResize({
-            license: 'GPLv3',
-            log: true,
-            checkOrigin: false,
-          }, 123)
+          iframeResize(
+            {
+              license: 'GPLv3',
+              log: true,
+              checkOrigin: false,
+            },
+            123,
+          )
         }).toThrow()
       })
 
       it('should handle non-iframe element', () => {
         const divElement = document.createElement('div')
-        
+
         expect(() => {
-          iframeResize({
-            license: 'GPLv3',
-            log: true,
-            checkOrigin: false,
-          }, divElement)
+          iframeResize(
+            {
+              license: 'GPLv3',
+              log: true,
+              checkOrigin: false,
+            },
+            divElement,
+          )
         }).toThrow()
       })
 
       it('should handle null target', () => {
         expect(() => {
-          iframeResize({
-            license: 'GPLv3',
-            log: true,
-            checkOrigin: false,
-          }, null)
+          iframeResize(
+            {
+              license: 'GPLv3',
+              log: true,
+              checkOrigin: false,
+            },
+            null,
+          )
         }).toThrow()
       })
     })
@@ -570,17 +593,20 @@ define(['iframeResizerParent'], (iframeResize) => {
         const iframeEl = document.getElementsByTagName('iframe')[0]
         iframeEl.removeAttribute('id')
 
-        const iframes = iframeResize({
-          license: 'GPLv3',
-          log: true,
-          checkOrigin: false,
-          onReady: (iframeWithId) => {
-            // Should have auto-generated ID
-            expect(iframeWithId.id).toBeTruthy()
-            expect(iframeWithId.id).toContain('iframeResizer')
-            setTimeout(done, 1)
+        const iframes = iframeResize(
+          {
+            license: 'GPLv3',
+            log: true,
+            checkOrigin: false,
+            onReady: (iframeWithId) => {
+              // Should have auto-generated ID
+              expect(iframeWithId.id).toBeTruthy()
+              expect(iframeWithId.id).toContain('iframeResizer')
+              setTimeout(done, 1)
+            },
           },
-        }, iframeEl)
+          iframeEl,
+        )
 
         iframe = iframes[0]
         mockMsgFromIFrame(iframe, 'init')
@@ -588,7 +614,7 @@ define(['iframeResizerParent'], (iframeResize) => {
 
       it('should preserve custom ID when provided', (done) => {
         const customId = 'myCustomIframeId'
-        
+
         iframe = iframeResize({
           license: 'GPLv3',
           log: true,

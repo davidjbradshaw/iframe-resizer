@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
+import * as consoleMod from '../console'
 import sendMessage from '../send/message'
 import settings from '../values/settings'
 import state from '../values/state'
@@ -38,5 +39,21 @@ describe('child/page/links', () => {
     findTarget('#nope')
 
     expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  test('does nothing when in page links are already wired up', () => {
+    const existing = vi.fn()
+    state.findInPageLinkTarget = existing
+    const addListener = vi.spyOn(document, 'addEventListener')
+    // A mode that would otherwise be advised against
+    settings.mode = 1
+
+    setupInPageLinks(true)
+
+    expect(state.findInPageLinkTarget).toBe(existing)
+    expect(consoleMod.advise).not.toHaveBeenCalled()
+    expect(consoleMod.log).not.toHaveBeenCalled()
+    expect(addListener).not.toHaveBeenCalled()
+    addListener.mockRestore()
   })
 })

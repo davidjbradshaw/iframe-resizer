@@ -1,8 +1,15 @@
-import { checkMode, getModeData, once, round } from '@iframe-resizer/common'
+import {
+  checkMode,
+  escapeField,
+  getModeData,
+  once,
+  round,
+} from '@iframe-resizer/common'
 import { INIT, MESSAGE_ID } from '@iframe-resizer/common/consts'
 import { HIGHLIGHT, ITALIC } from 'auto-console-group'
 
 import { advise, assert, info, log } from '../console'
+import narrowOrigins from '../utils/narrow-origins'
 import settings from '../values/settings'
 import state from '../values/state'
 
@@ -45,8 +52,10 @@ export function dispatchToParent(
     }
   else {
     assert(target, 'Internal error: postMessage target is undefined')
-    const origins = setTargetOrigin(targetOrigin)
-    const originList = Array.isArray(origins) ? origins : [origins]
+    const originList = narrowOrigins(
+      setTargetOrigin(targetOrigin),
+      state.origin,
+    )
 
     for (const origin of originList) {
       ;(target as Window).postMessage(MESSAGE_ID + message, origin)
@@ -66,7 +75,8 @@ export default function dispatch(
   const { parentId } = settings
   const { sameOrigin } = state
   const size = `${height}:${width}`
-  const message = `${parentId}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
+  // The id goes back as the parent sent it, with its colons escaped
+  const message = `${escapeField(parentId)}:${size}:${triggerEvent}${undefined === msg ? '' : `:${msg}`}`
 
   if (settings.mode < -1) return
 

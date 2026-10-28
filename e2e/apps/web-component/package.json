@@ -11,7 +11,7 @@
     "@iframe-resizer/core": "file:../../../dist/core"
   },
   "devDependencies": {
-    "vite": "^7.3.2"
+    "vite": "^7.3.7"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,

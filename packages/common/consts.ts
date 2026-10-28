@@ -78,11 +78,14 @@ export const MANUAL_RESIZE_REQUEST = 'manualResize'
 export const PARENT_RESIZE_REQUEST = 'parentResize'
 export const SET_OFFSET_SIZE = 'setOffsetSize'
 
-// Explicit size requests: sent even when the page is hidden, a send is
-// pending in the current frame or autoResize is off
+// Sent even when the page is hidden, a send is pending in the current frame
+// or autoResize is off: the init reply, which connects the parent, and
+// explicit size requests
 export const IGNORE_DISABLE_RESIZE = {
+  [INIT]: 1,
   [MANUAL_RESIZE_REQUEST]: 1,
   [PARENT_RESIZE_REQUEST]: 1,
+  [SET_OFFSET_SIZE]: 1,
 }
 
 export const RESIZE_OBSERVER = 'resizeObserver'

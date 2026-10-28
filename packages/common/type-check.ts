@@ -26,7 +26,6 @@ export const typeAssert = (
   type: string,
   error: string,
 ): void => {
-  // eslint-disable-next-line valid-typeof
   if (typeof value !== type) {
     throw new TypeError(
       `${error} is not a ${type.charAt(0).toUpperCase()}${type.slice(1)}`,

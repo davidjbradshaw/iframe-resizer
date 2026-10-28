@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>iframe-resizer colon id test</title>
+    <style>
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+    </style>
+    <script src="../../js/iframe-resizer.parent.js"></script>
+  </head>
+  <body>
+    <!-- An id with colons, as React's useId() gives -->
+    <iframe id=":r1:" scrolling="no"></iframe>
+    <script>
+      // ?child=v1..v5 loads that release's child script in the iframe
+      const query = new URLSearchParams(location.search)
+      const childQuery = new URLSearchParams()
+      if (query.has('child')) childQuery.set('child', query.get('child'))
+      const iframe = document.getElementById(':r1:')
+      iframe.src = `child/frame.legacy.html?${childQuery}`
+
+      window.ready = false
+      window.resizedId = null
+      iframeResize(
+        {
+          license: 'GPLv3',
+          onReady: () => {
+            window.ready = true
+          },
+          onResized: ({ id }) => {
+            window.resizedId = id
+          },
+        },
+        iframe,
+      )
+    </script>
+  </body>
+</html>

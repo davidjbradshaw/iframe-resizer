@@ -1,4 +1,4 @@
-import { esModuleInterop } from '@iframe-resizer/common'
+import { esModuleInterop, setStyleKeepingSize } from '@iframe-resizer/common'
 import { EXPAND, LOG_EXPANDED } from '@iframe-resizer/common/consts'
 import type { IFrameComponent, IFrameOptions } from '@iframe-resizer/core'
 import connectResizer from '@iframe-resizer/core'
@@ -8,11 +8,13 @@ import {
   createEffect,
   createMemo,
   createRenderEffect,
+  mergeProps,
   onCleanup,
   onMount,
   splitProps,
   untrack,
 } from 'solid-js'
+import { isServer } from 'solid-js/web'
 
 import type { IFrameResizerProps } from './types'
 import pickWireOptions from './wire-options'
@@ -52,27 +54,12 @@ type Callback = (...args: unknown[]) => unknown
 
 type StyleProp = JSX.CSSProperties | string | undefined
 
-// Solid re-sets every property of a style object whenever an element's props
-// are re-assigned, which would overwrite the size iframe-resizer has set on
-// the iframe with the size the page started it at. So the style prop is
-// applied here instead, touching only the properties whose value changed.
-// Returns the applied value, to be passed back as prev on the next call.
-function applyStyle(
+// Touches only the properties whose value changed, so core's size survives
+function applyStyleObject(
   el: HTMLElement,
-  value: StyleProp,
-  prev: StyleProp,
-): StyleProp {
-  if (typeof value !== 'object') {
-    el.style.cssText = value ?? ''
-    return value
-  }
-
-  const previous = (typeof prev === 'object' ? prev : {}) as Record<
-    string,
-    unknown
-  >
-  if (typeof prev === 'string') el.style.cssText = ''
-
+  value: Record<string, unknown>,
+  previous: Record<string, unknown>,
+): void {
   for (const name of Object.keys(previous)) {
     if (!(name in value)) el.style.removeProperty(name)
   }
@@ -81,8 +68,42 @@ function applyStyle(
     if (v !== previous[name])
       el.style.setProperty(name, v == null ? '' : `${v}`)
   }
+}
 
-  return value
+// Solid re-sets every property of a style object whenever an element's props
+// are re-assigned, which would overwrite the size iframe-resizer has set on
+// the iframe with the size the page started it at. So the style prop is
+// applied here instead. Returns the value to pass back as prev on the next
+// call.
+function applyStyle(
+  el: HTMLElement,
+  value: StyleProp,
+  prev: StyleProp,
+): StyleProp {
+  if (value === prev) return prev
+
+  // A string, or anything falsy, goes through the browser's own parser, which
+  // keeps the forms a parsed diff loses, such as var() inside a shorthand
+  if (typeof value !== 'object' || value === null) {
+    setStyleKeepingSize(el, typeof value === 'string' ? value : '')
+    return value
+  }
+
+  // A previous string is cleared wholesale, so the object starts clean
+  if (typeof prev === 'string') setStyleKeepingSize(el, '')
+
+  applyStyleObject(
+    el,
+    value as Record<string, unknown>,
+    (typeof prev === 'object' && prev !== null ? prev : {}) as Record<
+      string,
+      unknown
+    >,
+  )
+
+  // A copy, so a style object mutated in place still diffs against what was
+  // applied last time
+  return { ...value }
 }
 
 export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
@@ -123,6 +144,8 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
 
   const buildOptions = (): IFrameOptions => ({
     ...pickWireOptions(local),
+    // This component disconnects when it unmounts
+    disconnectOnRemove: false,
     onBeforeClose,
     ...callbackOptions(),
   })
@@ -160,26 +183,46 @@ export default function IframeResizer(props: IFrameResizerProps): JSX.Element {
   // and callback presence only; the options are then built untracked so a
   // new callback identity does not re-run it.
   let isFirstUpdate = true
+
   createEffect(() => {
     pickWireOptions(local)
     callbackPresence()
+
+    // Reading the id tracks it, so a changed id re-binds and core can report
+    // that a bound iframe cannot change its id
+    if (iframeProps.id !== undefined)
+      consoleGroup.label(`solid(${iframeProps.id})`)
 
     if (isFirstUpdate) {
       isFirstUpdate = false
       return
     }
+    // Set as the component renders, before any effect runs
+    /* v8 ignore next */
     if (!iframeEl) return
 
     connectResizer(untrack(buildOptions))(iframeEl)
   })
 
+  // The server has no element to style, so the style is merged back into the
+  // markup there; the client keeps it out of the spread and applies it below
+  const serverAttrs = mergeProps(iframeProps, styleProp)
+  const attrs = isServer ? serverAttrs : iframeProps
+  // The compiled ref has a branch for a function ref, which iframeEl never is
+  /* v8 ignore start */
   // eslint-disable-next-line jsx-a11y/iframe-has-title
-  const iframe = <iframe {...iframeProps} ref={iframeEl} />
+  const iframe = <iframe {...attrs} ref={iframeEl} />
+  /* v8 ignore stop */
 
-  let prevStyle: StyleProp
-  createRenderEffect(() => {
-    prevStyle = applyStyle(iframeEl, styleProp.style, prevStyle)
-  })
+  if (!isServer) {
+    let prevStyle: StyleProp
+    createRenderEffect(() => {
+      prevStyle = applyStyle(iframeEl, styleProp.style, prevStyle)
+    })
+  }
 
   return iframe
+  // solid-refresh adds hot reload code here, whose else never runs in tests
+  /* v8 ignore start */
 }
+/* v8 ignore stop */

@@ -21,10 +21,15 @@
       document.getElementById('child-name').textContent = child
       document.querySelector('iframe').src = `child/${child}`
 
+      window.readyCount = 0
+
       iframeResize({
         license: 'GPLv3',
         log: true,
         direction: query.get('direction') || 'horizontal-inline',
+        onReady: () => {
+          window.readyCount += 1
+        },
       })
     </script>
   </body>

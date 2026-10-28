@@ -7,6 +7,13 @@ export default defineConfig({
   build: {
     outDir: '../../fixtures/react',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        'early-update': 'early-update.html',
+        activity: 'activity.html',
+      },
+    },
   },
   resolve: {
     preserveSymlinks: true,

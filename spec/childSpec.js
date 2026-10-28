@@ -16,7 +16,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
     window.iframeResizer = {
       license: 'GPLv3',
       onMessage(msg) {
-        msgCalled = msg
+        window.msgCalled = msg
       },
       onReady() {
         this.readyCalled = true
@@ -85,21 +85,21 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         )
         win.parentIframe.moveToAnchor('bar')
 
-        expect(msgObject.source.postMessage.calls.argsFor(1)[0]).toContain(
-          ':scrollToOffset',
-        )
+        expect(
+          msgObject.source.postMessage.calls.mostRecent().args[0],
+        ).toContain(':scrollToOffset')
       })
 
       it('reset', () => {
         win.parentIframe.reset()
 
-        expect(msgObject.source.postMessage.calls.argsFor(0)[0]).toContain(
-          ':reset',
-        )
+        expect(
+          msgObject.source.postMessage.calls.mostRecent().args[0],
+        ).toContain(':reset')
       })
 
       it('getParentProps', (done) => {
-        win.parentIframe.getParentProps((pageInfo) => {
+        const unsubscribe = win.parentIframe.getParentProps((pageInfo) => {
           expect(pageInfo.iframeHeight).toBe(500)
 
           expect(pageInfo.iframeWidth).toBe(300)
@@ -123,6 +123,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
           expect(pageInfo.clientHeight).toBe(645)
 
           expect(pageInfo.clientWidth).toBe(1295)
+          unsubscribe()
           setTimeout(done, 1)
         })
 
@@ -217,7 +218,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
 
         setTimeout(() => {
-          expect(msgCalled).toBe(msg)
+          expect(window.msgCalled).toBe(msg)
           setTimeout(done, 1)
         })
       })
@@ -227,7 +228,7 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         mockMsgListener(createMsg('message:' + JSON.stringify(msg)))
 
         setTimeout(() => {
-          expect(msgCalled.foo).toBe('bar')
+          expect(window.msgCalled.foo).toBe('bar')
           setTimeout(done, 1)
         })
       })
@@ -281,6 +282,5 @@ define(['iframeResizerChild', 'jquery'], (mockMsgListener, $) => {
         }, 17)
       })
     })
-
   })
 })

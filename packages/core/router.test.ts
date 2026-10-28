@@ -37,6 +37,7 @@ vi.mock('./page/scroll', () => ({
 vi.mock('./page/title', () => ({ setTitle: vi.fn() }))
 vi.mock('./received/message', () => ({ default: vi.fn(() => 'body') }))
 vi.mock('./setup/first-run', () => ({ default: vi.fn() }))
+vi.mock('./setup/update', () => ({ sendPendingUpdate: vi.fn() }))
 
 const routeMessage = (await import('./router')).default
 const settings = (await import('./values/settings')).default
@@ -52,6 +53,7 @@ const { setTitle } = await import('./page/title')
 const checkValidMessage = (await import('./checks/valid-message')).default
 const { info } = await import('./console')
 const firstRun = (await import('./setup/first-run')).default
+const { sendPendingUpdate } = await import('./setup/update')
 
 describe('core/router', () => {
   const id = 'i1'
@@ -93,12 +95,54 @@ describe('core/router', () => {
     expect(firstRun).toHaveBeenCalledWith(id, 0)
   })
 
+  test("INIT starts the new page from the parent's own setting", () => {
+    // As recorded when the old page called parentIframe.autoResize(false)
+    settings[id].autoResize = true
+    settings[id].childAutoResize = false
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(settings[id].childAutoResize).toBe(true)
+  })
+
+  test('INIT leaves it off when the parent is not sizing', () => {
+    settings[id].autoResize = false
+    settings[id].childAutoResize = false
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(settings[id].childAutoResize).toBe(false)
+  })
+
+  test('INIT sends an update queued before it, once the child version is known and before onReady', () => {
+    let initialisedWhenSent: boolean | undefined
+    vi.mocked(sendPendingUpdate).mockImplementationOnce(() => {
+      initialisedWhenSent = settings[id].initialised
+    })
+
+    routeMessage({ ...base, type: INIT })
+
+    expect(sendPendingUpdate).toHaveBeenCalledWith(id)
+    expect(initialisedWhenSent).toBe(true)
+
+    const order = (mock: { mock: { invocationCallOrder: number[] } }) =>
+      mock.mock.invocationCallOrder[0]
+    expect(order(vi.mocked(checkVersion))).toBeLessThan(
+      order(vi.mocked(sendPendingUpdate)),
+    )
+    expect(order(vi.mocked(sendPendingUpdate))).toBeLessThan(
+      order(vi.mocked(on)),
+    )
+  })
+
   test('updates AUTO_RESIZE from message body', async () => {
     const getBody = (await import('./received/message')).default
     getBody.mockReturnValue('true')
     routeMessage({ ...base, type: AUTO_RESIZE })
 
-    expect(settings[id].autoResize).toBe(true)
+    // What the child reports is recorded apart from the parent's own setting
+    expect(settings[id].childAutoResize).toBe(true)
+    expect(settings[id].autoResize).toBeUndefined()
   })
 
   test('BEFORE_UNLOAD resets initialised', () => {
@@ -127,10 +171,13 @@ describe('core/router', () => {
     expect(stopParentInfoMonitor).toHaveBeenCalledWith(id)
   })
 
-  test('TITLE sets title via setTitle', () => {
-    routeMessage({ ...base, type: TITLE })
+  test('TITLE sets the whole message body as the title', async () => {
+    const getBody = (await import('./received/message')).default
+    getBody.mockReturnValue('Docs: Getting started')
+    routeMessage({ ...base, type: TITLE, message: 'Docs' })
 
-    expect(setTitle).toHaveBeenCalledWith(id, 'm')
+    expect(getBody).toHaveBeenCalledWith(id, 4)
+    expect(setTitle).toHaveBeenCalledWith(id, 'Docs: Getting started')
   })
 
   test('delegates to checkValidMessage for unknown types', () => {

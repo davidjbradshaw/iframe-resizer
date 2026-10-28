@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 vi.mock('../send/trigger', () => ({ default: vi.fn() }))
 vi.mock('../values/settings', () => ({
   default: {
-    a: { autoResize: true, firstRun: false, iframe: { id: 'a' } },
-    b: { autoResize: false, firstRun: false, iframe: { id: 'b' } },
-    c: { autoResize: true, firstRun: true, iframe: { id: 'c' } },
+    a: { childAutoResize: true, firstRun: false, iframe: { id: 'a' } },
+    b: { childAutoResize: false, firstRun: false, iframe: { id: 'b' } },
+    c: { childAutoResize: true, firstRun: true, iframe: { id: 'c' } },
   },
 }))
 
@@ -21,7 +21,7 @@ describe('core/events/visible', () => {
     vi.clearAllMocks()
   })
 
-  test('triggers resize for autoResize and not firstRun frames', () => {
+  test('triggers resize only where the child is still resizing', () => {
     tabVisible()
 
     expect(trigger).toHaveBeenCalledTimes(1)

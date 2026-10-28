@@ -82,6 +82,20 @@ it('uses id (no-op) when bothDirections is true', async () => {
   expect(sendSize).toHaveBeenCalled()
 })
 
+it('remembers the values the parent sent, for updates to compare with', async () => {
+  const { default: init } = await import('./init')
+  const { default: state } = await import('./values/state')
+  state.firstRun = true
+
+  init([])
+
+  expect(state.fromParent).toEqual({
+    logging: false,
+    logExpand: false,
+    parentId: 'x',
+  })
+})
+
 it('returns early when not first run', async () => {
   const { default: init } = await import('./init')
   const sendSize = (await import('./send/size')).default

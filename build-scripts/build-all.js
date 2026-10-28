@@ -5,9 +5,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { rollup } from 'rollup'
 import { build as viteBuild } from 'vite'
 
+import { DEBUG, stripLog, TEST } from '../vite.config/shared/env.js'
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
-const { DEBUG, TEST } = process.env
 
 // One build number for the whole run, e.g. 20261010.142530; the plugins
 // add it to the version of dev and test builds
@@ -34,11 +35,13 @@ const packages = [
 
 async function buildPackage(pkg) {
   const configPath = join(root, 'vite.config', `${pkg.name}.config.js`)
-  const config = await import(pathToFileURL(configPath).href)
 
   if (pkg.type === 'vite') {
     await viteBuild({ configFile: configPath })
   } else {
+    // Only the rollup build needs the config here; vite loads and evaluates
+    // it itself, so importing it as well ran every config twice
+    const config = await import(pathToFileURL(configPath).href)
     const configs = Array.isArray(config.default)
       ? config.default
       : [config.default]
@@ -85,7 +88,7 @@ async function buildAll() {
 
   const { default: reportSizes } = await import('./report-sizes.js')
   const distDirs = packages.map((pkg) => `dist/${pkg.name}`)
-  const note = DEBUG || TEST ? 'logging not stripped' : ''
+  const note = stripLog ? '' : 'logging not stripped'
   reportSizes(root, [...distDirs, 'js'], note)
 
   console.log('\n✅ Build completed successfully!\n')

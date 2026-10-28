@@ -87,10 +87,11 @@
 
     <span id="insert"></span>
 
-    <!-- 
-      The data-iframe-resize attribute tells iframe-resizer to use this element
-      to calculate the height of the iframe, when the content overflows the
-      <body> element.     
+    <!--
+      Auto mode sizes the iframe to the content that overflows the <body>
+      element, which is what this page relies on. To size it from this element
+      alone instead, put data-iframe-resize on it, or set the resizeSelector
+      option below to "#abs".
     -->
     <div id="abs">
       <p>
@@ -100,7 +101,7 @@
     </div>
 
     <script>
-      // Add some content to to show the effect of using data-iframe-resize above
+      // Add some content, so the body overflows and the sizing above shows
       for (let i = 0; i < 500; i++) {
         const span = document.createElement('span')
         span.style.setProperty('position', 'relative')

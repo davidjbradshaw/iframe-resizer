@@ -3,8 +3,8 @@ import { describe, expect, test, vi } from 'vitest'
 import {
   createDetachObservers,
   createLogCounter,
+  createWarnAlreadyObserved,
   metaCreateDebugObserved,
-  metaCreateErrorObserved,
 } from './utils'
 
 vi.mock('../console', () => ({ debug: vi.fn(), error: vi.fn(), info: vi.fn() }))
@@ -18,11 +18,12 @@ describe('child/observers/utils', () => {
     expect(debug).toHaveBeenCalled()
   })
 
-  test('metaCreateErrorObserved logs errors when set has items', () => {
-    const logErr = metaCreateErrorObserved('already')('Resize')
-    logErr(new Set([document.createElement('span')]))
+  test('already-attached nodes are a debug log, not a console error', () => {
+    const warnAlready = createWarnAlreadyObserved('Resize')
+    warnAlready(new Set([document.createElement('span')]))
 
-    expect(error).toHaveBeenCalled()
+    expect(debug).toHaveBeenCalled()
+    expect(error).not.toHaveBeenCalled()
   })
 
   test('createLogCounter only logs when counter > 0', () => {

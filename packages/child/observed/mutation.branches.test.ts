@@ -12,6 +12,7 @@ vi.mock('../console', () => ({
 vi.mock('../check/migrate-size-attr', () => ({ default: vi.fn() }))
 vi.mock('../check/overflow', () => ({ default: vi.fn() }))
 vi.mock('../check/tags', () => ({ default: vi.fn() }))
+vi.mock('../page/body-setup', () => ({ default: vi.fn() }))
 
 vi.mock('../values/state', () => ({ default: { applySelectors: vi.fn() } }))
 
@@ -22,7 +23,11 @@ vi.mock('./observers', () => {
   return {
     default: {
       overflow: { attachObservers, detachObservers },
-      resize: { attachObserverToNonStaticElements, detachObservers },
+      resize: {
+        attachObserverToNonStaticElements,
+        detachObservers,
+        observeBody: vi.fn(),
+      },
     },
     attachObservers,
     attachObserverToNonStaticElements,

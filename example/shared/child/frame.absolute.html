@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>iFrame message passing test</title>
-    <meta name="description" content="iFrame message passing test" />
+    <title>iframe message passing test</title>
+    <meta name="description" content="iframe message passing test" />
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <style>
@@ -39,7 +39,7 @@
 
   <body>
     <p>
-      <b>iFrame</b>
+      <b>iframe</b>
 
       <a href="frame.content.html" class="back">Back to page 1</a>
       &nbsp;
@@ -61,25 +61,37 @@
         href="#"
         class="back"
         onclick="if ('parentIframe' in window) window.parentIframe.scrollToOffset(0,0);return false;"
-        >Scroll to iFrame</a
+        >Scroll to iframe</a
       >
       &nbsp;
-      <a href="#test" class="back">Jump to iFrame anchor</a>
+      <a href="#test" class="back">Jump to iframe anchor</a>
       <a href="#anchorParentTest" class="back">Jump to parent anchor</a>
     </p>
     <p>
-      This page has an absolutely positioned element that extends outside the
-      normal document body, which is marked with a red border on this page.
-      iframe-resizer's <b>auto</b> mode detects this element because it has the
-      <b>data-iframe-height</b> attribute, which tells the library to include it
-      when calculating the page height.
+      This page has an absolutely positioned element that sits outside the
+      normal document body, marked with a red border below. Because it is out of
+      flow, the height of the body does not include it.
+    </p>
+    <p>
+      iframe-resizer's <b>auto</b> mode finds it anyway. The child watches for
+      elements that overflow the body, marks them with
+      <b>data-iframe-overflowed</b>, and sizes the frame to cover them, so this
+      page needs no configuration.
     </p>
     <span style="visibility: collapse">a</span>
     <span style="visibility: hidden">a</span>
     <span style="display: none">a</span>
+    <p>
+      <i
+        >To size the frame from a single element instead, put
+        <b>data-iframe-resize</b> on it. To have an overflowing element left out
+        of the calculation, put <b>data-iframe-ignore</b> on it, as
+        <a href="frame.overflow.html">the overflow example</a> shows.</i
+      >
+    </p>
     <a name="test">Test in page anchor</a>
 
-    <div id="abs" data-iframe-height>
+    <div id="abs">
       Absolute positioned element
       <a
         href="#"
@@ -94,5 +106,11 @@
       src="/js-dist/iframe-resizer.child.js"
     ></script>
 
+    <script>
+      // Uncomment to leave the absolute element out of the size calculation
+      // window.iframeResizer = {
+      //   ignoreSelector: '#abs',
+      // }
+    </script>
   </body>
 </html>

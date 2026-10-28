@@ -1,5 +1,5 @@
 import { id, once } from '@iframe-resizer/common'
-import { INIT, VERSION } from '@iframe-resizer/common/consts'
+import { VERSION } from '@iframe-resizer/common/consts'
 
 import checkBlockingCSS from './check/blocking-css'
 import checkBoth from './check/both'
@@ -24,14 +24,12 @@ import setupPrintListeners from './events/print'
 import setupPublicMethods from './methods'
 import attachObservers from './observed'
 import createApplySelectors from './page/apply-selectors'
-import injectClearFixIntoBodyElement from './page/clear-fix'
+import { bodySetupSteps } from './page/body-setup'
 import setContentWidth from './page/content-width'
-import { setBodyStyle, setMargin } from './page/css'
 import setupInPageLinks from './page/links'
-import stopInfiniteResizingOfIframe from './page/stop-infinite-resizing'
 import readDataFromPage from './read/from-page'
 import readDataFromParent from './read/from-parent'
-import sendSize from './send/size'
+import sendInitReply from './send/init-reply'
 import isolate from './utils/isolate'
 import map2settings from './utils/map-settings'
 import settings from './values/settings'
@@ -58,13 +56,9 @@ function ready(onReady: () => void): void {
 }
 
 function startIframeResizerChild({
-  bodyBackground,
-  bodyPadding,
   inPageLinks,
   onReady,
 }: {
-  bodyBackground: string
-  bodyPadding: string
   inPageLinks: boolean
   onReady: () => void
 }): void {
@@ -79,13 +73,7 @@ function startIframeResizerChild({
     checkSettings,
     bothDirections ? id : checkBlockingCSS,
 
-    () => setMargin(settings),
-    () => setBodyStyle('background', bodyBackground),
-    () => setBodyStyle('padding', bodyPadding),
-
-    bothDirections ? id : stopInfiniteResizingOfIframe,
-    setContentWidth,
-    injectClearFixIntoBodyElement,
+    ...bodySetupSteps(setContentWidth),
 
     state.applySelectors,
 
@@ -95,14 +83,7 @@ function startIframeResizerChild({
     setupOnPageHide,
     () => setupPublicMethods(),
 
-    () =>
-      sendSize(
-        INIT,
-        'Init message from host page',
-        undefined,
-        undefined,
-        `${VERSION}:${settings.mode}`,
-      ),
+    sendInitReply,
 
     attachObservers,
     endAutoGroup,
@@ -117,7 +98,8 @@ function startIframeResizerChild({
 export default function (data: string[]): void {
   if (!state.firstRun) return
 
-  map2settings(readDataFromParent(data))
+  state.fromParent = readDataFromParent(data)
+  map2settings(state.fromParent)
   startLogging(settings)
 
   // Page settings are applied last so they win over the parent; remember
@@ -131,4 +113,7 @@ export default function (data: string[]): void {
   state.applySelectors = createApplySelectors(settings)
 
   startIframeResizerChild(settings)
+
+  // Past the licence check, which throws, so a later binding can take over
+  state.started = true
 }

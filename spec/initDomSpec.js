@@ -1,6 +1,6 @@
 define(['iframeResizerParent'], (iframeResize) => {
   describe('iFrame init(DOM Object)', () => {
-    it('should create iframeResizer object', (done) => {
+    it('binds an iframe passed as an element', (done) => {
       loadIFrame('iframe600.html')
       const iframe = document.getElementsByTagName('iframe')[0]
       let called = false
@@ -13,6 +13,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframe) => {
             if (called) return
             called = true
+
             expect(iframe.iframeResizer).toBeDefined()
             tearDown(iframe)
             setTimeout(done, 1)
@@ -27,7 +28,7 @@ define(['iframeResizerParent'], (iframeResize) => {
   })
 
   describe('iFrame init(CSS Selector)', () => {
-    it('should create iframeResizer object', (done) => {
+    it('binds an iframe matched by a selector', (done) => {
       loadIFrame('iframe600.html')
       let called = false
 
@@ -39,6 +40,7 @@ define(['iframeResizerParent'], (iframeResize) => {
           onReady: (iframe) => {
             if (called) return
             called = true
+
             expect(iframe.iframeResizer).toBeDefined()
             tearDown(iframe)
             setTimeout(done, 1)

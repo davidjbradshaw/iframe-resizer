@@ -16,14 +16,63 @@
         return false
       }
     </script>
+
     <script>
       window.iframeResizer = {
+        // offset: 20,
+        // onBeforeResize(newSize) {
+        //   console.log('onBeforeResize:', newSize)
+        //   return newSize + 1
+        // },
+        // offsetSize: -1,
         onMessage(message) {
           alert(`${message} ${parentIframe.getId()}`)
         },
+        license: 'GPLv3',
+        // heightCalculationMethod: 'auto',
       }
     </script>
     <script>
+      function insertContent() {
+        document.getElementsByTagName('p')[0].innerHTML =
+          `
+          <b>Content inserted by script</b>
+          <!-- This content is inserted by script to test the iframe resizing functionality. -->
+          <p>New paragraph added to test resizing.</p>
+          <select>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <p>Another paragraph to ensure the iframe resizes correctly.</p>
+          `
+        return false
+      }
+
+      function createDiv() {
+        const div = document.createElement('div')
+        const { style } = div
+        style.width = '25px'
+        style.height = '25px'
+        style.border = '1px solid #0c0'
+        style.background = '#9f9'
+        style.opacity = '0.5'
+        style.position = 'absolute'
+
+        div.textContent = 'New content'
+        div.className = 'new-content'
+
+        return div
+      }
+
+      const innerDiv = createDiv()
+      document.onreadystatechange = () => {
+        if (document.readyState === 'complete') {
+          // Insert the div into the body after it is fully loaded
+          document.body.prepend(innerDiv)
+        }
+      }
+
       function insertOverflow() {
         const div = document.createElement('div')
         const { style } = div
@@ -37,7 +86,26 @@
         style.top = `${document.body.scrollHeight - 10}px`
 
         div.textContent = 'Overflowing content'
+        div.className = 'overflow'
+
+        div.appendChild(createDiv())
         document.body.append(div)
+
+        return false
+      }
+
+      function removeOverflow() {
+        const elements = document.getElementsByClassName('overflow')
+
+        if (elements.length === 0) {
+          console.log('No overflow elements to remove')
+          return false
+        }
+
+        for (const div of [...elements]) {
+          div.remove()
+        }
+
         return false
       }
     </script>
@@ -63,13 +131,13 @@
   </head>
 
   <body>
-    <b>iFrame</b>
-    <a href="#" onclick="toggle()">Toggle content</a>
+    <b>iframe</b>
+    <a href="#" onclick="toggle(); return false">Toggle content</a>
     &nbsp;
     <a
       href="#"
       onclick="if ('parentIframe' in window) window.parentIframe.resize(250);return false;"
-      >Resize(250)</a
+      >resize(250)</a
     >
     &nbsp;
     <a
@@ -84,6 +152,20 @@
       >autoResize(false)</a
     >
 
+    <a href="https://iframe-resizer.com/examples/hover/">external</a>
+    &nbsp;
+    <a href="404.html">404</a>
+    &nbsp;
+    <a href="frame.1.html">v1</a>
+    &nbsp;
+    <a href="frame.2.html">v2</a>
+    &nbsp;
+    <a href="frame.3.html">v3</a>
+    &nbsp;
+    <a href="frame.4.html">v4</a>
+    &nbsp;
+    <a href="frame.5.html">v5</a>
+    &nbsp;
     <a id="nested" href="frame.nested.html">Nested</a>
     &nbsp;
     <a href="frame.animate.html">Animate</a>
@@ -96,16 +178,19 @@
     &nbsp;
     <a href="frame.absolute.html">Absolute Position</a>
     &nbsp;
+    <a href="#" onclick="return insertContent()">Insert content</a>
+    &nbsp;
     <a href="#" onclick="return insertOverflow()">Insert overflow</a>
+    &nbsp;
+    <a href="#" onclick="return removeOverflow()">Remove overflow</a>
+    &nbsp;
+    <a href="#" onclick="document.getElementsByTagName('p')[0].textContent = 'This text is different!';return false;">Mutate text node</a>
     &nbsp;
     <a
       href="#"
-      onclick="if ('parentIframe' in window) window.parentIframe.sendMessage('Hello from the iFrame');return false;"
+      onclick="if ('parentIframe' in window) window.parentIframe.sendMessage('Hello from the iframe');return false;"
       >Send Message</a
     >
-    <a href="../width-inline.html" target="_top">Width (inline)</a>
-    &nbsp;
-    <a href="../width-block.html" target="_top">Width (block)</a>
     &nbsp; &nbsp;
     <a
       href="#"

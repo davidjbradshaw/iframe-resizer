@@ -14,7 +14,7 @@ const read =
   (type: string) =>
   (data: Record<string, any>, key: string): any => {
     if (!(key in data)) return
-    // eslint-disable-next-line valid-typeof, consistent-return
+    // eslint-disable-next-line consistent-return
     if (typeof data[key] === type) return data[key]
 
     throw new TypeError(`${key} is not a ${type}.`)

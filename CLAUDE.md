@@ -32,6 +32,8 @@ This is a manual monorepo (no npm workspaces). Packages under `packages/` do not
 
 `build-scripts/build-all.js` builds every package from its `vite.config/<package>.config.js` (Vite with Rolldown; jQuery uses Rollup), runs any `vite.config/<package>.post-build.js` (UMD builds and type files), then builds the browser bundles (`build-scripts/build-browser.js`) and, for test builds, the Karma bundles (`build-scripts/build-tests.js`). Shared plugins live in `vite.config/shared/`.
 
+The Angular directive is first compiled by Angular 16's `ngc` in partial-Ivy mode, so apps on Angular 16 and later can link it. That toolchain pins TypeScript 5.1, so it lives in `build-scripts/angular/` with its own `package.json`, installed on the first build and again when its lockfile changes. Its output is left unminified, as Angular libraries are; apps minify it in their own builds.
+
 ```bash
 npm run build:dev      # DEBUG=1, all packages to dist/ and js/, logging kept, with a build number
 npm run build:prod     # Full production build: eslint + all formats to dist/ and js/
@@ -41,7 +43,7 @@ npm run build:beta     # Beta build with sourcemaps
 **Output directories:**
 - `dist/` — npm-publishable packages (ESM/CJS/UMD per package)
 - `js/` — Browser IIFE bundles
-- `test-js/` — UMD builds for Karma integration tests
+- `test/js/` — UMD builds for Karma integration tests
 - `js-dist/` — Copy of js/ from the last full release, used by the public examples; only updated by `npm run publish`
 
 **Build environment flags:** `DEBUG=1`, `BETA=1`, `TEST=1`. Dev and test builds add a build number to the version (`6.0.0+build.<number>`), so a parent and child from different builds report a version mismatch.
@@ -55,7 +57,7 @@ Three test tiers:
 ```bash
 npm test              # Full suite: eslint + build + e2e + integration + unit
 npm run test:unit     # Vitest only (fast, use during development)
-npm run test:int      # Karma/Jasmine integration tests (needs test-js/ built)
+npm run test:int      # Karma/Jasmine integration tests (needs test/js/ built)
 npm run test:e2e      # Playwright e2e (needs js/ and dist/ built)
 npm run test:types    # Compile the published types in dist as a strict consumer would
 ```
@@ -68,12 +70,13 @@ npm run test:watch                               # Watch mode
 
 **Integration tests (Karma + Jasmine):** In `spec/`. Uses RequireJS + ChromeHeadless. Tests real postMessage between parent/child.
 
-**E2E tests (Playwright):** Specs in `e2e/tests/*.spec.js`, pages in `e2e/fixtures/` (framework apps built from `e2e/apps/`). The repo is served on localhost:8080 (`npm run serve:e2e`). Tests fail on any `console.error` in the page.
+**E2E tests (Playwright):** Specs in `e2e/tests/`, grouped by CI runner: one `<platform>.spec.js` per wrapper, running the shared suites in `e2e/tests/shared/`, plus `e2e/tests/core/` for what does not vary by wrapper and `e2e/tests/legacy/` for the earlier releases. Pages in `e2e/fixtures/` (platform apps built from `e2e/apps/`). The repo is served on localhost:8080 (`npm run serve:e2e`). Tests fail on any `console.error` in the page.
 
 ### Test conventions
 - Use extensionless imports in tests
 - Reset Vitest module state per test when relying on internal singletons
 - Prefer `vi.mock` with factory functions; call `vi.restoreAllMocks()` in `beforeEach`
+- Unit tests run on jsdom's own window (`pool: 'vmThreads'`), where `window`, `window.top` and `window.location` can't be redefined. Override `self` or `parent`, use `window.history.replaceState` for the URL, and put server-side rendering tests in a `// @vitest-environment node` file
 
 ## Linting
 
@@ -88,7 +91,7 @@ ESLint config: `.eslintrc.json` (extends eslint-config-auto). Prettier: no semic
 
 - ES modules (`"type": "module"` in package.json)
 - No semicolons, single quotes, trailing commas
-- Node >= 20 required
+- Node >= 22 required
 
 ## Key Architectural Patterns
 
@@ -103,6 +106,7 @@ ESLint config: `.eslintrc.json` (extends eslint-config-auto). Prettier: no semic
 
 ## Key rules
 - **Always run `npm run eslint:fix` before every commit/check-in.** This is mandatory — do not skip it.
+- **Don't delete code kept for backwards compatibility** — support for older parents and children (v1–v5), deprecated options, attributes and messages — even when it looks dead or a review suggests removing it. Ask first.
 - `js-dist/` is just for the distribution of the latest published version. It should never be updated, except by running `npm run publish`
  - `js-dist/` should not be used for testing
  - `example-test` should never be checked in to git or used with test scripts. It is just for manual testing.

@@ -1,20 +1,28 @@
 {
   "reject": [
     "@angular/core",
+    "@babel/eslint-parser",
+    "@babel/preset-env",
+    "@babel/preset-react",
+    "@typescript-eslint/parser",
     "grunt-contrib-quint",
+    "typescript",
     "eslint",
     "eslint-plugin-compat",
     "eslint-plugin-json",
     "eslint-plugin-lodash",
     "eslint-plugin-markdown",
     "eslint-plugin-no-secrets",
+    "eslint-plugin-no-unsanitized",
     "eslint-plugin-no-use-extend-native",
     "eslint-plugin-promise",
     "eslint-plugin-react-hooks",
     "eslint-plugin-react-refresh",
     "eslint-plugin-security",
+    "eslint-plugin-solid",
     "eslint-plugin-sonarjs",
     "eslint-plugin-switch-case",
-    "eslint-plugin-unicorn"
+    "eslint-plugin-unicorn",
+    "typescript"
   ]
 }

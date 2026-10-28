@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from 'vitest'
 
 vi.useFakeTimers()
 
-vi.mock('../console', () => ({ debug: vi.fn(), log: vi.fn() }))
+vi.mock('../console', () => ({ event: vi.fn(), log: vi.fn() }))
 vi.mock('../send/message', () => ({ default: vi.fn() }))
 vi.mock('../size', () => ({
   getHeight: { auto: vi.fn(() => 10) },
@@ -36,6 +36,11 @@ describe('child/page/reset', () => {
 
     expect(state.triggerLocked).toBe(false)
     expect(sendMessage).toHaveBeenCalledWith(10, 20, 'reset')
+
+    // The lock coming off is the only thing in its frame, so it names its own
+    // group, and logs rather than debugs so the group is not empty
+    expect(consoleMod.event).toHaveBeenCalledWith('eventLock')
+    expect(consoleMod.log).toHaveBeenCalledWith('Trigger event lock off')
     globalThis.requestAnimationFrame = raf
   })
 

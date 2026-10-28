@@ -11,9 +11,11 @@ import {
 
 import { event as consoleEvent, info } from '../console'
 import resetIframe from '../methods/reset'
+import createOutgoingMessage from '../send/outgoing'
 import warnOnNoResponse from '../send/timeout'
 import trigger from '../send/trigger'
 import settings from '../values/settings'
+import { refreshRemoteHost } from './target-origin'
 
 const AFTER_EVENT_STACK = 1
 const isLazy = (iframe: HTMLIFrameElement): boolean => iframe.loading === LAZY
@@ -31,14 +33,20 @@ function checkReset(id: string): void {
   })
 }
 
+// Iframes whose page has loaded. Bound again, as React's <Activity> does, the
+// page may still be loaded, so no load event would come for waitForLoad.
+const loadedBefore = new WeakSet<HTMLIFrameElement>()
+
 function addLoadListener(
   id: string,
   iframe: HTMLIFrameElement,
   initChild: () => void,
 ): void {
   // allow other concurrent events to go first
-  const onload = (): ReturnType<typeof setTimeout> =>
-    setTimeout(initChild, AFTER_EVENT_STACK)
+  const onload = (): ReturnType<typeof setTimeout> => {
+    loadedBefore.add(iframe)
+    return setTimeout(initChild, AFTER_EVENT_STACK)
+  }
   addEventListener(iframe, LOAD, onload)
   settings[id].onLoadListener = onload
 }
@@ -48,25 +56,31 @@ const noContent = (iframe: HTMLIFrameElement): boolean => {
   return !srcdoc && (src == null || src === '' || src === 'about:blank')
 }
 
+// The load event initialises the child once the iframe has a page
+function delayInit(id: string, eventName: string, reason: string): void {
+  setTimeout(() => {
+    consoleEvent(id, eventName)
+    info(id, `${reason}, delaying initialisation`)
+  })
+}
+
 function sendInit(id: string, initChild: () => void): void {
   const { iframe, waitForLoad } = settings[id]
 
-  if (waitForLoad === true) return
+  if (waitForLoad === true && !loadedBefore.has(iframe)) return
   if (noContent(iframe)) {
-    setTimeout(() => {
-      consoleEvent(id, 'noContent')
-      info(id, 'No content detected in the iframe, delaying initialisation')
-    })
-    return
+    delayInit(id, 'noContent', 'No content detected in the iframe')
+  } else if (iframe.isConnected) {
+    setTimeout(initChild)
+  } else {
+    delayInit(id, 'notInDocument', 'The iframe is not in the document')
   }
-
-  setTimeout(initChild)
 }
 
 // We have to call trigger twice, as we can not be sure if all
 // iframes have completed loading when this code runs. The
 // event listener also catches the page changing in the iframe.
-export default function init(id: string, message: string): void {
+export default function init(id: string): void {
   const createInitChild = (eventType: string) => (): void => {
     if (!settings[id]) return // iframe removed before load event
 
@@ -74,7 +88,9 @@ export default function init(id: string, message: string): void {
 
     if (firstRun) settings[id].sameOrigin = true
 
-    trigger(eventType, message, id)
+    refreshRemoteHost(id)
+    // Built now, so a page that reloads gets the options as they are now
+    trigger(eventType, createOutgoingMessage(id), id)
     if (!(isInit(eventType) && isLazy(iframe))) warnOnNoResponse(id, settings)
 
     if (!firstRun) checkReset(id)

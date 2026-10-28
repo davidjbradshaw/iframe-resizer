@@ -2,17 +2,17 @@ import { CHILD_READY_MESSAGE } from '@iframe-resizer/common/consts'
 import { FOREGROUND, HIGHLIGHT } from 'auto-console-group'
 
 import { event as consoleEvent, log } from '../console'
+import narrowOrigins from '../utils/narrow-origins'
 import state from '../values/state'
 
 // Normally the parent kicks things off when it detects the iframe has loaded.
 // If this script is async-loaded, then tell parent page to retry init.
 let sent = false
 
-function sendReady(target: Window): void {
+function sendReady(target: Window, targetOrigin: string | undefined): void {
   const origins = window?.iframeResizer?.targetOrigin || '*'
-  const originList = Array.isArray(origins) ? origins : [origins]
 
-  for (const origin of originList) {
+  for (const origin of narrowOrigins(origins, targetOrigin)) {
     target.postMessage(CHILD_READY_MESSAGE, origin)
   }
 }
@@ -30,8 +30,11 @@ export default function ready(): void {
     window.location.href,
   )
 
-  sendReady(parent)
-  if (parent !== top) sendReady(top)
+  // Not in Firefox, which then posts to every listed origin
+  const ancestors = window.location.ancestorOrigins
+
+  sendReady(parent, ancestors?.[0])
+  if (parent !== top) sendReady(top, ancestors?.[ancestors.length - 1])
 
   sent = true
 }
