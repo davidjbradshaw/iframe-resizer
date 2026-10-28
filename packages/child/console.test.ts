@@ -95,6 +95,13 @@ describe('child/console', () => {
     spy.mockRestore()
   })
 
+  it('deprecation advice goes to the child console', async () => {
+    const mod = await import('./console')
+    mod.deprecateOption('sizeSelector', 'resizeSelector')
+
+    expect(calls.warn.at(-1)[0]).toContain('Deprecated Option(sizeSelector)')
+  })
+
   it('adviseNow writes directly to console.warn', async () => {
     const mod = await import('./console')
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
