@@ -7,7 +7,9 @@ const { event, log } = await import('../console')
 const sendMessage = (await import('../send/message')).default
 const { TITLE } = await import('@iframe-resizer/common/consts')
 const settings = (await import('../values/settings')).default
-const titleChanged = (await import('./title')).default
+const titleMod = await import('./title')
+const titleChanged = titleMod.default
+const { resendTitle } = titleMod
 
 describe('child/observed/title', () => {
   beforeEach(() => {
@@ -48,6 +50,17 @@ describe('child/observed/title', () => {
       vi.mocked(log).mock.invocationCallOrder[0],
     )
     expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  test('resendTitle sends an unchanged title again, for a new binding', () => {
+    const prev = document.title
+    document.title = 'Bound Again'
+    titleChanged()
+    resendTitle()
+    document.title = prev
+
+    expect(sendMessage).toHaveBeenCalledTimes(2)
+    expect(sendMessage).toHaveBeenLastCalledWith(0, 0, TITLE, 'Bound Again')
   })
 
   test('does not re-send when title has not changed', () => {

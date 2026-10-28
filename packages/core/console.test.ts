@@ -1,6 +1,13 @@
 import { vi } from 'vitest'
 
-import { advise, log, setupConsole, vInfo, warn } from './console'
+import {
+  advise,
+  log,
+  setupConsole,
+  updateConsoleExpand,
+  vInfo,
+  warn,
+} from './console'
 import settings from './values/settings'
 
 // Mock auto-console-group to control console group instances
@@ -35,6 +42,19 @@ describe('core/console', () => {
     // Clear shared settings state between tests
     Object.keys(settings).forEach((k) => delete settings[k])
     vi.clearAllMocks()
+  })
+
+  test('updateConsoleExpand passes the iframe logExpand to its console', () => {
+    const expand = vi.fn()
+    settings.iframe1 = { console: { expand }, logExpand: true }
+
+    updateConsoleExpand('iframe1')
+
+    expect(expand).toHaveBeenCalledWith(true)
+  })
+
+  test('updateConsoleExpand does nothing for an iframe with no settings', () => {
+    expect(() => updateConsoleExpand('missing')).not.toThrow()
   })
 
   test('log uses instance console when enabled', () => {
